@@ -1,0 +1,102 @@
+name: filtering
+display_name: Filtering
+category: api
+subcategory: general
+description: 'Server-side API filtering: implement query parameter filters, combine with pagination and
+  sorting, and test filter edge cases with jq.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- grep
+capabilities:
+- name: query-filtering
+  description: Build and test filter query parameters across API data sets.
+  commands:
+  - curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'
+  - curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10' | jq '.meta'
+  - curl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500' | jq '.data[].total'
+  - grep -rn 'filter' src/controllers/ | head -10
+  - curl -s 'http://localhost:8080/api/orders?q=alice' | jq '.data | length'
+  examples:
+  - curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10' | jq '.meta'
+  - curl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500' | jq '.data[].total'
+  - curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'
+  parameters:
+  - name: field
+    type: string
+    description: Field to filter on
+  - name: operator
+    type: string
+    description: eq, neq, gte, lte, in, contains
+  - name: value
+    type: string
+    description: Filter value
+knowledge:
+- title: JSON:API Filtering
+  type: documentation
+  source: https://jsonapi.org/recommendations/#filtering
+  description: Recommended filtering conventions for JSON:API implementations
+instructions: "# Filtering\n\n## What this skill does\n\nFiltering lets clients narrow result sets server-side\
+  \ instead of downloading everything. This skill covers query-parameter filters, operator conventions\
+  \ (eq, gte, in), combining with sort/pagination, and testing them.\n\n## When to use\n\n- Endpoints\
+  \ that return large collections\n- Dashboards and reporting with many filter dimensions\n- Moving client-side\
+  \ filtering into the API for performance\n\n## Real commands\n\n```bash\n# Equality filter\ncurl -s\
+  \ 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'\n\n# Range operators (gte/lte)\
+  \ and search\ncurl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500' | jq '.data[].total'\n\
+  curl -s 'http://localhost:8080/api/orders?q=alice' | jq '.data | length'\n\n# Combine with sort + pagination\n\
+  curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10' | jq '.meta'\n\
+  ```\n\n## Implementation example\n\n```javascript\nconst OPERATORS = { eq: '=', neq: '!=', gte: '>=',\
+  \ lte: '<=', in: 'IN' }\n\nfunction buildWhere(query) {\n  const clauses = []\n  for (const [key, value]\
+  \ of Object.entries(query)) {\n    const [field, op = 'eq'] = key.split('_')\n    if (OPERATORS[op]\
+  \ && field in ORDER_FIELDS) {\n      clauses.push({ field, op: OPERATORS[op], value })\n    }\n  }\n\
+  \  return clauses\n}\n```\n\n## Edge cases to test\n\n```bash\n# Unknown fields are ignored\ncurl -s\
+  \ 'http://localhost:8080/api/orders?nonexistent=1' | jq '.data | length'\n# Invalid operator is rejected\
+  \ with 400\ncurl -s -o /dev/null -w '%{http_code}\\n' 'http://localhost:8080/api/orders?total_bogus=5'\n\
+  ```\n\n## Best practices\n\n- Whitelist filterable fields; ignore or 400 on anything else.\n- Combine\
+  \ with sort and pagination; document the whole matrix.\n- Index the filterable columns in the database.\n\
+  - Use `contains` (ILIKE) sparingly; it bypasses indexes.\n- Cap `in` lists to a reasonable length (e.g.\
+  \ 100 values).\n"
+examples:
+- input: Add status and amount-range filtering to /orders
+  output: Implement eq/gte/lte parsing with a field allowlist, test with curl queries, and add the filter
+    columns to indexes.
+- input: Filter requests are slow
+  output: Check the query plan for the filtered fields, add indexes, and make sure the filters map to
+    indexed columns.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: filtering.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-filtering
+  generic:
+    system_prompt: 'You take the Filtering seat. You do it through query-filtering: Build and test filter
+      query parameters across API data sets. The commands are real, e.g. `curl -s http://localhost:8080/api/orders?status=paid
+      | jq .data | length`. You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

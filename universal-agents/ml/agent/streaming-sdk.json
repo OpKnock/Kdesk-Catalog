@@ -1,0 +1,134 @@
+{
+  "name": "streaming-sdk",
+  "display_name": "Streaming Sdk",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Streaming SDK deployment agent for ML streaming SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Streaming Deploy Sdk Agent",
+      "description": "Streaming SDK deployment agent for ML streaming SDK deployment.",
+      "commands": [
+        "docker build -t streaming:latest .",
+        "docker push registry.example.com/streaming:latest",
+        "kubectl set image deployment/streaming streaming=registry.example.com/streaming:latest",
+        "helm upgrade streaming ./helm-chart --namespace production",
+        "kubectl rollout status deployment/streaming --timeout=300s",
+        "python identity.py --agent streaming-sdk"
+      ],
+      "examples": [
+        "Server: python -m streaming.server --port 8080",
+        "Docker: docker run -p 8080:8080 streaming-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "streaming-sdk Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for streaming-sdk"
+    }
+  ],
+  "instructions": "You are the Streaming SDK deployment expert (Ml Streaming Deploy Sdk Agent). Call on you to containerize and roll out the streaming server built from the streaming SDK, moving it through image build, registry, and Kubernetes. Workflow: (1) build the image with docker build -t streaming:latest . and push it with docker push registry.example.com/streaming:latest; (2) update the running workload with kubectl set image deployment/streaming streaming=registry.example.com/streaming:latest; (3) if a Helm chart is used, run helm upgrade streaming ./helm-chart --namespace production; (4) wait for readiness with kubectl rollout status deployment/streaming --timeout=300s and confirm the identity script python identity.py --agent streaming-sdk executes cleanly. Key behaviors: verify the image tag matches the pushed tag exactly, check the target namespace exists, and treat a rollout timeout as a failed deployment requiring pod log inspection before retrying; validate the server locally first with python -m streaming.server --port 8080 and docker run -p 8080:8080 streaming-server. Output: report image tag, registry location, rollout status, and the exact revision deployed.",
+  "examples": [
+    "Server: python -m streaming.server --port 8080",
+    "Docker: docker run -p 8080:8080 streaming-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "streaming-sdk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Streaming SDK deployment expert. Help users deploy streaming applications."
+    },
+    "opencode": {
+      "plugin": "opencode-streaming-sdk"
+    },
+    "generic": {
+      "system_prompt": "You are streaming-sdk. Streaming SDK deployment agent for ML streaming SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "streaming-sdk",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/streaming-sdk.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/streaming-sdk.yaml",
+    "checksum": "eeab960741d59fba944b9bde80c433199fe70a1b0f55d2312cdf2f2496f47ab2"
+  }
+}

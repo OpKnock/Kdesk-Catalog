@@ -1,0 +1,166 @@
+{
+  "name": "rest-versioning",
+  "display_name": "Rest Versioning",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted REST API versioning skill: Accept-header and URL versioning, cursor pagination, conditional requests, and Prefer response selection.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "rest-versioning",
+      "description": "Versioned REST design: media types, cursors, conditional requests",
+      "commands": [
+        "curl -s -H 'Accept: application/vnd.myapi.v2+json' https://api.example.com/users",
+        "curl -s 'https://api.example.com/users?cursor=abc123&limit=100' | jq '.next_cursor'",
+        "curl -i https://api.example.com/users/42",
+        "curl -s -H 'If-None-Match: \"etag-42\"' https://api.example.com/users/42",
+        "curl -s -H 'Prefer: return=representation' -X PATCH https://api.example.com/users/42 -d '{\"name\":\"Ada\"}'"
+      ],
+      "examples": [
+        "curl -s 'https://api.example.com/users?cursor=abc123&limit=100'",
+        "curl -i -H 'Accept: application/vnd.myapi.v2+json' https://api.example.com/users",
+        "curl -s -H 'If-None-Match: \"etag-42\"' -o /dev/null -w '%{http_code}\\n' https://api.example.com/users/42"
+      ],
+      "parameters": [
+        {
+          "name": "accept_header",
+          "type": "string",
+          "description": "Media type selecting the API version, e.g. application/vnd.myapi.v2+json"
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "description": "Opaque pagination token from the previous page"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "description": "Page size for list endpoints"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Microsoft REST API Guidelines",
+      "type": "documentation",
+      "source": "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md",
+      "description": "Versioning, pagination, conditional requests conventions"
+    },
+    {
+      "title": "RFC 9110 Prefer header",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc9110#section-12.5.4",
+      "description": "Prefer: return=representation/minimal semantics"
+    }
+  ],
+  "instructions": "# REST API Versioning (v2 conventions)\n\nHand-crafted skill for versioned REST APIs with cursor pagination and conditional requests.\n\n## What this skill does\n\n- Version APIs via Accept media types instead of URL breaking changes\n- Paginates with opaque cursors instead of page numbers\n- Uses ETags, If-None-Match, and Prefer headers to save bandwidth\n\n## When to use\n\n- Launching a breaking change to an existing API\n- Adding fields that existing clients must not see\n- Optimizing list endpoints used by mobile clients\n\n## Real commands\n\n```bash\n# Pick the version with the Accept header\ncurl -s -H 'Accept: application/vnd.myapi.v2+json' https://api.example.com/users\n\n# Cursor pagination: read the next cursor from the response\ncurl -s 'https://api.example.com/users?cursor=abc123&limit=100' | jq '.next_cursor'\n\n# Conditional GET: 304 if nothing changed\ncurl -i https://api.example.com/users/42\ncurl -s -H 'If-None-Match: \"etag-42\"' -o /dev/null -w '%{http_code}\\n' https://api.example.com/users/42\n\n# Ask the server to return the updated representation\ncurl -s -H 'Prefer: return=representation' -X PATCH https://api.example.com/users/42 -d '{\"name\":\"Ada\"}'\n```\n\n## Design rules\n\n- Never change response shape of a live version; add a new version\n- Cursors are opaque: clients must not decode or construct them\n- List endpoints return {items, next_cursor} and drop cursor support at the end\n\n## Testing\n\n```bash\n# Paginate until next_cursor is null\ncurl -s 'https://api.example.com/users?limit=100'\ncurl -s 'https://api.example.com/users?cursor=abc123&limit=100'\n```\n\n## Best practices\n\n- Keep at least one version overlapping during migrations\n- Deprecate old versions with a Sunset header and changelog\n- Validate ETags on writes with If-Match to prevent lost updates\n",
+  "examples": [
+    {
+      "input": "Add a breaking field without breaking old clients",
+      "output": "Keep v1 responses unchanged and serve new fields under application/vnd.myapi.v2+json; old clients keep defaulting to v1."
+    },
+    {
+      "input": "Walk all pages of a list",
+      "output": "Loop curl -s 'https://api.example.com/users?cursor=<next_cursor>&limit=100' until the next_cursor field is null."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rest-versioning.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rest-versioning"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Rest Versioning. You do it through rest-versioning: Versioned REST design: media types, cursors, conditional requests. The commands are real, e.g. `curl -s -H Accept: application/vnd.myapi.v2+json https://api.example.com/users`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rest-versioning",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rest-versioning",
+        "name": "accept_header",
+        "type": "string",
+        "description": "Media type selecting the API version, e.g. application/vnd.myapi.v2+json"
+      },
+      {
+        "capability": "rest-versioning",
+        "name": "cursor",
+        "type": "string",
+        "description": "Opaque pagination token from the previous page"
+      },
+      {
+        "capability": "rest-versioning",
+        "name": "limit",
+        "type": "integer",
+        "description": "Page size for list endpoints"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rest-versioning-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rest-versioning-skill.yaml",
+    "checksum": "1eb8ee0655618542b31e5a9ba010e48236988b9ba24344390d5c521a4cc8c773"
+  }
+}

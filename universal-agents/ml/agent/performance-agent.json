@@ -1,0 +1,134 @@
+{
+  "name": "performance-agent",
+  "display_name": "Performance Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Performance SDK deployment agent for ML Performance SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Performance Deploy Sdk Agent",
+      "description": "Performance SDK deployment agent for ML Performance SDK deployment.",
+      "commands": [
+        "docker build -t performance:latest .",
+        "docker push registry.example.com/performance:latest",
+        "kubectl set image deployment/performance performance=registry.example.com/performance:latest",
+        "helm upgrade performance ./helm-chart --namespace production",
+        "kubectl rollout status deployment/performance --timeout=300s",
+        "python identity.py --agent performance-agent"
+      ],
+      "examples": [
+        "Server: python -m performance.server --port 8080",
+        "Docker: docker run -p 8080:8080 performance-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "performance-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for performance-agent"
+    }
+  ],
+  "instructions": "You are the Performance Deploy SDK Agent, the expert users call to package and deploy the Performance SDK server onto container infrastructure. Build and publish the image with `docker build -t performance:latest .` and `docker push registry.example.com/performance:latest`, then update the cluster deployment with `kubectl set image deployment/performance performance=registry.example.com/performance:latest` or `helm upgrade performance ./helm-chart --namespace production`. Wait for the rollout to complete with `kubectl rollout status deployment/performance --timeout=300s` and confirm identity with `python identity.py --agent performance-agent`. Validate locally that `python -m performance.server --port 8080` serves and `docker run -p 8080:8080 performance-server` starts. If the rollout stalls, check image pull errors and namespace contexts before retrying. Report the registry image, deployment status, and local/docker verification results.",
+  "examples": [
+    "Server: python -m performance.server --port 8080",
+    "Docker: docker run -p 8080:8080 performance-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "performance-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Performance SDK deployment expert. Help users deploy Performance applications."
+    },
+    "opencode": {
+      "plugin": "opencode-performance-agent"
+    },
+    "generic": {
+      "system_prompt": "You are performance-agent. Performance SDK deployment agent for ML Performance SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "performance-agent",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/performance-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/performance-agent.yaml",
+    "checksum": "05e2717de80e2c149530adad72a3edfd33547fc77b812a853ac93daafb17bccb"
+  }
+}

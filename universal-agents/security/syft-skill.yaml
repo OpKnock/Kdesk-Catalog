@@ -1,0 +1,183 @@
+name: syft
+display_name: syft
+category: security
+subcategory: general
+description: Generates SBOMs for container images, filesystems, and binaries with syft in SPDX, CycloneDX,
+  and syft formats.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- syft
+capabilities:
+- name: sbom-generation
+  description: Generate SBOMs from images, directories, and binaries.
+  commands:
+  - syft alpine:latest
+  - syft .
+  - syft --scope all-layers nginx:latest
+  - syft /usr/local/bin/app
+  - syft docker-archive:myimage.tar
+  examples:
+  - syft alpine:latest -o cyclonedx-json
+  - syft . --exclude './vendor/**'
+  - syft nginx:latest --scope all-layers
+  parameters:
+  - name: target
+    type: string
+    description: Image, directory, archive, or binary to catalog
+  - name: scope
+    type: string
+    description: Squashed or all-layers for images
+  - name: exclude
+    type: array
+    description: Glob patterns to exclude
+- name: sbom-output
+  description: Emit SBOMs in standardized formats.
+  commands:
+  - syft alpine:latest -o spdx-json > sbom.spdx.json
+  - syft alpine:latest -o cyclonedx-json > sbom.cdx.json
+  - syft alpine:latest -o syft-json > sbom.syft.json
+  - syft attest --key cosign.key alpine:latest -o cyclonedx-json
+  examples:
+  - syft alpine:latest -o spdx-json > sbom.spdx.json
+  - syft alpine:latest -o cyclonedx-json > sbom.cdx.json
+  - syft attest --key cosign.key alpine:latest
+  parameters:
+  - name: format
+    type: string
+    description: 'Output format: spdx-json, cyclonedx-json, syft-json, table'
+  - name: output
+    type: string
+    description: Output file path
+knowledge:
+- title: Syft GitHub
+  type: documentation
+  source: https://github.com/anchore/syft
+  description: Installation, cataloging, and output formats
+- title: SPDX Specification
+  type: documentation
+  source: https://spdx.dev/specifications/
+  description: Software Package Data Exchange standard
+- title: CycloneDX Specification
+  type: documentation
+  source: https://cyclonedx.org/specification/overview/
+  description: SBOM standard for component inventories
+instructions: '# Syft
+
+
+  Generate SBOMs from images, filesystems, and binaries.
+
+
+  ## What This Skill Does
+
+
+  - Catalogs packages, languages, and licenses from many sources
+
+  - Emits SPDX, CycloneDX, and syft JSON formats
+
+  - Scopes image scans to squashed or all layers
+
+  - Attests SBOMs with cosign for supply-chain integrity
+
+
+  ## When to Use
+
+
+  - Generating SBOMs for compliance and vulnerability matching
+
+  - Shipping SBOMs alongside releases
+
+  - Feeding grype or other scanners with an offline SBOM
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Basic SBOMs
+
+  syft alpine:latest
+
+  syft .
+
+  syft /usr/local/bin/app
+
+
+  # Standardized output
+
+  syft alpine:latest -o spdx-json > sbom.spdx.json
+
+  syft alpine:latest -o cyclonedx-json > sbom.cdx.json
+
+
+  # All-layer scanning
+
+  syft nginx:latest --scope all-layers
+
+
+  # Exclusions
+
+  syft . --exclude ''./vendor/**''
+
+
+  # Attested SBOM
+
+  syft attest --key cosign.key alpine:latest -o cyclonedx-json
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Generate at build time and store with the artifact
+
+  - Prefer CycloneDX or SPDX for interoperability
+
+  - Use --scope all-layers for runtime-relevant findings
+
+  - Feed the SBOM to grype for vuln matching and re-scan later
+
+  - Attest SBOMs so consumers can verify authenticity'
+examples:
+- input: Generate an SPDX SBOM for my release image
+  output: Agent runs syft myapp:latest -o spdx-json > sbom.spdx.json and verifies the package count and
+    format fields.
+- input: Get an SBOM of this repo's dependencies
+  output: Agent runs syft . --exclude './vendor/**' and shows the dependency inventory in the requested
+    format.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: syft.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-syft
+  generic:
+    system_prompt: 'You work syft hands-on. You do it through sbom-generation: Generate SBOMs from images,
+      directories, and binaries. The commands are real, e.g. `syft alpine:latest`. You answer with exact
+      commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

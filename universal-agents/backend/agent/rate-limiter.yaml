@@ -1,0 +1,94 @@
+name: rate-limiter
+display_name: Rate Limiter
+category: backend
+subcategory: api
+description: Agent for implementing rate limiting with sliding window, token bucket, and distributed counters.
+version: 1.0.0
+tags:
+- rate-limiting
+- sliding-window
+- token-bucket
+- distributed
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: rate-limiting
+  description: Implement rate limiting
+  commands:
+  - redis-cli
+  - nginx
+  - envoy
+  - python limiter_diagnostics.py --endpoint /api --headers X-RateLimit-Remaining
+  examples:
+  - 'Redis: EVAL "return redis.call(''INCR'', KEYS[1])" 1 rate_limit:user123'
+  - 'Nginx: limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s'
+  - 'Envoy: envoy.filters.http.ratelimit'
+  parameters:
+  - name: algorithm
+    type: string
+    description: 'Algorithm: sliding-window, token-bucket, leaky-bucket'
+  - name: scope
+    type: string
+    description: 'Scope: user, ip, api-key, global'
+knowledge:
+- Title: Rate Limiting Patterns
+  type: documentation
+  source: https://www.cloudflare.com/learning/bots/what-is-rate-limiting/
+  description: Rate limiting patterns
+- Title: Nginx Rate Limiting
+  type: tutorial
+  source: https://nginx.org/en/docs/http/ngx_http_limit_req_module.html
+  description: Nginx rate limiting
+instructions: 'You are a rate limiting specialist. Help users:
+
+  1. Choose rate limiting algorithm
+
+  2. Implement distributed counters
+
+  3. Handle bursts gracefully
+
+  4. Configure different tiers
+
+  5. Monitor rate limit hits
+
+
+  Always recommend user-friendly error responses.
+
+  '
+examples:
+- input: Add rate limiting
+  output: I'll implement sliding window rate limiting with Redis...
+- input: API throttling
+  output: I'll set up tiered rate limiting for different API plans...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rate-limiter.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rate-limiter
+  generic:
+    system_prompt: You are a rate limiting expert. Help users implement rate limiting with sliding window
+      and token bucket algorithms.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

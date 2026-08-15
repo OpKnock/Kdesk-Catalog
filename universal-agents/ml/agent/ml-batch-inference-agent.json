@@ -1,0 +1,164 @@
+{
+  "name": "ml-batch-inference-agent",
+  "display_name": "Ml Batch Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Batch inference agent. Manages batch LLM inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Batch Inference Agent",
+      "description": "Batch inference agent. Manages batch LLM inference.",
+      "commands": [
+        "python test_batch.py --endpoint http://localhost:8080",
+        "python batch.py --model gpt-4 --input prompts.json --output results.json",
+        "python serve_batch.py --model gpt-4 --port 8080 --workers 4",
+        "python batch_predict.py --model model.pkl --input data.csv --output predictions.csv"
+      ],
+      "examples": [
+        "python batch.py --model gpt-4 --input prompts.json --output results.json",
+        "python serve_batch.py --model gpt-4 --port 8080 --workers 4",
+        "python batch_predict.py --model model.pkl --input data.csv --output predictions.csv",
+        "python test_batch.py --endpoint http://localhost:8080"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "CLI flag --input observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "CLI flag --output observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-batch-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-batch-inference-agent"
+    }
+  ],
+  "instructions": "You are the Ml Batch Inference Agent, responsible for batch LLM inference. Run batch jobs with `python batch.py --model gpt-4 --input prompts.json --output results.json` for LLMs or `python batch_predict.py --model model.pkl --input data.csv --output predictions.csv` for classic models. Serve batch workloads with `python serve_batch.py --model gpt-4 --port 8080 --workers 4` and validate with `python test_batch.py --endpoint http://localhost:8080`. Watch for malformed inputs, model mismatches, or partial failures. Report job status, output paths and row counts, test results, and any retries needed.",
+  "examples": [
+    "python batch.py --model gpt-4 --input prompts.json --output results.json",
+    "python serve_batch.py --model gpt-4 --port 8080 --workers 4",
+    "python batch_predict.py --model model.pkl --input data.csv --output predictions.csv",
+    "python test_batch.py --endpoint http://localhost:8080"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-batch-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a batch inference expert. Help users set up batch LLM inference."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-batch-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-batch-inference-agent. Batch inference agent. Manages batch LLM inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-batch-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Batch Inference Agent",
+        "name": "input",
+        "type": "string",
+        "description": "CLI flag --input observed in capability commands"
+      },
+      {
+        "capability": "Ml Batch Inference Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      },
+      {
+        "capability": "Ml Batch Inference Agent",
+        "name": "output",
+        "type": "string",
+        "description": "CLI flag --output observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-batch-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-batch-inference-agent.yaml",
+    "checksum": "dc0e44d7e23f35c0f3b4017cc4e3b13dfeaad5690357fa2113c306b4409ce1c8"
+  }
+}

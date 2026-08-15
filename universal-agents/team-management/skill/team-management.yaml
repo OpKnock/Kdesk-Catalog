@@ -1,0 +1,233 @@
+name: team-management
+version: 2.0.0
+type: skill
+category: management
+description: 'Manages GitHub-based team workflows with gh CLI: issues, PRs, reviews, releases, and contribution
+  metrics.'
+keywords:
+- team-management
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: team-management.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-team-management
+  generic:
+    system_prompt: 'This is your domain: team-management. You do it through pr-management: List, review,
+      merge, and manage pull requests. The commands are real, e.g. `gh pr list --state open`. You run
+      and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: pr-management
+  description: List, review, merge, and manage pull requests.
+  commands:
+  - gh pr list --state open
+  - gh pr view 123
+  - gh pr checkout 123
+  - gh pr review 123 --approve
+  - gh pr merge 123 --squash --delete-branch
+  - gh pr checks 123
+  examples:
+  - gh pr list --state open --author wagde
+  - gh pr review 123 --approve
+  - gh pr merge 123 --squash --delete-branch
+  parameters:
+  - name: prNumber
+    type: number
+    description: Pull request number
+  - name: state
+    type: string
+    description: 'PR state filter: open, closed, merged'
+- name: issue-and-project
+  description: Manage issues, labels, and project boards.
+  commands:
+  - gh issue create --title 'Fix login bug' --body 'details'
+  - gh issue list --label bug --assignee @me
+  - gh issue close 42 --reason completed
+  - gh label create bug --color d73a4a
+  - gh project view 1 --owner org
+  examples:
+  - gh issue create --title 'Fix login bug' --body 'details'
+  - gh issue list --label bug
+  - gh issue close 42 --reason completed
+  parameters:
+  - name: issueNumber
+    type: number
+    description: Issue number
+  - name: label
+    type: string
+    description: Label filter or name
+- name: releases-and-team
+  description: Create releases and inspect team activity.
+  commands:
+  - gh release create v1.2.3 --generate-notes
+  - gh release create v1.2.3 --target main --notes 'Release notes'
+  - gh api orgs/ORG/teams/TEAM/members --jq '.[].login'
+  - gh api search/commits -f q='author:wagde committer-date:>2024-01-01' --jq '.items[].commit.message'
+  examples:
+  - gh release create v1.2.3 --generate-notes
+  - gh api orgs/ORG/teams/TEAM/members --jq '.[].login'
+  - gh release view v1.2.3
+  parameters:
+  - name: tag
+    type: string
+    description: Release tag name
+  - name: target
+    type: string
+    description: Target branch for the release
+prerequisites:
+- greenhouse
+- lever
+- lattic
+- 15five
+tools:
+- greenhouse
+- lever
+- lattic
+- 15five
+- slack
+examples:
+- input: What's assigned to me today?
+  output: Agent runs gh pr list --review-requested=@me and gh issue list --assignee=@me and summarizes
+    the queue.
+- input: Cut a release for the sprint
+  output: Agent lists merged PRs since last tag, creates the release with --generate-notes, and posts
+    the changelog summary.
+instructions: '# Team Management
+
+
+  Run developer team workflows from the terminal with GitHub CLI.
+
+
+  ## What This Skill Does
+
+
+  - Tracks and reviews pull requests at scale
+
+  - Manages issues, labels, and project boards
+
+  - Creates releases with generated notes
+
+  - Pulls team activity and contribution data via gh api
+
+
+  ## When to Use
+
+
+  - Daily PR triage and review queues
+
+  - Sprint planning with issues and boards
+
+  - Release management
+
+  - Reporting team activity
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # PRs
+
+  gh pr list --state open --author wagde
+
+  gh pr review 123 --approve
+
+  gh pr merge 123 --squash --delete-branch
+
+  gh pr checks 123
+
+
+  # Issues
+
+  gh issue create --title ''Fix login bug'' --body ''details''
+
+  gh issue list --label bug --assignee @me
+
+  gh issue close 42 --reason completed
+
+
+  # Releases
+
+  gh release create v1.2.3 --generate-notes
+
+  gh release create v1.2.3 --target main --notes ''Release notes''
+
+
+  # Team data
+
+  gh api orgs/ORG/teams/TEAM/members --jq ''.[].login''
+
+  gh api search/commits -f q=''author:wagde'' --jq ''.items[].commit.message''
+
+  ```
+
+
+  ## Workflow Template
+
+
+  ```bash
+
+  # Daily triage
+
+  gh pr list --state open --review-requested=@me
+
+  gh issue list --state open --assignee=@me
+
+
+  # Release day
+
+  gh pr list --state merged --since=$(date -d ''-7 days'' +%Y-%m-%d)
+
+  gh release create $(git describe --tags) --generate-notes
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Automate labels with branch patterns and PR templates
+
+  - Use draft PRs for WIP; require checks before merge
+
+  - Keep release notes generated from conventional commits
+
+  - Rotate reviewers to avoid queue bottlenecks
+
+  - Archive old projects; track velocity with gh api metrics'
+display_name: team-management
+knowledge:
+- title: GitHub CLI Documentation
+  type: documentation
+  source: https://cli.github.com/manual/
+  description: gh command reference
+- title: GitHub REST API
+  type: documentation
+  source: https://docs.github.com/en/rest
+  description: API endpoints for teams, issues, and repos

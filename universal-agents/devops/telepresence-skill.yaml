@@ -1,0 +1,197 @@
+name: telepresence
+display_name: telepresence
+category: devops
+subcategory: general
+description: 'Develops Kubernetes services locally with Telepresence: connect to clusters, intercept traffic,
+  and preview services without redeploys.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- telepresence
+capabilities:
+- name: cluster-connect
+  description: Connect local dev environment to a cluster.
+  commands:
+  - telepresence connect
+  - telepresence status
+  - telepresence list
+  - telepresence quit
+  - telepresence connect --namespace app
+  - telepresence version
+  examples:
+  - telepresence connect
+  - telepresence status
+  - telepresence quit
+  parameters:
+  - name: namespace
+    type: string
+    description: Namespace to connect into
+  - name: context
+    type: string
+    description: Kube context to connect into
+- name: traffic-interception
+  description: Intercept service traffic and route it to the local process.
+  commands:
+  - telepresence intercept web --port 8080:80
+  - telepresence intercept api --port 8080 --env-json env.json
+  - telepresence list --intercepts
+  - telepresence leave web
+  - telepresence intercept api --port 8080 --mechanism tcp
+  - telepresence intercept --preview-url api web
+  examples:
+  - telepresence intercept web --port 8080:80
+  - telepresence leave web
+  - telepresence intercept api --port 8080 --env-json env.json
+  parameters:
+  - name: service
+    type: string
+    description: Service to intercept
+  - name: port
+    type: string
+    description: Local:remote port mapping
+  - name: env-json
+    type: string
+    description: File to dump intercepted env vars
+knowledge:
+- title: Telepresence Documentation
+  type: documentation
+  source: https://www.telepresence.io/docs
+  description: Connect, intercept, preview URLs, and installation
+- title: Telepresence GitHub
+  type: documentation
+  source: https://github.com/telepresenceio/telepresence
+  description: CLI reference and intercept mechanics
+instructions: '# Telepresence Local Development
+
+
+  Develop against a live cluster from your laptop: intercept service traffic to local processes.
+
+
+  ## What This Skill Does
+
+
+  - Connects your machine into cluster networking (DNS + routing)
+
+  - Intercepts requests to a service and sends them to your local process
+
+  - Replaces deployment code without redeploying
+
+  - Dumps intercepted env vars for local parity
+
+  - Shares preview URLs for review traffic
+
+
+  ## When to Use
+
+
+  - Developing microservices that depend on cluster services
+
+  - Testing changes against staging data without deploying
+
+  - Debugging with local breakpoints on live traffic
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Connect
+
+  telepresence connect
+
+  telepresence connect --namespace app
+
+  telepresence status
+
+  telepresence version
+
+
+  # Intercept
+
+  telepresence intercept web --port 8080:80
+
+  telepresence intercept api --port 8080 --env-json env.json
+
+  telepresence intercept web --port 8080 --mechanism tcp
+
+  telepresence intercept web --preview-url      # shareable preview
+
+
+  # Manage
+
+  telepresence list --intercepts
+
+  telepresence leave web
+
+  telepresence quit
+
+  ```
+
+
+  ## Workflow
+
+
+  1. `telepresence connect`
+
+  2. Run your local server on port 8080
+
+  3. `telepresence intercept web --port 8080:80`
+
+  4. Cluster traffic to `web` now hits your laptop process
+
+  5. `telepresence leave web` when done
+
+
+  ## Best Practices
+
+
+  - Use intercepts, not connect alone, when possible (precise routing)
+
+  - Verify intercepted env parity with --env-json
+
+  - Never intercept production without explicit approval and time limits
+
+  - Quit cleanly: telepresence quit removes all routes
+
+  - Prefer namespace-scoped connects in multi-team clusters'
+examples:
+- input: Test my local API changes against staging data
+  output: Agent connects, starts the local server, intercepts the api service, and validates traffic routes
+    locally
+- input: Stop intercepting and clean up
+  output: Agent lists active intercepts, leaves them, and quits the connection
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: telepresence.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-telepresence
+  generic:
+    system_prompt: 'Your lane is telepresence. You do it through cluster-connect: Connect local dev environment
+      to a cluster. The commands are real, e.g. `telepresence connect`. You run and verify the real CLI
+      commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,188 @@
+name: api-rate-limiting-designer
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Designs rate limiting algorithms and data models: token bucket, sliding window, fixed window,
+  and Redis-backed counters with Lua atomicity.'
+keywords:
+- rate-limiting
+- token-bucket
+- sliding-window
+- redis
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-rate-limiting-designer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-rate-limiting-designer
+  generic:
+    system_prompt: 'You are the api-rate-limiting-designer specialist. You do it through redis-windows:
+      Model rate limit windows with Redis primitives. The commands are real, e.g. `redis-cli INCR rate:user:42`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: redis-windows
+  description: Model rate limit windows with Redis primitives
+  commands:
+  - redis-cli INCR rate:user:42
+  - redis-cli EXPIRE rate:user:42 60
+  - redis-cli ZADD rate:user:42 $(date +%s%3N) req-1
+  - redis-cli ZREMRANGEBYSCORE rate:user:42 -inf $(($(date +%s%3N)-60000))
+  - redis-cli ZCARD rate:user:42
+  examples:
+  - INCR + EXPIRE implements a fixed window counter
+  - ZADD with millisecond timestamps tracks sliding windows
+  - ZREMRANGEBYSCORE prunes expired sliding window entries
+  parameters:
+  - name: key
+    type: string
+    description: Rate limit key, usually rate:<scope>:<client>
+  - name: window-ms
+    type: integer
+    description: Sliding window length in milliseconds
+  - name: limit
+    type: integer
+    description: Maximum requests per window
+- name: lua-atomicity
+  description: Use Lua scripts for atomic check-and-increment
+  commands:
+  - redis-cli --eval ratelimit.lua 1 rate:user:42 , 10 60
+  - redis-cli EVAL 'local c=redis.call("INCR",KEYS[1]); if c==1 then redis.call("EXPIRE",KEYS[1],ARGV[1])
+    end; return c' 1 rate:user:42 60
+  - redis-cli GET rate:user:42
+  - redis-cli DEL rate:user:42
+  examples: []
+  parameters: []
+prerequisites:
+- redis-cli
+- envoy
+- nginx
+tools:
+- redis-cli
+- envoy
+- nginx
+- lua
+- python
+- go
+examples:
+- input: Pick an algorithm for a chat API
+  output: Selects sliding window over ZSETs for smooth user pacing and documents burst tolerance
+- input: Design a distributed limiter
+  output: Specifies Redis counters with Lua INCR+EXPIRE and per-region keys
+instructions: '# API Rate Limiting Designer
+
+
+  Designs rate limiting algorithms.
+
+
+  ## What This Skill Does
+
+  - Chooses window and bucket algorithms for the workload
+
+  - Models counters with Redis primitives
+
+  - Ensures atomicity with Lua
+
+
+  ## When to Use
+
+  - Specifying rate limit behavior before implementation
+
+  - Comparing fixed vs sliding window tradeoffs
+
+  - Choosing data stores for distributed limits
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  redis-cli INCR rate:user:42
+
+  redis-cli EXPIRE rate:user:42 60
+
+  redis-cli ZADD rate:user:42 $(date +%s%3N) req-1
+
+  redis-cli ZREMRANGEBYSCORE rate:user:42 -inf $(($(date +%s%3N)-60000))
+
+  redis-cli ZCARD rate:user:42
+
+  ```
+
+
+  ## Algorithm Guide
+
+  - Fixed window: simple, allows boundary bursts (2x limit)
+
+  - Sliding window: smooth, keeps per-request timestamps
+
+  - Token bucket: permits bursts up to capacity
+
+  - Leaky bucket: constant output rate
+
+
+  ## Lua Atomic Script
+
+
+  ```lua
+
+  local c = redis.call(''INCR'', KEYS[1])
+
+  if c == 1 then redis.call(''EXPIRE'', KEYS[1], ARGV[1]) end
+
+  return c
+
+  ```
+
+
+  ## Testing
+
+  - Verify boundary bursts with clock-skew tests
+
+  - Compare memory use of ZSET vs counter designs
+
+  - Test multi-node consistency for distributed APIs
+
+
+  ## Best Practices
+
+  - Never trust client-supplied identifiers alone
+
+  - Add jitter to key TTLs to avoid thundering herds
+
+  - Design the 429 response before implementation'
+display_name: api-rate-limiting-designer
+knowledge:
+- title: Redis Commands Reference
+  type: documentation
+  source: https://redis.io/docs/latest/commands/
+  description: Redis primitives used in rate limit designs
+- title: 'Cloudflare Blog: Rate Limiting Algorithms'
+  type: documentation
+  source: https://blog.cloudflare.com/counting-things-a-lot-of-different-ways/
+  description: Comparison of counting and windowing approaches

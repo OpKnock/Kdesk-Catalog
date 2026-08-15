@@ -1,0 +1,127 @@
+name: remix
+display_name: Remix
+category: frontend
+subcategory: general
+description: 'Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment
+  to Node/Cloudflare.'
+version: 2.0.0
+tags:
+- frontend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- name: scaffold
+  description: Create and configure Remix applications.
+  commands:
+  - npx create-remix@latest my-app --template remix-run/remix/templates/express
+  - npm run dev
+  - npx remix reveal
+  - npx remix routes
+  - npx remix vite:dev
+  examples:
+  - npx create-remix@latest store --template remix-run/remix/templates/cloudflare-pages
+  - npx remix routes --json
+  - npx remix reveal --show
+  parameters:
+  - name: template
+    type: string
+    description: 'Deployment template: express, cloudflare, netlify, vercel'
+  - name: json
+    type: string
+    description: Print route tree as JSON
+  - name: show
+    type: string
+    description: Preview revealed files without writing
+- name: build-deploy
+  description: Build and run Remix apps for production.
+  commands:
+  - npx remix build
+  - npx remix-serve build/server/index.js
+  - npm run start
+  - npx remix build && npx remix-serve build/server/index.js
+  - npm run typecheck && npx remix build
+  examples:
+  - npx remix build --sourcemap
+  - npx remix-serve build/server/index.js --port 3001
+  - npm run typecheck && npx remix build
+  parameters:
+  - name: sourcemap
+    type: string
+    description: Emit sourcemaps for the build
+  - name: port
+    type: number
+    description: Production server port
+  - name: build
+    type: string
+    description: 'Build mode: development or production'
+knowledge:
+- title: Remix Docs
+  type: documentation
+  source: https://remix.run/docs
+  description: Loaders, actions, forms, and conventions
+- title: Remix CLI
+  type: documentation
+  source: https://remix.run/docs/en/main/other-api/cli
+  description: remix build, dev, routes, reveal commands
+- title: Remix Deployment
+  type: documentation
+  source: https://remix.run/docs/en/main/guides/deployment
+  description: Deploying to Node, Cloudflare, and edge runtimes
+instructions: "# Remix\n\nBuild full-stack React apps where data loading and mutations live next to the\
+  \ UI.\n\n## When to Use\n\n- Apps with heavy server data dependencies\n- Progressive enhancement with\
+  \ native forms\n- SSR-first SEO-sensitive pages\n\n## Scaffold\n\n```bash\nnpx create-remix@latest my-app\
+  \ --template remix-run/remix/templates/express\nnpm run dev\n```\n\n## Loaders and actions\n\n```tsx\n\
+  // app/routes/orders._index.tsx\nimport { json } from '@remix-run/node';\nimport { useLoaderData, Form\
+  \ } from '@remix-run/react';\n\nexport async function loader() {\n  const orders = await db.order.findMany();\n\
+  \  return json({ orders });\n}\n\nexport async function action({ request }: ActionFunctionArgs) {\n\
+  \  const fd = await request.formData();\n  await db.order.create({ data: { sku: String(fd.get('sku'))\
+  \ } });\n  return json({ ok: true });\n}\n```\n\n## Route tree\n\n```bash\nnpx remix routes\n```\n\n\
+  ## Build and serve\n\n```bash\nnpx remix build\nnpx remix-serve build/server/index.js\n```\n\n## Best\
+  \ practices\n\n- Load minimal data per route; let nesting compose the page.\n- Prefer Form actions over\
+  \ fetch for mutations to get progressive enhancement.\n- Set `shouldRevalidate` carefully to avoid refetch\
+  \ storms.\n- Type-check before build: `npm run typecheck && npx remix build`.\n\n## Testing\n\n```bash\n\
+  npm run typecheck\nnpx remix build\n```\n\nRun both in CI; a failed typecheck with a passing build indicates\
+  \ stale types."
+examples:
+- input: Add an order creation form to the store route.
+  output: Adds an action that reads formData and creates the order, then a Form with sku input, returning
+    json with ok status.
+- input: Deploy the Remix app to a Node server.
+  output: Builds with npx remix build and serves with remix-serve, then points the platform adapter at
+    the express template.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: remix.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-remix
+  generic:
+    system_prompt: 'You take the Remix seat. You do it through scaffold: Create and configure Remix applications.
+      The commands are real, e.g. `npx create-remix@latest my-app --template remix-run/remix/templates/express`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

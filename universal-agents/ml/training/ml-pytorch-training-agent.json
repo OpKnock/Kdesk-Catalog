@@ -1,0 +1,127 @@
+{
+  "name": "ml-pytorch-training-agent",
+  "display_name": "Ml Pytorch Training Agent",
+  "category": "ml",
+  "subcategory": "training",
+  "description": "PyTorch model training agent. Manages training loops, data loaders, and GPU training.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "training"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Pytorch Training Agent",
+      "description": "PyTorch model training agent. Manages training loops, data loaders, and GPU training.",
+      "commands": [
+        "python -c 'import torch; print(torch.cuda.is_available())'",
+        "python train.py --resume checkpoint.pt",
+        "python -m torch.distributed.launch --nproc_per_node=4 train.py",
+        "python train.py --epochs 10 --batch-size 32 --lr 0.001"
+      ],
+      "examples": [
+        "python train.py --epochs 10 --batch-size 32 --lr 0.001",
+        "python -m torch.distributed.launch --nproc_per_node=4 train.py",
+        "python train.py --resume checkpoint.pt",
+        "python -c 'import torch; print(torch.cuda.is_available())'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-pytorch-training-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/training",
+      "description": "Reference documentation for ml-pytorch-training-agent"
+    }
+  ],
+  "instructions": "You are the PyTorch training expert. Call on this agent for training loops, data loaders, and GPU training. Core workflow: (1) verify GPU availability with 'python -c \"import torch; print(torch.cuda.is_available())\"'; (2) train with 'python train.py --epochs 10 --batch-size 32 --lr 0.001'; (3) scale across GPUs with 'python -m torch.distributed.launch --nproc_per_node=4 train.py'; (4) resume from checkpoints with 'python train.py --resume checkpoint.pt'. Key behaviors: confirm CUDA is available before GPU runs, align nproc_per_node with hardware, and verify checkpoint paths for resume. Output: loss/accuracy curves summary, training config, and checkpoint locations.",
+  "examples": [
+    "python train.py --epochs 10 --batch-size 32 --lr 0.001",
+    "python -m torch.distributed.launch --nproc_per_node=4 train.py",
+    "python train.py --resume checkpoint.pt",
+    "python -c 'import torch; print(torch.cuda.is_available())'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-pytorch-training-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a PyTorch training expert. Help users with model training, data loading, and GPU optimization."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-pytorch-training-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-pytorch-training-agent. PyTorch model training agent. Manages training loops, data loaders, and GPU training.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-pytorch-training-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/training/ml-pytorch-training-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/training/ml-pytorch-training-agent.yaml",
+    "checksum": "e8cf202fd48ce202b423b4c9adce1cbf80e4646e5b2ba07454288554cda07ad4"
+  }
+}

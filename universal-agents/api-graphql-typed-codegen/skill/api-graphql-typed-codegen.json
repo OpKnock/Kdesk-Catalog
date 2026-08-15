@@ -1,0 +1,206 @@
+{
+  "name": "api-graphql-typed-codegen",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Advanced GraphQL implementation: codegen-typed resolvers, DataLoader batching, query-cost protection, and persisted operations.",
+  "keywords": [
+    "graphql",
+    "schema",
+    "dataloader"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-graphql-typed-codegen.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-graphql-typed-codegen"
+    },
+    "generic": {
+      "system_prompt": "You take the Api Graphql Typed Codegen seat. You do it through typed-codegen: Generate TypeScript types from the GraphQL schema. The commands are real, e.g. `npm install -D @graphql-codegen/cli @graphql-codegen/typescript...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "typed-codegen",
+      "description": "Generate TypeScript types from the GraphQL schema",
+      "commands": [
+        "npm install -D @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-resolvers",
+        "npx graphql-codegen init",
+        "npx graphql-codegen --config codegen.ts",
+        "node -e \"const c=require('./codegen.yml')||{};console.log('config ok')\" 2>/dev/null || npx graphql-codegen --help",
+        "npx graphql-codegen --watch"
+      ],
+      "examples": [
+        "npx graphql-codegen --config codegen.ts && npx tsc --noEmit",
+        "npm install -D @graphql-codegen/cli @graphql-codegen/typescript-resolvers",
+        "npx graphql-codegen --watch"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Codegen config file"
+        },
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Schema location"
+        }
+      ]
+    },
+    {
+      "name": "persisted-queries",
+      "description": "Register and serve persisted queries for production clients",
+      "commands": [
+        "npm install @apollo/server-plugin-operation-registry",
+        "node -e \"const p=require('@apollo/server-plugin-operation-registry');console.log(typeof p.ApolloServerOperationRegistry)\"",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"abc\"}}}' -o /dev/null -w '%{http_code}'",
+        "npm install graphql-persisted-documents",
+        "node -e \"console.log('persisted query: client sends hash, server resolves')\""
+      ],
+      "examples": [
+        "npm install @apollo/server-plugin-operation-registry",
+        "npm install graphql-persisted-documents",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"abc\"}}}' -o /dev/null -w '%{http_code}'"
+      ],
+      "parameters": [
+        {
+          "name": "hash",
+          "type": "string",
+          "description": "Persisted query hash"
+        },
+        {
+          "name": "registry",
+          "type": "string",
+          "description": "Operation registry URL"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader"
+  ],
+  "tools": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader",
+    "node.js",
+    "python"
+  ],
+  "examples": [
+    {
+      "input": "Optimize GraphQL N+1 with DataLoader",
+      "output": "Adds per-request DataLoader instances and batch functions, proving fewer SQL calls via logs"
+    },
+    {
+      "input": "Protect the API with query-cost limits",
+      "output": "Enables graphql-query-complexity with cost caps and persisted queries for known clients"
+    }
+  ],
+  "instructions": "# API GraphQL Engineer (Advanced)\n\nLevels up GraphQL services: types, batching, and hardened transports.\n\n## When to Use\n- Type-safe resolver development\n- Reducing client payload sizes\n- Protecting against unknown queries\n\n## Real Commands\n\n```bash\n# Codegen\nnpm install -D @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-resolvers\nnpx graphql-codegen --config codegen.ts\n\n# Persisted queries\nnpm install @apollo/server-plugin-operation-registry\n\n# Cost protection\nnpm install graphql-query-complexity\n```\n\n## Codegen Setup\n\n```yml\nschema: schema.graphql\ngenerates:\n  src/generated/resolvers-types.ts:\n    plugins: [typescript, typescript-resolvers]\n```\n\n## Testing\nRun `tsc --noEmit` after codegen to catch type drift.\n\n## Best Practices\n- Commit generated types\n- Enable persisted queries in production\n- Validate query cost before execution",
+  "display_name": "Api Graphql Typed Codegen",
+  "knowledge": [
+    {
+      "title": "GraphQL Codegen",
+      "type": "documentation",
+      "source": "https://the-guild.dev/graphql/codegen/docs",
+      "description": "Typed resolvers and clients"
+    },
+    {
+      "title": "Persisted Queries",
+      "type": "documentation",
+      "source": "https://www.apollographql.com/docs/apollo-server/performance/apq/",
+      "description": "Automatic persisted queries"
+    }
+  ],
+  "id": "api-graphql-typed-codegen",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "typed-codegen",
+        "name": "config",
+        "type": "string",
+        "description": "Codegen config file"
+      },
+      {
+        "capability": "typed-codegen",
+        "name": "schema",
+        "type": "string",
+        "description": "Schema location"
+      },
+      {
+        "capability": "persisted-queries",
+        "name": "hash",
+        "type": "string",
+        "description": "Persisted query hash"
+      },
+      {
+        "capability": "persisted-queries",
+        "name": "registry",
+        "type": "string",
+        "description": "Operation registry URL"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-graphql-typed-codegen/skill/api-graphql-typed-codegen.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-graphql-typed-codegen/skill/api-graphql-typed-codegen.yaml",
+    "checksum": "414af5dbe70433d4297d0ab8397bd5290851d81e7dc0a31d3cd54f05f6baafff"
+  }
+}

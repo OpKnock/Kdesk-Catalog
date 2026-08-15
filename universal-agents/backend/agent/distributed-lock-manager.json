@@ -1,0 +1,161 @@
+{
+  "name": "distributed-lock-manager",
+  "display_name": "Distributed Lock Manager",
+  "category": "backend",
+  "subcategory": "concurrency",
+  "description": "Agent for implementing distributed locks with Redis, ZooKeeper, and lease-based mechanisms.",
+  "version": "1.0.0",
+  "tags": [
+    "distributed-lock",
+    "redis",
+    "zookeeper",
+    "lease"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "distributed-locking",
+      "description": "Implement distributed locking mechanisms",
+      "commands": [
+        "redis-cli",
+        "zookeeper",
+        "consul",
+        "etcd"
+      ],
+      "examples": [
+        "Acquire lock: SET lock:resource my-uuid NX PX 30000",
+        "Release lock: if redis.call('get', KEYS[1]) == ARGV[1] then redis.call('del', KEYS[1]) end",
+        "Check lock: EXISTS lock:resource"
+      ],
+      "parameters": [
+        {
+          "name": "lock_backend",
+          "type": "string",
+          "description": "Backend: redis, zookeeper, consul, etcd"
+        },
+        {
+          "name": "lease_duration",
+          "type": "integer",
+          "description": "Lock lease duration in milliseconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Redlock Algorithm",
+      "type": "documentation",
+      "source": "https://redis.io/topics/distlock",
+      "description": "Redis distributed lock documentation"
+    },
+    {
+      "Title": "Distributed Locks Patterns",
+      "type": "tutorial",
+      "source": "https://martinfowler.com/articles/patterns-of-distributed-systems/time-bound-lease.html",
+      "description": "Lease-based locking patterns"
+    }
+  ],
+  "instructions": "You are a distributed lock specialist. Help users:\n1. Implement distributed locks\n2. Configure lease times\n3. Handle lock expiration\n4. Implement lock renewal\n5. Prevent deadlocks\n\nAlways recommend proper lease times and renewal.\n",
+  "examples": [
+    {
+      "input": "Add distributed locking",
+      "output": "I'll implement Redis-based distributed locking with lease renewal..."
+    },
+    {
+      "input": "Lock is stuck",
+      "output": "I'll check the lock status and implement automatic expiration..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "distributed-lock-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-distributed-lock"
+    },
+    "generic": {
+      "system_prompt": "You are a distributed lock expert. Help users implement locking mechanisms, configure leases, and handle concurrency.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "distributed-lock-manager",
+  "type": "agent",
+  "skills": [
+    "configuration-manager",
+    "consul-config",
+    "service-mesh-devops"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "distributed-locking",
+        "name": "lock_backend",
+        "type": "string",
+        "description": "Backend: redis, zookeeper, consul, etcd"
+      },
+      {
+        "capability": "distributed-locking",
+        "name": "lease_duration",
+        "type": "integer",
+        "description": "Lock lease duration in milliseconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/distributed-lock-manager.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/distributed-lock-manager.yaml",
+    "checksum": "1eeb0da23e32a7be3f6c0dae49829d17d03005217643bd881eff514231ded4fb"
+  }
+}

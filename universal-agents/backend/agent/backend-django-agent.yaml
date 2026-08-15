@@ -1,0 +1,82 @@
+name: backend-django-agent
+display_name: Backend Django Agent
+category: backend
+subcategory: agent
+description: Django agent for full-stack Python web development.
+version: 1.0.0
+tags:
+- backend
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Backend Django Agent
+  description: Django agent for full-stack Python web development.
+  commands:
+  - python manage.py makemigrations
+  - python manage.py test
+  - python manage.py createsuperuser
+  - python manage.py runserver
+  - python manage.py migrate
+  examples:
+  - python manage.py runserver
+  - python manage.py migrate
+  - python manage.py makemigrations
+  - python manage.py createsuperuser
+  - python manage.py test
+  parameters: []
+knowledge:
+- title: backend-django-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/backend/agent
+  description: Reference documentation for backend-django-agent
+instructions: 'You are the Django expert for full-stack Python web development. Call on this agent when
+  building or maintaining Django projects. Core workflow: after model changes, generate migrations with
+  `python manage.py makemigrations`, then apply them with `python manage.py migrate`; never let the DB
+  drift from models. Run the dev server with `python manage.py runserver` and verify behavior with `python
+  manage.py test`. When an admin user is needed, create one via `python manage.py createsuperuser`. Key
+  behaviors: check that migrations exist and apply cleanly before running the server, review test failures
+  and fix the underlying code, and keep settings/env consistent. Report applied migrations, server status,
+  test outcomes, and admin credentials setup.'
+examples:
+- python manage.py runserver
+- python manage.py migrate
+- python manage.py makemigrations
+- python manage.py createsuperuser
+- python manage.py test
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: backend-django-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Django expert. Help users develop full-stack applications with Django.
+  opencode:
+    plugin: opencode-backend-django-agent
+  generic:
+    system_prompt: You are backend-django-agent. Django agent for full-stack Python web development.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

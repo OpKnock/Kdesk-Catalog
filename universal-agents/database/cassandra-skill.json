@@ -1,0 +1,173 @@
+{
+  "name": "cassandra",
+  "display_name": "Cassandra",
+  "category": "database",
+  "subcategory": "general",
+  "description": "Operates Cassandra: cqlsh queries, schema management, and node health via nodetool.",
+  "version": "2.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cqlsh",
+    "nodetool"
+  ],
+  "capabilities": [
+    {
+      "name": "cassandra-cli",
+      "description": "Query and manage Cassandra with cqlsh and nodetool",
+      "commands": [
+        "cqlsh -e \"DESCRIBE KEYSPACES;\"",
+        "cqlsh -e \"SELECT * FROM app.orders LIMIT 10;\"",
+        "cqlsh -f schema.cql",
+        "nodetool status",
+        "nodetool repair -pr"
+      ],
+      "examples": [
+        "cqlsh -k app -e \"SELECT count(*) FROM orders;\"",
+        "nodetool tpstats | head -20",
+        "nodetool compactionstats"
+      ],
+      "parameters": [
+        {
+          "name": "keyspace",
+          "type": "string",
+          "description": "Keyspace to use (-k)"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "CQL script file to execute (-f)"
+        },
+        {
+          "name": "parallel",
+          "type": "boolean",
+          "description": "Run repair in parallel (-pr)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Cassandra docs",
+      "type": "documentation",
+      "source": "https://cassandra.apache.org/doc/latest/",
+      "description": "CQL reference and operational guides"
+    },
+    {
+      "title": "nodetool reference",
+      "type": "documentation",
+      "source": "https://cassandra.apache.org/doc/latest/cassandra/operating/",
+      "description": "Node health, repair, and compaction commands"
+    }
+  ],
+  "instructions": "# Cassandra\n\nDistributed NoSQL operations: CQL queries, schema changes, and cluster health\nwith nodetool.\n\n## When to Use\n\n- Querying or writing data via cqlsh\n- Running repairs and checking node state\n- Applying schema changes to a cluster\n\n## Real Commands\n\n```bash\n# Connect and explore\nsudo cqlsh\nsudo cqlsh -e \"DESCRIBE KEYSPACES;\"\n\n# Queries\nsudo cqlsh -k app -e \"SELECT * FROM orders WHERE order_id = 'abc-123';\"\nsudo cqlsh -e \"SELECT * FROM app.orders LIMIT 10;\"\n\n# Schema script\nsudo cqlsh -f schema.cql\n\n# Node health\nsudo nodetool status\nsudo nodetool status app\n\n# Repairs (primary range)\nsudo nodetool repair -pr app\n\n# Activity\nsudo nodetool tpstats\nsudo nodetool compactionstats\nsudo nodetool tablestats app.orders\n```\n\n## Schema Example (schema.cql)\n\n```sql\nCREATE KEYSPACE IF NOT EXISTS app WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': 3};\nCREATE TABLE IF NOT EXISTS app.orders (\n  order_id uuid PRIMARY KEY,\n  customer_id uuid,\n  amount decimal,\n  created_at timestamp\n);\n```\n\n## Best Practices\n\n- Always qualify queries with the partition key\n- Run repairs during low traffic with `-pr`\n- Never `DESCRIBE`-drift: apply schema via versioned CQL files\n- Check `tpstats` for drop and latency issues\n- Watch `nodetool status` for UN (up-normal) on all nodes\n\n## Example Response\n\nFor a slow cluster: reports nodetool status, compaction stats, and tpstats; then\nrecommends repairs, compactions, or query fixes.",
+  "examples": [
+    {
+      "input": "Check cluster health",
+      "output": "Runs nodetool status and tpstats, reports each node's state and any drops"
+    },
+    {
+      "input": "Create the orders table",
+      "output": "Writes schema.cql with proper replication, applies via cqlsh -f, and verifies with DESCRIBE"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cassandra.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cassandra"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Cassandra. You do it through cassandra-cli: Query and manage Cassandra with cqlsh and nodetool. The commands are real, e.g. `cqlsh -e DESCRIBE KEYSPACES;`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cassandra",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cassandra-cli",
+        "name": "keyspace",
+        "type": "string",
+        "description": "Keyspace to use (-k)"
+      },
+      {
+        "capability": "cassandra-cli",
+        "name": "file",
+        "type": "string",
+        "description": "CQL script file to execute (-f)"
+      },
+      {
+        "capability": "cassandra-cli",
+        "name": "parallel",
+        "type": "boolean",
+        "description": "Run repair in parallel (-pr)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cqlsh",
+    "nodetool"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/cassandra-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/cassandra-skill.yaml",
+    "checksum": "4b89c00b761934a66223305c39991f6f00955b2f391a1d77b37059d939eeefdc"
+  }
+}

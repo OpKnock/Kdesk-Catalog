@@ -1,0 +1,167 @@
+{
+  "name": "ruff",
+  "display_name": "ruff",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Ultra-fast Python linter and formatter: runs hundreds of rules at once and fixes files in place.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "ruff"
+  ],
+  "capabilities": [
+    {
+      "name": "ruff-lint-and-format",
+      "description": "Lint, auto-fix, and format Python code with Ruff",
+      "commands": [
+        "ruff check src/",
+        "ruff check --fix src/",
+        "ruff format .",
+        "ruff check --select E,F,I --fix src/",
+        "ruff check --output-format=github ."
+      ],
+      "examples": [
+        "ruff check --statistics src/",
+        "ruff format --check .",
+        "ruff check --fix-only --diff src/"
+      ],
+      "parameters": [
+        {
+          "name": "select",
+          "type": "string",
+          "description": "Comma-separated rule codes to enable, e.g. E,F,I,B,UP"
+        },
+        {
+          "name": "output-format",
+          "type": "string",
+          "description": "text, json, github, gitlab, sarif, or junit"
+        },
+        {
+          "name": "target-version",
+          "type": "string",
+          "description": "Python version for the rules, e.g. py311"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Ruff docs",
+      "type": "documentation",
+      "source": "https://docs.astral.sh/ruff/",
+      "description": "Rule list, configuration, and CLI reference"
+    },
+    {
+      "title": "Ruff rules catalog",
+      "type": "documentation",
+      "source": "https://docs.astral.sh/ruff/rules/",
+      "description": "Every rule with examples and fix availability"
+    }
+  ],
+  "instructions": "# Ruff\n\nRust-based Python linter and formatter, 10-100x faster than Flake8+Black and\nfully compatible with them.\n\n## When to Use\n\n- Replacing a slow multi-tool lint stack (Flake8, Isort, Black)\n- CI lint gates with tiny runtimes\n- Auto-fixing a large legacy codebase\n\n## Real Commands\n\n```bash\n# Install\npip install ruff\n\n# Lint a directory\nruff check src/\n\n# Lint and auto-fix\nruff check --fix src/\n\n# Select specific rule sets\nruff check --select E,F,I,B,UP src/\n\n# Format (Black-compatible)\nruff format .\n\n# Verify formatting in CI\nruff format --check .\n\n# Summary counts per rule\nruff check --statistics src/\n\n# Show a diff of what fixes would change\nruff check --fix --diff src/\n```\n\n## Config (pyproject.toml)\n\n```toml\n[tool.ruff]\ntarget-version = \"py311\"\nline-length = 100\n\n[tool.ruff.lint]\nselect = [\"E\", \"F\", \"W\", \"I\", \"N\", \"UP\", \"B\", \"SIM\", \"C4\"]\nignore = [\"E501\"]\n\n[tool.ruff.format]\nquote-style = \"double\"\n```\n\n## CI\n\n```yaml\n- name: Ruff\n  run: |\n    ruff check .\n    ruff format --check .\n```\n\n## Pre-commit\n\n```yaml\nrepos:\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n    rev: v0.6.0\n    hooks:\n      - id: ruff\n        args: [--fix]\n      - id: ruff-format\n```\n\n## Best Practices\n\n- Use `--fix` in pre-commit, `ruff check .` without fix in CI\n- Prefer `select` over relying on default rule set\n- Pair with mypy for type checking; Ruff does not type check\n\n## Example Response\n\nReports counts per rule code (e.g. F401 12 unused imports), what it auto-fixed,\nand lists remaining issues with file:line.",
+  "examples": [
+    {
+      "input": "Lint and fix this Python codebase",
+      "output": "Runs ruff check --fix src/ followed by ruff format ., then reports the remaining unfixable issues with ruff check --statistics"
+    },
+    {
+      "input": "Migrate from flake8+black to ruff",
+      "output": "Replaces flake8/black config with [tool.ruff] select lists and format section in pyproject.toml, then verifies with ruff check . and ruff format --check ."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ruff.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ruff"
+    },
+    "generic": {
+      "system_prompt": "You take the ruff seat. You do it through ruff-lint-and-format: Lint, auto-fix, and format Python code with Ruff. The commands are real, e.g. `ruff check src/`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ruff",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ruff-lint-and-format",
+        "name": "select",
+        "type": "string",
+        "description": "Comma-separated rule codes to enable, e.g. E,F,I,B,UP"
+      },
+      {
+        "capability": "ruff-lint-and-format",
+        "name": "output-format",
+        "type": "string",
+        "description": "text, json, github, gitlab, sarif, or junit"
+      },
+      {
+        "capability": "ruff-lint-and-format",
+        "name": "target-version",
+        "type": "string",
+        "description": "Python version for the rules, e.g. py311"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "ruff"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/ruff-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/ruff-skill.yaml",
+    "checksum": "08361f1db9475f12df06fec4f2b5257a6d70d1bd9a0d06c51c13093833adf8c1"
+  }
+}

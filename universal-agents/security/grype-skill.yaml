@@ -1,0 +1,184 @@
+name: grype
+display_name: grype
+category: security
+subcategory: general
+description: Generates SBOMs with syft and matches vulnerabilities against them using grype for image
+  and filesystem scanning.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- grype
+- syft
+capabilities:
+- name: vulnerability-matching
+  description: Scan images, directories, and binaries for known CVEs.
+  commands:
+  - grype alpine:latest
+  - grype .
+  - grype image:latest --scope all-layers
+  - grype --only-fixed alpine:latest
+  - grype -o table --by-cve alpine:latest
+  examples:
+  - grype myapp:latest
+  - grype --only-fixed myapp:latest
+  - grype . --exclude './vendor/**'
+  parameters:
+  - name: target
+    type: string
+    description: Image, directory, or binary to scan
+  - name: scope
+    type: string
+    description: Squashed or all-layers scope
+  - name: output
+    type: string
+    description: 'Format: table, json, sarif, cyclonedx'
+- name: db-and-sbom
+  description: Update the vulnerability database and scan SBOMs directly.
+  commands:
+  - grype db update
+  - grype db status
+  - grype -q sbom:sbom.json
+  - syft alpine:latest -o json > sbom.json
+  - grype --v 5 myapp:latest
+  examples:
+  - grype db update
+  - syft alpine:latest -o cyclonedx > sbom.cdx.json
+  - grype -q sbom:sbom.cdx.json
+  parameters:
+  - name: format
+    type: string
+    description: 'SBOM format for syft output: json, cyclonedx, spdx'
+  - default: sbom.json
+    description: Where to write the generated SBOM.
+    name: outputFile
+    type: string
+knowledge:
+- title: Grype GitHub
+  type: documentation
+  source: https://github.com/anchore/grype
+  description: Usage, database management, and output formats
+- title: Syft GitHub
+  type: documentation
+  source: https://github.com/anchore/syft
+  description: SBOM generation tool used with grype
+instructions: '# Grype
+
+
+  Vulnerability scanning powered by syft SBOMs.
+
+
+  ## What This Skill Does
+
+
+  - Scans container images, filesystems, and single binaries
+
+  - Matches packages against multiple vulnerability databases
+
+  - Filters by fixability, severity, and CVE
+
+  - Works from existing SBOMs for offline or supply-chain pipelines
+
+
+  ## When to Use
+
+
+  - Checking an image before deploy
+
+  - Generating a report of fixable vulnerabilities in a repo
+
+  - Re-scanning a previously generated SBOM
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Scan an image
+
+  grype alpine:latest
+
+  grype --only-fixed --fail-on high myapp:latest
+
+
+  # Scan a project directory
+
+  grype .
+
+  grype . --exclude ''./vendor/**''
+
+
+  # All layers (catches deleted package files)
+
+  grype myapp:latest --scope all-layers
+
+
+  # SBOM round-trip
+
+  syft myapp:latest -o json > sbom.json
+
+  grype -q sbom:sbom.json
+
+
+  # Database management
+
+  grype db update
+
+  grype db status
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Refresh the DB in CI (grype db update) or pin a DB image
+
+  - Use --only-fixed to prioritize actionable findings
+
+  - Set --fail-on high for deploy gates
+
+  - Scan the SBOM at build time and re-scan at deploy time
+
+  - Combine with syft attestation (syft attest) for signed SBOMs'
+examples:
+- input: Scan my image for fixable CVEs
+  output: Agent runs grype myapp:latest --only-fixed, summarizes the table by severity, and lists the
+    package versions to bump.
+- input: Verify an SBOM from our registry
+  output: Agent pulls the SBOM, runs grype -q sbom:sbom.json, and reports matches with CVE IDs and fix
+    versions.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grype.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grype
+  generic:
+    system_prompt: 'This is your domain: grype. You do it through vulnerability-matching: Scan images,
+      directories, and binaries for known CVEs. The commands are real, e.g. `grype alpine:latest`. You
+      run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

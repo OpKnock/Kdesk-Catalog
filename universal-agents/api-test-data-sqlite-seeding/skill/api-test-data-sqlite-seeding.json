@@ -1,0 +1,187 @@
+{
+  "name": "api-test-data-sqlite-seeding",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "testing",
+  "description": "Seeds database test data with SQL scripts and Node scripts: sqlite3 import, PostgreSQL COPY/INSERT, fixtures, and repeatable seed flows.",
+  "keywords": [
+    "test-data"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-test-data-sqlite-seeding.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-test-data-sqlite-seeding"
+    },
+    "generic": {
+      "system_prompt": "You take the Api Test Data Sqlite Seeding seat. You do it through sqlite-seeding: Seed SQLite databases for API tests. The commands are real, e.g. `sqlite3 test.db CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT)`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "sqlite-seeding",
+      "description": "Seed SQLite databases for API tests",
+      "commands": [
+        "sqlite3 test.db \"CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT)\"",
+        "sqlite3 test.db \"INSERT INTO users (name, email) VALUES ('alice', 'a@example.com'), ('bob', 'b@example.com')\"",
+        "sqlite3 test.db \"SELECT COUNT(*) FROM users\"",
+        "node -e \"const db=require('better-sqlite3')('test.db'); db.prepare('INSERT INTO users (name,email) VALUES (?,?)').run('carol','c@example.com'); console.log(db.prepare('SELECT COUNT(*) c FROM users').get())\"",
+        "sqlite3 test.db \".dump\" > seed.sql"
+      ],
+      "examples": [
+        "sqlite3 multi-row INSERT seeds fixtures",
+        "better-sqlite3 runs prepared statements",
+        ".dump exports the full seed"
+      ],
+      "parameters": [
+        {
+          "name": "db-file",
+          "type": "string",
+          "description": "SQLite database file"
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Target table"
+        },
+        {
+          "name": "sql",
+          "type": "string",
+          "description": "SQL statement"
+        }
+      ]
+    },
+    {
+      "name": "postgres-seeding",
+      "description": "Seed PostgreSQL for integration tests",
+      "commands": [
+        "psql -d app -f seed.sql",
+        "psql -d app -c \"COPY users (name, email) FROM '/tmp/users.csv' WITH (FORMAT csv, HEADER true)\"",
+        "psql -d app -c \"TRUNCATE users RESTART IDENTITY\"",
+        "pg_dump --data-only -t users app > seed.sql"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "faker",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "faker",
+    "node.js",
+    "python",
+    "factory-boy",
+    "json-schema-faker"
+  ],
+  "examples": [
+    {
+      "input": "Seed users for integration tests",
+      "output": "Creates a seed.sql and runs it with psql, then truncates between suites"
+    },
+    {
+      "input": "Bulk load 10k rows",
+      "output": "Uses COPY from CSV for fast inserts"
+    }
+  ],
+  "instructions": "# API Test Data v2 - Database Seeding\n\nDatabase seeding for API tests.\n\n## What This Skill Does\n- Seeds SQLite and PostgreSQL fixtures\n- Resets state between tests\n- Exports reusable seed scripts\n\n## When to Use\n- Integration test databases\n- CI ephemeral environments\n- Reproducible local dev data\n\n## Real Commands\n\n```bash\nsqlite3 test.db \"INSERT INTO users (name, email) VALUES ('alice', 'a@example.com')\"\npsql -d app -c \"COPY users (name, email) FROM '/tmp/users.csv' WITH (FORMAT csv, HEADER true)\"\npsql -d app -c \"TRUNCATE users RESTART IDENTITY\"\n```\n\n## Seeding Strategy\n1. Truncate with restart identity\n2. Insert fixtures in dependency order\n3. Re-verify with count queries\n\n## Testing\n- Reset then seed in test setup hooks\n- Verify foreign keys after truncation\n- Time large seeds with COPY vs INSERT\n\n\n## Best Practices\n- Keep seed scripts idempotent\n- Version seeds with migrations\n- Use CSV COPY for bulk rows",
+  "display_name": "Api Test Data Sqlite Seeding",
+  "knowledge": [
+    {
+      "title": "SQLite CLI Docs",
+      "type": "documentation",
+      "source": "https://www.sqlite.org/cli.html",
+      "description": "SQLite command line shell"
+    },
+    {
+      "title": "PostgreSQL COPY",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/sql-copy.html",
+      "description": "COPY command for bulk data"
+    }
+  ],
+  "id": "api-test-data-sqlite-seeding",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sqlite-seeding",
+        "name": "db-file",
+        "type": "string",
+        "description": "SQLite database file"
+      },
+      {
+        "capability": "sqlite-seeding",
+        "name": "table",
+        "type": "string",
+        "description": "Target table"
+      },
+      {
+        "capability": "sqlite-seeding",
+        "name": "sql",
+        "type": "string",
+        "description": "SQL statement"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "faker",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-test-data-sqlite-seeding/skill/api-test-data-sqlite-seeding.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-test-data-sqlite-seeding/skill/api-test-data-sqlite-seeding.yaml",
+    "checksum": "76b507df3913adad2becc0f14dd85172d87789b8e7577de781e434ed6109ec66"
+  }
+}

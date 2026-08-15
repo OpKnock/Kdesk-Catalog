@@ -1,0 +1,204 @@
+name: git-workflow
+display_name: git-workflow
+category: devops
+subcategory: general
+description: 'Designs and follows team git workflows (GitHub Flow, trunk-based, GitFlow): PR conventions,
+  rebasing, conflict resolution, and remote hygiene.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- git
+capabilities:
+- name: pull-request-flow
+  description: 'Drive feature-branch PR workflows: sync forks, rebase, and land changes.'
+  commands:
+  - git fetch upstream && git rebase upstream/main
+  - git push --force-with-lease origin feature/x
+  - 'gh pr create --title ''feat: x'' --body ''Closes #12'''
+  - gh pr checks
+  - gh pr merge --squash --delete-branch
+  - git config --global pull.rebase true
+  examples:
+  - 'gh pr create --title ''feat: x'' --body ''Closes #12'''
+  - git rebase upstream/main && git push --force-with-lease
+  - gh pr merge --squash --delete-branch
+  parameters:
+  - name: title
+    type: string
+    description: PR title
+  - name: base
+    type: string
+    description: Base branch for rebase
+- name: trunk-and-history
+  description: Keep a clean linear history on shared branches with rebase and interactive squash.
+  commands:
+  - git pull --rebase
+  - git rebase -i HEAD~5
+  - git log --first-parent
+  - git merge --squash feature/x
+  - git switch -c fix/urgent && git commit --fixup=<sha>
+  - git rebase --autosquash -i HEAD~5
+  examples:
+  - git rebase -i HEAD~5
+  - git commit --fixup=<sha> && git rebase --autosquash -i HEAD~5
+  - git log --first-parent --oneline
+  parameters:
+  - name: base
+    type: string
+    description: Rebase base ref
+  - name: sha
+    type: string
+    description: Commit SHA for fixup
+knowledge:
+- title: Comparing Workflows (Atlassian)
+  type: documentation
+  source: https://www.atlassian.com/git/tutorials/comparing-workflows
+  description: Feature branch, GitFlow, fork and trunk-based workflow comparison
+- title: GitHub Flow
+  type: documentation
+  source: https://docs.github.com/en/get-started/using-github/github-flow
+  description: Simple branch + PR-based workflow
+- title: Trunk-Based Development
+  type: documentation
+  source: https://trunkbaseddevelopment.com/
+  description: Short-lived branches, continuous integration to main
+instructions: '# Git Workflow Design
+
+
+  Choose and operate the right git workflow for your team and keep history clean.
+
+
+  ## What This Skill Does
+
+
+  - Recommends workflows: GitHub Flow, trunk-based, or GitFlow by team size/release cadence
+
+  - Sets up PR conventions, branch protection, and merge strategies
+
+  - Keeps linear history with rebase and fixup workflows
+
+  - Manages forks with upstream remotes
+
+  - Resolves merge conflicts systematically
+
+
+  ## When to Use
+
+
+  - Starting a new team repo and choosing conventions
+
+  - Onboarding automation: branch protection, PR templates, CI checks
+
+  - Cleaning up messy history before merge
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Fork workflow
+
+  git remote add upstream https://github.com/org/repo.git
+
+  git fetch upstream
+
+  git rebase upstream/main
+
+  git push --force-with-lease origin feature/x
+
+
+  # PR flow
+
+  gh pr create --title ''feat: x'' --body ''Closes #12''
+
+  gh pr checks --watch
+
+  gh pr merge --squash --delete-branch
+
+
+  # Clean linear history
+
+  git config --global pull.rebase true
+
+  git commit --fixup=<sha>
+
+  git rebase --autosquash -i HEAD~5
+
+  git log --first-parent --oneline
+
+
+  # Conflict resolution
+
+  git checkout --theirs path/to/file
+
+  git checkout --ours path/to/file
+
+  git rebase --continue
+
+  ```
+
+
+  ## Merge Strategy Guide
+
+
+  - Squash: default for feature branches (clean log)
+
+  - Rebase-merge: preserve branch structure (fine granularity)
+
+  - Merge commit: preserve exact topology (audit-heavy teams)
+
+
+  ## Best Practices
+
+
+  - Use branch protection: require PR, require checks, linear history
+
+  - Keep feature branches under 1-2 days old; rebase frequently
+
+  - Never rewrite history on protected branches
+
+  - Use `--force-with-lease`, never bare `--force`
+
+  - Pair conventions with commitlint to enforce message format'
+examples:
+- input: Our team keeps losing context in history; suggest a workflow
+  output: Agent evaluates release cadence, recommends squash-merge GitHub Flow with branch protection,
+    and shows the exact setup commands
+- input: My fork is behind upstream
+  output: Agent fetches upstream, rebases the local branch, and force-with-leases pushes to the fork
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: git-workflow.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-git-workflow
+  generic:
+    system_prompt: 'This is your domain: git-workflow. You do it through pull-request-flow: Drive feature-branch
+      PR workflows: sync forks, rebase, and land changes. The commands are real, e.g. `git fetch upstream
+      && git rebase upstream/main`. You verify each step you report and stay honest about what you have
+      not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

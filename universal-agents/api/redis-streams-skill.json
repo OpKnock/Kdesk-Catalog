@@ -1,0 +1,171 @@
+{
+  "name": "redis-streams",
+  "display_name": "Redis Streams",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted core Redis Streams skill: XADD/XREAD/XRANGE/XREVRANGE basics, IDs and sequences, blocking reads, and range queries.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "redis-streams-core",
+      "description": "Core Redis Streams operations: append, range read, block, length",
+      "commands": [
+        "redis-cli XADD temperature:2026-08 * sensor office value 22.5",
+        "redis-cli XRANGE temperature:2026-08 - +",
+        "redis-cli XREVRANGE temperature:2026-08 + - COUNT 3",
+        "redis-cli XLEN temperature:2026-08",
+        "redis-cli XREAD BLOCK 5000 COUNT 2 STREAMS temperature:2026-08 $"
+      ],
+      "examples": [
+        "redis-cli XRANGE temperature:2026-08 - + COUNT 5",
+        "redis-cli XRANGE temperature:2026-08 1723000000000-0 1723999999999-0",
+        "redis-cli XREAD BLOCK 5000 COUNT 2 STREAMS temperature:2026-08 $"
+      ],
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "string",
+          "description": "Stream key name"
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "description": "Number of entries to return"
+        },
+        {
+          "name": "block",
+          "type": "integer",
+          "description": "Blocking read timeout in milliseconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Redis Streams data type",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/develop/data-types/streams/",
+      "description": "Stream structure, IDs, and core commands"
+    },
+    {
+      "title": "XADD command",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/xadd/",
+      "description": "Auto ID generation and entry limits"
+    }
+  ],
+  "instructions": "# Redis Streams\n\nHand-crafted skill for the core Redis Streams data type.\n\n## What this skill does\n\n- Appends field-value entries with XADD and auto-generated IDs\n- Reads ranges forward and backward with XRANGE/XREVRANGE\n- Blocks for new entries with XREAD and checks stream length\n\n## When to use\n\n- Append-only event logs with per-message timestamps\n- Sensor or metrics time series\n- Learning streams before moving to consumer groups\n\n## Real commands\n\n```bash\n# Append an entry; * lets Redis generate <ms>-<seq> ID\nredis-cli XADD temperature:2026-08 * sensor office value 22.5\n\n# All entries, oldest to newest\nredis-cli XRANGE temperature:2026-08 - +\n\n# Newest 3 entries\nredis-cli XREVRANGE temperature:2026-08 + - COUNT 3\n\n# Entry count\nredis-cli XLEN temperature:2026-08\n\n# Block up to 5s for new entries (offset $ = end of stream)\nredis-cli XREAD BLOCK 5000 COUNT 2 STREAMS temperature:2026-08 $\n\n# Range by time window: IDs are <ms>-<seq>\nredis-cli XRANGE temperature:2026-08 1723000000000-0 1723999999999-0\n```\n\n## ID anatomy\n\n- IDs are <milliseconds-time>-<sequence> in UTC\n- Same-ms entries get incrementing sequence numbers\n- XADD MAXLEN ~ 1000 keeps the stream bounded while appending\n\n## Testing\n\n```bash\nredis-cli XADD temperature:2026-08 * sensor lab value 21.0\nredis-cli XRANGE temperature:2026-08 - + COUNT 5\nredis-cli XLEN temperature:2026-08\n```\n\n## Best practices\n\n- Use * to let Redis generate monotonic IDs\n- Give streams descriptive keys since IDs encode time already\n- Prefer MAXLEN trimming at insert time for hot streams\n",
+  "examples": [
+    {
+      "input": "Log a temperature reading to a stream",
+      "output": "redis-cli XADD temperature:2026-08 * sensor office value 22.5 returns the generated ID like 1723000000000-0."
+    },
+    {
+      "input": "Get the 5 newest readings",
+      "output": "redis-cli XREVRANGE temperature:2026-08 + - COUNT 5 lists them newest first."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "redis-streams.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-redis-streams"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Redis Streams. You do it through redis-streams-core: Core Redis Streams operations: append, range read, block, length. The commands are real, e.g. `redis-cli XADD temperature:2026-08 * sensor office value 22.5`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "redis-streams",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-streams-core",
+        "name": "stream",
+        "type": "string",
+        "description": "Stream key name"
+      },
+      {
+        "capability": "redis-streams-core",
+        "name": "count",
+        "type": "integer",
+        "description": "Number of entries to return"
+      },
+      {
+        "capability": "redis-streams-core",
+        "name": "block",
+        "type": "integer",
+        "description": "Blocking read timeout in milliseconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/redis-streams-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/redis-streams-skill.yaml",
+    "checksum": "5ecfd30790ae0000711028dc3ef4121edf0c9bc647809cd77475465e418e3bed"
+  }
+}

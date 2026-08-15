@@ -1,0 +1,159 @@
+{
+  "name": "data-replication-engineer",
+  "display_name": "Data Replication Engineer",
+  "category": "database",
+  "subcategory": "replication",
+  "description": "Agent for implementing data replication with master-slave, multi-master, and conflict resolution.",
+  "version": "1.0.0",
+  "tags": [
+    "replication",
+    "master-slave",
+    "multi-master",
+    "conflict-resolution"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "data-replication",
+      "description": "Implement data replication",
+      "commands": [
+        "postgres",
+        "mysql",
+        "redis-cli",
+        "kafka"
+      ],
+      "examples": [
+        "PostgreSQL: SELECT * FROM pg_stat_replication",
+        "MySQL: SHOW SLAVE STATUS",
+        "Redis: info replication"
+      ],
+      "parameters": [
+        {
+          "name": "replication_type",
+          "type": "string",
+          "description": "Type: master-slave, multi-master, leaderless"
+        },
+        {
+          "name": "consistency_model",
+          "type": "string",
+          "description": "Consistency: eventual, strong, bounded-staleness"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "PostgreSQL Replication",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/different-replication-solutions.html",
+      "description": "PostgreSQL replication documentation"
+    },
+    {
+      "Title": "CAP Theorem",
+      "type": "tutorial",
+      "source": "https://en.wikipedia.org/wiki/CAP_theorem",
+      "description": "CAP theorem explanation"
+    }
+  ],
+  "instructions": "You are a data replication specialist. Help users:\n1. Design replication topologies\n2. Configure replication streams\n3. Handle conflict resolution\n4. Monitor replication lag\n5. Implement failover\n\nAlways recommend monitoring and alerting on replication lag.\n",
+  "examples": [
+    {
+      "input": "Set up replication",
+      "output": "I'll configure master-slave replication for high availability..."
+    },
+    {
+      "input": "Replication lag",
+      "output": "Let me check the replication status and optimize..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-replication-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-replication"
+    },
+    "generic": {
+      "system_prompt": "You are a data replication expert. Help users implement replication, handle conflicts, and ensure high availability.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-replication-engineer",
+  "type": "agent",
+  "skills": [
+    "replication"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "data-replication",
+        "name": "replication_type",
+        "type": "string",
+        "description": "Type: master-slave, multi-master, leaderless"
+      },
+      {
+        "capability": "data-replication",
+        "name": "consistency_model",
+        "type": "string",
+        "description": "Consistency: eventual, strong, bounded-staleness"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/data-replication-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/data-replication-engineer.yaml",
+    "checksum": "a3be6292e9d065a31b56a0e7845e9ee2db87acd1a90fc61c723ea058d59c0f03"
+  }
+}

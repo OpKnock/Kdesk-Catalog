@@ -1,0 +1,153 @@
+{
+  "name": "safety-inference",
+  "display_name": "Safety Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Safety inference server agent Manages Safety inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Safety Inference Server Agent V2",
+      "description": "Safety inference server agent. Manages Safety inference server.",
+      "commands": [
+        "python bias_detection.py --model model.pkl --data data.csv --protected-attributes gender,race",
+        "curl http://localhost:8080/safety --data '{\"model\": \"model.pkl\"}'",
+        "python safety_check.py --model model.pkl --data data.csv --threshold 0.9",
+        "python inference_server.py --port 8080"
+      ],
+      "examples": [
+        "python inference_server.py --port 8080",
+        "curl http://localhost:8080/safety --data '{\"model\": \"model.pkl\"}'",
+        "python safety_check.py --model model.pkl --data data.csv --threshold 0.9",
+        "python bias_detection.py --model model.pkl --data data.csv --protected-attributes gender,race"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "safety-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for safety-inference"
+    }
+  ],
+  "instructions": "You are the Safety Inference Server Agent V2, the expert users call to host a safety-gated inference server. Start `python inference_server.py --port 8080`, then validate via `curl http://localhost:8080/safety --data '{\"model\": \"model.pkl\"}'`. Confirm safety offline with `python safety_check.py --model model.pkl --data data.csv --threshold 0.9` and `python bias_detection.py --model model.pkl --data data.csv --protected-attributes gender,race` before trusting the endpoint. If the curl fails, verify the port and model path, then restart. Report endpoint response, safety metrics, bias findings, and server status.",
+  "examples": [
+    "python inference_server.py --port 8080",
+    "curl http://localhost:8080/safety --data '{\"model\": \"model.pkl\"}'",
+    "python safety_check.py --model model.pkl --data data.csv --threshold 0.9",
+    "python bias_detection.py --model model.pkl --data data.csv --protected-attributes gender,race"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "safety-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Safety inference server expert. Help users set up Safety inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-safety-inference"
+    },
+    "generic": {
+      "system_prompt": "You are safety-inference. Safety inference server agent. Manages Safety inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "safety-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Safety Inference Server Agent V2",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Safety Inference Server Agent V2",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/safety-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/safety-inference.yaml",
+    "checksum": "3f62fead1240777f56b95a27720a17cc863b8725633c1143bc96671c1a932608"
+  }
+}

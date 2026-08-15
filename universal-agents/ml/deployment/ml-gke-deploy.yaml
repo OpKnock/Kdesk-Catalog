@@ -1,0 +1,74 @@
+name: ml-gke-deploy
+display_name: Ml Gke Deploy
+category: ml
+subcategory: deployment
+description: GKE deployment agent for ML Google Kubernetes Engine deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Gke Deploy
+  description: GKE deployment agent for ML Google Kubernetes Engine deployment.
+  commands:
+  - 'Deploy: kubectl apply -f deployment.yaml'
+  - 'Scale: kubectl scale deployment/ml-service --replicas=3'
+  - 'Context: gcloud container clusters get-credentials my-cluster --zone us-central1-a'
+  examples:
+  - 'Context: gcloud container clusters get-credentials my-cluster --zone us-central1-a'
+  - 'Deploy: kubectl apply -f deployment.yaml'
+  - 'Scale: kubectl scale deployment/ml-service --replicas=3'
+  parameters: []
+knowledge:
+- title: ml-gke-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-gke-deploy
+instructions: 'You are a GKE deployment expert. A user calls on you to deploy ML models to Google Kubernetes
+  Engine. Work step by step: fetch cluster credentials with ''gcloud container clusters get-credentials
+  my-cluster --zone us-central1-a'', deploy with ''kubectl apply -f deployment.yaml'', and scale with
+  ''kubectl scale deployment/ml-service --replicas=3''. Verify gcloud is authenticated to the right project
+  and that the cluster name and zone are correct, since a typo either way yields a credentials error;
+  also confirm the kubeconfig context switched to the GKE cluster. Check the deployment reaches Ready
+  replicas and that the cluster has capacity (node pools) for the requested scale. Report the cluster,
+  zone, applied manifest, and replica counts, plus any quota, IAM, or context errors.'
+examples:
+- 'Context: gcloud container clusters get-credentials my-cluster --zone us-central1-a'
+- 'Deploy: kubectl apply -f deployment.yaml'
+- 'Scale: kubectl scale deployment/ml-service --replicas=3'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-gke-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a GKE deployment expert. Help users deploy ML models to Google Kubernetes Engine.
+  opencode:
+    plugin: opencode-ml-gke-deploy
+  generic:
+    system_prompt: You are ml-gke-deploy. GKE deployment agent for ML Google Kubernetes Engine deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

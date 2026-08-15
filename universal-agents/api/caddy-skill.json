@@ -1,0 +1,251 @@
+{
+  "name": "caddy",
+  "display_name": "Caddy",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Serves sites and reverse proxies with Caddy: Caddyfile authoring, automatic HTTPS, file servers, and reloads.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "caddy"
+  ],
+  "capabilities": [
+    {
+      "name": "serve",
+      "description": "Run Caddy as a file server or site server.",
+      "commands": [
+        "caddy run",
+        "caddy file-server --root ./public --listen :8080",
+        "caddy reverse-proxy --from localhost:8080 --to localhost:3000",
+        "caddy run --config Caddyfile",
+        "caddy stop"
+      ],
+      "examples": [
+        "caddy file-server --root ./dist --listen :8080 --browse",
+        "caddy reverse-proxy --from example.com --to localhost:3000",
+        "caddy run --watch --config Caddyfile"
+      ],
+      "parameters": [
+        {
+          "name": "root",
+          "type": "string",
+          "description": "Document root"
+        },
+        {
+          "name": "listen",
+          "type": "string",
+          "description": "Listen address"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Caddyfile path"
+        }
+      ]
+    },
+    {
+      "name": "config",
+      "description": "Validate and adapt Caddyfile configs.",
+      "commands": [
+        "caddy validate --config Caddyfile",
+        "caddy adapt --config Caddyfile",
+        "caddy adapt --config Caddyfile --pretty",
+        "caddy fmt Caddyfile",
+        "caddy reload --config Caddyfile"
+      ],
+      "examples": [
+        "caddy validate --config Caddyfile",
+        "caddy adapt --config Caddyfile --pretty > caddy.json",
+        "caddy fmt --overwrite Caddyfile"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Caddyfile path"
+        },
+        {
+          "name": "pretty",
+          "type": "boolean",
+          "description": "Pretty-print adapted JSON"
+        }
+      ]
+    },
+    {
+      "name": "tls",
+      "description": "Manage automatic HTTPS and certificates.",
+      "commands": [
+        "caddy cert-manager list",
+        "caddy trust",
+        "caddy untrust",
+        "curl -sI https://localhost:8443 | head -5",
+        "caddy list-modules | grep tls"
+      ],
+      "examples": [
+        "caddy trust --ca /etc/caddy/ca.crt",
+        "caddy cert-manager list --domain example.com",
+        "caddy list-modules | grep -i tls"
+      ],
+      "parameters": [
+        {
+          "name": "domain",
+          "type": "string",
+          "description": "Domain for cert management"
+        },
+        {
+          "name": "ca",
+          "type": "string",
+          "description": "CA file path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Caddy Docs",
+      "type": "documentation",
+      "source": "https://caddyserver.com/docs/",
+      "description": "Caddyfile directives, auto-HTTPS"
+    },
+    {
+      "title": "Caddy CLI Reference",
+      "type": "documentation",
+      "source": "https://caddyserver.com/docs/command-line",
+      "description": "run, validate, adapt, fmt commands"
+    }
+  ],
+  "instructions": "# Caddy\n\n## What this skill does\n\nServes sites and proxies with Caddy: Caddyfile authoring, automatic HTTPS with Let's Encrypt, static file serving, reverse proxying, and safe reloads.\n\n## When to use\n\n- Stand up a static site with HTTPS in seconds\n- Reverse-proxy an API with automatic TLS\n- Replacing nginx config complexity\n\n## Real commands\n\n```bash\n# Serve static files\ncaddy file-server --root ./dist --listen :8080\n\n# Reverse proxy\ncaddy reverse-proxy --from localhost:8080 --to localhost:3000\n\n# Run with a Caddyfile\ncaddy run --config Caddyfile\n\n# Validate before reload\ncaddy validate --config Caddyfile\ncaddy reload --config Caddyfile\n\n# Format the Caddyfile\ncaddy fmt --overwrite Caddyfile\n```\n\n## Caddyfile example\n\n```caddy\nexample.com {\n  reverse_proxy localhost:3000\n  encode gzip zstd\n  header Cache-Control \"max-age=3600\"\n}\n```\n\n## Testing\n\n- caddy validate catches syntax errors pre-reload\n- curl -sI to verify headers and certs\n\n## Best practices\n\n- Use caddy fmt for consistent formatting\n- Keep Caddyfiles in version control; caddy reload is zero-downtime\n- Let Caddy manage TLS; don't hand-manage certs unless needed",
+  "examples": [
+    {
+      "input": "Serve our built SPA with HTTPS on example.com",
+      "output": "Writes the Caddyfile with file_server, runs caddy validate + caddy run, and confirms automatic cert issuance with curl -sI."
+    },
+    {
+      "input": "Proxy /api to our Node backend",
+      "output": "Uses reverse_proxy with a matcher for /api*, reloads, and verifies proxying with curl."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "caddy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-caddy"
+    },
+    "generic": {
+      "system_prompt": "You are the Caddy specialist. You do it through serve: Run Caddy as a file server or site server. The commands are real, e.g. `caddy run`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "caddy",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "serve",
+        "name": "root",
+        "type": "string",
+        "description": "Document root"
+      },
+      {
+        "capability": "serve",
+        "name": "listen",
+        "type": "string",
+        "description": "Listen address"
+      },
+      {
+        "capability": "serve",
+        "name": "config",
+        "type": "string",
+        "description": "Caddyfile path"
+      },
+      {
+        "capability": "config",
+        "name": "config",
+        "type": "string",
+        "description": "Caddyfile path"
+      },
+      {
+        "capability": "config",
+        "name": "pretty",
+        "type": "boolean",
+        "description": "Pretty-print adapted JSON"
+      },
+      {
+        "capability": "tls",
+        "name": "domain",
+        "type": "string",
+        "description": "Domain for cert management"
+      },
+      {
+        "capability": "tls",
+        "name": "ca",
+        "type": "string",
+        "description": "CA file path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "caddy"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/caddy-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/caddy-skill.yaml",
+    "checksum": "6184b2091556e1d5200f62cefac380d93d74001af7b8e8d8286add3d135f0d02"
+  }
+}

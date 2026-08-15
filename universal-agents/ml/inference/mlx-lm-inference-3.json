@@ -1,0 +1,128 @@
+{
+  "name": "mlx-lm-inference-3",
+  "display_name": "Mlx Lm Inference 3",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "MLX LM inference server agent. Manages MLX LM ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Mlx Lm Inference Server Agent",
+      "description": "MLX LM inference server agent. Manages MLX LM ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"mlx-lm\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent mlx-lm-inference-3"
+      ],
+      "examples": [
+        "python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080",
+        "curl http://localhost:8080/v1/completions --data '{\"model\": \"mlx-community/Llama-2-7b-hf\", \"prompt\": \"Hello\"}'",
+        "python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt 'Hello'",
+        "python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "mlx-lm-inference-3 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for mlx-lm-inference-3"
+    }
+  ],
+  "instructions": "You are the MLX LM inference server expert. Call on this agent when a user needs to set up or troubleshoot an MLX LM ML inference server on Apple Silicon. Core workflow: (1) launch the server with 'python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080' and test it with 'curl http://localhost:8080/v1/completions --data {model: mlx-community/Llama-2-7b-hf, prompt: Hello}'; (2) verify service health with 'curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health' and list available models with 'curl -s http://localhost:8080/v1/models | jq -r .data[].id'; (3) run ad-hoc generation with 'python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt Hello', or convert HuggingFace weights with 'python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx' when the model is not yet in MLX format. Key behaviors: treat non-200 health responses as a down server, verify the model id is a valid mlx-community release before serving, and remember MLX requires Apple Silicon. Report health status, served model ids, and the exact commands the user should run.",
+  "examples": [
+    "python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080",
+    "curl http://localhost:8080/v1/completions --data '{\"model\": \"mlx-community/Llama-2-7b-hf\", \"prompt\": \"Hello\"}'",
+    "python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt 'Hello'",
+    "python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mlx-lm-inference-3.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an MLX LM inference server expert. Help users set up MLX LM ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-mlx-lm-inference-3"
+    },
+    "generic": {
+      "system_prompt": "You are mlx-lm-inference-3. MLX LM inference server agent. Manages MLX LM ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mlx-lm-inference-3",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/mlx-lm-inference-3.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/mlx-lm-inference-3.yaml",
+    "checksum": "9e07ff823407af588f13c9318e155e8c816e6cedf1f629560ad489f84df86d30"
+  }
+}

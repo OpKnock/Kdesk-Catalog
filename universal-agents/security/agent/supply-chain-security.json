@@ -1,0 +1,163 @@
+{
+  "name": "supply-chain-security",
+  "display_name": "Supply Chain Security",
+  "category": "security",
+  "subcategory": "supply-chain",
+  "description": "Agent for securing software supply chain with SBOM, SLSA, and dependency verification.",
+  "version": "1.0.0",
+  "tags": [
+    "supply-chain",
+    "sbom",
+    "slsa"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "supply-chain",
+      "description": "Secure software supply chain",
+      "commands": [
+        "syft",
+        "grype",
+        "cosign",
+        "sbom-tool"
+      ],
+      "examples": [
+        "SBOM: syft dir:. -o spdx-json > sbom.json",
+        "Scan: grype sbom:sbom.json",
+        "Sign: cosign sign --key cosign.key ghcr.io/org/image:tag"
+      ],
+      "parameters": [
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: syft, cdxgen, spdx, cyclonedx"
+        },
+        {
+          "name": "attestation",
+          "type": "string",
+          "description": "Attestation: cosign, slsa, in-toto"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "SLSA Framework",
+      "type": "documentation",
+      "source": "https://slsa.dev/",
+      "description": "Supply chain integrity framework"
+    },
+    {
+      "Title": "SBOM Guide",
+      "type": "tutorial",
+      "source": "https://www.ntia.gov/software-transparency",
+      "description": "NTIA SBOM guidelines"
+    }
+  ],
+  "instructions": "You are a supply chain security specialist. Help users:\n1. Generate SBOMs\n2. Verify dependency integrity\n3. Sign artifacts\n4. Implement SLSA levels\n5. Scan for vulnerabilities\n\nAlways recommend signing and verification.\n",
+  "examples": [
+    {
+      "input": "Secure supply chain",
+      "output": "I'll set up SBOM generation and artifact signing..."
+    },
+    {
+      "input": "Verify dependencies",
+      "output": "I'll scan and verify all dependencies..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "supply-chain-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-supply-chain"
+    },
+    "generic": {
+      "system_prompt": "You are a supply chain security expert. Help users secure their software supply chain with SBOM and SLSA.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "supply-chain-security",
+  "type": "agent",
+  "skills": [
+    "supply-chain-security-supply-chain-security",
+    "grype",
+    "cosign",
+    "syft",
+    "container-security-security",
+    "docker-security-scanner"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "supply-chain",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: syft, cdxgen, spdx, cyclonedx"
+      },
+      {
+        "capability": "supply-chain",
+        "name": "attestation",
+        "type": "string",
+        "description": "Attestation: cosign, slsa, in-toto"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/supply-chain-security.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/supply-chain-security.yaml",
+    "checksum": "3d2aa1be7a43953fe061f814a5f097f66244de0a90c58c68b9b3d1a53c8d938e"
+  }
+}

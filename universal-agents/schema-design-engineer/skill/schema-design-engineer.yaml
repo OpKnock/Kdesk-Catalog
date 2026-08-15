@@ -1,0 +1,142 @@
+name: schema-design-engineer
+version: 2.0.0
+type: skill
+category: data
+description: Designs and validates relational, NoSQL, and event-driven data schemas, producing migration-ready
+  DDL, normalized models, and schema diagrams.
+keywords:
+- schema-design
+- normalization
+- denormalization
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: schema-design-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-schema-design-engineer
+  generic:
+    system_prompt: 'You take the schema-design-engineer seat. You do it through sql-schema-modeling: Inspect,
+      model, and normalize SQL schemas using psql, sqlite3, and Atlas. The commands are real, e.g. `psql
+      -d appdb -c \dt`. You answer with exact commands, not abstractions, and flag anything you have not
+      verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: sql-schema-modeling
+  description: Inspect, model, and normalize SQL schemas using psql, sqlite3, and Atlas.
+  commands:
+  - psql -d appdb -c "\dt"
+  - psql -d appdb -c "\d users"
+  - sqlite3 app.db ".schema users"
+  - atlas schema inspect --url "postgres://user:pass@localhost:5432/appdb"
+  - pg_dump -s appdb > schema.sql
+  examples:
+  - atlas schema inspect --url "sqlite://app.db" > schema.hcl
+  - psql -d appdb -c "\d orders"
+  - sqlite3 app.db "PRAGMA foreign_key_list(orders);"
+  parameters:
+  - name: url
+    type: string
+    description: Database connection URL for schema inspection, e.g. postgres://user@localhost:5432/db
+  - name: table
+    type: string
+    description: Table name to describe or inspect
+  - name: format
+    type: string
+    description: 'Output format: SQL, HCL, or diagram'
+- name: document-schema-design
+  description: Define MongoDB and JSON document models with mongosh validation and jq checks.
+  commands:
+  - 'mongosh appdb --eval "db.createCollection(''users'', { validator: { $jsonSchema: { bsonType: ''object'',
+    required: [''email''] } } })"'
+  - mongosh appdb --eval "db.users.getIndexes()"
+  - jq '.[0] | keys' sample.json
+  - 'mongosh appdb --eval "db.users.aggregate([{ $sample: { size: 1 } }])"'
+  examples:
+  - mongosh appdb --eval "db.users.getIndexes()"
+  - jq -r '.items[] | .sku' catalog.json | sort -u
+  - 'mongosh appdb --eval "db.orders.createIndex({ customerId: 1, createdAt: -1 })"'
+  parameters:
+  - name: collection
+    type: string
+    description: MongoDB collection to define or inspect
+  - name: index
+    type: object
+    description: 'Index fields and direction, e.g. {customerId: 1}'
+prerequisites:
+- postgresql
+- mongodb
+- node.js
+- python
+tools:
+- postgresql
+- mongodb
+- node.js
+- python
+- dbdiagram
+- dbeaver
+examples:
+- input: Design a schema for an e-commerce store with customers, orders, and payments
+  output: Agent inspects the existing DB (psql \dt), designs normalized tables with FKs and indexes, and
+    shows migration-ready DDL plus a jq-validated JSON sample for the events pipeline.
+- input: Why are my order queries slow? Optimize the schema
+  output: Agent inspects indexes (sqlite3 PRAGMA index_list) and query plans (EXPLAIN ANALYZE), then proposes
+    composite indexes and constraint checks.
+instructions: "# Schema Design Engineering\n\nDesign, inspect, and document data schemas for SQL, NoSQL,\
+  \ and event-driven systems.\n\n## What This Skill Does\n\n- Inspects existing schemas with database-native\
+  \ CLIs and Atlas\n- Produces normalized relational models with primary/foreign keys and indexes\n- Defines\
+  \ JSON Schema validators for document stores\n- Generates ER diagrams and migration-ready DDL\n- Reviews\
+  \ schemas for naming, type, and denormalization tradeoffs\n\n## When to Use\n\n- Designing a new database\
+  \ schema from requirements\n- Reviewing an existing schema for normalization or index issues\n- Producing\
+  \ DDL or a schema diagram for a new feature\n\n## Real Commands\n\n```bash\n# Inspect an existing PostgreSQL\
+  \ schema\npsql -d appdb -c \"\\dt\"\npsql -d appdb -c \"\\d orders\"\npg_dump -s appdb > schema.sql\n\
+  \n# Inspect with Atlas (works for Postgres, MySQL, SQLite, and more)\natlas schema inspect --url \"\
+  postgres://user:pass@localhost:5432/appdb\"\n\n# Inspect a SQLite schema\nsqlite3 app.db \".schema\"\
+  \nsqlite3 app.db \"PRAGMA foreign_key_list(orders);\"\n\n# Validate a JSON document against its shape\n\
+  jq '.[0] | keys' sample.json\n```\n\n## Sample Normalized Model\n\n```sql\nCREATE TABLE customers (\n\
+  \  id          BIGSERIAL PRIMARY KEY,\n  email       TEXT NOT NULL UNIQUE,\n  created_at  TIMESTAMPTZ\
+  \ NOT NULL DEFAULT now()\n);\n\nCREATE TABLE orders (\n  id           BIGSERIAL PRIMARY KEY,\n  customer_id\
+  \  BIGINT NOT NULL REFERENCES customers(id),\n  status       TEXT NOT NULL DEFAULT 'pending' CHECK (status\
+  \ IN ('pending', 'paid', 'shipped')),\n  created_at   TIMESTAMPTZ NOT NULL DEFAULT now()\n);\n\nCREATE\
+  \ INDEX orders_customer_idx ON orders (customer_id, created_at DESC);\n```\n\n## Best Practices\n\n\
+  - Prefer normalized forms (3NF) unless profiling shows a real denormalization win\n- Always add FKs\
+  \ with matching indexes on the referencing side\n- Use TEXT/DECIMAL for money and TIMESTAMPTZ for timestamps\n\
+  - Add CHECK constraints over application-level validation\n- Keep the schema diffable: version it in\
+  \ code, never mutate production DDL by hand"
+display_name: schema-design-engineer
+knowledge:
+- title: PostgreSQL Documentation
+  type: documentation
+  source: https://www.postgresql.org/docs/current/ddl.html
+  description: DDL, constraints, indexes, and data modeling reference
+- title: Atlas Schema Docs
+  type: documentation
+  source: https://atlasgo.io/docs
+  description: Schema-as-code inspection, diff, and migration tooling
+- title: MongoDB Schema Validation
+  type: documentation
+  source: https://www.mongodb.com/docs/manual/core/schema-validation/
+  description: JSON Schema validation rules for MongoDB collections

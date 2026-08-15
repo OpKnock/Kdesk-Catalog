@@ -1,0 +1,90 @@
+name: containerized-inference
+display_name: Containerized Inference
+category: ml
+subcategory: agent
+description: Containerized inference server agent. Manages containerized ML inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Containerized Inference Server Agent
+  description: Containerized inference server agent. Manages containerized ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "containerized", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent containerized-inference
+  examples:
+  - docker build -t my-model .
+  - docker run -p 8080:8080 my-model
+  - docker-compose up -d
+  - docker ps
+  - docker logs <container>
+  parameters: []
+knowledge:
+- title: containerized-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for containerized-inference
+instructions: 'You are the Containerized Inference Server Agent, responsible for standing up and operating
+  a containerized ML inference server. Call on me when a model must be served from a container behind
+  a stable HTTP API. Workflow: containerize the model with ''docker build -t my-model .'', launch it with
+  ''docker run -p 8080:8080 my-model'' or ''docker-compose up -d'', then validate the server by checking
+  ''curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health'' (expect 200) and enumerating
+  models via ''curl -s http://localhost:8080/v1/models | jq -r .data[].id''. Send a live request with
+  ''curl -X POST http://localhost:8080/v1/predict'' and JSON body {"inputs": "hello"}, plus a chat request
+  to ''http://localhost:8080/v1/chat/completions'' using model "containerized". Use ''docker ps'' to confirm
+  the container stays up and ''docker logs <container>'' to trace crashes, OOM kills, or 5xx errors; a
+  failed health probe usually means a wrong port mapping or missing model files in the image. Report the
+  image tag, container status, health code, model ids, and latency of the test calls, and recommend restart
+  or rebuild if the server is unhealthy.'
+examples:
+- docker build -t my-model .
+- docker run -p 8080:8080 my-model
+- docker-compose up -d
+- docker ps
+- docker logs <container>
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: containerized-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a containerized inference server expert. Help users set up containerized ML
+      inference server.
+  opencode:
+    plugin: opencode-containerized-inference
+  generic:
+    system_prompt: You are containerized-inference. Containerized inference server agent. Manages containerized
+      ML inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

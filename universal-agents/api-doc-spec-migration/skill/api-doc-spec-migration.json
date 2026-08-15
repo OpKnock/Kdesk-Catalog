@@ -1,0 +1,207 @@
+{
+  "name": "api-doc-spec-migration",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs.",
+  "keywords": [
+    "api-documentation",
+    "openapi",
+    "swagger",
+    "redoc"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-doc-spec-migration.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-doc-spec-migration"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Api Doc Spec Migration. You do it through spec-migration: Convert and upgrade OpenAPI specs between versions. The commands are real, e.g. `npx swagger2openapi swagger.yaml -o openapi3.yaml`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "spec-migration",
+      "description": "Convert and upgrade OpenAPI specs between versions",
+      "commands": [
+        "npx swagger2openapi swagger.yaml -o openapi3.yaml",
+        "npx swagger2openapi -y swagger.yaml > openapi3.yaml",
+        "redocly bundle openapi3.yaml -o bundled.yaml",
+        "swagger-cli validate openapi3.yaml",
+        "npx @stoplight/spectral-cli lint --extends spectral:oas openapi3.yaml"
+      ],
+      "examples": [
+        "npx swagger2openapi -y swagger.yaml > openapi3.yaml && swagger-cli validate openapi3.yaml",
+        "redocly bundle openapi3.yaml -o bundled.yaml",
+        "npx @stoplight/spectral-cli lint --extends spectral:oas openapi3.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Source spec file"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Target spec file"
+        }
+      ]
+    },
+    {
+      "name": "doc-versioning",
+      "description": "Publish versioned documentation sites with changelogs",
+      "commands": [
+        "mkdir -p docs/v1 docs/v2",
+        "redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html",
+        "node -e \"const fs=require('fs');fs.writeFileSync('docs/CHANGELOG.md','# Changelog\\n\\n## v2.0.0\\n- Breaking: renamed /items to /products\\n')\"",
+        "git tag v2.0.0 && git push origin v2.0.0",
+        "node -e \"console.log(new Date().toISOString())\""
+      ],
+      "examples": [
+        "redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html",
+        "node -e \"const fs=require('fs');fs.writeFileSync('docs/CHANGELOG.md','# Changelog\\n\\n## v2.0.0\\n- Breaking: renamed /items to /products\\n')\"",
+        "git tag v2.0.0 && git push origin v2.0.0"
+      ],
+      "parameters": [
+        {
+          "name": "version",
+          "type": "string",
+          "description": "API version"
+        },
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "Spec path per version"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator"
+  ],
+  "tools": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator",
+    "stoplight-studio",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Migrate our docs from Swagger 2.0 to OpenAPI 3.0",
+      "output": "Converts specs with swagger2openapi, fixes schema issues, and republishes Redoc sites"
+    },
+    {
+      "input": "Publish versioned documentation for v1 and v2",
+      "output": "Sets up docs/v1 and docs/v2 directories with separate builds and a shared changelog"
+    }
+  ],
+  "instructions": "# API Doc (Migration & Versioning)\n\nUpgrades and restructures API documentation across spec versions.\n\n## When to Use\n- Swagger 2.0 to OpenAPI 3.0 migration\n- Docs out of sync with multiple versions\n- Reorganizing a docs site\n\n## Real Commands\n\n```bash\n# Convert spec\nnpx swagger2openapi -y swagger.yaml > openapi3.yaml\nswagger-cli validate openapi3.yaml\n\n# Lint migrated spec\nnpx @stoplight/spectral-cli lint --extends spectral:oas openapi3.yaml\n\n# Versioned docs\nmkdir -p docs/v1 docs/v2\nredocly build-docs docs/v2/openapi.yaml -o public/v2/index.html\n\n# Changelog discipline\ngit tag v2.0.0 && git push origin v2.0.0\n```\n\n## Migration Checklist\n1. Convert with swagger2openapi\n2. Fix `$ref` and discriminator changes\n3. Validate and lint\n4. Diff old vs new rendered docs\n\n## Testing\nRender both versions and walk every example link.\n\n## Best Practices\n- Never edit docs by hand; regenerate from spec\n- Keep one changelog entry per breaking change",
+  "display_name": "Api Doc Spec Migration",
+  "knowledge": [
+    {
+      "title": "swagger2openapi",
+      "type": "documentation",
+      "source": "https://github.com/Mermade/oas-kit",
+      "description": "Swagger 2.0 to OpenAPI 3 conversion"
+    },
+    {
+      "title": "Redocly Build Docs",
+      "type": "documentation",
+      "source": "https://redocly.com/docs/cli/commands/build-docs/",
+      "description": "HTML documentation generation"
+    }
+  ],
+  "id": "api-doc-spec-migration",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "spec-migration",
+        "name": "input",
+        "type": "string",
+        "description": "Source spec file"
+      },
+      {
+        "capability": "spec-migration",
+        "name": "output",
+        "type": "string",
+        "description": "Target spec file"
+      },
+      {
+        "capability": "doc-versioning",
+        "name": "version",
+        "type": "string",
+        "description": "API version"
+      },
+      {
+        "capability": "doc-versioning",
+        "name": "spec",
+        "type": "string",
+        "description": "Spec path per version"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-doc-spec-migration/skill/api-doc-spec-migration.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-doc-spec-migration/skill/api-doc-spec-migration.yaml",
+    "checksum": "69aa52251b49784655f73f094dbc6ccea1bce1ba2142e557865fa465dc368c9e"
+  }
+}

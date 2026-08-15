@@ -1,0 +1,209 @@
+{
+  "name": "ansible-lint",
+  "display_name": "Ansible Lint",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Lints Ansible playbooks and roles with ansible-lint: best-practice rules, YAML validation, and CI integration.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "ansible-lint"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "ansible-lint playbooks/",
+        "ansible-lint playbook.yml -v",
+        "ansible-lint --exclude=roles/vendor/",
+        "ansible-lint -r custom-rules.yml playbook.yml",
+        "ansible-lint --offline"
+      ],
+      "description": "Run ansible-lint with rule and config control.",
+      "name": "ansible-lint-cli",
+      "examples": [
+        "ansible-lint -p playbooks/",
+        "ansible-lint playbook.yml --skip-list fqcn-builtins",
+        "ansible-lint --list-tags"
+      ],
+      "parameters": [
+        {
+          "description": "Files or directories to lint",
+          "name": "paths",
+          "type": "string"
+        },
+        {
+          "description": "Comma-separated rule ids to skip",
+          "name": "skip-list",
+          "type": "string"
+        },
+        {
+          "description": "Verbose output",
+          "name": "verbose",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "ansible-lint --generate-ignore-file",
+        "ansible-lint --list-rules",
+        "ansible-lint --config .ansible-lint",
+        "ansible-lint --fix playbook.yml"
+      ],
+      "description": "Manage config and rule selection.",
+      "name": "ansible-lint-config",
+      "examples": [
+        "ansible-lint --list-rules | grep -i \"no-changed-when\"",
+        "ansible-lint --fix"
+      ],
+      "parameters": [
+        {
+          "description": "Config file path",
+          "name": "config",
+          "type": "string"
+        },
+        {
+          "description": "Auto-fix issues",
+          "name": "fix",
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ansible-lint Docs",
+      "description": "Rules, config, and usage",
+      "source": "https://ansible.readthedocs.io/projects/lint/",
+      "type": "documentation"
+    },
+    {
+      "title": "Ansible Docs",
+      "description": "Playbook and module reference",
+      "source": "https://docs.ansible.com/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# ansible-lint\n\nLint Ansible playbooks and roles.\n\n## When to Use\n\n- Enforcing best practices across playbook repositories\n- Catching YAML, module, and FQCN mistakes before runs\n- CI gating on infrastructure-as-code changes\n- Keeping roles consistent across the codebase\n\n## Commands\n\n```bash\n# Lint a directory\nansible-lint playbooks/\n\n# Verbose\nansible-lint playbook.yml -v\n\n# Exclude directories\nansible-lint --exclude=roles/vendor/\n\n# Custom rules dir\nansible-lint -r custom-rules.yml playbook.yml\n\n# Skip a rule\nansible-lint playbook.yml --skip-list fqcn-builtins\n\n# List rules and tags\nansible-lint --list-rules\nansible-lint --list-tags\n\n# Auto-fix\nansible-lint --fix playbook.yml\n```\n\n## Config Example\n\n```yaml\n# .ansible-lint\nexclude_paths:\n  - .cache\n  - roles/vendor\nskip_list:\n  - yaml[line-length]\nwarn_list:\n  - experimental\n```\n\n## Best Practices\n\n- Run ansible-lint in CI on every MR\n- Use FQCNs for all modules (ansible.builtin.*)\n- Add no-changed-when to every command task\n- Keep line length within the yaml rule default\n- Auto-fix with --fix, then review the diff\n- Treat new violations as blockers; manage legacy ones via skip_list",
+  "examples": [
+    {
+      "input": "My playbook has lint errors; fix them",
+      "output": "Agent runs ansible-lint -v, categorizes rule violations, fixes FQCN and changed_when issues, and re-runs to verify."
+    },
+    {
+      "input": "Add ansible-lint to CI",
+      "output": "Agent adds a lint job running ansible-lint --offline with a pinned version and the repo config."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ansible-lint.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ansible-lint"
+    },
+    "generic": {
+      "system_prompt": "You take the Ansible Lint seat. You do it through ansible-lint-cli: Run ansible-lint with rule and config control. The commands are real, e.g. `ansible-lint playbooks/`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ansible-lint",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ansible-lint-cli",
+        "name": "paths",
+        "type": "string",
+        "description": "Files or directories to lint"
+      },
+      {
+        "capability": "ansible-lint-cli",
+        "name": "skip-list",
+        "type": "string",
+        "description": "Comma-separated rule ids to skip"
+      },
+      {
+        "capability": "ansible-lint-cli",
+        "name": "verbose",
+        "type": "boolean",
+        "description": "Verbose output"
+      },
+      {
+        "capability": "ansible-lint-config",
+        "name": "config",
+        "type": "string",
+        "description": "Config file path"
+      },
+      {
+        "capability": "ansible-lint-config",
+        "name": "fix",
+        "type": "boolean",
+        "description": "Auto-fix issues"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "ansible-lint"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/ansible-lint-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/ansible-lint-skill.yaml",
+    "checksum": "8ea5d6b8baaa9a752935d0b865497b3952b645fb1466371230bb46a77bc4caf8"
+  }
+}

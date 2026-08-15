@@ -1,0 +1,217 @@
+name: jwt-validation
+display_name: Jwt Validation
+category: api
+subcategory: general
+description: 'Decode, verify, and troubleshoot JWTs: inspect header/payload locally, validate signatures
+  with openssl and PyJWT, and test bearer-auth APIs with curl.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- echo
+- npx
+- python3
+capabilities:
+- name: decode-inspect
+  description: Decode JWT header and payload locally without any library.
+  commands:
+  - echo $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq .
+  - echo $JWT | cut -d. -f1 | base64 -d 2>/dev/null | jq .
+  - npx jwt-cli decode $JWT
+  - jq -r '.exp' <<< "$(echo $JWT | cut -d. -f2 | base64 -d)"
+  examples:
+  - echo $JWT | cut -d. -f2 | base64 -d | jq .
+  - npx jwt-cli decode $JWT
+  - jq -r '.sub' <<< "$(echo $JWT | cut -d. -f2 | base64 -d)"
+  parameters:
+  - name: token
+    type: string
+    description: The JWT string to inspect.
+  - name: field
+    type: string
+    description: Payload claim to extract, e.g. sub, exp, iss.
+- name: verify-signature
+  description: Verify JWT signatures with openssl, PyJWT, and curl against a real auth endpoint.
+  commands:
+  - echo -n "$HEADER.$PAYLOAD" | openssl dgst -sha256 -verify public.pem -signature sig.bin
+  - python3 -c "import jwt; print(jwt.decode('$JWT', open('public.pem').read(), algorithms=['RS256']))"
+  - 'curl -s -H "Authorization: Bearer $JWT" http://localhost:8080/api/me'
+  - 'curl -s -i -H "Authorization: Bearer $JWT" http://localhost:8080/api/me | head -5'
+  examples:
+  - python3 -c "import jwt; print(jwt.decode('$JWT', open('public.pem').read(), algorithms=['RS256']))"
+  - 'curl -s -H "Authorization: Bearer $JWT" http://localhost:8080/api/me'
+  - echo -n "$HEADER.$PAYLOAD" | openssl dgst -sha256 -verify public.pem -signature sig.bin
+  parameters:
+  - name: algorithm
+    type: string
+    description: 'JWT signing algorithm: RS256, HS256, ES256.'
+  - name: audience
+    type: string
+    description: Expected aud claim for verification.
+  - name: endpoint
+    type: string
+    description: Protected API URL for bearer-token smoke tests.
+knowledge:
+- title: JWT Introduction
+  type: documentation
+  source: https://jwt.io/introduction
+  description: JWT structure, claims, and signature explanation.
+- title: RFC 7519
+  type: documentation
+  source: https://datatracker.ietf.org/doc/html/rfc7519
+  description: JSON Web Token specification.
+- title: PyJWT
+  type: documentation
+  source: https://pyjwt.readthedocs.io/en/stable/
+  description: Python JWT encode/decode/verify library.
+instructions: '# JWT Validation
+
+
+  Inspect and verify JSON Web Tokens end to end.
+
+
+  ## What this skill does
+
+
+  - Decodes JWT header and payload with jq, jwt-cli, or python.
+
+  - Verifies RS256/HS256/ES256 signatures with openssl and PyJWT.
+
+  - Tests bearer-token protected endpoints with curl.
+
+
+  ## When to use
+
+
+  - Debugging 401/403 responses on API gateways.
+
+  - Verifying token expiry, issuer, and audience claims.
+
+  - Writing CI checks that a dev/QA token is still valid.
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Decode payload (add base64 padding if needed)
+
+  echo $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq .
+
+
+  # Decode header
+
+  echo $JWT | cut -d. -f1 | base64 -d 2>/dev/null | jq .
+
+
+  # Full decode with npx jwt-cli
+
+  npx jwt-cli decode $JWT
+
+
+  # Signature verification with openssl (RS256)
+
+  HEADER=$(echo $JWT | cut -d. -f1)
+
+  PAYLOAD=$(echo $JWT | cut -d. -f2)
+
+  echo -n "$HEADER.$PAYLOAD" | openssl dgst -sha256 -verify public.pem -signature sig.bin
+
+
+  # Python verification with PyJWT
+
+  python3 -c "import jwt; print(jwt.decode(''$JWT'', open(''public.pem'').read(), algorithms=[''RS256''],
+  audience=''api''))"
+
+
+  # Smoke test the protected endpoint
+
+  curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $JWT" http://localhost:8080/api/me
+
+  ```
+
+
+  ## Configuration example
+
+
+  ```bash
+
+  export JWT_SECRET_B64=...            # HS256 shared secret
+
+  openssl genrsa -out private.pem 2048 # RS256 keypair
+
+  openssl rsa -in private.pem -pubout -out public.pem
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  # Expired token should fail with a clear error
+
+  python3 -c "import jwt,time; print(jwt.decode(''$JWT'', open(''public.pem'').read(), algorithms=[''RS256'']))"
+
+
+  # Wrong key should raise InvalidSignatureError
+
+  python3 -c "import jwt; jwt.decode(''$JWT'', ''wrong-secret'', algorithms=[''HS256''])"
+
+  ```
+
+
+  ## Best practices
+
+
+  - Always verify exp, iss, and aud; never trust decoded payloads alone.
+
+  - Prefer RS256/ES256 for server-to-server; HS256 only with strong shared secrets.
+
+  - Keep token lifetimes short and use jti for revocation checks.
+
+  '
+examples:
+- input: Decode this JWT to check when it expires
+  output: jq -r '.exp' <<< "$(echo $JWT | cut -d. -f2 | base64 -d)" then compare to date +%s
+- input: Why am I getting 401 from my API?
+  output: Decode the token header/payload with jwt-cli, verify the signature against the JWKS public key,
+    and confirm exp/aud with PyJWT.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: jwt-validation.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-jwt-validation
+  generic:
+    system_prompt: 'You take the Jwt Validation seat. You do it through decode-inspect: Decode JWT header
+      and payload locally without any library. The commands are real, e.g. `echo $JWT | cut -d. -f2 |
+      base64 -d 2>/dev/null | jq .`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

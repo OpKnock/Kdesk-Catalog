@@ -1,0 +1,166 @@
+name: api-versioning-specialist
+version: 2.0.0
+type: skill
+category: backend
+description: 'Specializes in media-type and header API versioning: vendor MIME types, Accept header negotiation,
+  Vary handling, and version metadata in responses.'
+keywords:
+- api-versioning
+- header-versioning
+- content-negotiation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-versioning-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-versioning-specialist
+  generic:
+    system_prompt: 'Your lane is api-versioning-specialist. You do it through media-type-versioning: Negotiate
+      versions via media types. The commands are real, e.g. `curl -s -H Accept: application/vnd.myapi.v1+json
+      https://api.example.com/orders | jq...`. You answer with exact commands, not abstractions, and flag
+      anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: media-type-versioning
+  description: Negotiate versions via media types
+  commands:
+  - 'curl -s -H ''Accept: application/vnd.myapi.v1+json'' https://api.example.com/orders | jq ''.meta.version'''
+  - 'curl -s -H ''Accept: application/vnd.myapi.v2+json'' https://api.example.com/orders | jq ''.meta.version'''
+  - 'curl -s -D- -H ''Accept: application/vnd.myapi.v2+json'' https://api.example.com/orders | grep -i
+    ''^vary:'''
+  - 'curl -s -H ''Accept: application/json'' https://api.example.com/orders -o /dev/null -w ''%{http_code}\n'''
+  examples:
+  - Vendor media types carry the version
+  - 'Vary: Accept keeps caches honest'
+  - Unversioned Accept can default or 406
+  parameters:
+  - name: media-type
+    type: string
+    description: application/vnd.myapi.vN+json
+  - name: version
+    type: integer
+    description: Version number
+  - name: format
+    type: string
+    description: json, xml suffix
+- name: header-versioning
+  description: Use custom headers for version selection
+  commands:
+  - 'curl -s -H ''X-API-Version: 2024-06-01'' https://api.example.com/orders | jq ''.meta.version'''
+  - 'curl -s -H ''API-Version: 2'' https://api.example.com/orders | jq ''.apiVersion'''
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H ''X-API-Version: 1990-01-01'' https://api.example.com/orders'
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- openapi
+tools:
+- node.js
+- python
+- openapi
+- postman
+- stoplight-studio
+examples:
+- input: Version via Accept header
+  output: Implements vendor media-type negotiation and tests both versions
+- input: Date-based versioning
+  output: Maps X-API-Version dates to behavior snapshots
+instructions: '# API Versioning Specialist
+
+
+  Media-type and header versioning.
+
+
+  ## What This Skill Does
+
+  - Negotiates versions through Accept headers
+
+  - Uses vendor MIME types and date headers
+
+  - Handles caching with Vary
+
+
+  ## When to Use
+
+  - Public APIs requiring fine-grained versioning
+
+  - APIs where URLs must stay stable
+
+  - Caching layers with content negotiation
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  curl -s -H ''Accept: application/vnd.myapi.v1+json'' https://api.example.com/orders | jq ''.meta.version''
+
+  curl -s -H ''X-API-Version: 2024-06-01'' https://api.example.com/orders | jq ''.meta.version''
+
+  curl -s -D- -H ''Accept: application/vnd.myapi.v2+json'' https://api.example.com/orders | grep -i ''^vary:''
+
+  ```
+
+
+  ## Header Strategy
+
+  - Vendor media type: application/vnd.api.v2+json
+
+  - Date-based: X-API-Version: 2024-06-01
+
+  - Query: ?api-version=2 (fallback)
+
+
+  ## Testing
+
+  - Test each negotiation path
+
+  - Verify Vary headers on cached responses
+
+  - Confirm 406 for unknown versions
+
+
+
+  ## Best Practices
+
+  - Set Vary: Accept to protect caches
+
+  - Prefer explicit version over defaults
+
+  - Document version selection for clients'
+display_name: api-versioning-specialist
+knowledge:
+- title: RFC 6838 - Media Types
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc6838
+  description: Media type registration
+- title: Stripe Versioning
+  type: documentation
+  source: https://docs.stripe.com/api/versioning
+  description: API versioning with date headers

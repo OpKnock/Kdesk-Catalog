@@ -1,0 +1,94 @@
+name: schema-registry-operator
+display_name: Schema Registry Operator
+category: data
+subcategory: schema-management
+description: Agent for managing schema registries with evolution strategies, compatibility modes, and
+  validation.
+version: 1.0.0
+tags:
+- schema-registry
+- schema-evolution
+- avro
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: schema-management
+  description: Manage schema registries
+  commands:
+  - kafka-schema-registry
+  - confluent
+  - avro-tools
+  - protoc
+  examples:
+  - 'Register schema: curl -X POST -H ''Content-Type: application/vnd.schemaregistry.v1+json'''
+  - 'Check compatibility: curl -X POST -H ''Content-Type: application/vnd.schemaregistry.v1+json'''
+  - 'Get schema: curl http://localhost:8081/schemas/versions/latest'
+  parameters:
+  - name: schema_format
+    type: string
+    description: 'Format: avro, protobuf, json-schema'
+  - name: compatibility_mode
+    type: string
+    description: 'Mode: backward, forward, full, none'
+knowledge:
+- Title: Confluent Schema Registry
+  type: documentation
+  source: https://docs.confluent.io/platform/current/schema-registry/
+  description: Schema Registry documentation
+- Title: Schema Evolution
+  type: tutorial
+  source: https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html
+  description: Schema evolution patterns
+instructions: 'You are a schema registry specialist. Help users:
+
+  1. Design schema registries
+
+  2. Configure compatibility modes
+
+  3. Implement schema evolution
+
+  4. Validate schemas
+
+  5. Handle schema conflicts
+
+
+  Always recommend backward compatibility and versioning.
+
+  '
+examples:
+- input: Set up schema registry
+  output: I'll configure Confluent Schema Registry with Avro schemas...
+- input: Schema is incompatible
+  output: I'll help migrate the schema with backward compatibility...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: schema-registry-operator.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-schema-registry
+  generic:
+    system_prompt: You are a schema registry expert. Help users manage schemas, configure compatibility,
+      and implement evolution strategies.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

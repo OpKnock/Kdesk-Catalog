@@ -1,0 +1,171 @@
+{
+  "name": "jmeter",
+  "display_name": "Jmeter",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Apache JMeter load testing: running .jmx plans headlessly, property overrides for scaling, JTL result files, and HTML report generation.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "jmeter"
+  ],
+  "capabilities": [
+    {
+      "name": "jmeter-run",
+      "description": "Execute JMeter test plans in non-GUI mode and produce reports.",
+      "commands": [
+        "jmeter -n -t test-plan.jmx -l results.jtl -e -o report/",
+        "jmeter -n -t test-plan.jmx -Jthreads=50 -Jramp=10 -l results.jtl",
+        "jmeter -n -t test-plan.jmx -j jmeter.log -l results.jtl",
+        "jmeter -g results.jtl -o report/",
+        "jmeter -n -t test-plan.jmx -Jusers=100 -Jhost=staging.example.com -l results.jtl"
+      ],
+      "examples": [
+        "jmeter -n -t api-load.jmx -Jthreads=200 -Jduration=300 -l run1.jtl -e -o report1/",
+        "jmeter -n -t test-plan.jmx --testfile result.properties -l results.jtl",
+        "tail -n 5 results.jtl | cut -d, -f1,2,14"
+      ],
+      "parameters": [
+        {
+          "name": "plan",
+          "type": "string",
+          "description": "Path to the .jmx test plan."
+        },
+        {
+          "name": "log_file",
+          "type": "string",
+          "description": "JTL results output file."
+        },
+        {
+          "name": "report_dir",
+          "type": "string",
+          "description": "Directory for the HTML report (-e -o)."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "JMeter User Manual",
+      "type": "documentation",
+      "source": "https://jmeter.apache.org/usermanual/index.html",
+      "description": "JMeter user manual: components, test plans, and results."
+    },
+    {
+      "title": "JMeter Non-GUI Mode",
+      "type": "documentation",
+      "source": "https://jmeter.apache.org/usermanual/get-started.html#non_gui",
+      "description": "Running JMeter from the command line."
+    }
+  ],
+  "instructions": "# JMeter\n\nRun Apache JMeter load tests headlessly.\n\n## What this skill does\n\n- Executes .jmx test plans in non-GUI mode.\n- Scales tests via -J property overrides.\n- Generates JTL results and HTML dashboards.\n- Reads key metrics from the JTL directly.\n\n## When to use\n\n- Running the canonical load suite in CI.\n- Scaling a recorded test plan across environments.\n- Producing shareable HTML reports for capacity reviews.\n\n## Real commands\n\n```bash\n# Full run with report\njmeter -n -t test-plan.jmx -l results.jtl -e -o report/\n\n# Override properties (JMeter properties, not user props)\njmeter -n -t test-plan.jmx -Jthreads=50 -Jramp=10 -l results.jtl\n\n# Separate log file\njmeter -n -t test-plan.jmx -j jmeter.log -l results.jtl\n\n# Generate a report from an existing JTL\njmeter -g results.jtl -o report/\n\n# Environment override example\njmeter -n -t api-load.jmx -Jhost=staging.example.com -l run1.jtl -e -o report1/\n```\n\n## Property usage in the plan\n\n```groovy\n// ThreadGroup loop: ${__P(threads,10)}  -> defaults to 10\n```\n\n## Reading the JTL\n\n```bash\n# elapsed_ms, success, latency per sample (CSV)\ncut -d, -f1,2,14 results.jtl | head -5\n# error rate\nawk -F, 'NR>1 && $8==\"false\" {err++} END {print err\" failures\"}' results.jtl\n```\n\n## Testing\n\n```bash\njmeter -n -t test-plan.jmx -Jthreads=5 -l smoke.jtl -e -o smoke-report/ && echo done\n```\n\n## Best practices\n\n- Parameterize host, threads, and duration with -J overrides.\n- Keep response assertions in the plan so failures are counted.\n- Use `-e -o` for the HTML dashboard; keep the JTL for later analysis.\n- Run one ramp-up calibration test before the full soak.\n\n## Example exchange\n\n```\nUser: Run the API plan with 200 threads for 5 minutes.\nAgent: jmeter -n -t api-load.jmx -Jthreads=200 -Jduration=300 -l run1.jtl -e -o report1/\n```",
+  "examples": [
+    {
+      "input": "Run test-plan.jmx and generate an HTML report",
+      "output": "jmeter -n -t test-plan.jmx -l results.jtl -e -o report/"
+    },
+    {
+      "input": "Run with 50 threads and 10s ramp",
+      "output": "jmeter -n -t test-plan.jmx -Jthreads=50 -Jramp=10 -l results.jtl"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "jmeter.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-jmeter"
+    },
+    "generic": {
+      "system_prompt": "You work Jmeter hands-on. You do it through jmeter-run: Execute JMeter test plans in non-GUI mode and produce reports. The commands are real, e.g. `jmeter -n -t test-plan.jmx -l results.jtl -e -o report/`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "jmeter",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jmeter-run",
+        "name": "plan",
+        "type": "string",
+        "description": "Path to the .jmx test plan."
+      },
+      {
+        "capability": "jmeter-run",
+        "name": "log_file",
+        "type": "string",
+        "description": "JTL results output file."
+      },
+      {
+        "capability": "jmeter-run",
+        "name": "report_dir",
+        "type": "string",
+        "description": "Directory for the HTML report (-e -o)."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "jmeter"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/jmeter-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/jmeter-skill.yaml",
+    "checksum": "6a4bcc3af36af71499a9a239326bfc09db90d6da44eefbce82df9d3a5dc720f7"
+  }
+}

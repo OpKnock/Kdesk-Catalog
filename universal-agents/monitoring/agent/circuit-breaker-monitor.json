@@ -1,0 +1,168 @@
+{
+  "name": "circuit-breaker-monitor",
+  "display_name": "Circuit Breaker Monitor",
+  "category": "monitoring",
+  "subcategory": "reliability",
+  "description": "Agent for monitoring circuit breaker states, tracking failures, and alerting on open circuits.",
+  "version": "1.0.0",
+  "tags": [
+    "circuit-breaker",
+    "monitoring",
+    "alerts"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "circuit-monitoring",
+      "description": "Monitor circuit breakers",
+      "commands": [
+        "prometheus",
+        "grafana",
+        "circuit-breaker"
+      ],
+      "examples": [
+        "Query: circuit_breaker_state{service='api'}",
+        "Alert: circuit_breaker_open > 0",
+        "Dashboard: circuit_breaker_failures_total"
+      ],
+      "parameters": [
+        {
+          "name": "monitoring_tool",
+          "type": "string",
+          "description": "Tool: prometheus, datadog, cloudwatch"
+        },
+        {
+          "name": "alert_threshold",
+          "type": "string",
+          "description": "Threshold: failure-rate, slow-call-rate"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Circuit Breaker Metrics",
+      "type": "documentation",
+      "source": "https://resilience4j.readme.io/docs/metrics",
+      "description": "Circuit breaker metrics"
+    },
+    {
+      "Title": "Monitoring Best Practices",
+      "type": "tutorial",
+      "source": "https://sre.google/sre-book/practical-alerting/",
+      "description": "SRE monitoring practices"
+    }
+  ],
+  "instructions": "You are a circuit breaker monitor. Help users:\n1. Set up circuit breaker metrics\n2. Configure alerts\n3. Build dashboards\n4. Track failure patterns\n5. Analyze recovery\n\nAlways recommend proactive alerting and trend analysis.\n",
+  "examples": [
+    {
+      "input": "Monitor circuits",
+      "output": "I'll set up circuit breaker monitoring with Prometheus..."
+    },
+    {
+      "input": "Alert on failures",
+      "output": "I'll configure alerts for open circuits..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "circuit-breaker-monitor.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-circuit-monitor"
+    },
+    "generic": {
+      "system_prompt": "You are a circuit breaker monitoring expert. Help users monitor circuit states and alert on failures.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "circuit-breaker-monitor",
+  "type": "agent",
+  "skills": [
+    "api-analytics-anomaly-detection",
+    "api-analytics-engineer",
+    "api-analytics-event-tracking",
+    "api-analytics-privacy",
+    "api-analytics-specialist",
+    "api-analytics-streaming",
+    "api-monitor-checkly-cli",
+    "api-monitor-logcli",
+    "api-monitor-prometheus-metrics",
+    "api-monitor-specialist",
+    "api-monitoring-engineer",
+    "api-monitoring-specialist"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "circuit-monitoring",
+        "name": "monitoring_tool",
+        "type": "string",
+        "description": "Tool: prometheus, datadog, cloudwatch"
+      },
+      {
+        "capability": "circuit-monitoring",
+        "name": "alert_threshold",
+        "type": "string",
+        "description": "Threshold: failure-rate, slow-call-rate"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "monitoring/agent/circuit-breaker-monitor.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/monitoring/agent/circuit-breaker-monitor.yaml",
+    "checksum": "fd0ae584842baf8d4476887daec7f18f5fb03190047712962dbd546c7a102535"
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "name": "devops-argocd-agent",
+  "display_name": "Devops Argocd Agent",
+  "category": "devops",
+  "subcategory": "agent",
+  "description": "ArgoCD agent for GitOps continuous delivery.",
+  "version": "1.0.0",
+  "tags": [
+    "devops",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Devops Argocd Agent",
+      "description": "ArgoCD agent for GitOps continuous delivery.",
+      "commands": [
+        "argocd login <server>",
+        "argocd app sync my-app",
+        "argocd app create my-app --repo https://github.com/org/repo --path . --dest-server https://kubernete",
+        "argocd app get my-app"
+      ],
+      "examples": [
+        "argocd app create my-app --repo https://github.com/org/repo --path . --dest-server https://kubernetes.default.svc --dest-namespace default",
+        "argocd app sync my-app",
+        "argocd app get my-app",
+        "argocd login <server>"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "devops-argocd-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/devops/agent",
+      "description": "Reference documentation for devops-argocd-agent"
+    }
+  ],
+  "instructions": "You are an ArgoCD expert. Call on you to implement GitOps continuous delivery with ArgoCD applications, syncs, and health. Core workflow: 1) Authenticate with `argocd login <server>`; 2) Register applications from Git with `argocd app create my-app --repo https://github.com/org/repo --path . --dest-server https://kubernetes.default.svc --dest-namespace default`; 3) Inspect state with `argocd app get my-app`; 4) Deploy changes with `argocd app sync my-app`. Key behaviors: check sync and health status before acting; investigate out-of-sync diffs rather than force-syncing; validate repo credentials and destination cluster; warn about auto-sync risks. Output: application inventory with sync/health state, diff analysis, sync results, and GitOps process recommendations.",
+  "examples": [
+    "argocd app create my-app --repo https://github.com/org/repo --path . --dest-server https://kubernetes.default.svc --dest-namespace default",
+    "argocd app sync my-app",
+    "argocd app get my-app",
+    "argocd login <server>"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "devops-argocd-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ArgoCD expert. Help users implement GitOps with ArgoCD."
+    },
+    "opencode": {
+      "plugin": "opencode-devops-argocd-agent"
+    },
+    "generic": {
+      "system_prompt": "You are devops-argocd-agent. ArgoCD agent for GitOps continuous delivery.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "devops-argocd-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/devops-argocd-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/devops-argocd-agent.yaml",
+    "checksum": "350e7d08eef4f4f08dc7ff3385ac03f4cadd46efbfb4ab109b44178b8d4082c5"
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "name": "asyncapi-security",
+  "display_name": "Asyncapi Security",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Models and enforces AsyncAPI security schemes (apiKey, OAuth2, OpenID Connect, mTLS) in documents, generated clients, and broker connections.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-topics",
+    "mosquitto_pub",
+    "npx",
+    "openssl"
+  ],
+  "capabilities": [
+    {
+      "name": "security-schemes",
+      "description": "Author AsyncAPI securitySchemes and validate documents.",
+      "commands": [
+        "npx @asyncapi/cli validate asyncapi.yaml",
+        "npx @asyncapi/cli lint asyncapi.yaml",
+        "npx @asyncapi/cli validate https://raw.githubusercontent.com/asyncapi/spec/master/examples/streetlights.yml",
+        "npx @asyncapi/cli --version"
+      ],
+      "examples": [
+        "npx @asyncapi/cli validate asyncapi.yaml",
+        "npx @asyncapi/cli lint --ruleset security-rules.json asyncapi.yaml",
+        "npx @asyncapi/cli validate asyncapi.yaml && echo valid"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "AsyncAPI document to validate"
+        },
+        {
+          "name": "ruleset",
+          "type": "string",
+          "description": "Custom lint ruleset"
+        }
+      ]
+    },
+    {
+      "name": "oauth-broker",
+      "description": "Obtain OAuth2 tokens and connect to broker operations secured with OAuth2/OpenID Connect.",
+      "commands": [
+        "curl -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d client_id=api-consumer -d client_secret=secret -d scope=kafka:read",
+        "curl -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN",
+        "kafka-topics --bootstrap-server broker.example.com:9093 --command-config client-oauth.properties --list",
+        "mosquitto_pub -h mqtt.example.com -p 8883 -u client --pw $TOKEN -t orders/created -m '{\"id\":1}' --cafile ca.crt"
+      ],
+      "examples": [
+        "TOKEN=$(curl -s -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d client_id=api-consumer -d client_secret=secret -d scope=kafka:read | jq -r .access_token) && echo $TOKEN",
+        "curl -s -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN | jq '.active'",
+        "mosquitto_pub -h mqtt.example.com -p 8883 -u client --pw $TOKEN -t orders/created -m hello"
+      ],
+      "parameters": [
+        {
+          "name": "token_url",
+          "type": "string",
+          "description": "OAuth2 token endpoint URL"
+        },
+        {
+          "name": "client_id",
+          "type": "string",
+          "description": "OAuth2 client identifier"
+        },
+        {
+          "name": "scope",
+          "type": "string",
+          "description": "Requested OAuth2 scopes"
+        }
+      ]
+    },
+    {
+      "name": "tls-mtls",
+      "description": "Validate and test TLS/mTLS security schemes for broker endpoints.",
+      "commands": [
+        "openssl s_client -connect broker.example.com:9093 -showcerts < /dev/null | openssl x509 -noout -subject -issuer",
+        "openssl s_client -connect broker.example.com:9093 -cert client.crt -key client.key -CAfile ca.crt < /dev/null 2>&1 | grep -E 'Verify|Protocol'",
+        "kafka-topics --bootstrap-server broker.example.com:9093 --command-config client-mtls.properties --list",
+        "openssl verify -CAfile ca.crt client.crt"
+      ],
+      "examples": [
+        "openssl s_client -connect broker.example.com:9093 -showcerts < /dev/null | openssl x509 -noout -dates",
+        "openssl s_client -connect broker.example.com:9093 -cert client.crt -key client.key -CAfile ca.crt < /dev/null 2>&1 | grep 'Verify return code'",
+        "kafka-topics --bootstrap-server broker.example.com:9093 --command-config client-mtls.properties --describe --topic orders"
+      ],
+      "parameters": [
+        {
+          "name": "broker_host",
+          "type": "string",
+          "description": "Broker host:port"
+        },
+        {
+          "name": "cafile",
+          "type": "string",
+          "description": "CA certificate path"
+        },
+        {
+          "name": "client_cert",
+          "type": "string",
+          "description": "Client certificate for mTLS"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "AsyncAPI Security Schemes",
+      "type": "documentation",
+      "source": "https://www.asyncapi.com/docs/reference/specification/v3.0.0#security-scheme-object",
+      "description": "Security scheme object types"
+    },
+    {
+      "title": "AsyncAPI Security Best Practices",
+      "type": "documentation",
+      "source": "https://www.asyncapi.com/docs/guides/security",
+      "description": "Securing AsyncAPI documents and servers"
+    },
+    {
+      "title": "OAuth 2.0 Spec",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc6749",
+      "description": "OAuth2 flows used by brokers"
+    }
+  ],
+  "instructions": "# AsyncAPI Security\n\n## What this skill does\n\nModels and enforces AsyncAPI security schemes (apiKey, OAuth2, OpenID Connect, mutual TLS) in documents, generated clients, and broker connections.\n\n## When to use\n\n- A spec must declare how channels are authenticated\n- Connecting generated clients to OAuth2-secured brokers\n- Validating mTLS handshakes to Kafka/MQTT endpoints\n\n## Real commands\n\n```bash\n# Validate the security schemes in a document\nnpx @asyncapi/cli validate asyncapi.yaml\n\n# Get a client-credentials token\ncurl -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d client_id=api-consumer -d client_secret=secret -d scope=kafka:read\n\n# Introspect the token\ncurl -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN | jq '.active'\n\n# mTLS check to the broker\nopenssl s_client -connect broker.example.com:9093 -cert client.crt -key client.key -CAfile ca.crt < /dev/null 2>&1 | grep 'Verify return code'\n```\n\n## Spec example\n\n```yaml\ncomponents:\n  securitySchemes:\n    oauth:\n      type: oauth2\n      flows:\n        clientCredentials:\n          tokenUrl: https://auth.example.com/oauth2/token\n          scopes:\n            kafka:read: Read access\n    mtls:\n      type: mutualTLS\nchannels:\n  orders:\n    address: orders\n    security:\n      - oauth: [kafka:read]\n```\n\n## Testing\n\n- Validate documents in CI with the AsyncAPI CLI\n- Test broker auth with kafka-topics --command-config\n\n## Best practices\n\n- Apply security at both the document and broker level\n- Rotate client credentials; never embed secrets in specs\n- Use scope-based authorization, not shared topics",
+  "examples": [
+    {
+      "input": "Our Kafka topics require OAuth2 now, update the spec",
+      "output": "Adds an oauth2 securityScheme with clientCredentials flow, attaches it to channels, validates with the CLI, and tests a token-acquiring connection."
+    },
+    {
+      "input": "Is our broker mTLS handshake working?",
+      "output": "Runs openssl s_client with client cert/key and CA, greps 'Verify return code', and confirms the cipher/protocol lines."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "asyncapi-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-asyncapi-security"
+    },
+    "generic": {
+      "system_prompt": "You take the Asyncapi Security seat. You do it through security-schemes: Author AsyncAPI securitySchemes and validate documents. The commands are real, e.g. `npx @asyncapi/cli validate asyncapi.yaml`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "asyncapi-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "security-schemes",
+        "name": "file",
+        "type": "string",
+        "description": "AsyncAPI document to validate"
+      },
+      {
+        "capability": "security-schemes",
+        "name": "ruleset",
+        "type": "string",
+        "description": "Custom lint ruleset"
+      },
+      {
+        "capability": "oauth-broker",
+        "name": "token_url",
+        "type": "string",
+        "description": "OAuth2 token endpoint URL"
+      },
+      {
+        "capability": "oauth-broker",
+        "name": "client_id",
+        "type": "string",
+        "description": "OAuth2 client identifier"
+      },
+      {
+        "capability": "oauth-broker",
+        "name": "scope",
+        "type": "string",
+        "description": "Requested OAuth2 scopes"
+      },
+      {
+        "capability": "tls-mtls",
+        "name": "broker_host",
+        "type": "string",
+        "description": "Broker host:port"
+      },
+      {
+        "capability": "tls-mtls",
+        "name": "cafile",
+        "type": "string",
+        "description": "CA certificate path"
+      },
+      {
+        "capability": "tls-mtls",
+        "name": "client_cert",
+        "type": "string",
+        "description": "Client certificate for mTLS"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-topics",
+    "mosquitto_pub",
+    "npx",
+    "openssl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/asyncapi-security-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/asyncapi-security-skill.yaml",
+    "checksum": "5e1deaf1fee87c033835eef06e3a44d51305c75ea07099a183c5800d9b233e56"
+  }
+}

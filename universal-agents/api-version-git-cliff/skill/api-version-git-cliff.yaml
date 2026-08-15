@@ -1,0 +1,170 @@
+name: api-version-git-cliff
+version: 2.0.0
+type: skill
+category: backend
+description: 'Maintains API changelogs and version history: git-cliff generation from commits, conventional
+  commits, and changelog-driven release notes.'
+keywords:
+- api-version-git-cliff
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-version-git-cliff.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-version-git-cliff
+  generic:
+    system_prompt: 'This is your domain: Api Version Git Cliff. You do it through git-cliff: Generate
+      changelogs from git history. The commands are real, e.g. `npx git-cliff --init`. You answer with
+      exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: git-cliff
+  description: Generate changelogs from git history
+  commands:
+  - npx git-cliff --init
+  - npx git-cliff -o CHANGELOG.md
+  - npx git-cliff --unreleased
+  - npx git-cliff --bump
+  - npx git-cliff --tag v2.0.0
+  examples:
+  - git-cliff --init creates cliff.toml
+  - git-cliff -o writes the changelog
+  - --unreleased previews pending changes
+  parameters:
+  - name: tag
+    type: string
+    description: Version tag to generate for
+  - name: output
+    type: string
+    description: Changelog output file
+  - name: range
+    type: string
+    description: Commit range
+- name: conventional-commits
+  description: Structure commits for changelog generation
+  commands:
+  - npx commitizen init cz-conventional-changelog --save-dev --save-exact
+  - npx cz
+  - npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+  - git log --oneline --format='%h %s' -20
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- openapi
+tools:
+- node.js
+- python
+- openapi
+- postman
+examples:
+- input: Generate the v2.0.0 changelog
+  output: Runs git-cliff --tag v2.0.0 and reviews the breaking changes
+- input: Standardize commits
+  output: Sets up commitizen and enforces conventional format
+instructions: '# API Version v4 - Changelogs
+
+
+  Changelog generation and history.
+
+
+  ## What This Skill Does
+
+  - Generates changelogs from commits
+
+  - Enforces conventional commits
+
+  - Produces release notes automatically
+
+
+  ## When to Use
+
+  - Preparing release notes
+
+  - Auditing API changes between versions
+
+  - Enforcing commit standards
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npx git-cliff --init
+
+  npx git-cliff -o CHANGELOG.md
+
+  npx git-cliff --bump
+
+  npx commitizen init cz-conventional-changelog --save-dev --save-exact
+
+  ```
+
+
+  ## Conventional Commits
+
+
+  ```
+
+  feat(users): add v2 avatar endpoint
+
+  fix(auth): correct token expiry check
+
+  BREAKING CHANGE: remove v1 legacy fields
+
+  ```
+
+
+  ## Testing
+
+  - Verify changelog entries per release
+
+  - Check breaking changes are flagged
+
+  - Test cliff config in CI
+
+
+
+  ## Best Practices
+
+  - Enforce commit conventions with a linter
+
+  - Generate changelogs at release time
+
+  - Publish changelogs to docs sites'
+display_name: Api Version Git Cliff
+knowledge:
+- title: git-cliff Docs
+  type: documentation
+  source: https://git-cliff.org/docs/
+  description: Changelog generation from git history
+- title: Conventional Commits
+  type: documentation
+  source: https://www.conventionalcommits.org/en/v1.0.0/
+  description: Commit message convention

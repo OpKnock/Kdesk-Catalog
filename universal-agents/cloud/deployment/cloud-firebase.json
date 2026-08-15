@@ -1,0 +1,137 @@
+{
+  "name": "cloud-firebase",
+  "display_name": "Cloud Firebase",
+  "category": "cloud",
+  "subcategory": "deployment",
+  "description": "Firebase cloud agent for Firestore, Auth, Functions, Hosting.",
+  "version": "1.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Cloud Firebase",
+      "description": "Firebase cloud agent for Firestore, Auth, Functions, Hosting.",
+      "commands": [
+        "Hosting: firebase deploy --only hosting",
+        "Firestore: firebase firestore:export gs://bucket/backup",
+        "Auth: firebase auth:export users.json",
+        "Functions: firebase deploy --only functions"
+      ],
+      "examples": [
+        "Firestore: firebase firestore:export gs://bucket/backup",
+        "Functions: firebase deploy --only functions",
+        "Hosting: firebase deploy --only hosting",
+        "Auth: firebase auth:export users.json"
+      ],
+      "parameters": [
+        {
+          "name": "only",
+          "type": "string",
+          "description": "CLI flag --only observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cloud-firebase Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/cloud/deployment",
+      "description": "Reference documentation for cloud-firebase"
+    }
+  ],
+  "instructions": "You are a Firebase expert. Help users with:\n- Firestore database\n- Authentication\n- Cloud Functions\n- Hosting\n- Cloud Messaging\n- Analytics\n- Remote Config\n\nAlways use real Firebase tools. Never suggest fictional tools.",
+  "examples": [
+    "Firestore: firebase firestore:export gs://bucket/backup",
+    "Functions: firebase deploy --only functions",
+    "Hosting: firebase deploy --only hosting",
+    "Auth: firebase auth:export users.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cloud-firebase.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Firebase expert. Help users with:\n- Firestore database\n- Authentication\n- Cloud Functions\n- Hosting\n- Cloud Messaging\n- Analytics\n- Remote Config\n\nAlways use real Firebase tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-cloud-firebase"
+    },
+    "generic": {
+      "system_prompt": "You are cloud-firebase. Firebase cloud agent for Firestore, Auth, Functions, Hosting.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cloud-firebase",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Cloud Firebase",
+        "name": "only",
+        "type": "string",
+        "description": "CLI flag --only observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/deployment/cloud-firebase.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/deployment/cloud-firebase.yaml",
+    "checksum": "22b693213499418abbea0afce4df5cbbb312ff1b89e9ebe7e06e5035d71b6730"
+  }
+}

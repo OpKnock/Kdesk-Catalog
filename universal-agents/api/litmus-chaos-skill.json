@@ -1,0 +1,213 @@
+{
+  "name": "litmus-chaos",
+  "display_name": "Litmus Chaos",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Run chaos experiments on Kubernetes with LitmusChaos: install agents via litmusctl, apply chaos engines, and execute pod-delete experiments.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubectl",
+    "litmusctl"
+  ],
+  "capabilities": [
+    {
+      "name": "litmusctl-connect",
+      "description": "Connect agents and manage experiments with litmusctl.",
+      "commands": [
+        "litmusctl version",
+        "litmusctl connect agent --endpoint=http://litmus-frontend:3001 --username admin --password=litmus",
+        "litmusctl get agents",
+        "litmusctl get chaosengines",
+        "litmusctl apply chaosengine -f chaosengine.yaml"
+      ],
+      "examples": [
+        "litmusctl connect agent --endpoint=http://litmus-frontend:3001 --username admin --password=litmus",
+        "litmusctl get agents",
+        "litmusctl apply chaosengine -f chaosengine.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "Litmus frontend endpoint."
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "description": "Litmus portal username."
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "description": "Litmus portal password."
+        }
+      ]
+    },
+    {
+      "name": "chaos-runs",
+      "description": "Apply chaos experiments (pod-delete, cpu-hog) and monitor runs.",
+      "commands": [
+        "kubectl apply -f pod-delete-experiment.yaml -n litmus",
+        "kubectl apply -f chaosengine.yaml -n litmus",
+        "kubectl get chaosengine -n litmus",
+        "kubectl get chaosresult -n litmus",
+        "kubectl logs -n litmus -l app=chaos-exporter --tail=50"
+      ],
+      "examples": [
+        "kubectl apply -f pod-delete-experiment.yaml -n litmus",
+        "kubectl get chaosresult -n litmus",
+        "kubectl apply -f chaosengine.yaml -n litmus"
+      ],
+      "parameters": [
+        {
+          "name": "engine",
+          "type": "string",
+          "description": "ChaosEngine YAML file."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace where the engine runs."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "LitmusChaos Docs",
+      "type": "documentation",
+      "source": "https://litmuschaos.io/docs/",
+      "description": "Official LitmusChaos documentation."
+    },
+    {
+      "title": "litmusctl",
+      "type": "documentation",
+      "source": "https://docs.litmuschaos.io/docs/litmusctl/",
+      "description": "litmusctl CLI reference."
+    }
+  ],
+  "instructions": "# LitmusChaos\n\nRun Kubernetes chaos experiments with the LitmusChaos platform.\n\n## What this skill does\n\n- Connects Kubernetes agents to the Litmus portal with litmusctl.\n- Applies ChaosEngine manifests targeting workloads.\n- Monitors experiment results (ChaosResult CRs).\n\n## When to use\n\n- Validating pod failure tolerance in staging.\n- Testing deployment rollbacks under pod deletion.\n- Building a chaos regression suite before releases.\n\n## Real commands\n\n```bash\n# Connect an agent (cluster) to the portal\nlitmusctl connect agent \\\n  --endpoint=http://litmus-frontend:3001 \\\n  --username admin --password=litmus\n\n# Verify agent state\nlitmusctl get agents\n\n# Apply the experiment definitions\nkubectl apply -f pod-delete-experiment.yaml -n litmus\n\n# Apply the chaos engine (targets the workload)\nlitmusctl apply chaosengine -f chaosengine.yaml\nkubectl apply -f chaosengine.yaml -n litmus\n\n# Watch the run\nkubectl get chaosengine -n litmus\nkubectl get chaosresult -n litmus\nkubectl logs -n litmus -l app=chaos-exporter --tail=50\n```\n\n## ChaosEngine example\n\n```yaml\napiVersion: litmuschaos.io/v1alpha1\nkind: ChaosEngine\nmetadata:\n  name: nginx-chaos\n  namespace: litmus\nspec:\n  appinfo:\n    appns: default\n    applabel: app=nginx\n    appkind: deployment\n  chaosServiceAccount: litmus-admin\n  experiments:\n    - name: pod-delete\n      spec:\n        components:\n          env:\n            - name: TOTAL_CHAOS_DURATION\n              value: \"30\"\n```\n\n## Testing\n\n```bash\nkubectl get chaosresult -n litmus -o jsonpath='{.items[0].status.experimentStatus.verdict}'\n```\n\n## Best practices\n\n- Scope experiments to staging first; use namespaces to bound blast radius.\n- Define steady-state checks (Probes) so failures surface automatically.\n- Clean up ChaosEngines after runs to avoid repeating experiments.\n",
+  "examples": [
+    {
+      "input": "Delete a random nginx pod to test recovery",
+      "output": "Apply pod-delete-experiment.yaml, create a ChaosEngine targeting app=nginx with 30s duration, then watch kubectl get chaosresult."
+    },
+    {
+      "input": "Connect a new cluster to Litmus",
+      "output": "litmusctl connect agent --endpoint=http://litmus-frontend:3001 --username admin --password=litmus"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "litmus-chaos.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-litmus-chaos"
+    },
+    "generic": {
+      "system_prompt": "You work Litmus Chaos hands-on. You do it through litmusctl-connect: Connect agents and manage experiments with litmusctl. The commands are real, e.g. `litmusctl version`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "litmus-chaos",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "litmusctl-connect",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Litmus frontend endpoint."
+      },
+      {
+        "capability": "litmusctl-connect",
+        "name": "username",
+        "type": "string",
+        "description": "Litmus portal username."
+      },
+      {
+        "capability": "litmusctl-connect",
+        "name": "password",
+        "type": "string",
+        "description": "Litmus portal password."
+      },
+      {
+        "capability": "chaos-runs",
+        "name": "engine",
+        "type": "string",
+        "description": "ChaosEngine YAML file."
+      },
+      {
+        "capability": "chaos-runs",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace where the engine runs."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubectl",
+    "litmusctl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/litmus-chaos-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/litmus-chaos-skill.yaml",
+    "checksum": "7bc108e430f258fc70a0dc2ca0cc8ec5a37033ab0e3bfae934b5ea79903c8a3c"
+  }
+}

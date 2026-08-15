@@ -1,0 +1,200 @@
+name: diversity-equity-inclusion
+version: 2.0.0
+type: skill
+category: culture
+description: 'Analyzes workforce DEI data with real tooling: org audit logs, survey analytics, representation
+  metrics, and inclusive communication.'
+keywords:
+- diversity
+- equity
+- inclusion
+- metrics
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: diversity-equity-inclusion.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-diversity-equity-inclusion
+  generic:
+    system_prompt: 'You take the diversity-equity-inclusion seat. You do it through org-data-analytics:
+      Pull and analyze org and team composition data from GitHub. The commands are real, e.g. `gh api
+      orgs/{org}/members --paginate | jq length`. You verify each step you report and stay honest about
+      what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: org-data-analytics
+  description: Pull and analyze org and team composition data from GitHub.
+  commands:
+  - gh api orgs/{org}/members --paginate | jq 'length'
+  - gh api orgs/{org}/teams --paginate | jq '.[].name'
+  - gh api rate_limit | jq '.resources.core'
+  - gh api repos/{owner}/{repo}/contributors --paginate | jq '[.[].login] | unique | length'
+  - 'gh api orgs/{org}/events --paginate | jq ''group_by(.type) | map({type: .[0].type, count: length})'''
+  examples:
+  - gh api orgs/{org}/members --paginate | jq 'length'
+  - gh api repos/{owner}/{repo}/contributors --paginate | jq '[.[].login] | unique | length'
+  - gh api orgs/{org}/events --paginate | jq 'group_by(.type)'
+  parameters:
+  - name: org
+    type: string
+    description: GitHub org name
+  - name: owner-repo
+    type: string
+    description: owner/repo for contributor analysis
+- name: survey-and-text-analysis
+  description: Process engagement survey data and audit language in code/docs.
+  commands:
+  - 'jq ''group_by(.department) | map({dept: .[0].department, avg: ([.[].score] | add / length)})'' survey.json'
+  - jq '[.responses[] | select(.score <= 2)] | length' survey.json
+  - grep -rniE 'guys|manpower|sanity check' --include='*.md' .
+  - grep -rniE 'blacklist|whitelist|master/slave' --include='*.md' .
+  - sort -u emails.txt | wc -l
+  examples:
+  - 'jq ''group_by(.department) | map({dept: .[0].department, avg: ([.[].score] | add / length)})'' survey.json'
+  - grep -rniE 'blacklist|whitelist' --include='*.md' .
+  - jq '[.responses[] | select(.score <= 2)] | length' survey.json
+  parameters:
+  - name: pattern
+    type: string
+    description: Regex to audit for inclusive language
+  - name: file
+    type: string
+    description: Survey JSON file
+prerequisites:
+- greenhouse
+- lattic
+- slack
+- survey
+tools:
+- greenhouse
+- lattic
+- slack
+- survey
+- culture-amp
+examples:
+- input: Measure contributor diversity in our repo
+  output: Agent queries contributor data, aggregates unique contributors, and frames representation context
+- input: Audit docs for inclusive language
+  output: Agent greps the codebase for flagged terms and builds a fix list
+instructions: '# Diversity, Equity & Inclusion Analytics
+
+
+  Measure and improve workplace equity with reproducible data workflows.
+
+
+  ## What This Skill Does
+
+
+  - Analyzes org/team composition via GitHub APIs
+
+  - Aggregates engagement survey scores by group
+
+  - Audits docs and code for exclusionary language
+
+  - Builds representation and retention metrics
+
+  - Produces trend reports for leadership
+
+
+  ## When to Use
+
+
+  - Building a DEI measurement program
+
+  - Reviewing representation before hiring decisions
+
+  - Making communications more inclusive
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Org data (GitHub)
+
+  gh api orgs/{org}/members --paginate | jq ''length''
+
+  gh api orgs/{org}/teams --paginate | jq ''.[].name''
+
+  gh api repos/{owner}/{repo}/contributors --paginate   | jq ''[.[].login] | unique | length''
+
+
+  # Survey analytics
+
+  jq ''group_by(.department) | map({dept: .[0].department, avg: ([.[].score] | add / length)})'' survey.json
+
+  jq ''[.responses[] | select(.score <= 2)] | length'' survey.json
+
+
+  # Language audit
+
+  grep -rniE ''blacklist|whitelist|master/slave'' --include=''*.md'' .
+
+  grep -rniE ''guys|manpower|sanity check'' --include=''*.md'' .
+
+  ```
+
+
+  ## Metric Set
+
+
+  - Representation by team/level vs labor pool
+
+  - Engagement scores by demographic group
+
+  - Turnover and promotion rates by group
+
+  - Language inclusivity index over time
+
+
+  ## Best Practices
+
+
+  - Aggregate small cells to protect privacy (min group size)
+
+  - Combine quantitative data with lived-experience feedback
+
+  - Publish trends, not raw individual data
+
+  - Re-run the same queries each quarter for comparability
+
+  - Pair analytics with concrete action plans'
+display_name: diversity-equity-inclusion
+knowledge:
+- title: GitHub REST API Orgs
+  type: documentation
+  source: https://docs.github.com/en/rest/orgs/orgs
+  description: Org members, teams, and events API
+- title: EEOC Employer Guidance
+  type: documentation
+  source: https://www.eeoc.gov/employers
+  description: Legal frameworks for workplace equity
+- title: Inclusive Language Guide
+  type: documentation
+  source: https://developers.google.com/style/inclusive-documentation
+  description: Google inclusive documentation guidance

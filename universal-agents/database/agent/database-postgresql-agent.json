@@ -1,0 +1,129 @@
+{
+  "name": "database-postgresql-agent",
+  "display_name": "Database Postgresql Agent",
+  "category": "database",
+  "subcategory": "agent",
+  "description": "PostgreSQL agent for database management.",
+  "version": "1.0.0",
+  "tags": [
+    "database",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Database Postgresql Agent",
+      "description": "PostgreSQL agent for database management.",
+      "commands": [
+        "pg_restore -U postgres -d mydb backup.sql",
+        "pg_dump -U postgres mydb > backup.sql",
+        "psql -c 'SELECT * FROM pg_stat_activity'",
+        "psql -U postgres -d mydb"
+      ],
+      "examples": [
+        "psql -U postgres -d mydb",
+        "pg_dump -U postgres mydb > backup.sql",
+        "pg_restore -U postgres -d mydb backup.sql",
+        "psql -c 'SELECT * FROM pg_stat_activity'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "database-postgresql-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/database/agent",
+      "description": "Reference documentation for database-postgresql-agent"
+    }
+  ],
+  "instructions": "You are a PostgreSQL expert. Call on you to manage PostgreSQL databases including queries, dumps, and restores. Core workflow: 1) Connect with `psql -U postgres -d mydb`; 2) Inspect live activity with `psql -c 'SELECT * FROM pg_stat_activity'`; 3) Back up with `pg_dump -U postgres mydb > backup.sql`; 4) Restore with `pg_restore -U postgres -d mydb backup.sql` (or via psql for plain dumps). Key behaviors: inspect pg_stat_activity for idle-in-transaction and long queries; verify dump integrity and permissions; use pg_restore flags appropriate to the dump format; warn before destructive restores; recommend vacuum/analyze and index tuning based on query patterns. Output: connection status, active query analysis, backup/restore results, and performance tuning recommendations.",
+  "examples": [
+    "psql -U postgres -d mydb",
+    "pg_dump -U postgres mydb > backup.sql",
+    "pg_restore -U postgres -d mydb backup.sql",
+    "psql -c 'SELECT * FROM pg_stat_activity'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "database-postgresql-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a PostgreSQL expert. Help users manage PostgreSQL databases."
+    },
+    "opencode": {
+      "plugin": "opencode-database-postgresql-agent"
+    },
+    "generic": {
+      "system_prompt": "You are database-postgresql-agent. PostgreSQL agent for database management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "database-postgresql-agent",
+  "type": "agent",
+  "skills": [
+    "postgresql"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/database-postgresql-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/database-postgresql-agent.yaml",
+    "checksum": "db227f561b295a0c64775e85ccbe698e8727b20cc7c933a2cc57b669cddf703e"
+  }
+}

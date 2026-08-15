@@ -1,0 +1,219 @@
+name: nats-messaging
+display_name: Nats
+category: messaging
+subcategory: general
+description: 'Operates NATS and JetStream: pub/sub, request-reply, streams, consumers, and key-value stores.'
+version: 2.0.0
+tags:
+- messaging
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nats
+capabilities:
+- name: pub-sub
+  description: Publish and subscribe to NATS subjects.
+  commands:
+  - nats sub 'orders.>'
+  - nats pub orders.created '{"id":1}'
+  - nats request service.orders '{"action":"status"}'
+  - nats pub --reply order.ack orders.created '{"id":1}'
+  - nats reply service.orders 'ack received'
+  examples:
+  - nats sub 'metrics.>' --raw
+  - nats request service.health '{}' --timeout 2s
+  - nats pub orders.created '{"id":2}' --count 100 --sleep 0.1s
+  parameters:
+  - name: subject
+    type: string
+    description: NATS subject with wildcards
+  - name: payload
+    type: string
+    description: Message payload
+  - name: timeout
+    type: string
+    description: Request timeout
+- name: jetstream
+  description: Manage JetStream streams, consumers, and KV.
+  commands:
+  - nats stream add ORDERS --subjects 'orders.>' --storage file --retention limits --max-age 168h --max-size
+    10GB
+  - nats stream info ORDERS
+  - nats consumer add ORDERS order-worker --pull --deliver last --ack-explicit --max-deliver 5
+  - nats stream report ORDERS
+  - nats kv add config --history 10
+  examples:
+  - nats stream add ORDERS --subjects 'orders.>' --replicas 3
+  - nats consumer info ORDERS order-worker
+  - nats kv put config feature_flag '{"on":true}' && nats kv get config feature_flag
+  parameters:
+  - name: stream
+    type: string
+    description: Stream name
+  - name: max-age
+    type: string
+    description: Retention duration
+  - name: storage
+    type: string
+    description: file or memory storage
+knowledge:
+- title: NATS Docs
+  type: documentation
+  source: https://docs.nats.io/
+  description: Subjects, JetStream, and CLI reference
+- title: NATS CLI
+  type: documentation
+  source: https://docs.nats.io/using-nats/nats-tools/nats_cli
+  description: nats sub/pub/request/stream commands
+- title: JetStream Guide
+  type: documentation
+  source: https://docs.nats.io/nats-concepts/jetstream
+  description: Streams, consumers, and KV concepts
+instructions: '# NATS
+
+
+  Fast, lightweight messaging with pub/sub and JetStream persistence.
+
+
+  ## When to Use
+
+
+  - Microservices request-reply
+
+  - Edge and IoT messaging
+
+  - Lightweight stream processing
+
+
+  ## Pub/sub
+
+
+  ```bash
+
+  nats sub ''orders.>''
+
+  nats pub orders.created ''{"id":1}''
+
+  ```
+
+
+  `>` matches one or more tokens; `*` matches exactly one.
+
+
+  ## Request-reply
+
+
+  ```bash
+
+  nats request service.orders ''{"action":"status"}''
+
+  nats reply service.orders ''{"status":"ok"}''
+
+  ```
+
+
+  ## JetStream streams
+
+
+  ```bash
+
+  nats stream add ORDERS --subjects ''orders.>'' --storage file --retention limits --max-age 168h
+
+  nats stream info ORDERS
+
+  ```
+
+
+  ## Consumers
+
+
+  ```bash
+
+  nats consumer add ORDERS order-worker --pull --deliver last --ack-explicit --max-deliver 5
+
+  nats consumer info ORDERS order-worker
+
+  ```
+
+
+  Pull consumers are the norm for worker pools.
+
+
+  ## KV store
+
+
+  ```bash
+
+  nats kv add config
+
+  nats kv put config feature_flag ''{"on":true}''
+
+  nats kv get config feature_flag
+
+  ```
+
+
+  ## Best practices
+
+
+  - Choose retention: limits (size/age), interest, or workqueue.
+
+  - Set max-deliver so poison messages end in the DLQ stream.
+
+  - Use subject naming convention: `<app>.<entity>.<action>`.
+
+  - Monitor stream lag: `nats stream report`.
+
+
+  ## Testing
+
+
+  ```bash
+
+  nats pub orders.created ''{"id":1}'' --count 1000
+
+  nats stream report ORDERS
+
+  ```
+
+
+  Verify all 1000 land in the stream with zero loss.'
+examples:
+- input: Set up a durable order stream with 7-day retention.
+  output: Creates the ORDERS JetStream with file storage and 168h retention, then adds a pull consumer
+    with explicit ack.
+- input: Expose service health over request-reply.
+  output: Wires a nats reply handler on service.health and tests with nats request and a 2s timeout.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nats-messaging.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nats
+  generic:
+    system_prompt: 'This is your domain: Nats. You do it through pub-sub: Publish and subscribe to NATS
+      subjects. The commands are real, e.g. `nats sub orders.>`. You verify each step you report and stay
+      honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

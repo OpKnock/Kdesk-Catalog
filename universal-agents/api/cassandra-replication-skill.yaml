@@ -1,0 +1,206 @@
+name: cassandra-replication
+display_name: Cassandra Replication
+category: api
+subcategory: general
+description: 'Manages Cassandra replication: replication factors, keyspace strategies, endpoint mapping,
+  and consistency levels.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cqlsh
+- nodetool
+capabilities:
+- name: keyspace-replication
+  description: Set and inspect replication configuration.
+  commands:
+  - cqlsh -e "DESCRIBE KEYSPACE mykeyspace"
+  - cqlsh -e "ALTER KEYSPACE mykeyspace WITH replication = {'class':'NetworkTopologyStrategy','dc1':3,'dc2':3}"
+  - cqlsh -e "SELECT keyspace_name, replication FROM system_schema.keyspaces"
+  - cqlsh -e "CREATE KEYSPACE mykeyspace WITH replication = {'class':'NetworkTopologyStrategy','dc1':3}"
+  - cqlsh -e "SELECT keyspace_name, replication, durable_writes FROM system_schema.keyspaces WHERE keyspace_name='mykeyspace'"
+  examples:
+  - cqlsh -e "ALTER KEYSPACE mykeyspace WITH replication = {'class':'NetworkTopologyStrategy','dc1':3,'dc2':3}"
+  - cqlsh -e "SELECT keyspace_name, replication FROM system_schema.keyspaces"
+  - cqlsh -e "CREATE KEYSPACE app WITH replication = {'class':'SimpleStrategy','replication_factor':2}"
+  parameters:
+  - name: keyspace
+    type: string
+    description: Keyspace name
+  - name: dc_replication
+    type: string
+    description: Per-DC RF map
+  - name: strategy
+    type: string
+    description: NetworkTopologyStrategy or SimpleStrategy
+- name: endpoints
+  description: Map partition keys to replicas.
+  commands:
+  - nodetool getendpoints mykeyspace users 42
+  - nodetool status
+  - nodetool status -r
+  - nodetool gossipinfo
+  - nodetool ring | grep -E 'dc1|dc2'
+  examples:
+  - nodetool getendpoints mykeyspace users 42
+  - nodetool ring | head -20
+  - nodetool status -r
+  parameters:
+  - name: keyspace
+    type: string
+    description: Keyspace
+  - name: table
+    type: string
+    description: Table
+  - name: partition_key
+    type: string
+    description: Partition key value
+- name: consistency
+  description: Set and test consistency levels.
+  commands:
+  - cqlsh -e "CONSISTENCY QUORUM"
+  - cqlsh -e "CONSISTENCY LOCAL_QUORUM"
+  - cqlsh -e "CONSISTENCY ONE; SELECT COUNT(*) FROM mykeyspace.users"
+  - cqlsh -e "TRACING ON; SELECT * FROM mykeyspace.users WHERE id=42"
+  - nodetool tpstats | grep -E 'ReadRepair|Read'
+  examples:
+  - cqlsh -e "CONSISTENCY QUORUM; SELECT * FROM mykeyspace.users WHERE id=42"
+  - cqlsh -e "TRACING ON; SELECT * FROM mykeyspace.users WHERE id=42"
+  - cqlsh -e "CONSISTENCY EACH_QUORUM; SELECT COUNT(*) FROM mykeyspace.users"
+  parameters:
+  - name: consistency
+    type: string
+    description: Consistency level
+  - name: trace
+    type: boolean
+    description: Enable tracing
+knowledge:
+- title: Cassandra Dynamo Architecture
+  type: documentation
+  source: https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html
+  description: Replication and consistency
+- title: Cassandra Consistency
+  type: documentation
+  source: https://cassandra.apache.org/doc/latest/cassandra/architecture/guarantees.html
+  description: CL semantics
+- title: nodetool getendpoints
+  type: documentation
+  source: https://cassandra.apache.org/doc/latest/cassandra/operating/nodetool/
+  description: Replica mapping
+instructions: '# Cassandra Replication
+
+
+  ## What this skill does
+
+
+  Manages Cassandra replication: setting replication factors per datacenter, mapping partition keys to
+  replicas, and testing consistency levels with tracing.
+
+
+  ## When to use
+
+
+  - Adding a datacenter or changing RF
+
+  - Debugging ''unavailable'' errors
+
+  - Understanding which nodes hold a partition
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Inspect replication
+
+  cqlsh -e "DESCRIBE KEYSPACE mykeyspace"
+
+  cqlsh -e "SELECT keyspace_name, replication FROM system_schema.keyspaces"
+
+
+  # Change RF
+
+  cqlsh -e "ALTER KEYSPACE mykeyspace WITH replication = {''class'':''NetworkTopologyStrategy'',''dc1'':3,''dc2'':3}"
+
+
+  # Map a key to replicas
+
+  nodetool getendpoints mykeyspace users 42
+
+
+  # Test consistency
+
+  cqlsh -e "CONSISTENCY QUORUM; SELECT COUNT(*) FROM mykeyspace.users"
+
+  cqlsh -e "TRACING ON; SELECT * FROM mykeyspace.users WHERE id=42"
+
+  ```
+
+
+  ## RF and CL math
+
+
+  - QUORUM = (RF/2) + 1 per DC (LOCAL_QUORUM)
+
+  - For RF=3: QUORUM needs 2 replicas
+
+  - EACH_QUORUM: quorum in every DC
+
+
+  ## Testing
+
+
+  - getendpoints shows expected replica count = RF
+
+  - Trace queries to see contact points and read repair
+
+
+  ## Best practices
+
+
+  - Use NetworkTopologyStrategy in production
+
+  - Run nodetool repair after RF changes
+
+  - Prefer LOCAL_QUORUM over QUORUM in multi-DC'
+examples:
+- input: Add a third DC with RF 3
+  output: Runs ALTER KEYSPACE with dc3:3, verifies with system_schema.keyspaces, then schedules repairs.
+- input: Why do we get UnavailableException?
+  output: Checks RF vs live nodes, tests CL with cqlsh, and recommends lowering CL or raising RF.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cassandra-replication.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cassandra-replication
+  generic:
+    system_prompt: 'This is your domain: Cassandra Replication. You do it through keyspace-replication:
+      Set and inspect replication configuration. The commands are real, e.g. `cqlsh -e DESCRIBE KEYSPACE
+      mykeyspace`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

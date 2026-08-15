@@ -1,0 +1,123 @@
+name: container-security-security
+display_name: Container Security
+category: security
+subcategory: general
+description: Scans container images for vulnerabilities and supply-chain risks with Docker Scout, trivy,
+  and grype, then hardens Dockerfiles.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- docker
+- grype
+- trivy
+capabilities:
+- name: docker-scout
+  description: Analyze images with Docker Scout for CVEs and remediation guidance.
+  commands:
+  - docker scout quickview nginx:latest
+  - docker scout cves nginx:latest
+  - docker scout recommendations nginx:latest
+  - docker scout compare --to registry.local/app:old app:new
+  - docker scout cves nginx:latest --only-severity critical
+  examples:
+  - docker scout quickview myapp:latest
+  - docker scout cves myapp:latest --only-severity critical --only-fixed
+  - docker scout recommendations myapp:latest
+  parameters:
+  - name: image
+    type: string
+    description: Image reference, e.g. nginx:latest
+  - name: severity
+    type: string
+    description: 'Minimum severity filter: low, medium, high, critical'
+- name: image-scanning
+  description: Scan images and filesystems with trivy and grype for CVE coverage.
+  commands:
+  - trivy image nginx:latest
+  - trivy image --severity CRITICAL --ignore-unfixed nginx:latest
+  - grype nginx:latest
+  - trivy fs --scanners vuln,secret .
+  - docker scan myapp:latest
+  examples:
+  - trivy image --severity HIGH,CRITICAL --ignore-unfixed myapp:latest
+  - grype --only-fixed myapp:latest
+  - docker scout cves myapp:latest --format sarif --output scout.sarif
+  parameters:
+  - name: image
+    type: string
+    description: Image to scan
+  - name: scanners
+    type: array
+    description: 'trivy scanner types: vuln, secret, config, license'
+knowledge:
+- title: Docker Scout Documentation
+  type: documentation
+  source: https://docs.docker.com/scout/
+  description: Image analysis, CVE triage, and policy evaluation
+- title: Trivy Documentation
+  type: documentation
+  source: https://trivy.dev/
+  description: Image, filesystem, and repo vulnerability scanning
+- title: Grype GitHub
+  type: documentation
+  source: https://github.com/anchore/grype
+  description: SBOM-driven CVE matching with syft integration
+instructions: "# Container Security\n\nScan, triage, and harden container images across the delivery pipeline.\n\
+  \n## What This Skill Does\n\n- Scans images with Docker Scout, trivy, and grype\n- Triages CVEs by severity,\
+  \ fixability, and exploitability\n- Produces SARIF/JSON reports for CI and dashboards\n- Reviews Dockerfiles\
+  \ for base-image, user, and layer hygiene\n- Blocks deploys on critical unfixed CVEs\n\n## When to Use\n\
+  \n- Before pushing an image to production\n- A CVE advisory hits a base image in use\n- CI needs a container\
+  \ security gate\n\n## Real Commands\n\n```bash\n# Docker Scout analysis\nscout login\n docker scout\
+  \ quickview myapp:latest\ndocker scout cves myapp:latest --only-severity critical --only-fixed\ndocker\
+  \ scout recommendations myapp:latest\n\n# Trivy\n trivy image --severity HIGH,CRITICAL --ignore-unfixed\
+  \ myapp:latest\ntrivy image -o scan.sarif -f sarif myapp:latest\n\n# Grype\n grype myapp:latest --only-fixed\n\
+  \n# Filesystem scan including secrets\ntrivy fs --scanners vuln,secret .\n```\n\n## Hardening Checklist\n\
+  \n- Pin base image digests, not tags\n- Run as a non-root user and drop capabilities\n- Copy only build\
+  \ output; multi-stage builds shrink attack surface\n- Scan the final image, not the build stage\n- Keep\
+  \ a signed SBOM alongside each released image\n\n## Best Practices\n\n- Fail CI on CRITICAL unfixed\
+  \ CVEs; use --ignore-unfixed to focus on actionable\n- Triage with Docker Scout's policy evaluation\
+  \ for package priorities\n- Automate scanning at every image push, not just at release\n- Pair scanning\
+  \ with runtime hardening (seccomp, read-only rootfs, non-root UID)"
+examples:
+- input: Is my base image safe to deploy?
+  output: Agent runs docker scout quickview myapp:latest and trivy image --severity HIGH,CRITICAL, then
+    summarizes exploitable CVEs and proposed base image updates.
+- input: Scan all images in a compose stack
+  output: Agent extracts image refs from docker-compose.yml, runs trivy image on each, and aggregates
+    results into one SARIF report for CI.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: container-security-security.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-container-security
+  generic:
+    system_prompt: 'You work Container Security hands-on. You do it through docker-scout: Analyze images
+      with Docker Scout for CVEs and remediation guidance. The commands are real, e.g. `docker scout quickview
+      nginx:latest`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

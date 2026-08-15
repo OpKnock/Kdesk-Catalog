@@ -1,0 +1,177 @@
+{
+  "name": "observer",
+  "display_name": "Observer",
+  "category": "patterns",
+  "subcategory": "general",
+  "description": "Implements the Observer pattern in Node.js: event-driven notifications with EventEmitter and node --test suites.",
+  "version": "2.0.0",
+  "tags": [
+    "observer"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "node"
+  ],
+  "capabilities": [
+    {
+      "name": "node",
+      "description": "Implement and test observer examples.",
+      "commands": [
+        "node --test tests/",
+        "node --test tests/observer.test.mjs",
+        "node --test --test-name-pattern 'stock' tests/",
+        "node -e \"const {EventEmitter}=require('events'); const e=new EventEmitter(); e.on('x',()=>console.log('fired')); e.emit('x');\"",
+        "node --test --watch tests/"
+      ],
+      "examples": [
+        "node --test tests/observer.test.mjs -v",
+        "node --test-name-pattern 'notify' tests/",
+        "node -e \"const {EventEmitter}=require('events'); const e=new EventEmitter(); console.log(e.listenerCount('x'))\""
+      ],
+      "parameters": [
+        {
+          "name": "test-name-pattern",
+          "type": "string",
+          "description": "Filter tests by name"
+        },
+        {
+          "name": "watch",
+          "type": "string",
+          "description": "Watch mode"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Test file path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Refactoring Guru: Observer",
+      "type": "documentation",
+      "source": "https://refactoring.guru/design-patterns/observer",
+      "description": "Observer intent, structure, and usage"
+    },
+    {
+      "title": "Node.js EventEmitter",
+      "type": "documentation",
+      "source": "https://nodejs.org/api/events.html",
+      "description": "EventEmitter API and conventions"
+    },
+    {
+      "title": "node --test runner",
+      "type": "documentation",
+      "source": "https://nodejs.org/api/test.html",
+      "description": "Built-in test runner"
+    }
+  ],
+  "instructions": "# Observer Pattern\n\nNotify many subscribers when state changes.\n\n## When to Use\n\n- UI updates on data changes\n- Event-driven architectures\n- Decoupling producers from consumers\n\n## Example (Node.js)\n\n```js\nimport { EventEmitter } from 'node:events';\n\nclass StockTracker extends EventEmitter {\n  setPrice(symbol, price) {\n    this.emit('price', { symbol, price });\n  }\n}\n\nconst tracker = new StockTracker();\ntracker.on('price', ({ symbol, price }) => console.log(`${symbol}: $${price}`));\ntracker.setPrice('ACME', 42.5);\n```\n\n## Test\n\n```js\nimport { test } from 'node:test';\nimport assert from 'node:assert';\n\ntest('notifies subscribers on price change', () => {\n  const tracker = new StockTracker();\n  const seen = [];\n  tracker.on('price', (p) => seen.push(p));\n  tracker.setPrice('ACME', 42.5);\n  assert.deepEqual(seen, [{ symbol: 'ACME', price: 42.5 }]);\n});\n```\n\n```bash\nnode --test tests/\n```\n\n## Best practices\n\n- Emit events with payload objects, not positional args.\n- Use 'error' events for error propagation.\n- Clean up listeners to prevent leaks (`off()`).\n- Name events as past-tense facts: 'priceChanged'.\n\n## Testing\n\nVerify delivery order, payload shape, and listener cleanup.",
+  "examples": [
+    {
+      "input": "Notify UI and audit log when an order is placed.",
+      "output": "Emits orderPlaced from the order service; UI and audit subscribe independently."
+    },
+    {
+      "input": "Debug why a subscriber fires twice.",
+      "output": "Checks listener registration sites and tests listenerCount before/after subscribe."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "observer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-observer"
+    },
+    "generic": {
+      "system_prompt": "You are the Observer specialist. You do it through node: Implement and test observer examples. The commands are real, e.g. `node --test tests/`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "observer",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "node",
+        "name": "test-name-pattern",
+        "type": "string",
+        "description": "Filter tests by name"
+      },
+      {
+        "capability": "node",
+        "name": "watch",
+        "type": "string",
+        "description": "Watch mode"
+      },
+      {
+        "capability": "node",
+        "name": "file",
+        "type": "string",
+        "description": "Test file path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/observer-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/observer-skill.yaml",
+    "checksum": "ad474b21e253ae582e8026d8c3c530dc7fb8a2562ba25f4e0244ec7900493f2a"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "name": "fine-tuning-agent-2",
+  "display_name": "Fine Tuning Agent 2",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Fine-tuning inference server agent. Manages Fine-tuning ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Fine Tuning Inference Server Agent",
+      "description": "Fine-tuning inference server agent. Manages Fine-tuning ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent fine-tuning-agent-2"
+      ],
+      "examples": [
+        "python serve_finetuned.py --model fine_tuned_model.pkl --port 8080",
+        "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+        "python predict.py --model fine_tuned_model.pkl --input data.csv --output predictions.csv",
+        "python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "fine-tuning-agent-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for fine-tuning-agent-2"
+    }
+  ],
+  "instructions": "You are the Fine-Tuning Inference Server Agent, owner of the Fine-tuning ML inference server exposing the v1 API. Workflow: start with 'python serve_finetuned.py --model fine_tuned_model.pkl --port 8080', health-check with 'curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health', list models with 'curl -s http://localhost:8080/v1/models | jq -r .data[].id', predict with 'curl -X POST http://localhost:8080/v1/predict', and chat with model \"model\". Batch-predict with 'python predict.py --model fine_tuned_model.pkl --input data.csv --output predictions.csv' and evaluate with 'python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json'; exercise 'curl http://localhost:8080/predict --data {\"input\": \"Hello\"}'. Failure modes: model load failures and non-200 health; read logs. Report health code, model ids, prediction output, and evaluation metrics.",
+  "examples": [
+    "python serve_finetuned.py --model fine_tuned_model.pkl --port 8080",
+    "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+    "python predict.py --model fine_tuned_model.pkl --input data.csv --output predictions.csv",
+    "python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "fine-tuning-agent-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Fine-tuning inference server expert. Help users set up Fine-tuning ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-fine-tuning-agent-2"
+    },
+    "generic": {
+      "system_prompt": "You are fine-tuning-agent-2. Fine-tuning inference server agent. Manages Fine-tuning ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "fine-tuning-agent-2",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/fine-tuning-agent-2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/fine-tuning-agent-2.yaml",
+    "checksum": "f1d752209907fc36b91623d780e67f09dc8e62ccbb0db3f0f0f2c650dcdda325"
+  }
+}

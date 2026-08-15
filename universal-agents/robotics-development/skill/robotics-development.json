@@ -1,0 +1,236 @@
+{
+  "name": "robotics-development",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "robotics",
+  "description": "Develops ROS 2 systems: topics, nodes, launch files, parameter control, and rosbag recording/playback.",
+  "keywords": [
+    "robotics",
+    "ros",
+    "control"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "robotics-development.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-robotics-development"
+    },
+    "generic": {
+      "system_prompt": "You work robotics-development hands-on. You do it through ros2-cli: Inspect and operate the ROS 2 graph. The commands are real, e.g. `ros2 topic list`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "ros2-cli",
+      "description": "Inspect and operate the ROS 2 graph.",
+      "commands": [
+        "ros2 topic list",
+        "ros2 topic echo /odom --field linear.x",
+        "ros2 node list",
+        "ros2 node info /turtlebot",
+        "ros2 param set /turtlebot background_r 255"
+      ],
+      "examples": [
+        "ros2 topic info /cmd_vel -v",
+        "ros2 topic echo /scan --once | head -20",
+        "ros2 node list | grep -E 'nav|move'"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic name"
+        },
+        {
+          "name": "node",
+          "type": "string",
+          "description": "Node name"
+        },
+        {
+          "name": "field",
+          "type": "string",
+          "description": "Message field to echo"
+        }
+      ]
+    },
+    {
+      "name": "launch-bags",
+      "description": "Launch systems and record/playback data.",
+      "commands": [
+        "ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py",
+        "ros2 bag record -a -o rosbag2_2026_08_10",
+        "ros2 bag record /odom /scan /cmd_vel -o nav_run1",
+        "ros2 bag play rosbag2_2026_08_10",
+        "ros2 bag info rosbag2_2026_08_10"
+      ],
+      "examples": [
+        "ros2 bag record -a -o run_$(date +%F)",
+        "ros2 bag play rosbag2_2026_08_10 --rate 0.5",
+        "ros2 bag info rosbag2_2026_08_10 | head -20"
+      ],
+      "parameters": [
+        {
+          "name": "bag",
+          "type": "string",
+          "description": "Bag directory"
+        },
+        {
+          "name": "rate",
+          "type": "number",
+          "description": "Playback rate"
+        },
+        {
+          "name": "topics",
+          "type": "string",
+          "description": "Topics to record"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "python",
+    "c++",
+    "ros",
+    "moveit"
+  ],
+  "tools": [
+    "python",
+    "c++",
+    "ros",
+    "moveit",
+    "gazebo"
+  ],
+  "examples": [
+    {
+      "input": "Inspect why the robot isn't publishing odometry.",
+      "output": "Lists topics and nodes, echoes /odom, and checks node info for the publisher state."
+    },
+    {
+      "input": "Replay yesterday's navigation run for analysis.",
+      "output": "Records a bag on the run, then plays it back at half rate while observing /scan and /odom."
+    }
+  ],
+  "instructions": "# Robotics Development\n\nBuild and debug robot software with ROS 2.\n\n## When to Use\n\n- Robot perception, navigation, and control\n- Simulated robot stacks (Gazebo)\n- Logging and replay of robot runs\n\n## Inspect the graph\n\n```bash\nros2 topic list\nros2 node list\nros2 topic echo /odom --field linear.x\n```\n\n## Control and params\n\n```bash\nros2 param set /turtlebot background_r 255\nros2 topic pub /cmd_vel geometry_msgs/msg/Twist '{\"linear\": {\"x\": 0.1}}' --once\n```\n\n## Launch\n\n```bash\nros2 launch turtlebot3_gazebo turtlebot3_world.launch.py\n```\n\nLaunch files bring up nodes, params, and remappings together.\n\n## Record and replay\n\n```bash\nros2 bag record /odom /scan /cmd_vel -o nav_run1\nros2 bag info nav_run1\nros2 bag play nav_run1 --rate 0.5\n```\n\nReplays let you debug perception without hardware.\n\n## Best practices\n\n- Namespace topics by robot id for multi-robot.\n- Use lifecycle nodes for deterministic startup.\n- Record bags for every on-robot experiment.\n- Simulate first; hardware time is precious.\n\n## Testing\n\nRun the stack in simulation, record a bag, replay, and compare metrics.",
+  "display_name": "robotics-development",
+  "knowledge": [
+    {
+      "title": "ROS 2 CLI",
+      "type": "documentation",
+      "source": "https://docs.ros.org/en/rolling/p/ros2cli/index.html",
+      "description": "ros2 topic, node, param, launch commands"
+    },
+    {
+      "title": "rosbag2",
+      "type": "documentation",
+      "source": "https://docs.ros.org/en/rolling/p/rosbag2/",
+      "description": "Record and playback robot data"
+    },
+    {
+      "title": "ROS 2 Tutorials",
+      "type": "documentation",
+      "source": "https://docs.ros.org/en/rolling/Tutorials.html",
+      "description": "First steps with ROS 2"
+    }
+  ],
+  "id": "robotics-development",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ros2-cli",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic name"
+      },
+      {
+        "capability": "ros2-cli",
+        "name": "node",
+        "type": "string",
+        "description": "Node name"
+      },
+      {
+        "capability": "ros2-cli",
+        "name": "field",
+        "type": "string",
+        "description": "Message field to echo"
+      },
+      {
+        "capability": "launch-bags",
+        "name": "bag",
+        "type": "string",
+        "description": "Bag directory"
+      },
+      {
+        "capability": "launch-bags",
+        "name": "rate",
+        "type": "number",
+        "description": "Playback rate"
+      },
+      {
+        "capability": "launch-bags",
+        "name": "topics",
+        "type": "string",
+        "description": "Topics to record"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python",
+    "c++",
+    "ros",
+    "moveit"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "robotics-development/skill/robotics-development.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/robotics-development/skill/robotics-development.yaml",
+    "checksum": "976bf68d31a1ab558ee7805a0ed67f7adf53e6a4089c95d84573e11b0350c6fb"
+  }
+}

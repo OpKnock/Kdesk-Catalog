@@ -1,0 +1,167 @@
+{
+  "name": "buildah",
+  "display_name": "buildah",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Builds OCI container images without a daemon using buildah: containerfiles, commits, and pushes.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "buildah"
+  ],
+  "capabilities": [
+    {
+      "name": "buildah-images",
+      "description": "Create, modify, commit, and push container images",
+      "commands": [
+        "buildah bud -t myapp:latest .",
+        "buildah from alpine:3.19",
+        "buildah run container1 -- sh -c \"apk add --no-cache curl\"",
+        "buildah commit container1 myimage:v1",
+        "buildah push myimage quay.io/org/myimage:v1"
+      ],
+      "examples": [
+        "buildah bud -f Containerfile.dev -t myapp:dev .",
+        "buildah images",
+        "buildah rm -a && buildah rmi -a"
+      ],
+      "parameters": [
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "Image tag, e.g. myapp:latest"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Containerfile path (-f)"
+        },
+        {
+          "name": "layers",
+          "type": "boolean",
+          "description": "Use layer caching during bud"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "buildah docs",
+      "type": "documentation",
+      "source": "https://buildah.io/",
+      "description": "CLI reference and use cases"
+    },
+    {
+      "title": "buildah command reference",
+      "type": "documentation",
+      "source": "https://github.com/containers/buildah/blob/main/docs/buildah.1.md",
+      "description": "Full command list with examples"
+    }
+  ],
+  "instructions": "# Buildah\n\nBuilds OCI images without a daemon and without root for many workflows: handy for\nCI where Docker isn't available.\n\n## When to Use\n\n- Building images in rootless CI environments\n- Fine-grained image creation from the CLI\n- Replacing docker build in daemon-less hosts\n\n## Real Commands\n\n```bash\n# Build from a Containerfile\nsudo buildah bud -t myapp:latest .\nsudo buildah bud -f Containerfile.dev -t myapp:dev --layers .\n\n# Manual image construction\nctr=$(sudo buildah from alpine:3.19)\nsudo buildah run $ctr -- sh -c \"apk add --no-cache curl\"\nsudo buildah config --entrypoint '[\"/usr/bin/myapp\"]' $ctr\nsudo buildah commit $ctr myimage:v1\n\n# Inspect\nsudo buildah images\nsudo buildah inspect myimage:v1\n\n# Push\nsudo buildah push myimage:v1 quay.io/org/myimage:v1\n\n# Cleanup\nsudo buildah rm -a\nsudo buildah rmi -a\n```\n\n## Containerfile Example\n\n```dockerfile\nFROM alpine:3.19\nRUN apk add --no-cache curl\nCOPY app /usr/bin/app\nENTRYPOINT [\"/usr/bin/app\"]\n```\n\n## Best Practices\n\n- Prefer `buildah bud` from a committed Containerfile\n- Use `--layers` to reuse cache in CI\n- Set labels and entrypoint via buildah config\n- Combine buildah push with skopeo for cross-repo copies\n- Clean up build containers in CI to avoid leaks\n\n## Example Response\n\nBuilds the image, verifies it with inspect, pushes it, and cleans up the\nintermediate build containers.",
+  "examples": [
+    {
+      "input": "Build the app image in CI",
+      "output": "Runs buildah bud --layers, tags it, pushes to the registry, and cleans up"
+    },
+    {
+      "input": "Add a debugging tool to an image",
+      "output": "Runs the container, installs curl via buildah run, commits as a new tag"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "buildah.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-buildah"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: buildah. You do it through buildah-images: Create, modify, commit, and push container images. The commands are real, e.g. `buildah bud -t myapp:latest .`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "buildah",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "buildah-images",
+        "name": "tag",
+        "type": "string",
+        "description": "Image tag, e.g. myapp:latest"
+      },
+      {
+        "capability": "buildah-images",
+        "name": "file",
+        "type": "string",
+        "description": "Containerfile path (-f)"
+      },
+      {
+        "capability": "buildah-images",
+        "name": "layers",
+        "type": "boolean",
+        "description": "Use layer caching during bud"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "buildah"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/buildah-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/buildah-skill.yaml",
+    "checksum": "27ccdc29312b1bf0c9e76ed18693f7ede70eb288509398b6d1262f2d296f954c"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "name": "graphql-sangria",
+  "display_name": "Graphql Sangria",
+  "category": "api",
+  "subcategory": "general",
+  "description": "GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and test queries with the execution API.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "sbt"
+  ],
+  "capabilities": [
+    {
+      "name": "sangria-schema",
+      "description": "Define Sangria schemas, execute queries, and export SDL.",
+      "commands": [
+        "sbt run",
+        "sbt compile",
+        "sbt test",
+        "curl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq",
+        "sbt 'runMain example.SchemaExport'"
+      ],
+      "examples": [
+        "sbt compile && sbt test",
+        "curl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq",
+        "sbt 'runMain example.SchemaExport'"
+      ],
+      "parameters": [
+        {
+          "name": "schema-object",
+          "type": "string",
+          "description": "Scala object exposing the Schema"
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "GraphQL HTTP endpoint"
+        },
+        {
+          "name": "main-class",
+          "type": "string",
+          "description": "Sangria main class for SDL export"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Sangria docs",
+      "type": "documentation",
+      "source": "https://sangria-graphql.org/learn/",
+      "description": "Schema definition DSL, resolvers, and mutations"
+    },
+    {
+      "title": "Sangria GitHub",
+      "type": "documentation",
+      "source": "https://github.com/sangria-graphql/sangria",
+      "description": "Examples and integration with Akka HTTP"
+    }
+  ],
+  "instructions": "# GraphQL Sangria\n\n## What this skill does\n\nSangria is a Scala GraphQL library with a powerful programmatic schema DSL. Resolvers return Futures for async sources; `Executor.execute` runs queries and `SchemaRenderer` exports SDL.\n\n## When to use\n\n- Scala/Akka services adding GraphQL\n- Teams that prefer explicit schema DSLs over macros\n- Type-safe async resolvers with Future/Task\n\n## Real commands\n\n```bash\n# Build and test with sbt\nsbt compile\nsbt test\n\n# Run the server\nsbt run\n\n# Query it\ncurl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq\n\n# Export SDL\nsbt 'runMain example.SchemaExport'\n```\n\n## Schema example\n\n```scala\nimport sangria.schema._\nimport sangria.execution.Executor\n\nval Character = ObjectType(\n  \"Character\",\n  \"A character in the story\",\n  fields[MyCtx, Character](Field(\"name\", StringType, resolve = _.value.name))\n)\n\nval Query = ObjectType(\"Query\", fields[MyCtx, Unit](\n  Field(\"characters\", ListType(Character), resolve = ctx => repo.all(ctx.ctx))\n))\n\nval schema = Schema(Query)\n```\n\n## Executing a query\n\n```scala\nimport scala.concurrent.Await\nimport scala.concurrent.duration._\n\nval result = Await.result(Executor.execute(schema, query), 10.seconds)\nprintln(result)\n```\n\n## Best practices\n\n- Use `FieldTags` and middleware for auth, not resolver checks.\n- Keep the context (MyCtx) for DI of repos and caches.\n- Export SDL from CI to catch breaking changes.\n- Use deferred resolution (Deferred/Projector) for N+1 batching.\n- Keep schema construction lazy or cached; it is expensive.\n",
+  "examples": [
+    {
+      "input": "Serve a Sangria schema over Akka HTTP",
+      "output": "Define the schema, mount the route with graphQL endpoint and the executor, run with sbt run, and curl a query."
+    },
+    {
+      "input": "Run a query in a test",
+      "output": "Await Executor.execute(schema, query) with a test timeout and assert on the result map."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-sangria.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql-sangria"
+    },
+    "generic": {
+      "system_prompt": "You own Graphql Sangria end to end. You do it through sangria-schema: Define Sangria schemas, execute queries, and export SDL. The commands are real, e.g. `sbt run`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "graphql-sangria",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sangria-schema",
+        "name": "schema-object",
+        "type": "string",
+        "description": "Scala object exposing the Schema"
+      },
+      {
+        "capability": "sangria-schema",
+        "name": "endpoint",
+        "type": "string",
+        "description": "GraphQL HTTP endpoint"
+      },
+      {
+        "capability": "sangria-schema",
+        "name": "main-class",
+        "type": "string",
+        "description": "Sangria main class for SDL export"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "sbt"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/graphql-sangria-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/graphql-sangria-skill.yaml",
+    "checksum": "a473a65a907b2384d11ad90171712c6eb19e60fec52a2505ea6275c15fcafd32"
+  }
+}

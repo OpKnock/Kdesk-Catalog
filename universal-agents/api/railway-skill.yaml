@@ -1,0 +1,161 @@
+name: railway
+display_name: Railway
+category: api
+subcategory: general
+description: 'Deploy to Railway: login, init, link, deploy, variables, logs and project management with
+  the railway CLI.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- railway
+capabilities:
+- name: railway-deployments
+  description: Deploy applications to Railway, manage environment variables and inspect deployments.
+  commands:
+  - railway login
+  - railway init
+  - railway up
+  - railway deploy
+  - railway variables
+  examples:
+  - railway up
+  - railway variables --set FOO=bar
+  - railway run npm run migrate
+  parameters:
+  - name: project
+    type: string
+    description: Railway project name
+  - name: environment
+    type: string
+    description: Deploy environment (production/preview)
+  - name: variable
+    type: string
+    description: KEY=VALUE to set
+knowledge:
+- title: Railway Docs
+  type: documentation
+  source: https://docs.railway.com/
+  description: CLI reference, deployment and environments
+- title: Railway CLI GitHub
+  type: documentation
+  source: https://github.com/railwayapp/cli
+  description: railway commands and usage
+instructions: '# Railway
+
+
+  Railway deploys apps with zero config: push code, it runs.
+
+
+  ## What this skill does
+
+
+  - Logs in and links projects
+
+  - Deploys from the current directory
+
+  - Manages variables and runs commands in the environment
+
+
+  ## When to use
+
+
+  - Heroku-style deploys without the lock-in
+
+  - Preview environments per PR
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Auth
+
+  railway login
+
+  railway init
+
+  railway link
+
+
+  # Deploy
+
+  railway up
+
+  railway deploy
+
+
+  # Variables
+
+  railway variables
+
+  railway variables --set FOO=bar
+
+  railway variables --delete FOO
+
+
+  # Run in project env
+
+  railway run npm run migrate
+
+  railway run python manage.py migrate
+
+
+  # Logs
+
+  railway logs
+
+  railway logs --deployment
+
+  ```
+
+
+  ## Best practices
+
+
+  - Keep secrets in variables, never in git
+
+  - Use railway up for quick deploys, railway deploy for pinned environments
+
+  - Run migrations via railway run before releases'
+examples:
+- input: Deploy my Node app to Railway
+  output: The agent links the project and runs railway up, then checks logs.
+- input: Add DATABASE_URL to my production environment
+  output: The agent sets the variable with railway variables --set and redeploys.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: railway.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-railway
+  generic:
+    system_prompt: 'You are the Railway specialist. You do it through railway-deployments: Deploy applications
+      to Railway, manage environment variables and inspect deployments. The commands are real, e.g. `railway
+      login`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,107 @@
+name: linter
+display_name: Linter
+category: code-quality
+subcategory: linting
+description: Code linting assistant for multiple languages and frameworks
+version: 1.0.0
+tags:
+- linting
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Linter
+  description: Code linting assistant for multiple languages and frameworks
+  commands:
+  - 'ESLint: npx eslint src/'
+  - 'Ruff: ruff check src/'
+  - 'golangci-lint: golangci-lint run'
+  - 'Hadolint: hadolint Dockerfile'
+  examples:
+  - 'ESLint: npx eslint src/'
+  - 'Ruff: ruff check src/'
+  - 'golangci-lint: golangci-lint run'
+  - 'Hadolint: hadolint Dockerfile'
+  parameters: []
+knowledge:
+- title: linter Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/linting
+  description: Reference documentation for linter
+instructions: 'You are a code linting expert. Help users with:
+
+  - ESLint (JS/TS)
+
+  - Stylelint (CSS/SCSS)
+
+  - Flake8/Pylint/Ruff (Python)
+
+  - golangci-lint (Go)
+
+  - Clippy (Rust)
+
+  - Hadolint (Dockerfile)
+
+  - ShellCheck (Bash)
+
+  - Markdownlint
+
+
+  Always use real linting tools. Never suggest fictional tools.'
+examples:
+- 'ESLint: npx eslint src/'
+- 'Ruff: ruff check src/'
+- 'golangci-lint: golangci-lint run'
+- 'Hadolint: hadolint Dockerfile'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: linter.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a code linting expert. Help users with:
+
+      - ESLint (JS/TS)
+
+      - Stylelint (CSS/SCSS)
+
+      - Flake8/Pylint/Ruff (Python)
+
+      - golangci-lint (Go)
+
+      - Clippy (Rust)
+
+      - Hadolint (Dockerfile)
+
+      - ShellCheck (Bash)
+
+      - Markdownlint
+
+
+      Always use real linting tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-linter
+  generic:
+    system_prompt: You are linter. Code linting assistant for multiple languages and frameworks
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

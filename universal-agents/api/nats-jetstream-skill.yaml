@@ -1,0 +1,175 @@
+name: nats-jetstream
+display_name: Nats Jetstream
+category: api
+subcategory: general
+description: 'NATS JetStream core: create streams, message retention, storage engines, and durability
+  configuration.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nats
+capabilities:
+- name: jetstream-streams
+  description: Create and manage JetStream streams, configure retention/storage, and produce/consume messages.
+  commands:
+  - nats server check jetstream
+  - nats stream add ORDERS --subjects 'orders.*' --storage file
+  - nats stream ls
+  - nats stream info ORDERS
+  - nats stream rm ORDERS
+  examples:
+  - nats stream add EVENTS --subjects 'events.>' --retention limits --max-age 24h --storage file
+  - nats stream info ORDERS
+  - nats stream purge ORDERS --force
+  parameters:
+  - name: stream
+    type: string
+    description: Stream name
+  - name: subjects
+    type: array
+    description: Subject filters the stream captures
+  - name: retention
+    type: string
+    description: limits, interest or workqueue
+knowledge:
+- title: NATS JetStream Concepts
+  type: documentation
+  source: https://docs.nats.io/nats-concepts/jetstream
+  description: Streams, consumers, retention policies and limits
+- title: nats CLI reference
+  type: documentation
+  source: https://docs.nats.io/using-nats/command-line/
+  description: nats stream and nats consumer commands
+instructions: '# NATS JetStream
+
+
+  JetStream adds durable streams and consumer groups to NATS, enabling reliable messaging.
+
+
+  ## What this skill does
+
+
+  - Verifies JetStream is enabled on the server
+
+  - Creates streams with subjects and retention policies
+
+  - Publishes to and reads from streams
+
+
+  ## When to use
+
+
+  - Persisting events for replay
+
+  - Exactly-once-capable event processing
+
+  - Replacing Kafka-style messaging with NATS
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Verify JetStream is running
+
+  nats server check jetstream
+
+
+  # Create a stream
+
+  nats stream add ORDERS --subjects ''orders.*'' --storage file
+
+  nats stream add EVENTS --subjects ''events.>'' --retention limits --max-age 24h
+
+
+  # List and inspect
+
+  nats stream ls
+
+  nats stream info ORDERS
+
+
+  # Purge and delete
+
+  nats stream purge ORDERS --force
+
+  nats stream rm ORDERS
+
+  ```
+
+
+  ## Publish into a stream
+
+
+  ```bash
+
+  nats pub orders.created ''{"id":1}'' --stream ORDERS
+
+  nats stream view ORDERS
+
+  ```
+
+
+  ## Retention policies
+
+
+  - `limits`: keep until limits hit (default)
+
+  - `interest`: drop when all consumers have seen them
+
+  - `workqueue`: single consumer, delete on ack
+
+
+  ## Best practices
+
+
+  - Use file storage for durable data, memory for cache-like streams
+
+  - Set max-age/max-bytes to bound disk
+
+  - Always name streams clearly and match subjects deliberately'
+examples:
+- input: Set up JetStream so I can replay order events
+  output: The agent checks `nats server check jetstream`, creates a file-backed ORDERS stream, and publishes
+    test messages.
+- input: My JetStream messages disappear after a server restart
+  output: The agent switches the stream to `--storage file` and verifies persistence with `nats stream
+    info`.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nats-jetstream.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nats-jetstream
+  generic:
+    system_prompt: 'You work Nats Jetstream hands-on. You do it through jetstream-streams: Create and
+      manage JetStream streams, configure retention/storage, and produce/consume messages. The commands
+      are real, e.g. `nats server check jetstream`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

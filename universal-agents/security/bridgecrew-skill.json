@@ -1,0 +1,206 @@
+{
+  "name": "bridgecrew",
+  "display_name": "bridgecrew",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Scans IaC and repositories against the Bridgecrew/Prisma Cloud policy library, uploading results for centralized fix tracking.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bridgecrew",
+    "checkov"
+  ],
+  "capabilities": [
+    {
+      "name": "bridgecrew-scan",
+      "description": "Run Bridgecrew scans locally over directories and files with framework selection.",
+      "commands": [
+        "bridgecrew --directory .",
+        "bridgecrew -d terraform/ --framework terraform",
+        "bridgecrew -f main.tf -o json",
+        "bridgecrew -d . --skip-check CKV_AWS_79",
+        "bridgecrew -d . --output junitxml"
+      ],
+      "examples": [
+        "bridgecrew --directory ./infra --framework terraform --output cli",
+        "bridgecrew -f serverless.yml --framework serverless",
+        "bridgecrew -d . --compact"
+      ],
+      "parameters": [
+        {
+          "name": "directory",
+          "type": "string",
+          "description": "Directory to scan recursively"
+        },
+        {
+          "name": "framework",
+          "type": "string",
+          "description": "IaC framework: terraform, cloudformation, serverless, arm"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Report format: cli, json, junitxml, sarif"
+        }
+      ]
+    },
+    {
+      "name": "platform-integration",
+      "description": "Upload results to Bridgecrew SaaS for dashboards, PR comments, and fix tracking.",
+      "commands": [
+        "bridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra",
+        "checkov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra --repo-branch main",
+        "bridgecrew --bc-api-key $BRIDGECREW_API_KEY --directory . --skip-fixes"
+      ],
+      "examples": [
+        "bridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id acme/infra",
+        "checkov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id acme/infra --download-external-modules"
+      ],
+      "parameters": [
+        {
+          "name": "apiKey",
+          "type": "string",
+          "description": "Bridgecrew API key (env: BRIDGECREW_API_KEY)"
+        },
+        {
+          "name": "repoId",
+          "type": "string",
+          "description": "Repository identifier for result upload, e.g. org/repo"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Bridgecrew Documentation",
+      "type": "documentation",
+      "source": "https://docs.bridgecrew.io/",
+      "description": "CLI usage, policies, and platform integration"
+    },
+    {
+      "title": "Prisma Cloud IaC Docs",
+      "type": "documentation",
+      "source": "https://docs.prismacloud.io/en/enterprise-edition/content/iac",
+      "description": "IaC scanning engine, policy library, and fix workflow"
+    }
+  ],
+  "instructions": "# Bridgecrew IaC Security\n\nScan infrastructure-as-code against Bridgecrew/Prisma Cloud policies for misconfigurations.\n\n## What This Skill Does\n\n- Scans Terraform, CloudFormation, Serverless, ARM, and Kubernetes manifests\n- Reports policy violations with fix guidance in multiple formats\n- Integrates with the Bridgecrew SaaS platform for dashboards and PR gatekeeping\n- Excludes false positives per policy or per check\n\n## When to Use\n\n- Pre-deploy IaC review for misconfigurations\n- CI gate that fails on high-severity policy violations\n- Centralized compliance reporting for cloud infrastructure\n\n## Real Commands\n\n```bash\n# Basic directory scan\nbridgecrew --directory .\n\n# Framework-scoped scan with JSON output\nbridgecrew -d terraform/ --framework terraform -o json\n\n# Single-file scan\nbridgecrew -f main.tf -o cli\n\n# Skip a noisy policy and output SARIF for GitHub code scanning\nbridgecrew -d . --skip-check CKV_AWS_79 --output sarif\n\n# Upload to the platform\nbridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra\n\n# Modern engine: checkov with platform key\ncheckov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra\n```\n\n## Best Practices\n\n- Run in CI on every PR; fail only on HIGH/CRITICAL to start\n- Keep baseline results reviewed and suppress known-false positives explicitly\n- Scan Kubernetes YAML with the k8s framework as part of the same pipeline\n- Prefer checkov for newer policy features; bridgecrew CLI is legacy\n- Store the API key in CI secrets, never in the repo",
+  "examples": [
+    {
+      "input": "Scan my Terraform before a production deploy",
+      "output": "Agent runs bridgecrew -d terraform/ --framework terraform -o json, summarizes HIGH/CRITICAL findings with check IDs, and proposes fixes for the top issues."
+    },
+    {
+      "input": "Wire Bridgecrew into CI to block insecure PRs",
+      "output": "Agent adds bridgecrew -d . --framework terraform --output junitxml with BRIDGECREW_API_KEY secret and fails the job on CRITICAL findings."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "bridgecrew.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-bridgecrew"
+    },
+    "generic": {
+      "system_prompt": "Your lane is bridgecrew. You do it through bridgecrew-scan: Run Bridgecrew scans locally over directories and files with framework selection. The commands are real, e.g. `bridgecrew --directory .`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "bridgecrew",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "bridgecrew-scan",
+        "name": "directory",
+        "type": "string",
+        "description": "Directory to scan recursively"
+      },
+      {
+        "capability": "bridgecrew-scan",
+        "name": "framework",
+        "type": "string",
+        "description": "IaC framework: terraform, cloudformation, serverless, arm"
+      },
+      {
+        "capability": "bridgecrew-scan",
+        "name": "output",
+        "type": "string",
+        "description": "Report format: cli, json, junitxml, sarif"
+      },
+      {
+        "capability": "platform-integration",
+        "name": "apiKey",
+        "type": "string",
+        "description": "Bridgecrew API key (env: BRIDGECREW_API_KEY)"
+      },
+      {
+        "capability": "platform-integration",
+        "name": "repoId",
+        "type": "string",
+        "description": "Repository identifier for result upload, e.g. org/repo"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bridgecrew",
+    "checkov"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/bridgecrew-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/bridgecrew-skill.yaml",
+    "checksum": "60abb4d0b0bc85006375b2d49c962a4eaf68a7001cefbcbf83da7aee514b7b23"
+  }
+}

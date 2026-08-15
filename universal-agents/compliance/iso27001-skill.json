@@ -1,0 +1,177 @@
+{
+  "name": "iso27001",
+  "display_name": "Iso27001",
+  "category": "compliance",
+  "subcategory": "general",
+  "description": "Supports ISO 27001 ISMS work: asset inventory, risk assessment, control verification, and evidence collection.",
+  "version": "2.0.0",
+  "tags": [
+    "iso27001"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "gitleaks",
+    "nmap",
+    "openssl"
+  ],
+  "capabilities": [
+    {
+      "name": "isms-evidence",
+      "description": "Collect security evidence for ISO 27001 Annex A controls",
+      "commands": [
+        "nmap -sV -p 22,443,8443 --open 10.0.0.0/24",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:9200/_cat/health",
+        "openssl cipherlist -v tls1_2",
+        "gitleaks detect --source . --report-path gitleaks.json",
+        "docker compose ps --format json"
+      ],
+      "examples": [
+        "nuclei -l targets.txt -severity critical,high",
+        "rg -i \"password|api_key|secret\" config/ --hidden",
+        "curl -s localhost:9090/metrics | head -20"
+      ],
+      "parameters": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Show only open ports in nmap output"
+        },
+        {
+          "name": "report-path",
+          "type": "string",
+          "description": "Where to write the secret-scan report"
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "Nuclei severity filter, e.g. critical,high"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ISO/IEC 27001 standard",
+      "type": "documentation",
+      "source": "https://www.iso.org/standard/27001",
+      "description": "The official ISMS requirements standard"
+    },
+    {
+      "title": "Annex A control reference",
+      "type": "documentation",
+      "source": "https://www.iso.org/standard/27002",
+      "description": "ISO 27002 control catalogue mapped to Annex A"
+    }
+  ],
+  "instructions": "# ISO 27001\n\nInformation Security Management System (ISMS) support: evidence gathering for\nAnnex A controls, asset inventories, and risk assessments.\n\n## When to Use\n\n- Collecting audit evidence for certification or surveillance audits\n- Building the asset inventory (A.5.9)\n- Verifying technical controls: patching, encryption, access (A.8)\n- Preparing the Statement of Applicability (SoA)\n\n## Real Commands\n\n```bash\n# Asset discovery on a subnet\nnmap -sV -p 22,443,8443 --open 10.0.0.0/24 -oX assets.xml\n\n# Patch level: check SSH versions\nnmap -sV -p 22 10.0.0.5\n\n# Secret hygiene evidence\nsudo gitleaks detect --source . --report-path gitleaks.json\n\n# Access control: review users\nrg -i -n \"admin|root\" docker-compose.yml k8s/ | head -30\n\n# Monitoring: metrics endpoint reachable\ncurl -s localhost:9090/metrics | head -5\n\n# Backups: verify job runs\ncrontab -l && docker compose ps --format json\n```\n\n## Common Evidence Pack\n\n- A.5.9 asset inventory (nmap -oX output + owner table)\n- A.8.8 vulnerability management (nuclei/grype reports)\n- A.8.9/A.8.10 secrets management (gitleaks report, vault config)\n- A.8.16 monitoring (metrics, alert rules)\n- A.8.13 backup policy + restore test logs\n\n## Best Practices\n\n- Keep the SoA honest: mark controls as applicable or not, with justification\n- Tie every control to concrete evidence artifacts\n- Schedule recurring scans so evidence has dates\n- Document risk treatment: accept, mitigate, transfer, avoid\n- Update the ISMS after infrastructure changes\n\n## Example Response\n\nReturns an evidence matrix mapping Annex A controls to artifacts collected\n(scans, config excerpts), with gaps and risk-level suggestions.",
+  "examples": [
+    {
+      "input": "Collect evidence for our surveillance audit",
+      "output": "Runs nmap asset scan, gitleaks secret scan, and metrics checks, then maps results to Annex A controls in an evidence table"
+    },
+    {
+      "input": "Verify our patch management control",
+      "output": "Scans hosts with nmap -sV and reports outdated software versions with CVEs, then links findings to A.8.8"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "iso27001.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-iso27001"
+    },
+    "generic": {
+      "system_prompt": "You work Iso27001 hands-on. You do it through isms-evidence: Collect security evidence for ISO 27001 Annex A controls. The commands are real, e.g. `nmap -sV -p 22,443,8443 --open 10.0.0.0/24`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "iso27001",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "isms-evidence",
+        "name": "open",
+        "type": "boolean",
+        "description": "Show only open ports in nmap output"
+      },
+      {
+        "capability": "isms-evidence",
+        "name": "report-path",
+        "type": "string",
+        "description": "Where to write the secret-scan report"
+      },
+      {
+        "capability": "isms-evidence",
+        "name": "severity",
+        "type": "string",
+        "description": "Nuclei severity filter, e.g. critical,high"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "gitleaks",
+    "nmap",
+    "openssl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "compliance/iso27001-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/compliance/iso27001-skill.yaml",
+    "checksum": "f5968fa285af5ee1a267c3c3f556b0b192ef842af441f27b7616fb02a733458e"
+  }
+}

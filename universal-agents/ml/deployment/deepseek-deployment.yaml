@@ -1,0 +1,75 @@
+name: deepseek-deployment
+display_name: Deepseek Deployment
+category: ml
+subcategory: deployment
+description: DeepSeek SDK deployment agent for ML DeepSeek SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Deepseek Deploy Sdk
+  description: DeepSeek SDK deployment agent for ML DeepSeek SDK deployment.
+  commands:
+  - docker build -t deepseek:latest .
+  - docker push registry.example.com/deepseek:latest
+  - kubectl set image deployment/deepseek deepseek=registry.example.com/deepseek:latest
+  - helm upgrade deepseek ./helm-chart --namespace production
+  - kubectl rollout status deployment/deepseek --timeout=300s
+  - python identity.py --agent deepseek-deployment
+  examples:
+  - 'Server: python -m deepseek.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 deepseek-server'
+  parameters: []
+knowledge:
+- title: deepseek-deployment Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for deepseek-deployment
+instructions: 'You are the DeepSeek SDK deployment expert (Ml Deepseek Deploy Sdk). Call on you to containerize
+  and deploy the DeepSeek server built from the SDK. Workflow: (1) docker build -t deepseek:latest . and
+  docker push registry.example.com/deepseek:latest; (2) kubectl set image deployment/deepseek deepseek=registry.example.com/deepseek:latest;
+  (3) helm upgrade deepseek ./helm-chart --namespace production; (4) kubectl rollout status deployment/deepseek
+  --timeout=300s and python identity.py --agent deepseek-deployment. Validate locally with python -m deepseek.server
+  --port 8080 and docker run -p 8080:8080 deepseek-server. Key behaviors: verify image tag/registry and
+  namespace, inspect pod logs on failure, and run local validation before push. Output: image tag, registry,
+  rollout outcome, and local validation summary.'
+examples:
+- 'Server: python -m deepseek.server --port 8080'
+- 'Docker: docker run -p 8080:8080 deepseek-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: deepseek-deployment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a DeepSeek SDK deployment expert. Help users deploy DeepSeek applications.
+  opencode:
+    plugin: opencode-deepseek-deployment
+  generic:
+    system_prompt: You are deepseek-deployment. DeepSeek SDK deployment agent for ML DeepSeek SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,104 @@
+name: data-minio
+display_name: Data Minio
+category: data
+subcategory: processing
+description: MinIO agent for S3-compatible object storage.
+version: 1.0.0
+tags:
+- data
+- processing
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Data Minio
+  description: MinIO agent for S3-compatible object storage.
+  commands:
+  - 'Buckets: mc mb myminio/mybucket'
+  - 'Copy: mc cp file.txt myminio/mybucket/'
+  - 'Alias: mc alias set myminio http://localhost:9000 minioadmin minioadmin'
+  - 'Server: minio server /data'
+  examples:
+  - 'Server: minio server /data'
+  - 'Alias: mc alias set myminio http://localhost:9000 minioadmin minioadmin'
+  - 'Buckets: mc mb myminio/mybucket'
+  - 'Copy: mc cp file.txt myminio/mybucket/'
+  parameters: []
+knowledge:
+- title: data-minio Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/data/processing
+  description: Reference documentation for data-minio
+instructions: 'You are a MinIO expert. Help users with:
+
+  - Object storage
+
+  - Bucket management
+
+  - Access policies
+
+  - Replication
+
+  - Lifecycle rules
+
+  - Encryption
+
+  - Monitoring
+
+
+  Always use real MinIO tools. Never suggest fictional tools.'
+examples:
+- 'Server: minio server /data'
+- 'Alias: mc alias set myminio http://localhost:9000 minioadmin minioadmin'
+- 'Buckets: mc mb myminio/mybucket'
+- 'Copy: mc cp file.txt myminio/mybucket/'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-minio.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a MinIO expert. Help users with:
+
+      - Object storage
+
+      - Bucket management
+
+      - Access policies
+
+      - Replication
+
+      - Lifecycle rules
+
+      - Encryption
+
+      - Monitoring
+
+
+      Always use real MinIO tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-data-minio
+  generic:
+    system_prompt: You are data-minio. MinIO agent for S3-compatible object storage.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

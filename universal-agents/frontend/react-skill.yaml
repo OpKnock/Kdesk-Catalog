@@ -1,0 +1,128 @@
+name: react
+display_name: React
+category: frontend
+subcategory: general
+description: 'Develops React applications with Vite: scaffolding, JSX, hooks, and production builds with
+  strict TypeScript.'
+version: 2.0.0
+tags:
+- frontend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- name: vite
+  description: Scaffold and run React apps on the Vite toolchain.
+  commands:
+  - npm create vite@latest my-app -- --template react-ts
+  - npm install
+  - npm run dev
+  - npm run build
+  - npm run preview
+  examples:
+  - npm create vite@latest admin -- --template react-ts --no-interactive
+  - npm run dev -- --port 5173 --open
+  - npm run build && npm run preview -- --port 4173
+  parameters:
+  - name: template
+    type: string
+    description: react, react-ts, or vanilla-ts
+  - name: port
+    type: number
+    description: Dev server port
+  - name: open
+    type: string
+    description: Open browser on dev start
+- name: typescript-check
+  description: Type-check and optimize React code.
+  commands:
+  - npx tsc --noEmit
+  - npm run build && npx tsc --noEmit
+  - npx vite build --mode production
+  - npm run preview
+  - npx eslint . --ext ts,tsx
+  examples:
+  - npx tsc --noEmit --strict
+  - npx vite build --minify esbuild
+  - npx tsc --noEmit && npm run build
+  parameters:
+  - name: mode
+    type: string
+    description: Vite build mode for env configs
+  - name: noEmit
+    type: string
+    description: Type-check without emitting files
+  - name: minify
+    type: string
+    description: esbuild or terser minifier
+knowledge:
+- title: React Quick Start
+  type: documentation
+  source: https://react.dev/learn
+  description: Components, props, state, and hooks fundamentals
+- title: Vite Guide
+  type: documentation
+  source: https://vite.dev/guide/
+  description: Vite tooling, HMR, and build pipeline
+- title: TypeScript with React
+  type: documentation
+  source: https://www.typescriptlang.org/docs/handbook/react-&-webpack.html
+  description: Typed props, hooks, and JSX patterns
+instructions: "# React\n\nBuild React applications on Vite with typed components and fast iteration.\n\
+  \n## When to Use\n\n- New SPAs where you own the full toolchain\n- Migrating from legacy CRA tooling\n\
+  - Component-heavy interactive UIs\n\n## Scaffold\n\n```bash\nnpm create vite@latest my-app -- --template\
+  \ react-ts\nnpm install\nnpm run dev\n```\n\n## Component basics\n\n```tsx\ntype UserCardProps = { name:\
+  \ string; role: string; onSelect: (id: string) => void };\n\nexport function UserCard({ name, role,\
+  \ onSelect }: UserCardProps) {\n  return (\n    <button onClick={() => onSelect(name)}>\n      <strong>{name}</strong>\
+  \ <span>{role}</span>\n    </button>\n  );\n}\n```\n\n## Hooks discipline\n\n- `useState` for local\
+  \ state, `useReducer` for complex transitions\n- `useEffect` for subscriptions and sync with external\
+  \ systems only\n- `useMemo`/`useCallback` only when profiling proves the need\n\n```tsx\nexport function\
+  \ useDebounced<T>(value: T, delay = 300): T {\n  const [debounced, setDebounced] = useState(value);\n\
+  \  useEffect(() => {\n    const t = setTimeout(() => setDebounced(value), delay);\n    return () =>\
+  \ clearTimeout(t);\n  }, [value, delay]);\n  return debounced;\n}\n```\n\n## Type checking and build\n\
+  \n```bash\nnpx tsc --noEmit\nnpm run build\nnpm run preview\n```\n\n## Best practices\n\n- Type all\
+  \ props and state; avoid `any` at module boundaries.\n- Colocate tests next to components: `UserCard.test.tsx`.\n\
+  - Split code by feature folders with a `components/` shared dir.\n- Use `import.meta.env` typed env\
+  \ variables, never string lookups.\n\n## Testing\n\n```bash\nnpx vitest run --coverage\n```\n\nVerify\
+  \ coverage before every release."
+examples:
+- input: Start a typed React admin app with Vite.
+  output: Scaffolds react-ts template, installs dependencies, and opens the dev server; then adds typed
+    components for the admin shell.
+- input: Prepare a production build and verify types.
+  output: Runs npx tsc --noEmit, then npm run build --mode production, and previews the bundle locally.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: react.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-react
+  generic:
+    system_prompt: 'You own React end to end. You do it through vite: Scaffold and run React apps on the
+      Vite toolchain. The commands are real, e.g. `npm create vite@latest my-app -- --template react-ts`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

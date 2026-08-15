@@ -1,0 +1,229 @@
+name: mobile-app-development
+version: 2.0.0
+type: skill
+category: mobile
+description: 'Develops cross-platform mobile apps with Flutter and React Native/Expo: scaffolding, builds,
+  and device deployments.'
+keywords:
+- react-native
+- flutter
+- ios
+- android
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mobile-app-development.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-mobile-app-development
+  generic:
+    system_prompt: 'Your lane is mobile-app-development. You do it through flutter: Create, build, and
+      test Flutter applications. The commands are real, e.g. `flutter create my_app --org com.example`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: flutter
+  description: Create, build, and test Flutter applications.
+  commands:
+  - flutter create my_app --org com.example
+  - flutter pub get
+  - flutter analyze
+  - flutter test
+  - flutter build apk --release
+  examples:
+  - flutter create my_app --platforms android,ios
+  - flutter analyze --fatal-infos
+  - flutter build ipa --release --export-method ad-hoc
+  parameters:
+  - name: platforms
+    type: string
+    description: Target platforms android,ios,web,linux...
+  - name: fatal-infos
+    type: string
+    description: Fail analyze on info-level issues
+  - name: build-mode
+    type: string
+    description: debug, profile, or release
+- name: react-native
+  description: Scaffold and run React Native apps with Expo.
+  commands:
+  - npx create-expo-app@latest my-app --template blank-typescript
+  - npx expo start
+  - npx expo prebuild
+  - npx expo export --platform android
+  - eas build --platform android --profile preview
+  examples:
+  - npx create-expo-app@latest my-app --template tabs
+  - npx expo start --tunnel
+  - eas build --platform ios --profile production
+  parameters:
+  - name: template
+    type: string
+    description: Expo template name
+  - name: tunnel
+    type: string
+    description: Expo dev over the internet
+  - name: profile
+    type: string
+    description: 'EAS build profile: preview, development, production'
+prerequisites:
+- react-native
+- flutter
+- xcode
+- android-studio
+tools:
+- react-native
+- flutter
+- xcode
+- android-studio
+- expo
+examples:
+- input: Start a new cross-platform app with navigation.
+  output: Scaffolds a Flutter app with the org id, adds routes, and verifies with flutter analyze and
+    flutter test.
+- input: Ship an Expo app to TestFlight.
+  output: Prebuilds native projects, runs eas build with the production profile, and uploads the build
+    for review.
+instructions: '# Mobile App Development
+
+
+  Ship cross-platform apps with Flutter or React Native.
+
+
+  ## When to Use
+
+
+  - One codebase for iOS + Android
+
+  - Fast prototyping with hot reload
+
+  - Teams without deep native specialization
+
+
+  ## Flutter
+
+
+  ```bash
+
+  flutter create my_app --org com.example
+
+  flutter pub get
+
+  flutter analyze --fatal-infos
+
+  flutter test
+
+  ```
+
+
+  ## Flutter builds
+
+
+  ```bash
+
+  flutter build apk --release
+
+  flutter build ipa --release --export-method ad-hoc
+
+  ```
+
+
+  ## Expo (React Native)
+
+
+  ```bash
+
+  npx create-expo-app@latest my-app --template blank-typescript
+
+  npx expo start
+
+  npx expo prebuild
+
+  ```
+
+
+  ## EAS builds
+
+
+  ```bash
+
+  eas build --platform android --profile preview
+
+  eas build --platform ios --profile production
+
+  ```
+
+
+  EAS runs cloud builds with correct signing.
+
+
+  ## Framework decision
+
+
+  - Flutter: pixel-consistent UI, strong perf, Dart.
+
+  - React Native: JS ecosystem reuse, OTA updates via Expo.
+
+  - Evaluate plugin coverage before committing.
+
+
+  ## Best practices
+
+
+  - Run flutter analyze and tests in CI.
+
+  - Pin SDK versions and lockfiles.
+
+  - Test on physical devices before release - emulators miss edge cases.
+
+  - Use device farms (Firebase/EAS) for the device matrix.
+
+
+  ## Testing
+
+
+  ```bash
+
+  flutter analyze --fatal-infos && flutter test
+
+  ```
+
+
+  Both must pass on every merge.'
+display_name: mobile-app-development
+knowledge:
+- title: Flutter Docs
+  type: documentation
+  source: https://docs.flutter.dev/
+  description: Flutter CLI, testing, and builds
+- title: Expo Docs
+  type: documentation
+  source: https://docs.expo.dev/
+  description: React Native development with Expo tooling
+- title: React Native
+  type: documentation
+  source: https://reactnative.dev/docs/getting-started
+  description: Core React Native components and APIs

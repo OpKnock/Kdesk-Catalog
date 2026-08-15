@@ -1,0 +1,248 @@
+{
+  "name": "avro",
+  "display_name": "Avro",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Works with Apache Avro data serialization: schema authoring, avro-tools conversion, Python avro library usage, and schema evolution.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "java",
+    "pip",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "avro-tools",
+      "description": "Convert, inspect, and manipulate Avro data files.",
+      "commands": [
+        "java -jar avro-tools.jar getmeta file.avro",
+        "java -jar avro-tools.jar tojson file.avro",
+        "java -jar avro-tools.jar fromjson data.json --schema-file schema.avsc",
+        "java -jar avro-tools.jar cat file.avro",
+        "java -jar avro-tools.jar random --schema-file schema.avsc --count 10 test.avro"
+      ],
+      "examples": [
+        "java -jar avro-tools.jar tojson events.avro | head -5",
+        "java -jar avro-tools.jar getmeta events.avro | head -20",
+        "java -jar avro-tools.jar random --schema-file user.avsc --count 100 sample.avro"
+      ],
+      "parameters": [
+        {
+          "name": "schema_file",
+          "type": "string",
+          "description": "Avro schema .avsc file"
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "description": "Number of records for random generation"
+        }
+      ]
+    },
+    {
+      "name": "python-avro",
+      "description": "Serialize and deserialize Avro with the Python library.",
+      "commands": [
+        "pip install avro",
+        "python -c \"import avro; print(avro.__version__)\"",
+        "python -c \"from avro.datafile import DataFileWriter; from avro.io import DatumWriter; print('ok')\"",
+        "python -m avro"
+      ],
+      "examples": [
+        "python -c \"import avro.schema; s=avro.schema.parse(open('user.avsc').read()); print(s.fullname)\"",
+        "python -c \"from avro import schema; print(schema.parse('\\\"string\\\"').fullname)\"",
+        "python -c \"import avro.datafile as d; print([x for x in dir(d) if 'Writer' in x or 'Reader' in x])\""
+      ],
+      "parameters": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Avro schema JSON"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": ".avro data file to read/write"
+        }
+      ]
+    },
+    {
+      "name": "schema-evolution",
+      "description": "Test schema resolution between writer and reader schemas.",
+      "commands": [
+        "java -jar avro-tools.jar --version",
+        "java -jar avro-tools.jar tojson --schema-file reader.avsc writer.avro",
+        "python -c \"import avro.io as io; print([x for x in dir(io) if 'Reader' in x])\"",
+        "java -jar avro-tools.jar compile schema schema.avsc /tmp/out"
+      ],
+      "examples": [
+        "java -jar avro-tools.jar tojson --schema-file reader_v2.avsc writer_v1.avro | head -3",
+        "python -c \"from avro.io import DatumReader; r=DatumReader(reader_schema, writer_schema); print('resolution ready')\"",
+        "java -jar avro-tools.jar compile schema v2.avsc gen/"
+      ],
+      "parameters": [
+        {
+          "name": "writer_schema",
+          "type": "string",
+          "description": "Original schema used at write time"
+        },
+        {
+          "name": "reader_schema",
+          "type": "string",
+          "description": "New schema for reading"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Avro Specification",
+      "type": "documentation",
+      "source": "https://avro.apache.org/docs/current/specification/",
+      "description": "Schema types, resolution rules"
+    },
+    {
+      "title": "Avro Getting Started",
+      "type": "documentation",
+      "source": "https://avro.apache.org/docs/current/getting-started-java/",
+      "description": "avro-tools usage"
+    },
+    {
+      "title": "Python avro library",
+      "type": "documentation",
+      "source": "https://avro.apache.org/docs/current/getting-started-python/",
+      "description": "Python API for data files"
+    }
+  ],
+  "instructions": "# Avro\n\n## What this skill does\n\nWorks with Apache Avro serialization: writing schemas, converting data with avro-tools, reading/writing data files in Python, and testing schema evolution (resolution) between writer and reader schemas.\n\n## When to use\n\n- Serializing records for Kafka or data lakes (compact, typed, evolvable)\n- Converting JSON lines to Avro for storage efficiency\n- Verifying a schema change is backward compatible\n\n## Real commands\n\n```bash\n# Inspect metadata\njava -jar avro-tools.jar getmeta events.avro\n\n# Convert Avro to JSON\njava -jar avro-tools.jar tojson events.avro | head -5\n\n# JSON to Avro\njava -jar avro-tools.jar fromjson data.json --schema-file schema.avsc\n\n# Generate sample data\njava -jar avro-tools.jar random --schema-file user.avsc --count 100 sample.avro\n\n# Python\npip install avro\npython -c \"import avro.schema; s=avro.schema.parse(open('user.avsc').read()); print(s.fullname)\"\n```\n\n## Schema example\n\n```json\n{\n  \"type\": \"record\",\n  \"name\": \"User\",\n  \"namespace\": \"com.example\",\n  \"fields\": [\n    {\"name\": \"id\", \"type\": \"long\"},\n    {\"name\": \"email\", \"type\": \"string\"}\n  ]\n}\n```\n\n## Schema evolution\n\n- Adding a field with a default is backward compatible\n- Test resolution: `avro-tools tojson --schema-file reader_v2.avsc writer_v1.avro`\n\n## Testing\n\n- Round-trip: fromjson then tojson should reproduce input\n- Run evolution checks in CI with both schema versions\n\n## Best practices\n\n- Never remove fields without defaults unless coordinated\n- Store the writer schema in the .avro container header\n- Use Avro IDs in a schema registry for Kafka payloads",
+  "examples": [
+    {
+      "input": "Convert our API logs from JSON to Avro",
+      "output": "Writes a log.avsc matching the fields, runs fromjson on the JSON lines, verifies with getmeta/tojson, and notes the size reduction."
+    },
+    {
+      "input": "Can we add a field to the user schema safely?",
+      "output": "Adds the field with a default, runs `avro-tools tojson --schema-file v2.avsc v1.avro` to confirm resolution, and checks old readers still work."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "avro.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-avro"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Avro. You do it through avro-tools: Convert, inspect, and manipulate Avro data files. The commands are real, e.g. `java -jar avro-tools.jar getmeta file.avro`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "avro",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "avro-tools",
+        "name": "schema_file",
+        "type": "string",
+        "description": "Avro schema .avsc file"
+      },
+      {
+        "capability": "avro-tools",
+        "name": "count",
+        "type": "number",
+        "description": "Number of records for random generation"
+      },
+      {
+        "capability": "python-avro",
+        "name": "schema",
+        "type": "string",
+        "description": "Avro schema JSON"
+      },
+      {
+        "capability": "python-avro",
+        "name": "file",
+        "type": "string",
+        "description": ".avro data file to read/write"
+      },
+      {
+        "capability": "schema-evolution",
+        "name": "writer_schema",
+        "type": "string",
+        "description": "Original schema used at write time"
+      },
+      {
+        "capability": "schema-evolution",
+        "name": "reader_schema",
+        "type": "string",
+        "description": "New schema for reading"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "java",
+    "pip",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/avro-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/avro-skill.yaml",
+    "checksum": "46a07c8bb326e1aa9e2c96533b4d9000494a94527d72e2f84bff5d12c11aeb39"
+  }
+}

@@ -1,0 +1,190 @@
+name: nerdctl
+display_name: nerdctl
+category: devops
+subcategory: general
+description: 'Runs containers with the Docker-compatible containerd CLI (nerdctl): lifecycle, compose,
+  build, and debug on Kubernetes node runtimes.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nerdctl
+capabilities:
+- name: container-lifecycle
+  description: Pull, run, list, exec, and remove containers on containerd.
+  commands:
+  - nerdctl pull nginx:alpine
+  - nerdctl run -d --name web -p 8080:80 nginx:alpine
+  - nerdctl ps -a
+  - nerdctl exec -it web sh
+  - nerdctl logs -f web
+  - nerdctl rm -f web
+  examples:
+  - nerdctl run -d --name web -p 8080:80 nginx:alpine
+  - nerdctl exec -it web sh
+  - nerdctl ps -a
+  parameters:
+  - name: name
+    type: string
+    description: Container name
+  - name: image
+    type: string
+    description: Image reference
+  - name: ports
+    type: string
+    description: Port mapping
+- name: compose-and-build
+  description: Build images with BuildKit and run compose stacks via containerd.
+  commands:
+  - nerdctl build -t myapp:1.0 .
+  - nerdctl compose -f compose.yaml up -d
+  - nerdctl compose -f compose.yaml logs -f
+  - nerdctl compose down
+  - nerdctl images
+  - nerdctl system prune -a
+  examples:
+  - nerdctl build -t myapp:1.0 .
+  - nerdctl compose -f compose.yaml up -d
+  - nerdctl images
+  parameters:
+  - name: tag
+    type: string
+    description: Image tag
+  - name: compose-file
+    type: string
+    description: Compose file path
+knowledge:
+- title: nerdctl GitHub
+  type: documentation
+  source: https://github.com/containerd/nerdctl
+  description: Install, command reference, and Docker compatibility notes
+- title: containerd
+  type: documentation
+  source: https://containerd.io/docs/
+  description: The container runtime nerdctl talks to
+instructions: '# nerdctl with containerd
+
+
+  Operate containers on containerd with a Docker-compatible CLI.
+
+
+  ## What This Skill Does
+
+
+  - Runs and manages containers (run, ps, exec, logs, rm)
+
+  - Builds images with BuildKit
+
+  - Runs compose stacks against containerd namespaces
+
+  - Pulls/pushes images with lazy-pull (stargz) support
+
+  - Provides Docker parity for nodes running containerd (K3s, RKE2, bare)
+
+
+  ## When to Use
+
+
+  - Nodes have no Docker daemon, only containerd (common on Kubernetes)
+
+  - Debugging pods at runtime level on such nodes
+
+  - Local containerd-based dev environments
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Lifecycle
+
+  nerdctl pull nginx:alpine
+
+  nerdctl run -d --name web -p 8080:80 nginx:alpine
+
+  nerdctl ps -a
+
+  nerdctl exec -it web sh
+
+  nerdctl logs -f web
+
+  nerdctl rm -f web
+
+
+  # Build and compose
+
+  nerdctl build -t myapp:1.0 .
+
+  nerdctl compose -f compose.yaml up -d
+
+  nerdctl compose -f compose.yaml logs -f
+
+  nerdctl compose down
+
+
+  # Maintenance
+
+  nerdctl images
+
+  nerdctl system df
+
+  nerdctl system prune -a
+
+  nerdctl namespace list
+
+  nerdctl --namespace k8s.io ps   # inspect pods'' containers on k8s nodes
+
+  ```
+
+
+  ## Best Practices
+
+
+  - On Kubernetes nodes use `--namespace k8s.io` to see pod containers
+
+  - Use `nerdctl compose up` for CRI-less environments (e.g. RKE2 control plane)
+
+  - Prefer `nerdctl run --cni` for CNI networking in bare setups
+
+  - Use stargz lazy-pulling for cold-start sensitive fleets
+
+  - Keep containerd and nerdctl versions matched'
+examples:
+- input: List containers running on a K3s node
+  output: Agent runs nerdctl --namespace k8s.io ps to show pod containers, then inspects one with logs
+- input: Run our compose stack without Docker
+  output: Agent uses nerdctl compose up -d on the containerd host and checks status with ps
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nerdctl.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nerdctl
+  generic:
+    system_prompt: 'This is your domain: nerdctl. You do it through container-lifecycle: Pull, run, list,
+      exec, and remove containers on containerd. The commands are real, e.g. `nerdctl pull nginx:alpine`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

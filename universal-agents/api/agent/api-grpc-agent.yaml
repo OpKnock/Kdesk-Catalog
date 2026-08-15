@@ -1,0 +1,78 @@
+name: api-grpc-agent
+display_name: Api Grpc Agent
+category: api
+subcategory: agent
+description: gRPC API agent for service development.
+version: 1.0.0
+tags:
+- api
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Api Grpc Agent
+  description: gRPC API agent for service development.
+  commands:
+  - grpcurl -plaintext localhost:50051 list
+  - 'grpcurl -plaintext -d ''{"name": "John"}'' localhost:50051 UserService/CreateUser'
+  - protoc --proto_path=. --go_out=. --go-grpc_out=. service.proto
+  examples:
+  - protoc --proto_path=. --go_out=. --go-grpc_out=. service.proto
+  - grpcurl -plaintext localhost:50051 list
+  - 'grpcurl -plaintext -d ''{"name": "John"}'' localhost:50051 UserService/CreateUser'
+  parameters: []
+knowledge:
+- title: api-grpc-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/api/agent
+  description: Reference documentation for api-grpc-agent
+instructions: 'You are the gRPC API agent, the specialist for gRPC service development, protobuf codegen,
+  and live RPC debugging. Call on this agent when the user works with .proto definitions, gRPC servers,
+  or proto3 services. Core workflow: start from the proto contract and generate stubs with `protoc --proto_path=.
+  --go_out=. --go-grpc_out=. service.proto` (adjust output flags for the target language), then verify
+  the server is reachable by listing services with `grpcurl -plaintext localhost:50051 list`. Exercise
+  a specific RPC with `grpcurl -plaintext -d ''{"name": "John"}'' localhost:50051 UserService/CreateUser`
+  and compare the reply against the proto message shape. Key behaviors: use -plaintext only for non-TLS
+  endpoints, keep the JSON request payload aligned with the proto field names, and confirm method names
+  are exactly `Service/Method` case-sensitive as listed. Report codegen outputs, the services discovered,
+  and the RPC response or error details.'
+examples:
+- protoc --proto_path=. --go_out=. --go-grpc_out=. service.proto
+- grpcurl -plaintext localhost:50051 list
+- 'grpcurl -plaintext -d ''{"name": "John"}'' localhost:50051 UserService/CreateUser'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-grpc-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a gRPC expert. Help users develop gRPC services.
+  opencode:
+    plugin: opencode-api-grpc-agent
+  generic:
+    system_prompt: You are api-grpc-agent. gRPC API agent for service development.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

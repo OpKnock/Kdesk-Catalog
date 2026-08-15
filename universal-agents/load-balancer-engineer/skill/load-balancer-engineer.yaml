@@ -1,0 +1,147 @@
+name: load-balancer-engineer
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Architects layer 4/7 load balancing with HAProxy and Envoy: routing, health checks, and
+  capacity verification with load tools.'
+keywords:
+- load-balancing
+- haproxy
+- health-checks
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: load-balancer-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-load-balancer-engineer
+  generic:
+    system_prompt: 'This is your domain: load-balancer-engineer. You do it through envoy: Configure and
+      run Envoy proxies. The commands are real, e.g. `envoy -c envoy.yaml`. You prefer the shortest safe
+      path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: envoy
+  description: Configure and run Envoy proxies.
+  commands:
+  - envoy -c envoy.yaml
+  - envoy --config-path envoy.yaml --mode validate
+  - envoy --mode validate --config-path envoy.yaml
+  - curl -s http://127.0.0.1:9901/stats | grep -E 'cluster.upstream_cx_active|http.downstream_rq_total'
+  - curl -s http://127.0.0.1:9901/clusters | grep -E 'health_flags|healthy'
+  examples:
+  - envoy --mode validate --config-path envoy.yaml
+  - curl -s http://127.0.0.1:9901/stats/prometheus | grep 'envoy_cluster_upstream_cx_active'
+  - curl -s http://127.0.0.1:9901/server_info | jq '.version'
+  parameters:
+  - name: config-path
+    type: string
+    description: Envoy bootstrap config file
+  - name: mode
+    type: string
+    description: validate or serve mode
+  - name: admin-port
+    type: number
+    description: Envoy admin listener port
+- name: capacity
+  description: Verify balancer capacity with load generation.
+  commands:
+  - hey -n 5000 -c 100 http://127.0.0.1:8080/
+  - ab -n 10000 -c 200 -k http://127.0.0.1:8080/api
+  - curl -sI http://127.0.0.1:8080/ | grep -iE 'HTTP|x-request-id'
+  - hey -n 2000 -c 50 -m POST -T 'application/json' -d '{"q":1}' http://127.0.0.1:8080/search
+  - curl -s -o /dev/null -w '%{time_total} %{http_code}\n' http://127.0.0.1:8080/healthz
+  examples:
+  - ab -n 10000 -c 200 -k http://127.0.0.1:8080/ | grep -E 'Requests per second|Failed requests'
+  - hey -n 3000 -c 100 -z 30s http://127.0.0.1:8080/
+  - 'curl -sI -H ''Host: api.example.com'' http://127.0.0.1:8080/ | head -5'
+  parameters:
+  - name: requests
+    type: number
+    description: Total request count
+  - name: concurrency
+    type: number
+    description: Concurrent connections
+  - name: method
+    type: string
+    description: HTTP method and payload
+prerequisites:
+- nginx
+- haproxy
+- aws-cli
+- istioctl
+tools:
+- nginx
+- haproxy
+- aws-cli
+- istioctl
+- ab
+- wrk
+examples:
+- input: Route /api traffic to the API cluster with round-robin.
+  output: Writes the Envoy bootstrap with an L7 route, validates with --mode validate, and starts the
+    proxy.
+- input: Is the balancer saturated at launch traffic?
+  output: Runs ab/hey at projected load, reads cluster active connections, and reports the headroom margin.
+instructions: "# Load Balancer Engineering\n\nDesign and verify layer 4/7 balancers for capacity and correctness.\n\
+  \n## When to Use\n\n- Routing traffic across service instances\n- TLS termination and header manipulation\n\
+  - Capacity verification before launches\n\n## Envoy basics\n\n```yaml\nstatic_resources:\n  listeners:\n\
+  \    - name: listener_0\n      address: { socket_address: { address: 0.0.0.0, port_value: 10000 } }\n\
+  \      filter_chains:\n        - filters:\n            - name: envoy.filters.network.http_connection_manager\n\
+  \              typed_config:\n                \"@type\": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager\n\
+  \                stat_prefix: ingress\n                route_config:\n                  virtual_hosts:\n\
+  \                    - name: backend\n                      domains: [\"*\"]\n                     \
+  \ routes:\n                        - match: { prefix: / }\n                          route: { cluster:\
+  \ service_api }\n                http_filters:\n                  - name: envoy.filters.http.router\n\
+  \                    typed_config: { \"@type\": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router\
+  \ }\n  clusters:\n    - name: service_api\n      type: STRICT_DNS\n      lb_policy: ROUND_ROBIN\n  \
+  \    load_assignment:\n        cluster_name: service_api\n        endpoints:\n          - lb_endpoints:\n\
+  \              - endpoint: { address: { socket_address: { address: api-1, port_value: 8080 } } }\n```\n\
+  \n```bash\nenvoy --mode validate --config-path envoy.yaml\nenvoy -c envoy.yaml\n```\n\n## Health and\
+  \ stats\n\n```bash\ncurl -s http://127.0.0.1:9901/clusters | grep -E 'health_flags|healthy'\ncurl -s\
+  \ http://127.0.0.1:9901/stats/prometheus | grep 'envoy_cluster_upstream_cx_active'\n```\n\n## Capacity\
+  \ verification\n\n```bash\nab -n 10000 -c 200 -k http://127.0.0.1:8080/\nhey -n 5000 -c 100 http://127.0.0.1:8080/\n\
+  ```\n\nCheck: requests/sec, p95 latency, error rate, and backend saturation.\n\n## Design decisions\n\
+  \n- L4 (TCP passthrough) when the app handles TLS.\n- L7 (Envoy/HAProxy) when routing on headers/paths.\n\
+  - Always include health checks and a drain policy.\n\n## Best practices\n\n- Validate configs before\
+  \ every reload.\n- Keep admin endpoints internal-only.\n- Set graceful drain windows matching connection\
+  \ lifetime.\n- Load test at 2x peak to find the failure curve.\n\n## Testing\n\n```bash\nenvoy --mode\
+  \ validate --config-path envoy.yaml\nab -n 10000 -c 200 -k http://127.0.0.1:8080/\n```\n\nRecord the\
+  \ capacity baseline per release."
+display_name: load-balancer-engineer
+knowledge:
+- title: Envoy Proxy Docs
+  type: documentation
+  source: https://www.envoyproxy.io/docs
+  description: Bootstrap config, listeners, and clusters
+- title: Envoy Admin API
+  type: documentation
+  source: https://www.envoyproxy.io/docs/envoy/latest/operations/admin
+  description: Stats, clusters, and server info endpoints
+- title: HAProxy Management
+  type: documentation
+  source: https://www.haproxy.org/download/2.9/doc/management.txt
+  description: Runtime admin and stats socket

@@ -1,0 +1,209 @@
+{
+  "name": "flower",
+  "display_name": "flower",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Operates Flower, the Celery web monitoring tool, for tracking tasks, workers, and queues with optional basic auth.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "celery",
+    "pip"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "pip install flower",
+        "celery -A proj flower --port=5555",
+        "celery -A proj flower --basic_auth=user:password",
+        "celery -A proj flower --url_prefix=flower",
+        "celery -A proj flower --broker=redis://localhost:6379/0"
+      ],
+      "description": "Start and configure the Flower monitoring server.",
+      "name": "flower-server",
+      "examples": [
+        "celery -A proj flower --port=5555 --address=0.0.0.0",
+        "celery -A proj flower --basic_auth=admin:s3cret",
+        "celery -A proj flower --persistent --state-dir=/tmp/flower"
+      ],
+      "parameters": [
+        {
+          "description": "Web UI port",
+          "name": "port",
+          "type": "integer"
+        },
+        {
+          "description": "user:password for the UI",
+          "name": "basic_auth",
+          "type": "string"
+        },
+        {
+          "description": "Bind address",
+          "name": "address",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "curl http://localhost:5555/api/workers",
+        "curl http://localhost:5555/api/tasks",
+        "curl http://localhost:5555/api/tasks?task_type=tasks.send_email",
+        "curl http://localhost:5555/api/queues/length",
+        "curl http://localhost:5555/api/task/info/{task_id}"
+      ],
+      "description": "Query task and worker state through the Flower HTTP API.",
+      "name": "flower-api",
+      "examples": [
+        "curl -s http://localhost:5555/api/workers | python -m json.tool",
+        "curl -s http://localhost:5555/api/queues/length",
+        "curl -s http://localhost:5555/api/tasks | jq -r \"keys[]\" | head"
+      ],
+      "parameters": [
+        {
+          "description": "Celery task UUID",
+          "name": "task_id",
+          "type": "string"
+        },
+        {
+          "description": "Filter by task name",
+          "name": "task_type",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Flower Docs",
+      "description": "CLI options and HTTP API reference",
+      "source": "https://flower.readthedocs.io",
+      "type": "documentation"
+    },
+    {
+      "title": "Flower on PyPI",
+      "description": "Installation and version notes",
+      "source": "https://pypi.org/project/flower/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Flower\n\nReal-time web monitor for Celery.\n\n## When to Use\n\n- Observing task states (started, succeeded, failed) live\n- Checking worker heartbeats and load per process\n- Inspecting queue lengths without touching Redis directly\n- Alerting from the REST API in scripts\n\n## Commands\n\n```bash\npip install flower\n\n# Start on port 5555\ncelery -A proj flower --port=5555\n\n# Bind all interfaces\ncelery -A proj flower --address=0.0.0.0\n\n# Require auth\ncelery -A proj flower --basic_auth=user:password\n\n# Persist state across restarts\ncelery -A proj flower --persistent --state-dir=/tmp/flower\n\n# API endpoints\ncurl http://localhost:5555/api/workers\ncurl http://localhost:5555/api/tasks\ncurl http://localhost:5555/api/queues/length\ncurl http://localhost:5555/api/task/info/<task_id>\n```\n\n## Best Practices\n\n- Always enable basic_auth when exposing beyond localhost\n- Use --persistent to retain state across redeploys\n- Point alerts at /api/queues/length and /api/workers\n- Correlate task UUIDs from app logs to the UI\n- Run Flower as a managed process, not an ad-hoc terminal",
+  "examples": [
+    {
+      "input": "A task keeps failing; how do I see the traceback?",
+      "output": "Agent opens Flower /tasks, filters by task name, and reads the exception section of the failed task detail page or the API."
+    },
+    {
+      "input": "Is Flower safe to expose to my team?",
+      "output": "Agent recommends --basic_auth and shows the curl API for scripted monitoring instead of opening the UI broadly."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "flower.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-flower"
+    },
+    "generic": {
+      "system_prompt": "You own flower end to end. You do it through flower-server: Start and configure the Flower monitoring server. The commands are real, e.g. `pip install flower`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "flower",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "flower-server",
+        "name": "port",
+        "type": "integer",
+        "description": "Web UI port"
+      },
+      {
+        "capability": "flower-server",
+        "name": "basic_auth",
+        "type": "string",
+        "description": "user:password for the UI"
+      },
+      {
+        "capability": "flower-server",
+        "name": "address",
+        "type": "string",
+        "description": "Bind address"
+      },
+      {
+        "capability": "flower-api",
+        "name": "task_id",
+        "type": "string",
+        "description": "Celery task UUID"
+      },
+      {
+        "capability": "flower-api",
+        "name": "task_type",
+        "type": "string",
+        "description": "Filter by task name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "celery",
+    "pip"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/flower-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/flower-skill.yaml",
+    "checksum": "f80d4abb03708843dc3662ab4f087f2cc4eaeec7ed8b707e01c2c39bbcc11b7d"
+  }
+}

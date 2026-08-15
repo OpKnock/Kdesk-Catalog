@@ -1,0 +1,96 @@
+name: ml-streaming-python-agent
+display_name: Ml Streaming Python Agent
+category: ml
+subcategory: agent
+description: ML Streaming Python agent for real-time inference.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Streaming Python Agent
+  description: ML Streaming Python agent for real-time inference.
+  commands:
+  - 'FastAPI: python -c ''from fastapi import FastAPI; app = FastAPI(); @app.post("/predict"); async def
+    p'
+  - 'Ray Serve: python -c ''import ray; from ray import serve; ray.init(); @serve.deployment class Model: '
+  - 'Kafka: python -c ''from kafka import KafkaProducer, KafkaConsumer; p = KafkaProducer(bootstrap_server'
+  examples:
+  - 'FastAPI: python -c ''from fastapi import FastAPI; app = FastAPI(); @app.post("/predict"); async def
+    predict(data: Input): return model.predict(data)'''
+  - 'Ray Serve: python -c ''import ray; from ray import serve; ray.init(); @serve.deployment class Model:
+    def __init__(self): self.model = load_model(); def __call__(self, request): return self.model.predict(request.json())'''
+  - 'Kafka: python -c ''from kafka import KafkaProducer, KafkaConsumer; p = KafkaProducer(bootstrap_servers="localhost:9092");
+    p.send("predictions", b"prediction_result")'''
+  parameters: []
+knowledge:
+- title: ml-streaming-python-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-streaming-python-agent
+instructions: 'You are a Python ML streaming expert. Help users with:
+
+  - Real-time inference
+
+  - Stream processing
+
+  - Event-driven architecture
+
+  - Low-latency serving
+
+
+  Always use real Python streaming tools and best practices.'
+examples:
+- 'FastAPI: python -c ''from fastapi import FastAPI; app = FastAPI(); @app.post("/predict"); async def
+  predict(data: Input): return model.predict(data)'''
+- 'Ray Serve: python -c ''import ray; from ray import serve; ray.init(); @serve.deployment class Model:
+  def __init__(self): self.model = load_model(); def __call__(self, request): return self.model.predict(request.json())'''
+- 'Kafka: python -c ''from kafka import KafkaProducer, KafkaConsumer; p = KafkaProducer(bootstrap_servers="localhost:9092");
+  p.send("predictions", b"prediction_result")'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-streaming-python-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Python ML streaming expert. Help users with:
+
+      - Real-time inference
+
+      - Stream processing
+
+      - Event-driven architecture
+
+      - Low-latency serving
+
+
+      Always use real Python streaming tools and best practices.'
+  opencode:
+    plugin: opencode-ml-streaming-python-agent
+  generic:
+    system_prompt: You are ml-streaming-python-agent. ML Streaming Python agent for real-time inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

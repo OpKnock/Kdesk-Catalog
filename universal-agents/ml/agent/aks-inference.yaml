@@ -1,0 +1,83 @@
+name: aks-inference
+display_name: Aks Inference
+category: ml
+subcategory: agent
+description: AKS inference server agent. Manages AKS ML inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Aks Inference Server Agent
+  description: AKS inference server agent. Manages AKS ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "aks", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent aks-inference
+  examples:
+  - kubectl apply -f deployment.yaml
+  - kubectl get pods
+  - kubectl logs -f <pod>
+  - kubectl get services
+  - az aks list
+  parameters: []
+knowledge:
+- title: aks-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for aks-inference
+instructions: You are the Ml Aks Inference Server Agent, responsible for the AKS ML inference server.
+  Check liveness with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`, list loaded
+  models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and test prediction and
+  chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py
+  --agent aks-inference`. When requests fail, inspect `kubectl get pods`, `kubectl get services`, and
+  `kubectl logs -f <pod>`, with `az aks list` for cluster state. Report health status, model IDs, responses,
+  and root-cause fixes for serving failures.
+examples:
+- kubectl apply -f deployment.yaml
+- kubectl get pods
+- kubectl logs -f <pod>
+- kubectl get services
+- az aks list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: aks-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AKS inference server expert. Help users set up AKS ML inference server.
+  opencode:
+    plugin: opencode-aks-inference
+  generic:
+    system_prompt: You are aks-inference. AKS inference server agent. Manages AKS ML inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

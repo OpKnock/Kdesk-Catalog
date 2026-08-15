@@ -1,0 +1,225 @@
+{
+  "name": "age",
+  "display_name": "Age",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Encrypts and decrypts files with age: key generation, recipient-based encryption, passphrase files, piping, and SSH-key conversion.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "age",
+    "age-keygen",
+    "chmod",
+    "ssh-to-age",
+    "tar"
+  ],
+  "capabilities": [
+    {
+      "name": "key-management",
+      "description": "Generate age keypairs, derive public keys, and convert SSH keys.",
+      "commands": [
+        "age-keygen -o key.txt",
+        "age-keygen -y -i key.txt",
+        "chmod 600 key.txt",
+        "ssh-to-age -private-key -i ~/.ssh/id_ed25519 > key.txt",
+        "age-keygen -o ~/.config/age/keys.txt"
+      ],
+      "examples": [
+        "age-keygen -y -i key.txt | tee recipient.txt",
+        "ssh-to-age -private-key -i ~/.ssh/id_ed25519 > age-key.txt",
+        "age-keygen -o key.txt && chmod 600 key.txt"
+      ],
+      "parameters": [
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Path to write the generated key file"
+        },
+        {
+          "name": "identity",
+          "type": "string",
+          "description": "Private key file to derive the public key from"
+        }
+      ]
+    },
+    {
+      "name": "encrypt-decrypt",
+      "description": "Encrypt and decrypt files and streams with recipients or passphrases.",
+      "commands": [
+        "age -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p -o secret.age secret.txt",
+        "age -d -i key.txt -o secret.txt secret.age",
+        "age -p -o secret.age secret.txt",
+        "age -d secret.age",
+        "tar czf - ./data | age -r $(cat recipient.txt) > data.tar.gz.age"
+      ],
+      "examples": [
+        "age -r age1... -o secret.age secret.txt",
+        "age -d -i key.txt secret.age",
+        "age -p -o kubeconfig.age kubeconfig"
+      ],
+      "parameters": [
+        {
+          "name": "recipient",
+          "type": "string",
+          "description": "age1... recipient public key or --recipients-file"
+        },
+        {
+          "name": "identity",
+          "type": "string",
+          "description": "Key file to decrypt with (-d -i)"
+        },
+        {
+          "name": "passphrase",
+          "type": "boolean",
+          "description": "-p uses an interactive passphrase instead of keys"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "age Specification",
+      "type": "documentation",
+      "source": "https://age-encryption.org/v1",
+      "description": "Format spec and recipients"
+    },
+    {
+      "title": "age GitHub",
+      "type": "documentation",
+      "source": "https://github.com/FiloSottile/age",
+      "description": "Installation and usage"
+    },
+    {
+      "title": "ssh-to-age",
+      "type": "documentation",
+      "source": "https://github.com/FiloSottile/age/tree/main/ssh-to-age",
+      "description": "Convert OpenSSH keys to age identities"
+    }
+  ],
+  "instructions": "# age\n\n## What this skill does\n\nEncrypts and decrypts files with age: key generation, recipient-based encryption, passphrase mode, streaming/pipe usage, and converting SSH keys into age identities.\n\n## When to use\n\n- Sealing env files, kubeconfigs, or backups before storing them\n- Sharing encrypted files with a team without a KMS\n- Reusing existing SSH keys for encryption\n\n## Real commands\n\n```bash\n# Generate a keypair\nage-keygen -o key.txt\nchmod 600 key.txt\n\n# Encrypt to a recipient\nage -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p -o secret.age secret.txt\n\n# Decrypt with the identity file\nage -d -i key.txt -o secret.txt secret.age\n\n# Passphrase-protected file\nage -p -o secret.age secret.txt\n\n# Pipe archives through age\ntar czf - ./data | age -r $(cat recipient.txt) > data.tar.gz.age\n```\n\n## SSH key conversion\n\n```bash\nssh-to-age -private-key -i ~/.ssh/id_ed25519 > key.txt\nage-keygen -y -i key.txt   # derive the recipient\n```\n\n## Testing\n\n- Round-trip: encrypt then decrypt and compare with sha256sum\n- Test recipient mode with a freshly generated keypair\n\n## Best practices\n\n- Always chmod 600 key files\n- Prefer recipient files over pasting long keys in shell history\n- Store recipient (public) keys in the repo, identity files outside",
+  "examples": [
+    {
+      "input": "Encrypt our .env file before committing it",
+      "output": "Runs `age-keygen -o key.txt` (if needed), `age -r $(cat recipient.txt) -o .env.age .env`, and removes plaintext .env from the repo while keeping recipient.txt public."
+    },
+    {
+      "input": "Decrypt a file a colleague sent me",
+      "output": "Uses `age -d -i key.txt -o out.txt file.age`, noting the identity must match the recipient used at encryption time."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "age.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-age"
+    },
+    "generic": {
+      "system_prompt": "You work Age hands-on. You do it through key-management: Generate age keypairs, derive public keys, and convert SSH keys. The commands are real, e.g. `age-keygen -o key.txt`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "age",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "key-management",
+        "name": "output",
+        "type": "string",
+        "description": "Path to write the generated key file"
+      },
+      {
+        "capability": "key-management",
+        "name": "identity",
+        "type": "string",
+        "description": "Private key file to derive the public key from"
+      },
+      {
+        "capability": "encrypt-decrypt",
+        "name": "recipient",
+        "type": "string",
+        "description": "age1... recipient public key or --recipients-file"
+      },
+      {
+        "capability": "encrypt-decrypt",
+        "name": "identity",
+        "type": "string",
+        "description": "Key file to decrypt with (-d -i)"
+      },
+      {
+        "capability": "encrypt-decrypt",
+        "name": "passphrase",
+        "type": "boolean",
+        "description": "-p uses an interactive passphrase instead of keys"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "age",
+    "age-keygen",
+    "chmod",
+    "ssh-to-age",
+    "tar"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/age-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/age-skill.yaml",
+    "checksum": "2b2db1f0276409fa2632165b7df622d9c4a2c664fe92d4ff5503e761cae2f5c7"
+  }
+}

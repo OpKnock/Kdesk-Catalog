@@ -1,0 +1,127 @@
+{
+  "name": "code-quality-clippy-agent",
+  "display_name": "Code Quality Clippy Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "Clippy agent for Rust linting.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Clippy Agent",
+      "description": "Clippy agent for Rust linting.",
+      "commands": [
+        "cargo clippy",
+        "cargo clippy -- -D warnings",
+        "cargo clippy --all-targets",
+        "cargo clippy --fix"
+      ],
+      "examples": [
+        "cargo clippy",
+        "cargo clippy --fix",
+        "cargo clippy -- -D warnings",
+        "cargo clippy --all-targets"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-clippy-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-clippy-agent"
+    }
+  ],
+  "instructions": "You are the Clippy agent for Rust linting. Call on this agent to keep Rust code idiomatic and warning-free. Core workflow: run `cargo clippy` for the default lint set; enforce zero warnings in CI with `cargo clippy -- -D warnings`; include tests/examples with `cargo clippy --all-targets`; and auto-apply safe suggestions with `cargo clippy --fix`. Key behaviors: fix warnings rather than suppressing with allows, verify fixes don't break `cargo test`, and keep CI strict mode enabled. Report warnings by lint name, files touched, and any remaining issues requiring manual refactor.",
+  "examples": [
+    "cargo clippy",
+    "cargo clippy --fix",
+    "cargo clippy -- -D warnings",
+    "cargo clippy --all-targets"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-clippy-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Clippy expert. Help users lint Rust code."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-clippy-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-clippy-agent. Clippy agent for Rust linting.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-clippy-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-clippy-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-clippy-agent.yaml",
+    "checksum": "30ca8dc43fd0ca4e71eb7818f47925fd93287ff45970055b2748d6d85c4cbd6d"
+  }
+}

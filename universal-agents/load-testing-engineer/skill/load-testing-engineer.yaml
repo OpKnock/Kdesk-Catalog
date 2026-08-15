@@ -1,0 +1,138 @@
+name: load-testing-engineer
+version: 2.0.0
+type: skill
+category: testing
+description: 'Designs and executes load tests with k6, Vegeta, and wrk: scenarios, thresholds, and CI-integrated
+  performance gates.'
+keywords:
+- load-testing
+- k6
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: load-testing-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-load-testing-engineer
+  generic:
+    system_prompt: 'You take the load-testing-engineer seat. You do it through k6: Write and run scripted
+      load tests with k6. The commands are real, e.g. `k6 run --vus 50 --duration 1m load-test.js`. You
+      answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: k6
+  description: Write and run scripted load tests with k6.
+  commands:
+  - k6 run --vus 50 --duration 1m load-test.js
+  - k6 inspect load-test.js
+  - k6 run --vus 20 --duration 30s --summary-trend-stats='avg,p(95),p(99)' load-test.js
+  - k6 run --out json=results.json load-test.js
+  - k6 run --vus 100 --duration 2m --execution-segment=1/3:2/3 load-test.js
+  examples:
+  - k6 run --vus 50 --duration 1m --out influxdb=http://localhost:8086/k6 smoke.js
+  - k6 run --summary-trend-stats='p(99)' soak.js
+  - k6 inspect smoke.js | jq '.config.options.vus'
+  parameters:
+  - name: vus
+    type: number
+    description: Virtual users
+  - name: duration
+    type: string
+    description: Test duration like 1m30s
+  - name: summary-trend-stats
+    type: string
+    description: Percentiles shown in the summary
+- name: vegeta
+  description: Attack endpoints with Vegeta and generate reports.
+  commands:
+  - echo 'GET http://localhost:8080/' | vegeta attack -rate=200 -duration=30s | vegeta report
+  - 'echo ''POST http://localhost:8080/api'' | vegeta attack -header ''Content-Type: application/json''
+    -body payload.json -rate=100 -duration=60s | vegeta report -type=json > report.json'
+  - vegeta attack -targets=targets.txt -rate=500 -duration=30s | vegeta report -type=hist[0,100ms,200ms,500ms]
+  - vegeta attack -rate=50 -duration=1m | vegeta report -type=text
+  - vegeta attack -targets=targets.txt -rate=100 -duration=30s -timeout=10s | vegeta report
+  examples:
+  - echo 'GET http://localhost:8080/healthz' | vegeta attack -rate=1000 -duration=10s | vegeta report
+  - vegeta attack -targets=targets.txt -rate=300 -duration=1m | vegeta report -type=json | jq '.latencies'
+  - echo 'GET http://localhost:8080/' | vegeta attack -rate=100 -duration=30s | vegeta plot > plot.html
+  parameters:
+  - name: rate
+    type: number
+    description: Requests per second
+  - name: duration
+    type: string
+    description: Attack duration
+  - name: targets
+    type: string
+    description: Targets file with methods and URLs
+prerequisites:
+- k6
+- locust
+- jmeter
+- artillery
+tools:
+- k6
+- locust
+- jmeter
+- artillery
+- grafana
+- prometheus
+examples:
+- input: Run a 100-VU soak test to check for memory leaks.
+  output: Writes a k6 soak scenario with thresholds, runs with duration 1h, and compares memory across
+    the run.
+- input: Quick throughput check of the login endpoint.
+  output: Runs a vegeta attack at 500 rps for 30s and reports p95 latency and error count.
+instructions: "# Load Testing\n\nProve capacity before customers do.\n\n## When to Use\n\n- Launch and\
+  \ marketing-event capacity planning\n- Verifying perf fixes and regressions\n- Establishing baseline\
+  \ per release\n\n## k6 scenarios\n\n```js\nimport http from 'k6/http';\nimport { check, sleep } from\
+  \ 'k6';\n\nexport const options = {\n  vus: 50,\n  duration: '1m',\n  thresholds: {\n    http_req_duration:\
+  \ ['p(95)<500'],\n    http_req_failed: ['rate<0.01']\n  }\n};\n\nexport default function () {\n  const\
+  \ res = http.get('http://localhost:8080/api');\n  check(res, { 'status 200': (r) => r.status === 200\
+  \ });\n  sleep(1);\n}\n```\n\n```bash\nk6 run --vus 50 --duration 1m load-test.js\n```\n\nThresholds\
+  \ make tests fail automatically - use them in CI.\n\n## Test types\n\n- Smoke: 1-5 VUs, validate plumbing.\n\
+  - Load: 50-200 VUs, expected peak.\n- Stress: ramp until failure; find the ceiling.\n- Soak: 1h+, catch\
+  \ leaks.\n\n## Vegeta quick report\n\n```bash\necho 'GET http://localhost:8080/' | vegeta attack -rate=200\
+  \ -duration=30s | vegeta report\n```\n\n## Reading results\n\n- Latency: watch p95/p99, not mean.\n\
+  - Errors: check rate threshold, not absolute count.\n- Compare against the recorded baseline per release.\n\
+  \n## Best practices\n\n- Never load test production without approval; use staging.\n- Correlate with\
+  \ server metrics (CPU, pool depth, DB).\n- Freeze code and config during the run.\n- Store results with\
+  \ the release tag for regression diffing.\n\n## Testing\n\n```bash\nk6 run --vus 20 --duration 30s --summary-trend-stats='avg,p(95),p(99)'\
+  \ smoke.js\n```\n\nGate the pipeline on thresholds."
+display_name: load-testing-engineer
+knowledge:
+- title: k6 Docs
+  type: documentation
+  source: https://grafana.com/docs/k6/latest/
+  description: Scripting, thresholds, scenarios, and outputs
+- title: Vegeta
+  type: documentation
+  source: https://vegeta.io/
+  description: HTTP load testing tool and report formats
+- title: wrk
+  type: documentation
+  source: https://github.com/wg/wrk
+  description: High-concurrency HTTP benchmarking

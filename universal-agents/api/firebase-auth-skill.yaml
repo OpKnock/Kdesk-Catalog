@@ -1,0 +1,104 @@
+name: firebase-auth
+display_name: Firebase Auth
+category: api
+subcategory: general
+description: 'Firebase Authentication operations: manage users and ID tokens, test sign-in flows with
+  the CLI, and verify token validation.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- firebase
+- node
+capabilities:
+- name: auth-admin
+  description: Administer Firebase Auth users, issue custom tokens, and verify ID tokens.
+  commands:
+  - firebase auth:list
+  - firebase auth:import users.json
+  - firebase auth:create user@example.com
+  - firebase auth:token google-oauth-token
+  - node -e "const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)"
+  - firebase auth:delete user@example.com
+  examples:
+  - firebase auth:list
+  - firebase auth:import users.json
+  - node -e "const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)"
+  parameters:
+  - name: email
+    type: string
+    description: User email to create or delete
+  - name: id-token
+    type: string
+    description: ID token to verify
+  - name: import-file
+    type: string
+    description: JSON file with users to import
+knowledge:
+- title: Firebase Auth REST API
+  type: documentation
+  source: https://firebase.google.com/docs/reference/rest/auth
+  description: Sign-up, sign-in, and token endpoints
+- title: Admin SDK verifyIdToken
+  type: documentation
+  source: https://firebase.google.com/docs/auth/admin/verify-id-tokens
+  description: Server-side ID token verification with the Admin SDK
+instructions: "# Firebase Auth\n\n## What this skill does\n\nFirebase Auth handles email/password, social,\
+  \ and phone sign-ins, and issues ID tokens. The CLI and Admin SDK manage users, imports, custom tokens,\
+  \ and token verification.\n\n## When to use\n\n- Managing user accounts from the command line\n- Migrating\
+  \ users between projects via import/export\n- Verifying ID tokens server-side\n\n## Real commands\n\n\
+  ```bash\n# List and manage users\nfirebase auth:list\nfirebase auth:create user@example.com\nfirebase\
+  \ auth:delete user@example.com\n\n# Import users (hash config required for passwords)\nfirebase auth:import\
+  \ users.json\n\n# Mint an ID token for a Google OAuth token\nfirebase auth:token google-oauth-token\n\
+  \n# Verify an ID token with the Admin SDK\nnode -e \"const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)\"\
+  \n```\n\n## users.json import example\n\n```json\n{\n  \"users\": [\n    {\n      \"localId\": \"user-1\"\
+  ,\n      \"email\": \"a@example.com\",\n      \"emailVerified\": true,\n      \"passwordHash\": \"base64-encoded-hash\"\
+  ,\n      \"salt\": \"base64-salt\"\n    }\n  ]\n}\n```\n\n## Custom claims\n\n```javascript\nawait admin.auth().setCustomUserClaims(uid,\
+  \ { role: 'admin' })\n```\n\n## Testing\n\n```bash\n# Round trip: create -> sign in via REST -> verify\n\
+  curl -s -X POST 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY'\
+  \ -H 'Content-Type: application/json' -d '{\"email\":\"user@example.com\",\"password\":\"pw\",\"returnSecureToken\"\
+  :true}' | jq '.idToken | length > 0'\n```\n\n## Best practices\n\n- Always verify ID tokens server-side\
+  \ with the Admin SDK; never trust client claims.\n- Check `exp` and `auth_time` claims in token verification.\n\
+  - Use custom claims for roles, not for frequent-changing data.\n- Set a session revocation policy for\
+  \ sensitive apps (verifyIdToken with checkRevoked).\n"
+examples:
+- input: Verify a client token in our backend
+  output: Use firebase-admin's verifyIdToken, check uid and claims, and reject expired or revoked tokens.
+- input: Migrate users to a new project
+  output: Export users with password hashes to JSON, run firebase auth:import users.json with matching
+    hash config, then verify sign-in works.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: firebase-auth.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-firebase-auth
+  generic:
+    system_prompt: 'You are the Firebase Auth specialist. You do it through auth-admin: Administer Firebase
+      Auth users, issue custom tokens, and verify ID tokens. The commands are real, e.g. `firebase auth:list`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

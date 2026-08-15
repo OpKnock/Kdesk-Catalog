@@ -1,0 +1,175 @@
+name: redis
+display_name: redis
+category: database
+subcategory: general
+description: 'Operates Redis: key management, expiry, transactions, Lua scripting, and benchmarking.'
+version: 2.0.0
+tags:
+- database
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- redis-cli
+capabilities:
+- name: redis-cli
+  description: Manage keys, data structures, TTLs, and run scripts with redis-cli
+  commands:
+  - 'redis-cli SET user:42 ''{"name": "jane"}'' EX 3600'
+  - redis-cli GET user:42
+  - redis-cli INCR page_views
+  - redis-cli LPUSH recent:items item-1
+  - redis-cli --scan --pattern 'cache:*' | xargs -r redis-cli DEL
+  examples:
+  - redis-cli SADD online_users u1 u2 u3
+  - redis-cli EVAL "return redis.call('incr', KEYS[1])" 1 counter
+  - redis-cli --benchmark -n 100000 -c 50 -q
+  parameters:
+  - name: ex
+    type: integer
+    description: Expire the key after N seconds (EX)
+  - name: ttl
+    type: string
+    description: 'Key TTL: seconds, millis, or timestamp options'
+  - name: benchmark
+    type: boolean
+    description: Run redis-benchmark load testing
+knowledge:
+- title: Redis commands reference
+  type: documentation
+  source: https://redis.io/docs/latest/commands/
+  description: Every command with syntax and examples
+- title: redis-cli docs
+  type: documentation
+  source: https://redis.io/docs/latest/develop/tools/cli/
+  description: CLI usage and modes
+instructions: '# Redis
+
+
+  In-memory data store operations: strings, hashes, lists, sets, TTLs, transactions,
+
+  and Lua scripting via redis-cli.
+
+
+  ## When to Use
+
+
+  - Caching with TTLs
+
+  - Rate limiting and counters
+
+  - Queues and leaderboards with list/set commands
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Strings with TTL
+
+  sudo redis-cli SET user:42 ''{"name": "jane"}'' EX 3600
+
+  sudo redis-cli GET user:42
+
+  sudo redis-cli TTL user:42
+
+
+  # Counters
+
+  sudo redis-cli INCR page_views
+
+  sudo redis-cli INCRBY page_views 5
+
+
+  # Lists / sets
+
+  sudo redis-cli LPUSH recent:items item-1
+
+  sudo redis-cli LRANGE recent:items 0 4
+
+  sudo redis-cli SADD online u1 u2
+
+  sudo redis-cli SCARD online
+
+
+  # Hashes
+
+  sudo redis-cli HSET user:42 name jane age 34
+
+  sudo redis-cli HGETALL user:42
+
+
+  # Scripts
+
+  sudo redis-cli EVAL "return redis.call(''incr'', KEYS[1])" 1 mycounter
+
+
+  # Bulk delete by pattern
+
+  sudo redis-cli --scan --pattern ''cache:*'' | xargs -r redis-cli DEL
+
+
+  # Benchmark
+
+  sudo redis-benchmark -t set,get -n 100000 -c 50 -q
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Always set TTLs for cache keys
+
+  - Use SCAN, never KEYS, in production
+
+  - Keep scripts pure (no time/random) for replication safety
+
+  - Use pipeline/MULTI for batch operations
+
+  - Set maxmemory-policy for eviction behavior
+
+
+  ## Example Response
+
+
+  Implements the cache/queue pattern, verifies values and TTLs, and benchmarks to
+
+  confirm performance targets.'
+examples:
+- input: Cache the user profile with TTL
+  output: SETs the key with EX, verifies GET and TTL, and adds a cache-aside read pattern
+- input: Rate-limit an API endpoint
+  output: Uses INCR+EXPIRE script, verifies with a test burst, and documents the limits
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: redis.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-redis
+  generic:
+    system_prompt: 'You work redis hands-on. You do it through redis-cli: Manage keys, data structures,
+      TTLs, and run scripts with redis-cli. The commands are real, e.g. `redis-cli SET user:42 {name:
+      jane} EX 3600`. You prefer the shortest safe path, and you reproduce failures before diagnosing
+      them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

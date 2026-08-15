@@ -1,0 +1,225 @@
+{
+  "name": "logging-devops",
+  "display_name": "logging-devops",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Manages local and system logging: journald, syslog, log rotation, logrotate policies, and real-time tailing on Linux hosts.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "journalctl",
+    "logger",
+    "logrotate",
+    "rsyslogd",
+    "tail"
+  ],
+  "capabilities": [
+    {
+      "name": "journald-management",
+      "description": "Query, filter, and maintain the systemd journal.",
+      "commands": [
+        "journalctl -u nginx --since '2 hours ago'",
+        "journalctl -p err --no-pager",
+        "journalctl -f",
+        "journalctl --disk-usage",
+        "journalctl --vacuum-size=200M",
+        "journalctl _PID=$(pgrep nginx | head -1)"
+      ],
+      "examples": [
+        "journalctl -u nginx --since '2 hours ago'",
+        "journalctl -p err --no-pager",
+        "journalctl --vacuum-size=200M"
+      ],
+      "parameters": [
+        {
+          "name": "unit",
+          "type": "string",
+          "description": "systemd unit name"
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "description": "Priority filter: err, warning, info, debug"
+        },
+        {
+          "name": "since",
+          "type": "string",
+          "description": "Time window, e.g. '1 hour ago'"
+        }
+      ]
+    },
+    {
+      "name": "syslog-and-rotation",
+      "description": "Configure rsyslog forwarding and logrotate policies.",
+      "commands": [
+        "tail -f /var/log/syslog",
+        "tail -n 200 /var/log/nginx/error.log",
+        "logrotate -d /etc/logrotate.d/nginx",
+        "logrotate -f /etc/logrotate.conf",
+        "rsyslogd -N1 -f /etc/rsyslog.conf",
+        "logger -t deploy -p user.notice 'release 1.2.0 shipped'"
+      ],
+      "examples": [
+        "logrotate -d /etc/logrotate.d/nginx",
+        "rsyslogd -N1 -f /etc/rsyslog.conf",
+        "tail -f /var/log/syslog"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "logrotate or rsyslog config path"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Log file to tail"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "journalctl Manual",
+      "type": "documentation",
+      "source": "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html",
+      "description": "journalctl filters, output modes, and maintenance"
+    },
+    {
+      "title": "logrotate Manual",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man8/logrotate.8.html",
+      "description": "logrotate config syntax and directives"
+    },
+    {
+      "title": "rsyslog Documentation",
+      "type": "documentation",
+      "source": "https://www.rsyslog.com/doc/",
+      "description": "rsyslog configuration, modules, and templates"
+    }
+  ],
+  "instructions": "# Local Logging Operations\n\nManage logs on Linux hosts: journald, syslog, rotation, and live tailing.\n\n## What This Skill Does\n\n- Queries journald with unit/priority/time filters\n- Watches live logs with journalctl -f and tail -f\n- Configures logrotate for rotation, compression, and retention\n- Routes syslog with rsyslog (local files, remote, filtering)\n- Manages disk usage with journal vacuuming\n\n## When to Use\n\n- Debugging a service on a VM via its logs\n- Disk fills up because logs never rotate\n- Forwarding logs to a central server\n\n## Real Commands\n\n```bash\n# journald\njournalctl -u nginx --since '2 hours ago'\njournalctl -p err --no-pager\njournalctl -f -u kubelet\njournalctl --disk-usage\njournalctl --vacuum-size=200M\njournalctl --vacuum-time=7d\n\n# tailing\ntail -f /var/log/syslog\ntail -n 200 /var/log/nginx/error.log\n\n# rotation\nlogrotate -d /etc/logrotate.d/nginx    # dry run\nlogrotate -f /etc/logrotate.conf       # force\nlogrotate -s /var/lib/logrotate/status /etc/logrotate.d/nginx\n\n# syslog\nrsyslogd -N1 -f /etc/rsyslog.conf\nlogger -t deploy -p user.notice 'release 1.2.0 shipped'\n```\n\n## logrotate Config\n\n```\n/var/log/nginx/*.log {\n  daily\n  rotate 14\n  compress\n  delaycompress\n  missingok\n  notifempty\n  create 0640 www-data adm\n  sharedscripts\n  postrotate\n    [ -f /var/run/nginx.pid ] && kill -USR1 $(cat /var/run/nginx.pid)\n  endscript\n}\n```\n\n## Best Practices\n\n- Test rotation with `logrotate -d` before enforcing\n- Vacuum the journal proactively on busy hosts\n- Centralize host logs via rsyslog/Logstash instead of SSH tailing\n- Include timestamps and hostnames in forwarded syslog templates\n- Monitor `/var/log` disk usage; rotation is not backup",
+  "examples": [
+    {
+      "input": "The disk is full; logs are the culprit",
+      "output": "Agent checks journalctl --disk-usage and du on /var/log, vacums the journal, and tightens logrotate retention"
+    },
+    {
+      "input": "Find why nginx restarted at 03:00",
+      "output": "Agent runs journalctl -u nginx --since '03:00' and reviews the shutdown/start messages"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "logging-devops.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-logging"
+    },
+    "generic": {
+      "system_prompt": "You work logging-devops hands-on. You do it through journald-management: Query, filter, and maintain the systemd journal. The commands are real, e.g. `journalctl -u nginx --since 2 hours ago`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "logging-devops",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "journald-management",
+        "name": "unit",
+        "type": "string",
+        "description": "systemd unit name"
+      },
+      {
+        "capability": "journald-management",
+        "name": "priority",
+        "type": "string",
+        "description": "Priority filter: err, warning, info, debug"
+      },
+      {
+        "capability": "journald-management",
+        "name": "since",
+        "type": "string",
+        "description": "Time window, e.g. '1 hour ago'"
+      },
+      {
+        "capability": "syslog-and-rotation",
+        "name": "config",
+        "type": "string",
+        "description": "logrotate or rsyslog config path"
+      },
+      {
+        "capability": "syslog-and-rotation",
+        "name": "file",
+        "type": "string",
+        "description": "Log file to tail"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "journalctl",
+    "logger",
+    "logrotate",
+    "rsyslogd",
+    "tail"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/logging-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/logging-skill.yaml",
+    "checksum": "bb31f25580977017f68d9c2db0eba5e77afe2345f3b45ecf916b4cf20c8e418b"
+  }
+}

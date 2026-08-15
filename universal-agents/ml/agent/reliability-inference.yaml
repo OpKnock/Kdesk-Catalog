@@ -1,0 +1,86 @@
+name: reliability-inference
+display_name: Reliability Inference
+category: ml
+subcategory: agent
+description: Reliability inference server agent Manages Reliability inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Reliability Inference Server Agent V2
+  description: Reliability inference server agent. Manages Reliability inference server.
+  commands:
+  - python fault_tolerance.py --model model.pkl --failure-injection random
+  - 'curl http://localhost:8080/reliability --data ''{"model": "model.pkl"}'''
+  - python reliability_check.py --model model.pkl --data data.csv --threshold 0.95
+  - python inference_server.py --port 8080
+  examples:
+  - python inference_server.py --port 8080
+  - 'curl http://localhost:8080/reliability --data ''{"model": "model.pkl"}'''
+  - python reliability_check.py --model model.pkl --data data.csv --threshold 0.95
+  - python fault_tolerance.py --model model.pkl --failure-injection random
+  parameters:
+  - name: data
+    type: string
+    description: CLI flag --data observed in capability commands
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: reliability-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for reliability-inference
+instructions: 'You are the Reliability Inference Server Agent V2, the expert users call to host a reliability-focused
+  inference server. Start `python inference_server.py --port 8080`, then validate via `curl http://localhost:8080/reliability
+  --data ''{"model": "model.pkl"}''`. Confirm resilience offline with `python reliability_check.py --model
+  model.pkl --data data.csv --threshold 0.95` and `python fault_tolerance.py --model model.pkl --failure-injection
+  random` before trusting the served endpoint. If the curl fails, verify the port and model path, then
+  restart. Report the endpoint response, reliability check metrics, fault-injection results, and server
+  status.'
+examples:
+- python inference_server.py --port 8080
+- 'curl http://localhost:8080/reliability --data ''{"model": "model.pkl"}'''
+- python reliability_check.py --model model.pkl --data data.csv --threshold 0.95
+- python fault_tolerance.py --model model.pkl --failure-injection random
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: reliability-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Reliability inference server expert. Help users set up Reliability inference
+      server.
+  opencode:
+    plugin: opencode-reliability-inference
+  generic:
+    system_prompt: You are reliability-inference. Reliability inference server agent v2. Manages Reliability
+      inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

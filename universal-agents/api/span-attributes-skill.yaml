@@ -1,0 +1,183 @@
+name: span-attributes
+display_name: Span Attributes
+category: api
+subcategory: general
+description: 'Hand-crafted span attributes skill: otel-cli span creation, semantic conventions for http/db
+  attributes, and OTLP export of annotated spans.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- export
+- otel-cli
+capabilities:
+- name: otel-span-attrs
+  description: Create spans and attach semantic attributes with otel-cli
+  commands:
+  - otel-cli span --name 'http.request' --attrs 'http.method=GET,http.status_code=200,http.route=/v1/users'
+  - otel-cli span --name 'db.query' --kind client --attrs 'db.system=postgresql,db.statement=SELECT 1'
+  - otel-cli exec --service my-svc --name 'deploy job' -- curl -s https://example.com
+  - export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 && otel-cli span --name 'boot' --attrs "host.name=$(hostname)"
+  - otel-cli span --name 'operation' --start --end
+  examples:
+  - otel-cli span --name 'http.request' --attrs 'http.method=GET,http.status_code=200'
+  - otel-cli exec --service my-svc --name 'db.migrate' -- ./migrate.sh
+  - otel-cli span --name 'cache.get' --kind client --attrs 'db.system=redis,cache.hit=false'
+  parameters:
+  - name: name
+    type: string
+    description: Span name, e.g. http.request
+  - name: attrs
+    type: string
+    description: Comma-separated key=value semantic attributes
+  - name: service
+    type: string
+    description: Service name for the span's resource
+knowledge:
+- title: OpenTelemetry span API spec
+  type: documentation
+  source: https://opentelemetry.io/docs/specs/otel/trace/api/
+  description: Span creation, attributes, and events
+- title: otel-cli repo
+  type: documentation
+  source: https://github.com/equinix-labs/otel-cli
+  description: span, exec commands and OTLP export
+instructions: '# Span Attributes
+
+
+  Hand-crafted skill for attaching semantic attributes to traces with otel-cli.
+
+
+  ## What this skill does
+
+
+  - Creates spans from the CLI with otel-cli span
+
+  - Attaches semantic-convention attributes for http and db spans
+
+  - Wraps arbitrary commands with otel-cli exec
+
+
+  ## When to use
+
+
+  - Instrumenting shell scripts and cron jobs without code changes
+
+  - Verifying attribute names follow semantic conventions
+
+  - Building trace samples for dashboards
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # A span with HTTP semantic attributes
+
+  otel-cli span --name ''http.request'' --attrs ''http.method=GET,http.status_code=200,http.route=/v1/users''
+
+
+  # Database span
+
+  otel-cli span --name ''db.query'' --kind client --attrs ''db.system=postgresql,db.statement=SELECT 1''
+
+
+  # Wrap any command; span duration equals the command
+
+  otel-cli exec --service my-svc --name ''deploy job'' -- curl -s https://example.com
+
+
+  # Manual start/end pair for a longer operation
+
+  otel-cli span --name ''operation'' --start
+
+  sleep 5
+
+  otel-cli span --name ''operation'' --end
+
+
+  # Export via OTLP to the local collector
+
+  export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
+
+  otel-cli span --name ''boot'' --attrs "host.name=$(hostname)"
+
+  ```
+
+
+  ## Attribute conventions
+
+
+  - http.method, http.status_code, http.route, http.url
+
+  - db.system, db.statement, db.name, cache.hit
+
+  - Custom attributes: any key=value pair is valid
+
+
+  ## Testing
+
+
+  ```bash
+
+  otel-cli span --name ''test'' --attrs ''http.method=GET,http.status_code=200'' --traceparent-file t.txt
+
+  cat t.txt
+
+  ```
+
+
+  ## Best practices
+
+
+  - Follow semantic conventions so tools and dashboards understand spans
+
+  - Keep attribute cardinality low: never put user IDs or URLs in span names
+
+  - Use --traceparent-file to stitch child spans into a parent trace
+
+  '
+examples:
+- input: Trace a cron job from the shell
+  output: otel-cli exec --service cron --name 'nightly-report' -- ./report.sh wraps the job in a span
+    with its duration.
+- input: Mark a DB call in an existing trace
+  output: Capture the parent via --traceparent-file in the first command and pass it with --parent in
+    the db span.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: span-attributes.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-span-attributes
+  generic:
+    system_prompt: 'You own Span Attributes end to end. You do it through otel-span-attrs: Create spans
+      and attach semantic attributes with otel-cli. The commands are real, e.g. `otel-cli span --name
+      http.request --attrs...`. You prefer the shortest safe path, and you reproduce failures before diagnosing
+      them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

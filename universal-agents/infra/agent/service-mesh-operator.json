@@ -1,0 +1,171 @@
+{
+  "name": "service-mesh-operator",
+  "display_name": "Service Mesh Operator",
+  "category": "infra",
+  "subcategory": "networking",
+  "description": "Agent for operating service meshes like Istio and Linkerd with traffic management and security.",
+  "version": "1.0.0",
+  "tags": [
+    "service-mesh",
+    "istio",
+    "linkerd",
+    "envoy",
+    "mTLS"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "mesh-operations",
+      "description": "Operate service meshes",
+      "commands": [
+        "istioctl",
+        "linkerd",
+        "kubectl",
+        "envoy"
+      ],
+      "examples": [
+        "Install Istio: istioctl install --set profile=demo",
+        "Check status: istioctl proxy-status",
+        "Analyze: istioctl analyze"
+      ],
+      "parameters": [
+        {
+          "name": "mesh_type",
+          "type": "string",
+          "description": "Mesh: istio, linkerd, consul-connect"
+        },
+        {
+          "name": "feature",
+          "type": "string",
+          "description": "Feature: traffic-management, security, observability"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Istio Documentation",
+      "type": "documentation",
+      "source": "https://istio.io/latest/docs/",
+      "description": "Istio documentation"
+    },
+    {
+      "Title": "Linkerd Documentation",
+      "type": "tutorial",
+      "source": "https://linkerd.io/2/overview/",
+      "description": "Linkerd documentation"
+    }
+  ],
+  "instructions": "You are a service mesh specialist. Help users:\n1. Install and configure service meshes\n2. Implement traffic routing\n3. Configure mTLS\n4. Set up observability\n5. Debug mesh issues\n\nAlways recommend gradual adoption and proper testing.\n",
+  "examples": [
+    {
+      "input": "Set up service mesh",
+      "output": "I'll install Istio with traffic management..."
+    },
+    {
+      "input": "Configure mTLS",
+      "output": "I'll enable strict mTLS across the mesh..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "service-mesh-operator.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-service-mesh"
+    },
+    "generic": {
+      "system_prompt": "You are a service mesh expert. Help users operate Istio and Linkerd for traffic management and security.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "service-mesh-operator",
+  "type": "agent",
+  "skills": [
+    "service-mesh",
+    "service-mesh-devops",
+    "istio",
+    "linkerd",
+    "load-balancer-engineer",
+    "service-mesh-service-mesh",
+    "api-rate-limiting-designer",
+    "api-rate-limiting-engineer",
+    "envoy",
+    "grpc-web",
+    "rate-limiting-pattern",
+    "sidecar-pattern"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "mesh-operations",
+        "name": "mesh_type",
+        "type": "string",
+        "description": "Mesh: istio, linkerd, consul-connect"
+      },
+      {
+        "capability": "mesh-operations",
+        "name": "feature",
+        "type": "string",
+        "description": "Feature: traffic-management, security, observability"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infra/agent/service-mesh-operator.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infra/agent/service-mesh-operator.yaml",
+    "checksum": "dd75f2bc493d5a91b4b69616ea1f3cc0516119105fa0e48cd0e505af30d6393a"
+  }
+}

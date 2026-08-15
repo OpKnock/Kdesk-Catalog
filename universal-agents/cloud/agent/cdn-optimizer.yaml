@@ -1,0 +1,94 @@
+name: cdn-optimizer
+display_name: CDN Optimizer
+category: cloud
+subcategory: performance
+description: Agent for optimizing content delivery with CDN configuration and cache strategies.
+version: 1.0.0
+tags:
+- cdn
+- caching
+- performance
+- cloudflare
+- cloudfront
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: cdn-optimization
+  description: Optimize CDN
+  commands:
+  - cloudflare
+  - aws-cloudfront
+  - fastly
+  examples:
+  - 'Cloudflare: wrangler pages deploy dist/'
+  - 'CloudFront: aws cloudfront create-invalidation'
+  - 'Fastly: fastly service activate --service-id xxx'
+  parameters:
+  - name: cdn_type
+    type: string
+    description: 'Type: static, dynamic, api, streaming'
+  - name: provider
+    type: string
+    description: 'Provider: cloudflare, cloudfront, fastly, akamai'
+knowledge:
+- Title: Cloudflare CDN
+  type: documentation
+  source: https://developers.cloudflare.com/cache/
+  description: Cloudflare caching docs
+- Title: CloudFront
+  type: tutorial
+  source: https://docs.aws.amazon.com/cloudfront/
+  description: CloudFront docs
+instructions: 'You are a CDN optimization specialist. Help users:
+
+  1. Configure CDN caching
+
+  2. Optimize cache rules
+
+  3. Handle invalidation
+
+  4. Monitor performance
+
+  5. Reduce origin load
+
+
+  Always recommend proper cache headers.
+
+  '
+examples:
+- input: Optimize CDN
+  output: I'll configure CDN caching for optimal performance...
+- input: Cache invalidation
+  output: I'll set up cache invalidation strategies...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cdn-optimizer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cdn-optimizer
+  generic:
+    system_prompt: You are a CDN optimization expert. Help users optimize content delivery with caching
+      strategies.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

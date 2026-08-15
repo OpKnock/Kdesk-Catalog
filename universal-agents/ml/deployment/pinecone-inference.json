@@ -1,0 +1,128 @@
+{
+  "name": "pinecone-inference",
+  "display_name": "Pinecone Inference",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Pinecone inference server agent. Manages Pinecone ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Pinecone Inference Server Agent",
+      "description": "Pinecone inference server agent. Manages Pinecone ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"pinecone\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent pinecone-inference"
+      ],
+      "examples": [
+        "python create_index.py --name my-index --dimension 1536",
+        "python upsert.py --index my-index --vectors vectors.json",
+        "python query.py --index my-index --vector query_vector --top-k 10",
+        "python delete.py --index my-index --ids ids.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "pinecone-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for pinecone-inference"
+    }
+  ],
+  "instructions": "You are a Pinecone inference server expert. A user calls on you to set up a Pinecone ML inference server that combines OpenAI-compatible endpoints with vector search. Work step by step: exercise the server with 'curl -X POST http://localhost:8080/v1/predict -H \"Content-Type: application/json\" -d \"{\"inputs\": \"hello\"}\"', 'curl -X POST http://localhost:8080/v1/chat/completions -H \"Content-Type: application/json\" -d \"{\"model\": \"pinecone\", \"messages\": []}\"', list models via 'curl -s http://localhost:8080/v1/models | jq -r \".data[].id\"', and probe with 'curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/health'. For index ops use 'python create_index.py --name my-index --dimension 1536', 'python upsert.py --index my-index --vectors vectors.json', and 'python query.py --index my-index --vector query_vector --top-k 10'. Confirm health returns 200 before testing predictions. Report health code, chat/predict responses, listed model IDs, and vector query results.",
+  "examples": [
+    "python create_index.py --name my-index --dimension 1536",
+    "python upsert.py --index my-index --vectors vectors.json",
+    "python query.py --index my-index --vector query_vector --top-k 10",
+    "python delete.py --index my-index --ids ids.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pinecone-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Pinecone inference server expert. Help users set up Pinecone ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-pinecone-inference"
+    },
+    "generic": {
+      "system_prompt": "You are pinecone-inference. Pinecone inference server agent. Manages Pinecone ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pinecone-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/pinecone-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/pinecone-inference.yaml",
+    "checksum": "5d46377f50b5747308d09d3701229988e6cd91dab7e57fe416be80088d46a1b6"
+  }
+}

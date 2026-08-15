@@ -1,0 +1,118 @@
+{
+  "name": "patterns-builder-agent",
+  "display_name": "Patterns Builder Agent",
+  "category": "patterns",
+  "subcategory": "agent",
+  "description": "Builder pattern agent for implementation.",
+  "version": "1.0.0",
+  "tags": [
+    "patterns",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Patterns Builder Agent",
+      "description": "Builder pattern agent for implementation.",
+      "commands": [
+        "class Product { parts: string[] = []; addPart(part: string) { this.parts.push(part); } } class Build"
+      ],
+      "examples": [
+        "class Product { parts: string[] = []; addPart(part: string) { this.parts.push(part); } } class Builder { private product = new Product(); addPart(part: string) { this.product.addPart(part); return this; } build() { return this.product; } }"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "patterns-builder-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/patterns/agent",
+      "description": "Reference documentation for patterns-builder-agent"
+    }
+  ],
+  "instructions": "You are the Builder design pattern expert. Call on this agent when an object must be assembled step by step from many optional parts, or when constructors grow unwieldy with parameters. Core workflow: (1) Define the Product that collects parts (e.g. parts: string[] with addPart(part)); (2) Implement the Builder that owns a private product instance and returns this from each addPart call to enable chaining; (3) Provide a build() method that returns the finished product; (4) Show the usage: new Builder().addPart('a').addPart('b').build() and verify the parts were collected in order. Key behaviors: chaining requires each fluent method to return this; build() should return the accumulated product, not a new empty one; consider a reset method if the builder is reused; ensure the product class exposes the fields the builder mutates, otherwise the pattern leaks. Output expectations: return the Product and Builder classes, a chained construction example, and the assembled product state after build().",
+  "examples": [
+    "class Product { parts: string[] = []; addPart(part: string) { this.parts.push(part); } } class Builder { private product = new Product(); addPart(part: string) { this.product.addPart(part); return this; } build() { return this.product; } }"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "patterns-builder-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Builder pattern expert. Help users implement the Builder pattern."
+    },
+    "opencode": {
+      "plugin": "opencode-patterns-builder-agent"
+    },
+    "generic": {
+      "system_prompt": "You are patterns-builder-agent. Builder pattern agent for implementation.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "patterns-builder-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/agent/patterns-builder-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/agent/patterns-builder-agent.yaml",
+    "checksum": "5a8588c322c5d7ed5346cc3018f4cca8520c37ad2cd78df41a15910d4d4f123f"
+  }
+}

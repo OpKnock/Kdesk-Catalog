@@ -1,0 +1,78 @@
+name: coding-sdk
+display_name: Coding Sdk
+category: ml
+subcategory: agent
+description: Coding SDK deployment agent for ML coding SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Coding Deploy Sdk Agent
+  description: Coding SDK deployment agent for ML coding SDK deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent coding-sdk
+  examples:
+  - 'Server: python -m coding.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 coding-server'
+  parameters: []
+knowledge:
+- title: coding-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for coding-sdk
+instructions: You are the Ml Coding Deploy Sdk Agent, the Coding SDK deployment specialist.
+  Build and push the image with `docker build -t model:latest .` and `docker push
+  registry.example.com/model:latest`, then deploy via `kubectl set image deployment/model
+  model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace
+  production`, waiting for `kubectl rollout status deployment/model --timeout=300s`.
+  Confirm identity with `python identity.py --agent coding-sdk`. Validate
+  the served app with `python -m coding.server --port 8080` and `docker run -p 8080:8080
+  coding-server`. Report image references, rollout status, and server smoke-test results.
+examples:
+- 'Server: python -m coding.server --port 8080'
+- 'Docker: docker run -p 8080:8080 coding-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: claude-3-5-sonnet-20241022
+  cursor:
+    rule_type: auto
+    model: gpt-4
+  github_copilot:
+    prompt_file: coding-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: claude-3.5-sonnet
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Coding SDK deployment expert. Help users deploy coding
+      applications.
+  opencode:
+    plugin: opencode-coding-sdk
+  generic:
+    system_prompt: You are coding-sdk. Coding SDK deployment agent
+      for ML coding SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,115 @@
+name: api-schema-engineer
+version: 2.0.0
+type: skill
+category: data
+description: 'Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test
+  files, and format handling with ajv-cli.'
+keywords:
+- api-schema
+- json-schema
+- validation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-schema-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-schema-engineer
+  generic:
+    system_prompt: 'You own api-schema-engineer end to end. You do it through schema-authoring: Write
+      and validate JSON Schema files. The commands are real, e.g. `npm install -g ajv-cli`. You verify
+      each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: schema-authoring
+  description: Write and validate JSON Schema files
+  commands:
+  - npm install -g ajv-cli
+  - ajv compile -s user.schema.json --strict=false
+  - ajv validate -s user.schema.json -d user.json --strict=false
+  - ajv test -s user.schema.json -t user.schema.test.json --strict=false
+  - ajv migrate -s legacy.schema.json -o modern.schema.json
+  examples:
+  - ajv compile checks schema syntax
+  - ajv validate checks a data file against the schema
+  - ajv test runs positive/negative test files
+  parameters:
+  - name: schema
+    type: string
+    description: Schema file path
+  - name: data
+    type: string
+    description: Data file to validate
+  - name: strict
+    type: boolean
+    description: Disable strict mode when false
+- name: draft-handling
+  description: Handle schema drafts and formats
+  commands:
+  - ajv validate -s user.schema.json -d bad.json --strict=false 2>&1 | head -5
+  - node -e "const Ajv=require('ajv'); const addFormats=require('ajv-formats'); const a=new Ajv(); addFormats(a);
+    const v=a.compile({type:'string',format:'email'}); console.log(v('x@y.com'), v('nope'))"
+  - node -e "console.log(require('ajv').defaults)"
+  examples: []
+  parameters: []
+prerequisites:
+- openapi
+- json-schema
+- node.js
+- python
+tools:
+- openapi
+- json-schema
+- node.js
+- python
+- stoplight-studio
+- swagger-cli
+examples:
+- input: Validate user payloads
+  output: Writes a JSON Schema and validates samples with ajv validate
+- input: Add a schema test suite
+  output: Creates positive/negative test files and runs ajv test
+instructions: "# API Schema Engineer\n\nJSON Schema authoring and validation.\n\n## What This Skill Does\n\
+  - Writes JSON Schema for API payloads\n- Validates instances with ajv-cli\n- Maintains schema test suites\n\
+  \n## When to Use\n- Defining API request/response contracts\n- Validating configuration files\n- Sharing\
+  \ validation rules across services\n\n## Real Commands\n\n```bash\nnpm install -g ajv-cli\najv compile\
+  \ -s user.schema.json --strict=false\najv validate -s user.schema.json -d user.json --strict=false\n\
+  ajv test -s user.schema.json -t user.schema.test.json --strict=false\n```\n\n## Schema Example\n\n```json\n\
+  {\n  \"type\": \"object\",\n  \"properties\": {\n    \"id\": { \"type\": \"integer\" },\n    \"email\"\
+  : { \"type\": \"string\", \"format\": \"email\" }\n  },\n  \"required\": [\"email\"]\n}\n```\n\n## Testing\n\
+  - Maintain positive and negative test files\n- Run ajv test in CI\n- Test formats like email, date-time,\
+  \ uri\n\n## Best Practices\n- Keep schemas in a shared package\n- Reference with $ref instead of duplication\n\
+  - Use $defs for reusable components"
+display_name: api-schema-engineer
+knowledge:
+- title: JSON Schema Docs
+  type: documentation
+  source: https://json-schema.org/learn/
+  description: JSON Schema learning resources
+- title: Ajv Docs
+  type: documentation
+  source: https://ajv.js.org/
+  description: Ajv validator documentation

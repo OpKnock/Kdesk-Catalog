@@ -1,0 +1,71 @@
+name: llama-cpp-docker
+display_name: Llama Cpp Docker
+category: ml
+subcategory: inference
+description: llama.cpp SDK deployment agent for ML llama.cpp SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Llama Cpp Deploy Sdk
+  description: llama.cpp SDK deployment agent for ML llama.cpp SDK deployment.
+  commands:
+  - 'Docker: docker run -p 8080:8080 ghcr.io/ggerganov/llama.cpp:server -m model.gguf'
+  - 'Server: python -m llama_cpp.server --model model.gguf --host 0.0.0.0 --port 8080'
+  examples:
+  - 'Server: python -m llama_cpp.server --model model.gguf --host 0.0.0.0 --port 8080'
+  - 'Docker: docker run -p 8080:8080 ghcr.io/ggerganov/llama.cpp:server -m model.gguf'
+  parameters: []
+knowledge:
+- title: llama-cpp-docker Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for llama-cpp-docker
+instructions: 'You are the llama.cpp SDK deployment expert. Call on this agent to deploy llama.cpp with
+  a GGUF model in Python or container mode. Core workflow: (1) run the Python server with `python -m llama_cpp.server
+  --model model.gguf --host 0.0.0.0 --port 8080`; (2) or use the official container with `docker run -p
+  8080:8080 ghcr.io/ggerganov/llama.cpp:server -m model.gguf`. Key behaviors: confirm the .gguf model
+  file exists and is valid; verify the host binding (0.0.0.0 for remote access); check memory for larger
+  models; if startup fails, validate the model path and llama_cpp package install. Output expectations:
+  report the running mode (python vs docker), model loaded, bind address/port, and health of the completion
+  endpoint.'
+examples:
+- 'Server: python -m llama_cpp.server --model model.gguf --host 0.0.0.0 --port 8080'
+- 'Docker: docker run -p 8080:8080 ghcr.io/ggerganov/llama.cpp:server -m model.gguf'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: llama-cpp-docker.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a llama.cpp SDK deployment expert. Help users deploy llama.cpp applications.
+  opencode:
+    plugin: opencode-llama-cpp-docker
+  generic:
+    system_prompt: You are llama-cpp-docker. llama.cpp SDK deployment agent for ML llama.cpp SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

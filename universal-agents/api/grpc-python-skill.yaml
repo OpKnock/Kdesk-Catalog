@@ -1,0 +1,106 @@
+name: grpc-python
+display_name: Grpc Python
+category: api
+subcategory: general
+description: 'gRPC services and clients in Python with grpcio and grpcio-tools: python -m grpc_tools.protoc
+  codegen, async/await servers, and interceptors.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pip
+- python
+capabilities:
+- name: python-grpc
+  description: Generate Python stubs with grpc_tools and implement sync or asyncio gRPC servers.
+  commands:
+  - pip install grpcio grpcio-tools
+  - python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. helloworld.proto
+  - python server.py
+  - python client.py
+  - pip install grpcio-health-checking
+  examples:
+  - python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. -I . helloworld.proto
+  - python server.py & python client.py
+  - python -m grpc_tools.protoc --help
+  parameters:
+  - name: proto_file
+    type: string
+    description: Proto file to compile.
+  - name: out_dir
+    type: string
+    description: Output directory for generated _pb2.py files.
+  - name: grpc_port
+    type: integer
+    description: Port for the server thread, default 50051.
+knowledge:
+- title: gRPC Python Docs
+  type: documentation
+  source: https://grpc.io/docs/languages/python/
+  description: Official gRPC Python quickstart, basics, asyncio, and streaming.
+- title: grpcio on PyPI
+  type: documentation
+  source: https://pypi.org/project/grpcio/
+  description: grpcio package page with release notes.
+instructions: "# gRPC Python\n\nWrite and run gRPC services in Python with grpcio and grpcio-tools.\n\n\
+  ## What this skill does\n\n- Generates Python stubs (_pb2 and _pb2_grpc) from proto files.\n- Implements\
+  \ sync (thread-pool) and async (asyncio) gRPC servers.\n- Calls RPCs from clients with retries and deadlines.\n\
+  - Adds interceptors for logging and auth.\n\n## When to use\n\n- A Python service needs typed RPC communication.\n\
+  - Building data pipelines that fan out gRPC requests.\n- Prototyping gRPC services quickly.\n\n## Real\
+  \ commands\n\n```bash\n# Install\npip install grpcio grpcio-tools grpcio-health-checking\n\n# Generate\
+  \ stubs\npython -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. helloworld.proto\n\n# Run\
+  \ server and client\npython server.py &\npython client.py\n```\n\n## Server skeleton\n\n```python\n\
+  import grpc\nimport helloworld_pb2, helloworld_pb2_grpc\n\nclass Greeter(helloworld_pb2_grpc.GreeterServicer):\n\
+  \    def SayHello(self, request, context):\n        return helloworld_pb2.HelloReply(message=f\"Hello\
+  \ {request.name}\")\n\nserver = grpc.server(grpc.ThreadPoolExecutor(max_workers=10))\nhelloworld_pb2_grpc.add_GreeterServicer_to_server(Greeter(),\
+  \ server)\nserver.add_insecure_port(\"[::]:50051\")\nserver.start()\nserver.wait_for_termination()\n\
+  ```\n\n## Async server (asyncio)\n\n```python\nasync def say_hello(request, context):\n    return helloworld_pb2.HelloReply(message=f\"\
+  Hello {request.name}\")\n\nserver = grpc.aio.server()\nhelloworld_pb2_grpc.add_GreeterServicer_to_server(servicer,\
+  \ server)\nawait server.start()\n```\n\n## Testing\n\n```bash\npython server.py &\ngrpcurl -plaintext\
+  \ -d '{\"name\":\"Py\"}' localhost:50051 helloworld.Greeter/SayHello\npython client.py\n```\n\n## Best\
+  \ practices\n\n- Run codegen in CI and commit stubs or regenerate on tagged proto versions.\n- Use the\
+  \ asyncio API (`grpc.aio`) for concurrent servers; ThreadPoolExecutor blocks under load.\n- Set per-call\
+  \ timeouts on the client: `stub.SayHello(req, timeout=5)`.\n- Enable grpcio-health-checking and register\
+  \ health status for orchestration.\n\n## Example exchange\n\n```\nUser: My Python server only handles\
+  \ a few requests concurrently.\nAgent: Switch to grpc.aio or increase ThreadPoolExecutor workers:\n\
+  \       grpc.server(grpc.ThreadPoolExecutor(max_workers=32))\n```"
+examples:
+- input: Generate Python stubs from helloworld.proto
+  output: python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. helloworld.proto
+- input: Verify the running Python server
+  output: grpcurl -plaintext -d '{"name":"Py"}' localhost:50051 helloworld.Greeter/SayHello
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grpc-python.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grpc-python
+  generic:
+    system_prompt: 'You are the Grpc Python specialist. You do it through python-grpc: Generate Python
+      stubs with grpc_tools and implement sync or asyncio gRPC servers. The commands are real, e.g. `pip
+      install grpcio grpcio-tools`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

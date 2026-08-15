@@ -1,0 +1,208 @@
+{
+  "name": "popeye",
+  "display_name": "popeye",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Sanitizes Kubernetes clusters with Popeye: scans live resources for best-practice violations, misconfigurations, and security issues.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "popeye"
+  ],
+  "capabilities": [
+    {
+      "name": "cluster-sanitize",
+      "description": "Run full-cluster sanitizer scans and review reports.",
+      "commands": [
+        "popeye",
+        "popeye -n kube-system",
+        "popeye -A",
+        "popeye --save",
+        "popeye -o yaml",
+        "popeye --context prod"
+      ],
+      "examples": [
+        "popeye",
+        "popeye -n kube-system",
+        "popeye --save"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace scope"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Report format: standard, json, yaml, junit"
+        },
+        {
+          "name": "save",
+          "type": "boolean",
+          "description": "Write report to file"
+        }
+      ]
+    },
+    {
+      "name": "rules-and-overrides",
+      "description": "Customize scans with lint rules, ignore lists, and severity config.",
+      "commands": [
+        "popeye --lint < rules.yaml",
+        "popeye --overrides overrides.yaml",
+        "popeye -l app=web",
+        "popeye --clear-cache",
+        "popeye -n app -o json > report.json"
+      ],
+      "examples": [
+        "popeye --lint < rules.yaml",
+        "popeye --overrides overrides.yaml",
+        "popeye -n app -o json > report.json"
+      ],
+      "parameters": [
+        {
+          "name": "lint",
+          "type": "string",
+          "description": "Inline YAML lint rules via stdin"
+        },
+        {
+          "name": "overrides",
+          "type": "string",
+          "description": "Overrides file"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Popeye GitHub",
+      "type": "documentation",
+      "source": "https://github.com/derailed/popeye",
+      "description": "CLI usage, lint rules, and report output formats"
+    },
+    {
+      "title": "Popeye Config Reference",
+      "type": "documentation",
+      "source": "https://github.com/derailed/popeye/blob/master/README.md#configuration",
+      "description": "popeye.yaml configuration and severity levels"
+    }
+  ],
+  "instructions": "# Popeye Cluster Sanitizer\n\nAudit Kubernetes clusters for hygiene violations: missing probes, resource limits, deprecated APIs, and security smells.\n\n## What This Skill Does\n\n- Scans live cluster resources against best-practice lint rules\n- Reports severity-ranked violations (ok, info, warning, error)\n- Scopes scans by namespace or label selector\n- Saves JSON/YAML reports for CI and dashboards\n- Supports custom rule overrides\n\n## When to Use\n\n- Pre-release cluster audit\n- Spotting risky patterns (no probes, no limits, root containers)\n- CI gate on cluster hygiene\n\n## Real Commands\n\n```bash\n# Full scan\npopeye\npopeye -A\npopeye -n kube-system\npopeye --context prod\n\n# Reports\npopeye --save                 # writes report to file\npopeye -o yaml\npopeye -n app -o json > report.json\npopeye -o junit > report.xml\n\n# Customization\npopeye --lint < rules.yaml\npopeye --overrides overrides.yaml\npopeye -l app=web\npopeye --clear-cache\n```\n\n## What It Checks\n\n- Resource limits/requests missing\n- Readiness/liveness probes absent\n- Containers running as root\n- Deprecated apiVersions\n- Excess replicas of ReplicaSets\n- Secrets mounted as env vs files\n\n## Best Practices\n\n- Run popeye weekly and after every major release\n- Feed JSON output into dashboards for trend tracking\n- Combine with pluto for deprecation scanning and trivy for images\n- Use --overrides to codify your team's exceptions explicitly\n- Gate on ERROR severity only initially; ratchet down over time",
+  "examples": [
+    {
+      "input": "Audit the staging cluster before launch",
+      "output": "Agent runs popeye, summarizes violations by severity/type, and proposes fixes for error-level issues"
+    },
+    {
+      "input": "Fail CI if probes are missing",
+      "output": "Agent adds a popeye step with junit output and enforces error-severity exit codes"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "popeye.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-popeye"
+    },
+    "generic": {
+      "system_prompt": "You own popeye end to end. You do it through cluster-sanitize: Run full-cluster sanitizer scans and review reports. The commands are real, e.g. `popeye`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "popeye",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cluster-sanitize",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace scope"
+      },
+      {
+        "capability": "cluster-sanitize",
+        "name": "output",
+        "type": "string",
+        "description": "Report format: standard, json, yaml, junit"
+      },
+      {
+        "capability": "cluster-sanitize",
+        "name": "save",
+        "type": "boolean",
+        "description": "Write report to file"
+      },
+      {
+        "capability": "rules-and-overrides",
+        "name": "lint",
+        "type": "string",
+        "description": "Inline YAML lint rules via stdin"
+      },
+      {
+        "capability": "rules-and-overrides",
+        "name": "overrides",
+        "type": "string",
+        "description": "Overrides file"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "popeye"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/popeye-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/popeye-skill.yaml",
+    "checksum": "074dfa71d6dbb1d0422bd6bc2da4e0c59b4fe2464ae8e8263e955ec5c9628d24"
+  }
+}

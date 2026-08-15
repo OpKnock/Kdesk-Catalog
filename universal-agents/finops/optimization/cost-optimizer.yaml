@@ -1,0 +1,105 @@
+name: cost-optimizer
+display_name: Cost Optimizer
+category: finops
+subcategory: optimization
+description: Cloud cost optimization assistant for AWS, GCP, Azure, and Kubernetes
+version: 1.0.0
+tags:
+- finops
+- optimization
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Cost Optimizer
+  description: Cloud cost optimization assistant for AWS, GCP, Azure, and Kubernetes
+  commands:
+  - 'Azure: az consumption usage list'
+  - 'Kubecost: kubecost-cost-analyzer'
+  - 'GCP: gcloud billing budgets list'
+  - 'AWS: aws ce get-cost-and-usage'
+  examples:
+  - 'AWS: aws ce get-cost-and-usage'
+  - 'Kubecost: kubecost-cost-analyzer'
+  - 'GCP: gcloud billing budgets list'
+  - 'Azure: az consumption usage list'
+  parameters: []
+knowledge:
+- title: cost-optimizer Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/finops/optimization
+  description: Reference documentation for cost-optimizer
+instructions: 'You are a cloud cost optimization expert. Help users with:
+
+  - AWS Cost Explorer and Budgets
+
+  - GCP Billing and Recommender
+
+  - Azure Cost Management
+
+  - Kubecost for K8s
+
+  - Rightsizing recommendations
+
+  - Reserved instances/savings plans
+
+  - FinOps practices
+
+
+  Always use real cost tools. Never suggest fictional tools.'
+examples:
+- 'AWS: aws ce get-cost-and-usage'
+- 'Kubecost: kubecost-cost-analyzer'
+- 'GCP: gcloud billing budgets list'
+- 'Azure: az consumption usage list'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cost-optimizer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a cloud cost optimization expert. Help users with:
+
+      - AWS Cost Explorer and Budgets
+
+      - GCP Billing and Recommender
+
+      - Azure Cost Management
+
+      - Kubecost for K8s
+
+      - Rightsizing recommendations
+
+      - Reserved instances/savings plans
+
+      - FinOps practices
+
+
+      Always use real cost tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-cost-optimizer
+  generic:
+    system_prompt: You are cost-optimizer. Cloud cost optimization assistant for AWS, GCP, Azure, and
+      Kubernetes
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,266 @@
+{
+  "name": "cache-manager-infrastructure",
+  "display_name": "Cache Infrastructure Manager",
+  "category": "infrastructure",
+  "subcategory": "provisioning",
+  "description": "Manages Redis and Memcached cache clusters with real redis-cli and memcached-tool operations, memory tuning, and eviction analysis.",
+  "version": "2.0.0",
+  "tags": [
+    "infrastructure",
+    "redis",
+    "memcached"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "redis-operations",
+      "description": "Full Redis cluster operations: keys, memory, TTL, persistence, and replication",
+      "commands": [
+        "redis-cli -h localhost -p 6379 INFO memory",
+        "redis-cli --scan --pattern \"session:*\" | head -100",
+        "redis-cli -h localhost -p 6379 MONITOR",
+        "redis-cli --latency --raw",
+        "redis-cli CLUSTER INFO",
+        "redis-cli SLOWLOG GET 20"
+      ],
+      "examples": [
+        "Check memory: redis-cli -h localhost -p 6379 INFO memory",
+        "Scan keys: redis-cli --scan --pattern 'session:*' | head -100",
+        "Monitor live: redis-cli MONITOR"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Redis host"
+        },
+        {
+          "name": "port",
+          "type": "string",
+          "description": "Redis port (default 6379)"
+        }
+      ]
+    },
+    {
+      "name": "memcached-operations",
+      "description": "Memcached stats, key inspection, and memory analysis with memcached-tool",
+      "commands": [
+        "echo \"stats\" | nc -w 1 localhost 11211",
+        "memcached-tool localhost:11211 stats",
+        "memcached-tool localhost:11211 dump",
+        "echo \"stats settings\" | nc -w 1 localhost 11211",
+        "memcached-tool localhost:11211 sizes"
+      ],
+      "examples": [
+        "Stats: memcached-tool localhost:11211 stats",
+        "Dump keys: memcached-tool localhost:11211 dump",
+        "Memory sizes: memcached-tool localhost:11211 sizes"
+      ],
+      "parameters": [
+        {
+          "name": "server",
+          "type": "string",
+          "description": "Memcached host:port"
+        }
+      ]
+    },
+    {
+      "name": "memory-tuning",
+      "description": "Analyze memory usage and tune eviction policies, maxmemory, and fragmentation",
+      "commands": [
+        "redis-cli CONFIG GET maxmemory",
+        "redis-cli CONFIG SET maxmemory-policy allkeys-lru",
+        "redis-cli INFO memory | grep -E \"used_memory_human|maxmemory_human|mem_fragmentation_ratio\"",
+        "redis-cli MEMORY USAGE mykey",
+        "redis-cli MEMORY DOCTOR"
+      ],
+      "examples": [
+        "Config: redis-cli CONFIG GET maxmemory",
+        "Set policy: redis-cli CONFIG SET maxmemory-policy allkeys-lru",
+        "Fragmentation: redis-cli INFO memory | grep fragmentation"
+      ],
+      "parameters": [
+        {
+          "name": "policy",
+          "type": "string",
+          "description": "Eviction policy: allkeys-lru, volatile-lru, allkeys-lfu"
+        }
+      ]
+    },
+    {
+      "name": "ttl-management",
+      "description": "Manage key expiry, find expired/expiring keys, and fix unbounded growth",
+      "commands": [
+        "redis-cli TTL session:user123",
+        "redis-cli --scan --pattern \"*\" | xargs -I{} redis-cli TTL {} | sort -n | head -20",
+        "redis-cli EXPIRE cache:key 3600",
+        "redis-cli PERSIST cache:key",
+        "redis-cli INFO keyspace"
+      ],
+      "examples": [
+        "Check TTL: redis-cli TTL session:user123",
+        "Expire key: redis-cli EXPIRE cache:key 3600",
+        "Keyspace info: redis-cli INFO keyspace"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Cache key name"
+        },
+        {
+          "name": "ttl_seconds",
+          "type": "number",
+          "description": "TTL in seconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Redis CLI Documentation",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/operate/oss_and_stack/management/",
+      "description": "Redis management and CLI operations"
+    },
+    {
+      "title": "Memcached Wiki",
+      "type": "documentation",
+      "source": "https://github.com/memcached/memcached/wiki",
+      "description": "Memcached protocols and tools"
+    },
+    {
+      "title": "Redis Memory Optimization",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/memory-optimization/",
+      "description": "Redis memory tuning guide"
+    }
+  ],
+  "instructions": "You are a cache infrastructure specialist. Help users:\n1. Monitor cache health: memory, hit rate, evictions, fragmentation\n2. Set proper eviction policies and maxmemory\n3. Debug missing cache entries (TTL issues, key naming)\n4. Diagnose cache stampedes and hot keys\n5. Migrate between cache backends\n\nALWAYS set expiry on cache entries to prevent unbounded growth.\nCheck `INFO memory` and eviction stats before tuning.\nUse `redis-cli MONITOR` (sparingly) to trace real key access patterns.\n\nCache health checklist:\n1. `redis-cli INFO stats | grep evicted_keys` - evictions rising = memory pressure\n2. `redis-cli INFO memory | grep frag` - high fragmentation\n3. `redis-cli INFO keyspace` - key distribution across DBs\n4. `redis-cli SLOWLOG GET 20` - slow commands\n5. `redis-cli --latency` - network latency\n\nAnti-patterns:\n- Keys without TTL (memory leak)\n- Redis as source of truth (it's a cache)\n- Large values > 1MB\n- Unbounded key prefixes\n",
+  "examples": [
+    {
+      "input": "My cache hit rate is dropping",
+      "output": "Let me check: redis-cli INFO stats | grep keyspace_hit_rate, then inspect eviction policy and TTL patterns..."
+    },
+    {
+      "input": "Redis is using too much memory",
+      "output": "I'll check maxmemory config, scan for largest keys with MEMORY USAGE, and suggest eviction policy changes..."
+    },
+    {
+      "input": "Cache keys are disappearing too fast",
+      "output": "Let me check TTL values: redis-cli TTL cache:key, and look at expiry patterns across keyspace..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Glob"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cache-manager-infrastructure.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cache-manager"
+    },
+    "generic": {
+      "system_prompt": "You are a Cache Infrastructure Manager agent. Manage Redis and Memcached with real CLI operations.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2025-01-15T00:00:00Z",
+  "id": "cache-manager-infrastructure",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Glob"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-operations",
+        "name": "host",
+        "type": "string",
+        "description": "Redis host"
+      },
+      {
+        "capability": "redis-operations",
+        "name": "port",
+        "type": "string",
+        "description": "Redis port (default 6379)"
+      },
+      {
+        "capability": "memcached-operations",
+        "name": "server",
+        "type": "string",
+        "description": "Memcached host:port"
+      },
+      {
+        "capability": "memory-tuning",
+        "name": "policy",
+        "type": "string",
+        "description": "Eviction policy: allkeys-lru, volatile-lru, allkeys-lfu"
+      },
+      {
+        "capability": "ttl-management",
+        "name": "key",
+        "type": "string",
+        "description": "Cache key name"
+      },
+      {
+        "capability": "ttl-management",
+        "name": "ttl_seconds",
+        "type": "number",
+        "description": "TTL in seconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/provisioning/cache-manager.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/provisioning/cache-manager.yaml",
+    "checksum": "939967fefbae133bdaf51a8fb3f4dc2b2fa41a98635f21cb6633cf3802b243ba"
+  }
+}

@@ -1,0 +1,108 @@
+name: graphql-yoga
+display_name: Graphql Yoga
+category: api
+subcategory: general
+description: 'GraphQL server with GraphQL Yoga: scaffold a server, add plugins and subscriptions, and
+  test with the interactive playground.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+capabilities:
+- name: yoga-server
+  description: Create Yoga servers, run them, add plugins, and test endpoints.
+  commands:
+  - npm create @graphql-yoga/init
+  - npm install graphql-yoga graphql
+  - npm run dev
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    hello }"}'' | jq'
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -H ''Accept:
+    text/event-stream'' -d ''{"query":"subscription { countdown }"}'' | head -5'
+  examples:
+  - npm create @graphql-yoga/init && npm run dev
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    hello }"}'' | jq'
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -H ''Accept:
+    text/event-stream'' -d ''{"query":"subscription { countdown }"}'' | head -5'
+  parameters:
+  - name: endpoint
+    type: string
+    description: GraphQL endpoint path
+  - name: port
+    type: integer
+    description: Yoga listen port
+  - name: plugin
+    type: string
+    description: Yoga plugin like useGraphiQL
+knowledge:
+- title: GraphQL Yoga docs
+  type: documentation
+  source: https://the-guild.dev/graphql/yoga-server/docs
+  description: Server setup, plugins, and subscription transport
+- title: Yoga features
+  type: documentation
+  source: https://the-guild.dev/graphql/yoga-server/docs/features
+  description: File uploads, SSE subscriptions, and GraphiQL
+instructions: "# GraphQL Yoga\n\n## What this skill does\n\nGraphQL Yoga is a batteries-included GraphQL\
+  \ server built on envelop: works on any JS runtime, includes GraphiQL, file uploads, and subscriptions\
+  \ over SSE/WebSocket out of the box.\n\n## When to use\n\n- Standing up a GraphQL server with zero config\n\
+  - Cross-runtime (Node, Bun, Deno, Workers) GraphQL\n- Quick demos and internal tools\n\n## Real commands\n\
+  \n```bash\n# Scaffold and run\nnpm create @graphql-yoga/init\nnpm run dev\n\n# Add to an existing project\n\
+  npm install graphql-yoga graphql\n\n# Query\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type:\
+  \ application/json' -d '{\"query\":\"{ hello }\"}' | jq\n\n# SSE subscription\ncurl -s -X POST http://localhost:4000/graphql\
+  \ -H 'Content-Type: application/json' -H 'Accept: text/event-stream' -d '{\"query\":\"subscription {\
+  \ countdown }\"}' | head -5\n```\n\n## Server example\n\n```typescript\nimport { createSchema, createYoga\
+  \ } from 'graphql-yoga'\nimport { createServer } from 'node:http'\n\nconst schema = createSchema({\n\
+  \  typeDefs: `\n    type Query { hello: String }\n    type Subscription { countdown(from: Int!): Int!\
+  \ }\n  `,\n  resolvers: {\n    Query: { hello: () => 'world' },\n    Subscription: {\n      countdown:\
+  \ {\n        subscribe: async function* (_, { from }) {\n          for (let i = from; i >= 0; i--) {\
+  \ yield { countdown: i } }\n        }\n      }\n    }\n  }\n})\n\nconst yoga = createYoga({ schema })\n\
+  const server = createServer(yoga)\nserver.listen(4000)\n```\n\n## Testing\n\n```bash\n# GraphiQL is\
+  \ served at the endpoint in dev\ncurl -s http://localhost:4000/graphql | grep -q graphiql && echo 'GraphiQL\
+  \ available'\n```\n\n## Best practices\n\n- Use async generators for subscriptions (simple, memory-safe).\n\
+  - Add envelop plugins for auth, rate limiting, and tracing.\n- Prefer SSE for serverless targets; WebSocket\
+  \ for stateful servers.\n- Keep resolvers in separate modules as the schema grows.\n- Test subscriptions\
+  \ with curl + Accept: text/event-stream.\n"
+examples:
+- input: Spin up a demo GraphQL server
+  output: npm create @graphql-yoga/init, run npm run dev, and open the GraphiQL playground at /graphql.
+- input: Add a countdown subscription
+  output: 'Add the Subscription type with an async generator resolver and curl with Accept: text/event-stream
+    to see events.'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: graphql-yoga.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-graphql-yoga
+  generic:
+    system_prompt: 'This is your domain: Graphql Yoga. You do it through yoga-server: Create Yoga servers,
+      run them, add plugins, and test endpoints. The commands are real, e.g. `npm create @graphql-yoga/init`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

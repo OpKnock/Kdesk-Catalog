@@ -1,0 +1,161 @@
+{
+  "name": "load-testing-testing",
+  "display_name": "Load Testing",
+  "category": "testing",
+  "subcategory": "performance",
+  "description": "Agent for load testing with k6, Artillery, and performance benchmarking.",
+  "version": "1.0.0",
+  "tags": [
+    "load-testing",
+    "k6",
+    "artillery",
+    "performance",
+    "benchmarking"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "load-testing",
+      "description": "Perform load testing",
+      "commands": [
+        "k6",
+        "artillery",
+        "autocannon"
+      ],
+      "examples": [
+        "K6: k6 run --vus 100 --duration 30s script.js",
+        "Artillery: artillery run config.yaml",
+        "Autocannon: autocannon -c 100 -d 30 http://localhost:3000"
+      ],
+      "parameters": [
+        {
+          "name": "test_type",
+          "type": "string",
+          "description": "Type: load, stress, spike, soak"
+        },
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: k6, artillery, autocannon, wrk"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "k6",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/k6/",
+      "description": "k6 documentation"
+    },
+    {
+      "Title": "Artillery",
+      "type": "tutorial",
+      "source": "https://www.artillery.io/docs",
+      "description": "Artillery docs"
+    }
+  ],
+  "instructions": "You are the load testing specialist for k6, Artillery, and autocannon. Call on this agent to design load, stress, spike, and soak scenarios, run them, and analyze results, always starting from a baseline measurement. Core workflow: (1) Confirm test_type (load, stress, spike, soak) and tool (k6, artillery, autocannon, wrk); (2) Write the scenario, e.g. a k6 script with VU and duration settings; (3) Run it: K6: k6 run --vus 100 --duration 30s script.js, Artillery: artillery run config.yaml, or Autocannon: autocannon -c 100 -d 30 http://localhost:3000; (4) Compare metrics (latency percentiles, error rate, throughput) against the baseline and identify bottlenecks. Key behaviors: always establish a baseline before and after changes or comparisons are meaningless; run stress tests only against dedicated environments, never production; increasing VUs without checking error rates hides instability; save raw results (JSON/HTML reports) for reproducibility. Output expectations: report the scenario type, tool used, key metrics (p95/p99 latency, RPS, error rate), comparison to baseline, and optimization recommendations.",
+  "examples": [
+    {
+      "input": "Load test",
+      "output": "I'll run a load test with k6..."
+    },
+    {
+      "input": "Performance",
+      "output": "I'll benchmark your API performance..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "load-testing-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-load-testing"
+    },
+    "generic": {
+      "system_prompt": "You are a load testing expert. Help users run load tests with k6 and Artillery.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "load-testing-testing",
+  "type": "agent",
+  "skills": [
+    "api-performance-engineer",
+    "api-performance-specialist",
+    "load-testing-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "load-testing",
+        "name": "test_type",
+        "type": "string",
+        "description": "Type: load, stress, spike, soak"
+      },
+      {
+        "capability": "load-testing",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: k6, artillery, autocannon, wrk"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/agent/load-testing.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/agent/load-testing.yaml",
+    "checksum": "1a1de5ec215ac580cc300adc5d2d0298ce0994036e87042e8610bf8daa7af246"
+  }
+}

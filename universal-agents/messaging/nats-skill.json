@@ -1,0 +1,228 @@
+{
+  "name": "nats-messaging",
+  "display_name": "Nats",
+  "category": "messaging",
+  "subcategory": "general",
+  "description": "Operates NATS and JetStream: pub/sub, request-reply, streams, consumers, and key-value stores.",
+  "version": "2.0.0",
+  "tags": [
+    "messaging"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nats"
+  ],
+  "capabilities": [
+    {
+      "name": "pub-sub",
+      "description": "Publish and subscribe to NATS subjects.",
+      "commands": [
+        "nats sub 'orders.>'",
+        "nats pub orders.created '{\"id\":1}'",
+        "nats request service.orders '{\"action\":\"status\"}'",
+        "nats pub --reply order.ack orders.created '{\"id\":1}'",
+        "nats reply service.orders 'ack received'"
+      ],
+      "examples": [
+        "nats sub 'metrics.>' --raw",
+        "nats request service.health '{}' --timeout 2s",
+        "nats pub orders.created '{\"id\":2}' --count 100 --sleep 0.1s"
+      ],
+      "parameters": [
+        {
+          "name": "subject",
+          "type": "string",
+          "description": "NATS subject with wildcards"
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "description": "Message payload"
+        },
+        {
+          "name": "timeout",
+          "type": "string",
+          "description": "Request timeout"
+        }
+      ]
+    },
+    {
+      "name": "jetstream",
+      "description": "Manage JetStream streams, consumers, and KV.",
+      "commands": [
+        "nats stream add ORDERS --subjects 'orders.>' --storage file --retention limits --max-age 168h --max-size 10GB",
+        "nats stream info ORDERS",
+        "nats consumer add ORDERS order-worker --pull --deliver last --ack-explicit --max-deliver 5",
+        "nats stream report ORDERS",
+        "nats kv add config --history 10"
+      ],
+      "examples": [
+        "nats stream add ORDERS --subjects 'orders.>' --replicas 3",
+        "nats consumer info ORDERS order-worker",
+        "nats kv put config feature_flag '{\"on\":true}' && nats kv get config feature_flag"
+      ],
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "string",
+          "description": "Stream name"
+        },
+        {
+          "name": "max-age",
+          "type": "string",
+          "description": "Retention duration"
+        },
+        {
+          "name": "storage",
+          "type": "string",
+          "description": "file or memory storage"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "NATS Docs",
+      "type": "documentation",
+      "source": "https://docs.nats.io/",
+      "description": "Subjects, JetStream, and CLI reference"
+    },
+    {
+      "title": "NATS CLI",
+      "type": "documentation",
+      "source": "https://docs.nats.io/using-nats/nats-tools/nats_cli",
+      "description": "nats sub/pub/request/stream commands"
+    },
+    {
+      "title": "JetStream Guide",
+      "type": "documentation",
+      "source": "https://docs.nats.io/nats-concepts/jetstream",
+      "description": "Streams, consumers, and KV concepts"
+    }
+  ],
+  "instructions": "# NATS\n\nFast, lightweight messaging with pub/sub and JetStream persistence.\n\n## When to Use\n\n- Microservices request-reply\n- Edge and IoT messaging\n- Lightweight stream processing\n\n## Pub/sub\n\n```bash\nnats sub 'orders.>'\nnats pub orders.created '{\"id\":1}'\n```\n\n`>` matches one or more tokens; `*` matches exactly one.\n\n## Request-reply\n\n```bash\nnats request service.orders '{\"action\":\"status\"}'\nnats reply service.orders '{\"status\":\"ok\"}'\n```\n\n## JetStream streams\n\n```bash\nnats stream add ORDERS --subjects 'orders.>' --storage file --retention limits --max-age 168h\nnats stream info ORDERS\n```\n\n## Consumers\n\n```bash\nnats consumer add ORDERS order-worker --pull --deliver last --ack-explicit --max-deliver 5\nnats consumer info ORDERS order-worker\n```\n\nPull consumers are the norm for worker pools.\n\n## KV store\n\n```bash\nnats kv add config\nnats kv put config feature_flag '{\"on\":true}'\nnats kv get config feature_flag\n```\n\n## Best practices\n\n- Choose retention: limits (size/age), interest, or workqueue.\n- Set max-deliver so poison messages end in the DLQ stream.\n- Use subject naming convention: `<app>.<entity>.<action>`.\n- Monitor stream lag: `nats stream report`.\n\n## Testing\n\n```bash\nnats pub orders.created '{\"id\":1}' --count 1000\nnats stream report ORDERS\n```\n\nVerify all 1000 land in the stream with zero loss.",
+  "examples": [
+    {
+      "input": "Set up a durable order stream with 7-day retention.",
+      "output": "Creates the ORDERS JetStream with file storage and 168h retention, then adds a pull consumer with explicit ack."
+    },
+    {
+      "input": "Expose service health over request-reply.",
+      "output": "Wires a nats reply handler on service.health and tests with nats request and a 2s timeout."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nats-messaging.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nats"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Nats. You do it through pub-sub: Publish and subscribe to NATS subjects. The commands are real, e.g. `nats sub orders.>`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nats-messaging",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pub-sub",
+        "name": "subject",
+        "type": "string",
+        "description": "NATS subject with wildcards"
+      },
+      {
+        "capability": "pub-sub",
+        "name": "payload",
+        "type": "string",
+        "description": "Message payload"
+      },
+      {
+        "capability": "pub-sub",
+        "name": "timeout",
+        "type": "string",
+        "description": "Request timeout"
+      },
+      {
+        "capability": "jetstream",
+        "name": "stream",
+        "type": "string",
+        "description": "Stream name"
+      },
+      {
+        "capability": "jetstream",
+        "name": "max-age",
+        "type": "string",
+        "description": "Retention duration"
+      },
+      {
+        "capability": "jetstream",
+        "name": "storage",
+        "type": "string",
+        "description": "file or memory storage"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nats"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "messaging/nats-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/messaging/nats-skill.yaml",
+    "checksum": "683e6afbbf46ffab57e3d6d8362e1dc68074ca3ad41519b6bfc0624a5f4aa857"
+  }
+}

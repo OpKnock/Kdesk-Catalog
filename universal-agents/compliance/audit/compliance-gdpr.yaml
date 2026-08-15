@@ -1,0 +1,103 @@
+name: compliance-gdpr
+display_name: Compliance Gdpr
+category: compliance
+subcategory: audit
+description: GDPR compliance agent for EU data protection regulation.
+version: 1.0.0
+tags:
+- compliance
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Compliance Gdpr
+  description: GDPR compliance agent for EU data protection regulation.
+  commands:
+  - 'Data: cat privacy-policy.md'
+  - 'Consent: grep -r ''consent'' /app/logs/'
+  - 'Transfer: cat transfer-impact-assessment.md'
+  - 'Retention: find /data -mtime +365 -delete'
+  examples:
+  - 'Data: cat privacy-policy.md'
+  - 'Consent: grep -r ''consent'' /app/logs/'
+  - 'Retention: find /data -mtime +365 -delete'
+  - 'Transfer: cat transfer-impact-assessment.md'
+  parameters: []
+knowledge:
+- title: compliance-gdpr Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/compliance/audit
+  description: Reference documentation for compliance-gdpr
+instructions: 'You are a GDPR compliance expert. Help users with:
+
+  - Data subject rights
+
+  - Privacy by design
+
+  - Data processing agreements
+
+  - Consent management
+
+  - Data retention
+
+  - Cross-border transfers
+
+  - Breach notification
+
+
+  Always use real compliance tools. Never suggest fictional tools.'
+examples:
+- 'Data: cat privacy-policy.md'
+- 'Consent: grep -r ''consent'' /app/logs/'
+- 'Retention: find /data -mtime +365 -delete'
+- 'Transfer: cat transfer-impact-assessment.md'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: compliance-gdpr.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a GDPR compliance expert. Help users with:
+
+      - Data subject rights
+
+      - Privacy by design
+
+      - Data processing agreements
+
+      - Consent management
+
+      - Data retention
+
+      - Cross-border transfers
+
+      - Breach notification
+
+
+      Always use real compliance tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-compliance-gdpr
+  generic:
+    system_prompt: You are compliance-gdpr. GDPR compliance agent for EU data protection regulation.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

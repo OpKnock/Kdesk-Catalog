@@ -1,0 +1,140 @@
+name: testcontainers
+display_name: testcontainers
+category: testing
+subcategory: general
+description: Runs throwaway Docker containers in tests with Testcontainers for databases, message brokers,
+  and services.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ./gradlew
+- docker
+- mvn
+- node
+- npm
+- npx
+capabilities:
+- name: container-lifecycle
+  description: Start, inspect, and stop test containers.
+  commands:
+  - docker ps --filter name=testcontainer
+  - docker logs $(docker ps -q --filter name=testcontainer-postgres)
+  - docker network ls
+  - docker image prune -f
+  - mvn test -Dtest=PostgresContainerTest
+  examples:
+  - docker logs $(docker ps -q --filter name=testcontainer-postgres)
+  - docker ps --filter name=testcontainer
+  - mvn test -Dtest=PostgresContainerTest
+  parameters:
+  - name: image
+    type: string
+    description: Container image, e.g. postgres:16
+  - name: port
+    type: number
+    description: Exposed port
+- name: testcontainers-java
+  description: JUnit integration with Testcontainers for Java.
+  commands:
+  - mvn test -Dtest=OrderRepositoryIT
+  - mvn verify
+  - ./gradlew test --tests "*ContainerTest"
+  - mvn test -Dcontainers.maxNumberOfContainers=4
+  examples:
+  - mvn test -Dtest=OrderRepositoryIT
+  - ./gradlew test --tests "*ContainerTest"
+  - mvn verify
+  parameters:
+  - name: test
+    type: string
+    description: Test class filter
+  - name: maxContainers
+    type: number
+    description: Parallel container limit
+- name: testcontainers-node
+  description: Node.js integration with testcontainers package.
+  commands:
+  - npm test
+  - npx jest --runInBand tests/db.test.js
+  - node --test tests/containers.test.js
+  - docker stats --no-stream $(docker ps -q --filter name=testcontainer)
+  examples:
+  - npm test
+  - npx jest --runInBand tests/db.test.js
+  - docker stats --no-stream $(docker ps -q --filter name=testcontainer)
+  parameters:
+  - name: runner
+    type: string
+    description: Test runner invocation
+  - default: 'false'
+    description: Run jest tests in-band to avoid container port conflicts.
+    name: runInBand
+    type: boolean
+knowledge:
+- title: Testcontainers Documentation
+  type: documentation
+  source: https://testcontainers.com/
+  description: Guides for Java, Node, Go, and .NET
+- title: Testcontainers Java
+  type: documentation
+  source: https://java.testcontainers.org/
+  description: JUnit integration and modules
+- title: Testcontainers Node
+  type: documentation
+  source: https://node.testcontainers.org/
+  description: Node.js container management
+instructions: "# Testcontainers\n\nRun real dependencies in tests with throwaway containers.\n\n## What\
+  \ This Skill Does\n\n- Starts databases, brokers, and services per test suite\n- Manages lifecycle automatically\
+  \ (start, wait, stop)\n- Maps random ports to avoid conflicts\n- Works with Java, Node, Go, and .NET\
+  \ test runners\n\n## When to Use\n\n- Integration tests that need a real Postgres/Redis\n- Testing against\
+  \ real message brokers\n- Replacing in-memory mocks with actual services\n\n## Real Commands\n\n```bash\n\
+  # Inspect running test containers\ndocker ps --filter name=testcontainer\ndocker logs $(docker ps -q\
+  \ --filter name=testcontainer-postgres)\n\n# Java\nmvn test -Dtest=OrderRepositoryIT\nmvn verify\n./gradlew\
+  \ test --tests \"*ContainerTest\"\n\n# Node\nnpm test\nnpx jest --runInBand tests/db.test.js\n```\n\n\
+  ## Java Example\n\n```java\n@Testcontainers\nclass OrderRepositoryIT {\n  @Container\n  static PostgreSQLContainer<?>\
+  \ postgres =\n      new PostgreSQLContainer<>(\"postgres:16\");\n\n  @Test\n  void persistsOrder() {\n\
+  \    // dataSource points at postgres.getJdbcUrl()\n  }\n}\n```\n\n## Best Practices\n\n- Scope containers\
+  \ to the suite, not each test\n- Use wait strategies (healthcheck) before asserting\n- Cap parallel\
+  \ containers to avoid resource exhaustion\n- Clean up images after CI runs\n- Keep container versions\
+  \ pinned to match production"
+examples:
+- input: Test my repository against real Postgres
+  output: Agent writes a Testcontainers-based integration test with a postgres:16 container and runs it
+    with mvn test.
+- input: Our tests use H2 and miss Postgres bugs
+  output: Agent replaces the embedded DB with a Testcontainers Postgres container and runs the suite to
+    catch dialect issues.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: testcontainers.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-testcontainers
+  generic:
+    system_prompt: 'Your lane is testcontainers. You do it through container-lifecycle: Start, inspect,
+      and stop test containers. The commands are real, e.g. `docker ps --filter name=testcontainer`. You
+      prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

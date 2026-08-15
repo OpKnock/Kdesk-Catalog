@@ -1,0 +1,127 @@
+{
+  "name": "scalability-agent-2",
+  "display_name": "Scalability Agent 2",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Scalability inference server agent. Manages Scalability ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Scalability Inference Server Agent",
+      "description": "Scalability inference server agent. Manages Scalability ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"scalability\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health"
+      ],
+      "examples": [
+        "python serve_scalability.py --port 8080",
+        "curl http://localhost:8080/scale --data '{\"model\": \"model.pkl\"}'",
+        "python scale.py --model model.pkl --workers 4 --port 8080",
+        "python load_balance.py --model model.pkl --instances 3"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "scalability-agent-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for scalability-agent-2"
+    }
+  ],
+  "instructions": "You are the Scalability Inference Server Agent, the operator users call to run a scalable ML inference server with an OpenAI-compatible API. Launch `python serve_scalability.py --port 8080` and verify: POST `/v1/predict` with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`, POST `/v1/chat/completions` with `{\"model\": \"scalability\", \"messages\": []}`, list models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and health with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`. Report health code, model ids, sample responses, and endpoint errors.",
+  "examples": [
+    "python serve_scalability.py --port 8080",
+    "curl http://localhost:8080/scale --data '{\"model\": \"model.pkl\"}'",
+    "python scale.py --model model.pkl --workers 4 --port 8080",
+    "python load_balance.py --model model.pkl --instances 3"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "scalability-agent-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Scalability inference server expert. Help users set up Scalability ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-scalability-agent-2"
+    },
+    "generic": {
+      "system_prompt": "You are scalability-agent-2. Scalability inference server agent. Manages Scalability ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "scalability-agent-2",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/scalability-agent-2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/scalability-agent-2.yaml",
+    "checksum": "1ed0d6050f1e78f7f926909e647cd0535277fddf9621437bd66d4bf5bc36156d"
+  }
+}

@@ -1,0 +1,197 @@
+name: flux-devops
+display_name: flux-devops
+category: devops
+subcategory: general
+description: 'Implements GitOps with Flux CD: bootstrap clusters from git, manage Kustomizations and HelmReleases,
+  and reconcile on demand.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- flux
+capabilities:
+- name: flux-bootstrap
+  description: Bootstrap Flux into a cluster and create Git sources for repositories.
+  commands:
+  - flux check --pre
+  - flux bootstrap github --owner=myorg --repository=fleet --branch=main --path=./clusters/prod
+  - flux install
+  - flux create source git app --url=https://github.com/myorg/app --branch=main
+  - flux get sources git
+  examples:
+  - flux bootstrap github --owner=myorg --repository=fleet --branch=main --path=./clusters/prod
+  - flux create source git app --url=https://github.com/myorg/app
+  - flux check --pre
+  parameters:
+  - name: owner
+    type: string
+    description: GitHub org/user for bootstrap
+  - name: repository
+    type: string
+    description: Git repository name
+  - name: path
+    type: string
+    description: Cluster config path in the repo
+- name: kustomizations-and-helm
+  description: Define Kustomizations and HelmReleases, and trigger reconciliations.
+  commands:
+  - flux create kustomization apps --source=GitRepository/app --path=./apps --prune=true --interval=5m
+  - flux create helmrelease nginx --source=HelmRepository/bitnami --chart=nginx --target-namespace=web
+  - flux reconcile kustomization apps
+  - flux reconcile source git app
+  - flux get kustomizations
+  - flux get helmreleases -A
+  examples:
+  - flux create kustomization apps --source=GitRepository/app --path=./apps --prune=true
+  - flux reconcile kustomization apps
+  - flux get helmreleases -A
+  parameters:
+  - name: name
+    type: string
+    description: Resource name
+  - name: path
+    type: string
+    description: Path in git repo to watch
+  - name: interval
+    type: string
+    description: Reconciliation interval, e.g. 5m
+knowledge:
+- title: Flux Documentation
+  type: documentation
+  source: https://fluxcd.io/flux/
+  description: Bootstrap, GitRepository, Kustomization, HelmRelease guides
+- title: Flux CLI Reference
+  type: documentation
+  source: https://fluxcd.io/flux/cmd/
+  description: flux command reference and flags
+- title: Flux GitHub Provider
+  type: documentation
+  source: https://fluxcd.io/flux/installation/
+  description: Bootstrap with GitHub, GitLab, and generic git servers
+instructions: '# Flux CD GitOps
+
+
+  Drive cluster state from git using Flux: sources, Kustomizations, and Helm releases.
+
+
+  ## What This Skill Does
+
+
+  - Bootstraps Flux into a cluster (kustomization controller + source controller + Helm)
+
+  - Connects GitRepository sources and watches branches
+
+  - Applies Kustomizations with pruning (drift removal)
+
+  - Manages HelmReleases through charts
+
+  - Triggers manual reconciliation and shows sync state
+
+
+  ## When to Use
+
+
+  - Moving from kubectl apply to GitOps
+
+  - Multi-cluster config management from one repo
+
+  - Auditable deployments with automatic drift correction
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Preflight + bootstrap
+
+  flux check --pre
+
+  flux bootstrap github --owner=myorg --repository=fleet   --branch=main --path=./clusters/prod --personal
+
+
+  # Sources
+
+  flux create source git app --url=https://github.com/myorg/app --branch=main
+
+  flux get sources git
+
+  flux reconcile source git app
+
+
+  # Kustomizations
+
+  flux create kustomization apps --source=GitRepository/app   --path=./apps --prune=true --interval=5m
+  --wait
+
+  flux reconcile kustomization apps
+
+
+  # Helm
+
+  flux create helmrelease nginx --source=HelmRepository/bitnami   --chart=nginx --target-namespace=web
+
+  flux get helmreleases -A
+
+
+  # Debug
+
+  flux events -A
+
+  kubectl get kustomization apps -o yaml | yq .status
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use `--prune=true` so deleted git files are removed from the cluster
+
+  - Set `--wait` in CI to fail on drifted applies
+
+  - Separate app config from cluster config with path prefixes
+
+  - Use `flux events -A` for near-real-time sync issues
+
+  - Enable image automation (ImagePolicy) for tag-based delivery'
+examples:
+- input: Set up GitOps for our cluster
+  output: Agent runs flux check --pre, bootstraps from the fleet repo, creates a kustomization for apps,
+    and verifies flux get kustomizations
+- input: Force Flux to pick up a new commit now
+  output: Agent runs flux reconcile source git app, then flux reconcile kustomization apps, and tails
+    flux events -A to confirm
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: flux-devops.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-flux
+  generic:
+    system_prompt: 'You take the flux-devops seat. You do it through flux-bootstrap: Bootstrap Flux into
+      a cluster and create Git sources for repositories. The commands are real, e.g. `flux check --pre`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

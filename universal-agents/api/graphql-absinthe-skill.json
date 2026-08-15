@@ -1,0 +1,173 @@
+{
+  "name": "graphql-absinthe",
+  "display_name": "Graphql Absinthe",
+  "category": "api",
+  "subcategory": "general",
+  "description": "GraphQL on Elixir with Absinthe: scaffold schemas, run the mix compiler, generate docs, and test GraphQL queries.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "iex",
+    "mix"
+  ],
+  "capabilities": [
+    {
+      "name": "absinthe-development",
+      "description": "Manage Absinthe schemas, compile, and run queries in a Phoenix/IEx context.",
+      "commands": [
+        "mix deps.get && mix absinthe.schema.json --schema MyApp.Schema > schema.json",
+        "mix absinthe.schema.sdl --schema MyApp.Schema > schema.graphql",
+        "mix test test/graphql",
+        "mix run -e \"IO.inspect(MyApp.Schema)\"",
+        "iex -S mix phx.server"
+      ],
+      "examples": [
+        "mix absinthe.schema.sdl --schema MyApp.Schema > schema.graphql",
+        "mix test test/graphql",
+        "mix absinthe.schema.json --schema MyApp.Schema > schema.json && jq '.data.__schema.queryType.name' schema.json"
+      ],
+      "parameters": [
+        {
+          "name": "schema-module",
+          "type": "string",
+          "description": "Absinthe schema module like MyApp.Schema"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output file for schema export"
+        },
+        {
+          "name": "test-path",
+          "type": "string",
+          "description": "Test directory pattern"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Absinthe docs",
+      "type": "documentation",
+      "source": "https://hexdocs.pm/absinthe/",
+      "description": "Schema definition, resolvers, and subscriptions in Elixir"
+    },
+    {
+      "title": "Absinthe mix tasks",
+      "type": "documentation",
+      "source": "https://hexdocs.pm/absinthe/extra-tools.html",
+      "description": "Schema export and code generation mix tasks"
+    }
+  ],
+  "instructions": "# GraphQL Absinthe\n\n## What this skill does\n\nAbsinthe is the GraphQL implementation for Elixir. Schemas are defined with the `use Absinthe.Schema` macro, resolvers handle fields, and mix tasks export the schema as SDL/JSON for tooling.\n\n## When to use\n\n- Building GraphQL APIs on Phoenix/Elixir\n- Exporting the schema for client codegen\n- Testing resolvers in isolation\n\n## Real commands\n\n```bash\n# Export schema as SDL/JSON\nmix absinthe.schema.sdl --schema MyApp.Schema > schema.graphql\nmix absinthe.schema.json --schema MyApp.Schema > schema.json\n\n# Tests\nmix test test/graphql\n\n# Interactive\niex -S mix phx.server\n```\n\n## Schema example\n\n```elixir\ndefmodule MyApp.Schema do\n  use Absinthe.Schema\n\n  import_types Absinthe.Type.Custom\n\n  query do\n    field :order, :order do\n      arg :id, non_null(:id)\n      resolve fn %{id: id}, _ ->\n        case Orders.get(id) do\n          nil -> {:error, \"not found\"}\n          order -> {:ok, order}\n        end\n      end\n    end\n  end\n\n  object :order do\n    field :id, non_null(:id)\n    field :status, non_null(:string)\n  end\nend\n```\n\n## Testing\n\n```elixir\n# Absinthe test helper: run a query against the schema directly\nAbsinthe.run(~s({ order(id: \"1\") { id status } }), MyApp.Schema)\n```\n\n## Best practices\n\n- Keep resolvers in context modules, not inline in the schema.\n- Use `Absinthe.Test` for schema-level tests without HTTP.\n- Export the SDL in CI and diff it to catch schema drift.\n- Use dataloader for batched associations.\n- Document fields with `@doc` strings; they surface in schema tooling.\n",
+  "examples": [
+    {
+      "input": "Export the Absinthe schema for client codegen",
+      "output": "Run mix absinthe.schema.sdl --schema MyApp.Schema > schema.graphql and hand it to the codegen step."
+    },
+    {
+      "input": "Test the order resolver",
+      "output": "Use Absinthe.run with a query string in an ExUnit test and assert on the result map."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-absinthe.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql-absinthe"
+    },
+    "generic": {
+      "system_prompt": "You work Graphql Absinthe hands-on. You do it through absinthe-development: Manage Absinthe schemas, compile, and run queries in a Phoenix/IEx context. The commands are real, e.g. `mix deps.get && mix absinthe.schema.json --schema MyApp.Schema > schema.json`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "graphql-absinthe",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "absinthe-development",
+        "name": "schema-module",
+        "type": "string",
+        "description": "Absinthe schema module like MyApp.Schema"
+      },
+      {
+        "capability": "absinthe-development",
+        "name": "output",
+        "type": "string",
+        "description": "Output file for schema export"
+      },
+      {
+        "capability": "absinthe-development",
+        "name": "test-path",
+        "type": "string",
+        "description": "Test directory pattern"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "iex",
+    "mix"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/graphql-absinthe-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/graphql-absinthe-skill.yaml",
+    "checksum": "40cc0b50484f82053178218b95754504ccc77c4e6ce2afeab6a95ed1301faaf8"
+  }
+}

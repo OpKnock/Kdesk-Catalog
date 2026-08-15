@@ -1,0 +1,205 @@
+{
+  "name": "kafka-monitoring",
+  "display_name": "Kafka Monitoring",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Monitor Kafka brokers and clients: JMX metrics with JmxTool, broker API versions, log dir health, and JMX-to-Prometheus exporter setup.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "java",
+    "kafka-broker-api-versions.sh",
+    "kafka-log-dirs.sh",
+    "kafka-run-class.sh",
+    "kafka-topics.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "broker-health",
+      "description": "Query broker health, API versions, and log directories.",
+      "commands": [
+        "kafka-broker-api-versions.sh --bootstrap-server localhost:9092",
+        "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --broker-list 1",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --describe --unclean-offset-leader-available",
+        "kafka-broker-api-versions.sh --bootstrap-server localhost:9092 --version"
+      ],
+      "examples": [
+        "kafka-broker-api-versions.sh --bootstrap-server localhost:9092",
+        "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --broker-list 1 | jq '.brokers[].logDirs[].errorCode'",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --describe --unclean-offset-leader-available"
+      ],
+      "parameters": [
+        {
+          "name": "broker",
+          "type": "integer",
+          "description": "Broker id to inspect."
+        },
+        {
+          "name": "bootstrap",
+          "type": "string",
+          "description": "Bootstrap server address."
+        }
+      ]
+    },
+    {
+      "name": "jmx-metrics",
+      "description": "Pull broker JMX metrics with kafka.tools.JmxTool and export to Prometheus.",
+      "commands": [
+        "kafka-run-class.sh kafka.tools.JmxTool --object-name kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec --date-format 'yyyy-MM-dd HH:mm:ss' --jmx-url service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi",
+        "kafka-run-class.sh kafka.tools.JmxTool --object-name kafka.server:type=KafkaRequestHandlerPool,name=RequestHandlerAvgIdlePercent --reporting-interval 10000",
+        "java -javaagent:jmx_prometheus_javaagent.jar=7071:config.yaml -jar kafka-server.jar config/server.properties"
+      ],
+      "examples": [
+        "kafka-run-class.sh kafka.tools.JmxTool --object-name kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec --date-format 'yyyy-MM-dd HH:mm:ss' --jmx-url service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi",
+        "java -javaagent:jmx_prometheus_javaagent.jar=7071:config.yaml -jar kafka-server.jar config/server.properties",
+        "curl -s localhost:7071/metrics | grep BytesInPerSec"
+      ],
+      "parameters": [
+        {
+          "name": "object_name",
+          "type": "string",
+          "description": "JMX MBean pattern, e.g. kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec."
+        },
+        {
+          "name": "jmx_url",
+          "type": "string",
+          "description": "JMX RMI URL of the broker."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka Monitoring",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#monitoring",
+      "description": "Official Kafka monitoring documentation and metric catalog."
+    },
+    {
+      "title": "JMX Exporter",
+      "type": "documentation",
+      "source": "https://github.com/prometheus/jmx_exporter",
+      "description": "JMX to Prometheus exporter agent."
+    }
+  ],
+  "instructions": "# Kafka Monitoring\n\nMonitor Kafka brokers and client metrics with the Kafka CLI and JMX tooling.\n\n## What this skill does\n\n- Checks broker API versions and log directory health.\n- Samples broker JMX metrics with kafka.tools.JmxTool.\n- Bootstraps the JMX-to-Prometheus exporter for dashboards.\n\n## When to use\n\n- Capacity planning (BytesInPerSec, BytesOutPerSec).\n- Debugging disk and network saturation on brokers.\n- Verifying a fresh cluster is healthy before go-live.\n\n## Real commands\n\n```bash\n# Broker API versions (also shows broker->client compatibility)\nkafka-broker-api-versions.sh --bootstrap-server localhost:9092\n\n# Log dir health (disk errors, sizes)\nkafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --broker-list 1\n\n# Partitions with unclean leader elections\nkafka-topics.sh --bootstrap-server localhost:9092 --describe --unclean-offset-leader-available\n\n# Sample a metric every 5s from JMX\nkafka-run-class.sh kafka.tools.JmxTool \\\n  --object-name kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec \\\n  --reporting-interval 5000 \\\n  --jmx-url service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi\n\n# Request handler pool utilization\nkafka-run-class.sh kafka.tools.JmxTool \\\n  --object-name kafka.server:type=KafkaRequestHandlerPool,name=RequestHandlerAvgIdlePercent\n\n# Prometheus exporter on broker start\njava -javaagent:jmx_prometheus_javaagent.jar=7071:config.yaml \\\n  -jar kafka-server.jar config/server.properties\n\n# Verify exporter is serving\ncurl -s localhost:7071/metrics | grep BytesInPerSec\n```\n\n## Prometheus config.yaml example\n\n```yaml\nlowercaseOutputName: true\nrules:\n  - pattern: kafka.server<type=BrokerTopicMetrics, name=(.*)><>(Value)\n    name: kafka_broker_topic_$1\n    type: GAUGE\n```\n\n## Testing\n\n```bash\n# Produce traffic then watch BytesInPerSec climb\nkafka-console-producer.sh --bootstrap-server localhost:9092 --topic test\n```\n\n## Best practices\n\n- Enable JMX on brokers (-Dcom.sun.management.jmxremote.port=9999).\n- Scrape request handler idle %, ISR shrink rate, and under-replicated partitions.\n- Use the kafka.server:type=KafkaServer,name=BrokerState metric for broker liveness.\n",
+  "examples": [
+    {
+      "input": "Check broker 1 disk health",
+      "output": "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --broker-list 1"
+    },
+    {
+      "input": "Set up Prometheus scraping for Kafka",
+      "output": "Restart brokers with -javaagent:jmx_prometheus_javaagent.jar=7071:config.yaml and scrape localhost:7071/metrics."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-monitoring.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-monitoring"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Kafka Monitoring. You do it through broker-health: Query broker health, API versions, and log directories. The commands are real, e.g. `kafka-broker-api-versions.sh --bootstrap-server localhost:9092`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-monitoring",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "broker-health",
+        "name": "broker",
+        "type": "integer",
+        "description": "Broker id to inspect."
+      },
+      {
+        "capability": "broker-health",
+        "name": "bootstrap",
+        "type": "string",
+        "description": "Bootstrap server address."
+      },
+      {
+        "capability": "jmx-metrics",
+        "name": "object_name",
+        "type": "string",
+        "description": "JMX MBean pattern, e.g. kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec."
+      },
+      {
+        "capability": "jmx-metrics",
+        "name": "jmx_url",
+        "type": "string",
+        "description": "JMX RMI URL of the broker."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "java",
+    "kafka-broker-api-versions.sh",
+    "kafka-log-dirs.sh",
+    "kafka-run-class.sh",
+    "kafka-topics.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-monitoring-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-monitoring-skill.yaml",
+    "checksum": "7830f7e14d1d72fcca2c5699bebadc5dd53f6cf03080753dd1f94dccf100023e"
+  }
+}

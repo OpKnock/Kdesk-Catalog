@@ -1,0 +1,134 @@
+name: knowledge-management
+version: 2.0.0
+type: skill
+category: collaboration
+description: 'Builds team documentation and knowledge bases with MkDocs and Docusaurus: authoring, serving,
+  and publishing.'
+keywords:
+- knowledge-management
+- documentation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: knowledge-management.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-knowledge-management
+  generic:
+    system_prompt: 'You work knowledge-management hands-on. You do it through mkdocs: Author and publish
+      documentation sites with MkDocs. The commands are real, e.g. `mkdocs new docs`. You work hands-on
+      and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: mkdocs
+  description: Author and publish documentation sites with MkDocs.
+  commands:
+  - mkdocs new docs
+  - mkdocs serve -a localhost:8000
+  - mkdocs build --strict
+  - mkdocs gh-deploy
+  - mkdocs build --clean
+  examples:
+  - mkdocs serve -a 0.0.0.0:8000 --livereload
+  - mkdocs build --strict --site-dir dist
+  - mkdocs gh-deploy --force
+  parameters:
+  - name: strict
+    type: string
+    description: Fail on warnings
+  - name: site-dir
+    type: string
+    description: Output directory for the site
+  - name: serve
+    type: string
+    description: Dev server with host:port
+- name: docusaurus
+  description: Build React-powered knowledge bases with Docusaurus.
+  commands:
+  - npx create-docusaurus@latest my-docs classic --typescript
+  - npm run start
+  - npm run build
+  - npm run swizzle @docusaurus/theme-classic SidebarItem -- --typescript
+  - npx docusaurus serve
+  examples:
+  - npx create-docusaurus@latest my-docs classic --typescript --skip-install
+  - npm run build && npx docusaurus serve --port 3001
+  - npm run write-translations -- --locale de
+  parameters:
+  - name: template
+    type: string
+    description: classic or plain template
+  - name: port
+    type: number
+    description: Dev server port
+  - name: locale
+    type: string
+    description: Translation locale
+prerequisites:
+- confluence
+- notion
+- gitbook
+- algolia
+tools:
+- confluence
+- notion
+- gitbook
+- algolia
+- docusaurus
+examples:
+- input: Create a platform runbook site.
+  output: Scaffolds MkDocs with the material theme, writes runbooks, and deploys via mkdocs gh-deploy
+    with strict CI builds.
+- input: Migrate a wiki into versioned docs.
+  output: Sets up Docusaurus with versioning, migrates pages to MDX, and enables Algolia search.
+instructions: "# Knowledge Management\n\nTurn team knowledge into a maintainable documentation site.\n\
+  \n## When to Use\n\n- Onboarding and runbook documentation\n- API and product docs that need versioning\n\
+  - Centralizing tribal knowledge from Slack/meetings\n\n## MkDocs for lightweight docs\n\n```yaml\nsite_name:\
+  \ Platform Docs\nnav:\n  - Home: index.md\n  - Runbooks: runbooks.md\n  - Architecture: architecture.md\n\
+  theme: material\n```\n\n```bash\nmkdocs new docs\nmkdocs serve -a localhost:8000\nmkdocs build --strict\n\
+  ```\n\n`--strict` turns warnings into errors - great CI gate.\n\n## Publish to GitHub Pages\n\n```bash\n\
+  mkdocs gh-deploy\n```\n\n## Docusaurus for feature-rich docs\n\n```bash\nnpx create-docusaurus@latest\
+  \ my-docs classic --typescript\nnpm run start\nnpm run build\n```\n\n## Documentation hygiene\n\n- Every\
+  \ runbook starts with impact + owner + recovery steps.\n- Link docs from code comments and alert pages.\n\
+  - Mark stale docs with expiry dates; delete rather than rot.\n- Keep a docs review task in the team's\
+  \ sprint.\n\n## Best practices\n\n- Single source of truth: link, don't duplicate.\n- Use mermaid diagrams\
+  \ for architecture flows.\n- Version docs with product versions.\n- CI: build --strict on every PR touching\
+  \ docs/\n\n## Testing\n\n```bash\nmkdocs build --strict\n```\n\nVerify all internal links resolve before\
+  \ merge."
+display_name: knowledge-management
+knowledge:
+- title: MkDocs
+  type: documentation
+  source: https://www.mkdocs.org/
+  description: Static docs from Markdown, strict mode, deploy
+- title: Docusaurus
+  type: documentation
+  source: https://docusaurus.io/docs
+  description: Documentation sites, versions, and search
+- title: Markdown Guide
+  type: documentation
+  source: https://www.markdownguide.org/
+  description: CommonMark and extensions for docs

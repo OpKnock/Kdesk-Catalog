@@ -1,0 +1,178 @@
+name: api-contract-validator-api-contract-validator
+version: 2.0.0
+type: skill
+category: testing
+description: 'Validates API contracts continuously: response schema checks at runtime, spec diffs in CI,
+  and consumer contract verification.'
+keywords:
+- openapi
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-contract-validator-api-contract-validator.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-contract-validator
+  generic:
+    system_prompt: 'You own api-contract-validator-api-contract-validator end to end. You do it through
+      runtime-validation: Validate API responses at runtime against the OpenAPI contract. The commands
+      are real, e.g. `npm install express-openapi-validator`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: runtime-validation
+  description: Validate API responses at runtime against the OpenAPI contract
+  commands:
+  - npm install express-openapi-validator
+  - node -e "const v=require('express-openapi-validator');console.log(typeof v.middleware)"
+  - npm install @faker-js/faker --save-dev
+  - curl -s http://localhost:3000/api/products/1 | python -m json.tool
+  - npm install supertest --save-dev
+  examples:
+  - npm install express-openapi-validator
+  - curl -s http://localhost:3000/api/products/1 | python -m json.tool
+  - npm install supertest --save-dev && npx jest
+  parameters:
+  - name: spec
+    type: string
+    description: OpenAPI spec for runtime validation
+  - name: endpoint
+    type: string
+    description: Endpoint to validate
+- name: spec-diff-checking
+  description: Diff specs across versions in CI to block breaking changes
+  commands:
+  - openapi-diff v1.yaml v2.yaml
+  - openapi-diff --fail-on-incompatible v1.yaml v2.yaml
+  - openapi-diff --fail-on-changed v1.yaml v2.yaml
+  - node -e "const {compare}=require('openapi-spec-validator');console.log(typeof compare)" 2>/dev/null
+    || echo 'install openapi-spec-validator'
+  - git diff v1.yaml v2.yaml --stat
+  examples:
+  - openapi-diff --fail-on-incompatible v1.yaml v2.yaml
+  - openapi-diff v1.yaml v2.yaml | grep -i 'breaking'
+  - git diff v1.yaml v2.yaml --stat && openapi-diff v1.yaml v2.yaml
+  parameters:
+  - name: oldSpec
+    type: string
+    description: Baseline spec
+  - name: newSpec
+    type: string
+    description: Candidate spec
+prerequisites:
+- pact
+- openapi
+- node.js
+- python
+tools:
+- pact
+- openapi
+- node.js
+- python
+- postman
+- stoplight-studio
+examples:
+- input: Validate API responses against the OpenAPI spec
+  output: Adds express-openapi-validator middleware plus supertest assertions against schema-derived fixtures
+- input: Catch breaking changes before release
+  output: Adds openapi-diff with --fail-on-incompatible to the release pipeline
+instructions: '# API Contract Validator
+
+
+  Validates contracts everywhere: at runtime, in tests, and in CI diffs.
+
+
+  ## When to Use
+
+  - Spec drift reaches production
+
+  - Teams need early breaking-change alerts
+
+  - Third-party responses must match contracts
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Runtime validation
+
+  npm install express-openapi-validator
+
+
+  # Test-time response checks
+
+  npm install supertest --save-dev
+
+  npx jest
+
+
+  # CI diff gates
+
+  openapi-diff --fail-on-incompatible v1.yaml v2.yaml
+
+
+  # Probe responses
+
+  curl -s http://localhost:3000/api/products/1 | python -m json.tool
+
+  ```
+
+
+  ## Validation Layers
+
+  - Runtime middleware: request/response shapes
+
+  - Tests: supertest assertions
+
+  - CI: openapi-diff on PRs
+
+
+  ## Testing
+
+  Add negative tests: send responses that violate the schema and assert 500-level handling.
+
+
+  ## Best Practices
+
+  - One spec per version, diffs in CI
+
+  - Log validation failures with request IDs'
+display_name: api-contract-validator-api-contract-validator
+knowledge:
+- title: express-openapi-validator
+  type: documentation
+  source: https://github.com/cdimascio/express-openapi-validator
+  description: Runtime request/response validation
+- title: openapi-diff
+  type: documentation
+  source: https://github.com/OpenAPITools/openapi-diff
+  description: Breaking change detection
+- title: supertest
+  type: documentation
+  source: https://github.com/ladjs/supertest
+  description: HTTP assertions for API tests

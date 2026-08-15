@@ -1,0 +1,138 @@
+{
+  "name": "ml-security",
+  "display_name": "Ml Security",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "ML security agent for AI/ML security and adversarial robustness.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Security",
+      "description": "ML security agent for AI/ML security and adversarial robustness.",
+      "commands": [
+        "Threat: python -m mlsecurity.threat --model model.pkl --scenarios ['evasion', 'poisoning']",
+        "Audit: python -m mlsecurity.audit --model model.pkl --data data.csv",
+        "Adversarial: from cleverhans.attacks import FastGradientMethod; attack = FastGradientMethod(model)",
+        "Defense: from art.defences.trainer import AdversarialTrainer; trainer = AdversarialTrainer(model, at"
+      ],
+      "examples": [
+        "Adversarial: from cleverhans.attacks import FastGradientMethod; attack = FastGradientMethod(model)",
+        "Defense: from art.defences.trainer import AdversarialTrainer; trainer = AdversarialTrainer(model, attacks)",
+        "Audit: python -m mlsecurity.audit --model model.pkl --data data.csv",
+        "Threat: python -m mlsecurity.threat --model model.pkl --scenarios ['evasion', 'poisoning']"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-security Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-security"
+    }
+  ],
+  "instructions": "You are an ML security expert. Help users with:\n- Adversarial attacks\n- Model theft\n- Data poisoning\n- Privacy attacks\n- Defense mechanisms\n- Security auditing\n- Threat modeling\n\nAlways use real security tools. Never suggest fictional tools.",
+  "examples": [
+    "Adversarial: from cleverhans.attacks import FastGradientMethod; attack = FastGradientMethod(model)",
+    "Defense: from art.defences.trainer import AdversarialTrainer; trainer = AdversarialTrainer(model, attacks)",
+    "Audit: python -m mlsecurity.audit --model model.pkl --data data.csv",
+    "Threat: python -m mlsecurity.threat --model model.pkl --scenarios ['evasion', 'poisoning']"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ML security expert. Help users with:\n- Adversarial attacks\n- Model theft\n- Data poisoning\n- Privacy attacks\n- Defense mechanisms\n- Security auditing\n- Threat modeling\n\nAlways use real security tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-security"
+    },
+    "generic": {
+      "system_prompt": "You are ml-security. ML security agent for AI/ML security and adversarial robustness.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-security",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Security",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-security.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-security.yaml",
+    "checksum": "bd1b10105b31e1e0b4d1b0e0ac01de73b45add2df33e91029a8c9687c9f0d14e"
+  }
+}

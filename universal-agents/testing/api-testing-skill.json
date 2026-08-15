@@ -1,0 +1,266 @@
+{
+  "name": "api-testing",
+  "display_name": "api-testing",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Tests REST APIs with curl, httpie, and Newman, covering auth, contracts, and response validation from the terminal.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "http",
+    "newman"
+  ],
+  "capabilities": [
+    {
+      "name": "curl-testing",
+      "description": "Craft and assert on API requests with curl.",
+      "commands": [
+        "curl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users",
+        "curl -s -X POST https://api.example.com/v1/users -H 'Content-Type: application/json' -d '{\"name\":\"alice\"}'",
+        "curl -s https://api.example.com/v1/users | jq -e '.data | length > 0'",
+        "curl -sI https://api.example.com/v1/health",
+        "curl -s -u user:pass https://api.example.com/v1/users"
+      ],
+      "examples": [
+        "curl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users",
+        "curl -s -X POST https://api.example.com/v1/users -H 'Content-Type: application/json' -d '{\"name\":\"alice\"}' | jq .",
+        "curl -s https://api.example.com/v1/users | jq -e '.data | length > 0'"
+      ],
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method: GET, POST, PUT, DELETE"
+        },
+        {
+          "name": "headers",
+          "type": "object",
+          "description": "Request headers"
+        },
+        {
+          "name": "data",
+          "type": "object",
+          "description": "JSON request body"
+        }
+      ]
+    },
+    {
+      "name": "httpie-testing",
+      "description": "Human-friendly API testing with httpie.",
+      "commands": [
+        "http GET https://api.example.com/v1/users",
+        "http POST https://api.example.com/v1/users name=alice role=admin",
+        "http --json POST https://api.example.com/v1/users <<< '{\"name\":\"bob\"}'",
+        "http -h GET https://api.example.com/v1/users",
+        "http GET https://api.example.com/v1/users Authorization:'Bearer $TOKEN'"
+      ],
+      "examples": [
+        "http GET https://api.example.com/v1/users",
+        "http POST https://api.example.com/v1/users name=alice role=admin",
+        "http -h GET https://api.example.com/v1/users"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Request URL"
+        },
+        {
+          "name": "fields",
+          "type": "object",
+          "description": "Form or JSON fields"
+        }
+      ]
+    },
+    {
+      "name": "newman-collections",
+      "description": "Run Postman collections with assertions in CI.",
+      "commands": [
+        "newman run api.postman_collection.json",
+        "newman run collection.json -e staging.postman_environment.json",
+        "newman run collection.json -d data.csv",
+        "newman run collection.json -r html,cli --reporter-html-export report.html",
+        "newman run collection.json --env-var baseUrl=https://staging.example.com"
+      ],
+      "examples": [
+        "newman run collection.json -e staging.env.json",
+        "newman run collection.json -r html,cli --reporter-html-export report.html",
+        "newman run collection.json --env-var baseUrl=https://staging.example.com"
+      ],
+      "parameters": [
+        {
+          "name": "collection",
+          "type": "string",
+          "description": "Collection JSON path"
+        },
+        {
+          "name": "environment",
+          "type": "string",
+          "description": "Environment JSON path"
+        },
+        {
+          "name": "dataFile",
+          "type": "string",
+          "description": "CSV/JSON data file for iteration"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "curl Documentation",
+      "type": "documentation",
+      "source": "https://curl.se/docs/",
+      "description": "curl manual and examples"
+    },
+    {
+      "title": "httpie Documentation",
+      "type": "documentation",
+      "source": "https://httpie.io/docs/cli",
+      "description": "httpie CLI reference"
+    },
+    {
+      "title": "Newman Documentation",
+      "type": "documentation",
+      "source": "https://learning.postman.com/docs/running-collections/using-newman-cli/",
+      "description": "Newman CLI and reporters"
+    }
+  ],
+  "instructions": "# API Testing\n\nTest REST APIs quickly from the terminal with curl, httpie, and Newman.\n\n## What This Skill Does\n\n- Exercises endpoints with status and body assertions\n- Verifies auth, headers, and contract fields\n- Runs Postman collections in CI with data files\n- Generates HTML/CLI reports\n\n## When to Use\n\n- Quick smoke tests of a new endpoint\n- Contract verification before merge\n- CI regression suites for APIs\n\n## Real Commands\n\n```bash\n# curl\ncurl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users\ncurl -s -X POST https://api.example.com/v1/users -H 'Content-Type: application/json' -d '{\"name\":\"alice\"}'\ncurl -s https://api.example.com/v1/users | jq -e '.data | length > 0'\n\n# httpie\nhttp GET https://api.example.com/v1/users\nhttp POST https://api.example.com/v1/users name=alice role=admin\nhttp -h GET https://api.example.com/v1/users\n\n# Newman\nnewman run collection.json -e staging.postman_environment.json\nnewman run collection.json -d data.csv -r html,cli --reporter-html-export report.html\n```\n\n## Assertion Pattern (Newman script)\n\n```js\npm.test(\"returns 201 and user id\", () => {\n  pm.response.to.have.status(201);\n  const body = pm.response.json();\n  pm.expect(body.data.id).to.be.a('string');\n});\n```\n\n## Best Practices\n\n- Assert status AND schema, not just 200\n- Keep tests independent; create resources in setup scripts\n- Use environment variables for base URLs and tokens\n- Run collections with data files for data-driven cases\n- Fail CI on HTTP 5xx or schema drift",
+  "examples": [
+    {
+      "input": "Quickly verify the users endpoint",
+      "output": "Agent runs curl with -w '%{http_code}' and jq assertions, then checks a POST round-trip with httpie."
+    },
+    {
+      "input": "Run the API suite in CI",
+      "output": "Agent wires newman run collection.json -e staging.env.json -d data.csv into CI with an HTML report artifact."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-testing"
+    },
+    "generic": {
+      "system_prompt": "You are the api-testing specialist. You do it through curl-testing: Craft and assert on API requests with curl. The commands are real, e.g. `curl -s -o /dev/null -w %{http_code} https://api.example.com/v1/users`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-testing",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "curl-testing",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method: GET, POST, PUT, DELETE"
+      },
+      {
+        "capability": "curl-testing",
+        "name": "headers",
+        "type": "object",
+        "description": "Request headers"
+      },
+      {
+        "capability": "curl-testing",
+        "name": "data",
+        "type": "object",
+        "description": "JSON request body"
+      },
+      {
+        "capability": "httpie-testing",
+        "name": "url",
+        "type": "string",
+        "description": "Request URL"
+      },
+      {
+        "capability": "httpie-testing",
+        "name": "fields",
+        "type": "object",
+        "description": "Form or JSON fields"
+      },
+      {
+        "capability": "newman-collections",
+        "name": "collection",
+        "type": "string",
+        "description": "Collection JSON path"
+      },
+      {
+        "capability": "newman-collections",
+        "name": "environment",
+        "type": "string",
+        "description": "Environment JSON path"
+      },
+      {
+        "capability": "newman-collections",
+        "name": "dataFile",
+        "type": "string",
+        "description": "CSV/JSON data file for iteration"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "http",
+    "newman"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/api-testing-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/api-testing-skill.yaml",
+    "checksum": "1f1b2568a0ee6fdeb17a1be591c7b63aa5608dd3b3be8371e6cb06d5059116ee"
+  }
+}

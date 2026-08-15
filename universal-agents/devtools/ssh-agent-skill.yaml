@@ -1,0 +1,194 @@
+name: ssh-agent
+display_name: ssh-agent
+category: devtools
+subcategory: general
+description: 'Manages SSH keys in the agent: add/remove keys, list fingerprints, lifetimes, and agent
+  forwarding for multi-hop connections.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- eval
+- ssh
+- ssh-add
+- ssh-agent
+capabilities:
+- name: agent-lifecycle
+  description: Start the agent and manage loaded keys.
+  commands:
+  - eval "$(ssh-agent -s)"
+  - ssh-add ~/.ssh/id_ed25519
+  - ssh-add -l
+  - ssh-add -L
+  - ssh-add -D
+  - ssh-agent -k
+  examples:
+  - eval "$(ssh-agent -s)"
+  - ssh-add ~/.ssh/id_ed25519
+  - ssh-add -l
+  parameters:
+  - name: keyfile
+    type: string
+    description: Private key path
+  - name: agent-sock
+    type: string
+    description: Agent socket path (SSH_AUTH_SOCK)
+- name: key-security
+  description: Set lifetimes, require confirmation, and inspect agent state.
+  commands:
+  - ssh-add -t 1h ~/.ssh/id_ed25519
+  - ssh-add -c ~/.ssh/id_ed25519
+  - ssh-add -t 3600
+  - ssh-add -x && ssh-add -X
+  - ssh -A user@jumphost
+  - ssh-add -E sha256 -l
+  examples:
+  - ssh-add -t 1h ~/.ssh/id_ed25519
+  - ssh-add -c ~/.ssh/id_ed25519
+  - ssh-add -E sha256 -l
+  parameters:
+  - name: lifetime
+    type: integer
+    description: Key lifetime in seconds (-t)
+  - name: confirm
+    type: boolean
+    description: Require confirmation before use (-c)
+knowledge:
+- title: ssh-agent Manual
+  type: documentation
+  source: https://man.openbsd.org/ssh-agent
+  description: Agent options and behavior
+- title: ssh-add Manual
+  type: documentation
+  source: https://man.openbsd.org/ssh-add
+  description: Key management options
+instructions: '# SSH Agent Management
+
+
+  Hold SSH keys in memory so you authenticate without passphrases on every use.
+
+
+  ## What This Skill Does
+
+
+  - Starts the agent and loads private keys
+
+  - Lists loaded keys and fingerprints
+
+  - Removes keys (individual or all)
+
+  - Sets lifetimes and confirmation prompts
+
+  - Enables agent forwarding for jump hosts
+
+
+  ## When to Use
+
+
+  - Passphrase-protected keys without re-entry
+
+  - Multiple keys needing selection per host
+
+  - Jump-host chains (bastion -> target)
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Start and add
+
+  eval "$(ssh-agent -s)"
+
+  ssh-add ~/.ssh/id_ed25519
+
+  ssh-add ~/.ssh/id_rsa
+
+
+  # Inspect
+
+  ssh-add -l                    # fingerprints
+
+  ssh-add -L                    # public keys
+
+  ssh-add -E sha256 -l          # sha256 fingerprints
+
+
+  # Remove
+
+  ssh-add -d ~/.ssh/id_ed25519
+
+  ssh-add -D                    # all keys
+
+  ssh-agent -k                  # kill agent
+
+
+  # Security options
+
+  ssh-add -t 1h ~/.ssh/id_ed25519
+
+  ssh-add -c ~/.ssh/id_ed25519  # confirm each use
+
+  ssh-add -x                    # lock agent
+
+  ssh-add -X                    # unlock
+
+
+  # Forwarding
+
+  ssh -A user@jumphost
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use ed25519 keys with short lifetimes in the agent
+
+  - Set -t lifetimes on shared machines
+
+  - Use -A only on trusted jump hosts (forwarding leaks key use)
+
+  - Add `AddKeysToAgent yes` in ~/.ssh/config for convenience
+
+  - Lock the agent (-x) when stepping away from shared sessions'
+examples:
+- input: Stop typing my passphrase every git push
+  output: Agent starts the agent, adds the key, and verifies with ssh-add -l
+- input: Securely use keys via a bastion
+  output: Agent configures agent forwarding with -A and scoped lifetimes
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ssh-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ssh-agent
+  generic:
+    system_prompt: 'You are the ssh-agent specialist. You do it through agent-lifecycle: Start the agent
+      and manage loaded keys. The commands are real, e.g. `eval $(ssh-agent -s)`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

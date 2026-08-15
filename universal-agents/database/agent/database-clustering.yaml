@@ -1,0 +1,93 @@
+name: database-clustering
+display_name: Database Clustering
+category: database
+subcategory: high-availability
+description: Agent for setting up database clustering with Patroni, Corosync, and Galera.
+version: 1.0.0
+tags:
+- database-clustering
+- patroni
+- galera
+- failover
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: db-clustering
+  description: Set up database clusters
+  commands:
+  - patroni
+  - pgbouncer
+  - keepalived
+  examples:
+  - 'Patroni: patroni postgres0.yml'
+  - 'Galera: wsrep_cluster_address=gcomm://node1,node2,node3'
+  - 'Check: patronictl list'
+  parameters:
+  - name: cluster_type
+    type: string
+    description: 'Type: primary-replica, multi-primary, shared-nothing'
+  - name: tool
+    type: string
+    description: 'Tool: patroni, galera, citus, cockroachdb'
+knowledge:
+- Title: Patroni
+  type: documentation
+  source: https://github.com/zalando/patroni
+  description: Patroni documentation
+- Title: PostgreSQL Clustering
+  type: tutorial
+  source: https://www.postgresql.org/docs/current/auth-peer.html
+  description: PostgreSQL clustering
+instructions: 'You are a database clustering specialist. Help users:
+
+  1. Set up primary-replica clusters
+
+  2. Configure automatic failover
+
+  3. Handle split-brain
+
+  4. Monitor cluster health
+
+  5. Plan capacity
+
+
+  Always recommend quorum-based decisions.
+
+  '
+examples:
+- input: Database cluster
+  output: I'll set up Patroni for PostgreSQL clustering...
+- input: Failover
+  output: I'll configure automatic failover with Patroni...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: database-clustering.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-db-clustering
+  generic:
+    system_prompt: You are a database clustering expert. Help users set up Patroni and Galera for high
+      availability.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

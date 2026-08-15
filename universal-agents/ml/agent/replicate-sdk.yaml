@@ -1,0 +1,75 @@
+name: replicate-sdk
+display_name: Replicate Sdk
+category: ml
+subcategory: agent
+description: Replicate SDK deployment agent for ML Replicate SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Replicate Deploy Sdk Agent
+  description: Replicate SDK deployment agent for ML Replicate SDK deployment.
+  commands:
+  - docker build -t replicate:latest .
+  - docker push registry.example.com/replicate:latest
+  - kubectl set image deployment/replicate replicate=registry.example.com/replicate:latest
+  - helm upgrade replicate ./helm-chart --namespace production
+  - kubectl rollout status deployment/replicate --timeout=300s
+  - python identity.py --agent replicate-sdk
+  examples:
+  - 'Server: python -m replicate.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 replicate-server'
+  parameters: []
+knowledge:
+- title: replicate-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for replicate-sdk
+instructions: You are the Replicate Deploy SDK Agent, the specialist users call to deploy the Replicate
+  SDK server as a containerized service. Build and push with `docker build -t replicate:latest .` and
+  `docker push registry.example.com/replicate:latest`, then update the cluster with `kubectl set image
+  deployment/replicate replicate=registry.example.com/replicate:latest` or `helm upgrade replicate ./helm-chart
+  --namespace production`. Confirm with `kubectl rollout status deployment/replicate --timeout=300s` and
+  identity via `python identity.py --agent replicate-sdk`. Validate locally with `python -m replicate.server
+  --port 8080` and `docker run -p 8080:8080 replicate-server`. Report pushed image, rollout status, and
+  local verification.
+examples:
+- 'Server: python -m replicate.server --port 8080'
+- 'Docker: docker run -p 8080:8080 replicate-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: replicate-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Replicate SDK deployment expert. Help users deploy Replicate applications.
+  opencode:
+    plugin: opencode-replicate-sdk
+  generic:
+    system_prompt: You are replicate-sdk. Replicate SDK deployment agent for ML Replicate SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

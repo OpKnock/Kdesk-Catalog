@@ -1,0 +1,206 @@
+{
+  "name": "rest-api-design",
+  "display_name": "Rest Api Design",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering, and OpenAPI documentation.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx @redocly/cli lint openapi.yaml",
+        "npx @redocly/cli bundle openapi.yaml -o bundled.yaml",
+        "npx swagger-cli validate openapi.yaml",
+        "python -m json.tool openapi.json > /dev/null"
+      ],
+      "description": "Validate and serve OpenAPI specifications.",
+      "name": "rest-openapi",
+      "examples": [
+        "npx @redocly/cli lint openapi.yaml --extends recommended",
+        "npx @redocly/cli preview-docs openapi.yaml",
+        "npx swagger-cli validate openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "description": "OpenAPI file path",
+          "name": "spec",
+          "type": "string"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Spec format: yaml or json"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "curl -s -X POST http://localhost:8000/api/users -H \"Content-Type: application/json\" -d \"{\\\"name\\\":\\\"ann\\\"}\"",
+        "curl -s http://localhost:8000/api/users?page=2&limit=20",
+        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/api/users/999",
+        "curl -sI http://localhost:8000/api/users"
+      ],
+      "description": "Exercise endpoints and verify API behavior.",
+      "name": "rest-testing",
+      "examples": [
+        "curl -s -X DELETE -o /dev/null -w \"%{http_code}\" http://localhost:8000/api/users/1",
+        "curl -s \"http://localhost:8000/api/users?sort=-created_at&status=active\"",
+        "curl -s http://localhost:8000/api/users/1 | python -m json.tool"
+      ],
+      "parameters": [
+        {
+          "description": "API endpoint URL",
+          "name": "endpoint",
+          "type": "string"
+        },
+        {
+          "description": "HTTP method",
+          "name": "method",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "REST API Tutorial",
+      "description": "Resource naming, status codes, and design",
+      "source": "https://restfulapi.net",
+      "type": "documentation"
+    },
+    {
+      "title": "OpenAPI Spec",
+      "description": "OpenAPI 3.1 specification",
+      "source": "https://spec.openapis.org/oas/v3.1.0",
+      "type": "documentation"
+    },
+    {
+      "title": "Redocly CLI",
+      "description": "Lint and bundle OpenAPI",
+      "source": "https://redocly.com/docs/cli/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# REST API Design\n\nDesign consistent, documented REST APIs.\n\n## When to Use\n\n- Any HTTP service that will outlive its first version\n- Multi-consumer APIs where the contract matters\n- Public or partner-facing integrations\n\n## Resource Modeling\n\n- Nouns for resources: /users, /orders/{id}\n- Actions as sub-resources: /orders/{id}/cancel (POST)\n- Collections support ?filter, ?sort, ?page, ?limit\n- Versions in the path: /v1/users\n\n## Status Codes\n\n- 200 OK, 201 Created, 204 No Content\n- 400 bad request, 401 unauthenticated, 403 forbidden\n- 404 missing, 409 conflict, 422 validation, 429 rate limited\n- 5xx only for server faults\n\n## Commands\n\n```bash\n# Lint your OpenAPI spec\nnpx @redocly/cli lint openapi.yaml\nnpx swagger-cli validate openapi.yaml\n\n# Bundle for distribution\nnpx @redocly/cli bundle openapi.yaml -o bundled.yaml\n\n# Preview docs\nnpx @redocly/cli preview-docs openapi.yaml\n\n# Exercise endpoints\ncurl -s -X POST http://localhost:8000/api/users -H \"Content-Type: application/json\" -d '{\"name\":\"ann\"}'\ncurl -s \"http://localhost:8000/api/users?page=2&limit=20\"\ncurl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/api/users/999\n```\n\n## Best Practices\n\n- Use consistent plural nouns and kebab-case paths\n- Return error envelopes with machine-readable codes\n- Paginate with page/limit and return total where cheap\n- Version the API before breaking changes ship\n- Document everything in OpenAPI and lint it in CI\n- Use 204 for deletes, 201 with Location for creates",
+  "examples": [
+    {
+      "input": "Review my API design for consistency",
+      "output": "Agent reviews resource naming, status codes, pagination params, and produces a linted OpenAPI spec with Redocly."
+    },
+    {
+      "input": "How do I paginate large collections?",
+      "output": "Agent implements page/limit with total, shows cursor alternatives for deep pages, and adds the params to OpenAPI."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rest-api-design.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rest-api-design"
+    },
+    "generic": {
+      "system_prompt": "You own Rest Api Design end to end. You do it through rest-openapi: Validate and serve OpenAPI specifications. The commands are real, e.g. `npx @redocly/cli lint openapi.yaml`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rest-api-design",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rest-openapi",
+        "name": "spec",
+        "type": "string",
+        "description": "OpenAPI file path"
+      },
+      {
+        "capability": "rest-openapi",
+        "name": "format",
+        "type": "string",
+        "description": "Spec format: yaml or json"
+      },
+      {
+        "capability": "rest-testing",
+        "name": "endpoint",
+        "type": "string",
+        "description": "API endpoint URL"
+      },
+      {
+        "capability": "rest-testing",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/rest-api-design-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/rest-api-design-skill.yaml",
+    "checksum": "e2ed69cad7eea54f13d138fbfe66e4cbbb50d9fa468f07490050e625e4a8ddaa"
+  }
+}

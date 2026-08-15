@@ -1,0 +1,169 @@
+{
+  "name": "redis-insight",
+  "display_name": "redis-insight",
+  "category": "database",
+  "subcategory": "general",
+  "description": "Visualizes and manages Redis with RedisInsight, plus core redis-cli operations for verification.",
+  "version": "2.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli",
+    "redisinsight"
+  ],
+  "capabilities": [
+    {
+      "name": "redis-insight",
+      "description": "Launch RedisInsight, connect to databases, and run redis-cli checks",
+      "commands": [
+        "redisinsight",
+        "redis-cli -p 6379 PING",
+        "redis-cli INFO server",
+        "redis-cli --scan --pattern 'session:*' | head -20",
+        "redis-cli --bigkeys"
+      ],
+      "examples": [
+        "redisinsight --http-port 8001",
+        "redis-cli -u redis://user:pass@localhost:6379/2 INFO memory",
+        "redis-cli --latency -h cache.internal"
+      ],
+      "parameters": [
+        {
+          "name": "http-port",
+          "type": "integer",
+          "description": "Port for the RedisInsight web UI"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Key pattern for --scan"
+        },
+        {
+          "name": "bigkeys",
+          "type": "boolean",
+          "description": "Find the largest keys in the database"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RedisInsight docs",
+      "type": "documentation",
+      "source": "https://redis.io/docs/insight/",
+      "description": "Installation, features, and connection setup"
+    },
+    {
+      "title": "redis-cli reference",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/develop/tools/cli/",
+      "description": "CLI modes: interactive, raw, latency, bigkeys"
+    }
+  ],
+  "instructions": "# Redis Insight\n\nGUI-based Redis management (browser, profiler, slowlog) paired with redis-cli for\nscripted verification.\n\n## When to Use\n\n- Exploring key space visually\n- Profiling commands and slow queries\n- Finding big keys and memory hogs\n\n## Real Commands\n\n```bash\n# Launch RedisInsight (default web port 8001)\nredisinsight\nredisinsight --http-port 8001\n\n# CLI verification alongside the GUI\nsudo redis-cli -p 6379 PING\nsudo redis-cli INFO server\nsudo redis-cli INFO memory\n\n# Key space exploration\nsudo redis-cli --scan --pattern 'session:*' | head -20\n\n# Large keys\nsudo redis-cli --bigkeys\n\n# Slowlog\nsudo redis-cli SLOWLOG GET 10\n\n# Latency baseline\nsudo redis-cli --latency -h cache.internal\n```\n\n## Workflow\n\n1. Connect RedisInsight to the instance (URI, TLS, ACL as needed)\n2. Browse keyspaces and inspect types/TTLs\n3. Use the profiler to capture live commands\n4. Confirm findings with redis-cli (bigkeys, slowlog)\n\n## Best Practices\n\n- Never expose RedisInsight to the internet; bind to localhost/VPN\n- Use ACL users instead of the default user\n- Check `--bigkeys` for memory optimization targets\n- Review slowlog before blaming the client\n- Monitor memory with INFO memory in addition to the GUI\n\n## Example Response\n\nConnects the GUI, runs bigkeys/slowlog checks, and reports large keys and slow\ncommands with optimization suggestions.",
+  "examples": [
+    {
+      "input": "Find memory hogs in Redis",
+      "output": "Runs redis-cli --bigkeys and INFO memory, then reports the largest keys and top memory consumers"
+    },
+    {
+      "input": "Why are some commands slow?",
+      "output": "Pulls SLOWLOG GET 10 and identifies slow command patterns, then suggests fixes"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "redis-insight.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-redis-insight"
+    },
+    "generic": {
+      "system_prompt": "You work redis-insight hands-on. You do it through redis-insight: Launch RedisInsight, connect to databases, and run redis-cli checks. The commands are real, e.g. `redisinsight`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "redis-insight",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-insight",
+        "name": "http-port",
+        "type": "integer",
+        "description": "Port for the RedisInsight web UI"
+      },
+      {
+        "capability": "redis-insight",
+        "name": "pattern",
+        "type": "string",
+        "description": "Key pattern for --scan"
+      },
+      {
+        "capability": "redis-insight",
+        "name": "bigkeys",
+        "type": "boolean",
+        "description": "Find the largest keys in the database"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli",
+    "redisinsight"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/redis-insight-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/redis-insight-skill.yaml",
+    "checksum": "57e30f542bcd62bbd03ac5f96f6d4cb5d122cc397272200aea0c2c36ddbc6465"
+  }
+}

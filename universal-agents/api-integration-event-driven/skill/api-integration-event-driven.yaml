@@ -1,0 +1,180 @@
+name: api-integration-event-driven
+version: 2.0.0
+type: skill
+category: backend
+description: 'Designs integration architectures: event-driven patterns, webhook contracts, retry and queue
+  designs for third-party APIs.'
+keywords:
+- api-integration
+- third-party
+- webhooks
+- event-driven
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-integration-event-driven.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-integration-event-driven
+  generic:
+    system_prompt: 'You own Api Integration Event Driven end to end. You do it through event-driven-design:
+      Model pub/sub flows and queues for integration workloads. The commands are real, e.g. `redis-cli
+      LPUSH integration.events {type:order.created}`. You work hands-on and only report outcomes you have
+      observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: event-driven-design
+  description: Model pub/sub flows and queues for integration workloads
+  commands:
+  - redis-cli LPUSH integration.events '{"type":"order.created"}'
+  - redis-cli BRPOP integration.events 0
+  - redis-cli LLEN integration.events
+  - redis-cli XADD stream:orders '*' type order.created
+  - redis-cli XREAD COUNT 5 STREAMS stream:orders 0
+  examples:
+  - redis-cli LPUSH integration.events '{"type":"order.created"}' && redis-cli BRPOP integration.events
+    0
+  - redis-cli XADD stream:orders '*' type order.created
+  - redis-cli XREAD COUNT 5 STREAMS stream:orders 0
+  parameters:
+  - name: queue
+    type: string
+    description: Queue or stream name
+  - name: event
+    type: string
+    description: Event payload
+- name: retry-design
+  description: Design retry and backoff strategies for upstream APIs
+  commands:
+  - node -e "const backoff=[100,250,500];const f=(tries)=>backoff[Math.min(tries,backoff.length-1)];console.log([0,1,2,3].map(f))"
+  - node -e "const jitter=(base)=>base*0.5+Math.random()*base;console.log([1,2,3].map(i=>jitter(2**i*100)))"
+  - 'curl -s -o /dev/null -w ''%{http_code} %{time_total}s\n'' -X POST http://localhost:3000/integrations/payment
+    -H ''Idempotency-Key: test-1'''
+  - redis-cli SET idem:charge_1 'done' NX EX 86400
+  - 'node -e "console.log(''circuit states: closed|open|half-open'')"'
+  examples:
+  - node -e "const backoff=[100,250,500];const f=(tries)=>backoff[Math.min(tries,backoff.length-1)];console.log([0,1,2,3].map(f))"
+  - 'curl -s -o /dev/null -w ''%{http_code} %{time_total}s\n'' -X POST http://localhost:3000/integrations/payment
+    -H ''Idempotency-Key: test-1'''
+  - redis-cli SET idem:charge_1 'done' NX EX 86400
+  parameters:
+  - name: retries
+    type: string
+    description: Max retry count
+  - name: idempotencyKey
+    type: string
+    description: Idempotency key header
+prerequisites:
+- node.js
+- python
+- ngrok
+- redis
+tools:
+- node.js
+- python
+- ngrok
+- redis
+- stripe-cli
+examples:
+- input: Design the Stripe integration architecture
+  output: Models webhook ingestion, event streams, retry policy, and idempotency for payment events
+- input: Add a durable queue for webhook processing
+  output: Routes webhook payloads through Redis streams so crashes don't lose events
+instructions: '# API Integration (Design)
+
+
+  Designs robust integration architecture before writing connector code.
+
+
+  ## When to Use
+
+  - New integration needs reliability design
+
+  - Events must survive crashes
+
+  - Retry policies need modeling
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Queue events
+
+  redis-cli LPUSH integration.events ''{"type":"order.created"}''
+
+  redis-cli BRPOP integration.events 0
+
+
+  # Streams for audit-able events
+
+  redis-cli XADD stream:orders ''*'' type order.created
+
+  redis-cli XREAD COUNT 5 STREAMS stream:orders 0
+
+
+  # Idempotency keys
+
+  redis-cli SET idem:charge_1 ''done'' NX EX 86400
+
+  ```
+
+
+  ## Backoff Design
+
+  Exponential with jitter: `2^n * 100ms + random`.
+
+
+  ## Webhook Contract
+
+  - Signature header on every delivery
+
+  - Retries with exponential backoff
+
+  - Exactly-once via event IDs
+
+
+  ## Testing
+
+  Kill the consumer mid-stream and verify replay from the last acked position.
+
+
+  ## Best Practices
+
+  - Design for at-least-once delivery
+
+  - Make every handler idempotent'
+display_name: Api Integration Event Driven
+knowledge:
+- title: Redis Streams
+  type: documentation
+  source: https://redis.io/docs/latest/data-types/streams/
+  description: Streams for event processing
+- title: Webhooks Best Practices
+  type: documentation
+  source: https://webhooks.fyi/
+  description: Signatures, retries, ordering

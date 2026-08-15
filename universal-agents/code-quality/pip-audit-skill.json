@@ -1,0 +1,171 @@
+{
+  "name": "pip-audit",
+  "display_name": "Pip Audit",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Audits Python environments and requirements files for known vulnerabilities with pip-audit.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pip-audit"
+  ],
+  "capabilities": [
+    {
+      "name": "pip-audit",
+      "description": "Scan installed or declared Python dependencies against the OSV database",
+      "commands": [
+        "pip-audit",
+        "pip-audit -r requirements.txt",
+        "pip-audit -l --format json",
+        "pip-audit --fix",
+        "pip-audit --skip-editable --no-deps"
+      ],
+      "examples": [
+        "pip-audit -r requirements.txt --format markdown",
+        "pip-audit -l | grep -i critical",
+        "pip-audit --fix --dry-run -r requirements.txt"
+      ],
+      "parameters": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output format: columns, json, cyclonedx-json, cyclonedx-xml, markdown"
+        },
+        {
+          "name": "fix",
+          "type": "boolean",
+          "description": "Attempt to fix vulnerabilities by upgrading packages"
+        },
+        {
+          "name": "vuln-service",
+          "type": "string",
+          "description": "Vulnerability service: osv or pypi"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "pip-audit GitHub",
+      "type": "documentation",
+      "source": "https://github.com/pypa/pip-audit",
+      "description": "CLI reference, exit codes, and OSV integration"
+    },
+    {
+      "title": "pip-audit PyPI",
+      "type": "documentation",
+      "source": "https://pypi.org/project/pip-audit/",
+      "description": "Installation and usage overview"
+    }
+  ],
+  "instructions": "# pip Audit\n\nAudits Python packages for known vulnerabilities using the OSV database, covering\ninstalled environments, requirements files, and lock files.\n\n## When to Use\n\n- Pre-release check of a Python app\n- Scanning a requirements.txt before a Docker build\n- CI security gate for Python projects\n\n## Real Commands\n\n```bash\n# Install\npip install pip-audit\n\n# Audit the current environment\npip-audit\n\n# Audit a requirements file\npip-audit -r requirements.txt\n\n# Audit only direct deps, skip editable installs\npip-audit -l --skip-editable --no-deps\n\n# JSON output for CI\npip-audit -r requirements.txt --format json > audit.json\n\n# Auto-fix by upgrading (review with --dry-run first)\npip-audit --fix -r requirements.txt --dry-run\npip-audit --fix -r requirements.txt\n```\n\n## Exit Codes\n\n- `0` no vulnerabilities, `1` vulnerabilities found, `2` audit failed\n\n## CI\n\n```yaml\n- name: pip audit\n  run: pip-audit -r requirements.txt --no-deps\n```\n\n## Best Practices\n\n- Use `--no-deps -r requirements.txt` in CI for speed and determinism\n- Audit the lock file used by the deployment (constraints.txt / pip-tools output)\n- Prefer `--fix` with `--dry-run` first, then run tests\n- Pin pip-audit itself in CI\n\n## Example Response\n\nLists each vulnerable package as `pkg==ver` with CVE ID, severity, and the patched\nversion; then proposes the upgrade command.",
+  "examples": [
+    {
+      "input": "Audit our Python environment",
+      "output": "Runs pip-audit -l --format json and reports found CVEs with severities and suggested upgrades"
+    },
+    {
+      "input": "Make CI block vulnerable deps",
+      "output": "Adds pip-audit -r requirements.txt --no-deps --skip-editable to CI and fixes the current findings"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pip-audit.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pip-audit"
+    },
+    "generic": {
+      "system_prompt": "You work Pip Audit hands-on. You do it through pip-audit: Scan installed or declared Python dependencies against the OSV database. The commands are real, e.g. `pip-audit`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pip-audit",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pip-audit",
+        "name": "format",
+        "type": "string",
+        "description": "Output format: columns, json, cyclonedx-json, cyclonedx-xml, markdown"
+      },
+      {
+        "capability": "pip-audit",
+        "name": "fix",
+        "type": "boolean",
+        "description": "Attempt to fix vulnerabilities by upgrading packages"
+      },
+      {
+        "capability": "pip-audit",
+        "name": "vuln-service",
+        "type": "string",
+        "description": "Vulnerability service: osv or pypi"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pip-audit"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/pip-audit-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/pip-audit-skill.yaml",
+    "checksum": "a3b8c2a38c9eef10d17d5d18b363bb9a8b008cc27dce9c71a91b5e611584b70e"
+  }
+}

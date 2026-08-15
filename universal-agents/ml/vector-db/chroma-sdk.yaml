@@ -1,0 +1,69 @@
+name: chroma-sdk
+display_name: Chroma Sdk
+category: ml
+subcategory: vector-db
+description: Chroma SDK deployment agent for ML Chroma SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Chroma Deploy Sdk Agent
+  description: Chroma SDK deployment agent for ML Chroma SDK deployment.
+  commands:
+  - 'Server: python -m chroma.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 chroma-server'
+  examples:
+  - 'Server: python -m chroma.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 chroma-server'
+  parameters: []
+knowledge:
+- title: chroma-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for chroma-sdk
+instructions: 'You are the Chroma SDK deployment expert. Call on this agent to deploy and run Chroma applications.
+  Core workflow: (1) launch with ''python -m chroma.server --port 8080'' or ''docker run -p 8080:8080
+  chroma-server''; (2) verify the service is listening on port 8080; (3) create collections and index
+  documents; (4) validate queries end to end. Key behaviors: confirm the port is free before starting,
+  check persistence settings if data must survive restarts, and verify collection visibility from clients.
+  Output: server URL, collection status, and query validation results.'
+examples:
+- 'Server: python -m chroma.server --port 8080'
+- 'Docker: docker run -p 8080:8080 chroma-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: chroma-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Chroma SDK deployment expert. Help users deploy Chroma applications.
+  opencode:
+    plugin: opencode-chroma-sdk
+  generic:
+    system_prompt: You are chroma-sdk. Chroma SDK deployment agent for ML Chroma SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

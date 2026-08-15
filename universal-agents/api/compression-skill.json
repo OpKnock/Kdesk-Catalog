@@ -1,0 +1,204 @@
+{
+  "name": "compression",
+  "display_name": "Compression",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implement HTTP response compression for APIs: gzip, Brotli, and zstd with curl verification and server config.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "brotli",
+    "gunzip",
+    "gzip",
+    "zstd"
+  ],
+  "capabilities": [
+    {
+      "name": "compression-verify",
+      "description": "Verify compression headers and response size on API endpoints",
+      "commands": [
+        "curl -s -H \"Accept-Encoding: gzip\" -D - -o /dev/null https://api.example.com/v1/users | grep -i content-encoding",
+        "curl -s -H \"Accept-Encoding: gzip, br\" -o /dev/null -w \"%{size_download} bytes\\n\" https://api.example.com/v1/users",
+        "curl -s -o /dev/null -w \"%{http_code}\\n\" -H \"Accept-Encoding: gzip\" https://api.example.com/v1/users",
+        "curl --compressed -s https://api.example.com/v1/users | wc -c"
+      ],
+      "examples": [
+        "curl -s -H \"Accept-Encoding: gzip, br\" -D - -o /dev/null https://api.example.com/v1/users | grep -i 'content-encoding'",
+        "curl -s -o /dev/null -w \"%{size_download}\\n\" -H \"Accept-Encoding: gzip\" https://api.example.com/v1/users",
+        "curl -s -o /dev/null -w \"%{size_download}\\n\" -H \"Accept-Encoding: gzip, br, zstd\" https://api.example.com/v1/users"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Endpoint to check"
+        },
+        {
+          "name": "accept_encoding",
+          "type": "string",
+          "description": "Accept-Encoding header value"
+        }
+      ]
+    },
+    {
+      "name": "cli-tools",
+      "description": "Compress and decompress payloads with gzip, brotli, and zstd",
+      "commands": [
+        "gzip -9 -k response.json",
+        "gunzip -k response.json.gz",
+        "brotli -9 -o response.json.br response.json",
+        "zstd -19 -o response.json.zst response.json"
+      ],
+      "examples": [
+        "gzip -9 -k response.json && ls -la response.json.gz",
+        "brotli -9 -o response.json.br response.json",
+        "zstd -19 response.json -o response.json.zst"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "File to compress"
+        },
+        {
+          "name": "level",
+          "type": "string",
+          "description": "Compression level, e.g. 9 for gzip, 11 for brotli"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MDN Content-Encoding",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding",
+      "description": "HTTP content encoding headers reference"
+    },
+    {
+      "title": "Brotli GitHub",
+      "type": "documentation",
+      "source": "https://github.com/google/brotli",
+      "description": "Brotli CLI and library usage"
+    }
+  ],
+  "instructions": "# Compression\n\nCompress API responses to cut bandwidth and latency.\n\n## When to Use\n\n- JSON-heavy APIs with large payloads\n- Mobile clients on slow networks\n- Reducing egress cost and p95 transfer time\n\n## Encode Selection\n\nPrefer Brotli (br) for text-heavy JSON, then gzip, then zstd; always set Vary: Accept-Encoding.\n\n## Verify Endpoints\n\n```bash\ncurl -s -H \"Accept-Encoding: gzip\" -D - -o /dev/null https://api.example.com/v1/users | grep -i content-encoding\ncurl -s -o /dev/null -w \"compressed: %{size_download} bytes\\n\" -H \"Accept-Encoding: gzip, br\" https://api.example.com/v1/users\ncurl --compressed -s https://api.example.com/v1/users | wc -c\n```\n\nCompare with no encoding:\n\n```bash\ncurl -s -o /dev/null -w \"uncompressed: %{size_download} bytes\\n\" https://api.example.com/v1/users\n```\n\n## CLI Tools\n\n```bash\ngzip -9 -k response.json\nbrotli -9 -o response.json.br response.json\nzstd -19 -o response.json.zst response.json\n```\n\n## Server Middleware (Express)\n\n```bash\nnpm install compression\n```\n\n```js\nconst compression = require('compression');\napp.use(compression({ threshold: 1024 }));\n```\n\n## Testing\n\n```bash\ncurl -s -o /dev/null -w \"gzip: %{size_download}\\n\" -H \"Accept-Encoding: gzip\" https://api.example.com/v1/users\ncurl -s -o /dev/null -w \"br: %{size_download}\\n\" -H \"Accept-Encoding: br\" https://api.example.com/v1/users\n```\n\n## Best Practices\n\n- Compress above a small threshold (1KB) only\n- Do not compress already-compressed media (images, video)\n- Set Vary: Accept-Encoding on cached responses\n- Never send both Content-Length and chunked encoding\n- Use brotli when clients support it\n- Keep compression CPU cost off the hot path with CDN caching",
+  "examples": [
+    {
+      "input": "Check if my API serves compressed responses.",
+      "output": "The agent curls with Accept-Encoding: gzip, br and compares size_download with and without encoding, then reports the Content-Encoding header."
+    },
+    {
+      "input": "Enable gzip on my Express API.",
+      "output": "The agent installs the compression middleware, adds it with a 1KB threshold, and verifies the Content-Encoding header with curl."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "compression.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-compression"
+    },
+    "generic": {
+      "system_prompt": "You are the Compression specialist. You do it through compression-verify: Verify compression headers and response size on API endpoints. The commands are real, e.g. `curl -s -H Accept-Encoding: gzip -D - -o /dev/null https://api.example.com/v1/users |...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "compression",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "compression-verify",
+        "name": "url",
+        "type": "string",
+        "description": "Endpoint to check"
+      },
+      {
+        "capability": "compression-verify",
+        "name": "accept_encoding",
+        "type": "string",
+        "description": "Accept-Encoding header value"
+      },
+      {
+        "capability": "cli-tools",
+        "name": "file",
+        "type": "string",
+        "description": "File to compress"
+      },
+      {
+        "capability": "cli-tools",
+        "name": "level",
+        "type": "string",
+        "description": "Compression level, e.g. 9 for gzip, 11 for brotli"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "brotli",
+    "gunzip",
+    "gzip",
+    "zstd"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/compression-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/compression-skill.yaml",
+    "checksum": "143f59d9b9b5fe99fa684b051da37e9e945da7ccc780f02ccf5a25788c4803f4"
+  }
+}

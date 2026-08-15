@@ -1,0 +1,255 @@
+{
+  "name": "cargo-test",
+  "display_name": "cargo-test",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and race condition checks.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cargo",
+    "rustflags='-c"
+  ],
+  "capabilities": [
+    {
+      "name": "cargo-testing",
+      "description": "Run unit, integration, and doc tests.",
+      "commands": [
+        "cargo test",
+        "cargo test my_module::test_name",
+        "cargo test -- --nocapture",
+        "cargo test --release",
+        "cargo test --doc"
+      ],
+      "examples": [
+        "cargo test",
+        "cargo test my_module::test_name -- --nocapture",
+        "cargo test -- --test-threads=8"
+      ],
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "Test name substring filter"
+        },
+        {
+          "name": "nocapture",
+          "type": "boolean",
+          "description": "Show println output from tests"
+        },
+        {
+          "name": "threads",
+          "type": "number",
+          "description": "Test thread count"
+        }
+      ]
+    },
+    {
+      "name": "nextest-and-coverage",
+      "description": "Faster parallel testing and coverage measurement.",
+      "commands": [
+        "cargo nextest run",
+        "cargo nextest run --partition count:2/2",
+        "cargo tarpaulin --out html",
+        "cargo llvm-cov --open",
+        "cargo nextest run --fail-fast"
+      ],
+      "examples": [
+        "cargo nextest run",
+        "cargo tarpaulin --out html",
+        "cargo llvm-cov --open"
+      ],
+      "parameters": [
+        {
+          "name": "outFormat",
+          "type": "string",
+          "description": "Coverage format: html, xml, json"
+        },
+        {
+          "name": "partition",
+          "type": "string",
+          "description": "Test partition for sharding"
+        }
+      ]
+    },
+    {
+      "name": "concurrency-and-vet",
+      "description": "Race detection and lints for tests.",
+      "commands": [
+        "cargo test -- --test-threads=1",
+        "RUSTFLAGS='-C target-feature=+crt-static' cargo test",
+        "cargo clippy --all-targets -- -D warnings",
+        "cargo test --features integration"
+      ],
+      "examples": [
+        "cargo test -- --test-threads=1",
+        "cargo clippy --all-targets -- -D warnings",
+        "cargo test --features integration"
+      ],
+      "parameters": [
+        {
+          "name": "features",
+          "type": "string",
+          "description": "Cargo features to enable"
+        },
+        {
+          "default": "1",
+          "description": "Number of parallel test threads via --test-threads.",
+          "name": "testThreads",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cargo test Reference",
+      "type": "documentation",
+      "source": "https://doc.rust-lang.org/cargo/commands/cargo-test.html",
+      "description": "cargo test flags and behavior"
+    },
+    {
+      "title": "Nextest Documentation",
+      "type": "documentation",
+      "source": "https://nexte.st/",
+      "description": "Faster test runner with sharding"
+    },
+    {
+      "title": "cargo-tarpaulin",
+      "type": "documentation",
+      "source": "https://github.com/xd009642/tarpaulin",
+      "description": "Code coverage for Rust"
+    }
+  ],
+  "instructions": "# cargo test\n\nTest Rust code with unit, integration, and doc tests.\n\n## What This Skill Does\n\n- Runs the full test matrix (unit, integration, docs)\n- Filters tests by name and shows captured output\n- Measures coverage with tarpaulin or llvm-cov\n- Speeds up CI with nextest sharding\n\n## When to Use\n\n- Verifying changes before merge\n- Debugging a single failing test\n- Enforcing coverage thresholds\n\n## Real Commands\n\n```bash\n# Basics\ncargo test\ncargo test my_module::test_name\ncargo test -- --nocapture\ncargo test --release\ncargo test --doc\n\n# Nextest\ncargo nextest run\ncargo nextest run --partition count:2/2\n\n# Coverage\ncargo tarpaulin --out html\ncargo llvm-cov --open\n\n# Quality\ncargo clippy --all-targets -- -D warnings\n```\n\n## Sample Test\n\n```rust\n#[cfg(test)]\nmod tests {\n    #[test]\n    fn parses_numbers() {\n        assert_eq!(\"42\".parse::<u32>().unwrap(), 42);\n    }\n\n    #[test]\n    fn rejects_empty() {\n        assert!(\"\".parse::<u32>().is_err());\n    }\n}\n```\n\n## Best Practices\n\n- Use #[test] + assert_eq!/assert! for unit tests\n- Put integration tests in tests/ for public API coverage\n- Run doctests in CI; they rot silently\n- Gate coverage at 80%+ with tarpaulin thresholds\n- Use nextest for fast feedback on large workspaces",
+  "examples": [
+    {
+      "input": "Test my new parser",
+      "output": "Agent adds unit tests, runs cargo test my_module, and iterates until green with -- --nocapture for debugging."
+    },
+    {
+      "input": "Why does the integration test hang?",
+      "output": "Agent reruns with -- --test-threads=1 to expose shared-state contention and checks for blocking IO."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cargo-test.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cargo-test"
+    },
+    "generic": {
+      "system_prompt": "Your lane is cargo-test. You do it through cargo-testing: Run unit, integration, and doc tests. The commands are real, e.g. `cargo test`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cargo-test",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cargo-testing",
+        "name": "filter",
+        "type": "string",
+        "description": "Test name substring filter"
+      },
+      {
+        "capability": "cargo-testing",
+        "name": "nocapture",
+        "type": "boolean",
+        "description": "Show println output from tests"
+      },
+      {
+        "capability": "cargo-testing",
+        "name": "threads",
+        "type": "number",
+        "description": "Test thread count"
+      },
+      {
+        "capability": "nextest-and-coverage",
+        "name": "outFormat",
+        "type": "string",
+        "description": "Coverage format: html, xml, json"
+      },
+      {
+        "capability": "nextest-and-coverage",
+        "name": "partition",
+        "type": "string",
+        "description": "Test partition for sharding"
+      },
+      {
+        "capability": "concurrency-and-vet",
+        "name": "features",
+        "type": "string",
+        "description": "Cargo features to enable"
+      },
+      {
+        "capability": "concurrency-and-vet",
+        "name": "testThreads",
+        "type": "integer",
+        "description": "Number of parallel test threads via --test-threads."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cargo",
+    "rustflags='-c"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/cargo-test-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/cargo-test-skill.yaml",
+    "checksum": "44feb289daed0205bfea4fe2b4a131ac08a668dd59a33c8b7d7471003aa1a303"
+  }
+}

@@ -1,0 +1,126 @@
+name: asyncapi-go
+display_name: Asyncapi Go
+category: api
+subcategory: general
+description: Generates Go models and typed publisher/subscriber code from AsyncAPI documents using Modelina
+  and asyncapi-go.
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- asyncapi-go
+- gofmt
+- npx
+capabilities:
+- name: go-generation
+  description: Generate Go types from an AsyncAPI spec with Modelina.
+  commands:
+  - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./internal/models --language Go
+  - go mod init github.com/example/order-service
+  - go build ./...
+  - go vet ./...
+  - go test ./...
+  examples:
+  - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./internal/models --language Go --packageName
+    orderapi
+  - go mod init github.com/example/order-service && go build ./...
+  - go test ./internal/... -race
+  parameters:
+  - name: package_name
+    type: string
+    description: Go package name for generated models
+  - name: module
+    type: string
+    description: Go module path for go mod init
+- name: asyncapi-go-codegen
+  description: Produce typed publisher/subscriber interfaces with asyncapi-go.
+  commands:
+  - go install github.com/lerayjin/asyncapi-go@latest
+  - asyncapi-go generate --input asyncapi.yaml --output ./gen
+  - gofmt -l ./gen
+  - go run ./cmd/subscriber --broker kafka://localhost:9092
+  - curl -s http://localhost:8080/metrics
+  examples:
+  - asyncapi-go generate --input asyncapi.yaml --output ./gen --package gen
+  - gofmt -w ./gen && go vet ./gen/...
+  - go run ./cmd/subscriber --broker kafka://localhost:9092
+  parameters:
+  - name: input
+    type: string
+    description: AsyncAPI document path
+  - name: output
+    type: string
+    description: Output directory
+  - name: broker
+    type: string
+    description: Broker URL, e.g. kafka://localhost:9092
+knowledge:
+- title: Modelina Go
+  type: documentation
+  source: https://www.asyncapi.com/docs/tools/modelina/languages/Go
+  description: Go generation options
+- title: asyncapi-go
+  type: documentation
+  source: https://github.com/lerayjin/asyncapi-go
+  description: Go code generation with typed channels
+- title: AsyncAPI for Go
+  type: documentation
+  source: https://www.asyncapi.com/docs/tutorials/getting-started/go
+  description: Go async API walkthrough
+instructions: "# AsyncAPI Go\n\n## What this skill does\n\nGenerates Go code from AsyncAPI documents:\
+  \ typed models via Modelina and publisher/subscriber interfaces via asyncapi-go, wired into a working\
+  \ Go service.\n\n## When to use\n\n- A Go microservice must publish/consume events from a spec\n- Bootstrapping\
+  \ typed message handling without hand-writing structs\n- Keeping Go payloads in sync with an evolving\
+  \ spec\n\n## Real commands\n\n```bash\n# Generate Go models\nnpx @asyncapi/modelina generate --input\
+  \ asyncapi.yaml --output ./internal/models --language Go --packageName orderapi\n\n# Init module and\
+  \ build\ngo mod init github.com/example/order-service\ngo build ./...\ngo vet ./...\n\n# Generate typed\
+  \ channels\nasyncapi-go generate --input asyncapi.yaml --output ./gen\n\n# Run a subscriber\ngo run\
+  \ ./cmd/subscriber --broker kafka://localhost:9092\n```\n\n## Generated struct\n\n```go\npackage orderapi\n\
+  \ntype OrderCreated struct {\n\tID     string  `json:\"id\"`\n\tAmount float64 `json:\"amount\"`\n}\n\
+  ```\n\n## Testing\n\n- go test ./... -race for handler concurrency\n- Publish with a producer, assert\
+  \ the subscriber receives the same JSON\n\n## Best practices\n\n- Regenerate in CI and fail on drift\
+  \ with git diff --exit-code\n- Keep packageName consistent with module layout\n- Never edit generated\
+  \ files; extend via composition"
+examples:
+- input: Generate Go models for our order events
+  output: Runs Modelina with --language Go --packageName orderapi into internal/models, then go build
+    ./... to verify.
+- input: Create a Go subscriber for order.created
+  output: Generates typed channels with asyncapi-go, writes a cmd/subscriber main handling OrderCreated,
+    tests against a local Kafka broker.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: asyncapi-go.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-asyncapi-go
+  generic:
+    system_prompt: 'You take the Asyncapi Go seat. You do it through go-generation: Generate Go types
+      from an AsyncAPI spec with Modelina. The commands are real, e.g. `npx @asyncapi/modelina generate
+      --input asyncapi.yaml --output ./internal/models...`. You verify each step you report and stay honest
+      about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

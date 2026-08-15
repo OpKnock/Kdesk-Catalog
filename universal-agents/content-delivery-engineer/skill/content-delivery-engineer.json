@@ -1,0 +1,180 @@
+{
+  "name": "content-delivery-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Tunes content delivery: cache headers, CDN configuration, and origin performance measurements.",
+  "keywords": [
+    "cdn",
+    "cloudflare",
+    "caching"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "content-delivery-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-content-delivery-engineer"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: content-delivery-engineer. You do it through cdn-tuning: Measure and improve cache hit rates and TTFB from origin to edge. The commands are real, e.g. `curl -sI https://cdn.example.com/assets/app.js | grep -iE...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "cdn-tuning",
+      "description": "Measure and improve cache hit rates and TTFB from origin to edge",
+      "commands": [
+        "curl -sI https://cdn.example.com/assets/app.js | grep -iE 'cache-control|age|cf-cache-status|x-cache'",
+        "curl -s -o /dev/null -w 'ttfb=%{time_starttransfer}s total=%{time_total}s code=%{http_code}\\n' https://cdn.example.com/",
+        "ab -n 500 -c 50 https://cdn.example.com/assets/app.js",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -H 'Accept-Encoding: gzip' https://origin.example.com/",
+        "openssl s_client -servername cdn.example.com -connect cdn.example.com:443 </dev/null 2>/dev/null | grep -i 'issuer'"
+      ],
+      "examples": [
+        "curl -sI https://cdn.example.com/img/logo.png | grep -i cache-control",
+        "curl -s -o /dev/null -w '%{size_download}' -H 'Range: bytes=0-1023' https://cdn.example.com/video.mp4",
+        "for f in $(cat assets.txt); do curl -s -o /dev/null -w \"$f %{time_total}\\n\" https://cdn.example.com/$f; done"
+      ],
+      "parameters": [
+        {
+          "name": "header",
+          "type": "string",
+          "description": "Custom request header, e.g. Accept-Encoding"
+        },
+        {
+          "name": "range",
+          "type": "string",
+          "description": "Byte range request to test partial content"
+        },
+        {
+          "name": "write-out",
+          "type": "string",
+          "description": "curl -w format string for timing metrics"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "cloudflare-cli",
+    "aws-cli",
+    "fastly-cli",
+    "terraform"
+  ],
+  "tools": [
+    "cloudflare-cli",
+    "aws-cli",
+    "fastly-cli",
+    "terraform",
+    "curl",
+    "webpagetest"
+  ],
+  "examples": [
+    {
+      "input": "Cache hit rate is only 40%",
+      "output": "Checks cache headers on key assets, identifies non-cached responses and query-string issues, and proposes cache rules + file versioning"
+    },
+    {
+      "input": "Users in Asia have slow loads",
+      "output": "Measures TTFB from the edge and origin, checks PoP routing and range requests, and recommends edge tuning or origin closer placement"
+    }
+  ],
+  "instructions": "# Content Delivery Engineer\n\nOptimizes delivery of static and dynamic content: cache policy, CDN edge config,\nand origin performance.\n\n## When to Use\n\n- Diagnosing low cache hit rates\n- Reducing TTFB for globally distributed users\n- Verifying gzip/brotli and HTTP/2 at the edge\n\n## Real Commands\n\n```bash\n# Check cache headers from the edge\ncurl -sI https://cdn.example.com/assets/app.js | grep -iE 'cache-control|age|x-cache|cf-cache-status'\n\n# Timing from the edge\ncurl -s -o /dev/null -w 'ttfb=%{time_starttransfer}s total=%{time_total}s\\n' https://cdn.example.com/\n\n# Origin compression\ncurl -s -o /dev/null -w '%{size_download} bytes\\n' -H 'Accept-Encoding: gzip' https://origin.example.com/\n\n# Load test a cached asset\nab -n 500 -c 50 https://cdn.example.com/assets/app.js\n\n# Verify cache invalidation (purge propagation)\ncurl -sI https://cdn.example.com/versioned/app-2024.js | grep -i age\n```\n\n## Cache Policy Example\n\n```http\nCache-Control: public, max-age=31536000, immutable   # hashed assets\nCache-Control: public, max-age=60, stale-while-revalidate=600\n```\n\n## Best Practices\n\n- Hash file names for long max-age + immutable\n- Use stale-while-revalidate for HTML and API responses\n- Set Vary on Accept-Encoding to avoid cache poisoning\n- Purge edge caches on deploy; never wait for TTL on release days\n- Keep origin slow-path under 200ms TTFB: CDN can't fix a slow backend\n\n## Example Response\n\nReports edge cache status, TTFB percentiles from multiple regions, compression\nratio, and recommends cache-policy or origin changes with evidence.",
+  "display_name": "content-delivery-engineer",
+  "knowledge": [
+    {
+      "title": "MDN HTTP caching",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching",
+      "description": "Cache-Control, ETag, and validation semantics"
+    },
+    {
+      "title": "Cloudflare caching docs",
+      "type": "documentation",
+      "source": "https://developers.cloudflare.com/cache/",
+      "description": "Cache rules, purge, and cache-control behavior at the edge"
+    }
+  ],
+  "id": "content-delivery-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cdn-tuning",
+        "name": "header",
+        "type": "string",
+        "description": "Custom request header, e.g. Accept-Encoding"
+      },
+      {
+        "capability": "cdn-tuning",
+        "name": "range",
+        "type": "string",
+        "description": "Byte range request to test partial content"
+      },
+      {
+        "capability": "cdn-tuning",
+        "name": "write-out",
+        "type": "string",
+        "description": "curl -w format string for timing metrics"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cloudflare-cli",
+    "aws-cli",
+    "fastly-cli",
+    "terraform"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "content-delivery-engineer/skill/content-delivery-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/content-delivery-engineer/skill/content-delivery-engineer.yaml",
+    "checksum": "83db19eccad02f764d02bbbb351bedc82d58a0924f0371bb1a704dfe6386fa49"
+  }
+}

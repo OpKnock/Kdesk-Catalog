@@ -1,0 +1,130 @@
+{
+  "name": "code-quality-tflint-agent",
+  "display_name": "Code Quality Tflint Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "TFLint agent for Terraform linting.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Tflint Agent",
+      "description": "TFLint agent for Terraform linting.",
+      "commands": [
+        "tflint",
+        "tflint --enable-rule=terraform_unused_declarations",
+        "tflint --format json",
+        "tflint --init"
+      ],
+      "examples": [
+        "tflint",
+        "tflint --init",
+        "tflint --format json",
+        "tflint --enable-rule=terraform_unused_declarations"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-tflint-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-tflint-agent"
+    }
+  ],
+  "instructions": "You are the TFLint agent for Terraform linting. Call on this agent to catch Terraform config issues beyond basic validation. Core workflow: initialize plugins with `tflint --init` on first use; lint with `tflint`; enable specific rules like `tflint --enable-rule=terraform_unused_declarations`; and export JSON with `tflint --format json` for CI. Key behaviors: run --init after config changes, fix warnings about unused vars/instances and invalid syntax, and re-run to confirm clean. Report findings by rule with file/line locations and fixes.",
+  "examples": [
+    "tflint",
+    "tflint --init",
+    "tflint --format json",
+    "tflint --enable-rule=terraform_unused_declarations"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-tflint-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a TFLint expert. Help users lint Terraform code."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-tflint-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-tflint-agent. TFLint agent for Terraform linting.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-tflint-agent",
+  "type": "agent",
+  "skills": [
+    "terraform-module-builder",
+    "tflint"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-tflint-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-tflint-agent.yaml",
+    "checksum": "064bfaa270ea95615acc9c04feab0663048dbe5df1873ad3a419de07582c6da5"
+  }
+}

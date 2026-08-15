@@ -1,0 +1,102 @@
+name: graphql-hot-chocolate
+display_name: Graphql Hot Chocolate
+category: api
+subcategory: general
+description: 'GraphQL in .NET with Hot Chocolate: build schemas from C# types, run the server, and use
+  Banana Cake Pop for testing.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- dotnet
+capabilities:
+- name: hotchocolate-development
+  description: Scaffold Hot Chocolate servers, add packages, and run queries.
+  commands:
+  - dotnet add package HotChocolate.AspNetCore
+  - dotnet run
+  - dotnet build --no-restore
+  - 'curl -s -X POST http://localhost:5000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    books { title } }"}'' | jq'
+  - dotnet test
+  examples:
+  - dotnet add package HotChocolate.AspNetCore && dotnet run
+  - 'curl -s -X POST http://localhost:5000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    books { title } }"}'' | jq'
+  - dotnet build --no-restore
+  parameters:
+  - name: package
+    type: string
+    description: Hot Chocolate package name
+  - name: endpoint
+    type: string
+    description: GraphQL endpoint path
+  - name: schema-export
+    type: string
+    description: Output path for schema SDL
+knowledge:
+- title: Hot Chocolate docs
+  type: documentation
+  source: https://chillicream.com/docs/hotchocolate
+  description: Schema-first and code-first APIs, resolvers, and middleware
+- title: Banana Cake Pop
+  type: documentation
+  source: https://chillicream.com/docs/bananacakepop
+  description: GraphQL IDE for testing queries against Hot Chocolate
+instructions: "# GraphQL Hot Chocolate\n\n## What this skill does\n\nHot Chocolate is the .NET GraphQL\
+  \ server from ChilliCream. It supports code-first (C# classes become schema types), schema-first (SDL),\
+  \ and a rich middleware pipeline.\n\n## When to use\n\n- Adding GraphQL to ASP.NET Core services\n-\
+  \ .NET teams wanting strong typing end to end\n- Reusing EF Core entities in the graph\n\n## Real commands\n\
+  \n```bash\n# Add the package and run\n dotnet add package HotChocolate.AspNetCore\ndotnet run\n\n# Build\
+  \ and test\ndotnet build --no-restore\n dotnet test\n\n# Query the endpoint\ncurl -s -X POST http://localhost:5000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ books { title } }\"}' | jq\n```\n\n## Program.cs\
+  \ example\n\n```csharp\nusing HotChocolate;\n\nvar builder = WebApplication.CreateBuilder(args);\nbuilder.Services.AddGraphQLServer().AddQueryType<Query>();\n\
+  \nvar app = builder.Build();\napp.MapGraphQL();\napp.Run();\n\npublic record Book(string Title, string\
+  \ Author);\n\npublic class Query\n{\n    public Book GetBook() => new(\"C# in Depth\", \"Jon Skeet\"\
+  );\n}\n```\n\n## Testing\n\n```bash\n# Export the schema SDL\ncurl -s -X POST http://localhost:5000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ __schema { queryType { name } } }\"}' | jq\
+  \ '.data'\n```\n\n## Best practices\n\n- Prefer code-first for .NET services; it keeps types in sync.\n\
+  - Use `[GraphQLName]` attributes for API naming conventions.\n- Register resolvers via `[Service]` injection,\
+  \ not globals.\n- Enable persisted operations for production caching.\n- Use Banana Cake Pop for exploratory\
+  \ queries in dev.\n"
+examples:
+- input: Stand up a Hot Chocolate server
+  output: dotnet add package HotChocolate.AspNetCore, add a Query type, MapGraphQL in Program.cs, and
+    curl the /graphql endpoint.
+- input: Test a query before the client exists
+  output: Use Banana Cake Pop at /graphql or curl the endpoint with a query string.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: graphql-hot-chocolate.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-graphql-hot-chocolate
+  generic:
+    system_prompt: 'You own Graphql Hot Chocolate end to end. You do it through hotchocolate-development:
+      Scaffold Hot Chocolate servers, add packages, and run queries. The commands are real, e.g. `dotnet
+      add package HotChocolate.AspNetCore`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

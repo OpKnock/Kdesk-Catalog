@@ -1,0 +1,190 @@
+name: slither
+display_name: Slither
+category: code-quality
+subcategory: general
+description: Static analysis for Solidity smart contracts with Slither, detecting vulnerabilities and
+  printing contract info.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- slither
+- slither-check-erc
+capabilities:
+- name: slither-analysis
+  description: Run Slither detectors, printers, and inheritance checks on Solidity projects
+  commands:
+  - slither contracts/
+  - slither . --filter-paths node_modules
+  - slither --print contract-summary contracts/Token.sol
+  - slither --exclude-dependencies --json out.json contracts/
+  - slither-check-erc contracts/Token.sol --erc ERC20
+  examples:
+  - slither --exclude reentrancy-no-eth contracts/
+  - slither --detect assembly --json report.json .
+  - slither --print inheritance contracts/
+  parameters:
+  - name: detect
+    type: string
+    description: Comma-separated detector list to run, e.g. reentrancy-eth,uninitialized-state
+  - name: exclude
+    type: string
+    description: Comma-separated detectors to skip
+  - name: filter-paths
+    type: string
+    description: Skip paths matching this regex, e.g. node_modules
+knowledge:
+- title: Slither docs
+  type: documentation
+  source: https://github.com/crytic/slither
+  description: Installation, CLI, detectors, and printers
+- title: Slither wiki
+  type: documentation
+  source: https://github.com/crytic/slither/wiki
+  description: Detector list and usage examples
+instructions: '# Slither
+
+
+  Fast static analysis framework for Solidity that finds vulnerabilities, prints
+
+  contract structure, and generates inheritance graphs.
+
+
+  ## When to Use
+
+
+  - Pre-deployment vulnerability scan of contracts
+
+  - Understanding an unfamiliar contract''s structure
+
+  - CI gate for Solidity projects
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Install
+
+  pip install slither-analyzer
+
+
+  # Analyze a project (uses truffle/hardhat config when present)
+
+  slither .
+
+
+  # Analyze a directory of contracts
+
+  slither contracts/
+
+
+  # Exclude vendored code
+
+  slither . --filter-paths node_modules
+
+
+  # Run specific detectors
+
+  slither --detect reentrancy-eth,uninitialized-state contracts/
+
+
+  # JSON report
+
+  slither . --json out.json
+
+
+  # Print contract summary
+
+  slither --print contract-summary contracts/Token.sol
+
+
+  # Check ERC compliance
+
+  slither-check-erc contracts/Token.sol --erc ERC20
+
+  ```
+
+
+  ## Common Detectors
+
+
+  - `reentrancy-eth` / `reentrancy-no-eth` - reentrancy
+
+  - `uninitialized-state` - uninitialized storage
+
+  - `suicidal` - selfdestruct paths
+
+  - `arbitrary-send-erc20` - arbitrary token sends
+
+
+  ## CI
+
+
+  ```bash
+
+  slither . --filter-paths node_modules --json slither-report.json
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run with the project''s compiler config (hardhat.config.js / truffle-config.js)
+
+  - Combine with Mythril (symbolic execution) and manual review
+
+  - Treat every High finding as a blocker before mainnet deploy
+
+  - Check the upgradeability-detector (`--detect upgrades`) on proxy contracts
+
+
+  ## Example Response
+
+
+  Lists findings as `file.sol:line: Impact: message [detector-name]`, plus the contract
+
+  summary and inheritance output requested.'
+examples:
+- input: Audit these contracts before deployment
+  output: Runs slither . --filter-paths node_modules --json slither-report.json and summarizes findings
+    by impact with file:line references
+- input: Is this token contract ERC-20 compliant?
+  output: Runs slither-check-erc contracts/Token.sol --erc ERC20 and reports compliance status per method
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: slither.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-slither
+  generic:
+    system_prompt: 'You own Slither end to end. You do it through slither-analysis: Run Slither detectors,
+      printers, and inheritance checks on Solidity projects. The commands are real, e.g. `slither contracts/`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

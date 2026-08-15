@@ -1,0 +1,95 @@
+name: tflint
+display_name: tflint
+category: code-quality
+subcategory: general
+description: 'Lints Terraform code with tflint: plugin-based checks for AWS/Azure/GCP best practices and
+  deprecations.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- tflint
+capabilities:
+- name: tflint-linting
+  description: Install plugins, lint Terraform modules recursively, and output in CI formats
+  commands:
+  - tflint --init
+  - tflint
+  - tflint --recursive
+  - tflint --config .tflint.hcl --format json
+  - tflint --minimum-severity warning
+  examples:
+  - tflint --init --chdir=modules/eks
+  - tflint --call-module-type=all
+  - tflint --force --format=checkstyle .
+  parameters:
+  - name: format
+    type: string
+    description: 'Output format: default, json, checkstyle, sarif'
+  - name: minimum-severity
+    type: string
+    description: 'Only report findings at or above: error, warning, notice'
+  - name: recursive
+    type: boolean
+    description: Lint all .tf files in subdirectories too
+knowledge:
+- title: tflint GitHub
+  type: documentation
+  source: https://github.com/terraform-linters/tflint
+  description: Installation, plugin system, and rules reference
+- title: tflint plugin docs
+  type: documentation
+  source: https://github.com/terraform-linters/tflint/tree/master/docs
+  description: How to configure plugins for AWS, Azure, GCP
+instructions: "# TFLint\n\nLinter for Terraform that catches mistakes terraform validate misses: deprecated\n\
+  syntax, provider-specific issues, and module problems.\n\n## When to Use\n\n- Enforcing AWS/Azure/GCP\
+  \ best practices in Terraform\n- Finding deprecated attributes before they break\n- CI lint gate alongside\
+  \ terraform validate\n\n## Real Commands\n\n```bash\n# Install\nbrew install tflint   # or scoop/choco\
+  \ on Windows\n\n# Install configured plugins\ncp .tflint.hcl.example .tflint.hcl\ntflint --init\n\n\
+  # Lint the current directory\ntflint\n\n# Lint recursively\ntflint --recursive\n\n# JSON output\nsudo\
+  \ tflint --format=json . | jq\n\n# Only warn+ findings\nsudo tflint --minimum-severity warning\n\n#\
+  \ Specific config\nsudo tflint --config .tflint.hcl --chdir=environments/prod\n```\n\n## Config (.tflint.hcl)\n\
+  \n```hcl\nplugin \"aws\" {\n  enabled = true\n  version = \"0.34.0\"\n  source  = \"github.com/terraform-linters/tflint-ruleset-aws\"\
+  \n}\n\nrule \"aws_instance_invalid_type\" {\n  enabled = true\n}\n```\n\n## Best Practices\n\n- Commit\
+  \ `.tflint.hcl` and run `tflint --init` in CI before linting\n- Pin plugin versions in the config\n\
+  - Run with `--recursive` in module-heavy repos\n- Feed `--format=sarif` into GitHub code scanning\n\n\
+  ## Example Response\n\nReturns findings as `path:line,col: message (rule)` with severity, then the agent\n\
+  applies the suggested attribute/configuration fixes."
+examples:
+- input: Lint our Terraform before merging
+  output: Runs tflint --init then tflint --recursive --format=json, and summarizes findings by rule
+- input: Find deprecated resource attributes
+  output: Runs tflint --recursive --minimum-severity warning and reports deprecated attribute usage
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: tflint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-tflint
+  generic:
+    system_prompt: 'You take the tflint seat. You do it through tflint-linting: Install plugins, lint
+      Terraform modules recursively, and output in CI formats. The commands are real, e.g. `tflint --init`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

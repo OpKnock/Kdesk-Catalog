@@ -1,0 +1,173 @@
+{
+  "name": "wireshark",
+  "display_name": "Wireshark",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Packet capture and analysis with tshark/wireshark: capture on interfaces, apply display filters, decode HTTP/API traffic, and export fields.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "dumpcap",
+    "tshark"
+  ],
+  "capabilities": [
+    {
+      "name": "packet-capture",
+      "description": "Capture and analyze network traffic for API debugging",
+      "commands": [
+        "tshark -i eth0 -f 'tcp port 443' -w capture.pcapng",
+        "tshark -r capture.pcapng -Y 'http.request' -T fields -e http.host -e http.request.uri",
+        "tshark -r capture.pcapng -Y 'http.response.code >= 400' -T fields -e http.response.code -e http.request.uri | head",
+        "tshark -r capture.pcapng -z io,phs",
+        "dumpcap -i eth0 -c 5000 -w sample.pcapng"
+      ],
+      "examples": [
+        "tshark -i lo -f 'tcp port 8080' -a duration:60 -w api.pcapng",
+        "tshark -r capture.pcapng -Y 'http.request.method == POST' -T fields -e ip.src -e http.user_agent | sort | uniq -c",
+        "tshark -r capture.pcapng -Y 'tls.handshake.type == 1' -T fields -e tls.handshake.extensions_server_name"
+      ],
+      "parameters": [
+        {
+          "name": "interface",
+          "type": "string",
+          "description": "Capture interface, e.g. eth0, lo, Wi-Fi"
+        },
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "BPF capture filter, e.g. 'tcp port 443'"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Stop capture after N seconds (-a duration:N)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Wireshark Docs",
+      "type": "documentation",
+      "source": "https://www.wireshark.org/docs/",
+      "description": "User guide and capture/filter reference"
+    },
+    {
+      "title": "tshark man page",
+      "type": "documentation",
+      "source": "https://www.wireshark.org/docs/man-pages/tshark.html",
+      "description": "All tshark command-line options"
+    }
+  ],
+  "instructions": "# Wireshark / tshark\n\n## What this skill does\nCapture and analyze API network traffic using tshark (Wireshark's CLI) and the Wireshark GUI. Use BPF capture filters, display filters, field extraction, and protocol statistics to debug HTTP/TLS issues.\n\n## When to use\n- Debugging slow or failing API requests\n- Verifying TLS handshakes and SNI\n- Confirming payloads leave the client unchanged\n\n## Real commands\n```bash\n# Capture HTTPS traffic to file\nsudo tshark -i eth0 -f 'tcp port 443' -w capture.pcapng\n\n# Capture local API traffic for 60s\ndumpcap -i lo -f 'tcp port 8080' -a duration:60 -w api.pcapng\n\n# List HTTP requests\n tshark -r capture.pcapng -Y 'http.request' -T fields -e http.host -e http.request.uri\n\n# Error responses\n tshark -r capture.pcapng -Y 'http.response.code >= 400' -T fields -e http.response.code -e http.request.uri | head\n\n# Protocol hierarchy stats\ntshark -r capture.pcapng -z io,phs\n\n# TLS SNI values\ntshark -r capture.pcapng -Y 'tls.handshake.type == 1' -T fields -e tls.handshake.extensions_server_name\n\n# Unique POST user agents\ntshark -r capture.pcapng -Y 'http.request.method == POST' -T fields -e http.user_agent | sort | uniq -c\n```\n\n## Common filters\n```\nhttp.request\nhttp.response.code >= 400\ntcp.port == 8080\nip.addr == 10.0.0.5\ndns.qry.name contains api\n```\n\n## Best practices\n- Capture with BPF filters to keep files small\n- Use `-a duration:N` or `-c N` to bound captures\n- Decrypt TLS with a keylog file for payload inspection\n- Correlate with server logs by timestamp and IP\n\n## Testing\n```bash\nsudo tshark -i lo -f 'tcp port 8080' -a duration:10 -w test.pcapng &\ncurl -s http://localhost:8080/api/users > /dev/null\nsleep 12\n tshark -r test.pcapng -Y 'http.request' -T fields -e http.request.method -e http.request.uri\n```",
+  "examples": [
+    {
+      "input": "Why is my POST timing out?",
+      "output": "Captures port traffic, filters http.request.method == POST, and inspects TCP retransmissions and response timing."
+    },
+    {
+      "input": "Is the client sending my header?",
+      "output": "Extracts http headers for the specific stream and compares with expectations."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "wireshark.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-wireshark"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Wireshark. You do it through packet-capture: Capture and analyze network traffic for API debugging. The commands are real, e.g. `tshark -i eth0 -f tcp port 443 -w capture.pcapng`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "wireshark",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "packet-capture",
+        "name": "interface",
+        "type": "string",
+        "description": "Capture interface, e.g. eth0, lo, Wi-Fi"
+      },
+      {
+        "capability": "packet-capture",
+        "name": "filter",
+        "type": "string",
+        "description": "BPF capture filter, e.g. 'tcp port 443'"
+      },
+      {
+        "capability": "packet-capture",
+        "name": "duration",
+        "type": "string",
+        "description": "Stop capture after N seconds (-a duration:N)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "dumpcap",
+    "tshark"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/wireshark-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/wireshark-skill.yaml",
+    "checksum": "6feb54f19407926b22a35986cd5f02d01b534d69b4ce03c69ecf08b049a04b82"
+  }
+}

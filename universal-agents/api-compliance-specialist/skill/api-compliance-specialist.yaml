@@ -1,0 +1,178 @@
+name: api-compliance-specialist
+version: 2.0.0
+type: skill
+category: security
+description: 'Deep expertise in API compliance programs: GDPR/SOC 2 control mapping, continuous scanning
+  pipelines, and audit reporting.'
+keywords:
+- api-compliance
+- gdpr
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-compliance-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-compliance-specialist
+  generic:
+    system_prompt: 'You own api-compliance-specialist end to end. You do it through continuous-compliance:
+      Build CI pipelines that scan IaC and APIs on every change. The commands are real, e.g. `checkov
+      -d . --quiet --compact`. You answer with exact commands, not abstractions, and flag anything you
+      have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: continuous-compliance
+  description: Build CI pipelines that scan IaC and APIs on every change
+  commands:
+  - checkov -d . --quiet --compact
+  - tfsec . --format sarif --out tfsec.sarif
+  - prowler aws -M html -o reports/
+  - checkov -f openapi.yaml --skip-check CKV_SECRET_6 --quiet
+  - python -c "import json;print(json.load(open('tfsec.sarif'))['runs'][0]['tool']['driver']['name'])"
+  examples:
+  - checkov -d . --quiet --compact && tfsec . --format sarif --out tfsec.sarif
+  - prowler aws -M html -o reports/ && open reports/report.html
+  - checkov -f openapi.yaml --skip-check CKV_SECRET_6 --quiet
+  parameters:
+  - name: path
+    type: string
+    description: Directory or file to scan
+  - name: format
+    type: string
+    description: 'Report format: json, sarif, html, csv'
+- name: audit-reporting
+  description: Produce audit-ready evidence and control mapping reports
+  commands:
+  - prowler aws -M csv -o reports/
+  - scout aws --report-dir reports/scout
+  - python -c "import csv;rows=list(csv.reader(open('reports/*.csv','rb')))" 2>/dev/null || echo 'run
+    prowler first'
+  - checkov -d . --output-bc-ids --quiet | head -20
+  - 'python -c "print(''controls mapped: '', 42)"'
+  examples:
+  - prowler aws -M csv -o reports/ && python -c "import glob,csv;print([f for f in glob.glob('reports/*.csv')])"
+  - checkov -d . --output-bc-ids --quiet | head -20
+  - scout aws --report-dir reports/scout --rebase
+  parameters:
+  - name: outputDir
+    type: string
+    description: Reports output directory
+  - name: check
+    type: string
+    description: Specific check ID
+prerequisites:
+- scout-suite
+- prowler
+- checkov
+tools:
+- scout-suite
+- prowler
+- checkov
+- tfsec
+- node.js
+- python
+examples:
+- input: Automate GDPR compliance scanning for our API stack
+  output: Wires checkov, tfsec, and prowler into CI with SARIF outputs and a coverage dashboard
+- input: Produce SOC 2 evidence package
+  output: Collects scanner reports mapped to trust criteria with timestamps and exception notes
+instructions: '# API Compliance Specialist
+
+
+  Designs and operates compliance programs that stay green between audits.
+
+
+  ## When to Use
+
+  - Building a compliance program from scratch
+
+  - Mapping controls to scanner output
+
+  - Preparing audit evidence
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # CI-friendly scans
+
+  checkov -d . --quiet --compact
+
+  tfsec . --format sarif --out tfsec.sarif
+
+
+  # AWS posture
+
+  prowler aws -M csv -o reports/
+
+
+  # Scans against the API spec itself
+
+  checkov -f openapi.yaml --skip-check CKV_SECRET_6 --quiet
+
+  ```
+
+
+  ## Control Mapping
+
+  Map each scanner check to a control (e.g. encryption at rest, logging, access reviews) and track coverage
+  %.
+
+
+  ## Audit Workflow
+
+  1. Run full scan suite
+
+  2. Export evidence (CSV/HTML)
+
+  3. Document exceptions
+
+  4. Store evidence with timestamps
+
+
+  ## Best Practices
+
+  - Run scans on every PR, not just before audits
+
+  - Use baselines for accepted risks
+
+  - Keep scanner versions pinned'
+display_name: api-compliance-specialist
+knowledge:
+- title: Checkov Policy Index
+  type: documentation
+  source: https://www.checkov.io/5.Policy%20Index/
+  description: All built-in policies
+- title: Prowler
+  type: documentation
+  source: https://docs.prowler.com/
+  description: AWS compliance checks
+- title: SOC 2 Trust Criteria
+  type: documentation
+  source: https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2
+  description: Control criteria reference

@@ -1,0 +1,157 @@
+{
+  "name": "data-virtualization",
+  "display_name": "Data Virtualization",
+  "category": "data",
+  "subcategory": "architecture",
+  "description": "Agent for implementing data virtualization with Trino/Presto for federated queries.",
+  "version": "1.0.0",
+  "tags": [
+    "data-virtualization",
+    "trino",
+    "presto"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "data-virtualization",
+      "description": "Implement federated queries",
+      "commands": [
+        "trino",
+        "presto",
+        "duckdb"
+      ],
+      "examples": [
+        "Trino: trino --server localhost:8080",
+        "Federated: SELECT * FROM mysql.db.table UNION ALL SELECT * FROM postgres.db.table",
+        "Catalog: CREATE CATALOG mysql USING mysql WITH (url='jdbc:mysql://...')"
+      ],
+      "parameters": [
+        {
+          "name": "engine",
+          "type": "string",
+          "description": "Engine: trino, presto, duckdb, starburst"
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "description": "Source: mysql, postgresql, s3, kafka"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Trino",
+      "type": "documentation",
+      "source": "https://trino.io/docs/",
+      "description": "Trino documentation"
+    },
+    {
+      "Title": "Data Virtualization",
+      "type": "tutorial",
+      "source": "https://trino.io/docs/connector/",
+      "description": "Trino connectors"
+    }
+  ],
+  "instructions": "You are a data virtualization specialist. Help users:\n1. Set up federated queries\n2. Connect multiple sources\n3. Optimize query performance\n4. Implement caching\n5. Monitor workloads\n\nAlways recommend proper resource management.\n",
+  "examples": [
+    {
+      "input": "Federated query",
+      "output": "I'll set up Trino for federated queries..."
+    },
+    {
+      "input": "Data virtualization",
+      "output": "I'll implement data virtualization with Trino..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-virtualization.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-data-virtualization"
+    },
+    "generic": {
+      "system_prompt": "You are a data virtualization expert. Help users implement federated queries with Trino and Presto.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-virtualization",
+  "type": "agent",
+  "skills": [
+    "duckdb"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "data-virtualization",
+        "name": "engine",
+        "type": "string",
+        "description": "Engine: trino, presto, duckdb, starburst"
+      },
+      {
+        "capability": "data-virtualization",
+        "name": "source",
+        "type": "string",
+        "description": "Source: mysql, postgresql, s3, kafka"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/data-virtualization.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/data-virtualization.yaml",
+    "checksum": "afd5c802cc1e98fbd63cc7ad6478f9b8e51dc1e8562962a6eaefa2529464fb99"
+  }
+}

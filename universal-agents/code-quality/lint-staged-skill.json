@@ -1,0 +1,167 @@
+{
+  "name": "lint-staged",
+  "display_name": "lint-staged",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Runs linters only on staged files via lint-staged git hooks, keeping pre-commit checks fast in any JS project.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "lint-staged-hooks",
+      "description": "Configure and run lint-staged to execute linters and formatters on git-staged files",
+      "commands": [
+        "npx lint-staged --allow-empty",
+        "npx lint-staged --concurrent false",
+        "npx lint-staged --debug",
+        "npx lint-staged --diff 'main...HEAD'",
+        "npx lint-staged --shell"
+      ],
+      "examples": [
+        "npx lint-staged",
+        "npx lint-staged --concurrent false --debug",
+        "git commit -m 'chore: format'  # triggers lint-staged via pre-commit hook"
+      ],
+      "parameters": [
+        {
+          "name": "concurrent",
+          "type": "boolean",
+          "description": "Run linter tasks in parallel (default true) or sequentially with false"
+        },
+        {
+          "name": "diff",
+          "type": "string",
+          "description": "Override the file list scope, e.g. 'main...HEAD'"
+        },
+        {
+          "name": "allow-empty",
+          "type": "boolean",
+          "description": "Allow empty commits when the staging area has no matching files"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "lint-staged GitHub docs",
+      "type": "documentation",
+      "source": "https://github.com/okonet/lint-staged",
+      "description": "Configuration format, glob patterns, and all CLI options"
+    },
+    {
+      "title": "lint-staged configuration guide",
+      "type": "documentation",
+      "source": "https://github.com/okonet/lint-staged#configuration",
+      "description": "package.json vs .lintstagedrc.json config, examples for ESLint, Prettier, Jest"
+    }
+  ],
+  "instructions": "# Lint-Staged\n\nRuns configured linters and formatters against only the files that are staged in git,\nso pre-commit checks stay fast even in huge repos.\n\n## When to Use\n\n- Setting up a pre-commit hook that lints and auto-fixes changed files\n- Speeding up a slow full-repo lint that blocks commits\n- Enforcing formatting (Prettier) and linting (ESLint) only on touched files\n\n## Real Commands\n\n```bash\n# Install with the husky pre-commit hook\nnpm install --save-dev lint-staged husky\nnpx husky init\n\n# Add the hook\necho \"npx lint-staged\" > .husky/pre-commit\n\n# Run on the current staging area (what the hook does)\nnpx lint-staged\n\n# Run with output for debugging glob matching\nnpx lint-staged --debug\n\n# Run linters one at a time\nnpx lint-staged --concurrent false\n\n# Scope to a range of commits instead of the index\nnpx lint-staged --diff 'main...HEAD'\n```\n\n## Configuration (.lintstagedrc.json)\n\n```json\n{\n  \"*.{js,jsx,ts,tsx}\": [\"eslint --fix\", \"prettier --write\"],\n  \"*.{json,md,yml,yaml}\": [\"prettier --write\"],\n  \"*.css\": [\"stylelint --fix\", \"prettier --write\"],\n  \"*.py\": [\"black --check\"]\n}\n```\n\n## Testing\n\n```bash\n# Simulate what runs on commit\nnpx lint-staged --diff HEAD~1 --debug\n\n# Verify the hook is installed\nnpx husky check\n```\n\n## Best Practices\n\n- Combine `--fix`/`--write` linters so the file is fixed before commit\n- Put slow checks (type-check, full test suite) in pre-push, not pre-commit\n- Use explicit extensions, never `*` alone, to avoid binary files being formatted\n- Keep the staged task list short; 3 steps max per glob",
+  "examples": [
+    {
+      "input": "Set up pre-commit linting for a fresh JS repo",
+      "output": "Installs lint-staged and husky, writes .husky/pre-commit with npx lint-staged, creates .lintstagedrc.json with eslint --fix and prettier --write globs, and validates with npx lint-staged --debug"
+    },
+    {
+      "input": "Pre-commit hook is failing on a huge file",
+      "output": "Runs npx lint-staged --debug to trace which glob matched the file, then narrows the glob or moves the check to pre-push"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "lint-staged.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-lint-staged"
+    },
+    "generic": {
+      "system_prompt": "You take the lint-staged seat. You do it through lint-staged-hooks: Configure and run lint-staged to execute linters and formatters on git-staged files. The commands are real, e.g. `npx lint-staged --allow-empty`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "lint-staged",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "lint-staged-hooks",
+        "name": "concurrent",
+        "type": "boolean",
+        "description": "Run linter tasks in parallel (default true) or sequentially with false"
+      },
+      {
+        "capability": "lint-staged-hooks",
+        "name": "diff",
+        "type": "string",
+        "description": "Override the file list scope, e.g. 'main...HEAD'"
+      },
+      {
+        "capability": "lint-staged-hooks",
+        "name": "allow-empty",
+        "type": "boolean",
+        "description": "Allow empty commits when the staging area has no matching files"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/lint-staged-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/lint-staged-skill.yaml",
+    "checksum": "400b8cefc2bf7065a5de56a689b1659f0f9693254e924acf55f4e3b490553f2f"
+  }
+}

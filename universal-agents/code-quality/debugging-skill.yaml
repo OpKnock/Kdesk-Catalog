@@ -1,0 +1,193 @@
+name: debugging
+display_name: debugging
+category: code-quality
+subcategory: general
+description: Debug applications systematically with interactive debuggers, logging, tracing, and profilers
+  across runtimes.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- dlv
+- kubectl
+- ngrep
+- node
+- python
+- tail
+- tcpdump
+capabilities:
+- commands:
+  - node --inspect-brk server.js
+  - python -m pdb app.py
+  - python -m pdb -c continue app.py
+  - dlv debug ./cmd/app
+  - dlv test ./...
+  description: Attach interactive debuggers in Node, Python, and Go.
+  name: runtime-debuggers
+  examples:
+  - node --inspect-brk=0.0.0.0:9229 server.js
+  - dlv exec ./app -- --config prod.yaml
+  - python -m pdb -c "break app.py:42" app.py
+  parameters:
+  - description: Entry point
+    name: entry
+    type: string
+  - description: file:line breakpoint
+    name: breakpoint
+    type: string
+- commands:
+  - tail -f logs/app.log
+  - kubectl logs -f deploy/myapp --tail=100
+  - tcpdump -i any port 8080 -nn
+  - curl -sv http://localhost:8080/api
+  - ngrep -d any "POST /api"
+  description: Use logs and traces to isolate faults.
+  name: tracing-observability
+  examples:
+  - kubectl logs deploy/myapp -c sidecar --since=10m
+  - tcpdump -i any -w traffic.pcap port 8080
+  - curl -sv -X POST http://localhost:8080/api -d "{}"
+  parameters:
+  - description: Service or pod to inspect
+    name: target
+    type: string
+  - name: since
+    type: string
+    description: Log window, e.g. 10m
+knowledge:
+- title: Node Debugger Docs
+  description: CLI debugger and inspector
+  source: https://nodejs.org/api/debugger.html
+  type: documentation
+- title: pdb Docs
+  description: Python debugger
+  source: https://docs.python.org/3/library/pdb.html
+  type: documentation
+- title: Delve Docs
+  description: Go debugger
+  source: https://github.com/go-delve/delve
+  type: documentation
+instructions: '# Debugging
+
+
+  Find root causes systematically.
+
+
+  ## When to Use
+
+
+  - Unexplained errors, hangs, and crashes
+
+  - Timing and race condition investigation
+
+  - Attaching to a running process without restarting
+
+  - Confirming network-level behavior
+
+
+  ## Method
+
+
+  1. Reproduce with the smallest input
+
+  2. Bisect: recent change, code path, data slice
+
+  3. Inspect state at the failure point
+
+  4. Form a hypothesis and verify
+
+  5. Fix, then add a regression test
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Node
+
+  node --inspect-brk server.js
+
+
+  # Python
+
+  python -m pdb app.py
+
+  python -m pdb -c "break app.py:42" app.py
+
+
+  # Go
+
+  dlv debug ./cmd/app
+
+  dlv exec ./app -- --config prod.yaml
+
+
+  # Logs and network
+
+  tail -f logs/app.log
+
+  kubectl logs -f deploy/myapp --tail=100
+
+  tcpdump -i any port 8080 -nn
+
+  curl -sv http://localhost:8080/api
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Add logging at entry/exit of suspicious functions
+
+  - Capture the stack trace before guessing
+
+  - Reproduce on the smallest dataset that fails
+
+  - Check logs, then network, then state, in that order
+
+  - Use -c continue with pdb to reach a breakpoint fast
+
+  - Never ship debug prints; replace with proper logging
+
+  - Turn every fix into a regression test'
+examples:
+- input: My service hangs on one request
+  output: Agent attaches a debugger with --inspect-brk or dlv, inspects goroutine/stack state, and bisects
+    the handler.
+- input: 500 errors with no stack trace in logs
+  output: Agent checks log levels, reproduces with curl -sv, and adds tracing around the failing middleware.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: debugging.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-debugging
+  generic:
+    system_prompt: 'You take the debugging seat. You do it through runtime-debuggers: Attach interactive
+      debuggers in Node, Python, and Go. The commands are real, e.g. `node --inspect-brk server.js`. You
+      prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

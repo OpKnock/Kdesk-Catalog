@@ -1,0 +1,128 @@
+name: capacity-planning
+version: 2.0.0
+type: skill
+category: sre
+description: 'Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware
+  sizing for services.'
+keywords:
+- capacity-planning
+- scaling
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: capacity-planning.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-capacity-planning
+  generic:
+    system_prompt: 'You own capacity-planning end to end. You do it through load-testing: Generate load
+      and measure service capacity. The commands are real, e.g. `ab -n 10000 -c 100 http://localhost:8000/api`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- commands:
+  - ab -n 10000 -c 100 http://localhost:8000/api
+  - wrk -t4 -c200 -d30s http://localhost:8000/api
+  - k6 run load-test.js
+  - hey -n 5000 -c 50 http://localhost:8000/api
+  description: Generate load and measure service capacity.
+  name: load-testing
+  examples:
+  - wrk -t8 -c400 -d60s -s latency.lua http://localhost:8000/
+  - k6 run --vus 100 --duration 5m load-test.js
+  - ab -n 10000 -c 100 -k http://localhost:8000/api
+  parameters:
+  - description: Concurrent connections
+    name: concurrency
+    type: integer
+  - description: Total requests
+    name: requests
+    type: integer
+  - description: Test duration
+    name: duration
+    type: string
+- commands:
+  - kubectl top pod -l app=myapp
+  - kubectl top node
+  - kubectl get hpa myapp
+  - docker stats --no-stream
+  - 'psutil: python -c "import psutil; print(psutil.cpu_percent(interval=1))"'
+  description: Analyze headroom and set scaling rules.
+  name: sizing-analysis
+  examples:
+  - kubectl top pod -l app=myapp --containers
+  - kubectl get hpa myapp -o yaml | grep -A5 spec
+  - docker stats $(docker ps -q) --no-stream
+  parameters:
+  - description: HPA target %
+    name: target-utilization
+    type: integer
+  - name: metric
+    type: string
+    description: cpu, memory, or latency
+prerequisites:
+- prometheus
+- grafana
+- aws
+- terraform
+tools:
+- prometheus
+- grafana
+- aws
+- terraform
+- kubernetes
+examples:
+- input: How many instances do I need for launch?
+  output: Agent load tests current build with wrk, computes per-instance saturation, sizes replicas with
+    2x headroom, and sets HPA thresholds.
+- input: Our p95 latency spikes at peak
+  output: Agent runs k6 at peak load, profiles CPU/DB, and recommends capacity or architectural fixes
+    with numbers.
+instructions: "# Capacity Planning\n\nSize infrastructure for real load, not guesses.\n\n## When to Use\n\
+  \n- Before major launches or traffic campaigns\n- When p95 latency degrades under expected peak\n- Right-sizing\
+  \ costs in cloud budgets\n- Validating autoscaling rules\n\n## Method\n\n1. Baseline current usage (RPS,\
+  \ p95 latency, CPU, memory)\n2. Load test 1x, 2x, 5x expected peak\n3. Find the saturation point per\
+  \ instance\n4. Add headroom: 2x peak for steady services\n5. Set autoscaling thresholds from real numbers\n\
+  \n## Commands\n\n```bash\n# Load generation\nab -n 10000 -c 100 http://localhost:8000/api\nwrk -t4 -c200\
+  \ -d30s http://localhost:8000/api\nhey -n 5000 -c 50 http://localhost:8000/api\nk6 run --vus 100 --duration\
+  \ 5m load-test.js\n\n# Current utilization\nkubectl top pod -l app=myapp\nkubectl top node\nkubectl\
+  \ get hpa myapp\ndocker stats --no-stream\n```\n\n## HPA Example\n\n```yaml\napiVersion: autoscaling/v2\n\
+  kind: HorizontalPodAutoscaler\nmetadata:\n  name: myapp\nspec:\n  minReplicas: 3\n  maxReplicas: 20\n\
+  \  metrics:\n    - type: Resource\n      resource:\n        name: cpu\n        target:\n          type:\
+  \ Utilization\n          averageUtilization: 60\n```\n\n## Best Practices\n\n- Test at 2-3x expected\
+  \ peak with realistic request mixes\n- Watch p95 latency, not just throughput\n- Plan for failure of\
+  \ one instance, zone, or region\n- Pre-scale before known events, autoscale during them\n- Revisit numbers\
+  \ quarterly; traffic changes fast"
+display_name: capacity-planning
+knowledge:
+- title: k6 Docs
+  description: Load testing tool reference
+  source: https://grafana.com/docs/k6/latest/
+  type: documentation
+- title: HPA Docs
+  description: Horizontal autoscaling
+  source: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+  type: documentation

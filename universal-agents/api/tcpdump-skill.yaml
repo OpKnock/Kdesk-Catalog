@@ -1,0 +1,191 @@
+name: tcpdump
+display_name: Tcpdump
+category: api
+subcategory: general
+description: 'Hand-crafted tcpdump skill: capture filters, pcap file workflows, header inspection with
+  -A/-X, and targeted port/host filtering for API debugging.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- tcpdump
+capabilities:
+- name: tcpdump-capture
+  description: Capture and analyze packets with tcpdump filters
+  commands:
+  - tcpdump -i eth0 -nn port 443
+  - tcpdump -i any -nnv -c 100
+  - tcpdump -i eth0 -w capture.pcap -s 0
+  - tcpdump -r capture.pcap -nn 'tcp port 8080'
+  - tcpdump -i eth0 -A -c 20 'tcp port 80'
+  - tcpdump -X -r capture.pcap | head -50
+  examples:
+  - tcpdump -i eth0 -nn host 10.0.0.5 and port 5432
+  - tcpdump -r capture.pcap -nn 'tcp[13] & 2 != 0'
+  - tcpdump -i any -nn -c 50 port 53
+  parameters:
+  - name: interface
+    type: string
+    description: Capture interface, e.g. eth0 or any
+  - name: filter
+    type: string
+    description: BPF filter expression
+  - name: pcap_file
+    type: string
+    description: Capture or read file name
+knowledge:
+- title: tcpdump man page
+  type: documentation
+  source: https://www.tcpdump.org/manpages/tcpdump.1.html
+  description: Flags and output formats
+- title: pcap-filter man page
+  type: documentation
+  source: https://www.tcpdump.org/manpages/pcap-filter.7.html
+  description: BPF filter syntax
+instructions: '# tcpdump
+
+
+  Hand-crafted skill for capturing and reading network traffic.
+
+
+  ## What this skill does
+
+
+  - Captures live packets with BPF filters on ports and hosts
+
+  - Writes pcap files for later analysis
+
+  - Inspects payloads with -A (ASCII) and -X (hex) dumps
+
+
+  ## When to use
+
+
+  - Is an API request even leaving the host?
+
+  - What payload did the client send to port 5432?
+
+  - Reproducing a network bug from a captured pcap
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Live capture on 443 with numeric output
+
+  tcpdump -i eth0 -nn port 443
+
+
+  # Any interface, verbose, stop after 100 packets
+
+  tcpdump -i any -nnv -c 100
+
+
+  # Capture to a file (full payloads)
+
+  tcpdump -i eth0 -w capture.pcap -s 0
+
+
+  # Read and filter the file
+
+  tcpdump -r capture.pcap -nn ''tcp port 8080''
+
+
+  # Payload as ASCII
+
+  tcpdump -i eth0 -A -c 20 ''tcp port 80''
+
+
+  # Hex + ASCII dump
+
+  tcpdump -X -r capture.pcap | head -50
+
+
+  # Host and port combo
+
+  tcpdump -i eth0 -nn host 10.0.0.5 and port 5432
+
+
+  # SYN packets only (TCP flags bit 2)
+
+  tcpdump -r capture.pcap -nn ''tcp[13] & 2 != 0''
+
+  ```
+
+
+  ## Capture workflow
+
+
+  1. tcpdump -i eth0 -w file.pcap -s 0 ''port 443''
+
+  2. Reproduce the issue
+
+  3. Ctrl+C, then tcpdump -r file.pcap -nn
+
+
+  ## Testing
+
+
+  ```bash
+
+  tcpdump -i lo -nn port 8080 &
+
+  curl -s localhost:8080/health
+
+  kill %1
+
+  ```
+
+
+  ## Best practices
+
+
+  - Always use -nn to skip slow DNS/service lookups
+
+  - Use -c N to bound live captures
+
+  - Prefer pcap files over live output for anything longer than a minute
+
+  '
+examples:
+- input: See if my app talks to the DB at all
+  output: tcpdump -i eth0 -nn host <db-host> and port 5432 -c 20; empty output means the app never connects.
+- input: What request body went out on 8080?
+  output: tcpdump -i lo -A -c 20 'tcp port 8080' prints payloads as ASCII lines.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: tcpdump.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-tcpdump
+  generic:
+    system_prompt: 'You own Tcpdump end to end. You do it through tcpdump-capture: Capture and analyze
+      packets with tcpdump filters. The commands are real, e.g. `tcpdump -i eth0 -nn port 443`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

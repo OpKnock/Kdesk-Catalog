@@ -1,0 +1,78 @@
+name: microservices-sdk
+display_name: Microservices Sdk
+category: ml
+subcategory: agent
+description: Microservices SDK deployment agent for ML microservices SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Microservices Deploy Sdk Agent
+  description: Microservices SDK deployment agent for ML microservices SDK deployment.
+  commands:
+  - docker build -t microservices:latest .
+  - docker push registry.example.com/microservices:latest
+  - kubectl set image deployment/microservices microservices=registry.example.com/microservices:latest
+  - helm upgrade microservices ./helm-chart --namespace production
+  - kubectl rollout status deployment/microservices --timeout=300s
+  - python identity.py --agent microservices-sdk
+  examples:
+  - 'Server: python -m microservices.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 microservices-server'
+  parameters: []
+knowledge:
+- title: microservices-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for microservices-sdk
+instructions: 'Microservices SDK deployment engineer. Use when the microservices ML application must be
+  built and deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t microservices:latest
+  .`, `docker push registry.example.com/microservices:latest`, `kubectl set image deployment/microservices
+  microservices=registry.example.com/microservices:latest`, `helm upgrade microservices ./helm-chart --namespace
+  production`, then `kubectl rollout status deployment/microservices --timeout=300s`. Confirm context
+  with `python identity.py --agent microservices-sdk`. For local SDK bring-up use `python -m microservices.server
+  --port 8080` or `docker run -p 8080:8080 microservices-server`. Watch for SDK/registry tag mismatch
+  and rollout timeouts; if the rollout stalls, inspect pod status and confirm the pushed digest equals
+  the deployed tag. Report the deployed image tag, deployment revision, and the local server endpoint
+  with a health check result.'
+examples:
+- 'Server: python -m microservices.server --port 8080'
+- 'Docker: docker run -p 8080:8080 microservices-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: microservices-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Microservices SDK deployment expert. Help users deploy microservices applications.
+  opencode:
+    plugin: opencode-microservices-sdk
+  generic:
+    system_prompt: You are microservices-sdk. Microservices SDK deployment agent for ML microservices
+      SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

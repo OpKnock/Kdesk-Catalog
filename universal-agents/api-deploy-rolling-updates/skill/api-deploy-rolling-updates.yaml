@@ -1,0 +1,176 @@
+name: api-deploy-rolling-updates
+version: 2.0.0
+type: skill
+category: devops
+description: 'Implements standard deployment pipelines: rolling updates with health gates, versioned releases,
+  and staged rollouts.'
+keywords:
+- rolling-update
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-deploy-rolling-updates.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-deploy-rolling-updates
+  generic:
+    system_prompt: 'You are the Api Deploy Rolling Updates specialist. You do it through rolling-updates:
+      Configure rolling updates with readiness and liveness gates. The commands are real, e.g. `kubectl
+      rollout restart deployment/api -n prod`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: rolling-updates
+  description: Configure rolling updates with readiness and liveness gates
+  commands:
+  - kubectl rollout restart deployment/api -n prod
+  - kubectl rollout status deployment/api -n prod --watch
+  - kubectl set resources deployment/api -n prod --limits=cpu=500m,memory=512Mi
+  - kubectl get deployment api -n prod -o yaml | grep -A5 strategy
+  - kubectl rollout undo deployment/api -n prod
+  examples:
+  - kubectl rollout restart deployment/api -n prod && kubectl rollout status deployment/api -n prod --watch
+  - kubectl get deployment api -n prod -o yaml | grep -A5 strategy
+  - kubectl rollout undo deployment/api -n prod
+  parameters:
+  - name: deployment
+    type: string
+    description: Deployment name
+  - name: namespace
+    type: string
+    description: Namespace
+- name: staged-rollout
+  description: Roll out through dev, staging, then production with promotion checks
+  commands:
+  - kubectl apply -f deploy/dev/api.yaml --record
+  - kubectl apply -f deploy/staging/api.yaml --record
+  - kubectl apply -f deploy/prod/api.yaml --record
+  - kubectl rollout status deployment/api -n staging --timeout 120s
+  - kubectl describe deployment api -n staging | grep -E 'Replicas|Conditions'
+  examples:
+  - kubectl apply -f deploy/dev/api.yaml --record && kubectl apply -f deploy/staging/api.yaml --record
+  - kubectl rollout status deployment/api -n staging --timeout 120s
+  - kubectl describe deployment api -n staging | grep -E 'Replicas|Conditions'
+  parameters:
+  - name: environment
+    type: string
+    description: Target environment
+  - name: manifest
+    type: string
+    description: Manifest path
+prerequisites:
+- kubernetes
+- argocd
+- istio
+tools:
+- kubernetes
+- argocd
+- istio
+- helm
+- terraform
+examples:
+- input: Set up a rolling deployment pipeline
+  output: Configures rolling updates with health gates and staged env-by-env promotion
+- input: Standardize API release steps
+  output: Documents apply-record-verify-promote steps shared across teams
+instructions: '# API Deploy (Implementation)
+
+
+  Implements standard, repeatable deployment pipelines for APIs.
+
+
+  ## When to Use
+
+  - Standardizing deploy steps
+
+  - Adding health-gated updates
+
+  - Rolling out environment-by-environment
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Rolling update
+
+  kubectl rollout restart deployment/api -n prod
+
+  kubectl rollout status deployment/api -n prod --watch
+
+
+  # Check strategy
+
+  kubectl get deployment api -n prod -o yaml | grep -A5 strategy
+
+
+  # Staged rollout
+
+  kubectl apply -f deploy/dev/api.yaml --record
+
+  kubectl apply -f deploy/staging/api.yaml --record
+
+  kubectl rollout status deployment/api -n staging --timeout 120s
+
+  kubectl apply -f deploy/prod/api.yaml --record
+
+
+  # Rollback
+
+  kubectl rollout undo deployment/api -n prod
+
+  ```
+
+
+  ## Health Gates
+
+  - readinessProbe: /health endpoint
+
+  - livenessProbe: /healthz
+
+  - maxUnavailable: 25%
+
+
+  ## Testing
+
+  Watch rollout status during a deploy and verify old pods drain before new ones serve.
+
+
+  ## Best Practices
+
+  - Record every apply (`--record`)
+
+  - Promote only after staging gates pass'
+display_name: Api Deploy Rolling Updates
+knowledge:
+- title: Kubernetes Deployments
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+  description: Update strategies and probes
+- title: Rollout Strategies
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  description: Rolling update parameters

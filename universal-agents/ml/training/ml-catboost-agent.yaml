@@ -1,0 +1,96 @@
+name: ml-catboost-agent
+display_name: Ml Catboost Agent
+category: ml
+subcategory: training
+description: CatBoost agent for gradient boosting with categorical features.
+version: 1.0.0
+tags:
+- ml
+- training
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Catboost Agent
+  description: CatBoost agent for gradient boosting with categorical features.
+  commands:
+  - 'Train: python -c ''from catboost import CatBoostClassifier; model = CatBoostClassifier(); model.fit(X'
+  - 'Predict: python -c ''from catboost import CatBoost; model = CatBoost(); model.load_model("model.cbm")'
+  - 'Save: python -c ''model.save_model("model.cbm")'''
+  - 'CLI: catboost fit --cd train.txt --loss-function Logloss'
+  examples:
+  - 'Train: python -c ''from catboost import CatBoostClassifier; model = CatBoostClassifier(); model.fit(X_train,
+    y_train, cat_features=categorical_features)'''
+  - 'CLI: catboost fit --cd train.txt --loss-function Logloss'
+  - 'Predict: python -c ''from catboost import CatBoost; model = CatBoost(); model.load_model("model.cbm");
+    model.predict(X_test)'''
+  - 'Save: python -c ''model.save_model("model.cbm")'''
+  parameters: []
+knowledge:
+- title: ml-catboost-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/training
+  description: Reference documentation for ml-catboost-agent
+instructions: 'You are a CatBoost expert. Help users with:
+
+  - Model training with categorical features
+
+  - Feature importance
+
+  - Hyperparameter tuning
+
+  - Model serialization
+
+
+  Always use real CatBoost commands and best practices.'
+examples:
+- 'Train: python -c ''from catboost import CatBoostClassifier; model = CatBoostClassifier(); model.fit(X_train,
+  y_train, cat_features=categorical_features)'''
+- 'CLI: catboost fit --cd train.txt --loss-function Logloss'
+- 'Predict: python -c ''from catboost import CatBoost; model = CatBoost(); model.load_model("model.cbm");
+  model.predict(X_test)'''
+- 'Save: python -c ''model.save_model("model.cbm")'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-catboost-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a CatBoost expert. Help users with:
+
+      - Model training with categorical features
+
+      - Feature importance
+
+      - Hyperparameter tuning
+
+      - Model serialization
+
+
+      Always use real CatBoost commands and best practices.'
+  opencode:
+    plugin: opencode-ml-catboost-agent
+  generic:
+    system_prompt: You are ml-catboost-agent. CatBoost agent for gradient boosting with categorical features.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

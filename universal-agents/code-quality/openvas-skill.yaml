@@ -1,0 +1,170 @@
+name: openvas
+display_name: Openvas
+category: code-quality
+subcategory: general
+description: Runs vulnerability scans with Greenbone OpenVAS/GVM via gvm-cli and the OMP protocol.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- greenbone-nvt-sync
+- gvm-cli
+- gvmd
+capabilities:
+- name: gvm-scans
+  description: Manage OpenVAS targets, tasks, and reports via gvm-cli/omp
+  commands:
+  - greenbone-nvt-sync
+  - gvmd --list-scanners
+  - gvm-cli socket --xml "<get_version/>"
+  - gvm-cli socket --xml "<create_target>...<name>web</name></create_target>"
+  - gvm-cli socket --xml "<get_reports/>"
+  examples:
+  - gvm-cli socket --xml "<get_tasks/>"
+  - gvmd --create-task --name daily-scan --target web --scanner openvas
+  - gvm-cli socket --xml "<get_results task_id='...'/>"
+  parameters:
+  - name: socketpath
+    type: string
+    description: Path to the gvmd unix socket (default /var/run/gvmd.sock)
+  - name: gmp-username
+    type: string
+    description: GMP username for gvm-cli authentication
+  - name: gmp-password
+    type: string
+    description: GMP password for gvm-cli authentication
+knowledge:
+- title: Greenbone GVM docs
+  type: documentation
+  source: https://greenbone.github.io/docs/
+  description: GVM architecture, gvm-cli usage, and feed updates
+- title: OpenVAS protocol reference
+  type: documentation
+  source: https://greenbone.github.io/gmp/
+  description: GMP XML command and response formats
+instructions: '# OpenVAS / GVM
+
+
+  Greenbone Vulnerability Manager (GVM) with OpenVAS scanner: schedule and run network
+
+  vulnerability scans and export reports.
+
+
+  ## When to Use
+
+
+  - Periodic vulnerability scanning of internal infrastructure
+
+  - Credentialed scans against Linux/Windows hosts
+
+  - Generating compliance reports (CVE/CPE based)
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Update the NVT feed (VTs)
+
+  greenbone-nvt-sync
+
+
+  # Confirm the daemon is up
+
+  sudo -u gvm gvmd --version
+
+
+  # XML via gvm-cli socket
+
+  gvm-cli socket --xml "<get_version/>"
+
+
+  # List tasks
+
+  gvm-cli socket --xml "<get_tasks/>"
+
+
+  # List scanners
+
+  sudo -u gvm gvmd --list-scanners
+
+
+  # Create a task from CLI
+
+  sudo -u gvm gvmd --create-task --name ci-scan --target 10.0.0.0/24 --scanner <uuid>
+
+  ```
+
+
+  ## Typical Flow
+
+
+  1. `greenbone-nvt-sync` to refresh the feed
+
+  2. Create target + task via gvmd or GMP XML
+
+  3. Start the task: `gvm-cli socket --xml "<start_task task_id=''...''/>"`
+
+  4. Poll `get_reports` and export XML or PDF
+
+
+  ## Best Practices
+
+
+  - Run `greenbone-nvt-sync` before scans; stale feeds produce stale results
+
+  - Use credentialed scans (`ssh`/`smb` credentials) for accurate coverage
+
+  - Scope scans to owned infrastructure
+
+  - Schedule via GSA (web UI) or cron + gvm-cli for recurring checks
+
+
+  ## Example Response
+
+
+  Returns task status, scan duration, and findings grouped by severity with CVE IDs,
+
+  so the agent can map each CVE to a remediation.'
+examples:
+- input: Scan our internal subnet for vulnerabilities
+  output: Syncs the feed, creates a target/task for 10.0.0.0/24, starts it, polls until complete, and
+    summarizes CVEs by severity
+- input: Check scan progress
+  output: Runs gvm-cli socket --xml "<get_tasks/>" and reports each task's status and progress percentage
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: openvas.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-openvas
+  generic:
+    system_prompt: 'You own Openvas end to end. You do it through gvm-scans: Manage OpenVAS targets, tasks,
+      and reports via gvm-cli/omp. The commands are real, e.g. `greenbone-nvt-sync`. You verify each step
+      you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

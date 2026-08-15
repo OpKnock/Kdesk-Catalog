@@ -1,0 +1,98 @@
+name: postmortem
+display_name: Postmortem
+category: api
+subcategory: general
+description: 'Incident postmortems: evidence gathering from logs/metrics/git, blameless writeups, and
+  follow-up action tracking.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- git
+- journalctl
+- kubectl
+capabilities:
+- name: postmortem-evidence
+  description: Collect incident evidence from git, logs and Kubernetes events, then draft a blameless
+    postmortem.
+  commands:
+  - git log --oneline --since="2026-08-08 12:00" --until="2026-08-08 13:00"
+  - journalctl -u orders-api --since "2026-08-08 12:30" --until "2026-08-08 12:45" -p err
+  - kubectl get events --sort-by=.lastTimestamp -n prod
+  - kubectl get pods -n prod -o wide --field-selector=status.phase=Failed
+  - git diff --stat v2.3.0..v2.3.1
+  examples:
+  - journalctl -u orders-api --since "2 hours ago" | grep -i "timeout"
+  - kubectl get events --sort-by=.lastTimestamp -n prod | grep -i crashloop
+  - git log --oneline v2.3.0..v2.3.1
+  parameters:
+  - name: service
+    type: string
+    description: Affected service name
+  - name: start_time
+    type: string
+    description: Incident start timestamp
+  - name: window
+    type: string
+    description: Time window for log collection
+knowledge:
+- title: Google SRE Postmortem Culture
+  type: documentation
+  source: https://sre.google/sre-book/postmortem-culture.html
+  description: Blameless postmortem methodology
+- title: Postmortem template (Atlassian)
+  type: documentation
+  source: https://www.atlassian.com/incident-management/postmortem/templates
+  description: Structure for incident writeups
+instructions: "# Postmortem\n\nA postmortem turns an incident into durable learning: timeline, root cause,\
+  \ actions.\n\n## What this skill does\n\n- Gathers evidence: deploys, logs, events, metrics\n- Drafts\
+  \ a blameless writeup\n- Tracks follow-up actions\n\n## When to use\n\n- After any significant incident\n\
+  - Before closing out an incident ticket\n\n## Real commands\n\n```bash\n# Deploy timeline\n git log\
+  \ --oneline --since=\"2026-08-08 12:00\" --until=\"2026-08-08 13:00\"\n git diff --stat v2.3.0..v2.3.1\n\
+  \n# Logs around the incident\n journalctl -u orders-api --since \"2026-08-08 12:30\" --until \"2026-08-08\
+  \ 12:45\" -p err\n\n# Kubernetes evidence\n kubectl get events --sort-by=.lastTimestamp -n prod\n kubectl\
+  \ get pods -n prod --field-selector=status.phase=Failed\n```\n\n## Template\n\n```markdown\n# Postmortem:\
+  \ INC-123\n## Summary\n## Impact\n## Timeline (UTC)\n## Root cause\n## Contributing factors\n## Actions\
+  \ (owner, deadline)\n## Lessons learned\n```\n\n## Best practices\n\n- Write within 48h while memory\
+  \ is fresh\n- Focus on systems, not people\n- Every action needs an owner and due date"
+examples:
+- input: Draft a postmortem for yesterday's outage
+  output: The agent gathers git/log/event evidence for the window and produces the structured template.
+- input: What changed right before the incident?
+  output: The agent diffs the last releases with git and checks deploy timestamps.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: postmortem.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-postmortem
+  generic:
+    system_prompt: 'You own Postmortem end to end. You do it through postmortem-evidence: Collect incident
+      evidence from git, logs and Kubernetes events, then draft a blameless postmortem. The commands are
+      real, e.g. `git log --oneline --since=2026-08-08 12:00 --until=2026-08-08 13:00`. You answer with
+      exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

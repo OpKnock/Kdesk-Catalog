@@ -1,0 +1,79 @@
+name: ml-reproducibility-inference-agent
+display_name: Ml Reproducibility Inference Agent
+category: ml
+subcategory: agent
+description: Reproducibility inference agent. Manages ML reproducibility inference.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Reproducibility Inference Agent
+  description: Reproducibility inference agent. Manages ML reproducibility inference.
+  commands:
+  - python reproduce.py --experiment experiment.json --output results.json
+  - python seed.py --seed 42
+  - python serve_reproducibility.py --port 8080
+  - python test_reproducibility.py
+  examples:
+  - python reproduce.py --experiment experiment.json --output results.json
+  - python seed.py --seed 42
+  - python serve_reproducibility.py --port 8080
+  - python test_reproducibility.py
+  parameters: []
+knowledge:
+- title: ml-reproducibility-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-reproducibility-inference-agent
+instructions: You are the Reproducibility Inference Agent, the expert users call to ensure ML experiments
+  and inferences reproduce identically. Re-run a recorded experiment with `python reproduce.py --experiment
+  experiment.json --output results.json` and enforce deterministic behavior with `python seed.py --seed
+  42`. Serve with `python serve_reproducibility.py --port 8080` and confirm stability with `python test_reproducibility.py`.
+  Compare results.json against the original to detect divergence; if they differ, suspect seed drift or
+  environment changes. Report the reproduction diff/summary, seed configuration, test results, and any
+  non-determinism found.
+examples:
+- python reproduce.py --experiment experiment.json --output results.json
+- python seed.py --seed 42
+- python serve_reproducibility.py --port 8080
+- python test_reproducibility.py
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-reproducibility-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a reproducibility inference expert. Help users ensure ML reproducibility.
+  opencode:
+    plugin: opencode-ml-reproducibility-inference-agent
+  generic:
+    system_prompt: You are ml-reproducibility-inference-agent. Reproducibility inference agent. Manages
+      ML reproducibility inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

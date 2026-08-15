@@ -1,0 +1,126 @@
+name: artillery-mode
+display_name: Artillery Mode
+category: api
+subcategory: general
+description: 'Load-tests APIs and WebSockets with Artillery v2: quick-mode runs, YAML scenarios, phases,
+  assertions, and HTML reports.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: quick-mode
+  description: Run instant load tests without config files.
+  commands:
+  - npx artillery quick -d 60 -r 20 http://localhost:3000/api/users
+  - npx artillery quick -d 30 -r 10 -m POST -b '{"name":"test"}' http://localhost:3000/api/users
+  - npx artillery quick --insecure https://staging.example.com/api
+  - 'npx artillery quick -d 60 -r 50 http://localhost:3000 -H "Authorization: Bearer $TOKEN"'
+  examples:
+  - npx artillery quick -d 60 -r 20 http://localhost:3000/api/users
+  - 'npx artillery quick -d 30 -r 10 -m POST -b ''{"name":"test"}'' -H "Content-Type: application/json"
+    http://localhost:3000/api/users'
+  - npx artillery quick -d 120 -r 100 --output report.json http://localhost:3000
+  parameters:
+  - name: duration
+    type: number
+    description: Test duration in seconds (-d)
+  - name: rate
+    type: number
+    description: Requests per second (-r)
+  - name: method
+    type: string
+    description: HTTP method, e.g. GET/POST
+- name: scenario-tests
+  description: Write multi-step YAML scenarios with phases, hooks, and assertions.
+  commands:
+  - npx artillery run load-test.yml
+  - npx artillery run --output report.json load-test.yml
+  - npx artillery report report.json
+  - npx artillery run -e staging load-test.yml
+  - npx artillery run --config base.yml --test-scenarios load-test.yml
+  examples:
+  - npx artillery run --output results.json load.yml && npx artillery report results.json
+  - npx artillery run -e production --quiet load.yml
+  - npx artillery run --snippet-mode load.yml
+  parameters:
+  - name: environment
+    type: string
+    description: Environment name from config (-e)
+  - name: output
+    type: string
+    description: JSON results output path
+  - name: report
+    type: string
+    description: Input JSON to render an HTML report
+knowledge:
+- title: Artillery Docs
+  type: documentation
+  source: https://www.artillery.io/docs
+  description: Quick mode, scenarios, phases, assertions
+- title: Artillery Reference
+  type: documentation
+  source: https://www.artillery.io/docs/reference
+  description: YAML config schema, WebSocket testing
+- title: Getting Started
+  type: documentation
+  source: https://www.artillery.io/docs/guides/getting-started/installing-artillery
+  description: Install and CLI patterns
+instructions: "# Artillery v2\n\n## What this skill does\n\nLoad-tests APIs with Artillery: instant quick\
+  \ runs for smoke tests, YAML scenarios for realistic flows, phased load ramping, response assertions,\
+  \ and HTML report generation.\n\n## When to use\n\n- Verifying an endpoint's capacity before launch\n\
+  - Catching latency regressions under load\n- Reproducing a production spike pattern locally\n\n## Real\
+  \ commands\n\n```bash\n# Quick smoke test: 60s at 20 RPS\nnpx artillery quick -d 60 -r 20 http://localhost:3000/api/users\n\
+  \n# POST with body\nnpx artillery quick -d 30 -r 10 -m POST -b '{\"name\":\"test\"}' -H \"Content-Type:\
+  \ application/json\" http://localhost:3000/api/users\n\n# Scenario test\nnpx artillery run load-test.yml\n\
+  \n# Save + render report\nnpx artillery run --output report.json load-test.yml\nnpx artillery report\
+  \ report.json\n```\n\n## Scenario config\n\n```yaml\nconfig:\n  target: http://localhost:3000\n  phases:\n\
+  \    - duration: 60\n      arrivalRate: 10\n      rampTo: 50\n    - duration: 120\n      arrivalRate:\
+  \ 50\nscenarios:\n  - name: fetch users\n    flow:\n      - get:\n          url: /api/users\n      \
+  \    expect:\n            statusCode: 200\n```\n\n## Testing\n\n- Compare p99 latency against an SLO,\
+  \ not just the average\n- Run 2-3 minutes of steady load before judging capacity\n\n## Best practices\n\
+  \n- Start with quick smoke tests, then formalize scenarios\n- Assert statusCode and JSON bodies to fail\
+  \ on wrong responses\n- Save raw JSON results as CI artifacts"
+examples:
+- input: Smoke test our API at 20 RPS for a minute
+  output: 'Runs `npx artillery quick -d 60 -r 20 http://localhost:3000/api/users` and interprets the summary:
+    requests/sec, p95/p99, timeouts, errors.'
+- input: Build a login-then-fetch flow load test
+  output: Writes a scenario with POST /login capturing a token, then GET /api/users with the Authorization
+    header, run with npx artillery run load-test.yml.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: artillery-mode.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-artillery-mode
+  generic:
+    system_prompt: 'You take the Artillery Mode seat. You do it through quick-mode: Run instant load tests
+      without config files. The commands are real, e.g. `npx artillery quick -d 60 -r 20 http://localhost:3000/api/users`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

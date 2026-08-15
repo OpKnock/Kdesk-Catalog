@@ -1,0 +1,188 @@
+{
+  "name": "api-schema-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "data",
+  "description": "Reviews and hardens API schemas with spectral: OpenAPI rulesets, custom rules, JSON output for CI, and schema quality gating.",
+  "keywords": [
+    "api-schema",
+    "openapi"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-schema-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-schema-specialist"
+    },
+    "generic": {
+      "system_prompt": "You own api-schema-specialist end to end. You do it through spectral-linting: Lint OpenAPI schemas with spectral. The commands are real, e.g. `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "spectral-linting",
+      "description": "Lint OpenAPI schemas with spectral",
+      "commands": [
+        "npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml",
+        "npx @stoplight/spectral-cli lint openapi.yaml -f json -o report.json",
+        "npx @stoplight/spectral-cli lint openapi.yaml -f junit -o junit.xml",
+        "npx @stoplight/spectral-cli lint openapi.yaml --fail-severity=warn"
+      ],
+      "examples": [
+        "-f json exports machine-readable results",
+        "--fail-severity=warn makes warnings fail CI",
+        "-f junit integrates with test reports"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "OpenAPI file to lint"
+        },
+        {
+          "name": "ruleset",
+          "type": "string",
+          "description": "Spectral ruleset path"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "stylish, json, junit"
+        }
+      ]
+    },
+    {
+      "name": "schema-review",
+      "description": "Enforce schema quality rules",
+      "commands": [
+        "npx @stoplight/spectral-cli lint openapi.yaml -r quality-rules.yaml",
+        "curl -s http://localhost:3000/openapi.json -o openapi.json",
+        "npx @stoplight/spectral-cli lint openapi.json -r .spectral.yml"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "openapi",
+    "json-schema",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "openapi",
+    "json-schema",
+    "node.js",
+    "python",
+    "stoplight-studio"
+  ],
+  "examples": [
+    {
+      "input": "Audit the OpenAPI for missing descriptions",
+      "output": "Adds a spectral rule and runs lint with JSON output"
+    },
+    {
+      "input": "Gate CI on schema quality",
+      "output": "Runs spectral with --fail-severity=warn in the pipeline"
+    }
+  ],
+  "instructions": "# API Schema Specialist\n\nSchema linting and review with spectral.\n\n## What This Skill Does\n- Lints OpenAPI contracts for consistency\n- Enforces custom schema rules\n- Exports reports for CI gating\n\n## When to Use\n- Reviewing schema PRs\n- Enforcing API design standards\n- Auditing legacy specs\n\n## Real Commands\n\n```bash\nnpx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml\nnpx @stoplight/spectral-cli lint openapi.yaml -f json -o report.json\nnpx @stoplight/spectral-cli lint openapi.yaml --fail-severity=warn\n```\n\n## Custom Rule\n\n```yaml\nrules:\n  schemas-need-description:\n    given: $.components.schemas[*]\n    severity: error\n    then:\n      field: description\n      function: truthy\n```\n\n## Testing\n- Fail builds on error-severity violations\n- Review JSON reports for triage\n- Add rules incrementally\n\n## Best Practices\n- Extend a base ruleset before adding custom rules\n- Document rule intent in comments\n- Run lint in pre-merge checks",
+  "display_name": "api-schema-specialist",
+  "knowledge": [
+    {
+      "title": "Spectral Docs",
+      "type": "documentation",
+      "source": "https://docs.stoplight.io/docs/spectral/",
+      "description": "Spectral ruleset authoring"
+    },
+    {
+      "title": "Spectral CLI",
+      "type": "documentation",
+      "source": "https://github.com/stoplightio/spectral",
+      "description": "Spectral command line tool"
+    }
+  ],
+  "id": "api-schema-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "spectral-linting",
+        "name": "spec",
+        "type": "string",
+        "description": "OpenAPI file to lint"
+      },
+      {
+        "capability": "spectral-linting",
+        "name": "ruleset",
+        "type": "string",
+        "description": "Spectral ruleset path"
+      },
+      {
+        "capability": "spectral-linting",
+        "name": "format",
+        "type": "string",
+        "description": "stylish, json, junit"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "openapi",
+    "json-schema",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-schema-specialist/skill/api-schema-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-schema-specialist/skill/api-schema-specialist.yaml",
+    "checksum": "45c826d3759535bc8692bc9bf8105efae54c60506f0200de2d62c1d528c27094"
+  }
+}

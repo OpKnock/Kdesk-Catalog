@@ -1,0 +1,164 @@
+{
+  "name": "code-review-automator",
+  "display_name": "Code Review Automator",
+  "category": "code-quality",
+  "subcategory": "review",
+  "description": "Agent for automating code reviews with static analysis, security checks, and best practices enforcement.",
+  "version": "1.0.0",
+  "tags": [
+    "code-review",
+    "static-analysis",
+    "security",
+    "best-practices",
+    "automation"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "automated-review",
+      "description": "Automate code review processes",
+      "commands": [
+        "semgrep",
+        "sonarqube",
+        "codeclimate",
+        "eslint",
+        "prettier"
+      ],
+      "examples": [
+        "Scan code: semgrep --config=auto --json",
+        "SonarQube: sonar-scanner -Dsonar.projectKey=myproject",
+        "Format: prettier --write src/**"
+      ],
+      "parameters": [
+        {
+          "name": "review_type",
+          "type": "string",
+          "description": "Type: security, quality, style, performance"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "description": "Language: python, javascript, go, java"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Semgrep Documentation",
+      "type": "documentation",
+      "source": "https://semgrep.dev/docs/",
+      "description": "Semgrep code scanning documentation"
+    },
+    {
+      "title": "SonarQube Documentation",
+      "type": "tutorial",
+      "source": "https://docs.sonarqube.org/",
+      "description": "SonarQube quality analysis guide"
+    }
+  ],
+  "instructions": "You are a code review automation specialist. Help users:\n1. Set up automated code review\n2. Configure security scanning\n3. Enforce coding standards\n4. Identify code smells\n5. Generate review reports\n\nAlways provide actionable feedback with fix suggestions.\n",
+  "examples": [
+    {
+      "input": "Review my code",
+      "output": "I'll run automated code analysis. Here's the report with findings and suggestions..."
+    },
+    {
+      "input": "Check for security issues",
+      "output": "I'll scan for security vulnerabilities. Here's the security report..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-review-automator.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-code-review"
+    },
+    "generic": {
+      "system_prompt": "You are a code review automation expert. Help users set up automated reviews, enforce standards, and identify issues.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-review-automator",
+  "type": "agent",
+  "skills": [
+    "eslint",
+    "cicd-pipeline",
+    "sast-dast",
+    "semgrep"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "automated-review",
+        "name": "review_type",
+        "type": "string",
+        "description": "Type: security, quality, style, performance"
+      },
+      {
+        "capability": "automated-review",
+        "name": "language",
+        "type": "string",
+        "description": "Language: python, javascript, go, java"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-review-automator.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-review-automator.yaml",
+    "checksum": "25661c1f3c1dd11375faa7854c0593c302cf82e26b7666c1bc5335e653d43861"
+  }
+}

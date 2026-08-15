@@ -1,0 +1,188 @@
+{
+  "name": "circleci",
+  "display_name": "Circleci",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Build, validate, and debug CircleCI pipelines with the circleci CLI, including orbs and local execution.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "circleci"
+  ],
+  "capabilities": [
+    {
+      "name": "pipeline-validate",
+      "description": "Validate, process, and inspect CircleCI config files",
+      "commands": [
+        "circleci config validate",
+        "circleci config validate .circleci/config.yml",
+        "circleci config process .circleci/config.yml > processed.yml",
+        "circleci config pack .circleci/config"
+      ],
+      "examples": [
+        "circleci config validate .circleci/config.yml",
+        "circleci config process .circleci/config.yml | circleci config validate",
+        "circleci config pack .circleci/config > .circleci/config.yml"
+      ],
+      "parameters": [
+        {
+          "name": "config_path",
+          "type": "string",
+          "description": "Path to config.yml, default .circleci/config.yml"
+        }
+      ]
+    },
+    {
+      "name": "orbs-and-runs",
+      "description": "Manage orbs and run jobs locally with the CircleCI CLI",
+      "commands": [
+        "circleci orb publish orb.yml myorg/myorb@0.0.1",
+        "circleci orb validate orb.yml",
+        "circleci orb list myorg",
+        "circleci local execute --job test",
+        "circleci build --job test"
+      ],
+      "examples": [
+        "circleci orb validate my-orb.yml && circleci orb publish my-orb.yml myorg/api-orb@1.0.0",
+        "circleci local execute --job build",
+        "circleci orb list myorg | grep api"
+      ],
+      "parameters": [
+        {
+          "name": "job",
+          "type": "string",
+          "description": "Job name to execute locally"
+        },
+        {
+          "name": "orb_ref",
+          "type": "string",
+          "description": "Orb reference like namespace/orb@version"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "CircleCI CLI Docs",
+      "type": "documentation",
+      "source": "https://circleci.com/docs/local-cli/",
+      "description": "circleci CLI installation and command reference"
+    },
+    {
+      "title": "CircleCI Config Docs",
+      "type": "documentation",
+      "source": "https://circleci.com/docs/configuration-reference/",
+      "description": "Config.yml reference for jobs, workflows, and orbs"
+    }
+  ],
+  "instructions": "# CircleCI\n\nBuild and validate CircleCI pipelines from the command line.\n\n## When to Use\n\n- Validating config before pushing\n- Testing config changes locally with Docker\n- Publishing and consuming orbs\n\n## Install\n\n```bash\ncurl -fLSs https://circle.ci/cli | bash\n# macOS\nbrew install circleci\n```\n\n## Validate\n\n```bash\ncircleci config validate\ncircleci config process .circleci/config.yml > processed.yml\n```\n\n## Config Example\n\n```yaml\nversion: 2.1\norbs:\n  go: circleci/go@1.7.3\njobs:\n  build:\n    docker:\n      - image: cimg/go:1.22\n    steps:\n      - checkout\n      - go/load-cache\n      - run: go test ./...\n      - go/save-cache\nworkflows:\n  main:\n    jobs:\n      - build\n```\n\n## Local Execution\n\n```bash\ncircleci local execute --job build\n```\n\n## Orbs\n\n```bash\ncircleci orb validate my-orb.yml\ncircleci orb publish my-orb.yml myorg/api-orb@1.0.0\ncircleci orb list myorg\n```\n\n## Testing\n\n```bash\ncircleci config validate .circleci/config.yml\ncircleci config pack .circleci/config | circleci config validate\n```\n\n## Best Practices\n\n- Validate config in a pre-commit hook\n- Pin orb versions in production\n- Use local execute to test jobs that do not need private env vars\n- Keep secrets in project or context env vars, never in config\n- Process config to debug conditional logic and orbs",
+  "examples": [
+    {
+      "input": "Validate my .circleci/config.yml before pushing.",
+      "output": "The agent runs circleci config validate .circleci/config.yml and reports any yaml or schema errors."
+    },
+    {
+      "input": "Test my build job locally with Docker.",
+      "output": "The agent runs circleci local execute --job build and walks through the job logs."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "circleci.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-circleci"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Circleci. You do it through pipeline-validate: Validate, process, and inspect CircleCI config files. The commands are real, e.g. `circleci config validate`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "circleci",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pipeline-validate",
+        "name": "config_path",
+        "type": "string",
+        "description": "Path to config.yml, default .circleci/config.yml"
+      },
+      {
+        "capability": "orbs-and-runs",
+        "name": "job",
+        "type": "string",
+        "description": "Job name to execute locally"
+      },
+      {
+        "capability": "orbs-and-runs",
+        "name": "orb_ref",
+        "type": "string",
+        "description": "Orb reference like namespace/orb@version"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "circleci"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/circleci-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/circleci-skill.yaml",
+    "checksum": "8f4e1e03f3becfd4298ffa182004e467f3f99088ffad8452f7affb543048e75b"
+  }
+}

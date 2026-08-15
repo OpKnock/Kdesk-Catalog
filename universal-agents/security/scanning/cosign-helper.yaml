@@ -1,0 +1,106 @@
+name: cosign-helper
+display_name: Cosign Helper
+category: security
+subcategory: scanning
+description: Cosign container signing agent. Real cosign CLI.
+version: 1.0.0
+tags:
+- security
+- scanning
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Cosign Helper
+  description: Cosign container signing agent. Real cosign CLI.
+  commands:
+  - 'Generate: cosign generate-key-pair'
+  - 'Attest: cosign attest --key cosign.key --predicate sbom.json --type spdxjson registry.example.com/my'
+  - 'Sign: cosign sign --key cosign.key registry.example.com/myapp:latest'
+  - 'Verify: cosign verify --key cosign.pub registry.example.com/myapp:latest'
+  - 'Keyless: cosign sign registry.example.com/myapp:latest'
+  examples:
+  - 'Generate: cosign generate-key-pair'
+  - 'Sign: cosign sign --key cosign.key registry.example.com/myapp:latest'
+  - 'Keyless: cosign sign registry.example.com/myapp:latest'
+  - 'Verify: cosign verify --key cosign.pub registry.example.com/myapp:latest'
+  - 'Attest: cosign attest --key cosign.key --predicate sbom.json --type spdxjson registry.example.com/myapp:latest'
+  parameters:
+  - name: key
+    type: string
+    description: CLI flag --key observed in capability commands
+knowledge:
+- title: cosign-helper Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/security/scanning
+  description: Reference documentation for cosign-helper
+instructions: 'You are a Cosign container signing expert. Help users with:
+
+  - Key generation
+
+  - Image signing
+
+  - Keyless signing
+
+  - Verification
+
+  - Attestations
+
+  - Rekor transparency log
+
+
+  Always use real cosign CLI. Never suggest fictional tools.'
+examples:
+- 'Generate: cosign generate-key-pair'
+- 'Sign: cosign sign --key cosign.key registry.example.com/myapp:latest'
+- 'Keyless: cosign sign registry.example.com/myapp:latest'
+- 'Verify: cosign verify --key cosign.pub registry.example.com/myapp:latest'
+- 'Attest: cosign attest --key cosign.key --predicate sbom.json --type spdxjson registry.example.com/myapp:latest'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cosign-helper.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Cosign container signing expert. Help users with:
+
+      - Key generation
+
+      - Image signing
+
+      - Keyless signing
+
+      - Verification
+
+      - Attestations
+
+      - Rekor transparency log
+
+
+      Always use real cosign CLI. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-cosign-helper
+  generic:
+    system_prompt: You are cosign-helper. Cosign container signing agent. Real cosign CLI.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,130 @@
+name: gcp
+display_name: gcp
+category: cloud
+subcategory: general
+description: 'Operates Google Cloud with the gcloud CLI: compute, GKE, Cloud Run, gsutil, IAM, and service
+  accounts.'
+version: 2.0.0
+tags:
+- cloud
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- gcloud
+- gsutil
+- kubectl
+capabilities:
+- commands:
+  - gcloud auth login
+  - gcloud config set project my-project
+  - gcloud compute instances list
+  - gsutil ls
+  - gcloud projects list
+  description: Manage projects, compute, and storage.
+  name: gcp-core
+  examples:
+  - gcloud config list
+  - gsutil cp file.txt gs://my-bucket/
+  - gcloud compute instances describe my-instance --zone us-central1-a
+  parameters:
+  - description: GCP project id
+    name: project
+    type: string
+  - description: Compute zone
+    name: zone
+    type: string
+- commands:
+  - gcloud run deploy myapp --image gcr.io/my-project/myapp:1.0 --region us-central1 --allow-unauthenticated
+  - gcloud run services list
+  - gcloud run services describe myapp --region us-central1
+  - gcloud run services update-traffic myapp --to-latest --region us-central1
+  - gcloud builds submit --tag gcr.io/my-project/myapp:1.0
+  description: Deploy and manage Cloud Run services.
+  name: gcp-run
+  examples:
+  - gcloud run deploy myapp --image gcr.io/my-project/myapp:1.0 --region us-central1 --min-instances 1
+  - gcloud run services update-traffic myapp --to-revisions REVISION=50 --region us-central1
+  parameters:
+  - description: Cloud Run service name
+    name: service
+    type: string
+  - description: Container image reference
+    name: image
+    type: string
+- commands:
+  - gcloud container clusters create mycluster --zone us-central1-a --num-nodes 3
+  - gcloud container clusters get-credentials mycluster --zone us-central1-a
+  - gcloud container clusters list
+  - kubectl get nodes
+  description: Manage GKE clusters and kubectl context.
+  name: gcp-gke
+  examples:
+  - gcloud container clusters resize mycluster --node-pool default-pool --num-nodes 5
+  - gcloud container node-pools list --cluster mycluster
+  parameters:
+  - description: GKE cluster name
+    name: cluster
+    type: string
+  - name: zone
+    type: string
+    description: Compute zone
+knowledge:
+- title: gcloud CLI Reference
+  description: Full gcloud command reference
+  source: https://cloud.google.com/sdk/gcloud/reference/
+  type: documentation
+- title: Cloud Run Docs
+  description: Serverless containers
+  source: https://cloud.google.com/run/docs
+  type: documentation
+instructions: "# Google Cloud\n\nOperate GCP with the gcloud CLI.\n\n## When to Use\n\n- Compute and GKE\
+  \ cluster management\n- Cloud Run serverless deploys\n- Cloud Storage via gsutil\n- IAM and service\
+  \ account management\n\n## Commands\n\n```bash\n# Auth and project\ngcloud auth login\ngcloud config\
+  \ set project my-project\ngcloud projects list\n\n# Compute\ngcloud compute instances list\ngcloud compute\
+  \ instances describe my-instance --zone us-central1-a\n\n# Storage\ngsutil ls\ngsutil cp file.txt gs://my-bucket/\n\
+  \n# Cloud Run\ngcloud builds submit --tag gcr.io/my-project/myapp:1.0\ngcloud run deploy myapp --image\
+  \ gcr.io/my-project/myapp:1.0 \\\n  --region us-central1 --allow-unauthenticated\ngcloud run services\
+  \ describe myapp --region us-central1\ngcloud run services update-traffic myapp --to-latest --region\
+  \ us-central1\n\n# GKE\ngcloud container clusters create mycluster --zone us-central1-a --num-nodes\
+  \ 3\ngcloud container clusters get-credentials mycluster --zone us-central1-a\nkubectl get nodes\n```\n\
+  \n## Best Practices\n\n- Use gcloud config set project to avoid cross-project mistakes\n- Prefer Workload\
+  \ Identity over static service account keys\n- Grant minimum roles; use IAM conditions where possible\n\
+  - Pin container tags; avoid :latest in production\n- Use --allow-unauthenticated only for public services\n\
+  - Enable logging and check Cloud Logging for errors"
+examples:
+- input: Deploy a container to Cloud Run
+  output: Agent builds with gcloud builds submit, deploys with gcloud run deploy, and checks the service
+    URL and traffic split.
+- input: Access my GKE cluster from kubectl
+  output: Agent runs gcloud container clusters get-credentials and verifies with kubectl get nodes.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gcp.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gcp
+  generic:
+    system_prompt: 'This is your domain: gcp. You do it through gcp-core: Manage projects, compute, and
+      storage. The commands are real, e.g. `gcloud auth login`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

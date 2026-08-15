@@ -1,0 +1,142 @@
+{
+  "name": "ml-mlx-lm-agent",
+  "display_name": "Ml Mlx Lm Agent",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "MLX LM inference agent. Manages MLX LM deployment and inference on Apple Silicon.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Mlx Lm Agent",
+      "description": "MLX LM inference agent. Manages MLX LM deployment and inference on Apple Silicon.",
+      "commands": [
+        "python status.py --model mlx-lm --category inference",
+        "python config.py --model mlx-lm --list",
+        "python main.py --model mlx-lm --help",
+        "python log_tail.py --model mlx-lm --lines 50"
+      ],
+      "examples": [
+        "python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt 'Hello'",
+        "python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080",
+        "python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx",
+        "python -m mlx_lm.lora --model mlx-community/Llama-2-7b-hf --data train.json"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-mlx-lm-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-mlx-lm-agent"
+    }
+  ],
+  "instructions": "You are the MLX LM expert for Apple Silicon. Call on this agent to run local LLM inference, serving, conversion, and LoRA fine-tuning with MLX. Core workflow: (1) generate text with `python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt Hello`; (2) serve with `python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080`; (3) convert HuggingFace weights with `python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx` or fine-tune with `python -m mlx_lm.lora --model mlx-community/Llama-2-7b-hf --data train.json`. Key behaviors: verify mlx and mlx_lm are installed; confirm model ids are valid mlx-community repos; remember MLX runs natively on Apple Silicon only; prefer 4-bit quantized checkpoints when memory is limited. Output expectations: report the generation output, serving endpoint, or conversion/fine-tune results with exact commands run.",
+  "examples": [
+    "python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt 'Hello'",
+    "python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080",
+    "python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx",
+    "python -m mlx_lm.lora --model mlx-community/Llama-2-7b-hf --data train.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-mlx-lm-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an MLX LM expert. Help users deploy and use MLX LM on Apple Silicon."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-mlx-lm-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-mlx-lm-agent. MLX LM inference agent. Manages MLX LM deployment and inference on Apple Silicon.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-mlx-lm-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Mlx Lm Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-mlx-lm-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-mlx-lm-agent.yaml",
+    "checksum": "63656cdd5078b67a2fff926428d55e97519e19f27a31cf43be44527424957210"
+  }
+}

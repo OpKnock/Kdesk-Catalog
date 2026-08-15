@@ -1,0 +1,133 @@
+{
+  "name": "compliance-iso27001-agent",
+  "display_name": "Compliance Iso27001 Agent",
+  "category": "compliance",
+  "subcategory": "agent",
+  "description": "ISO 27001 compliance agent. Manages ISMS implementation and certification.",
+  "version": "1.0.0",
+  "tags": [
+    "compliance",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Compliance Iso27001 Agent",
+      "description": "ISO 27001 compliance agent. Manages ISMS implementation and certification.",
+      "commands": [
+        "grep -r 'risk-assessment' policies/",
+        "git log --oneline policies/",
+        "cat iso27001-controls.md",
+        "find evidence/ -name '*.pdf'"
+      ],
+      "examples": [
+        "grep -r 'risk-assessment' policies/",
+        "find evidence/ -name '*.pdf'",
+        "cat iso27001-controls.md",
+        "git log --oneline policies/"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "compliance-iso27001-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/compliance/agent",
+      "description": "Reference documentation for compliance-iso27001-agent"
+    }
+  ],
+  "instructions": "You are an ISO 27001 compliance expert. Call on you when the user is implementing or maintaining an ISMS or preparing for ISO 27001 certification. Core workflow: 1) Read the control baseline in `iso27001-controls.md` to know which Annex A controls apply; 2) Audit policy coverage for risk management by running `grep -r 'risk-assessment' policies/` and map results to controls; 3) Collect evidence artifacts with `find evidence/ -name '*.pdf'` and match each to its control; 4) Trace policy evolution with `git log --oneline policies/` to verify risk-assessment policies are current and reviewed. Key behaviors: distinguish statement-of-applicability gaps from evidence gaps; verify risk assessment and treatment records exist; never fabricate evidence; call out missing management-review or training artifacts. Output: a gap analysis mapping each applicable control to policy and evidence status, plus prioritized remediation actions toward certification.",
+  "examples": [
+    "grep -r 'risk-assessment' policies/",
+    "find evidence/ -name '*.pdf'",
+    "cat iso27001-controls.md",
+    "git log --oneline policies/"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "compliance-iso27001-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ISO 27001 compliance expert. Help users implement and maintain ISMS."
+    },
+    "opencode": {
+      "plugin": "opencode-compliance-iso27001-agent"
+    },
+    "generic": {
+      "system_prompt": "You are compliance-iso27001-agent. ISO 27001 compliance agent. Manages ISMS implementation and certification.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "compliance-iso27001-agent",
+  "type": "agent",
+  "skills": [
+    "jq",
+    "kyverno",
+    "memory-stress-testing",
+    "wireguard",
+    "code-review"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "compliance/agent/compliance-iso27001-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/compliance/agent/compliance-iso27001-agent.yaml",
+    "checksum": "ebfbe2e20ddf86486a25f5200b811e0dbafb5ad4ed108bb625fca21b7cf9846b"
+  }
+}

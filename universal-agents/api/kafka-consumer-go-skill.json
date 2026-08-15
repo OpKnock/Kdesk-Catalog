@@ -1,0 +1,198 @@
+{
+  "name": "kafka-consumer-go",
+  "display_name": "Kafka Consumer Go",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Build Kafka consumers in Go with segmentio/kafka-go: consumer groups, manual commits, partitioning strategies, and lag verification against real brokers.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-console-consumer.sh",
+    "kafka-consumer-groups.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "go-consumer-app",
+      "description": "Scaffold and run a Go consumer using kafka-go Reader/ConsumerGroup APIs.",
+      "commands": [
+        "go get github.com/segmentio/kafka-go",
+        "go run ./cmd/consumer -group payments -topic orders -brokers localhost:9092",
+        "go build -o bin/consumer ./cmd/consumer",
+        "go test ./..."
+      ],
+      "examples": [
+        "go run ./cmd/consumer -group payments -topic orders -brokers localhost:9092",
+        "go build -o bin/consumer ./cmd/consumer && ./bin/consumer",
+        "go vet ./..."
+      ],
+      "parameters": [
+        {
+          "name": "group",
+          "type": "string",
+          "description": "Consumer group ID."
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic to consume."
+        },
+        {
+          "name": "brokers",
+          "type": "string",
+          "description": "Comma-separated bootstrap brokers."
+        }
+      ]
+    },
+    {
+      "name": "group-ops",
+      "description": "Verify consumer group membership, lag, and offsets with the Kafka CLI.",
+      "commands": [
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments --members --verbose",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --group debug --from-beginning --max-messages 5"
+      ],
+      "examples": [
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments --members --verbose"
+      ],
+      "parameters": [
+        {
+          "name": "group",
+          "type": "string",
+          "description": "Group ID to inspect."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "segmentio/kafka-go",
+      "type": "documentation",
+      "source": "https://github.com/segmentio/kafka-go",
+      "description": "Official kafka-go repo: Reader, Writer, ConsumerGroup examples."
+    },
+    {
+      "title": "kafka-go consumer docs",
+      "type": "documentation",
+      "source": "https://pkg.go.dev/github.com/segmentio/kafka-go",
+      "description": "Package reference for Reader and ConsumerGroup APIs."
+    }
+  ],
+  "instructions": "# Kafka Consumer (Go)\n\nWrite production Go consumers with segmentio/kafka-go.\n\n## What this skill does\n\n- Builds consumers using kafka-go Reader and ConsumerGroup.\n- Handles explicit offset commits and graceful shutdown.\n- Verifies group membership and lag against the broker CLI.\n\n## When to use\n\n- Go services consuming event streams.\n- Replacing ad-hoc shell consumers with a typed app.\n- Building exactly-once-ish pipelines with manual commits.\n\n## Real commands\n\n```bash\n# Add dependency\ngo get github.com/segmentio/kafka-go\n\n# Run the consumer\ngo run ./cmd/consumer -group payments -topic orders -brokers localhost:9092\n\n# Build a static binary\ngo build -o bin/consumer ./cmd/consumer\n\n# Verify group lag\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 \\\n  --describe --group payments\n\n# Debug consumer from CLI\nkafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n  --topic orders --group debug --from-beginning --max-messages 5\n```\n\n## Consumer example\n\n```go\nimport (\n  \"context\"\n  \"github.com/segmentio/kafka-go\"\n)\n\nreader := kafka.NewReader(kafka.ReaderConfig{\n  Brokers:  []string{\"localhost:9092\"},\n  GroupID:  \"payments\",\n  Topic:    \"orders\",\n  MinBytes: 10e3,\n  MaxBytes: 10e6,\n})\n\nfor {\n  m, err := reader.ReadMessage(context.Background())\n  if err != nil {\n    break\n  }\n  process(m)\n  // reader.CommitMessages(ctx, m) when manual commits are enabled\n}\n```\n\n## Testing\n\n```bash\ngo test ./... && go vet ./...\n# Produce test records\necho '{\"order_id\":\"1\"}' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders\n```\n\n## Best practices\n\n- Always handle reader.Close() on shutdown to leave the group cleanly.\n- Commit after processing, not after reading.\n- Set MinBytes/MaxBytes for throughput; use FetchMaxWait to control batching.\n",
+  "examples": [
+    {
+      "input": "Scaffold a Go consumer for the orders topic",
+      "output": "Add kafka-go, create a ConsumerGroup reader in cmd/consumer, and run: go run ./cmd/consumer -group payments -topic orders -brokers localhost:9092"
+    },
+    {
+      "input": "Check consumer lag",
+      "output": "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-consumer-go.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-consumer-go"
+    },
+    "generic": {
+      "system_prompt": "You work Kafka Consumer Go hands-on. You do it through go-consumer-app: Scaffold and run a Go consumer using kafka-go Reader/ConsumerGroup APIs. The commands are real, e.g. `go get github.com/segmentio/kafka-go`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-consumer-go",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "go-consumer-app",
+        "name": "group",
+        "type": "string",
+        "description": "Consumer group ID."
+      },
+      {
+        "capability": "go-consumer-app",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic to consume."
+      },
+      {
+        "capability": "go-consumer-app",
+        "name": "brokers",
+        "type": "string",
+        "description": "Comma-separated bootstrap brokers."
+      },
+      {
+        "capability": "group-ops",
+        "name": "group",
+        "type": "string",
+        "description": "Group ID to inspect."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-console-consumer.sh",
+    "kafka-consumer-groups.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-consumer-go-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-consumer-go-skill.yaml",
+    "checksum": "ac71b720c6900f64e21f5a17dc0f6883d4543ea85c088b231b5c649aaaaee8e4"
+  }
+}

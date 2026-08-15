@@ -1,0 +1,181 @@
+name: yq
+display_name: yq
+category: devtools
+subcategory: general
+description: 'Processes YAML in the shell with yq (mikefarah): read/write values, patches, merges, JSON
+  conversion, and multi-document handling.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- yq
+capabilities:
+- name: read-and-query
+  description: Extract and filter values from YAML files.
+  commands:
+  - yq '.metadata.name' pod.yaml
+  - yq '.spec.containers[0].image' pod.yaml
+  - yq '.items[] | select(.kind == "Deployment")' all.yaml
+  - yq '. | length' services.yaml
+  - yq eval-all '. as $item ireduce ({}; . * $item)' a.yaml b.yaml
+  - yq -o=json . config.yaml
+  examples:
+  - yq '.spec.containers[0].image' pod.yaml
+  - yq '.items[] | select(.kind == "Deployment")' all.yaml
+  - yq -o=json . config.yaml
+  parameters:
+  - name: expression
+    type: string
+    description: yq expression
+  - name: file
+    type: string
+    description: YAML file path
+- name: write-and-transform
+  description: Update YAML in place and transform documents.
+  commands:
+  - yq -i '.spec.replicas = 5' deployment.yaml
+  - yq -i '.spec.template.spec.containers[0].image = "nginx:1.27"' deployment.yaml
+  - yq -i '.metadata.labels.owner = "platform"' config.yaml
+  - yq '.spec.replicas |= . * 2' deployment.yaml
+  - yq -i 'del(.spec.tolerations)' deployment.yaml
+  - yq -i '.data = load("values.json")' config.yaml
+  examples:
+  - yq -i '.spec.replicas = 5' deployment.yaml
+  - yq -i '.metadata.labels.owner = "platform"' config.yaml
+  - yq -i 'del(.spec.tolerations)' deployment.yaml
+  parameters:
+  - name: in-place
+    type: boolean
+    description: Edit file in place (-i)
+  - name: path
+    type: string
+    description: YAML path expression
+knowledge:
+- title: yq (mikefarah) Docs
+  type: documentation
+  source: https://mikefarah.gitbook.io/yq
+  description: yq usage, expressions, and operations
+- title: yq GitHub
+  type: documentation
+  source: https://github.com/mikefarah/yq
+  description: Installation and release notes
+instructions: '# yq YAML Processing
+
+
+  Query and edit YAML files like jq does for JSON.
+
+
+  ## What This Skill Does
+
+
+  - Reads values with jq-like expressions
+
+  - Edits YAML in place (-i)
+
+  - Converts between YAML and JSON
+
+  - Merges multi-document files
+
+  - Transforms with operators (|=, del, load)
+
+
+  ## When to Use
+
+
+  - Patching Kubernetes manifests in scripts
+
+  - Reading values from config files in CI
+
+  - Converting YAML configs to JSON for APIs
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Read
+
+  yq ''.metadata.name'' pod.yaml
+
+  yq ''.spec.containers[0].image'' pod.yaml
+
+  yq ''.items[] | select(.kind == "Deployment")'' all.yaml
+
+  yq ''. | length'' services.yaml
+
+
+  # Write
+
+  yq -i ''.spec.replicas = 5'' deployment.yaml
+
+  yq -i ''.spec.template.spec.containers[0].image = "nginx:1.27"'' deployment.yaml
+
+  yq -i ''.metadata.labels.owner = "platform"'' config.yaml
+
+  yq -i ''del(.spec.tolerations)'' deployment.yaml
+
+
+  # Transform
+
+  yq ''.spec.replicas |= . * 2'' deployment.yaml
+
+  yq -o=json . config.yaml
+
+  yq eval-all ''. as $item ireduce ({}; . * $item)'' a.yaml b.yaml
+
+  yq -i ''.data = load("values.json")'' config.yaml
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use -i only on files in version control
+
+  - Back up manifests before batch edits
+
+  - Use eval-all for multi-document merges
+
+  - Validate output: yq ... | kubectl apply --dry-run=client -f -
+
+  - Prefer yq over sed/awk for structured YAML changes'
+examples:
+- input: Bump image tags across 20 deployment files
+  output: Agent loops yq -i over the manifests and validates with kubectl dry-run
+- input: Convert helm values.yaml to JSON
+  output: Agent runs yq -o=json and pipes into a schema validator
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: yq.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-yq
+  generic:
+    system_prompt: 'You are the yq specialist. You do it through read-and-query: Extract and filter values
+      from YAML files. The commands are real, e.g. `yq .metadata.name pod.yaml`. You run and verify the
+      real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

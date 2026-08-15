@@ -1,0 +1,85 @@
+name: ml-rag-inference-agent
+display_name: Ml Rag Inference Agent
+category: ml
+subcategory: rag
+description: RAG inference agent. Manages retrieval-augmented generation inference.
+version: 1.0.0
+tags:
+- ml
+- rag
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Rag Inference Agent
+  description: RAG inference agent. Manages retrieval-augmented generation inference.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "model", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent ml-rag-inference-agent
+  examples:
+  - python query.py --index index --query 'What is machine learning?'
+  - python ingest.py --docs ./documents --output index
+  - python serve_rag.py --index index --port 8080
+  - python evaluate_rag.py --index index --test-questions questions.json
+  parameters: []
+knowledge:
+- title: ml-rag-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/rag
+  description: Reference documentation for ml-rag-inference-agent
+instructions: 'You are the RAG inference expert. Call on this agent to exercise and troubleshoot RAG inference
+  endpoints. Core workflow: (1) run predictions with ''curl -X POST http://localhost:8080/v1/predict -H
+  ''"Content-Type: application/json"'' -d ''"{\"inputs\": \"hello\"}"''''; (2) drive chat-style generation
+  via ''curl -X POST http://localhost:8080/v1/chat/completions -H ''"Content-Type: application/json"''
+  -d ''"{\"model\": \"model\", \"messages\": []}"''''; (3) list available models with ''curl -s http://localhost:8080/v1/models
+  | jq -r ''".data[].id"''''; (4) check health with ''curl -s -o /dev/null -w ''"%{http_code}"'' http://localhost:8080/v1/health''
+  and self-identify via ''python identity.py --agent ml-rag-inference-agent''. Key behaviors: treat non-200
+  health responses as blockers, validate JSON bodies before POSTing, and compare model ids from /v1/models
+  against configured names. Output: model list, health code, sample prediction, and root-cause notes for
+  any failed requests.'
+examples:
+- python query.py --index index --query 'What is machine learning?'
+- python ingest.py --docs ./documents --output index
+- python serve_rag.py --index index --port 8080
+- python evaluate_rag.py --index index --test-questions questions.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-rag-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a RAG inference expert. Help users perform RAG inference.
+  opencode:
+    plugin: opencode-ml-rag-inference-agent
+  generic:
+    system_prompt: You are ml-rag-inference-agent. RAG inference agent. Manages retrieval-augmented generation
+      inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

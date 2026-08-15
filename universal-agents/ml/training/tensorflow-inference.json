@@ -1,0 +1,142 @@
+{
+  "name": "tensorflow-inference",
+  "display_name": "Tensorflow Inference",
+  "category": "ml",
+  "subcategory": "training",
+  "description": "TensorFlow inference server agent. Manages TensorFlow inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "training"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Tensorflow Inference Server Agent",
+      "description": "TensorFlow inference server agent. Manages TensorFlow inference server.",
+      "commands": [
+        "python inference_server.py --model model.h5 --port 8080",
+        "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+        "python test_inference_server.py --endpoint http://localhost:8080",
+        "python config_inference.py --model model.h5 --batch-size 32"
+      ],
+      "examples": [
+        "python inference_server.py --model model.h5 --port 8080",
+        "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+        "python test_inference_server.py --endpoint http://localhost:8080",
+        "python config_inference.py --model model.h5 --batch-size 32"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "tensorflow-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/training",
+      "description": "Reference documentation for tensorflow-inference"
+    }
+  ],
+  "instructions": "You are the TensorFlow inference server expert. Call on this agent to set up and operate the TensorFlow inference server. Core workflow: (1) launch with 'python inference_server.py --model model.h5 --port 8080'; (2) test with 'curl http://localhost:8080/predict --data '\"{\\\"input\\\": \\\"Hello\\\"}\"''; (3) validate with 'python test_inference_server.py --endpoint http://localhost:8080'; (4) tune with 'python config_inference.py --model model.h5 --batch-size 32'. Key behaviors: verify the H5 model loads, right-size batch-size to memory, and confirm the endpoint responds before load tests. Output: server status, test results, batch configuration, and latency observations.",
+  "examples": [
+    "python inference_server.py --model model.h5 --port 8080",
+    "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+    "python test_inference_server.py --endpoint http://localhost:8080",
+    "python config_inference.py --model model.h5 --batch-size 32"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "tensorflow-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a TensorFlow inference server expert. Help users set up TensorFlow inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-tensorflow-inference"
+    },
+    "generic": {
+      "system_prompt": "You are tensorflow-inference. TensorFlow inference server agent. Manages TensorFlow inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "tensorflow-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Tensorflow Inference Server Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/training/tensorflow-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/training/tensorflow-inference.yaml",
+    "checksum": "f9760ee5617aee7cd8ea0b049e4d9ab9c21e77291fc600ffbcec2095f030e9dd"
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "name": "bitwarden",
+  "display_name": "Bitwarden",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manages passwords and secrets with the Bitwarden CLI: login, item CRUD, generation, exports, and sync.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bw"
+  ],
+  "capabilities": [
+    {
+      "name": "auth-session",
+      "description": "Log in, unlock, and manage CLI sessions.",
+      "commands": [
+        "bw login",
+        "bw unlock",
+        "bw status",
+        "bw logout",
+        "bw sync"
+      ],
+      "examples": [
+        "bw login user@example.com",
+        "bw unlock --raw | pbcopy",
+        "bw status | jq '.status'"
+      ],
+      "parameters": [
+        {
+          "name": "email",
+          "type": "string",
+          "description": "Account email"
+        },
+        {
+          "name": "raw",
+          "type": "boolean",
+          "description": "Print raw session token"
+        }
+      ]
+    },
+    {
+      "name": "item-management",
+      "description": "Create, read, update, and delete vault items.",
+      "commands": [
+        "bw get password https://example.com",
+        "bw list items --search github",
+        "bw get item my-api-key",
+        "bw create item --session $BW_SESSION",
+        "bw delete item <item-id>"
+      ],
+      "examples": [
+        "bw list items --search aws | jq '.[].login.username'",
+        "bw get password https://stripe.com",
+        "echo '{\"type\":1,\"name\":\"prod-db\",\"login\":{\"username\":\"admin\",\"password\":\"secret\"}}' | bw create item"
+      ],
+      "parameters": [
+        {
+          "name": "search",
+          "type": "string",
+          "description": "Search query"
+        },
+        {
+          "name": "item_id",
+          "type": "string",
+          "description": "Item ID or search term"
+        }
+      ]
+    },
+    {
+      "name": "generation-export",
+      "description": "Generate passwords and export vaults.",
+      "commands": [
+        "bw generate -l 20 -n -s",
+        "bw generate -u -l 24",
+        "bw export --format json --output bw.json --session $BW_SESSION",
+        "bw export --format csv --output bw.csv",
+        "bw get totp <item-id>"
+      ],
+      "examples": [
+        "bw generate -l 24 -n -s --base64",
+        "bw export --format json --output vault.json",
+        "bw get totp google"
+      ],
+      "parameters": [
+        {
+          "name": "length",
+          "type": "number",
+          "description": "Password length (-l)"
+        },
+        {
+          "name": "export_format",
+          "type": "string",
+          "description": "json or csv"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Bitwarden CLI Docs",
+      "type": "documentation",
+      "source": "https://bitwarden.com/help/cli/",
+      "description": "Full bw command reference"
+    },
+    {
+      "title": "Bitwarden API",
+      "type": "documentation",
+      "source": "https://bitwarden.com/help/api/",
+      "description": "Vault API and CLI internals"
+    }
+  ],
+  "instructions": "# Bitwarden\n\n## What this skill does\n\nManages passwords and secrets with the Bitwarden CLI (bw): login/unlock, item CRUD, password generation, exports, and TOTP retrieval.\n\n## When to use\n\n- Fetching a stored credential for a script or deploy\n- Generating strong passwords\n- Migrating or exporting a vault\n\n## Real commands\n\n```bash\n# Login and unlock\nbw login user@example.com\nbw unlock --raw\nbw status\n\n# Search and read\nbw list items --search github\nbw get password https://stripe.com\nbw get item prod-db\n\n# Create an item\nBW_SESSION=$(bw unlock --raw)\necho '{\"type\":1,\"name\":\"prod-db\",\"login\":{\"username\":\"admin\",\"password\":\"secret\"}}' | bw create item --session $BW_SESSION\n\n# Generate\nbw generate -l 24 -n -s\n\n# Export\nbw export --format json --output vault.json --session $BW_SESSION\n```\n\n## Testing\n\n- Run bw sync after external changes\n- Verify exports import cleanly (json preferred)\n\n## Best practices\n\n- Keep BW_SESSION out of logs; use --session carefully\n- Rotate shared passwords via item edits\n- Use TOTP items with bw get totp for 2FA flows\n- Export only to trusted, encrypted storage",
+  "examples": [
+    {
+      "input": "Get the GitHub token from our vault",
+      "output": "Unlocks, runs `bw get item github` (or list items --search github), extracts the password/notes field, and pipes it into the workflow without logging it."
+    },
+    {
+      "input": "Generate a strong database password",
+      "output": "Runs `bw generate -l 24 -n -s`, then creates a login item for the DB via echo | bw create item."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "bitwarden.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-bitwarden"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Bitwarden. You do it through auth-session: Log in, unlock, and manage CLI sessions. The commands are real, e.g. `bw login`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "bitwarden",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "auth-session",
+        "name": "email",
+        "type": "string",
+        "description": "Account email"
+      },
+      {
+        "capability": "auth-session",
+        "name": "raw",
+        "type": "boolean",
+        "description": "Print raw session token"
+      },
+      {
+        "capability": "item-management",
+        "name": "search",
+        "type": "string",
+        "description": "Search query"
+      },
+      {
+        "capability": "item-management",
+        "name": "item_id",
+        "type": "string",
+        "description": "Item ID or search term"
+      },
+      {
+        "capability": "generation-export",
+        "name": "length",
+        "type": "number",
+        "description": "Password length (-l)"
+      },
+      {
+        "capability": "generation-export",
+        "name": "export_format",
+        "type": "string",
+        "description": "json or csv"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bw"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/bitwarden-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/bitwarden-skill.yaml",
+    "checksum": "015a691d5e2ae3dfdba8143174ab3a3cab00277bb4c45c1386fda5b2d53da403"
+  }
+}

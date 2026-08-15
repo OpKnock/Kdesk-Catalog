@@ -1,0 +1,186 @@
+name: tracing-sdk-instrumentation
+display_name: Tracing Sdk Instrumentation
+category: api
+subcategory: general
+description: 'Hand-crafted OpenTelemetry SDK instrumentation skill: auto-instrumentation for Python and
+  Node, environment configuration, and SDK bootstrap.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- export
+- npm
+- opentelemetry-bootstrap
+- opentelemetry-instrument
+- pip
+capabilities:
+- name: sdk-instrumentation
+  description: Instrument apps with OTel SDKs and auto-instrumentation
+  commands:
+  - pip install opentelemetry-distro opentelemetry-instrumentation
+  - opentelemetry-bootstrap -a install
+  - export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 && export OTEL_SERVICE_NAME=checkout && opentelemetry-instrument
+    python app.py
+  - npm i @opentelemetry/sdk-node @opentelemetry/instrumentation-http @opentelemetry/instrumentation-express
+  - opentelemetry-instrument --help
+  examples:
+  - export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 && opentelemetry-instrument python app.py
+  - opentelemetry-bootstrap -a install
+  - node -r @opentelemetry/auto-instrumentations-node/register app.js
+  parameters:
+  - name: service_name
+    type: string
+    description: OTEL_SERVICE_NAME value
+  - name: endpoint
+    type: string
+    description: OTLP exporter endpoint
+  - name: instrumentation
+    type: string
+    description: 'Language: python or node'
+knowledge:
+- title: Python auto-instrumentation
+  type: documentation
+  source: https://opentelemetry.io/docs/languages/python/automatic/
+  description: opentelemetry-instrument and bootstrap
+- title: Node SDK docs
+  type: documentation
+  source: https://opentelemetry.io/docs/languages/js/getting-started/nodejs/
+  description: SDK setup and register hooks
+instructions: '# OTel SDK Instrumentation
+
+
+  Hand-crafted skill for auto-instrumenting apps with OpenTelemetry SDKs.
+
+
+  ## What this skill does
+
+
+  - Installs Python distro + instrumentations in one step
+
+  - Bootstraps Node SDK with http/express instrumentations
+
+  - Configures exporters and service names via env vars
+
+
+  ## When to use
+
+
+  - Adding tracing to existing apps with zero code changes
+
+  - Standardizing service names and endpoints across a fleet
+
+  - Upgrading an SDK-instrumented app
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Python: distro + all default instrumentations
+
+  pip install opentelemetry-distro opentelemetry-instrumentation
+
+  opentelemetry-bootstrap -a install
+
+
+  # Run the app under instrumentation
+
+  export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
+
+  export OTEL_SERVICE_NAME=checkout
+
+  opentelemetry-instrument python app.py
+
+
+  # Node
+
+  npm i @opentelemetry/sdk-node @opentelemetry/instrumentation-http @opentelemetry/instrumentation-express
+
+  node -r @opentelemetry/auto-instrumentations-node/register app.js
+
+
+  # Inspect options
+
+  opentelemetry-instrument --help
+
+  ```
+
+
+  ## Env config
+
+
+  - OTEL_SERVICE_NAME: service identity in the trace
+
+  - OTEL_EXPORTER_OTLP_ENDPOINT: collector or backend
+
+  - OTEL_TRACES_SAMPLER: sampling strategy
+
+
+  ## Testing
+
+
+  ```bash
+
+  export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 OTEL_SERVICE_NAME=test
+
+  opentelemetry-instrument python -c ''print("traced")''
+
+  # then look for the span in Jaeger/Collector
+
+  ```
+
+
+  ## Best practices
+
+
+  - Set OTEL_SERVICE_NAME on every deploy; never default
+
+  - Pin distro versions for reproducible instrumentation
+
+  - Enable exporter batching via env when volume grows
+
+  '
+examples:
+- input: Trace my Flask app without code changes
+  output: pip install opentelemetry-distro opentelemetry-instrumentation, opentelemetry-bootstrap -a install,
+    then OTEL_EXPORTER_OTLP_ENDPOINT=... opentelemetry-instrument python app.py.
+- input: Trace an Express API
+  output: npm i the SDK packages and start with node -r @opentelemetry/auto-instrumentations-node/register
+    app.js.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: tracing-sdk-instrumentation.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-tracing-sdk-instrumentation
+  generic:
+    system_prompt: 'You work Tracing Sdk Instrumentation hands-on. You do it through sdk-instrumentation:
+      Instrument apps with OTel SDKs and auto-instrumentation. The commands are real, e.g. `pip install
+      opentelemetry-distro opentelemetry-instrumentation`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

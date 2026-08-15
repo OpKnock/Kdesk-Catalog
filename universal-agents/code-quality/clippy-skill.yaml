@@ -1,0 +1,196 @@
+name: clippy
+display_name: Clippy
+category: code-quality
+subcategory: general
+description: 'Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with -D
+  warnings.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cargo
+- rustup
+capabilities:
+- commands:
+  - cargo clippy
+  - cargo clippy -- -D warnings
+  - cargo clippy --all-targets --all-features
+  - cargo clippy --fix --allow-dirty
+  - cargo clippy -- -A clippy::too_many_arguments
+  description: Run clippy over the crate.
+  name: clippy-lint
+  examples:
+  - cargo clippy --all-targets -- -D warnings
+  - cargo clippy --fix --allow-dirty --allow-staged
+  - cargo clippy --tests -- -A clippy::unwrap_used
+  parameters:
+  - description: Lint all targets
+    name: all-targets
+    type: boolean
+  - description: Apply suggestions
+    name: fix
+    type: boolean
+  - description: Lints to allow
+    name: allow
+    type: string
+- commands:
+  - cargo clippy -- -D clippy::pedantic
+  - cargo clippy -- -W clippy::nursery
+  - cargo clippy --message-format json
+  - rustup component add clippy
+  description: Configure lint levels per crate.
+  name: clippy-config
+  examples:
+  - cargo clippy -- -D warnings -D clippy::pedantic
+  - cargo clippy -- -A clippy::needless_return
+  parameters:
+  - description: warn, deny, allow
+    name: level
+    type: string
+  - description: pedantic, nursery, restriction
+    name: lint-group
+    type: string
+knowledge:
+- title: Clippy Docs
+  description: Lint list and usage
+  source: https://doc.rust-lang.org/clippy/
+  type: documentation
+- title: Clippy Lint Index
+  description: All lints with explanations
+  source: https://rust-lang.github.io/rust-clippy/master/
+  type: documentation
+instructions: '# Clippy
+
+
+  The Rust linter with smart suggestions.
+
+
+  ## When to Use
+
+
+  - Catching common Rust mistakes before review
+
+  - Enforcing strict quality gates in CI
+
+  - Modernizing old code with --fix
+
+  - Applying pedantic rules on codebases that want them
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Install the component
+
+  rustup component add clippy
+
+
+  # Default lint set
+
+  cargo clippy
+
+
+  # Block on any warning
+
+  cargo clippy -- -D warnings
+
+
+  # All targets (tests, benches, examples)
+
+  cargo clippy --all-targets --all-features
+
+
+  # Auto-fix
+
+  cargo clippy --fix --allow-dirty
+
+
+  # Select lint groups
+
+  cargo clippy -- -W clippy::nursery
+
+  cargo clippy -- -D clippy::pedantic
+
+
+  # Allow specific lints
+
+  cargo clippy -- -A clippy::too_many_arguments
+
+  ```
+
+
+  ## Config Example
+
+
+  ```toml
+
+  # Cargo.toml
+
+  [lints.clippy]
+
+  all = "warn"
+
+  pedantic = "warn"
+
+  unwrap_used = "warn"
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use -D warnings in CI; denials catch regressions
+
+  - Run cargo clippy --fix regularly to clean up
+
+  - Enable pedantic incrementally with per-lint allows
+
+  - Keep -A list documented for deliberate exceptions
+
+  - Run on all targets, not just lib/bin
+
+  - Format with cargo fmt before clippy for stable line numbers'
+examples:
+- input: Lint my Rust crate strictly
+  output: Agent runs cargo clippy --all-targets -- -D warnings, explains each finding, and applies cargo
+    clippy --fix where safe.
+- input: Enable pedantic lints without breaking the build
+  output: Agent adds lints.clippy config with pedantic = warn and a curated -A list for exceptions.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: clippy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-clippy
+  generic:
+    system_prompt: 'You are the Clippy specialist. You do it through clippy-lint: Run clippy over the
+      crate. The commands are real, e.g. `cargo clippy`. You run and verify the real CLI commands before
+      you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

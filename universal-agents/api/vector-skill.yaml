@@ -1,0 +1,199 @@
+name: vector
+display_name: Vector
+category: api
+subcategory: general
+description: 'Hand-crafted Vector skill: pipeline config with sources/transforms/sinks, file and docker
+  source ingestion, and topology validation via vector validate.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- vector
+capabilities:
+- name: vector-pipelines
+  description: Build and run Vector observability pipelines
+  commands:
+  - vector validate /etc/vector/vector.toml
+  - vector --config /etc/vector/vector.toml
+  - vector top --config /etc/vector/vector.toml
+  - vector tap file_logs --config /etc/vector/vector.toml
+  - vector generate --encoding toml file_nginx_logs/console
+  examples:
+  - vector validate /etc/vector/vector.toml
+  - vector --config /etc/vector/vector.toml
+  - vector generate --encoding toml file_nginx_logs/console
+  parameters:
+  - name: config
+    type: string
+    description: Path to vector config file
+  - name: component
+    type: string
+    description: Component id for tap/top
+  - name: encoding
+    type: string
+    description: toml or yaml for generated config
+knowledge:
+- title: Vector config reference
+  type: documentation
+  source: https://vector.dev/docs/reference/configuration/
+  description: Sources, transforms, sinks
+- title: Vector CLI commands
+  type: documentation
+  source: https://vector.dev/docs/reference/cli/
+  description: validate, top, tap, generate
+instructions: '# Vector
+
+
+  Hand-crafted skill for Vector observability pipelines.
+
+
+  ## What this skill does
+
+
+  - Defines sources -> transforms -> sinks in TOML
+
+  - Validates pipeline topology before running
+
+  - Inspects live events with tap and top
+
+
+  ## When to use
+
+
+  - Shipping logs from files or Docker to Loki/S3
+
+  - Transforming fields in transit
+
+  - Replacing agent chains (filebeat -> logstash -> ...)
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Validate the config without running
+
+  vector validate /etc/vector/vector.toml
+
+
+  # Run the agent
+
+  vector --config /etc/vector/vector.toml
+
+
+  # Live topology health
+
+  vector top --config /etc/vector/vector.toml
+
+
+  # Tail events through a source/component
+
+  vector tap file_logs --config /etc/vector/vector.toml
+
+
+  # Scaffold a config
+
+  vector generate --encoding toml file_nginx_logs/console
+
+  ```
+
+
+  ## Minimal pipeline
+
+
+  ```toml
+
+  [sources.file_logs]
+
+  type = "file"
+
+  include = ["/var/log/nginx/access.log"]
+
+
+  [transforms.parse_json]
+
+  type = "remap"
+
+  inputs = ["file_logs"]
+
+  source = ''''''
+
+  . = parse_json!(.message)
+
+  ''''''
+
+
+  [sinks.console]
+
+  type = "console"
+
+  inputs = ["parse_json"]
+
+  encoding.codec = "json"
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  vector validate /etc/vector/vector.toml
+
+  vector tap file_logs --config /etc/vector/vector.toml
+
+  ```
+
+
+  ## Best practices
+
+
+  - Validate configs in CI before deploying the agent
+
+  - Name components clearly: file_logs, parse_json, sink_loki
+
+  - Use remap transforms for all parsing, not jq in sinks
+
+  '
+examples:
+- input: Is my pipeline config valid?
+  output: vector validate /etc/vector/vector.toml checks the topology and reports component errors.
+- input: What is flowing through the pipeline?
+  output: vector tap file_logs --config /etc/vector/vector.toml streams live events through that component.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: vector.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-vector
+  generic:
+    system_prompt: 'You are the Vector specialist. You do it through vector-pipelines: Build and run Vector
+      observability pipelines. The commands are real, e.g. `vector validate /etc/vector/vector.toml`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

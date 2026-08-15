@@ -1,0 +1,114 @@
+name: nodejs
+display_name: Nodejs
+category: backend
+subcategory: general
+description: 'Develops Node.js backends: npm project setup, debugging, worker threads, dependency auditing,
+  and production runtime management.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+- npm
+capabilities:
+- commands:
+  - npm init -y
+  - npm install express
+  - node --version
+  - node --watch server.js
+  - node --max-old-space-size=4096 app.js
+  description: Manage Node.js projects and run scripts.
+  name: nodejs-runtime
+  examples:
+  - npm install --save-dev nodemon typescript
+  - node --inspect-brk server.js
+  - npm ci --omit=dev
+  parameters:
+  - description: Script to run
+    name: script
+    type: string
+  - description: Node runtime flags
+    name: flags
+    type: string
+- commands:
+  - npm audit
+  - npm audit fix
+  - npm test
+  - npm outdated
+  - node --test
+  description: Audit dependencies and run tests.
+  name: nodejs-quality
+  examples:
+  - npm audit --audit-level=high
+  - npm run lint
+  - node --test test/
+  parameters:
+  - description: low, moderate, high, critical
+    name: audit-level
+    type: string
+  - name: fix
+    type: boolean
+    description: Apply audit fixes
+knowledge:
+- title: Node.js Docs
+  description: Core modules and CLI reference
+  source: https://nodejs.org/api/
+  type: documentation
+- title: npm Docs
+  description: CLI commands and package management
+  source: https://docs.npmjs.com
+  type: documentation
+instructions: "# Node.js\n\nBackend development on the Node.js runtime.\n\n## When to Use\n\n- HTTP APIs,\
+  \ WebSockets, and real-time services\n- CLI tools and automation scripts\n- Polyglot teams already using\
+  \ JavaScript/TypeScript\n\n## Commands\n\n```bash\n# Project setup\nnpm init -y\nnpm install express\n\
+  npm install --save-dev nodemon typescript\n\n# Run\nnode server.js\nnode --watch server.js\n\n# Memory\
+  \ control\nnode --max-old-space-size=4096 app.js\n\n# Debugging\nnode --inspect-brk server.js\n\n# Production\
+  \ deps only\nnpm ci --omit=dev\n\n# Audit and updates\nnpm audit --audit-level=high\nnpm audit fix\n\
+  npm outdated\n\n# Tests\nnpm test\nnode --test\n```\n\n## HTTP Server\n\n```javascript\nconst http =\
+  \ require(\"node:http\");\n\nconst server = http.createServer((req, res) => {\n  res.writeHead(200,\
+  \ { \"Content-Type\": \"application/json\" });\n  res.end(JSON.stringify({ ok: true }));\n});\n\nserver.listen(3000);\n\
+  ```\n\n## Best Practices\n\n- Pin dependency versions and use package-lock.json in VCS\n- Run npm audit\
+  \ in CI and fix high+ findings\n- Use worker threads or child processes for CPU-heavy work\n- Always\
+  \ set a graceful shutdown handler (SIGTERM)\n- Use --watch in dev, a process manager in prod\n- Enable\
+  \ NODE_ENV=production to skip dev-only work"
+examples:
+- input: Debug a memory leak in my Node service
+  output: Agent runs node --max-old-space-size with heap snapshot, explains --inspect usage, and checks
+    for unclosed listeners/streams.
+- input: My npm install is slow in CI
+  output: Agent switches to npm ci, explains lockfile benefits, and suggests caching the npm cache directory.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nodejs.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nodejs
+  generic:
+    system_prompt: 'You take the Nodejs seat. You do it through nodejs-runtime: Manage Node.js projects
+      and run scripts. The commands are real, e.g. `npm init -y`. You work hands-on and only report outcomes
+      you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

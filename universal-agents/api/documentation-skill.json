@@ -1,0 +1,172 @@
+{
+  "name": "documentation",
+  "display_name": "Documentation",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Write, organize, and publish project documentation sites with MkDocs: scaffold, preview with hot reload, build, and deploy to GitHub Pages.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mkdocs"
+  ],
+  "capabilities": [
+    {
+      "name": "mkdocs-publishing",
+      "description": "Scaffold, serve, build, and deploy MkDocs documentation projects.",
+      "commands": [
+        "mkdocs new my-docs",
+        "mkdocs serve --dev-addr 127.0.0.1:8000",
+        "mkdocs build --clean",
+        "mkdocs gh-deploy",
+        "mkdocs build --strict",
+        "mkdocs --version"
+      ],
+      "examples": [
+        "mkdocs new my-docs && cd my-docs && mkdocs serve",
+        "mkdocs build --strict",
+        "mkdocs gh-deploy --force"
+      ],
+      "parameters": [
+        {
+          "name": "project-dir",
+          "type": "string",
+          "description": "Directory where the docs project lives"
+        },
+        {
+          "name": "dev-addr",
+          "type": "string",
+          "description": "Host:port for the local preview server"
+        },
+        {
+          "name": "strict-mode",
+          "type": "boolean",
+          "description": "Treat warnings as errors during build"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MkDocs Documentation",
+      "type": "documentation",
+      "source": "https://www.mkdocs.org/",
+      "description": "The static site generator: configuration, themes, plugins, and deployment"
+    },
+    {
+      "title": "Material for MkDocs",
+      "type": "documentation",
+      "source": "https://squidfunk.github.io/mkdocs-material/",
+      "description": "Popular Material Design theme with search, navigation, and code highlight plugins"
+    }
+  ],
+  "instructions": "# Documentation\n\n## What this skill does\n\nThis skill covers authoring and publishing documentation sites with MkDocs: project scaffolding, live preview, strict builds, and GitHub Pages deployment. Markdown files are the source of truth.\n\n## When to use\n\n- Starting a docs site for a project, API, or team\n- Restructuring an existing docs tree\n- Publishing docs to GitHub Pages or a static host\n\n## Real commands\n\n```bash\n# Scaffold a new project\n mkdocs new my-docs\n cd my-docs\n\n# Preview with hot reload\n mkdocs serve --dev-addr 127.0.0.1:8000\n\n# Build the static site (strict = warnings become errors)\n mkdocs build --clean\n mkdocs build --strict\n\n# Deploy to GitHub Pages\n mkdocs gh-deploy --force\n```\n\n## mkdocs.yml example\n\n```yaml\nsite_name: My Project\ntheme:\n  name: material\n  features:\n    - navigation.tabs\n    - search.suggest\nnav:\n  - Home: index.md\n  - Guides:\n      - Getting started: guides/getting-started.md\n      - Configuration: guides/configuration.md\nplugins:\n  - search\nmarkdown_extensions:\n  - admonition\n  - pymdownx.superfences\n```\n\n## Writing guidelines\n\n- One idea per page; link between pages instead of duplicating.\n- Keep a short title and an intro sentence before any heading.\n- Use admonitions (note, warning) sparingly for emphasis.\n- Include a code example on every how-to page.\n\n## Testing\n\n```bash\n# Verify every link resolves and no warnings are emitted\n mkdocs build --strict && echo 'docs healthy'\n```\n\n## Best practices\n\n- Use `mkdocs build --strict` in CI so broken links fail the pipeline.\n- Keep nav ordering in mkdocs.yml aligned with the docs tree.\n- Preview locally before every `gh-deploy`.\n- Store docs beside the code and version them together.\n",
+  "examples": [
+    {
+      "input": "Set up docs for our new project",
+      "output": "Scaffold with mkdocs new, add a Material theme and nav in mkdocs.yml, preview with mkdocs serve, and deploy with mkdocs gh-deploy."
+    },
+    {
+      "input": "The docs site has broken links in CI",
+      "output": "Run mkdocs build --strict locally, fix the broken references it reports, then re-deploy."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "documentation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-documentation"
+    },
+    "generic": {
+      "system_prompt": "You take the Documentation seat. You do it through mkdocs-publishing: Scaffold, serve, build, and deploy MkDocs documentation projects. The commands are real, e.g. `mkdocs new my-docs`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "documentation",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "mkdocs-publishing",
+        "name": "project-dir",
+        "type": "string",
+        "description": "Directory where the docs project lives"
+      },
+      {
+        "capability": "mkdocs-publishing",
+        "name": "dev-addr",
+        "type": "string",
+        "description": "Host:port for the local preview server"
+      },
+      {
+        "capability": "mkdocs-publishing",
+        "name": "strict-mode",
+        "type": "boolean",
+        "description": "Treat warnings as errors during build"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mkdocs"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/documentation-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/documentation-skill.yaml",
+    "checksum": "b9055a4bb768b6105b35717c2167ef512470d0c50995fd7d24643650f0bb7bc5"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "name": "ml-audit-aws-deploy",
+  "display_name": "Ml Audit Aws Deploy",
+  "category": "ml",
+  "subcategory": "audit",
+  "description": "AWS Audit deployment agent for ML audit logging on AWS.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "audit"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Audit Aws Deploy",
+      "description": "AWS Audit deployment agent for ML audit logging on AWS.",
+      "commands": [
+        "Config: aws configservice get-compliance-details-by-resource --resource-type AWS::SageMaker::Endpoin",
+        "Audit Manager: aws auditmanager get-assessment --assessment-id my-assessment",
+        "CloudTrail: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=I"
+      ],
+      "examples": [
+        "CloudTrail: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=InvokeEndpoint",
+        "Config: aws configservice get-compliance-details-by-resource --resource-type AWS::SageMaker::Endpoint --resource-id my-endpoint",
+        "Audit Manager: aws auditmanager get-assessment --assessment-id my-assessment"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-audit-aws-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/audit",
+      "description": "Reference documentation for ml-audit-aws-deploy"
+    }
+  ],
+  "instructions": "You are the AWS ML Audit deployment expert (Ml Audit Aws Deploy). Call on you to deploy and operate ML audit logging on AWS - tracing model invocations, compliance state, and assessment evidence. Workflow: (1) trace inference events with aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=InvokeEndpoint; (2) check resource compliance with aws configservice get-compliance-details-by-resource --resource-type AWS::SageMaker::Endpoint --resource-id my-endpoint; (3) review assessments with aws auditmanager get-assessment --assessment-id my-assessment. Key behaviors: verify the event name spelling (InvokeEndpoint) and the correct resource-type for SageMaker endpoints, confirm CloudTrail is recording the expected region/trail, and if no events return, check trail coverage before concluding the model is unused; flag noncompliant endpoints with remediation steps. Output: event inventory, compliance status per resource, assessment findings, and remediation recommendations.",
+  "examples": [
+    "CloudTrail: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=InvokeEndpoint",
+    "Config: aws configservice get-compliance-details-by-resource --resource-type AWS::SageMaker::Endpoint --resource-id my-endpoint",
+    "Audit Manager: aws auditmanager get-assessment --assessment-id my-assessment"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-audit-aws-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS ML Audit deployment expert. Help users deploy ML audit logging on AWS."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-audit-aws-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-audit-aws-deploy. AWS Audit deployment agent for ML audit logging on AWS.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-audit-aws-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/audit/ml-audit-aws-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/audit/ml-audit-aws-deploy.yaml",
+    "checksum": "64b119e29eee29097eba44099a179b95ebbb7b23173623d50f570b774cda818a"
+  }
+}

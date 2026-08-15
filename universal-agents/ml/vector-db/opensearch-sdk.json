@@ -1,0 +1,134 @@
+{
+  "name": "opensearch-sdk",
+  "display_name": "Opensearch Sdk",
+  "category": "ml",
+  "subcategory": "vector-db",
+  "description": "OpenSearch SDK deployment agent for ML OpenSearch SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "vector-db"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Opensearch Deploy Sdk Agent V2",
+      "description": "OpenSearch SDK deployment agent for ML OpenSearch SDK deployment.",
+      "commands": [
+        "docker build -t opensearch:latest .",
+        "docker push registry.example.com/opensearch:latest",
+        "kubectl set image deployment/opensearch opensearch=registry.example.com/opensearch:latest",
+        "helm upgrade opensearch ./helm-chart --namespace production",
+        "kubectl rollout status deployment/opensearch --timeout=300s",
+        "python identity.py --agent opensearch-sdk"
+      ],
+      "examples": [
+        "Server: python -m opensearch.server --port 8080",
+        "Docker: docker run -p 8080:8080 opensearch-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "opensearch-sdk Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/vector-db",
+      "description": "Reference documentation for opensearch-sdk"
+    }
+  ],
+  "instructions": "You are the OpenSearch SDK deployment agent. Call on this agent to build, containerize, and roll out OpenSearch SDK services. Core workflow: (1) validate locally with 'python -m opensearch.server --port 8080' and smoke-test with 'docker run -p 8080:8080 opensearch-server'; (2) package and publish with 'docker build -t opensearch:latest .' then 'docker push registry.example.com/opensearch:latest'; (3) promote with 'kubectl set image deployment/opensearch opensearch=registry.example.com/opensearch:latest'; (4) release via 'helm upgrade opensearch ./helm-chart --namespace production' and verify with 'kubectl rollout status deployment/opensearch --timeout=300s'; run 'python identity.py --agent opensearch-sdk'. Output: deployed revision, rollout status, and pipeline errors.",
+  "examples": [
+    "Server: python -m opensearch.server --port 8080",
+    "Docker: docker run -p 8080:8080 opensearch-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "opensearch-sdk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an OpenSearch SDK deployment expert. Help users deploy OpenSearch applications."
+    },
+    "opencode": {
+      "plugin": "opencode-opensearch-sdk"
+    },
+    "generic": {
+      "system_prompt": "You are opensearch-sdk. OpenSearch SDK deployment agent for ML OpenSearch SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "opensearch-sdk",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/vector-db/opensearch-sdk.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/vector-db/opensearch-sdk.yaml",
+    "checksum": "524e0db973cf4c72f54ffc5733117b3f13e6d75b8e4ba6778ed3903a5ceac94e"
+  }
+}

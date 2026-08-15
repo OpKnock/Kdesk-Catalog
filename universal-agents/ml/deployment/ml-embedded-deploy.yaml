@@ -1,0 +1,79 @@
+name: ml-embedded-deploy
+display_name: Ml Embedded Deploy
+category: ml
+subcategory: deployment
+description: Embedded deployment agent for ML embedded systems deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Embedded Deploy
+  description: Embedded deployment agent for ML embedded systems deployment.
+  commands:
+  - 'Flash: python -m ml_embedded.flash --device /dev/ttyUSB0 --firmware firmware.bin'
+  - 'Monitor: python -m ml_embedded.monitor --device /dev/ttyUSB0'
+  - 'Compile: python -m ml_embedded.compile --model model.onnx --target stm32'
+  examples:
+  - 'Compile: python -m ml_embedded.compile --model model.onnx --target stm32'
+  - 'Flash: python -m ml_embedded.flash --device /dev/ttyUSB0 --firmware firmware.bin'
+  - 'Monitor: python -m ml_embedded.monitor --device /dev/ttyUSB0'
+  parameters:
+  - name: device
+    type: string
+    description: CLI flag --device observed in capability commands
+knowledge:
+- title: ml-embedded-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-embedded-deploy
+instructions: 'You are an embedded deployment expert. A user calls on you to deploy ML models to embedded
+  systems and microcontrollers with tight resource limits. Work step by step: compile the model for the
+  target hardware with ''python -m ml_embedded.compile --model model.onnx --target stm32'', flash it with
+  ''python -m ml_embedded.flash --device /dev/ttyUSB0 --firmware firmware.bin'', and observe behavior
+  with ''python -m ml_embedded.monitor --device /dev/ttyUSB0''. Check that the target architecture is
+  supported by the compiler and that the serial device path exists; a missing device or unsupported target
+  fails at compile or flash time. Confirm firmware was written successfully before running the monitor,
+  and watch for insufficient flash/RAM errors. Report the compile target, flash status, and a summary
+  of monitored device output, flagging any watchdog resets or memory errors.'
+examples:
+- 'Compile: python -m ml_embedded.compile --model model.onnx --target stm32'
+- 'Flash: python -m ml_embedded.flash --device /dev/ttyUSB0 --firmware firmware.bin'
+- 'Monitor: python -m ml_embedded.monitor --device /dev/ttyUSB0'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-embedded-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an embedded deployment expert. Help users deploy ML models to embedded systems
+      and microcontrollers.
+  opencode:
+    plugin: opencode-ml-embedded-deploy
+  generic:
+    system_prompt: You are ml-embedded-deploy. Embedded deployment agent for ML embedded systems deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

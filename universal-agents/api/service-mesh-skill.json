@@ -1,0 +1,176 @@
+{
+  "name": "service-mesh",
+  "display_name": "Service Mesh",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted service mesh skill: Istio install and analyze, proxy-status checks, VirtualService traffic rules, and Linkerd bootstrap for mTLS and observability.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "istioctl",
+    "kubectl",
+    "linkerd"
+  ],
+  "capabilities": [
+    {
+      "name": "istio-linkerd-mesh",
+      "description": "Install and operate a service mesh with Istio or Linkerd",
+      "commands": [
+        "istioctl install --set profile=demo -y",
+        "istioctl analyze",
+        "istioctl proxy-status",
+        "kubectl get virtualservices -A",
+        "linkerd check --pre && linkerd install | kubectl apply -f -",
+        "linkerd check"
+      ],
+      "examples": [
+        "istioctl install --set profile=demo -y",
+        "istioctl analyze",
+        "kubectl get virtualservices -A -o yaml"
+      ],
+      "parameters": [
+        {
+          "name": "profile",
+          "type": "string",
+          "description": "Istio install profile: default, demo, minimal"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace to inspect for mesh resources"
+        },
+        {
+          "name": "mesh",
+          "type": "string",
+          "description": "istio or linkerd"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Istio docs",
+      "type": "documentation",
+      "source": "https://istio.io/latest/docs/",
+      "description": "Install, traffic management, and security"
+    },
+    {
+      "title": "Linkerd docs",
+      "type": "documentation",
+      "source": "https://linkerd.io/2.15/overview/",
+      "description": "Install, inject, and verify"
+    }
+  ],
+  "instructions": "# Service Mesh\n\nHand-crafted skill for installing and operating a service mesh.\n\n## What this skill does\n\n- Installs Istio or Linkerd into a cluster\n- Verifies proxies are connected and sidecars injected\n- Routes traffic with VirtualService rules\n\n## When to use\n\n- Enabling mTLS between services without app changes\n- Adding fine-grained traffic routing or canaries\n- Rolling out mesh observability (metrics, tracing)\n\n## Real commands\n\n```bash\n# Istio install (demo profile for evaluation)\nistioctl install --set profile=demo -y\n\n# Static analysis of your config\nistioctl analyze\n\n# Are proxies synced?\nistioctl proxy-status\n\n# Traffic rules\nkubectl get virtualservices -A\nkubectl get virtualservices -A -o yaml\n\n# Linkerd bootstrap\nlinkerd check --pre && linkerd install | kubectl apply -f -\nlinkerd check\nkubectl get deploy -n <ns> -o yaml | linkerd inject - | kubectl apply -f -\n```\n\n## VirtualService example\n\n```yaml\napiVersion: networking.istio.io/v1beta1\nkind: VirtualService\nmetadata:\n  name: api-routes\nspec:\n  hosts: [api]\n  http:\n    - match: [{ headers: { version: { exact: canary } } }]\n      route: [{ destination: { host: api, subset: v2 } }]\n    - route: [{ destination: { host: api, subset: v1 } }]\n```\n\n## Testing\n\n```bash\nistioctl proxy-status\nkubectl exec deploy/api -c istio-proxy -- curl -s localhost:15090/stats/prometheus | grep istio_requests_total | head\n```\n\n## Best practices\n\n- Run istioctl analyze before and after config changes\n- Inject sidecars namespace-wide with labels, not pod by pod\n- Validate mesh health with linkerd check or istioctl proxy-status\n",
+  "examples": [
+    {
+      "input": "Install Istio and verify it",
+      "output": "istioctl install --set profile=demo -y, then istioctl analyze and istioctl proxy-status to verify health."
+    },
+    {
+      "input": "Route 10% of traffic to a canary subset",
+      "output": "Create a DestinationRule with subsets v1/v2 and a VirtualService with weighted routes, then kubectl apply -f and istioctl analyze."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "service-mesh.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-service-mesh"
+    },
+    "generic": {
+      "system_prompt": "You work Service Mesh hands-on. You do it through istio-linkerd-mesh: Install and operate a service mesh with Istio or Linkerd. The commands are real, e.g. `istioctl install --set profile=demo -y`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "service-mesh",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "istio-linkerd-mesh",
+        "name": "profile",
+        "type": "string",
+        "description": "Istio install profile: default, demo, minimal"
+      },
+      {
+        "capability": "istio-linkerd-mesh",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace to inspect for mesh resources"
+      },
+      {
+        "capability": "istio-linkerd-mesh",
+        "name": "mesh",
+        "type": "string",
+        "description": "istio or linkerd"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "istioctl",
+    "kubectl",
+    "linkerd"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/service-mesh-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/service-mesh-skill.yaml",
+    "checksum": "1d2c4458f5adbbe9304d856135ae6ccf75e3bce01d15f0bbcf915d295d07ee44"
+  }
+}

@@ -1,0 +1,108 @@
+name: ml-monitoring-deploy
+display_name: Ml Monitoring Deploy
+category: ml
+subcategory: monitoring
+description: Monitoring deployment agent for ML monitoring service deployment.
+version: 1.0.0
+tags:
+- ml
+- monitoring
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Monitoring Deploy
+  description: Monitoring deployment agent for ML monitoring service deployment.
+  commands:
+  - 'Status: python -m monitoring.status --server http://localhost:8080'
+  - 'Health: curl http://localhost:8080/health'
+  - 'API: curl http://localhost:8080/monitor -X POST -H ''Content-Type: application/json'' -d ''{"model":
+    "m'
+  - 'Server: python -m monitoring.server --port 8080'
+  examples:
+  - 'Server: python -m monitoring.server --port 8080'
+  - 'API: curl http://localhost:8080/monitor -X POST -H ''Content-Type: application/json'' -d ''{"model":
+    "my_model", "metrics": ["accuracy", "latency"]}'''
+  - 'Health: curl http://localhost:8080/health'
+  - 'Status: python -m monitoring.status --server http://localhost:8080'
+  parameters: []
+knowledge:
+- title: ml-monitoring-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/monitoring
+  description: Reference documentation for ml-monitoring-deploy
+instructions: 'You are a monitoring deployment expert. Help users with:
+
+  - Monitoring service deployment
+
+  - API server
+
+  - Scaling
+
+  - Monitoring
+
+  - Backup/restore
+
+  - Security
+
+  - Cost optimization
+
+
+  Always use real monitoring deployment tools. Never suggest fictional tools.'
+examples:
+- 'Server: python -m monitoring.server --port 8080'
+- 'API: curl http://localhost:8080/monitor -X POST -H ''Content-Type: application/json'' -d ''{"model":
+  "my_model", "metrics": ["accuracy", "latency"]}'''
+- 'Health: curl http://localhost:8080/health'
+- 'Status: python -m monitoring.status --server http://localhost:8080'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-monitoring-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a monitoring deployment expert. Help users with:
+
+      - Monitoring service deployment
+
+      - API server
+
+      - Scaling
+
+      - Monitoring
+
+      - Backup/restore
+
+      - Security
+
+      - Cost optimization
+
+
+      Always use real monitoring deployment tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-monitoring-deploy
+  generic:
+    system_prompt: You are ml-monitoring-deploy. Monitoring deployment agent for ML monitoring service
+      deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

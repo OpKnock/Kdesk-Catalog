@@ -1,0 +1,236 @@
+{
+  "name": "quantum-computing",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "emerging",
+  "description": "Builds and runs quantum circuits with Qiskit: circuit design, simulation, and IBM Quantum runtime execution.",
+  "keywords": [
+    "quantum-computing",
+    "circuits",
+    "algorithms"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "quantum-computing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-quantum-computing"
+    },
+    "generic": {
+      "system_prompt": "You are the quantum-computing specialist. You do it through qiskit: Design and simulate quantum circuits. The commands are real, e.g. `pip install qiskit qiskit-ibm-runtime qiskit-aer`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "qiskit",
+      "description": "Design and simulate quantum circuits.",
+      "commands": [
+        "pip install qiskit qiskit-ibm-runtime qiskit-aer",
+        "python -c \"from qiskit import QuantumCircuit; qc = QuantumCircuit(2); qc.h(0); qc.cx(0,1); qc.measure_all(); print(qc.draw())\"",
+        "python -c \"from qiskit import QuantumCircuit, transpile; from qiskit_aer import AerSimulator; qc=QuantumCircuit(1); qc.h(0); qc.measure_all(); print(AerSimulator().run(transpile(qc, backend=AerSimulator()), shots=1024).result().get_counts())\"",
+        "python -m pip install -U qiskit",
+        "python -c \"import qiskit; print(qiskit.__version__)\""
+      ],
+      "examples": [
+        "python -c \"from qiskit import QuantumCircuit; qc=QuantumCircuit(3); qc.ccx(0,1,2); print(qc.draw())\"",
+        "python -c \"from qiskit.quantum_info import Statevector; from qiskit import QuantumCircuit; qc=QuantumCircuit(1); qc.h(0); print(Statevector(qc).probabilities())\"",
+        "python -c \"from qiskit_aer import AerSimulator; print(AerSimulator().available_devices())\""
+      ],
+      "parameters": [
+        {
+          "name": "circuit",
+          "type": "string",
+          "description": "Quantum circuit definition"
+        },
+        {
+          "name": "shots",
+          "type": "number",
+          "description": "Simulation shots"
+        },
+        {
+          "name": "backend",
+          "type": "string",
+          "description": "Simulator or device backend"
+        }
+      ]
+    },
+    {
+      "name": "ibm-runtime",
+      "description": "Run circuits on IBM Quantum devices.",
+      "commands": [
+        "python -c \"from qiskit_ibm_runtime import QiskitRuntimeService; svc = QiskitRuntimeService(); print(svc.least_busy(operational=True, simulated=False))\"",
+        "python -c \"from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler; from qiskit import QuantumCircuit; svc=QiskitRuntimeService(); backend=svc.least_busy(); print(Sampler(backend).run([QuantumCircuit(1,1)], shots=1000).result().get_counts())\"",
+        "python -c \"from qiskit_ibm_runtime import QiskitRuntimeService; print([b.name for b in QiskitRuntimeService().backends()])\"",
+        "python -c \"from qiskit_ibm_runtime import QiskitRuntimeService; svc=QiskitRuntimeService(); print(svc.jobs(limit=5))\"",
+        "python -c \"from qiskit_ibm_runtime import QiskitRuntimeService; svc=QiskitRuntimeService(); [j.cancel() for j in svc.jobs(limit=3) if j.status().name in ('QUEUED','INITIALIZING')]\""
+      ],
+      "examples": [
+        "python -c \"from qiskit_ibm_runtime import QiskitRuntimeService; svc=QiskitRuntimeService(); print([b.name for b in svc.backends(simulator=False, operational=True)])\"",
+        "python -c \"from qiskit_ibm_runtime import QiskitRuntimeService; svc=QiskitRuntimeService(); print([(j.job_id(), j.status()) for j in svc.jobs(limit=3)])\"",
+        "python -c \"from qiskit_ibm_runtime import QiskitRuntimeService; QiskitRuntimeService().save_account('YOUR_TOKEN')\""
+      ],
+      "parameters": [
+        {
+          "name": "token",
+          "type": "string",
+          "description": "IBM Quantum API token"
+        },
+        {
+          "name": "shots",
+          "type": "number",
+          "description": "Sampling shots on hardware"
+        },
+        {
+          "name": "backend",
+          "type": "string",
+          "description": "Backend name filter"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "python",
+    "qiskit",
+    "cirq",
+    "pennylane"
+  ],
+  "tools": [
+    "python",
+    "qiskit",
+    "cirq",
+    "pennylane",
+    "ibm-quantum"
+  ],
+  "examples": [
+    {
+      "input": "Create and simulate a Bell state.",
+      "output": "Builds the 2-qubit circuit, runs 1024-shot simulation, and confirms correlated measurement counts."
+    },
+    {
+      "input": "Estimate hardware queue time for a job.",
+      "output": "Lists operational backends, selects least_busy, and checks recent job statuses."
+    }
+  ],
+  "instructions": "# Quantum Computing\n\nBuild circuits, simulate them, and run on real hardware.\n\n## When to Use\n\n- Prototyping quantum algorithms (Grover, QAOA, VQE)\n- Verifying circuits on noisy simulators first\n- Comparing simulator vs hardware results\n\n## Bell state\n\n```python\nfrom qiskit import QuantumCircuit\nqc = QuantumCircuit(2)\nqc.h(0)\nqc.cx(0, 1)\nqc.measure_all()\nprint(qc.draw())\n```\n\n## Simulate\n\n```bash\npython -c \"from qiskit import QuantumCircuit, transpile; from qiskit_aer import AerSimulator; qc=QuantumCircuit(1); qc.h(0); qc.measure_all(); print(AerSimulator().run(transpile(qc, backend=AerSimulator()), shots=1024).result().get_counts())\"\n```\n\nExpect ~50/50 distribution - the hallmark of superposition.\n\n## Hardware runs\n\n```bash\npython -c \"from qiskit_ibm_runtime import QiskitRuntimeService; svc=QiskitRuntimeService(); print(svc.least_busy(operational=True, simulated=False))\"\n```\n\n## Pitfalls\n\n- Noise and decoherence: run many shots and error mitigation.\n- Transpile for the target hardware topology.\n- Queue times: batch experiments in one job.\n\n## Best practices\n\n- Simulate first at 100k+ shots before hardware.\n- Version-control circuits as Python files, not notebooks.\n- Record backend, shots, and error rates with results.\n- Use Qiskit's error-mitigation modules for near-term results.\n\n## Testing\n\nVerify circuit unitaries with Statevector before running anything.",
+  "display_name": "quantum-computing",
+  "knowledge": [
+    {
+      "title": "IBM Quantum Docs",
+      "type": "documentation",
+      "source": "https://docs.quantum.ibm.com/",
+      "description": "Qiskit SDK, runtime, and circuit tutorials"
+    },
+    {
+      "title": "Qiskit API",
+      "type": "documentation",
+      "source": "https://docs.quantum.ibm.com/api/qiskit",
+      "description": "QuantumCircuit, transpile, and simulation API"
+    },
+    {
+      "title": "Qiskit Aer",
+      "type": "documentation",
+      "source": "https://qiskit.github.io/qiskit-aer/",
+      "description": "High-performance circuit simulation"
+    }
+  ],
+  "id": "quantum-computing",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "qiskit",
+        "name": "circuit",
+        "type": "string",
+        "description": "Quantum circuit definition"
+      },
+      {
+        "capability": "qiskit",
+        "name": "shots",
+        "type": "number",
+        "description": "Simulation shots"
+      },
+      {
+        "capability": "qiskit",
+        "name": "backend",
+        "type": "string",
+        "description": "Simulator or device backend"
+      },
+      {
+        "capability": "ibm-runtime",
+        "name": "token",
+        "type": "string",
+        "description": "IBM Quantum API token"
+      },
+      {
+        "capability": "ibm-runtime",
+        "name": "shots",
+        "type": "number",
+        "description": "Sampling shots on hardware"
+      },
+      {
+        "capability": "ibm-runtime",
+        "name": "backend",
+        "type": "string",
+        "description": "Backend name filter"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python",
+    "qiskit",
+    "cirq",
+    "pennylane"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "quantum-computing/skill/quantum-computing.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/quantum-computing/skill/quantum-computing.yaml",
+    "checksum": "c05f7d1b4d62c9b414536e96fa12cf7aa5a314a5a6b8352a8c945ad597b00369"
+  }
+}

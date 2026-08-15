@@ -1,0 +1,283 @@
+{
+  "name": "kafka-cli",
+  "display_name": "kafka-cli",
+  "category": "database",
+  "subcategory": "general",
+  "description": "Kafka CLI commands. Real kafka CLI.",
+  "version": "1.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "brew",
+    "kafka-console-consumer",
+    "kafka-console-producer",
+    "kafka-consumer-groups",
+    "kafka-topics"
+  ],
+  "capabilities": [
+    {
+      "name": "kafka-cli",
+      "description": "Kafka CLI commands. Real kafka CLI.",
+      "commands": [
+        "brew install kafka",
+        "kafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092",
+        "kafka-topics --list --bootstrap-server localhost:9092",
+        "kafka-topics --describe --topic mytopic --bootstrap-server localhost:9092",
+        "kafka-topics --delete --topic mytopic --bootstrap-server localhost:9092",
+        "kafka-console-producer --topic mytopic --bootstrap-server localhost:9092",
+        "kafka-console-consumer --topic mytopic --from-beginning --bootstrap-server localhost:9092",
+        "kafka-consumer-groups --list --bootstrap-server localhost:9092",
+        "kafka-consumer-groups --describe --group mygroup --bootstrap-server localhost:9092",
+        "kafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092",
+        "kafka-topics --list --bootstrap-server localhost:9092",
+        "kafka-topics --describe --topic mytopic --bootstrap-server localhost:9092",
+        "kafka-topics --delete --topic mytopic --bootstrap-server localhost:9092",
+        "kafka-topics --alter --topic mytopic --partitions 6 --bootstrap-server localhost:9092",
+        "kafka-topics --alter --topic mytopic --config retention.ms=86400000 --bootstrap-server localhost:9092",
+        "kafka-console-producer --topic mytopic --bootstrap-server localhost:9092",
+        "kafka-console-producer --topic mytopic --property parse.key=true --property key.separator=: --bootstrap-server localhost:9092",
+        "kafka-console-producer --topic mytopic --bootstrap-server localhost:9092 < messages.txt",
+        "kafka-console-consumer --topic mytopic --from-beginning --bootstrap-server localhost:9092",
+        "kafka-console-consumer --topic mytopic --property print.key=true --property key.separator=: --from-beginning --bootstrap-server localhost:9092",
+        "kafka-console-consumer --topic mytopic --group mygroup --from-beginning --bootstrap-server localhost:9092",
+        "kafka-console-consumer --topic mytopic --max-messages 10 --bootstrap-server localhost:9092",
+        "kafka-consumer-groups --list --bootstrap-server localhost:9092",
+        "kafka-consumer-groups --describe --group mygroup --bootstrap-server localhost:9092",
+        "kafka-consumer-groups --group mygroup --topic mytopic --reset-offsets --to-earliest --execute --bootstrap-server localhost:9092",
+        "kafka-consumer-groups --delete --group mygroup --bootstrap-server localhost:9092",
+        "kafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092",
+        "kafka-console-producer --topic mytopic --bootstrap-server localhost:9092",
+        "kafka-console-consumer --topic mytopic --from-beginning --bootstrap-server localhost:9092"
+      ],
+      "examples": [
+        "brew install kafka",
+        "kafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092",
+        "kafka-topics --list --bootstrap-server localhost:9092"
+      ],
+      "parameters": [
+        {
+          "name": "alter",
+          "type": "boolean",
+          "description": "CLI flag --alter observed in capability commands"
+        },
+        {
+          "name": "bootstrap-server",
+          "type": "string",
+          "description": "CLI flag --bootstrap-server observed in capability commands"
+        },
+        {
+          "name": "create",
+          "type": "boolean",
+          "description": "CLI flag --create observed in capability commands"
+        },
+        {
+          "name": "delete",
+          "type": "boolean",
+          "description": "CLI flag --delete observed in capability commands"
+        },
+        {
+          "name": "describe",
+          "type": "boolean",
+          "description": "CLI flag --describe observed in capability commands"
+        },
+        {
+          "name": "from-beginning",
+          "type": "boolean",
+          "description": "CLI flag --from-beginning observed in capability commands"
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "description": "CLI flag --group observed in capability commands"
+        },
+        {
+          "name": "list",
+          "type": "boolean",
+          "description": "CLI flag --list observed in capability commands"
+        },
+        {
+          "name": "partitions",
+          "type": "number",
+          "description": "CLI flag --partitions observed in capability commands"
+        },
+        {
+          "name": "property",
+          "type": "string",
+          "description": "CLI flag --property observed in capability commands"
+        },
+        {
+          "name": "replication-factor",
+          "type": "number",
+          "description": "CLI flag --replication-factor observed in capability commands"
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "CLI flag --topic observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "kafka-cli Skill Documentation",
+      "type": "documentation",
+      "source": "skills/database/kafka-cli.md",
+      "description": "Complete guide for kafka-cli"
+    }
+  ],
+  "instructions": "# Kafka CLI\n\nKafka CLI commands using real CLI.\n\n## When to Use\n\n- Kafka operations\n- Message streaming\n- Topic management\n\n## Commands\n\n```bash\n# Install\nbrew install kafka  # macOS\n\n# Create topic\nkafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092\n\n# List topics\nkafka-topics --list --bootstrap-server localhost:9092\n\n# Describe topic\nkafka-topics --describe --topic mytopic --bootstrap-server localhost:9092\n\n# Delete topic\nkafka-topics --delete --topic mytopic --bootstrap-server localhost:9092\n\n# Produce\nkafka-console-producer --topic mytopic --bootstrap-server localhost:9092\n\n# Consume\nkafka-console-consumer --topic mytopic --from-beginning --bootstrap-server localhost:9092\n\n# Consumer groups\nkafka-consumer-groups --list --bootstrap-server localhost:9092\n\n# Describe group\nkafka-consumer-groups --describe --group mygroup --bootstrap-server localhost:9092\n```\n\n## Topic Operations\n\n```bash\n# Create topic\nkafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092\n\n# List topics\nkafka-topics --list --bootstrap-server localhost:9092\n\n# Describe topic\nkafka-topics --describe --topic mytopic --bootstrap-server localhost:9092\n\n# Delete topic\nkafka-topics --delete --topic mytopic --bootstrap-server localhost:9092\n\n# Alter topic\nkafka-topics --alter --topic mytopic --partitions 6 --bootstrap-server localhost:9092\n\n# Config\nkafka-topics --alter --topic mytopic --config retention.ms=86400000 --bootstrap-server localhost:9092\n```\n\n## Producer\n\n```bash\n# Produce\nkafka-console-producer --topic mytopic --bootstrap-server localhost:9092\n\n# Produce with key\nkafka-console-producer --topic mytopic --property parse.key=true --property key.separator=: --bootstrap-server localhost:9092\n\n# Produce from file\nkafka-console-producer --topic mytopic --bootstrap-server localhost:9092 < messages.txt\n```\n\n## Consumer\n\n```bash\n# Consume\nkafka-console-consumer --topic mytopic --from-beginning --bootstrap-server localhost:9092\n\n# Consume with key\nkafka-console-consumer --topic mytopic --property print.key=true --property key.separator=: --from-beginning --bootstrap-server localhost:9092\n\n# Consume with group\nkafka-console-consumer --topic mytopic --group mygroup --from-beginning --bootstrap-server localhost:9092\n\n# Consume with max messages\nkafka-console-consumer --topic mytopic --max-messages 10 --bootstrap-server localhost:9092\n```\n\n## Consumer Groups\n\n```bash\n# List groups\nkafka-consumer-groups --list --bootstrap-server localhost:9092\n\n# Describe group\nkafka-consumer-groups --describe --group mygroup --bootstrap-server localhost:9092\n\n# Reset offset\nkafka-consumer-groups --group mygroup --topic mytopic --reset-offsets --to-earliest --execute --bootstrap-server localhost:9092\n\n# Delete group\nkafka-consumer-groups --delete --group mygroup --bootstrap-server localhost:9092\n```\n\n## Examples\n\n```bash\n# Create topic\nkafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092\n\n# Produce\nkafka-console-producer --topic mytopic --bootstrap-server localhost:9092\n\n# Consume\nkafka-console-consumer --topic mytopic --from-beginning --bootstrap-server localhost:9092\n```\n\n## CI/CD\n\n```yaml\n# GitHub Actions\n- name: Kafka CLI\n  run: |\n    kafka-topics --list --bootstrap-server localhost:9092\n\n# GitLab CI\nkafka:\n  stage: test\n  script:\n    - kafka-topics --list --bootstrap-server localhost:9092\n```",
+  "examples": [],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-cli.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-cli"
+    },
+    "generic": {
+      "system_prompt": "You work kafka-cli hands-on. You do it through kafka-cli: Kafka CLI commands. Real kafka CLI. The commands are real, e.g. `brew install kafka`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-cli",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "kafka-cli",
+        "name": "alter",
+        "type": "boolean",
+        "description": "CLI flag --alter observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "bootstrap-server",
+        "type": "string",
+        "description": "CLI flag --bootstrap-server observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "create",
+        "type": "boolean",
+        "description": "CLI flag --create observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "delete",
+        "type": "boolean",
+        "description": "CLI flag --delete observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "describe",
+        "type": "boolean",
+        "description": "CLI flag --describe observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "from-beginning",
+        "type": "boolean",
+        "description": "CLI flag --from-beginning observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "group",
+        "type": "string",
+        "description": "CLI flag --group observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "list",
+        "type": "boolean",
+        "description": "CLI flag --list observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "partitions",
+        "type": "number",
+        "description": "CLI flag --partitions observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "property",
+        "type": "string",
+        "description": "CLI flag --property observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "replication-factor",
+        "type": "number",
+        "description": "CLI flag --replication-factor observed in capability commands"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "topic",
+        "type": "string",
+        "description": "CLI flag --topic observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "brew",
+    "kafka-console-consumer",
+    "kafka-console-producer",
+    "kafka-consumer-groups",
+    "kafka-topics"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/kafka-cli-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/kafka-cli-skill.yaml",
+    "checksum": "6bb4ba3384187aa9283e614b4a00aaa7a378d4b0845ba9093732692772890303"
+  }
+}

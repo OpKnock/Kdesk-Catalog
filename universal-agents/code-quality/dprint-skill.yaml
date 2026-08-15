@@ -1,0 +1,108 @@
+name: dprint
+display_name: dprint
+category: code-quality
+subcategory: general
+description: Formats multiple languages with dprint, the fast pluggable formatter, including plugin config
+  and CI integration.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- dprint
+- npm
+capabilities:
+- commands:
+  - npm install -g dprint
+  - dprint init
+  - dprint fmt
+  - dprint check
+  - dprint fmt --include "**/*.ts"
+  description: Format code with dprint plugins.
+  name: dprint-format
+  examples:
+  - dprint check ./src
+  - dprint fmt --exclude "**/dist/**"
+  - dprint fmt -- --stdin-filepath main.ts
+  parameters:
+  - description: Paths or globs
+    name: paths
+    type: string
+  - description: Verify without writing
+    name: check
+    type: boolean
+- commands:
+  - dprint config add typescript
+  - dprint config add markdown
+  - dprint config update
+  - dprint output-resolved-config
+  description: Manage plugins and configuration.
+  name: dprint-config
+  examples:
+  - dprint config add "prettier:toml"
+  - dprint output-resolved-config > dprint-resolved.json
+  parameters:
+  - description: Plugin name
+    name: plugin
+    type: string
+  - name: version
+    type: string
+    description: Plugin version to pin
+knowledge:
+- title: dprint Docs
+  description: Install, config, and plugins
+  source: https://dprint.dev
+  type: documentation
+- title: dprint on GitHub
+  description: Source and releases
+  source: https://github.com/dprint/dprint
+  type: documentation
+instructions: "# dprint\n\nFast, pluggable code formatter.\n\n## When to Use\n\n- Formatting many languages\
+  \ with one tool\n- Replacing slower formatters on large repos\n- Enforcing formatting in CI cheaply\n\
+  - Standardizing team-wide formatting rules\n\n## Commands\n\n```bash\n# Install and init\nnpm install\
+  \ -g dprint\ndprint init\n\n# Format\ndprint fmt\ndprint fmt --include \"**/*.ts\"\ndprint fmt --exclude\
+  \ \"**/dist/**\"\n\n# Check (CI)\ndprint check\n\n# Config\ndprint config add typescript\ndprint config\
+  \ add markdown\ndprint config add \"prettier:toml\"\ndprint config update\ndprint output-resolved-config\n\
+  ```\n\n## Config Example\n\n```json\n{\n  \"typescript\": {\n    \"lineWidth\": 100,\n    \"semiColons\"\
+  : \"always\"\n  },\n  \"markdown\": {},\n  \"includes\": [\"**/*.{ts,tsx,json,md}\"],\n  \"excludes\"\
+  : [\"**/dist/**\", \"**/node_modules/**\"]\n}\n```\n\n## Best Practices\n\n- Commit dprint.json at the\
+  \ repo root\n- Run dprint check in CI, dprint fmt in pre-commit\n- Use only the plugins your repo needs\n\
+  - Keep the dprint binary version pinned\n- Exclude generated directories from formatting\n- Resolve\
+  \ config in CI with output-resolved-config to debug drift"
+examples:
+- input: Format my TypeScript repo with dprint
+  output: Agent adds the typescript plugin, runs dprint fmt, and adds dprint check to CI.
+- input: Why does CI formatting differ from local?
+  output: Agent compares dprint output-resolved-config between environments and pins the version.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: dprint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-dprint
+  generic:
+    system_prompt: 'You take the dprint seat. You do it through dprint-format: Format code with dprint
+      plugins. The commands are real, e.g. `npm install -g dprint`. You verify each step you report and
+      stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

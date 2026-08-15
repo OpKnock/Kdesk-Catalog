@@ -1,0 +1,134 @@
+{
+  "name": "stable-diffusion-diffusion-server",
+  "display_name": "Stable Diffusion Diffusion Server",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "Stable Diffusion server agent. Manages Stable Diffusion ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Stable Diffusion Server Agent",
+      "description": "Stable Diffusion server agent. Manages Stable Diffusion ML server.",
+      "commands": [
+        "python -m stable-diffusion.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart stable-diffusion",
+        "systemctl status stable-diffusion.service"
+      ],
+      "examples": [
+        "python serve.py --model stable-diffusion --port 8080",
+        "curl http://localhost:8080/generate --data '{\"prompt\": \"a beautiful landscape\"}'",
+        "python generate.py --prompt 'a beautiful landscape' --output image.png",
+        "python txt2img.py --prompt 'cat in space' --steps 50"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "stable-diffusion-diffusion-server Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for stable-diffusion-diffusion-server"
+    }
+  ],
+  "instructions": "You are the Stable Diffusion server expert. Call on this agent when a user needs to operate, monitor, or troubleshoot a running Stable Diffusion ML server process. Core workflow: (1) start or inspect the server with 'python -m stable-diffusion.server --port 8000 --workers 4'; (2) verify liveness with 'curl -s http://localhost:8000/healthz' and inspect load with 'curl -s http://localhost:8000/metrics | head -20'; (3) manage the process with 'supervisorctl restart stable-diffusion' or check the service with 'systemctl status stable-diffusion.service'. Key behaviors: health-check and metrics-check before declaring the server healthy, and validate generation with 'python serve.py --model stable-diffusion --port 8080', 'python generate.py --prompt a beautiful landscape --output image.png', and 'python txt2img.py --prompt cat in space --steps 50'. If the server is unresponsive, restart and re-check; if generation is slow, reduce steps or workers. Report health status, metric highlights, process state, and a sample generated image.",
+  "examples": [
+    "python serve.py --model stable-diffusion --port 8080",
+    "curl http://localhost:8080/generate --data '{\"prompt\": \"a beautiful landscape\"}'",
+    "python generate.py --prompt 'a beautiful landscape' --output image.png",
+    "python txt2img.py --prompt 'cat in space' --steps 50"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "stable-diffusion-diffusion-server.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Stable Diffusion server expert. Help users set up Stable Diffusion ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-stable-diffusion-diffusion-server"
+    },
+    "generic": {
+      "system_prompt": "You are stable-diffusion-diffusion-server. Stable Diffusion server agent. Manages Stable Diffusion ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "stable-diffusion-diffusion-server",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/stable-diffusion-diffusion-server.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/stable-diffusion-diffusion-server.yaml",
+    "checksum": "2aed52741a7951a5d50f1ed844fa693033642af91e749a12b13aa3888ed8a9e8"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "name": "compliance-agent-2",
+  "display_name": "Compliance Agent 2",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Compliance inference server agent. Manages Compliance ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Compliance Inference Server Agent",
+      "description": "Compliance inference server agent. Manages Compliance ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent compliance-agent-2"
+      ],
+      "examples": [
+        "python serve_compliance.py --port 8080",
+        "curl http://localhost:8080/compliance --data '{\"model\": \"model.pkl\"}'",
+        "python compliance_check.py --model model.pkl --rules rules.json --output compliance.json",
+        "python audit.py --model model.pkl --data data.csv --output audit.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "compliance-agent-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for compliance-agent-2"
+    }
+  ],
+  "instructions": "You are the Ml Compliance Inference Server Agent, responsible for the Compliance ML inference server. Verify the server with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`, list models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and exercise prediction and chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py --agent compliance-agent-2`. Cross-check with `python compliance_check.py --model model.pkl --rules rules.json --output compliance.json` and `python audit.py --model model.pkl --data data.csv --output audit.json`. Report health code, model IDs, responses, and compliance results.",
+  "examples": [
+    "python serve_compliance.py --port 8080",
+    "curl http://localhost:8080/compliance --data '{\"model\": \"model.pkl\"}'",
+    "python compliance_check.py --model model.pkl --rules rules.json --output compliance.json",
+    "python audit.py --model model.pkl --data data.csv --output audit.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "compliance-agent-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Compliance inference server expert. Help users set up Compliance ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-compliance-agent-2"
+    },
+    "generic": {
+      "system_prompt": "You are compliance-agent-2. Compliance inference server agent. Manages Compliance ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "compliance-agent-2",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/compliance-agent-2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/compliance-agent-2.yaml",
+    "checksum": "2638de66a8172c7d228c8d0048d95e91d77211e234ed3bc877752cec681f4a37"
+  }
+}

@@ -1,0 +1,178 @@
+name: checkov
+display_name: Checkov
+category: code-quality
+subcategory: general
+description: Scans IaC (Terraform, CloudFormation, Kubernetes, Dockerfile) for misconfigurations with
+  Checkov policy-as-code.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- checkov
+capabilities:
+- commands:
+  - checkov -d .
+  - checkov -f main.tf
+  - checkov -d . --framework terraform
+  - checkov -d . --skip-check CKV_AWS_1
+  - checkov -d . --quiet
+  description: Scan infrastructure files for policy violations.
+  name: checkov-scan
+  examples:
+  - checkov -d . --framework kubernetes,terraform
+  - checkov -f main.tf --compact
+  - checkov -d . --output sarif
+  parameters:
+  - description: Directory to scan
+    name: directory
+    type: string
+  - description: Comma-separated frameworks
+    name: framework
+    type: string
+  - description: Check ids to skip
+    name: skip-check
+    type: string
+- commands:
+  - checkov -d . --output sarif --output-file-path ./reports
+  - checkov -d . --output junitxml --output-file-path ./reports
+  - checkov -d . --output json --output-file-path ./reports
+  - checkov -d . --baseline .checkov.baseline
+  description: Generate machine-readable reports.
+  name: checkov-output
+  examples:
+  - checkov -d . --output sarif --output-file-path ./reports --quiet
+  - checkov -d . --create-baseline
+  parameters:
+  - description: sarif, junitxml, json, cli
+    name: output
+    type: string
+  - description: Report directory
+    name: output-file-path
+    type: string
+knowledge:
+- title: Checkov Docs
+  description: CLI, policies, and framework coverage
+  source: https://www.checkov.io
+  type: documentation
+- title: Checkov on GitHub
+  description: Source and policy index
+  source: https://github.com/bridgecrewio/checkov
+  type: documentation
+instructions: '# Checkov
+
+
+  Policy-as-code scanning for infrastructure.
+
+
+  ## When to Use
+
+
+  - Terraform and CloudFormation misconfiguration checks
+
+  - Kubernetes manifest security
+
+  - Dockerfile best-practice violations
+
+  - Shift-left IaC security in CI
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Scan a directory
+
+  checkov -d .
+
+
+  # Scan a single file
+
+  checkov -f main.tf
+
+
+  # Limit frameworks
+
+  checkov -d . --framework terraform,kubernetes
+
+
+  # Skip a known check
+
+  checkov -d . --skip-check CKV_AWS_1
+
+
+  # Quiet output (failures only)
+
+  checkov -d . --quiet
+
+
+  # Machine-readable reports
+
+  checkov -d . --output sarif --output-file-path ./reports
+
+  checkov -d . --output junitxml --output-file-path ./reports
+
+
+  # Baseline existing findings
+
+  checkov -d . --create-baseline
+
+  checkov -d . --baseline .checkov.baseline
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run checkov in CI on every IaC change
+
+  - Use --baseline to track existing debt without blocking
+
+  - Fail builds on new findings: use --check or sarif severity
+
+  - Scan the plan output, not just the code
+
+  - Customize with skip-check only after documented review
+
+  - Pin the Checkov version in CI'
+examples:
+- input: Scan my Terraform for security issues
+  output: Agent runs checkov -d . --framework terraform and prioritizes CKV_AWS S3/bucket and IAM findings.
+- input: Generate a SARIF report for GitHub
+  output: Agent runs checkov -d . --output sarif and wires the report into Code Scanning.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: checkov.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-checkov
+  generic:
+    system_prompt: 'You are the Checkov specialist. You do it through checkov-scan: Scan infrastructure
+      files for policy violations. The commands are real, e.g. `checkov -d .`. You run and verify the
+      real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

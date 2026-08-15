@@ -1,0 +1,167 @@
+{
+  "name": "argocd-devops",
+  "display_name": "argocd-devops",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "GitOps with Argo CD: app registration, syncs, rollbacks, and sync policies for Kubernetes.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "argocd"
+  ],
+  "capabilities": [
+    {
+      "name": "argocd-apps",
+      "description": "Manage Argo CD applications and their sync lifecycle",
+      "commands": [
+        "argocd login argocd.example.com --sso",
+        "argocd app create guestbook --repo https://github.com/org/repo --path guestbook --dest-server https://kubernetes.default.svc --dest-namespace default",
+        "argocd app sync guestbook",
+        "argocd app get guestbook",
+        "argocd app rollback guestbook 2"
+      ],
+      "examples": [
+        "argocd app list",
+        "argocd app diff guestbook",
+        "argocd app set guestbook --sync-policy automated --auto-prune"
+      ],
+      "parameters": [
+        {
+          "name": "repo",
+          "type": "string",
+          "description": "Git repository URL for the app source"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Path within the repo containing manifests"
+        },
+        {
+          "name": "sync-policy",
+          "type": "string",
+          "description": "automated or manual sync policy"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Argo CD docs",
+      "type": "documentation",
+      "source": "https://argo-cd.readthedocs.io/",
+      "description": "Core concepts, CLI, and sync policies"
+    },
+    {
+      "title": "Argo CD declarative setup",
+      "type": "documentation",
+      "source": "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/",
+      "description": "Application CRs and projects"
+    }
+  ],
+  "instructions": "# Argo CD\n\nGitOps continuous delivery: apps defined in git, synced to Kubernetes automatically\nwith drift detection.\n\n## When to Use\n\n- Declarative, auditable deployments\n- Multi-cluster app promotion\n- Automated sync with rollback safety\n\n## Real Commands\n\n```bash\n# Login\nsudo argocd login argocd.example.com --sso\n\n# Create an app\nsudo argocd app create guestbook \\\n  --repo https://github.com/org/repo \\\n  --path guestbook \\\n  --dest-server https://kubernetes.default.svc \\\n  --dest-namespace default\n\n# Sync\nsudo argocd app sync guestbook --prune\n\n# Status / diff\nsudo argocd app get guestbook\nsudo argocd app diff guestbook\n\n# Rollback\nsudo argocd app rollback guestbook 2\n\n# Automate\nsudo argocd app set guestbook --sync-policy automated --auto-prune --self-heal\n\n# List and delete\nsudo argocd app list\nsudo argocd app delete guestbook --yes\n```\n\n## Declarative App (CR)\n\n```yaml\napiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: guestbook\nspec:\n  source:\n    repoURL: https://github.com/org/repo\n    path: guestbook\n  destination:\n    server: https://kubernetes.default.svc\n    namespace: default\n  syncPolicy:\n    automated:\n      prune: true\n      selfHeal: true\n```\n\n## Best Practices\n\n- Use automated sync + self-heal for mature services\n- Review `argocd app diff` before manual syncs\n- Pin the git revision in promotions; use tags\n- Set prune carefully: it deletes live resources\n- Prefer app-of-apps pattern for many services\n\n## Example Response\n\nFor a drift: diffs the app, explains the mismatch, syncs, and verifies\napplication health is Healthy/Synced.",
+  "examples": [
+    {
+      "input": "Deploy the app from git",
+      "output": "Creates the application, syncs it, and reports status; enables automated sync if desired"
+    },
+    {
+      "input": "Roll back the bad release",
+      "output": "Lists revisions, rolls back to the previous one, and confirms health"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "argocd-devops.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-argocd"
+    },
+    "generic": {
+      "system_prompt": "You take the argocd-devops seat. You do it through argocd-apps: Manage Argo CD applications and their sync lifecycle. The commands are real, e.g. `argocd login argocd.example.com --sso`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "argocd-devops",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "argocd-apps",
+        "name": "repo",
+        "type": "string",
+        "description": "Git repository URL for the app source"
+      },
+      {
+        "capability": "argocd-apps",
+        "name": "path",
+        "type": "string",
+        "description": "Path within the repo containing manifests"
+      },
+      {
+        "capability": "argocd-apps",
+        "name": "sync-policy",
+        "type": "string",
+        "description": "automated or manual sync policy"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "argocd"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/argocd-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/argocd-skill.yaml",
+    "checksum": "ca8bd0cac9b5acd748c925fc1c27c338f0873742f39ee1625f1b1eea68bf1c7b"
+  }
+}

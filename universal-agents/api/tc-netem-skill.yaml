@@ -1,0 +1,177 @@
+name: tc-netem
+display_name: Tc Netem
+category: api
+subcategory: general
+description: 'Hand-crafted tc netem skill: inject latency, loss, duplication, and corruption into network
+  paths for chaos testing of API clients and databases.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ping
+capabilities:
+- name: netem-injection
+  description: Simulate network faults with tc netem qdiscs
+  commands:
+  - tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal
+  - tc qdisc change dev eth0 root netem loss 10%
+  - tc qdisc add dev eth0 root netem duplicate 2% corrupt 1%
+  - tc qdisc show dev eth0
+  - tc qdisc del dev eth0 root
+  - ping -c 10 192.168.1.1
+  examples:
+  - tc qdisc change dev eth0 root netem loss 25%
+  - tc qdisc add dev eth0 root netem delay 200ms
+  - tc qdisc del dev eth0 root
+  parameters:
+  - name: delay_ms
+    type: integer
+    description: Base latency in milliseconds
+  - name: loss_percent
+    type: float
+    description: Packet loss percentage
+  - name: jitter_ms
+    type: integer
+    description: Delay variation around the base
+knowledge:
+- title: tc-netem man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man8/tc-netem.8.html
+  description: 'Netem parameters: delay, loss, duplicate, corrupt, reorder'
+- title: Linux tc man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man8/tc.8.html
+  description: Qdisc operations add/change/del/show
+instructions: '# tc netem
+
+
+  Hand-crafted skill for network fault injection with the netem qdisc.
+
+
+  ## What this skill does
+
+
+  - Adds latency with jitter to a network interface
+
+  - Drops, duplicates, and corrupts packets at a configurable rate
+
+  - Removes the fault instantly to restore normal traffic
+
+
+  ## When to use
+
+
+  - Testing timeouts in API clients under delay
+
+  - Verifying retry logic when packets drop
+
+  - Chaos drills: does the app survive a flaky network?
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # 100ms latency with 20ms jitter (normal distribution)
+
+  tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal
+
+
+  # Drop 10% of packets
+
+  tc qdisc change dev eth0 root netem loss 10%
+
+
+  # Duplicate and corrupt
+
+  tc qdisc add dev eth0 root netem duplicate 2% corrupt 1%
+
+
+  # Reorder with delay
+
+  tc qdisc add dev eth0 root netem delay 50ms reorder 25% gap 3
+
+
+  # Inspect the active qdisc
+
+  tc qdisc show dev eth0
+
+
+  # Measure the impact
+
+  ping -c 10 192.168.1.1
+
+
+  # Remove all netem rules
+
+  tc qdisc del dev eth0 root
+
+  ```
+
+
+  ## Test recipe
+
+
+  ```bash
+
+  tc qdisc add dev eth0 root netem delay 200ms
+
+  curl -s -o /dev/null -w ''total: %{time_total}s\n'' https://api.example.com/health
+
+  tc qdisc del dev eth0 root
+
+  ```
+
+
+  ## Best practices
+
+
+  - Always pair tests with ping or curl timing to measure the injection
+
+  - Remove the qdisc after the test: del dev eth0 root
+
+  - Prefer a dedicated test VM; netem affects all traffic on the host
+
+  '
+examples:
+- input: Simulate a slow network to test client timeouts
+  output: tc qdisc add dev eth0 root netem delay 300ms, run the client, then tc qdisc del dev eth0 root.
+- input: Simulate 25% packet loss
+  output: tc qdisc change dev eth0 root netem loss 25%, verify with ping -c 20 <host>.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: tc-netem.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-tc-netem
+  generic:
+    system_prompt: 'You are the Tc Netem specialist. You do it through netem-injection: Simulate network
+      faults with tc netem qdiscs. The commands are real, e.g. `tc qdisc add dev eth0 root netem delay
+      100ms 20ms distribution normal`. You verify each step you report and stay honest about what you
+      have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

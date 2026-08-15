@@ -1,0 +1,120 @@
+name: kustomize
+display_name: Kustomize
+category: api
+subcategory: general
+description: 'Manage Kubernetes manifests with Kustomize: overlays per environment, image/namespace overrides,
+  and build-to-apply workflows.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+- kustomize
+capabilities:
+- name: kustomize-build
+  description: Build and apply kustomized manifests.
+  commands:
+  - kustomize build .
+  - kubectl apply -k .
+  - kustomize build --load-restrictor LoadRestrictionsNone overlays/prod
+  - kustomize build . | kubectl apply -f -
+  examples:
+  - kustomize build .
+  - kubectl apply -k .
+  - kustomize build overlays/prod | kubectl apply -f -
+  parameters:
+  - name: dir
+    type: string
+    description: Kustomization directory.
+  - name: restrictor
+    type: string
+    description: LoadRestrictionsNone allows files outside the root.
+- name: kustomize-edit
+  description: 'Edit kustomization.yaml: images, namespaces, and common labels.'
+  commands:
+  - kustomize create --resources=../base
+  - kustomize edit set image myapp=myapp:v2.0
+  - kustomize edit set namespace production
+  - kustomize edit add label app:myapp --force
+  - kustomize edit set nameprefix prod-
+  examples:
+  - kustomize create --resources=../base
+  - kustomize edit set image myapp=myapp:v2.0
+  - kustomize edit set namespace production
+  parameters:
+  - name: image
+    type: string
+    description: image=image:tag pair.
+  - name: namespace
+    type: string
+    description: Namespace to set for all resources.
+  - name: nameprefix
+    type: string
+    description: Prefix added to resource names.
+knowledge:
+- title: Kustomize
+  type: documentation
+  source: https://kubectl.docs.kubernetes.io/
+  description: Official Kustomize documentation.
+- title: Kustomize CLI Reference
+  type: documentation
+  source: https://kubectl.docs.kubernetes.io/references/kustomize/
+  description: kustomize build/edit command reference.
+instructions: "# Kustomize\n\nManage Kubernetes manifests with overlays and patches, no templating needed.\n\
+  \n## What this skill does\n\n- Builds final manifests from base + overlays.\n- Overrides images, namespaces,\
+  \ labels, and names.\n- Applies via kubectl -k for GitOps-style flows.\n\n## When to use\n\n- Environment-specific\
+  \ tweaks (dev/staging/prod) of one base.\n- Promoting a manifest set across clusters.\n- Adding site-specific\
+  \ patches without forking manifests.\n\n## Real commands\n\n```bash\n# Build merged output\nkustomize\
+  \ build .\n\n# Build a specific overlay\nkustomize build overlays/prod\n\n# Apply directly\nkubectl\
+  \ apply -k .\n\n# Pipe build into apply (audit trail)\nkustomize build overlays/prod | kubectl apply\
+  \ -f -\n\n# Create a new overlay from base\nkustomize create --resources=../base --namespace=dev\n\n\
+  # Edit kustomization.yaml\nkustomize edit set image myapp=myapp:v2.0\nkustomize edit set namespace production\n\
+  kustomize edit add label app:myapp --force\nkustomize edit set nameprefix prod-\n```\n\n## Directory\
+  \ layout\n\n```text\nbase/\n  deployment.yaml\n  service.yaml\n  kustomization.yaml\noverlays/\n  dev/\n\
+  \    kustomization.yaml\n  prod/\n    kustomization.yaml\n    prod-patch.yaml\n```\n\n## kustomization.yaml\
+  \ example\n\n```yaml\napiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n\
+  \  - ../../base\nnamespace: production\nimages:\n  - name: myapp\n    newTag: v2.0\npatches:\n  - path:\
+  \ prod-patch.yaml\n```\n\n## Testing\n\n```bash\nkustomize build overlays/prod | kubectl apply --dry-run=client\
+  \ -f -\n```\n\n## Best practices\n\n- Keep the base pristine; put all environment changes in overlays.\n\
+  - Use configMapGenerator for config auto-naming (rollout on change).\n- Commit the built output only\
+  \ if auditors need it; otherwise build in CI.\n"
+examples:
+- input: Deploy to prod namespace with v2.0
+  output: cd overlays/prod && kustomize edit set image myapp=myapp:v2.0 && kubectl apply -k .
+- input: Preview the merged prod manifests
+  output: kustomize build overlays/prod
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kustomize.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kustomize
+  generic:
+    system_prompt: 'You own Kustomize end to end. You do it through kustomize-build: Build and apply kustomized
+      manifests. The commands are real, e.g. `kustomize build .`. You work hands-on and only report outcomes
+      you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

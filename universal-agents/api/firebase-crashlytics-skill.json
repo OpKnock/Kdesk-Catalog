@@ -1,0 +1,171 @@
+{
+  "name": "firebase-crashlytics",
+  "display_name": "Firebase Crashlytics",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Crash reporting with Firebase Crashlytics: check crash issues, manage release tracking, and verify symbol uploads for readable stack traces.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "firebase"
+  ],
+  "capabilities": [
+    {
+      "name": "crashlytics-ops",
+      "description": "Inspect crash issues, upload symbols, and manage release reporting.",
+      "commands": [
+        "curl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.issues[0] | {issueId, title, fatal}'",
+        "curl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues/$ISSUE_ID' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.sessions[0].appVersion'",
+        "firebase crashlytics:symbols:upload --app com.example.app ./build/app.so",
+        "firebase crashlytics:reports:list",
+        "curl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/reports' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.reports | length'"
+      ],
+      "examples": [
+        "firebase crashlytics:symbols:upload --app com.example.app ./build/app.so",
+        "curl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.issues[] | {issueId, title, fatal}'",
+        "firebase crashlytics:reports:list"
+      ],
+      "parameters": [
+        {
+          "name": "app-id",
+          "type": "string",
+          "description": "Android app id or iOS bundle id"
+        },
+        {
+          "name": "issue-id",
+          "type": "string",
+          "description": "Crashlytics issue identifier"
+        },
+        {
+          "name": "symbols-path",
+          "type": "string",
+          "description": "Path to native symbol files (dSYM/so)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Crashlytics REST API",
+      "type": "documentation",
+      "source": "https://firebase.google.com/docs/crashlytics/rest-api",
+      "description": "Issues, sessions, and reports endpoints"
+    },
+    {
+      "title": "Crashlytics symbol upload",
+      "type": "documentation",
+      "source": "https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports",
+      "description": "Uploading dSYMs and native symbols for readable stack traces"
+    }
+  ],
+  "instructions": "# Firebase Crashlytics\n\n## What this skill does\n\nCrashlytics aggregates app crashes into issues with stack traces, device data, and release context. The CLI uploads symbols; the REST API queries issues and reports for automation.\n\n## When to use\n\n- Triaging the top crash after a release\n- Making native stack traces readable (symbol upload)\n- Building crash dashboards from the API\n\n## Real commands\n\n```bash\n# Upload native symbols\nfirebase crashlytics:symbols:upload --app com.example.app ./build/app.so\n\n# List recent crash reports\nfirebase crashlytics:reports:list\n\n# Query fatal issues via the API\ncurl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.issues[] | {issueId, title, fatal}'\n\n# Issue detail with sessions\ncurl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues/$ISSUE_ID' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.sessions[0].appVersion'\n```\n\n## Symbol upload in CI\n\n```bash\n# iOS dSYMs before release\nfind . -name '*.dSYM' -exec firebase crashlytics:symbols:upload --app com.example.app {} \\;\n```\n\n## Testing\n\n```bash\n# Force a crash in a debug build and confirm the issue appears\nfirebase crashlytics:reports:list | grep -i 'test-crash'\n```\n\n## Best practices\n\n- Upload symbols in CI on every release; without them native traces are unusable.\n- Monitor fatality rate (fatal vs non-fatal) per release, not just crash count.\n- Tag releases with the same version the app reports.\n- Integrate with issue trackers for auto-triage.\n- Keep crash-free sessions percentage in the weekly report.\n",
+  "examples": [
+    {
+      "input": "Native stack traces are unreadable",
+      "output": "Upload the dSYMs/so files with firebase crashlytics:symbols:upload --app <id> <path> and re-check the issue trace."
+    },
+    {
+      "input": "What crashed the most this week?",
+      "output": "Query the issues API for fatal issues, sort by crash count, and cross-reference the appVersion with the latest release."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "firebase-crashlytics.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-firebase-crashlytics"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Firebase Crashlytics. You do it through crashlytics-ops: Inspect crash issues, upload symbols, and manage release reporting. The commands are real, e.g. `curl -s https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues...`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "firebase-crashlytics",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "crashlytics-ops",
+        "name": "app-id",
+        "type": "string",
+        "description": "Android app id or iOS bundle id"
+      },
+      {
+        "capability": "crashlytics-ops",
+        "name": "issue-id",
+        "type": "string",
+        "description": "Crashlytics issue identifier"
+      },
+      {
+        "capability": "crashlytics-ops",
+        "name": "symbols-path",
+        "type": "string",
+        "description": "Path to native symbol files (dSYM/so)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "firebase"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/firebase-crashlytics-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/firebase-crashlytics-skill.yaml",
+    "checksum": "3f82a5b473dd873e753e9c51c56ae92ef03808b461fe5bb8990f5ad7ff5c46ab"
+  }
+}

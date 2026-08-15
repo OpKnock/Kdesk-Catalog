@@ -1,0 +1,93 @@
+name: milvus-python-sdk
+display_name: Milvus Python Sdk
+category: ml
+subcategory: vector-db
+description: ML Milvus Python SDK agent for Milvus integration.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Milvus Python Sdk Agent
+  description: ML Milvus Python SDK agent for Milvus integration.
+  commands:
+  - 'Search: python -c ''from pymilvus import Collection; col = Collection("my_collection"); print(col.sea'
+  - 'Create: python -c ''from pymilvus import CollectionSchema, FieldSchema, DataType; fields = [FieldSche'
+  - 'Connect: python -c ''from pymilvus import connections; connections.connect(host="localhost", port="19'
+  examples:
+  - 'Connect: python -c ''from pymilvus import connections; connections.connect(host="localhost", port="19530");
+    print("Connected")'''
+  - 'Create: python -c ''from pymilvus import CollectionSchema, FieldSchema, DataType; fields = [FieldSchema("id",
+    DataType.INT64, is_primary=True), FieldSchema("embedding", DataType.FLOAT_VECTOR, dim=128)]; schema
+    = CollectionSchema(fields); print(schema)'''
+  - 'Search: python -c ''from pymilvus import Collection; col = Collection("my_collection"); print(col.search([[1.0,
+    2.0]], "embedding", {}, limit=5))'''
+  parameters: []
+knowledge:
+- title: milvus-python-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for milvus-python-sdk
+instructions: 'You are the Milvus Python SDK expert. Call on this agent for Milvus integration in Python.
+  Core workflow: (1) connect with ''python -c "from pymilvus import connections; connections.connect(host=\"localhost\",
+  port=\"19530\"); print(\"Connected\")"''; (2) define schemas with ''python -c "from pymilvus import
+  CollectionSchema, FieldSchema, DataType; fields = [FieldSchema(\"id\", DataType.INT64, is_primary=True),
+  FieldSchema(\"embedding\", DataType.FLOAT_VECTOR, dim=128)]; schema = CollectionSchema(fields); print(schema)"'';
+  (3) search with ''python -c "from pymilvus import Collection; col = Collection(\"my_collection\"); print(col.search([[1.0,
+  2.0]], \"embedding\", {}, limit=5))"''; (4) advise on collection creation, vector insertion, and index
+  management. Output: connection status, schema definitions, and search results.'
+examples:
+- 'Connect: python -c ''from pymilvus import connections; connections.connect(host="localhost", port="19530");
+  print("Connected")'''
+- 'Create: python -c ''from pymilvus import CollectionSchema, FieldSchema, DataType; fields = [FieldSchema("id",
+  DataType.INT64, is_primary=True), FieldSchema("embedding", DataType.FLOAT_VECTOR, dim=128)]; schema
+  = CollectionSchema(fields); print(schema)'''
+- 'Search: python -c ''from pymilvus import Collection; col = Collection("my_collection"); print(col.search([[1.0,
+  2.0]], "embedding", {}, limit=5))'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: milvus-python-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Milvus Python SDK expert. Help users with:
+
+      - Collection creation
+
+      - Vector insertion
+
+      - Similarity search
+
+      - Index management
+
+
+      Always use real Milvus Python SDK commands and best practices.'
+  opencode:
+    plugin: opencode-milvus-python-sdk
+  generic:
+    system_prompt: You are milvus-python-sdk. ML Milvus Python SDK agent for Milvus integration.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

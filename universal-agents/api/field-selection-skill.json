@@ -1,0 +1,165 @@
+{
+  "name": "field-selection",
+  "display_name": "Field Selection",
+  "category": "api",
+  "subcategory": "general",
+  "description": "API field selection: allow clients to request only the fields they need (sparse fieldsets), reduce payload size, and validate selections with jq and GraphQL-style patterns.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "grep"
+  ],
+  "capabilities": [
+    {
+      "name": "sparse-fieldsets",
+      "description": "Implement and test field selection parameters like ?fields= and verify payload savings.",
+      "commands": [
+        "curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'",
+        "curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'length'",
+        "curl -s 'http://localhost:8080/api/orders/1' | jq '. | length'",
+        "grep -rn 'req.query.fields' src/ | head -10",
+        "curl -s 'http://localhost:8080/api/orders?fields=id&page=1&limit=5' | jq '.data[0]'"
+      ],
+      "examples": [
+        "curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'",
+        "curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'length'",
+        "grep -rn 'req.query.fields' src/ | head -10"
+      ],
+      "parameters": [
+        {
+          "name": "fields",
+          "type": "array",
+          "description": "Comma-separated field names to include"
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "API endpoint to test selection on"
+        },
+        {
+          "name": "allow-list",
+          "type": "array",
+          "description": "Server-side allowlist of selectable fields"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "JSON:API sparse fieldsets",
+      "type": "documentation",
+      "source": "https://jsonapi.org/format/#fetching-sparse-fieldsets",
+      "description": "The ?fields= convention for client-side field selection"
+    }
+  ],
+  "instructions": "# Field Selection\n\n## What this skill does\n\nField selection lets clients fetch only the fields they use, shrinking payloads and server work. The JSON:API convention uses `?fields=type=field1,field2`; simpler APIs use `?fields=a,b,c`. This skill implements and validates that pattern.\n\n## When to use\n\n- Mobile clients that need small payloads\n- APIs whose default responses are bloated\n- Enforcing an allowlist so clients can't request arbitrary fields\n\n## Real commands\n\n```bash\n# Request only the fields you need\ncurl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'\n\n# Measure payload savings\ncurl -s 'http://localhost:8080/api/orders/1' | jq '. | length'          # full\ncurl -s 'http://localhost:8080/api/orders/1?fields=id,status' | jq '. | length'  # sparse\n\n# Find existing selection handling\n grep -rn 'req.query.fields' src/ | head -10\n```\n\n## Implementation example (Express)\n\n```javascript\nconst SELECTABLE = new Set(['id', 'status', 'total', 'createdAt'])\n\napp.get('/api/orders/:id', (req, res) => {\n  const wanted = (req.query.fields || '').split(',').filter(f => SELECTABLE.has(f))\n  const order = db.get(req.params.id)\n  res.json(pick(order, wanted.length ? wanted : Object.keys(SELECTABLE)))\n})\n```\n\n## Validation\n\n```bash\n# Unknown fields must be rejected or ignored, never echoed\ncurl -s 'http://localhost:8080/api/orders/1?fields=id,__proto__,total' | jq 'keys'\n```\n\n## Best practices\n\n- Always apply an allowlist; never build objects from raw input keys.\n- Default to a sane subset when `fields` is absent.\n- Document every selectable field in the OpenAPI spec.\n- For deeply nested resources, consider GraphQL or JSON:API includes syntax.\n- Measure payload size before/after and set budgets per endpoint.\n",
+  "examples": [
+    {
+      "input": "Mobile app only needs order status",
+      "output": "Add ?fields=id,status to the endpoint with an allowlist, verify with curl | jq 'keys', and confirm payload length dropped."
+    },
+    {
+      "input": "Client passes an invalid field name",
+      "output": "Filter the request against the allowlist server-side so unknown names are ignored instead of erroring or leaking."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "field-selection.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-field-selection"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Field Selection. You do it through sparse-fieldsets: Implement and test field selection parameters like ?fields= and verify payload savings. The commands are real, e.g. `curl -s http://localhost:8080/api/orders/1?fields=id,status,total | jq keys`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "field-selection",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sparse-fieldsets",
+        "name": "fields",
+        "type": "array",
+        "description": "Comma-separated field names to include"
+      },
+      {
+        "capability": "sparse-fieldsets",
+        "name": "endpoint",
+        "type": "string",
+        "description": "API endpoint to test selection on"
+      },
+      {
+        "capability": "sparse-fieldsets",
+        "name": "allow-list",
+        "type": "array",
+        "description": "Server-side allowlist of selectable fields"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "grep"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/field-selection-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/field-selection-skill.yaml",
+    "checksum": "436427e8fa048a74fa050645e8364f6e9249c2903074228ea8fd1019f2d01980"
+  }
+}

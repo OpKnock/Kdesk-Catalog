@@ -1,0 +1,188 @@
+name: age-security
+display_name: age-security
+category: security
+subcategory: general
+description: Encrypts and decrypts files with the age encryption tool, managing X25519 keys, passphrase-based
+  files, and SSH key recipients.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- age
+- age-keygen
+- ssh-to-age
+capabilities:
+- name: age-encrypt-decrypt
+  description: Encrypt and decrypt files or stdin with age recipient keys and passphrases.
+  commands:
+  - age-keygen -o key.txt
+  - age -r age1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu0q2xq -o secrets.age secrets.yaml
+  - age -d -i key.txt secrets.age > secrets.yaml
+  - age -p -o backup.age backup.tar.gz
+  - age -R recipients.txt -o config.age config.json
+  examples:
+  - age-keygen -o ~/.config/age/keys.txt
+  - age -e -r age1xyz... -o .env.age .env
+  - age -d -i keys.txt -o .env .env.age
+  parameters:
+  - name: recipient
+    type: string
+    description: age1... X25519 recipient public key
+  - name: identity
+    type: string
+    description: Path to the private key file used for decryption (-i)
+  - name: passphrase
+    type: boolean
+    description: Use a passphrase instead of a recipient (-p)
+- name: ssh-recipient-conversion
+  description: Use existing SSH public keys as age recipients and generate native age keys.
+  commands:
+  - ssh-to-age -i ~/.ssh/id_ed25519.pub
+  - age-keygen -o key.txt && cat key.txt | tail -1
+  - age -r ssh-ed25519 AAAAC3NzaC1lZDI1NTE5... -o file.age file.txt
+  examples:
+  - ssh-to-age -i ~/.ssh/id_ed25519.pub | age -R - -o out.age in.txt
+  - age-keygen -o key.txt
+  - cat key.txt
+  parameters:
+  - name: sshKey
+    type: string
+    description: Path to an SSH public key (.pub)
+  - default: stdout
+    description: File to write the converted age recipient (default stdout).
+    name: recipientFile
+    type: string
+knowledge:
+- title: age Specification
+  type: documentation
+  source: https://age-encryption.org/v1
+  description: Format spec, recipient types, and CLI examples
+- title: age GitHub Repository
+  type: documentation
+  source: https://github.com/FiloSottile/age
+  description: Installation, key management, and usage guide
+instructions: '# age Encryption
+
+
+  File encryption with the age tool: simple, modern, audited.
+
+
+  ## What This Skill Does
+
+
+  - Generates X25519 key pairs with age-keygen
+
+  - Encrypts files to one or more recipients
+
+  - Decrypts with native keys or SSH identity files
+
+  - Encrypts with passphrases for symmetric use
+
+  - Manages recipient lists with -R for group sharing
+
+
+  ## When to Use
+
+
+  - Encrypting secrets at rest outside of vaults or sops
+
+  - Sharing encrypted files with team members by public key
+
+  - Replacing GPG for simple file encryption workflows
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Generate a key pair
+
+  age-keygen -o key.txt
+
+  cat key.txt
+
+
+  # Encrypt to a recipient
+
+  age -r age1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu0q2xq -o secrets.age secrets.yaml
+
+
+  # Decrypt with your key
+
+  age -d -i key.txt secrets.age > secrets.yaml
+
+
+  # Passphrase encryption (no keys needed)
+
+  age -p -o backup.age backup.tar.gz
+
+  age -d backup.age > backup.tar.gz
+
+
+  # Encrypt to every key in a file
+
+  age -R recipients.txt -o config.age config.json
+
+
+  # Use an SSH public key as the recipient
+
+  ssh-to-age -i ~/.ssh/id_ed25519.pub
+
+  age -r ssh-ed25519 AAAAC3NzaC1lZDI1NTE5... -o file.age file.txt
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Store private keys in ~/.config/age/keys.txt with 0600 permissions
+
+  - Never log key material; rotate keys by re-encrypting to new recipients
+
+  - Use passphrase mode only when recipients are unavailable
+
+  - Combine with git-crypt or sops for repository-scale encryption
+
+  - Verify decrypted output integrity (age uses AEAD; verify with sha256sum)'
+examples:
+- input: Encrypt .env for my team so only they can decrypt it
+  output: Agent collects each member's age1... public key (or ssh-to-age of their SSH keys), writes recipients.txt,
+    and runs age -R recipients.txt -o .env.age .env.
+- input: Decrypt a backup sent to me
+  output: Agent runs age -d -i ~/.config/age/keys.txt backup.age > backup.tar.gz and verifies the archive
+    with tar -tzf.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: age-security.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-age
+  generic:
+    system_prompt: 'Your lane is age-security. You do it through age-encrypt-decrypt: Encrypt and decrypt
+      files or stdin with age recipient keys and passphrases. The commands are real, e.g. `age-keygen
+      -o key.txt`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

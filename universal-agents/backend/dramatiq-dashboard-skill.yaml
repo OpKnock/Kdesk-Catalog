@@ -1,0 +1,194 @@
+name: dramatiq-dashboard
+display_name: dramatiq-dashboard
+category: backend
+subcategory: general
+description: Configures and exposes the Dramatiq task queue dashboard for inspecting workers, brokers,
+  and message flow in real time.
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- gunicorn
+- pip
+- python
+- redis-cli
+- uvicorn
+capabilities:
+- commands:
+  - pip install dramatiq[watch]
+  - gunicorn dashboard:app
+  - uvicorn dashboard:app --reload
+  - python dashboard.py
+  - curl http://localhost:8000/dashboard
+  description: Mount and serve the Dramatiq dashboard from a WSGI/ASGI app.
+  name: dashboard-serving
+  examples:
+  - gunicorn -b 0.0.0.0:8000 dashboard:app
+  - uvicorn dashboard:app --port 9000
+  - python -m dashboard
+  parameters:
+  - description: Bind host
+    name: host
+    type: string
+  - description: Bind port
+    name: port
+    type: integer
+- commands:
+  - curl http://localhost:8000/dashboard/api/workers
+  - curl http://localhost:8000/dashboard/api/broker/queues
+  - redis-cli llen dramatiq:default
+  - redis-cli info clients
+  description: Query worker and queue state through the dashboard API.
+  name: dashboard-metrics
+  examples:
+  - curl -s http://localhost:8000/dashboard/api/workers | python -m json.tool
+  - redis-cli zrange dramatiq:delayed 0 -1
+  parameters:
+  - description: Dashboard API path
+    name: endpoint
+    type: string
+  - name: format
+    type: string
+    description: 'Output format: json or table'
+knowledge:
+- title: Dramatiq Docs
+  description: Task queue library and worker CLI reference
+  source: https://dramatiq.io/
+  type: documentation
+- title: Dramatiq Dashboard
+  description: Dashboard mounting and API endpoints
+  source: https://dramatiq-dashboard.readthedocs.io
+  type: documentation
+instructions: '# Dramatiq Dashboard
+
+
+  Visualize and monitor a Dramatiq broker from a web dashboard.
+
+
+  ## When to Use
+
+
+  - Watching queue depth and worker utilization in dev
+
+  - Debugging stalled messages and delayed queues
+
+  - Providing ops teams a read-only view of the task system
+
+  - Verifying that workers registered all expected actors
+
+
+  ## Setup
+
+
+  ```bash
+
+  pip install dramatiq[watch] dramatiq-dashboard
+
+  ```
+
+
+  ## Mounting
+
+
+  ```python
+
+  # dashboard.py
+
+  from dramatiq_dashboard import Dashboard
+
+  from dramatiq_dashboard.__main__ import make_dashboard_app
+
+
+  app = make_dashboard_app(broker, middleware=[...])
+
+  ```
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Serve with gunicorn
+
+  gunicorn -b 0.0.0.0:8000 dashboard:app
+
+
+  # Serve with uvicorn
+
+  uvicorn dashboard:app --reload
+
+
+  # Query workers via the API
+
+  curl http://localhost:8000/dashboard/api/workers
+
+  curl -s http://localhost:8000/dashboard/api/workers | python -m json.tool
+
+
+  # Inspect the broker queues
+
+  curl http://localhost:8000/dashboard/api/broker/queues
+
+
+  # Raw broker inspection
+
+  redis-cli llen dramatiq:default
+
+  redis-cli zrange dramatiq:delayed 0 -1
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Protect the dashboard behind auth in shared environments
+
+  - Mount on a separate port or path from the public API
+
+  - Watch the delayed set for messages stuck on backoff
+
+  - Pair the dashboard with worker CLI logging for correlation
+
+  - Use the API endpoints in scripts for alerting on queue growth'
+examples:
+- input: How do I see my Dramatiq queues in a browser?
+  output: Agent mounts the dashboard app and serves it with gunicorn, then points the user to /dashboard
+    and shows API curl examples.
+- input: Messages are stuck but workers look alive
+  output: Agent queries redis-cli zrange dramatiq:delayed to find backoff messages and checks worker registration
+    via the dashboard API.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: dramatiq-dashboard.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-dramatiq-dashboard
+  generic:
+    system_prompt: 'You take the dramatiq-dashboard seat. You do it through dashboard-serving: Mount and
+      serve the Dramatiq dashboard from a WSGI/ASGI app. The commands are real, e.g. `pip install dramatiq[watch]`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

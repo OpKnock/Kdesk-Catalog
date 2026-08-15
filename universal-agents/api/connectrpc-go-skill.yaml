@@ -1,0 +1,115 @@
+name: connectrpc-go
+display_name: Connectrpc Go
+category: api
+subcategory: general
+description: 'Build ConnectRPC services in Go: protobuf codegen with buf, connect handlers, and HTTP/JSON
+  serving.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- buf
+capabilities:
+- name: go-scaffold
+  description: Scaffold a Go ConnectRPC project, generate code from proto, and run the server
+  commands:
+  - go mod init example.com/connectrpc-service
+  - go get connectrpc.com/connect@latest
+  - go get google.golang.org/protobuf@latest
+  - buf generate
+  - go run ./cmd/server
+  examples:
+  - go mod init example.com/connectrpc-service && go get connectrpc.com/connect@latest
+  - buf generate && go run ./cmd/server
+  - go build ./... && go vet ./...
+  parameters:
+  - name: module
+    type: string
+    description: Go module path such as example.com/connectrpc-service
+- name: handlers-testing
+  description: Implement Connect handlers and test with curl and go test
+  commands:
+  - 'curl -H "Content-Type: application/json" -d ''{"name":"alice"}'' http://localhost:8080/example.connectrpc.v1.GreetService/Greet'
+  - 'curl -s -H "Content-Type: application/json" -d ''{"name":"alice"}'' http://localhost:8080/example.connectrpc.v1.GreetService/Greet
+    | jq ''.greeting'''
+  - go test ./...
+  - 'curl -s -o /dev/null -w "%{http_code}" -H "Content-Type: application/json" -d ''{}'' http://localhost:8080/example.connectrpc.v1.GreetService/Greet'
+  examples:
+  - 'curl -H "Content-Type: application/json" -d ''{"name":"alice"}'' http://localhost:8080/example.connectrpc.v1.GreetService/Greet'
+  - go test -v ./...
+  - 'curl -s -H "Content-Type: application/json" -d ''{"name":"alice"}'' http://localhost:8080/example.connectrpc.v1.GreetService/Greet'
+  parameters:
+  - name: service_path
+    type: string
+    description: Connect service path, e.g. example.connectrpc.v1.GreetService/Greet
+knowledge:
+- title: ConnectRPC Go Getting Started
+  type: documentation
+  source: https://connectrpc.com/docs/go/getting-started
+  description: Official Go quickstart for ConnectRPC
+- title: Buf CLI Docs
+  type: documentation
+  source: https://buf.build/docs/
+  description: buf reference for code generation from protobuf
+instructions: "# ConnectRPC Go\n\nBuild modern RPC services in Go with ConnectRPC.\n\n## When to Use\n\
+  \n- New gRPC-compatible services with simpler protocol handling\n- Services consumed by web, mobile,\
+  \ and gRPC clients\n- Replacing hand-written REST handlers with generated code\n\n## Scaffold\n\n```bash\n\
+  go mod init example.com/connectrpc-service\ngo get connectrpc.com/connect@latest\ngo get google.golang.org/protobuf@latest\n\
+  ```\n\n## Proto\n\n```proto\nsyntax = \"proto3\";\npackage example.connectrpc.v1;\n\nmessage GreetRequest\
+  \ { string name = 1; }\nmessage GreetResponse { string greeting = 1; }\n\nservice GreetService {\n \
+  \ rpc Greet(GreetRequest) returns (GreetResponse);\n}\n```\n\n## Generate and Serve\n\n```bash\nbuf\
+  \ generate\n```\n\n```go\npackage main\n\nimport (\n  \"net/http\"\n  \"connectrpc.com/connect\"\n \
+  \ greetv1 \"example.com/connectrpc-service/gen/greet/v1\"\n  \"example.com/connectrpc-service/gen/greet/v1/greetv1connect\"\
+  \n)\n\ntype GreetServer struct{}\n\nfunc (s *GreetServer) Greet(ctx context.Context, req *connect.Request[greetv1.GreetRequest])\
+  \ (*connect.Response[greetv1.GreetResponse], error) {\n  msg := \"Hello, \" + req.Msg.Name\n  return\
+  \ connect.NewResponse(&greetv1.GreetResponse{Greeting: msg}), nil\n}\n\nfunc main() {\n  mux := http.NewServeMux()\n\
+  \  mux.Handle(greetv1connect.NewGreetServiceHandler(&GreetServer{}))\n  http.ListenAndServe(\"localhost:8080\"\
+  , mux)\n}\n```\n\n```bash\ngo run ./cmd/server &\ncurl -H \"Content-Type: application/json\" -d '{\"\
+  name\":\"alice\"}' \\\n  http://localhost:8080/example.connectrpc.v1.GreetService/Greet\n```\n\n## Testing\n\
+  \n```bash\ngo test ./...\ngo build ./...\ngo vet ./...\n```\n\n## Best Practices\n\n- Use buf lint and\
+  \ buf breaking in CI\n- Keep handlers thin; put logic in services\n- Use connect options for interceptors\
+  \ such as logging and auth\n- Set Content-Type application/json for JSON calls\n- Always pass context\
+  \ through the stack"
+examples:
+- input: Scaffold a new ConnectRPC Go service with a Greet method.
+  output: The agent runs go mod init, go get connectrpc.com/connect, writes the proto, runs buf generate,
+    and starts the server with go run ./cmd/server.
+- input: Call my ConnectRPC service with JSON from the terminal.
+  output: The agent runs curl with Content-Type application/json against the Connect service path and
+    formats the reply with jq.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: connectrpc-go.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-connectrpc-go
+  generic:
+    system_prompt: 'This is your domain: Connectrpc Go. You do it through go-scaffold: Scaffold a Go ConnectRPC
+      project, generate code from proto, and run the server. The commands are real, e.g. `go mod init
+      example.com/connectrpc-service`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

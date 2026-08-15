@@ -1,0 +1,171 @@
+{
+  "name": "idempotency",
+  "display_name": "Idempotency",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Idempotency in practice: Stripe-style Idempotency-Key usage, retry loops with curl, storing responses in Redis, and verifying identical replays.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "idempotency-http",
+      "description": "Send idempotent HTTP requests, cache responses, and verify replay behavior.",
+      "commands": [
+        "curl -X POST https://api.stripe.com/v1/charges -u sk_test_x: -H \"Idempotency-Key: abc123\" -d amount=100 -d currency=usd",
+        "curl -s -X POST -H \"Idempotency-Key: k1\" http://localhost:8080/v1/payments -d amount=100 -o r1.json",
+        "redis-cli SET idem:k1 in-progress NX EX 60",
+        "redis-cli SETEX idem:k1 60 done",
+        "curl -s -X POST -H \"Idempotency-Key: k1\" http://localhost:8080/v1/payments -d amount=100 -o r2.json && diff r1.json r2.json"
+      ],
+      "examples": [
+        "curl --retry 3 --retry-all-errors -X POST -H \"Idempotency-Key: 9x\" http://localhost:8080/v1/payments -d amount=10",
+        "redis-cli GET idem:k1",
+        "curl -s -o /dev/null -w '%{http_code}' -X POST -H \"Idempotency-Key: k1\" http://localhost:8080/v1/payments -d amount=200"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Idempotency key value."
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "Mutating endpoint URL."
+        },
+        {
+          "name": "cache_ttl",
+          "type": "integer",
+          "description": "Response cache TTL in seconds."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Stripe Idempotent Requests",
+      "type": "documentation",
+      "source": "https://docs.stripe.com/api/idempotent_requests",
+      "description": "Stripe's production pattern for idempotent requests."
+    },
+    {
+      "title": "Redis SETEX",
+      "type": "documentation",
+      "source": "https://redis.io/commands/setex/",
+      "description": "SETEX command for keyed caching with expiry."
+    }
+  ],
+  "instructions": "# Idempotency\n\nSend and handle idempotent requests the way payment APIs do.\n\n## What this skill does\n\n- Uses Idempotency-Key headers on mutating requests.\n- Caches first responses and replays them verbatim.\n- Runs retry loops safely with curl --retry.\n- Verifies replays return identical bodies and status codes.\n\n## When to use\n\n- Integrating with APIs that document Idempotency-Key (Stripe, Shopify...).\n- Adding retry logic without duplicate side effects.\n- Testing your own API's replay behavior.\n\n## Real commands\n\n```bash\n# Stripe-style request\ncurl -X POST https://api.stripe.com/v1/charges -u sk_test_x: \\\n  -H \"Idempotency-Key: abc123\" -d amount=100 -d currency=usd\n\n# Two calls, one key: responses must be identical\ncurl -s -X POST -H \"Idempotency-Key: k1\" http://localhost:8080/v1/payments -d amount=100 -o r1.json\ncurl -s -X POST -H \"Idempotency-Key: k1\" http://localhost:8080/v1/payments -d amount=100 -o r2.json\ndiff r1.json r2.json\n\n# Server-side cache key\nredis-cli SETEX idem:k1 60 done\n\n# Retry with the same key across attempts\ncurl --retry 3 --retry-all-errors -X POST -H \"Idempotency-Key: 9x\" \\\n  http://localhost:8080/v1/payments -d amount=10\n```\n\n## Client retry loop\n\n```bash\nKEY=\"$(uuidgen)\"\nfor i in 1 2 3; do\n  curl -s -X POST -H \"Idempotency-Key: $KEY\" http://localhost:8080/v1/payments -d amount=10 && break\n  sleep 2\ndone\n```\n\n## Testing\n\n```bash\n# Same key, different payload must be rejected\ncurl -s -o /dev/null -w '%{http_code}\\n' -X POST -H \"Idempotency-Key: k1\" http://localhost:8080/v1/payments -d amount=200\n# expect 409/422 conflict\n```\n\n## Best practices\n\n- Generate the key client-side (UUID) before the first attempt.\n- Keep the key stable across all retries of one logical operation.\n- Store the canonical response (status + body) server-side under the key.\n- Expire entries to bound storage; clients accept a new key after expiry.\n\n## Example exchange\n\n```\nUser: Retry the payment request safely after a timeout.\nAgent: Reuse one key for all attempts:\n       curl --retry 3 --retry-all-errors -X POST -H \"Idempotency-Key: 9x\" http://localhost:8080/v1/payments -d amount=10\n```",
+  "examples": [
+    {
+      "input": "Verify a replayed request returns the same body",
+      "output": "curl -s -X POST -H \"Idempotency-Key: k1\" http://localhost:8080/v1/payments -o r1.json; # repeat; then diff r1.json r2.json"
+    },
+    {
+      "input": "Retry a payment with one idempotency key",
+      "output": "curl --retry 3 --retry-all-errors -X POST -H \"Idempotency-Key: 9x\" http://localhost:8080/v1/payments -d amount=10"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "idempotency.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-idempotency"
+    },
+    "generic": {
+      "system_prompt": "You are the Idempotency specialist. You do it through idempotency-http: Send idempotent HTTP requests, cache responses, and verify replay behavior. The commands are real, e.g. `curl -X POST https://api.stripe.com/v1/charges -u sk_test_x: -H Idempotency-Key: abc123...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "idempotency",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "idempotency-http",
+        "name": "key",
+        "type": "string",
+        "description": "Idempotency key value."
+      },
+      {
+        "capability": "idempotency-http",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Mutating endpoint URL."
+      },
+      {
+        "capability": "idempotency-http",
+        "name": "cache_ttl",
+        "type": "integer",
+        "description": "Response cache TTL in seconds."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/idempotency-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/idempotency-skill.yaml",
+    "checksum": "25937bacdee80d5cda26c41f73c4599b614c0b4e2fd51b23d0ff4c16f3bb7a18"
+  }
+}

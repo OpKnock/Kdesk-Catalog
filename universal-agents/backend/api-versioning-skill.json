@@ -1,0 +1,182 @@
+{
+  "name": "api-versioning",
+  "display_name": "Api Versioning",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Implements general API versioning across backend services: strategy selection, version headers, backward compatibility, and version-aware routing.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "git"
+  ],
+  "capabilities": [
+    {
+      "name": "version-headers",
+      "description": "Serve versions via headers and negotiation",
+      "commands": [
+        "curl -s -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/octocat/Hello-World | jq '.full_name'",
+        "curl -s -H 'X-API-Version: 2' http://localhost:3000/api/users | jq '.version'",
+        "curl -s -H 'X-API-Version: 1' http://localhost:3000/api/users | jq '.version'",
+        "curl -s -D- -H 'Accept: application/vnd.api.v2+json' http://localhost:3000/api/users | grep -i '^vary:'"
+      ],
+      "examples": [
+        "Accept headers negotiate media-type versions",
+        "X-API-Version selects explicit versions",
+        "Vary: Accept protects caches"
+      ],
+      "parameters": [
+        {
+          "name": "header",
+          "type": "string",
+          "description": "Version header name"
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Version value"
+        },
+        {
+          "name": "media-type",
+          "type": "string",
+          "description": "Vendor media type"
+        }
+      ]
+    },
+    {
+      "name": "compatibility",
+      "description": "Maintain backward compatibility",
+      "commands": [
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/v1/users",
+        "curl -s http://localhost:3000/v2/users | jq '.fields | keys'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/v9/users",
+        "git tag -l 'v*' --sort=-v:refname | head -3"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Microsoft API Versioning Guidance",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#versioning",
+      "description": "API versioning best practices"
+    },
+    {
+      "title": "GitHub REST Versions",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/rest/about-the-rest-api/api-versions",
+      "description": "Header-based versioning example"
+    }
+  ],
+  "instructions": "# API Versioning\n\nVersioning across backend services.\n\n## What This Skill Does\n- Selects and implements versioning strategies\n- Keeps old versions compatible\n- Routes versioned traffic correctly\n\n## When to Use\n- Multiple client generations\n- Breaking changes with legacy consumers\n- Version-aware gateway routing\n\n## Real Commands\n\n```bash\ncurl -s -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/octocat/Hello-World | jq '.full_name'\ncurl -s -H 'X-API-Version: 2' http://localhost:3000/api/users | jq '.version'\n```\n\n## Strategy Selection\n- URL: /v1, /v2 - visible and simple\n- Header: clean URLs, explicit selection\n- Media type: RESTful negotiation\n\n## Testing\n- Verify every version endpoint\n- Test unknown versions fail cleanly\n- Confirm caching honors Vary\n\n\n## Best Practices\n- Deprecate slowly with sunset dates\n- Keep defaults stable\n- Document versions in OpenAPI",
+  "examples": [
+    {
+      "input": "Add version headers to an API",
+      "output": "Implements X-API-Version routing and verifies both versions"
+    },
+    {
+      "input": "Plan a major version release",
+      "output": "Maps breaking changes and deprecation windows for v2"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-versioning.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-versioning"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Api Versioning. You do it through version-headers: Serve versions via headers and negotiation. The commands are real, e.g. `curl -s -H Accept: application/vnd.github.v3+json...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-versioning",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "version-headers",
+        "name": "header",
+        "type": "string",
+        "description": "Version header name"
+      },
+      {
+        "capability": "version-headers",
+        "name": "version",
+        "type": "string",
+        "description": "Version value"
+      },
+      {
+        "capability": "version-headers",
+        "name": "media-type",
+        "type": "string",
+        "description": "Vendor media type"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "git"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/api-versioning-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/api-versioning-skill.yaml",
+    "checksum": "e37fdc488c24f71d4c90512a9e91ced66bb15237f9c501ae8a7b4f8b0ef94f01"
+  }
+}

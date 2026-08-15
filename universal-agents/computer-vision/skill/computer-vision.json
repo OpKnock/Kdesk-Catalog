@@ -1,0 +1,186 @@
+{
+  "name": "computer-vision",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "ai",
+  "description": "Builds computer vision pipelines: image preprocessing with OpenCV, detection with YOLO, and video analysis with ffmpeg.",
+  "keywords": [
+    "computer-vision",
+    "object-detection",
+    "video-analysis",
+    "opencv"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "computer-vision.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-computer-vision"
+    },
+    "generic": {
+      "system_prompt": "You work computer-vision hands-on. You do it through image-processing: Preprocess images and video with OpenCV and ffmpeg. The commands are real, e.g. `python -c import cv2; print(cv2.__version__)`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "image-processing",
+      "description": "Preprocess images and video with OpenCV and ffmpeg",
+      "commands": [
+        "python -c \"import cv2; print(cv2.__version__)\"",
+        "python -m pip install opencv-python pillow",
+        "ffmpeg -i input.mp4 -vf \"fps=1\" frames/frame_%04d.jpg",
+        "python -c \"import cv2; img=cv2.imread('a.jpg'); cv2.resize(img,(640,640)); cv2.imwrite('r.jpg',img)\"",
+        "ffmpeg -i input.mp4 -vf scale=320:320 -c:v libx264 out.mp4"
+      ],
+      "examples": [
+        "ffmpeg -i video.mp4 -vf \"crop=640:640:0:0\" -frames:v 100 crop/%05d.jpg",
+        "python augment.py --folder train/ --flip --rotate 10",
+        "python detect.py --source rtsp://cam:554/stream --save-txt"
+      ],
+      "parameters": [
+        {
+          "name": "source",
+          "type": "string",
+          "description": "Image, video, directory, or stream URL to process"
+        },
+        {
+          "name": "save-txt",
+          "type": "boolean",
+          "description": "Write detection results as YOLO-format txt files"
+        },
+        {
+          "name": "weights",
+          "type": "string",
+          "description": "Path to trained model weights, e.g. best.pt"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "python",
+    "opencv",
+    "tensorflow",
+    "pytorch"
+  ],
+  "tools": [
+    "python",
+    "opencv",
+    "tensorflow",
+    "pytorch",
+    "yolo"
+  ],
+  "examples": [
+    {
+      "input": "Detect objects in these images",
+      "output": "Preprocesses with OpenCV resize, runs detect.py with the project weights, and reports bounding-box counts and confidence per class"
+    },
+    {
+      "input": "Turn a camera feed into a dataset",
+      "output": "Extracts frames with ffmpeg fps=1 from the RTSP stream, then preprocesses and splits them into train/val"
+    }
+  ],
+  "instructions": "# Computer Vision\n\nBuilds CV systems: image preprocessing (OpenCV), object detection (YOLO), and video\npipelines (ffmpeg).\n\n## When to Use\n\n- Preprocessing a dataset before training a detector\n- Running detection on images, video files, or RTSP streams\n- Extracting frames and creating datasets from video\n\n## Real Commands\n\n```bash\n# Verify the stack\npython -c \"import cv2; print(cv2.__version__)\"\n\n# Extract one frame per second from video\nffmpeg -i input.mp4 -vf \"fps=1\" frames/frame_%04d.jpg\n\n# Resize and normalize a dataset\npython -c \"\nimport cv2, glob\nfor f in glob.glob('raw/*.jpg'):\n    img = cv2.imread(f)\n    img = cv2.resize(img, (640, 640))\n    cv2.imwrite('proc/' + f.split('\\\\')[-1], img)\n\"\n\n# Run YOLO detection\npython detect.py --source images/ --weights best.pt --conf 0.4 --save-txt\n\n# Export to ONNX for edge deployment\npython export.py --weights best.pt --include onnx\n```\n\n## Dataset Prep\n\n```bash\n# Crop to square and save 100 frames\nffmpeg -i video.mp4 -vf \"crop=640:640:0:0\" -frames:v 100 crop/%05d.jpg\n\n# Augment with flip/rotation\npython augment.py --folder train/ --flip --rotate 10 --brightness 0.2\n```\n\n## Best Practices\n\n- Normalize (resize + RGB) identically for train and inference\n- Use augmentation to avoid overfitting on small datasets\n- Test on edge cases: blur, occlusion, low light\n- Benchmark FPS after quantization/export\n- Keep class balance in the dataset\n\n## Example Response\n\nThe agent produces a preprocessing command sequence, runs detection, and returns\nclass counts, confidence stats, and per-image annotated outputs.",
+  "display_name": "computer-vision",
+  "knowledge": [
+    {
+      "title": "OpenCV docs",
+      "type": "documentation",
+      "source": "https://docs.opencv.org/",
+      "description": "Python API reference for image processing and feature detection"
+    },
+    {
+      "title": "Ultralytics YOLO docs",
+      "type": "documentation",
+      "source": "https://docs.ultralytics.com/",
+      "description": "Training, inference, and export of YOLO detection models"
+    },
+    {
+      "title": "ffmpeg documentation",
+      "type": "documentation",
+      "source": "https://ffmpeg.org/documentation.html",
+      "description": "Filter graphs, codecs, and stream handling"
+    }
+  ],
+  "id": "computer-vision",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "image-processing",
+        "name": "source",
+        "type": "string",
+        "description": "Image, video, directory, or stream URL to process"
+      },
+      {
+        "capability": "image-processing",
+        "name": "save-txt",
+        "type": "boolean",
+        "description": "Write detection results as YOLO-format txt files"
+      },
+      {
+        "capability": "image-processing",
+        "name": "weights",
+        "type": "string",
+        "description": "Path to trained model weights, e.g. best.pt"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python",
+    "opencv",
+    "tensorflow",
+    "pytorch"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "computer-vision/skill/computer-vision.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/computer-vision/skill/computer-vision.yaml",
+    "checksum": "fa1ed5f6363b85f09f703103f9b1baff723c59cfaf95c34c3bd666af8c1d0d04"
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "name": "curl-devtools",
+  "display_name": "curl-devtools",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Makes HTTP requests with curl: headers, methods, auth, redirects, timeouts, retries, and output formatting for API debugging.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "http-requests",
+      "description": "Send GET/POST/PUT requests with headers, bodies, and auth.",
+      "commands": [
+        "curl -I https://example.com",
+        "curl -X POST https://api.example.com/items -H 'Content-Type: application/json' -d '{\"name\":\"x\"}'",
+        "curl -u user:pass https://api.example.com/me",
+        "curl -H 'Authorization: Bearer token123' https://api.example.com/data",
+        "curl -k https://selfsigned.local",
+        "curl -L https://example.com/redirect"
+      ],
+      "examples": [
+        "curl -X POST https://api.example.com/items -d '{\"name\":\"x\"}'",
+        "curl -H 'Authorization: Bearer token123' https://api.example.com/data",
+        "curl -I https://example.com"
+      ],
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method via -X"
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "description": "Request body via -d"
+        },
+        {
+          "name": "header",
+          "type": "string",
+          "description": "Request header via -H"
+        }
+      ]
+    },
+    {
+      "name": "downloads-and-metrics",
+      "description": "Download files and measure request timing and status.",
+      "commands": [
+        "curl -o file.zip https://example.com/file.zip",
+        "curl -O https://example.com/file.zip",
+        "curl -w '%{http_code} %{time_total}\\n' -o /dev/null https://example.com",
+        "curl --retry 5 --retry-delay 2 --retry-all-errors https://example.com/flaky",
+        "curl --max-time 30 https://example.com/slow",
+        "curl -s https://example.com/api | jq ."
+      ],
+      "examples": [
+        "curl -w '%{http_code} %{time_total}\\n' -o /dev/null https://example.com",
+        "curl --retry 5 --retry-delay 2 https://example.com/flaky",
+        "curl -s https://example.com/api | jq ."
+      ],
+      "parameters": [
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output file via -o"
+        },
+        {
+          "name": "retry",
+          "type": "integer",
+          "description": "Retry count"
+        },
+        {
+          "name": "max-time",
+          "type": "integer",
+          "description": "Timeout in seconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "curl Manual",
+      "type": "documentation",
+      "source": "https://curl.se/docs/manpage.html",
+      "description": "Every curl flag explained"
+    },
+    {
+      "title": "curl Everything Guide",
+      "type": "documentation",
+      "source": "https://everything.curl.dev/",
+      "description": "Deep dive into curl usage and HTTP"
+    }
+  ],
+  "instructions": "# curl HTTP Client\n\nInteract with HTTP APIs and download files using curl.\n\n## What This Skill Does\n\n- Sends requests with methods, headers, and bodies\n- Handles auth (basic, bearer, cookies)\n- Follows redirects and handles TLS variations\n- Measures latency and status with -w\n- Retries flaky requests and enforces timeouts\n\n## When to Use\n\n- Debugging REST APIs from the shell\n- Health checks and smoke tests in scripts\n- Downloads with headers/redirects\n\n## Real Commands\n\n```bash\n# Requests\ncurl -I https://example.com\ncurl -X POST https://api.example.com/items   -H 'Content-Type: application/json' -d '{\"name\":\"x\"}'\ncurl -u user:pass https://api.example.com/me\ncurl -H 'Authorization: Bearer token123' https://api.example.com/data\ncurl -L https://example.com/redirect\n\n# Downloads\ncurl -O https://example.com/file.zip\ncurl -o file.zip https://example.com/file.zip\n\n# Timing and resilience\ncurl -w '%{http_code} %{time_total}\\n' -o /dev/null https://example.com\ncurl --retry 5 --retry-delay 2 --retry-all-errors https://example.com/flaky\ncurl --max-time 30 https://example.com/slow\ncurl -s https://api.example.com/data | jq .\n```\n\n## Best Practices\n\n- Use -w with -o /dev/null for clean timing checks\n- Always set --max-time in scripts to avoid hangs\n- Use -f to fail on HTTP errors for scripting exit codes\n- Never put credentials in URLs; use -u or Authorization headers\n- Add -sS to suppress progress but keep errors visible in cron",
+  "examples": [
+    {
+      "input": "Check if the API is healthy and fast",
+      "output": "Agent runs curl -w with status and timing, outputting a health summary"
+    },
+    {
+      "input": "POST a JSON payload to create a resource",
+      "output": "Agent sends the POST with content-type and body, then validates the response code and body"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "curl-devtools.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-curl"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: curl-devtools. You do it through http-requests: Send GET/POST/PUT requests with headers, bodies, and auth. The commands are real, e.g. `curl -I https://example.com`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "curl-devtools",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "http-requests",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method via -X"
+      },
+      {
+        "capability": "http-requests",
+        "name": "data",
+        "type": "string",
+        "description": "Request body via -d"
+      },
+      {
+        "capability": "http-requests",
+        "name": "header",
+        "type": "string",
+        "description": "Request header via -H"
+      },
+      {
+        "capability": "downloads-and-metrics",
+        "name": "output",
+        "type": "string",
+        "description": "Output file via -o"
+      },
+      {
+        "capability": "downloads-and-metrics",
+        "name": "retry",
+        "type": "integer",
+        "description": "Retry count"
+      },
+      {
+        "capability": "downloads-and-metrics",
+        "name": "max-time",
+        "type": "integer",
+        "description": "Timeout in seconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/curl-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/curl-skill.yaml",
+    "checksum": "b22e7d2dd36f6bb7a5eef17f56d4e0d0f0ba9f50f86c181b2b8150b9a20ca449"
+  }
+}

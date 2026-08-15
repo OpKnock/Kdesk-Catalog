@@ -1,0 +1,167 @@
+{
+  "name": "yamllint",
+  "display_name": "yamllint",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Lints YAML files for syntax errors, formatting, and structure with yamllint.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "yamllint"
+  ],
+  "capabilities": [
+    {
+      "name": "yamllint",
+      "description": "Validate YAML style and syntax with configurable rules",
+      "commands": [
+        "yamllint config.yaml",
+        "yamllint -c .yamllint src/",
+        "yamllint --strict pipeline.yml",
+        "yamllint --format json .",
+        "yamllint -d \"{extends: default, rules: {line-length: disable}}\" deploy.yml"
+      ],
+      "examples": [
+        "yamllint --ignore \"*.generated.yaml\" .",
+        "yamllint --format github .",
+        "yamllint --no-warnings k8s/"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Path to the yamllint config file"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output format: standard, github, colored, parsable, json"
+        },
+        {
+          "name": "strict",
+          "type": "boolean",
+          "description": "Return non-zero if any warning (not just errors) is found"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "yamllint docs",
+      "type": "documentation",
+      "source": "https://yamllint.readthedocs.io/",
+      "description": "Rules, config format, and CLI reference"
+    },
+    {
+      "title": "yamllint configuration",
+      "type": "documentation",
+      "source": "https://yamllint.readthedocs.io/en/stable/configuration.html",
+      "description": "Config file examples and rule options"
+    }
+  ],
+  "instructions": "# yamllint\n\nLinter for YAML: catches syntax errors, inconsistent indentation, and style\nviolations in configs, CI pipelines, and manifests.\n\n## When to Use\n\n- Validating CI pipeline YAML before push\n- Enforcing consistent YAML style across a repo\n- Checking Kubernetes manifests and compose files\n\n## Real Commands\n\n```bash\n# Install\npip install yamllint\n\n# Check a file\nsudo yamllint docker-compose.yml\n\n# Check a directory with a config\nsudo yamllint -c .yamllint .\n\n# Strict: warnings also fail\nsudo yamllint --strict .github/workflows/\n\n# JSON for CI\nsudo yamllint --format json . > yamllint-report.json\n\n# One-off inline config\nsudo yamllint -d \"{extends: default, rules: {line-length: {max: 120}}}\" k8s/\n\n# Ignore generated files\nsudo yamllint --ignore '*.lock' .\n```\n\n## Config (.yamllint)\n\n```yaml\n---\nextends: default\nrules:\n  line-length:\n    max: 120\n  document-start: disable\n  truthy: disable\n```\n\n## CI\n\n```yaml\n- name: YAML lint\n  run: yamllint -c .yamllint .\n```\n\n## Best Practices\n\n- Commit `.yamllint` so all CI runs agree\n- Disable rules project-wide instead of adding `# yamllint disable-line` everywhere\n- Run before `kubectl apply` to catch indentation bugs in manifests\n- Use `--strict` only on curated YAML; otherwise it fails on style nits\n\n## Example Response\n\nReturns `file:line:col: level message (rule)` per violation and exits non-zero\non errors (or warnings with --strict).",
+  "examples": [
+    {
+      "input": "Check our k8s manifests",
+      "output": "Runs yamllint -c .yamllint k8s/ and reports indentation and syntax problems per file"
+    },
+    {
+      "input": "Lint CI workflows before pushing",
+      "output": "Runs yamllint --strict .github/workflows/ and fixes issues until clean"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "yamllint.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-yamllint"
+    },
+    "generic": {
+      "system_prompt": "You are the yamllint specialist. You do it through yamllint: Validate YAML style and syntax with configurable rules. The commands are real, e.g. `yamllint config.yaml`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "yamllint",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "yamllint",
+        "name": "config",
+        "type": "string",
+        "description": "Path to the yamllint config file"
+      },
+      {
+        "capability": "yamllint",
+        "name": "format",
+        "type": "string",
+        "description": "Output format: standard, github, colored, parsable, json"
+      },
+      {
+        "capability": "yamllint",
+        "name": "strict",
+        "type": "boolean",
+        "description": "Return non-zero if any warning (not just errors) is found"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "yamllint"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/yamllint-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/yamllint-skill.yaml",
+    "checksum": "9d91cad84684d366fb6e7d69035c63bace8fe16978f85f467d094f337c234edf"
+  }
+}

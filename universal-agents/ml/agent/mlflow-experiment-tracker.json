@@ -1,0 +1,160 @@
+{
+  "name": "mlflow-experiment-tracker",
+  "display_name": "MLflow Experiment Tracker",
+  "category": "ml",
+  "subcategory": "tracking",
+  "description": "Agent specialized in MLflow experiment tracking, model registry management, and deployment pipeline automation.",
+  "version": "1.0.0",
+  "tags": [
+    "mlflow",
+    "experiment-tracking",
+    "model-registry",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "experiment-tracking",
+      "description": "Track experiments, log metrics/params, manage model versions",
+      "commands": [
+        "mlflow tracking",
+        "mlflow models",
+        "mlflow experiments",
+        "mlflow run",
+        "python -c \"import mlflow; mlflow.log_metric('accuracy', 0.95)\""
+      ],
+      "examples": [
+        "Start experiment: mlflow experiment create --experiment-name 'resnet-training'",
+        "Log model: mlflow.pytorch.log_model(model, 'model')",
+        "Register model: mlflow models register -m 'runs:/run_id/model' -n 'production-model'"
+      ],
+      "parameters": [
+        {
+          "name": "tracking_uri",
+          "type": "string",
+          "description": "MLflow tracking server URI"
+        },
+        {
+          "name": "experiment_name",
+          "type": "string",
+          "description": "Name of the experiment to track"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MLflow Documentation",
+      "type": "documentation",
+      "source": "https://mlflow.org/docs/latest/index.html",
+      "description": "Complete MLflow reference for tracking, projects, and models"
+    },
+    {
+      "title": "MLflow Best Practices",
+      "type": "tutorial",
+      "source": "https://mlflow.org/docs/latest/tracking.html",
+      "description": "Best practices for experiment tracking and model management"
+    }
+  ],
+  "instructions": "You are an MLflow experiment tracking specialist. Help users:\n1. Set up MLflow tracking server (local/remote)\n2. Instrument training code with MLflow API\n3. Log experiments, metrics, parameters, and artifacts\n4. Manage model registry and versioning\n5. Deploy models from registry to various serving platforms\n\nAlways suggest proper experiment organization and tagging strategies.\n",
+  "examples": [
+    {
+      "input": "Set up experiment tracking for my PyTorch training",
+      "output": "I'll integrate MLflow tracking into your training loop. We'll log loss, accuracy, model checkpoints, and hyperparameters. Here's the implementation..."
+    },
+    {
+      "input": "Compare results from my last 5 experiments",
+      "output": "I'll query MLflow to retrieve metrics from your experiments and create a comparison table. Let me also generate visualization plots..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mlflow-experiment-tracker.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mlflow"
+    },
+    "generic": {
+      "system_prompt": "You are an MLflow experiment tracking expert. Help users set up tracking, log experiments, manage model registry, and deploy models.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mlflow-experiment-tracker",
+  "type": "agent",
+  "skills": [
+    "ai-ml-pipeline"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "experiment-tracking",
+        "name": "tracking_uri",
+        "type": "string",
+        "description": "MLflow tracking server URI"
+      },
+      {
+        "capability": "experiment-tracking",
+        "name": "experiment_name",
+        "type": "string",
+        "description": "Name of the experiment to track"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/mlflow-experiment-tracker.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/mlflow-experiment-tracker.yaml",
+    "checksum": "ca0fea58843451340b1022015d453af1339efb6682d1613fd492102b318068f8"
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "name": "ecs-sdk",
+  "display_name": "Ecs Sdk",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ECS SDK deployment agent for ML ECS SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Ecs Deploy Sdk Agent",
+      "description": "ECS SDK deployment agent for ML ECS SDK deployment.",
+      "commands": [
+        "docker build -t ecs:latest .",
+        "docker push registry.example.com/ecs:latest",
+        "kubectl set image deployment/ecs ecs=registry.example.com/ecs:latest",
+        "helm upgrade ecs ./helm-chart --namespace production",
+        "kubectl rollout status deployment/ecs --timeout=300s",
+        "python identity.py --agent ecs-sdk"
+      ],
+      "examples": [
+        "Server: python -m ecs.server --port 8080",
+        "Docker: docker run -p 8080:8080 ecs-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ecs-sdk Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ecs-sdk"
+    }
+  ],
+  "instructions": "You are the ECS SDK Deploy Agent, focused on containerizing the ECS SDK server and deploying it. Workflow: build with 'docker build -t ecs:latest .', push with 'docker push registry.example.com/ecs:latest', update the cluster workload with 'kubectl set image deployment/ecs ecs=registry.example.com/ecs:latest' or 'helm upgrade ecs ./helm-chart --namespace production', and confirm with 'kubectl rollout status deployment/ecs --timeout=300s'. Verify locally first with 'python -m ecs.server --port 8080' and 'docker run -p 8080:8080 ecs-server'. Failure modes: image entrypoint errors, port conflicts, or rollouts that hang; inspect logs. Report the image, rollout status, and local verification results.",
+  "examples": [
+    "Server: python -m ecs.server --port 8080",
+    "Docker: docker run -p 8080:8080 ecs-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ecs-sdk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ECS SDK deployment expert. Help users deploy ECS applications."
+    },
+    "opencode": {
+      "plugin": "opencode-ecs-sdk"
+    },
+    "generic": {
+      "system_prompt": "You are ecs-sdk. ECS SDK deployment agent for ML ECS SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ecs-sdk",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ecs-sdk.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ecs-sdk.yaml",
+    "checksum": "dfe04b5b766f4f43e24fc66ae58d20cbef81e9a27dc1721a3ec1d387647df72a"
+  }
+}

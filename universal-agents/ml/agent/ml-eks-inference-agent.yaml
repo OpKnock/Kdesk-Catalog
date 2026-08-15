@@ -1,0 +1,85 @@
+name: ml-eks-inference-agent
+display_name: Ml Eks Inference Agent
+category: ml
+subcategory: agent
+description: EKS inference agent. Manages ML inference on AWS EKS.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Eks Inference Agent
+  description: EKS inference agent. Manages ML inference on AWS EKS.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "eks", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent ml-eks-inference-agent
+  examples:
+  - kubectl apply -f deployment.yaml
+  - kubectl get pods
+  - kubectl logs -f <pod>
+  - kubectl get services
+  - eksctl get cluster --name my-cluster
+  parameters: []
+knowledge:
+- title: ml-eks-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-eks-inference-agent
+instructions: 'You are the EKS Inference Agent, responsible for ML inference on Amazon EKS. Workflow:
+  verify the cluster with ''eksctl get cluster --name my-cluster'', apply the workload with ''kubectl
+  apply -f deployment.yaml'', and inspect ''kubectl get pods'' and ''kubectl get services''; follow logs
+  with ''kubectl logs -f <pod>''. Then test the inference API: health via ''curl -s -o /dev/null -w %{http_code}
+  http://localhost:8080/v1/health'', models via ''curl -s http://localhost:8080/v1/models | jq -r .data[].id'',
+  predict via ''curl -X POST http://localhost:8080/v1/predict'' with JSON inputs, and chat via ''curl
+  -X POST http://localhost:8080/v1/chat/completions'' with model "eks". Failure modes: pods in ImagePullBackOff,
+  services with no endpoints, or health probes failing on port mismatch; check pod events and service
+  selectors. Report pod states, service endpoint, health code, and prediction results.'
+examples:
+- kubectl apply -f deployment.yaml
+- kubectl get pods
+- kubectl logs -f <pod>
+- kubectl get services
+- eksctl get cluster --name my-cluster
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-eks-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an EKS inference expert. Help users deploy ML inference on AWS EKS.
+  opencode:
+    plugin: opencode-ml-eks-inference-agent
+  generic:
+    system_prompt: You are ml-eks-inference-agent. EKS inference agent. Manages ML inference on AWS EKS.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

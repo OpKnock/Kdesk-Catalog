@@ -1,0 +1,179 @@
+name: social-login
+display_name: Social Login
+category: api
+subcategory: general
+description: 'Hand-crafted social login skill: OAuth2 flows with GitHub and Google, access token exchange,
+  userinfo retrieval, and callback wiring for social sign-in.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: oauth-social-login
+  description: Implement OAuth2 social login with GitHub and Google
+  commands:
+  - 'curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=$CODE"
+    | jq -r .access_token'
+  - 'curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user | jq ''{login, id, email}'''
+  - curl -X POST https://oauth2.googleapis.com/token -d "client_id=$GOOGLE_CLIENT_ID&client_secret=$GOOGLE_CLIENT_SECRET&code=$CODE&redirect_uri=http://localhost:3000/cb&grant_type=authorization_code"
+    | jq -r .access_token
+  - 'curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://www.googleapis.com/oauth2/v3/userinfo |
+    jq ''.sub, .email'''
+  examples:
+  - 'curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=$CODE"
+    | jq -r .access_token'
+  - 'curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://www.googleapis.com/oauth2/v3/userinfo |
+    jq ''.email'''
+  - 'curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user | jq ''{login, id}'''
+  parameters:
+  - name: provider
+    type: string
+    description: github or google
+  - name: client_id
+    type: string
+    description: OAuth app client ID
+  - name: redirect_uri
+    type: string
+    description: Registered callback URI
+knowledge:
+- title: GitHub OAuth apps
+  type: documentation
+  source: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+  description: GitHub authorization code flow
+- title: Google OAuth2 for web servers
+  type: documentation
+  source: https://developers.google.com/identity/protocols/oauth2/web-server
+  description: Google token endpoint and userinfo
+instructions: '# Social Login
+
+
+  Hand-crafted skill for OAuth2 social sign-in with GitHub and Google.
+
+
+  ## What this skill does
+
+
+  - Completes the authorization code exchange for GitHub and Google
+
+  - Fetches profile data from userinfo endpoints
+
+  - Maps provider identity to local accounts
+
+
+  ## When to use
+
+
+  - Adding Sign in with GitHub/Google to an app
+
+  - Debugging token exchange failures in CI
+
+  - Verifying the claims your app receives
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # GitHub: exchange the code (from /login/oauth/authorize redirect)
+
+  curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=$CODE"
+  | jq -r .access_token
+
+
+  # GitHub profile
+
+  curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user | jq ''{login, id, email}''
+
+
+  # Google: exchange the code
+
+  curl -X POST https://oauth2.googleapis.com/token -d "client_id=$GOOGLE_CLIENT_ID&client_secret=$GOOGLE_CLIENT_SECRET&code=$CODE&redirect_uri=http://localhost:3000/cb&grant_type=authorization_code"
+  | jq -r .access_token
+
+
+  # Google userinfo
+
+  curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://www.googleapis.com/oauth2/v3/userinfo | jq
+  ''.sub, .email''
+
+  ```
+
+
+  ## Flow
+
+
+  1. Redirect user to the provider''s authorize URL
+
+  2. Provider redirects back with ?code=
+
+  3. Exchange the code for tokens (commands above)
+
+  4. Fetch profile, upsert local user by provider id
+
+
+  ## Testing
+
+
+  ```bash
+
+  # Local callback test
+
+  curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=test"
+  | jq
+
+  ```
+
+
+  ## Best practices
+
+
+  - Match users by provider id, not email (emails change)
+
+  - Store only the tokens you need; prefer short-lived access tokens
+
+  - Verify the state parameter on the callback to block CSRF
+
+  '
+examples:
+- input: Add Sign in with GitHub
+  output: Register an OAuth app, redirect to /login/oauth/authorize, exchange ?code= for a token, and
+    fetch /user to create the local account keyed by id.
+- input: Callback returned bad_verification_code
+  output: The code is single-use and expires fast; re-run the authorize flow to get a fresh code, or use
+    the state/error fields from the callback.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: social-login.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-social-login
+  generic:
+    system_prompt: 'This is your domain: Social Login. You do it through oauth-social-login: Implement
+      OAuth2 social login with GitHub and Google. The commands are real, e.g. `curl -X POST https://github.com/login/oauth/access_token
+      -H Accept: application/json -d...`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

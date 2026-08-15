@@ -1,0 +1,171 @@
+{
+  "name": "builder",
+  "display_name": "Builder",
+  "category": "patterns",
+  "subcategory": "general",
+  "description": "Implements the Builder pattern in Python: constructing complex objects step-by-step with fluent APIs.",
+  "version": "2.0.0",
+  "tags": [
+    "builder"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "python",
+      "description": "Implement and test Builder pattern examples.",
+      "commands": [
+        "python -m venv .venv && .venv/Scripts/activate",
+        "python -m pip install pytest",
+        "python -m pytest tests/ -v",
+        "python -m pytest tests/test_builder.py -k price",
+        "python -m compileall builder.py"
+      ],
+      "examples": [
+        "python -m pytest tests/ -q",
+        "python -m pytest tests/test_builder.py --maxfail=1",
+        "python -c 'from builder import OrderBuilder; print(OrderBuilder().with_sku(\"A1\").with_qty(2).build())'"
+      ],
+      "parameters": [
+        {
+          "name": "test-path",
+          "type": "string",
+          "description": "pytest path filter"
+        },
+        {
+          "name": "k",
+          "type": "string",
+          "description": "pytest -k expression"
+        },
+        {
+          "name": "maxfail",
+          "type": "number",
+          "description": "Stop after N failures"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Refactoring Guru: Builder",
+      "type": "documentation",
+      "source": "https://refactoring.guru/design-patterns/builder",
+      "description": "Builder intent, structure, and usage"
+    },
+    {
+      "title": "Python Typing",
+      "type": "documentation",
+      "source": "https://docs.python.org/3/library/typing.html",
+      "description": "Type hints for builder classes"
+    }
+  ],
+  "instructions": "# Builder Pattern\n\nConstruct complex objects step by step.\n\n## When to Use\n\n- Objects with many optional parameters\n- Immutable value objects assembled from parts\n- Reducing constructor overloads\n\n## Example (Python)\n\n```python\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Order:\n    sku: str\n    qty: int\n    priority: str = \"normal\"\n    note: str = \"\"\n\nclass OrderBuilder:\n    def __init__(self) -> None:\n        self._sku = \"\"\n        self._qty = 1\n        self._priority = \"normal\"\n        self._note = \"\"\n\n    def with_sku(self, sku: str) -> \"OrderBuilder\":\n        self._sku = sku\n        return self\n\n    def with_qty(self, qty: int) -> \"OrderBuilder\":\n        self._qty = qty\n        return self\n\n    def with_priority(self, priority: str) -> \"OrderBuilder\":\n        self._priority = priority\n        return self\n\n    def build(self) -> Order:\n        return Order(self._sku, self._qty, self._priority, self._note)\n```\n\n## Test\n\n```python\nfrom builder import OrderBuilder\n\ndef test_builder_defaults():\n    order = OrderBuilder().with_sku(\"A1\").with_qty(2).build()\n    assert order.sku == \"A1\"\n    assert order.qty == 2\n    assert order.priority == \"normal\"\n```\n\n```bash\npython -m pytest tests/ -v\n```\n\n## Best practices\n\n- Return self from setters for fluent chaining.\n- Validate in build() - fail fast on missing requireds.\n- Keep the builder mutable, the product immutable.\n- Consider a Director only for standard configurations.\n\n## Testing\n\nCover defaults, overrides, and validation errors.",
+  "examples": [
+    {
+      "input": "Build order objects with many optional fields.",
+      "output": "Implements OrderBuilder with fluent with_* methods and a validating build()."
+    },
+    {
+      "input": "Standardize two order configurations across tests.",
+      "output": "Adds Director-style helper functions building standard order fixtures via the builder."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "builder.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-builder"
+    },
+    "generic": {
+      "system_prompt": "You are the Builder specialist. You do it through python: Implement and test Builder pattern examples. The commands are real, e.g. `python -m venv .venv && .venv/Scripts/activate`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "builder",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "python",
+        "name": "test-path",
+        "type": "string",
+        "description": "pytest path filter"
+      },
+      {
+        "capability": "python",
+        "name": "k",
+        "type": "string",
+        "description": "pytest -k expression"
+      },
+      {
+        "capability": "python",
+        "name": "maxfail",
+        "type": "number",
+        "description": "Stop after N failures"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/builder-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/builder-skill.yaml",
+    "checksum": "8789584b74a9d25105a1e95d8cd6f4afe5839d5f66d2910f40d9f1f2f6dbb342"
+  }
+}

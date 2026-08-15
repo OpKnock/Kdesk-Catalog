@@ -1,0 +1,175 @@
+{
+  "name": "spark-streaming",
+  "display_name": "Spark Streaming",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Spark Structured Streaming skill: spark-submit with Kafka integration, streaming queries in spark-shell, and cluster-mode deployment.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-console-producer",
+    "spark-shell",
+    "spark-submit"
+  ],
+  "capabilities": [
+    {
+      "name": "structured-streaming",
+      "description": "Run Spark Structured Streaming jobs with Kafka sources",
+      "commands": [
+        "spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py",
+        "spark-submit --deploy-mode cluster --master k8s://https://cluster:6443 --class com.app.StreamJob app.jar",
+        "spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1",
+        "spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 --conf spark.sql.shuffle.partitions=200 streaming.py",
+        "kafka-console-producer --broker-list localhost:9092 --topic events"
+      ],
+      "examples": [
+        "spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py",
+        "spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1",
+        "kafka-console-producer --broker-list localhost:9092 --topic events"
+      ],
+      "parameters": [
+        {
+          "name": "master",
+          "type": "string",
+          "description": "Spark master URL: local[4], yarn, k8s://"
+        },
+        {
+          "name": "packages",
+          "type": "string",
+          "description": "Maven coordinates for kafka connector"
+        },
+        {
+          "name": "shuffle_partitions",
+          "type": "integer",
+          "description": "Parallelism for stateful aggregations"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Spark Kafka integration guide",
+      "type": "documentation",
+      "source": "https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html",
+      "description": "Kafka source/sink options and offsets"
+    },
+    {
+      "title": "Spark Structured Streaming guide",
+      "type": "documentation",
+      "source": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+      "description": "Streaming queries, output modes, watermarking"
+    }
+  ],
+  "instructions": "# Spark Structured Streaming\n\nHand-crafted skill for streaming data pipelines with Spark Structured Streaming.\n\n## What this skill does\n\n- Runs streaming jobs with spark-submit against Kafka topics\n- Explores streaming APIs interactively in spark-shell\n- Deploys in cluster mode to YARN or Kubernetes\n\n## When to use\n\n- Aggregating event streams with windowing and watermarks\n- Joining a stream with a lookup table\n- Replacing stateful Kafka consumer microservices\n\n## Real commands\n\n```bash\n# Local run with the Kafka connector\nspark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py\n\n# Cluster mode on Kubernetes\nspark-submit --deploy-mode cluster --master k8s://https://cluster:6443 --class com.app.StreamJob app.jar\n\n# Interactive exploration\nspark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1\n\n# Tune aggregation parallelism\nspark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 --conf spark.sql.shuffle.partitions=200 streaming.py\n\n# Produce test data\nkafka-console-producer --broker-list localhost:9092 --topic events\n```\n\n## Streaming job\n\n```python\nfrom pyspark.sql import SparkSession\nfrom pyspark.sql.functions import from_json, window, col\n\nspark = SparkSession.builder.appName(\"events\").getOrCreate()\ndf = (\n    spark.readStream.format(\"kafka\")\n    .option(\"kafka.bootstrap.servers\", \"localhost:9092\")\n    .option(\"subscribe\", \"events\")\n    .option(\"startingOffsets\", \"earliest\")\n    .load()\n)\ncounts = df.groupBy(window(col(\"ts\"), \"1 minute\")).count()\ncounts.writeStream.outputMode(\"update\").format(\"console\").start().awaitTermination()\n```\n\n## Testing\n\n```bash\nkafka-console-producer --broker-list localhost:9092 --topic events <<< '{\"ts\":\"2026-08-10T10:00:00Z\",\"value\":1}'\nspark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py\n```\n\n## Best practices\n\n- Pin the spark-sql-kafka artifact version to your Spark version\n- Use checkpointLocation on durable storage for exactly-once recovery\n- Set startingOffsets=earliest for backfill, latest for production tailing\n",
+  "examples": [
+    {
+      "input": "Count events per minute from Kafka",
+      "output": "Read the topic with readStream.format(\"kafka\"), groupBy(window(col(\"ts\"), \"1 minute\")), and write with outputMode(\"update\") to console."
+    },
+    {
+      "input": "My streaming job replays on restart",
+      "output": "Point checkpointLocation to durable storage (S3/HDFS) and use latest offsets; without checkpoints Spark starts from the beginning."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "spark-streaming.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-spark-streaming"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Spark Streaming. You do it through structured-streaming: Run Spark Structured Streaming jobs with Kafka sources. The commands are real, e.g. `spark-submit --master local[4] --packages...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "spark-streaming",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "structured-streaming",
+        "name": "master",
+        "type": "string",
+        "description": "Spark master URL: local[4], yarn, k8s://"
+      },
+      {
+        "capability": "structured-streaming",
+        "name": "packages",
+        "type": "string",
+        "description": "Maven coordinates for kafka connector"
+      },
+      {
+        "capability": "structured-streaming",
+        "name": "shuffle_partitions",
+        "type": "integer",
+        "description": "Parallelism for stateful aggregations"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-console-producer",
+    "spark-shell",
+    "spark-submit"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/spark-streaming-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/spark-streaming-skill.yaml",
+    "checksum": "bcbeb1a6647f55e2995db9d032cce40367779f6da669382ed315e3428714742f"
+  }
+}

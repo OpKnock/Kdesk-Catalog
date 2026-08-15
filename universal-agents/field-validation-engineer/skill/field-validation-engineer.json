@@ -1,0 +1,235 @@
+{
+  "name": "field-validation-engineer-field-validation-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Builds schema-driven validation for APIs and data pipelines using JSON Schema, Ajv, and Redocly, with compile-time checks and CI enforcement.",
+  "keywords": [
+    "field-validation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "field-validation-engineer-field-validation-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-field-validation-engineer"
+    },
+    "generic": {
+      "system_prompt": "You work field-validation-engineer-field-validation-engineer hands-on. You do it through ajv: Compile and validate data against JSON Schema with Ajv CLI. The commands are real, e.g. `npx ajv-cli compile -s schema.json`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "ajv",
+      "description": "Compile and validate data against JSON Schema with Ajv CLI.",
+      "commands": [
+        "npx ajv-cli compile -s schema.json",
+        "npx ajv-cli validate -s schema.json -d data.json --strict=true",
+        "npx ajv-cli validate -s schema.json -d 'data/*.json' --all-errors",
+        "npx ajv-cli migrate -i legacy-schema.json -o modern-schema.json",
+        "npx ajv-cli test -s schema.json -d test-cases.json --valid"
+      ],
+      "examples": [
+        "npx ajv-cli validate -s user.schema.json -d request.json --all-errors",
+        "npx ajv-cli compile -s openapi.components.json --strict=false",
+        "npx ajv-cli validate -s order.schema.json -d 'fixtures/*.json'"
+      ],
+      "parameters": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Path to the JSON Schema file"
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "description": "Path or glob of data files to validate"
+        },
+        {
+          "name": "strict",
+          "type": "string",
+          "description": "true|false|log — strict mode for schema correctness"
+        }
+      ]
+    },
+    {
+      "name": "redocly",
+      "description": "Lint OpenAPI definitions for request/response schema quality.",
+      "commands": [
+        "npx @redocly/cli lint openapi.yaml",
+        "npx @redocly/cli lint --extends=recommended --format=stylish openapi.yaml",
+        "npx @redocly/cli bundle openapi.yaml -o dist/openapi.yaml",
+        "npx @redocly/cli lint openapi.yaml --skip-rule no-unspecified-components",
+        "npx @redocly/cli preview-docs openapi.yaml"
+      ],
+      "examples": [
+        "npx @redocly/cli lint openapi.yaml --format=json > lint-report.json",
+        "npx @redocly/cli bundle src/openapi.yaml -o build/openapi.yaml",
+        "npx @redocly/cli lint --extends=minimal openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "extends",
+          "type": "string",
+          "description": "Config preset: recommended, minimal, or a local config"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output format: stylish, json, or codeframe"
+        },
+        {
+          "name": "skip-rule",
+          "type": "string",
+          "description": "Rule id to skip during linting"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "pydantic",
+    "zod"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "pydantic",
+    "zod",
+    "ajv",
+    "joi"
+  ],
+  "examples": [
+    {
+      "input": "Validate user signup payloads against a strict schema and return all field errors.",
+      "output": "Runs ajv-cli validate with --all-errors against user.schema.json and maps violations to 422 responses with field-level messages."
+    },
+    {
+      "input": "Check the OpenAPI spec has no missing required fields before release.",
+      "output": "Runs Redocly lint with the recommended preset in CI and blocks merge on rule failures."
+    }
+  ],
+  "instructions": "# Field Validation\n\nEnforce contract-level validation with JSON Schema so bad data fails fast at the boundary.\n\n## When to Use\n\n- Defining request/response contracts for REST or event payloads\n- Validating bulk imports and data pipelines\n- Guarding against schema drift in polyglot services\n\n## JSON Schema fundamentals\n\n```json\n{\n  \"type\": \"object\",\n  \"required\": [\"email\", \"age\"],\n  \"properties\": {\n    \"email\": {\"type\": \"string\", \"format\": \"email\", \"maxLength\": 254},\n    \"age\": {\"type\": \"integer\", \"minimum\": 0, \"maximum\": 130}\n  },\n  \"additionalProperties\": false\n}\n```\n\nAlways set `additionalProperties: false` for internal payloads and keep external-facing schemas lenient where the provider may add fields.\n\n## Validation workflow\n\n```bash\nnpx ajv-cli compile -s user.schema.json\nnpx ajv-cli validate -s user.schema.json -d request.json --all-errors\n```\n\nUse `--all-errors` in tests to surface every violation in one run instead of fail-first behavior.\n\n## OpenAPI enforcement\n\n```bash\nnpx @redocly/cli lint openapi.yaml --extends=recommended\nnpx @redocly/cli lint --format=json openapi.yaml > lint-report.json\n```\n\n## Testing\n\nCreate a test-cases file: one entry per valid and invalid payload with expected outcome.\n\n```bash\nnpx ajv-cli test -s schema.json -d cases.json --valid\n```\n\n## Best practices\n\n- Version schemas; consumers pin to a major version.\n- Prefer `format` and `pattern` over open-ended string types.\n- Reject unknown fields in write paths to catch typos early.\n- Run schema lint in CI so breaking changes fail the build.\n- Use `$defs` for reusable components, not copy-paste duplication.",
+  "display_name": "field-validation-engineer-field-validation-engineer",
+  "knowledge": [
+    {
+      "title": "JSON Schema Spec",
+      "type": "documentation",
+      "source": "https://json-schema.org/",
+      "description": "Core, validation, and annotation vocabularies of JSON Schema"
+    },
+    {
+      "title": "Ajv Docs",
+      "type": "documentation",
+      "source": "https://ajv.js.org/",
+      "description": "Fastest JSON Schema validator, options, and strict mode"
+    },
+    {
+      "title": "Redocly CLI",
+      "type": "documentation",
+      "source": "https://www.redocly.com/docs/cli/",
+      "description": "OpenAPI linting, bundling, and breaking-change detection"
+    }
+  ],
+  "id": "field-validation-engineer-field-validation-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ajv",
+        "name": "schema",
+        "type": "string",
+        "description": "Path to the JSON Schema file"
+      },
+      {
+        "capability": "ajv",
+        "name": "data",
+        "type": "string",
+        "description": "Path or glob of data files to validate"
+      },
+      {
+        "capability": "ajv",
+        "name": "strict",
+        "type": "string",
+        "description": "true|false|log — strict mode for schema correctness"
+      },
+      {
+        "capability": "redocly",
+        "name": "extends",
+        "type": "string",
+        "description": "Config preset: recommended, minimal, or a local config"
+      },
+      {
+        "capability": "redocly",
+        "name": "format",
+        "type": "string",
+        "description": "Output format: stylish, json, or codeframe"
+      },
+      {
+        "capability": "redocly",
+        "name": "skip-rule",
+        "type": "string",
+        "description": "Rule id to skip during linting"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "pydantic",
+    "zod"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "field-validation-engineer/skill/field-validation-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/field-validation-engineer/skill/field-validation-engineer.yaml",
+    "checksum": "b592600a6a9d35fe6e4f6cc429c323de31b75459e2a5ac755010bd4ef3ce61cd"
+  }
+}

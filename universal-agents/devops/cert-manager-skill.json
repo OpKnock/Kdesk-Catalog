@@ -1,0 +1,169 @@
+{
+  "name": "cert-manager",
+  "display_name": "cert-manager",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Automates TLS certificates in Kubernetes with cert-manager: issuers, certificates, and cmctl status.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cmctl",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "cert-manager",
+      "description": "Manage issuers, certificates, and verify issuance",
+      "commands": [
+        "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml",
+        "kubectl apply -f issuer.yaml",
+        "kubectl get certificates -A",
+        "kubectl describe certificate web-tls",
+        "cmctl status certificate web-tls"
+      ],
+      "examples": [
+        "kubectl get issuers -n cert-manager",
+        "cmctl check api",
+        "kubectl create -f certificate.yaml --dry-run=client -o yaml"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace for the certificate/issuer"
+        },
+        {
+          "name": "dry-run",
+          "type": "string",
+          "description": "client/server dry-run validation"
+        },
+        {
+          "name": "wait",
+          "type": "boolean",
+          "description": "Wait for certificate readiness"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cert-manager docs",
+      "type": "documentation",
+      "source": "https://cert-manager.io/docs/",
+      "description": "Installation, issuers, and certificate resources"
+    },
+    {
+      "title": "cmctl reference",
+      "type": "documentation",
+      "source": "https://cert-manager.io/docs/reference/cmctl/",
+      "description": "CLI commands for status and approval"
+    }
+  ],
+  "instructions": "# cert-manager\n\nAutomates X.509 certificate issuance and renewal in Kubernetes, typically with\nLet's Encrypt.\n\n## When to Use\n\n- Automatic TLS for ingress-hosted services\n- Internal CA for service mesh/mTLS\n- Renewal tracking and certificate status checks\n\n## Real Commands\n\n```bash\n# Install (manifest)\nsudo kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml\n\n# Verify\nsudo kubectl get pods -n cert-manager\nsudo cmctl check api\n\n# Issuers\nsudo kubectl apply -f issuer.yaml\nsudo kubectl get issuers -A\nsudo kubectl describe issuer letsencrypt-prod -n cert-manager\n\n# Certificates\nsudo kubectl apply -f certificate.yaml\nsudo kubectl get certificates -A\nsudo kubectl describe certificate web-tls -n default\nsudo cmctl status certificate web-tls -n default\n```\n\n## Issuer Example\n\n```yaml\napiVersion: cert-manager.io/v1\nkind: ClusterIssuer\nmetadata:\n  name: letsencrypt-prod\nspec:\n  acme:\n    server: https://acme-v02.api.letsencrypt.org/directory\n    email: ops@example.com\n    privateKeySecretRef:\n      name: letsencrypt-prod-key\n    solvers:\n      - http01:\n          ingress:\n            class: nginx\n```\n\n## Best Practices\n\n- Use ClusterIssuer for cluster-wide Let's Encrypt\n- Pin the cert-manager version in manifests\n- Monitor certificate expiry (`kubectl get cert -A` + alerts)\n- Use `cmctl check api` after install to verify the API is live\n- Prefer dns01 for wildcards and http01 elsewhere\n\n## Example Response\n\nFor an unissued certificate: describes the cert and issuer, finds the error\n(ACME, DNS, ingress class), fixes it, and confirms Ready=True.",
+  "examples": [
+    {
+      "input": "Set up automatic TLS for our ingress",
+      "output": "Installs cert-manager, creates the ClusterIssuer, issues the certificate, and verifies Ready status"
+    },
+    {
+      "input": "Certificate renewal is failing",
+      "output": "Describes the certificate, identifies the ACME/DNS failure, and applies the fix"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cert-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cert-manager"
+    },
+    "generic": {
+      "system_prompt": "You are the cert-manager specialist. You do it through cert-manager: Manage issuers, certificates, and verify issuance. The commands are real, e.g. `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/ce...`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cert-manager",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cert-manager",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace for the certificate/issuer"
+      },
+      {
+        "capability": "cert-manager",
+        "name": "dry-run",
+        "type": "string",
+        "description": "client/server dry-run validation"
+      },
+      {
+        "capability": "cert-manager",
+        "name": "wait",
+        "type": "boolean",
+        "description": "Wait for certificate readiness"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cmctl",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/cert-manager-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/cert-manager-skill.yaml",
+    "checksum": "e225cc849fc69fbf18f20ed2362f52f2c014de89df3d9deee7e60201df80921e"
+  }
+}

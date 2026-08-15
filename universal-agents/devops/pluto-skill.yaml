@@ -1,0 +1,194 @@
+name: pluto
+display_name: pluto
+category: devops
+subcategory: general
+description: Detects deprecated Kubernetes API versions in manifests and live clusters with Fairwinds
+  Pluto, tracking removal schedules per version.
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- helm
+- pluto
+capabilities:
+- name: manifest-scanning
+  description: Scan directory trees of YAML manifests for deprecated APIs.
+  commands:
+  - pluto detect-files -d ./deploy
+  - pluto detect-files -d . --output json
+  - pluto detect-files -d . --ignore-deprecations
+  - pluto detect-files -d . --target-versions k8s=v1.25.0
+  - pluto detect-files --glob 'k8s/**/*.yaml'
+  examples:
+  - pluto detect-files -d ./deploy
+  - pluto detect-files -d . --output json
+  - pluto detect-files -d . --target-versions k8s=v1.25.0
+  parameters:
+  - name: dir
+    type: string
+    description: Directory to scan
+  - name: target-versions
+    type: string
+    description: Target versions, e.g. k8s=v1.25.0
+  - name: output
+    type: string
+    description: 'Output format: normal, json, yaml'
+- name: cluster-scanning
+  description: Scan live clusters for in-use deprecated APIs via helm output or kube context.
+  commands:
+  - pluto detect-kube-context
+  - pluto detect-kube-context -o json
+  - helm list -A -o json > /tmp/helm.json && pluto detect-helm -o json
+  - pluto detect-all-in-cluster
+  - pluto list-versions
+  examples:
+  - pluto detect-kube-context
+  - pluto detect-helm -o json
+  - pluto list-versions
+  parameters:
+  - name: context
+    type: string
+    description: Kube context to scan
+  - name: output
+    type: string
+    description: Output format
+knowledge:
+- title: Pluto GitHub
+  type: documentation
+  source: https://github.com/FairwindsOps/pluto
+  description: CLI usage, version matrix, and component groups
+- title: Fairwinds Deprecated API Policy
+  type: documentation
+  source: https://www.fairwinds.com/blog/deprecated-kubernetes-apis
+  description: Kubernetes API deprecation and removal schedule
+instructions: '# Pluto Deprecation Scanning
+
+
+  Find deprecated Kubernetes APIs before they are removed by the control plane.
+
+
+  ## What This Skill Does
+
+
+  - Scans manifest directories for deprecated apiVersions
+
+  - Scans live clusters through kube context
+
+  - Scans Helm chart output for deprecations
+
+  - Reports removal versions and target-version checks
+
+  - Exits nonzero to fail CI on deprecations
+
+
+  ## When to Use
+
+
+  - Before a Kubernetes upgrade (v1.22 -> v1.25 removed many APIs)
+
+  - CI gate to prevent deprecated API usage from merging
+
+  - Auditing Helm charts and vendored YAML
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Files
+
+  pluto detect-files -d ./deploy
+
+  pluto detect-files -d . --output json
+
+  pluto detect-files -d . --target-versions k8s=v1.25.0
+
+  pluto detect-files --glob ''k8s/**/*.yaml''
+
+
+  # Cluster
+
+  pluto detect-kube-context
+
+  pluto detect-kube-context -o json
+
+  helm list -A -o json > /tmp/helm.json
+
+  pluto detect-helm -o json
+
+  pluto detect-all-in-cluster
+
+
+  # Reference
+
+  pluto list-versions
+
+  pluto version
+
+  ```
+
+
+  ## CI Gate
+
+
+  ```bash
+
+  pluto detect-files -d ./deploy --output json | jq ''.items | length''
+
+  # exit code 1 means deprecations found
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run pluto in every CI pipeline, fail on deprecated APIs
+
+  - Check `pluto list-versions` before planning cluster upgrades
+
+  - Migrate deprecated APIs in the same release as their removal target
+
+  - Scan Helm charts with detect-helm; charts mask deprecations otherwise
+
+  - Keep the pluto binary updated for the latest version matrix'
+examples:
+- input: We are upgrading Kubernetes to 1.27; what breaks?
+  output: Agent scans manifests with target-version checks and cluster with detect-kube-context, producing
+    a migration list
+- input: Block deprecated APIs in CI
+  output: Agent adds a pluto detect-files step that fails on any deprecation and reports the JSON output
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pluto.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pluto
+  generic:
+    system_prompt: 'This is your domain: pluto. You do it through manifest-scanning: Scan directory trees
+      of YAML manifests for deprecated APIs. The commands are real, e.g. `pluto detect-files -d ./deploy`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

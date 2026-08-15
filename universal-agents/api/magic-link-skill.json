@@ -1,0 +1,222 @@
+{
+  "name": "magic-link",
+  "display_name": "Magic Link",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implement passwordless login with magic links: JWT signing, one-time token storage with Redis, email delivery, and verification endpoints.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx",
+    "openssl",
+    "python3",
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "token-issuance",
+      "description": "Generate and sign short-lived magic link tokens.",
+      "commands": [
+        "openssl rand -base64 32",
+        "python3 -c \"import jwt,datetime; print(jwt.encode({'sub':'alice@example.com','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)}, open('private.pem').read(), algorithm='RS256'))\"",
+        "npx jwt-cli encode --secret=dev-secret -P sub=alice@example.com -P exp=... ",
+        "python3 -c \"import secrets; print(secrets.token_urlsafe(32))\""
+      ],
+      "examples": [
+        "python3 -c \"import jwt,datetime; print(jwt.encode({'sub':'alice@example.com','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)}, open('private.pem').read(), algorithm='RS256'))\"",
+        "openssl rand -base64 32",
+        "python3 -c \"import secrets; print(secrets.token_urlsafe(32))\""
+      ],
+      "parameters": [
+        {
+          "name": "email",
+          "type": "string",
+          "description": "User email for the token subject."
+        },
+        {
+          "name": "ttl_minutes",
+          "type": "integer",
+          "description": "Token validity in minutes."
+        },
+        {
+          "name": "algorithm",
+          "type": "string",
+          "description": "JWT algorithm: RS256 or HS256."
+        }
+      ]
+    },
+    {
+      "name": "verify-exchange",
+      "description": "Exercise the magic link flow: request, verify, and one-time use.",
+      "commands": [
+        "curl -s -X POST http://localhost:8080/auth/magic-link -H 'Content-Type: application/json' -d '{\"email\":\"alice@example.com\"}'",
+        "curl -s http://localhost:8080/auth/verify?token=TOKEN",
+        "redis-cli SETEX magic:alice@example.com 900 TOKEN",
+        "redis-cli GET magic:alice@example.com",
+        "curl -s http://localhost:8080/auth/verify?token=USED_TOKEN"
+      ],
+      "examples": [
+        "curl -s -X POST http://localhost:8080/auth/magic-link -H 'Content-Type: application/json' -d '{\"email\":\"alice@example.com\"}'",
+        "curl -s http://localhost:8080/auth/verify?token=TOKEN",
+        "redis-cli SETEX magic:alice@example.com 900 TOKEN"
+      ],
+      "parameters": [
+        {
+          "name": "email",
+          "type": "string",
+          "description": "Email to send the link to."
+        },
+        {
+          "name": "token",
+          "type": "string",
+          "description": "Magic link token."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "JWT Best Practices",
+      "type": "documentation",
+      "source": "https://auth0.com/blog/implementing-magic-links/",
+      "description": "Magic link implementation patterns."
+    },
+    {
+      "title": "PyJWT",
+      "type": "documentation",
+      "source": "https://pyjwt.readthedocs.io/en/stable/",
+      "description": "JWT encode/decode in Python."
+    },
+    {
+      "title": "redis SETEX",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/setex/",
+      "description": "Redis command for one-time token storage with TTL."
+    }
+  ],
+  "instructions": "# Magic Link Authentication\n\nImplement passwordless login with signed, single-use magic links.\n\n## What this skill does\n\n- Issues short-lived signed tokens for emails.\n- Stores one-time tokens in Redis with TTL.\n- Verifies tokens on the callback endpoint.\n\n## When to use\n\n- Passwordless login flows.\n- Lowering login friction while keeping security.\n- Replacing emailed passwords with expiring links.\n\n## Real commands\n\n```bash\n# Generate a random secret or keypair\nopenssl rand -base64 32\nopenssl genrsa -out private.pem 2048\n\n# Issue an RS256 token (15 min TTL)\npython3 -c \"import jwt,datetime; print(jwt.encode({'sub':'alice@example.com','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)}, open('private.pem').read(), algorithm='RS256'))\"\n\n# Request a link (app endpoint)\ncurl -s -X POST http://localhost:8080/auth/magic-link \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"email\":\"alice@example.com\"}'\n\n# Store a one-time token in Redis (900s TTL)\nredis-cli SETEX magic:alice@example.com 900 TOKEN\n\n# Verify callback\ncurl -s http://localhost:8080/auth/verify?token=TOKEN\n\n# Replay protection: second use must fail\ncurl -s http://localhost:8080/auth/verify?token=USED_TOKEN\n```\n\n## Flow example\n\n```text\nPOST /auth/magic-link {email}  ->  generate token, email link\nGET  /auth/verify?token=...    ->  validate signature+exp, consume token, issue session\n```\n\n## Testing\n\n```bash\n# Negative tests\ncurl -s http://localhost:8080/auth/verify?token=EXPIRED   # 401\ncurl -s http://localhost:8080/auth/verify?token=USED      # 401 (single use)\n```\n\n## Best practices\n\n- Sign tokens (RS256 preferred) and enforce aud/iss claims.\n- Make links single-use: consume the token after successful verification.\n- Rate-limit the request endpoint; leaky magic links enable spam.\n- Keep TTL short (10-15 min); reissue on expiry.\n",
+  "examples": [
+    {
+      "input": "Send a login link to alice",
+      "output": "POST /auth/magic-link with alice's email; the app signs a 15-min token and emails the verify URL."
+    },
+    {
+      "input": "Why does the second click on the link fail?",
+      "output": "Tokens are single-use; Redis consumed the token on first verification. Reissue via POST /auth/magic-link."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "magic-link.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-magic-link"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Magic Link. You do it through token-issuance: Generate and sign short-lived magic link tokens. The commands are real, e.g. `openssl rand -base64 32`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "magic-link",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "token-issuance",
+        "name": "email",
+        "type": "string",
+        "description": "User email for the token subject."
+      },
+      {
+        "capability": "token-issuance",
+        "name": "ttl_minutes",
+        "type": "integer",
+        "description": "Token validity in minutes."
+      },
+      {
+        "capability": "token-issuance",
+        "name": "algorithm",
+        "type": "string",
+        "description": "JWT algorithm: RS256 or HS256."
+      },
+      {
+        "capability": "verify-exchange",
+        "name": "email",
+        "type": "string",
+        "description": "Email to send the link to."
+      },
+      {
+        "capability": "verify-exchange",
+        "name": "token",
+        "type": "string",
+        "description": "Magic link token."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx",
+    "openssl",
+    "python3",
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/magic-link-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/magic-link-skill.yaml",
+    "checksum": "f6552c4716f5beaecd18f5fa47757983925e7576c9b5bd0531edda8d350de40e"
+  }
+}

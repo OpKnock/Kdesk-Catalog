@@ -1,0 +1,131 @@
+name: api-gov-specialist
+version: 2.0.0
+type: skill
+category: backend
+description: 'Deep expertise in API governance: authoring style guides, custom Spectral rulesets, and
+  API review automation at scale.'
+keywords:
+- api-governance
+- style-guide
+- linting
+- standards
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-gov-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-gov-specialist
+  generic:
+    system_prompt: 'This is your domain: api-gov-specialist. You do it through ruleset-authoring: Write
+      custom Spectral rulesets with functions for org-specific API conventions. The commands are real,
+      e.g. `npx @stoplight/spectral-cli lint --ruleset .spectral.yaml openapi.yaml`. You verify each step
+      you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: ruleset-authoring
+  description: Write custom Spectral rulesets with functions for org-specific API conventions
+  commands:
+  - npx @stoplight/spectral-cli lint --ruleset .spectral.yaml openapi.yaml
+  - npx @stoplight/spectral-cli lint -r .spectral.yaml --format json openapi.yaml > report.json
+  - npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --verbose openapi.yaml
+  - node -e "const s=require('@stoplight/spectral'); console.log(s.version)"
+  - npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --fail-severity warn openapi.yaml
+  examples:
+  - npx @stoplight/spectral-cli lint -r .spectral.yaml --format json openapi.yaml > report.json && jq
+    '.summary' report.json
+  - npx @stoplight/spectral-cli lint -r .spectral.yaml --verbose openapi.yaml
+  - npx @stoplight/spectral-cli lint -r .spectral.yaml --fail-severity error openapi.yaml
+  parameters:
+  - name: ruleset
+    type: string
+    description: Custom ruleset file
+  - name: spec
+    type: string
+    description: Spec to lint
+- name: review-automation
+  description: Automate API design review in PRs with linting and diff checks
+  commands:
+  - git diff --name-only --diff-filter=ACM origin/main HEAD | grep -E '\.(yaml|yml)$' | xargs npx @stoplight/spectral-cli
+    lint
+  - openapi-diff --fail-on-incompatible --ignore-path path-to-ignore.json old.yaml new.yaml
+  - npx @stoplight/spectral-cli lint --summary --fail-severity error openapi.yaml
+  - redocly lint --extends=recommended openapi.yaml --output-style=github-actions
+  - swagger-cli validate $(git diff --name-only HEAD~1 | grep openapi.yaml)
+  examples:
+  - git diff --name-only origin/main HEAD | grep openapi.yaml | xargs npx @stoplight/spectral-cli lint
+    --fail-severity error
+  - openapi-diff --fail-on-incompatible prod.yaml pr.yaml
+  - redocly lint --extends=recommended openapi.yaml --output-style=github-actions
+  parameters:
+  - name: baseRef
+    type: string
+    description: Baseline branch
+  - name: failOn
+    type: string
+    description: Failure threshold
+prerequisites:
+- spectral
+- openapi
+tools:
+- spectral
+- openapi
+- node.js
+- python
+- stoplight-studio
+examples:
+- input: Enforce API standards across 40 services
+  output: Publishes a ruleset with org naming conventions and runs it in every service's CI with JSON
+    reporting
+- input: Automate API design review
+  output: Wires Spectral + openapi-diff into GitHub Actions so PRs fail on incompatible changes
+instructions: "# API Gov Specialist\n\nDesigns and operates API governance programs: style guides, custom\
+  \ linting, and automated review.\n\n## When to Use\n- Building org-wide API standards\n- Custom rule\
+  \ enforcement beyond defaults\n- Scaling review across many teams\n\n## Real Commands\n\n```bash\n#\
+  \ Lint with custom ruleset\nnpx @stoplight/spectral-cli lint --ruleset .spectral.yaml openapi.yaml\n\
+  \n# JSON report for dashboards\nnpx @stoplight/spectral-cli lint -r .spectral.yaml --format json openapi.yaml\
+  \ > report.json\n\n# Detect breaking changes between versions\nopenapi-diff --fail-on-incompatible v1.yaml\
+  \ v2.yaml\n\n# CI-friendly output\nredocly lint --extends=recommended openapi.yaml --output-style=github-actions\n\
+  ```\n\n## Ruleset Example\n\n```yaml\n# .spectral.yaml\nextends: [[spectral:oas, recommended]]\nrules:\n\
+  \  no-internal-paths:\n    message: Internal paths must be prefixed /internal\n    given: $.paths[*]~\n\
+  \    severity: error\n    then:\n      function: pattern\n      functionOptions: {match: \"^(/internal|/v[0-9]+)\"\
+  }\n```\n\n## Testing\nKeep a fixture spec with intentional violations to verify rules fire correctly.\n\
+  \n## Best Practices\n- Version the ruleset like code\n- Review new rules against existing specs before\
+  \ enabling as error"
+display_name: api-gov-specialist
+knowledge:
+- title: Spectral Functions
+  type: documentation
+  source: https://docs.stoplight.io/docs/spectral/reference/functions
+  description: Custom functions for advanced rules
+- title: OpenAPI Diff
+  type: documentation
+  source: https://github.com/OpenAPITools/openapi-diff
+  description: Breaking change detection
+- title: OpenAPI Style Guide Examples
+  type: documentation
+  source: https://opensource.zalando.com/restful-api-guidelines/
+  description: Zalando RESTful API guidelines reference

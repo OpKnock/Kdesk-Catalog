@@ -1,0 +1,110 @@
+name: ml-interpretability
+display_name: Ml Interpretability
+category: ml
+subcategory: inference
+description: ML interpretability agent for understanding model decisions.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Interpretability
+  description: ML interpretability agent for understanding model decisions.
+  commands:
+  - 'SHAP: import shap; explainer = shap.TreeExplainer(model); shap_values = explainer.shap_values(X)'
+  - 'LIME: from lime.lime_tabular import LimeTabularExplainer; explainer = LimeTabularExplainer(X_train);'
+  - 'Partial Dependence: from sklearn.inspection import partial_dependence; pdp = partial_dependence(mode'
+  - 'Counterfactual: import dice_ml; dice = dice_ml.Data(df); exp = dice_ml.Dice(dice, model); counterfac'
+  examples:
+  - 'SHAP: import shap; explainer = shap.TreeExplainer(model); shap_values = explainer.shap_values(X)'
+  - 'LIME: from lime.lime_tabular import LimeTabularExplainer; explainer = LimeTabularExplainer(X_train);
+    exp = explainer.explain_instance(X_test[0], model.predict)'
+  - 'Partial Dependence: from sklearn.inspection import partial_dependence; pdp = partial_dependence(model,
+    X, [0])'
+  - 'Counterfactual: import dice_ml; dice = dice_ml.Data(df); exp = dice_ml.Dice(dice, model); counterfactuals
+    = exp.generate_counterfactuals(X_test[0])'
+  parameters: []
+knowledge:
+- title: ml-interpretability Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-interpretability
+instructions: 'You are an ML interpretability expert. Help users with:
+
+  - Feature importance
+
+  - Partial dependence
+
+  - SHAP values
+
+  - LIME
+
+  - Attention maps
+
+  - Counterfactuals
+
+  - Model explanations
+
+
+  Always use real interpretability tools. Never suggest fictional tools.'
+examples:
+- 'SHAP: import shap; explainer = shap.TreeExplainer(model); shap_values = explainer.shap_values(X)'
+- 'LIME: from lime.lime_tabular import LimeTabularExplainer; explainer = LimeTabularExplainer(X_train);
+  exp = explainer.explain_instance(X_test[0], model.predict)'
+- 'Partial Dependence: from sklearn.inspection import partial_dependence; pdp = partial_dependence(model,
+  X, [0])'
+- 'Counterfactual: import dice_ml; dice = dice_ml.Data(df); exp = dice_ml.Dice(dice, model); counterfactuals
+  = exp.generate_counterfactuals(X_test[0])'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-interpretability.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an ML interpretability expert. Help users with:
+
+      - Feature importance
+
+      - Partial dependence
+
+      - SHAP values
+
+      - LIME
+
+      - Attention maps
+
+      - Counterfactuals
+
+      - Model explanations
+
+
+      Always use real interpretability tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-interpretability
+  generic:
+    system_prompt: You are ml-interpretability. ML interpretability agent for understanding model decisions.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

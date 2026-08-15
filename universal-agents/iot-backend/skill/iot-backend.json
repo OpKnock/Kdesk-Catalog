@@ -1,0 +1,236 @@
+{
+  "name": "iot-backend",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Builds IoT backends: MQTT brokers with mosquitto/EMQX, device data ingestion, and AWS IoT Core integration.",
+  "keywords": [
+    "iot",
+    "mqtt",
+    "telemetry"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "iot-backend.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-iot-backend"
+    },
+    "generic": {
+      "system_prompt": "You own iot-backend end to end. You do it through mqtt: Publish and subscribe to MQTT topics for device traffic. The commands are real, e.g. `mosquitto_sub -h localhost -t sensors/# -v`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "mqtt",
+      "description": "Publish and subscribe to MQTT topics for device traffic.",
+      "commands": [
+        "mosquitto_sub -h localhost -t 'sensors/#' -v",
+        "mosquitto_pub -h localhost -t sensors/temp -m '{\"device\":\"d1\",\"temp\":22.4}'",
+        "mosquitto_pub -h localhost -t sensors/+/temp -r -m '{\"temp\":22.4}'",
+        "mosquitto -c mosquitto.conf -v",
+        "mosquitto_pub -h localhost -t devices/d1/cmd -m '{\"action\":\"reboot\"}' -q 2"
+      ],
+      "examples": [
+        "mosquitto_sub -h broker.example.com -t 'devices/+/telemetry' -u device01 -P secret",
+        "mosquitto_pub -h localhost -t sensors/d1/temp -m '{\"t\":21.8}' -r",
+        "mosquitto_pub -h localhost -t alerts -m 'high-temp d1' --will-topic devices/d1/status --will-payload offline"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "MQTT topic with wildcards"
+        },
+        {
+          "name": "qos",
+          "type": "number",
+          "description": "Quality of service 0, 1, or 2"
+        },
+        {
+          "name": "retain",
+          "type": "string",
+          "description": "Retain the message with -r"
+        }
+      ]
+    },
+    {
+      "name": "aws-iot",
+      "description": "Manage AWS IoT Core endpoints and publish device data.",
+      "commands": [
+        "aws iot describe-endpoint --endpoint-type iot:Data-ATS",
+        "aws iot-data publish --topic sensors/d1 --payload '{\"temp\":22.4}' --cli-binary-format raw-in-base64-out",
+        "aws iot list-things",
+        "aws iot describe-thing --thing-name d1",
+        "aws iot-data get-thing-shadow --thing-name d1"
+      ],
+      "examples": [
+        "aws iot-data publish --topic devices/d1/telemetry --payload '{\"temp\":22.4,\"hum\":55}'",
+        "aws iot list-things --attribute-name firmware --attribute-value 2.1",
+        "aws iot describe-endpoint --endpoint-type iot:Data-ATS"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Device topic to publish to"
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "description": "JSON payload"
+        },
+        {
+          "name": "thing-name",
+          "type": "string",
+          "description": "IoT thing name"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "mosquitto",
+    "influxdb"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "mosquitto",
+    "influxdb",
+    "grafana"
+  ],
+  "examples": [
+    {
+      "input": "Ingest temperature readings from 1,000 sensors.",
+      "output": "Sets up sensors/# subscription on mosquitto, publishes retained telemetry per device, and routes batches to a queue for storage."
+    },
+    {
+      "input": "Command a device fleet to reboot via AWS IoT.",
+      "output": "Publishes a reboot command to devices/{id}/cmd and tracks responses via thing shadows."
+    }
+  ],
+  "instructions": "# IoT Backend\n\nIngest and control device traffic with MQTT and AWS IoT.\n\n## When to Use\n\n- Collecting telemetry from sensors and devices\n- Sending commands back to fleets\n- Managing device identity and state (shadows)\n\n## MQTT basics\n\n```bash\nmosquitto_sub -h localhost -t 'sensors/#' -v\nmosquitto_pub -h localhost -t sensors/temp -m '{\"device\":\"d1\",\"temp\":22.4}'\n```\n\nUse topic hierarchy: `fleet/device/metric` (e.g. `sensors/d1/temp`).\n\n## QoS and retained messages\n\n- QoS 0: fire and forget\n- QoS 1: at least once\n- QoS 2: exactly once (costly, use sparingly)\n- Retained (`-r`): last known state on subscribe\n\n```bash\nmosquitto_pub -h localhost -t sensors/d1/status -m online -r\n```\n\n## Will messages\n\nDeclare a will topic so disconnects are detected:\n\n```bash\nmosquitto_pub ... --will-topic devices/d1/status --will-payload offline\n```\n\n## AWS IoT Core\n\n```bash\naws iot describe-endpoint --endpoint-type iot:Data-ATS\naws iot-data publish --topic sensors/d1 --payload '{\"temp\":22.4}' --cli-binary-format raw-in-base64-out\naws iot-data get-thing-shadow --thing-name d1\n```\n\n## Backend design\n\n- Broker at edge, raw data to a queue, fan-out to processing.\n- Keep commands idempotent; devices reconnect often.\n- Batch telemetry per device; never per-message JSON logging.\n\n## Best practices\n\n- TLS everywhere; auth devices with certificates.\n- Alert on will-topic offline events.\n- Keep payloads small; devices have constrained bandwidth.\n- Test with real QoS semantics, not plain pub/sub.\n\n## Testing\n\n```bash\nmosquitto_sub -h localhost -t 'sensors/#' -v &\nmosquitto_pub -h localhost -t sensors/d1/temp -m '{\"t\":21.8}' -q 1\n```\n\nVerify delivery at each QoS level.",
+  "display_name": "iot-backend",
+  "knowledge": [
+    {
+      "title": "mosquitto man pages",
+      "type": "documentation",
+      "source": "https://mosquitto.org/man/",
+      "description": "mosquitto_pub, mosquitto_sub, and broker options"
+    },
+    {
+      "title": "EMQX Docs",
+      "type": "documentation",
+      "source": "https://docs.emqx.com/",
+      "description": "Scalable MQTT broker operations"
+    },
+    {
+      "title": "AWS IoT Core",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/iot/",
+      "description": "Device registry, shadow, and messaging APIs"
+    }
+  ],
+  "id": "iot-backend",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "mqtt",
+        "name": "topic",
+        "type": "string",
+        "description": "MQTT topic with wildcards"
+      },
+      {
+        "capability": "mqtt",
+        "name": "qos",
+        "type": "number",
+        "description": "Quality of service 0, 1, or 2"
+      },
+      {
+        "capability": "mqtt",
+        "name": "retain",
+        "type": "string",
+        "description": "Retain the message with -r"
+      },
+      {
+        "capability": "aws-iot",
+        "name": "topic",
+        "type": "string",
+        "description": "Device topic to publish to"
+      },
+      {
+        "capability": "aws-iot",
+        "name": "payload",
+        "type": "string",
+        "description": "JSON payload"
+      },
+      {
+        "capability": "aws-iot",
+        "name": "thing-name",
+        "type": "string",
+        "description": "IoT thing name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "mosquitto",
+    "influxdb"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "iot-backend/skill/iot-backend.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/iot-backend/skill/iot-backend.yaml",
+    "checksum": "29efa1bfbd4923ca325a5a7ed30dd7aad0ec644545d2a17fab81468b8b686693"
+  }
+}

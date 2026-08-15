@@ -1,0 +1,100 @@
+name: nats-server
+display_name: Nats Server
+category: api
+subcategory: general
+description: 'Deploy and operate nats-server: config files, clustering with routes, JetStream enablement,
+  and monitoring endpoints.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nats
+- nats-server
+capabilities:
+- name: nats-server-operations
+  description: Start nats-server with configs, form clusters via routes, and enable JetStream and monitoring.
+  commands:
+  - nats-server -c server.conf
+  - nats-server -js -p 4222
+  - nats-server -p 4222 -cluster nats://0.0.0.0:6222 -routes nats://seed:6222
+  - nats-server -m 8222 -DV
+  - nats server check -i nats://localhost:4222
+  examples:
+  - nats-server --tls --tlscert server.crt --tlskey server.key -p 4222
+  - nats-server -c cluster.conf
+  - curl -s http://localhost:8222/varz
+  parameters:
+  - name: config
+    type: string
+    description: Path to the server config file
+  - name: port
+    type: integer
+    description: Client listen port (default 4222)
+  - name: cluster_port
+    type: integer
+    description: Cluster route listen port (default 6222)
+knowledge:
+- title: NATS Server Configuration
+  type: documentation
+  source: https://docs.nats.io/running-a-nats-service/configuration
+  description: 'Server config reference: listeners, cluster, JetStream, TLS'
+- title: NATS Monitoring Endpoints
+  type: documentation
+  source: https://docs.nats.io/running-a-nats-service/nats_admin/monitoring
+  description: varz, connz, routez, subsz and healthz endpoints
+instructions: "# NATS Server\n\nThe nats-server is the single binary that powers core NATS, JetStream\
+  \ and clustering.\n\n## What this skill does\n\n- Starts servers with config files or flags\n- Forms\
+  \ clusters with route connections\n- Exposes monitoring endpoints and health checks\n\n## When to use\n\
+  \n- Standing up a NATS cluster\n- Tuning server resources and limits\n- Enabling JetStream on an existing\
+  \ deployment\n\n## Real commands\n\n```bash\n# Run with config\nnats-server -c server.conf\n\n# JetStream\
+  \ on\nnats-server -js -p 4222\n\n# Cluster member\nnats-server -p 4222 -cluster nats://0.0.0.0:6222\
+  \ -routes nats://seed:6222\n\n# Monitoring + debug verbosity\nnats-server -m 8222 -DV\n\n# Health check\
+  \ from CLI\nnats server check -i nats://localhost:4222\n```\n\n## Monitoring\n\n```bash\ncurl -s http://localhost:8222/varz\n\
+  curl -s http://localhost:8222/connz\ncurl -s http://localhost:8222/healthz\n```\n\n## cluster.conf snippet\n\
+  \n```conf\ncluster {\n  name: prod\n  listen: 0.0.0.0:6222\n  routes: [ nats://node1:6222, nats://node2:6222\
+  \ ]\n}\njetstream { store_dir: /var/lib/nats }\n```\n\n## Best practices\n\n- Run 3+ cluster nodes with\
+  \ routes to each other\n- Keep monitoring endpoints behind auth or a private net\n- Set memory/store\
+  \ limits for JetStream in config"
+examples:
+- input: Start a 3-node NATS cluster
+  output: The agent writes a cluster config with routes and starts each node, then verifies with `nats
+    server report routings`.
+- input: Enable JetStream on my existing server
+  output: The agent adds the jetstream block to the config or uses -js, and checks with `nats server check
+    jetstream`.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nats-server.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nats-server
+  generic:
+    system_prompt: 'This is your domain: Nats Server. You do it through nats-server-operations: Start
+      nats-server with configs, form clusters via routes, and enable JetStream and monitoring. The commands
+      are real, e.g. `nats-server -c server.conf`. You answer with exact commands, not abstractions, and
+      flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

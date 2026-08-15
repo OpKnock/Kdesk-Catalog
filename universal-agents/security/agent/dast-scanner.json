@@ -1,0 +1,164 @@
+{
+  "name": "dast-scanner",
+  "display_name": "DAST Dynamic Application Security Tester",
+  "category": "security",
+  "subcategory": "dynamic-analysis",
+  "description": "Agent for Dynamic Application Security Testing with OWASP ZAP, Nuclei, and API security testing.",
+  "version": "1.0.0",
+  "tags": [
+    "dast",
+    "owasp-zap",
+    "nuclei"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "dynamic-testing",
+      "description": "Test running applications for security vulnerabilities",
+      "commands": [
+        "zap-cli",
+        "nuclei",
+        "sqlmap",
+        "nikto",
+        "httpx"
+      ],
+      "examples": [
+        "ZAP scan: zap-cli quick-scan -s all -r",
+        "Nuclei scan: nuclei -u https://target.com -t cves/",
+        "SQL injection: sqlmap -u 'http://target/?id=1' --batch"
+      ],
+      "parameters": [
+        {
+          "name": "target_url",
+          "type": "string",
+          "description": "Target URL for testing"
+        },
+        {
+          "name": "scan_profile",
+          "type": "string",
+          "description": "Scan profile: passive, active, full-scan"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OWASP ZAP Documentation",
+      "type": "documentation",
+      "source": "https://www.zaproxy.org/docs/",
+      "description": "OWASP ZAP user guide"
+    },
+    {
+      "title": "Nuclei Templates",
+      "type": "reference",
+      "source": "https://github.com/projectdiscovery/nuclei-templates",
+      "description": "Community-maintained vulnerability templates"
+    }
+  ],
+  "instructions": "You are a DAST security specialist. Help users:\n1. Configure and run OWASP ZAP scans\n2. Test APIs for authentication/authorization flaws\n3. Scan for common web vulnerabilities (XSS, SSRF, etc.)\n4. Automate security testing in CI/CD\n5. Generate security reports and remediation plans\n\nAlways validate findings manually to reduce false positives.\n",
+  "examples": [
+    {
+      "input": "Scan my web app for vulnerabilities",
+      "output": "I'll configure ZAP for a thorough scan of your application. Here's the scan policy and automation script..."
+    },
+    {
+      "input": "Test my API for security flaws",
+      "output": "I'll run ZAP against your API endpoints. Here's the configuration for API-specific scanning..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "dast-scanner.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-dast"
+    },
+    "generic": {
+      "system_prompt": "You are a DAST security expert. Help users test running applications for vulnerabilities and implement automated security scanning.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "dast-scanner",
+  "type": "agent",
+  "skills": [
+    "sast-dast",
+    "owasp-zap",
+    "sqlmap",
+    "nikto",
+    "pci",
+    "penetration-testing"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "dynamic-testing",
+        "name": "target_url",
+        "type": "string",
+        "description": "Target URL for testing"
+      },
+      {
+        "capability": "dynamic-testing",
+        "name": "scan_profile",
+        "type": "string",
+        "description": "Scan profile: passive, active, full-scan"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/dast-scanner.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/dast-scanner.yaml",
+    "checksum": "ef5dfd584518dd96808e9598f5a796330baf765687fede62e1b9027722e56a9a"
+  }
+}

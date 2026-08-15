@@ -1,0 +1,170 @@
+name: api-version-knex-migrations
+version: 2.0.0
+type: skill
+category: backend
+description: 'Manages database migrations for versioned APIs: knex and Prisma migration workflows, rollback,
+  and schema evolution alongside API versions.'
+keywords:
+- migration
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-version-knex-migrations.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-version-knex-migrations
+  generic:
+    system_prompt: 'You work Api Version Knex Migrations hands-on. You do it through knex-migrations:
+      Create and apply knex migrations. The commands are real, e.g. `npx knex migrate:make add_users_table`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: knex-migrations
+  description: Create and apply knex migrations
+  commands:
+  - npx knex migrate:make add_users_table
+  - npx knex migrate:latest
+  - npx knex migrate:rollback
+  - npx knex migrate:status
+  - npx knex seed:run
+  examples:
+  - knex migrate:make scaffolds a migration
+  - knex migrate:latest applies pending migrations
+  - knex migrate:rollback undoes the last batch
+  parameters:
+  - name: name
+    type: string
+    description: Migration name
+  - name: directory
+    type: string
+    description: Migrations directory
+  - name: environment
+    type: string
+    description: Knex env config
+- name: prisma-migrate
+  description: Manage Prisma schema migrations
+  commands:
+  - npx prisma migrate dev --name add_users
+  - npx prisma migrate deploy
+  - npx prisma migrate status
+  - npx prisma migrate resolve --applied 20240101000000_add_users
+  - npx prisma generate
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- openapi
+tools:
+- node.js
+- python
+- openapi
+- postman
+examples:
+- input: Add a field for v2
+  output: Creates a migration, applies it, and ships the v2 schema
+- input: Fix a failed migration
+  output: Resolves the state with prisma migrate resolve and redeploys
+instructions: '# API Version v3 - Migrations
+
+
+  Database migrations for API versions.
+
+
+  ## What This Skill Does
+
+  - Versions database schema changes
+
+  - Applies and rolls back migrations
+
+  - Keeps schema in sync with API versions
+
+
+  ## When to Use
+
+  - Schema changes behind new API versions
+
+  - Expanding or contracting data models
+
+  - Reproducible environments
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npx knex migrate:make add_users_table
+
+  npx knex migrate:latest
+
+  npx prisma migrate dev --name add_users
+
+  npx prisma migrate deploy
+
+  ```
+
+
+  ## Migration Flow
+
+  1. Create the migration
+
+  2. Review the generated SQL
+
+  3. Apply in staging
+
+  4. Deploy schema before code
+
+  5. Roll back on failure
+
+
+  ## Testing
+
+  - Run migrations on a clean database
+
+  - Verify rollback restores state
+
+  - Test old queries against new schema
+
+
+
+  ## Best Practices
+
+  - Deploy migrations before API code
+
+  - Make migrations reversible
+
+  - Lock migration files per version'
+display_name: Api Version Knex Migrations
+knowledge:
+- title: Knex Migrations
+  type: documentation
+  source: https://knexjs.org/guide/migrations.html
+  description: Knex migration API
+- title: Prisma Migrate
+  type: documentation
+  source: https://www.prisma.io/docs/orm/prisma-migrate
+  description: Prisma migration workflow

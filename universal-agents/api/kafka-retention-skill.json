@@ -1,0 +1,202 @@
+{
+  "name": "kafka-retention",
+  "display_name": "Kafka Retention",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Control Kafka data retention: time/size-based retention configs, segment sizing, record deletion by offset, and log dir verification.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-configs.sh",
+    "kafka-delete-records.sh",
+    "kafka-log-dirs.sh",
+    "kafka-run-class.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "retention-config",
+      "description": "Set time- and size-based retention per topic with kafka-configs.sh.",
+      "commands": [
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter --add-config retention.ms=2592000000",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter --add-config \"retention.bytes=1073741824\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter --add-config \"segment.bytes=268435456,segment.ms=3600000\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --describe"
+      ],
+      "examples": [
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter --add-config retention.ms=2592000000",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter --add-config \"retention.bytes=1073741824\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --describe"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic name."
+        },
+        {
+          "name": "retention_ms",
+          "type": "integer",
+          "description": "Retention time in milliseconds (30 days = 2592000000)."
+        },
+        {
+          "name": "retention_bytes",
+          "type": "integer",
+          "description": "Retention size per partition in bytes."
+        }
+      ]
+    },
+    {
+      "name": "record-deletion",
+      "description": "Delete records below an offset and verify log sizes shrink.",
+      "commands": [
+        "kafka-delete-records.sh --bootstrap-server localhost:9092 --offset-json-file offsets.json",
+        "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list audit",
+        "kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic audit --time -1"
+      ],
+      "examples": [
+        "kafka-delete-records.sh --bootstrap-server localhost:9092 --offset-json-file offsets.json",
+        "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list audit"
+      ],
+      "parameters": [
+        {
+          "name": "offsets_file",
+          "type": "string",
+          "description": "JSON file with partition->offset pairs to delete below."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka Log Retention",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#retention",
+      "description": "Official retention configuration reference."
+    },
+    {
+      "title": "kafka-delete-records",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#basic_ops_delete_records",
+      "description": "Deleting records before a given offset."
+    }
+  ],
+  "instructions": "# Kafka Retention\n\nControl how long Kafka keeps data and reclaim disk space safely.\n\n## What this skill does\n\n- Sets retention.ms and retention.bytes per topic.\n- Tunes segment.bytes/segment.ms for rollover granularity.\n- Deletes records below explicit offsets and verifies log sizes.\n\n## When to use\n\n- Reducing storage cost for high-volume topics.\n- Complying with data-retention policies.\n- Purging sensitive records immediately (deletion by offset).\n\n## Real commands\n\n```bash\n# Retain 30 days (2592000000 ms)\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name audit --alter \\\n  --add-config retention.ms=2592000000\n\n# Cap size at 1 GiB per partition\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name audit --alter \\\n  --add-config \"retention.bytes=1073741824\"\n\n# Roll segments hourly for faster cleanup\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name audit --alter \\\n  --add-config \"segment.bytes=268435456,segment.ms=3600000\"\n\n# Show current config\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name audit --describe\n\n# Delete records below an offset\ncat > offsets.json <<'EOF'\n{\"partitions\":[{\"topic\":\"audit\",\"partition\":0,\"offset\":500000}],\"version\":1}\nEOF\nkafka-delete-records.sh --bootstrap-server localhost:9092 \\\n  --offset-json-file offsets.json\n\n# Verify log sizes\nkafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list audit\n```\n\n## Testing\n\n```bash\nkafka-run-class.sh kafka.tools.GetOffsetShell \\\n  --broker-list localhost:9092 --topic audit --time -1\n```\n\n## Best practices\n\n- Retention policy is per segment; segments never partially expire.\n- Deletion by offset is a one-way operation; use it deliberately.\n- Set log.retention.check.interval.ms on the broker for timely cleanup.\n",
+  "examples": [
+    {
+      "input": "Keep orders for 7 days only",
+      "output": "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config retention.ms=604800000"
+    },
+    {
+      "input": "Purge old audit records now",
+      "output": "Write offsets.json with the desired cut-off offset and run kafka-delete-records.sh --offset-json-file offsets.json."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-retention.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-retention"
+    },
+    "generic": {
+      "system_prompt": "You own Kafka Retention end to end. You do it through retention-config: Set time- and size-based retention per topic with kafka-configs.sh. The commands are real, e.g. `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-retention",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "retention-config",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic name."
+      },
+      {
+        "capability": "retention-config",
+        "name": "retention_ms",
+        "type": "integer",
+        "description": "Retention time in milliseconds (30 days = 2592000000)."
+      },
+      {
+        "capability": "retention-config",
+        "name": "retention_bytes",
+        "type": "integer",
+        "description": "Retention size per partition in bytes."
+      },
+      {
+        "capability": "record-deletion",
+        "name": "offsets_file",
+        "type": "string",
+        "description": "JSON file with partition->offset pairs to delete below."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-configs.sh",
+    "kafka-delete-records.sh",
+    "kafka-log-dirs.sh",
+    "kafka-run-class.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-retention-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-retention-skill.yaml",
+    "checksum": "9b84f90ae2b31de78fc21ca4d3eec1335a29fb50d3571d398e1688e4d3549f2d"
+  }
+}

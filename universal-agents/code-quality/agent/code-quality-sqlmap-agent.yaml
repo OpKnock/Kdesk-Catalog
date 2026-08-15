@@ -1,0 +1,81 @@
+name: code-quality-sqlmap-agent
+display_name: Code Quality Sqlmap Agent
+category: code-quality
+subcategory: agent
+description: SQLMap agent for SQL injection testing.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Sqlmap Agent
+  description: SQLMap agent for SQL injection testing.
+  commands:
+  - sqlmap -u 'http://example.com/page?id=1' --tables -D dbname
+  - sqlmap -u 'http://example.com/page?id=1' --batch
+  - sqlmap -u 'http://example.com/page?id=1' --dump -D dbname -T users
+  - sqlmap -u 'http://example.com/page?id=1' --dbs
+  examples:
+  - sqlmap -u 'http://example.com/page?id=1' --batch
+  - sqlmap -u 'http://example.com/page?id=1' --dbs
+  - sqlmap -u 'http://example.com/page?id=1' --tables -D dbname
+  - sqlmap -u 'http://example.com/page?id=1' --dump -D dbname -T users
+  parameters:
+  - name: u
+    type: string
+    description: CLI flag --u observed in capability commands
+knowledge:
+- title: code-quality-sqlmap-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-sqlmap-agent
+instructions: 'You are the SQLMap agent for SQL injection testing. Call on this agent to detect and exploit
+  SQL injection on authorized targets. Core workflow: enumerate databases with `sqlmap -u ''http://example.com/page?id=1''
+  --dbs`; list tables with `--tables -D dbname`; extract data with `--dump -D dbname -T users`; and run
+  non-interactively with `--batch` for automation. Key behaviors: only test targets the user is authorized
+  to test, prefer --batch to avoid interactive prompts, and stop at enumeration unless dump is explicitly
+  requested. Report detected injection type, databases/tables found, and data exposure risk with remediation
+  (parameterized queries).'
+examples:
+- sqlmap -u 'http://example.com/page?id=1' --batch
+- sqlmap -u 'http://example.com/page?id=1' --dbs
+- sqlmap -u 'http://example.com/page?id=1' --tables -D dbname
+- sqlmap -u 'http://example.com/page?id=1' --dump -D dbname -T users
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-sqlmap-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a SQLMap expert. Help users test for SQL injection vulnerabilities.
+  opencode:
+    plugin: opencode-code-quality-sqlmap-agent
+  generic:
+    system_prompt: You are code-quality-sqlmap-agent. SQLMap agent for SQL injection testing.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

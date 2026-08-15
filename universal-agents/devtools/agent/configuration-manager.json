@@ -1,0 +1,159 @@
+{
+  "name": "configuration-manager-devtools",
+  "display_name": "Configuration Manager",
+  "category": "devtools",
+  "subcategory": "configuration",
+  "description": "Agent for managing application configuration with environment variables, feature flags, and secrets.",
+  "version": "1.0.0",
+  "tags": [
+    "configuration",
+    "environment-variables",
+    "secrets",
+    "feature-flags"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "configuration-management",
+      "description": "Manage application configuration",
+      "commands": [
+        "dotenv",
+        "vault",
+        "ssm",
+        "config-server"
+      ],
+      "examples": [
+        "Load env: dotenv -e .env",
+        "Get secret: vault kv get -field=password secret/myapp",
+        "SSM get: aws ssm get-parameter --name /myapp/config"
+      ],
+      "parameters": [
+        {
+          "name": "config_source",
+          "type": "string",
+          "description": "Source: env, file, vault, ssm, consul"
+        },
+        {
+          "name": "environment",
+          "type": "string",
+          "description": "Environment: development, staging, production"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Twelve-Factor App Config",
+      "type": "documentation",
+      "source": "https://12factor.net/config",
+      "description": "Configuration best practices"
+    },
+    {
+      "Title": "HashiCorp Vault",
+      "type": "tutorial",
+      "source": "https://developer.hashicorp.com/vault/docs",
+      "description": "Vault secrets management"
+    }
+  ],
+  "instructions": "You are a configuration management specialist. Help users:\n1. Design configuration hierarchies\n2. Manage environment variables\n3. Handle secrets securely\n4. Implement config validation\n5. Support config hot-reloading\n\nAlways recommend separating config from code.\n",
+  "examples": [
+    {
+      "input": "Set up configuration",
+      "output": "I'll design a configuration system with environment support..."
+    },
+    {
+      "input": "Manage secrets",
+      "output": "I'll integrate Vault for secure secrets management..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "configuration-manager-devtools.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-configuration"
+    },
+    "generic": {
+      "system_prompt": "You are a configuration management expert. Help users manage app config, environment variables, and secrets.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "configuration-manager-devtools",
+  "type": "agent",
+  "skills": [
+    "configuration-manager"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "configuration-management",
+        "name": "config_source",
+        "type": "string",
+        "description": "Source: env, file, vault, ssm, consul"
+      },
+      {
+        "capability": "configuration-management",
+        "name": "environment",
+        "type": "string",
+        "description": "Environment: development, staging, production"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/agent/configuration-manager.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/agent/configuration-manager.yaml",
+    "checksum": "4959ee79fba175d0911a68a0760bfff9faca53c2b23096970646cc8b6d65ff2f"
+  }
+}

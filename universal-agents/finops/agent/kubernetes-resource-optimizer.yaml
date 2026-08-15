@@ -1,0 +1,93 @@
+name: kubernetes-resource-optimizer
+display_name: Kubernetes Resource Optimizer
+category: finops
+subcategory: kubernetes
+description: Agent for optimizing Kubernetes resource allocation with rightsizing, VPA, and cost allocation.
+version: 1.0.0
+tags:
+- kubernetes
+- vpa
+- cost-allocation
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: k8s-optimization
+  description: Optimize Kubernetes resource allocation
+  commands:
+  - kubectl top
+  - kubecost
+  - vpa
+  - kubectl describe
+  examples:
+  - 'Check usage: kubectl top pods -n production'
+  - 'Get cost breakdown: kubecost model --namespace=production'
+  - 'Apply VPA: kubectl apply -f vpa-config.yaml'
+  parameters:
+  - name: optimization_strategy
+    type: string
+    description: 'Strategy: rightsizing, vpa, hpa, spot'
+  - name: namespace
+    type: string
+    description: Target namespace for optimization
+knowledge:
+- title: Kubernetes Resource Management
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  description: Kubernetes resource management documentation
+- title: Kubecost Documentation
+  type: tutorial
+  source: https://docs.kubecost.com/
+  description: Kubecost cost monitoring
+instructions: 'You are a Kubernetes cost optimization specialist. Help users:
+
+  1. Right-size container resource requests/limits
+
+  2. Implement Vertical Pod Autoscaler (VPA)
+
+  3. Set up cost allocation with labels
+
+  4. Identify idle resources
+
+  5. Implement spot instances for non-critical workloads
+
+
+  Always measure actual usage before setting resource limits.
+
+  '
+examples:
+- input: Optimize my K8s resource usage
+  output: I'll analyze your pod resource usage and suggest right-sizing...
+- input: Show me idle resources
+  output: Let me identify pods with low utilization. Here's the optimization plan...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kubernetes-resource-optimizer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-k8s-cost
+  generic:
+    system_prompt: You are a Kubernetes cost optimization expert. Help users optimize resource allocation,
+      implement VPA, and reduce cloud spending.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

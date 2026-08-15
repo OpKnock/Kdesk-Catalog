@@ -1,0 +1,102 @@
+name: github-actions-workflows
+display_name: Github Actions Workflows
+category: api
+subcategory: general
+description: 'CI/CD with GitHub Actions: run workflows locally with act, manage secrets and runners via
+  gh, and debug workflow runs.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- act
+capabilities:
+- name: actions-workflows
+  description: Run, validate, and debug GitHub Actions workflows.
+  commands:
+  - gh workflow run ci.yml --ref main
+  - gh run list --workflow=ci.yml --limit=5
+  - gh run watch $(gh run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId')
+  - act -W .github/workflows/ci.yml --pull=false
+  - gh run download $(gh run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId') -n artifacts
+  - gh secret set DEPLOY_TOKEN --body=secret123
+  examples:
+  - gh workflow run ci.yml --ref main && gh run watch
+  - act -W .github/workflows/ci.yml --pull=false
+  - gh run download $(gh run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId') -n artifacts
+  parameters:
+  - name: workflow-file
+    type: string
+    description: Workflow YAML path like .github/workflows/ci.yml
+  - name: ref
+    type: string
+    description: Branch or tag to run the workflow on
+  - name: secret-name
+    type: string
+    description: Repository secret to set
+knowledge:
+- title: GitHub Actions docs
+  type: documentation
+  source: https://docs.github.com/en/actions
+  description: Workflow syntax, events, contexts, and expressions
+- title: act
+  type: documentation
+  source: https://github.com/nektos/act
+  description: Run GitHub Actions locally with Docker
+instructions: "# GitHub Actions v2\n\n## What this skill does\n\nGitHub Actions automates CI/CD from .github/workflows/*.yml.\
+  \ The gh CLI triggers and inspects runs; act executes workflows locally; secrets are managed per repo/environment.\n\
+  \n## When to use\n\n- Triggering and monitoring pipeline runs\n- Reproducing a failing job locally with\
+  \ act\n- Managing secrets and environments\n\n## Real commands\n\n```bash\n# Trigger a workflow\n gh\
+  \ workflow run ci.yml --ref main\n\n# Watch the run\n gh run list --workflow=ci.yml --limit=5\n gh run\
+  \ watch $(gh run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId')\n\n# Run locally with act\n\
+  \ act -W .github/workflows/ci.yml --pull=false\n\n# Download artifacts\n gh run download $(gh run list\
+  \ -w ci.yml -L 1 --json databaseId -q '.[0].databaseId') -n artifacts\n\n# Secrets\n gh secret set DEPLOY_TOKEN\
+  \ --body=secret123\n gh secret list\n```\n\n## Workflow example\n\n```yaml\nname: ci\non:\n  push:\n\
+  \    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n\
+  \      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n      - run: npm ci\n\
+  \      - run: npm test\n```\n\n## Testing\n\n```bash\n# Debug expressions locally\n gh workflow run\
+  \ ci.yml --ref main --json '{\"debug\":true}'\n# Inspect failure logs\n gh run view $(gh run list -w\
+  \ ci.yml -L 1 --json databaseId -q '.[0].databaseId') --log-failed | head -50\n```\n\n## Best practices\n\
+  \n- Pin action versions by tag/commit; never @main for third parties.\n- Use `actions/cache` for dependency\
+  \ caches across runs.\n- Store secrets in GitHub, never inline in YAML.\n- Validate YAML locally with\
+  \ act before pushing.\n- Use concurrency groups to cancel stale duplicate runs.\n"
+examples:
+- input: A CI job fails only on CI, not locally
+  output: Run act -W .github/workflows/ci.yml to reproduce, compare environment variables and actions
+    versions, then check logs with gh run view --log-failed.
+- input: Add a deploy secret
+  output: gh secret set DEPLOY_TOKEN --body=... and reference it as secrets.DEPLOY_TOKEN in the workflow.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: github-actions-workflows.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-github-actions-workflows
+  generic:
+    system_prompt: 'You work Github Actions Workflows hands-on. You do it through actions-workflows: Run,
+      validate, and debug GitHub Actions workflows. The commands are real, e.g. `gh workflow run ci.yml
+      --ref main`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

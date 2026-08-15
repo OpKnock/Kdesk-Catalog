@@ -1,0 +1,209 @@
+name: api-authorization-engineer
+version: 2.0.0
+type: skill
+category: security
+description: Implements API authorization with RBAC, ABAC, and scope-based access control using OPA, Casbin,
+  and middleware.
+keywords:
+- api-authorization
+- rbac
+- abac
+- scope-based
+- access-control
+- permissions
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-authorization-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-authorization-engineer
+  generic:
+    system_prompt: 'You are the api-authorization-engineer specialist. You do it through rbac-implementation:
+      Model roles, permissions, and tenant isolation for multi-tenant APIs. The commands are real, e.g.
+      `npm install casbin @casbin/express-middleware`. You run and verify the real CLI commands before
+      you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: rbac-implementation
+  description: Model roles, permissions, and tenant isolation for multi-tenant APIs
+  commands:
+  - npm install casbin @casbin/express-middleware
+  - node -e "const e=require('casbin'); e.newEnforcer('model.conf','policy.csv').then(en=>en.enforce('alice','data1','read').then(r=>console.log(r)))"
+  - casbin server --config model.conf --policy policy.csv
+  - 'curl -s http://localhost:8080/enforce -d ''{"sub":"alice","obj":"data1","act":"read"}'' -H ''Content-Type:
+    application/json'''
+  - node -e "require('casbin').newEnforcer('model.conf','policy.csv').then(e=>e.addPolicy('alice','data1','write'))"
+  examples:
+  - npm install casbin && node -e "require('casbin').newEnforcer('model.conf','policy.csv').then(e=>e.enforce('alice','data1','read').then(console.log))"
+  - casbin server --config model.conf --policy policy.csv
+  - 'curl -s http://localhost:8080/enforce -H ''Content-Type: application/json'' -d ''{"sub":"alice","obj":"data1","act":"read"}'''
+  parameters:
+  - name: sub
+    type: string
+    description: Subject (user or role)
+  - name: obj
+    type: string
+    description: Object (resource)
+  - name: act
+    type: string
+    description: Action (read/write/delete)
+- name: policy-engine
+  description: Enforce attribute-based policies with Open Policy Agent
+  commands:
+  - opa eval 'data.example.allow' --data policy.rego --input input.json
+  - opa test policy_test.rego -v
+  - opa build -b . -o bundle.tar.gz
+  - opa run --server --bundle bundle.tar.gz
+  - curl -s -X POST http://localhost:8181/v1/data/example/allow -d @input.json
+  examples:
+  - opa eval 'data.example.allow' --data policy.rego --input input.json
+  - opa test ./policies -v
+  - 'curl -s -X POST http://localhost:8181/v1/data/example/allow -H ''Content-Type: application/json''
+    -d @input.json'
+  parameters:
+  - name: query
+    type: string
+    description: OPA Rego query expression
+  - name: policy
+    type: string
+    description: Path to Rego policy file
+prerequisites:
+- node.js
+- python
+- casbin
+- opa
+tools:
+- node.js
+- python
+- casbin
+- opa
+- keycloak
+- auth0
+examples:
+- input: Implement RBAC for a multi-tenant API
+  output: Builds a Casbin model with role hierarchy and tenant scoping, wired into Express middleware
+- input: Add ABAC policy enforcement
+  output: Deploys an OPA decision service with Rego rules on resource ownership and evaluates requests
+    through the data API
+instructions: '# API Authorization Engineer
+
+
+  Implements authorization for APIs: role-based, attribute-based, and scope-based enforcement.
+
+
+  ## When to Use
+
+  - Multi-tenant access control
+
+  - Fine-grained permission modeling
+
+  - Audit-able access decisions
+
+  - Policy-driven compliance
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Casbin quick check
+
+  npm install casbin
+
+  node -e "require(''casbin'').newEnforcer(''model.conf'',''policy.csv'').then(e=>e.enforce(''alice'',''data1'',''read'').then(console.log))"
+
+
+  # OPA evaluation
+
+  opa eval ''data.example.allow'' --data policy.rego --input input.json
+
+
+  # OPA unit tests
+
+  opa test ./policies -v
+
+
+  # OPA as a service
+
+  opa run --server --bundle bundle.tar.gz
+
+  curl -s -X POST http://localhost:8181/v1/data/example/allow -d @input.json
+
+  ```
+
+
+  ## RBAC Model (Casbin)
+
+
+  ```ini
+
+  [request_definition]
+
+  r = sub, obj, act
+
+  [policy_definition]
+
+  p = sub, obj, act
+
+  [role_definition]
+
+  g = _, _
+
+  [matchers]
+
+  m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+
+  ```
+
+
+  ## Testing
+
+  Write Rego tests with `opa test -v` and enforce them in CI.
+
+
+  ## Best Practices
+
+  - Default deny everywhere
+
+  - Log every decision with the subject and resource
+
+  - Audit permissions quarterly'
+display_name: api-authorization-engineer
+knowledge:
+- title: Open Policy Agent Docs
+  type: documentation
+  source: https://www.openpolicyagent.org/docs/latest/
+  description: Rego language, OPA CLI, bundles
+- title: Casbin Docs
+  type: documentation
+  source: https://casbin.org/docs/
+  description: Models, policy files, enforcement
+- title: OAuth Scopes
+  type: documentation
+  source: https://oauth.net/2/scope/
+  description: Scope-based authorization design

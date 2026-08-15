@@ -1,0 +1,249 @@
+{
+  "name": "sops-security",
+  "display_name": "sops-security",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "git",
+    "sops"
+  ],
+  "capabilities": [
+    {
+      "name": "file-encryption",
+      "description": "Encrypt and decrypt config files with key providers.",
+      "commands": [
+        "sops -e secrets.yaml > secrets.enc.yaml",
+        "sops -d secrets.enc.yaml",
+        "sops -e --age age1q... secrets.yaml",
+        "sops -e --pgp ABCDEF... secrets.yaml",
+        "sops -e -i secrets.yaml"
+      ],
+      "examples": [
+        "sops -e secrets.yaml > secrets.enc.yaml",
+        "sops -d secrets.enc.yaml",
+        "sops -e -i secrets.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "ageRecipients",
+          "type": "array",
+          "description": "age1... recipient keys"
+        },
+        {
+          "name": "pgpFingerprints",
+          "type": "array",
+          "description": "PGP key fingerprints"
+        },
+        {
+          "name": "inPlace",
+          "type": "boolean",
+          "description": "Encrypt the file in place (-i)"
+        }
+      ]
+    },
+    {
+      "name": "editing-and-kms",
+      "description": "Edit encrypted values and use cloud KMS keys.",
+      "commands": [
+        "sops secrets.enc.yaml",
+        "sops --set '[\"db_password\"] \"newpass\"' secrets.enc.yaml",
+        "sops --set '[\"db\"][\"host\"] \"db.internal\"' secrets.enc.yaml",
+        "sops -e --kms arn:aws:kms:us-east-1:123456789012:key/abcd secrets.yaml",
+        "sops -k -e secrets.yaml"
+      ],
+      "examples": [
+        "sops secrets.enc.yaml",
+        "sops --set '[\"api_key\"] \"xyz\"' secrets.enc.yaml",
+        "sops -e --kms arn:aws:kms:... secrets.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "kms",
+          "type": "array",
+          "description": "KMS ARNs for encryption keys"
+        },
+        {
+          "name": "set",
+          "type": "object",
+          "description": "Path-value pairs to set on the file"
+        }
+      ]
+    },
+    {
+      "name": "git-integration",
+      "description": "Use sops with git diff and merge tools.",
+      "commands": [
+        "git config --global diff.sopsdiffer.textconv \"sops -d\"",
+        "git config --global merge.sopsmerge.driver \"sops merge-file --output %A %O %A %B\"",
+        "sops updatekeys secrets.enc.yaml",
+        "sops --config .sops.yaml -e secrets.yaml"
+      ],
+      "examples": [
+        "git config --global diff.sopsdiffer.textconv \"sops -d\"",
+        "sops updatekeys secrets.enc.yaml",
+        "sops --config .sops.yaml -e secrets.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Path to .sops.yaml config file"
+        },
+        {
+          "default": "secrets.yaml",
+          "description": "File to encrypt with the configured sops keys.",
+          "name": "encryptionTarget",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "SOPS GitHub",
+      "type": "documentation",
+      "source": "https://github.com/getsops/sops",
+      "description": "Key providers, file formats, and git integration"
+    },
+    {
+      "title": "SOPS Keys Documentation",
+      "type": "documentation",
+      "source": "https://getsops.io/docs/",
+      "description": "Age, PGP, KMS, and Vault key configuration"
+    }
+  ],
+  "instructions": "# SOPS\n\nSecrets as encrypted files: edit, commit, decrypt at deploy time.\n\n## What This Skill Does\n\n- Encrypts YAML, JSON, ENV, and binary files with per-value encryption\n- Uses age, PGP, KMS, or Vault key providers\n- Edits encrypted files in place without exposing values\n- Integrates with git diff for reviewable secret changes\n\n## When to Use\n\n- Secrets in GitOps repos with KMS-backed decryption\n- Team workflows that review secret changes in PRs\n- Replacing plaintext config files in CI\n\n## Real Commands\n\n```bash\n# Encrypt with age\nsops -e --age age1q... secrets.yaml > secrets.enc.yaml\n\n# Encrypt in place\nsops -e -i secrets.yaml\n\n# Decrypt\nsops -d secrets.enc.yaml\n\n# Edit interactively (decrypts in memory)\nsops secrets.enc.yaml\n\n# Set values non-interactively\nsops --set '[\"db_password\"] \"newpass\"' secrets.enc.yaml\n\n# KMS-backed\nsops -e --kms arn:aws:kms:us-east-1:123456789012:key/abcd secrets.yaml\n\n# Update keys after rotation\nsops updatekeys secrets.enc.yaml\n```\n\n## .sops.yaml\n\n```yaml\ncreation_rules:\n  - path_regex: secrets/.*\\.yaml\n    age: age1q...\n  - path_regex: prod/.*\\.env\n    kms: arn:aws:kms:us-east-1:123456789012:key/abcd\n```\n\n## Best Practices\n\n- Define creation_rules so sops picks keys by path automatically\n- Never commit plaintext versions of encrypted files\n- Rotate keys and run sops updatekeys on all files\n- Use KMS/age keys over PGP where possible for automation\n- Configure the git diff textconv so PRs show readable diffs",
+  "examples": [
+    {
+      "input": "Encrypt my .env for production",
+      "output": "Agent configures .sops.yaml with age or KMS keys, runs sops -e -i .env, and shows how to decrypt at deploy time."
+    },
+    {
+      "input": "Change the DB password in an encrypted file",
+      "output": "Agent uses sops --set to update the value, or sops secrets.enc.yaml interactively, and confirms the file stays encrypted."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "sops-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-sops"
+    },
+    "generic": {
+      "system_prompt": "You are the sops-security specialist. You do it through file-encryption: Encrypt and decrypt config files with key providers. The commands are real, e.g. `sops -e secrets.yaml > secrets.enc.yaml`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "sops-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "file-encryption",
+        "name": "ageRecipients",
+        "type": "array",
+        "description": "age1... recipient keys"
+      },
+      {
+        "capability": "file-encryption",
+        "name": "pgpFingerprints",
+        "type": "array",
+        "description": "PGP key fingerprints"
+      },
+      {
+        "capability": "file-encryption",
+        "name": "inPlace",
+        "type": "boolean",
+        "description": "Encrypt the file in place (-i)"
+      },
+      {
+        "capability": "editing-and-kms",
+        "name": "kms",
+        "type": "array",
+        "description": "KMS ARNs for encryption keys"
+      },
+      {
+        "capability": "editing-and-kms",
+        "name": "set",
+        "type": "object",
+        "description": "Path-value pairs to set on the file"
+      },
+      {
+        "capability": "git-integration",
+        "name": "config",
+        "type": "string",
+        "description": "Path to .sops.yaml config file"
+      },
+      {
+        "capability": "git-integration",
+        "name": "encryptionTarget",
+        "type": "string",
+        "description": "File to encrypt with the configured sops keys."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "git",
+    "sops"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/sops-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/sops-skill.yaml",
+    "checksum": "0fbb8b45b3720ffbfa8eb37b7f732fa455e6700e6ebce430d21b9d53df4529b6"
+  }
+}

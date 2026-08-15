@@ -1,0 +1,110 @@
+name: grpc-advanced
+display_name: Grpc Advanced
+category: api
+subcategory: general
+description: 'Advanced gRPC client workflows: interactive REPL with evans, rich output formats, large-message
+  limits, deadlines, and request streaming from the CLI.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- evans
+- grpcurl
+capabilities:
+- name: advanced-grpc-client
+  description: Interactively explore and call gRPC services with evans, plus advanced grpcurl flags.
+  commands:
+  - go install github.com/ktr0731/evans@latest
+  - evans --host localhost --port 50051 -r
+  - evans --proto helloworld.proto call helloworld.Greeter.SayHello
+  - grpcurl -plaintext -max-time 5 -max-msg-sz 4194304 -d '{"name":"John"}' localhost:50051 mypackage.MyService/SayHello
+  - grpcurl -plaintext -format json -d @ localhost:50051 mypackage.MyService/SayHello
+  examples:
+  - evans --tls --host localhost --port 50051 -r
+  - echo '{"name":"John"}' | grpcurl -plaintext -d @ localhost:50051 mypackage.MyService/SayHello
+  - evans --proto hello.proto --host localhost --port 50051
+  parameters:
+  - name: host
+    type: string
+    description: gRPC host for evans/grpcurl, default localhost.
+  - name: port
+    type: integer
+    description: gRPC port, default 50051.
+  - name: max_msg_size
+    type: integer
+    description: Maximum message size in bytes (grpcurl -max-msg-sz).
+knowledge:
+- title: evans GitHub
+  type: documentation
+  source: https://github.com/ktr0731/evans
+  description: evans REPL client documentation and all subcommands.
+- title: gRPC Keepalive Guide
+  type: documentation
+  source: https://grpc.io/docs/guides/keepalive/
+  description: Keepalive and connection management options for long-lived gRPC channels.
+instructions: "# gRPC v2 (Advanced Client Workflows)\n\nInteractive and advanced CLI workflows for gRPC\
+  \ services.\n\n## What this skill does\n\n- Explores gRPC services interactively with the evans REPL.\n\
+  - Calls RPCs with rich formats, large payloads, and deadlines.\n- Streams requests from stdin with `grpcurl\
+  \ -d @`.\n- Configures keepalive and channel options for flaky networks.\n\n## When to use\n\n- Exploratory\
+  \ debugging of an unfamiliar gRPC API.\n- Sending payloads larger than the default 4MB limit.\n- Scripting\
+  \ RPC calls from CI with stdin-driven payloads.\n\n## Real commands\n\n```bash\n# Install evans REPL\
+  \ client\ngo install github.com/ktr0731/evans@latest\n\n# Interactive REPL using server reflection\n\
+  evans --host localhost --port 50051 -r\n\n# One-shot call with a proto file\nevans --proto helloworld.proto\
+  \ call helloworld.Greeter.SayHello\n\n# grpcurl with deadlines and bigger message limit\ngrpcurl -plaintext\
+  \ -max-time 5 -max-msg-sz 4194304 \\\n  -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello\n\
+  \n# Stream a payload from stdin\necho '{\"name\":\"John\"}' | grpcurl -plaintext -d @ localhost:50051\
+  \ mypackage.MyService/SayHello\n\n# Explicit JSON format output\ngrpcurl -plaintext -format json -d\
+  \ '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello\n```\n\n## evans REPL workflow\n\
+  \n```\n> package mypackage\nmypackage.MyService@localhost:50051> service MyService\nmypackage.MyService@localhost:50051>\
+  \ call SayHello\nname (TYPE_STRING) => John\n```\n\n## Keepalive client (Go)\n\n```go\nconn, _ := grpc.NewClient(\"\
+  localhost:50051\",\n  grpc.WithTransportCredentials(insecure.NewCredentials()),\n  grpc.WithKeepaliveParams(keepalive.ClientParameters{Time:\
+  \ 10 * time.Second, Timeout: 3 * time.Second}))\n```\n\n## Testing\n\n```bash\n# Large-message round\
+  \ trip\ndd if=/dev/zero bs=1M count=5 | base64 | tr -d '\\n' > big.json\ngrpcurl -plaintext -max-msg-sz\
+  \ 8388608 -d @ localhost:50051 mypackage.MyService/SayHello < big.json\n```\n\n## Best practices\n\n\
+  - Raise -max-msg-sz only as far as needed; huge limits hide bugs.\n- Use `-d @` with jq to build payloads:\
+  \ `jq -n '{name:\"x\"}' | grpcurl -d @ ...`.\n- For long-running streams, verify keepalive config on\
+  \ both client and server.\n- Save evans call history (`history`) to reuse complex RPCs.\n\n## Example\
+  \ exchange\n\n```\nUser: My RPC fails with RESOURCE_EXHAUSTED on a 5MB upload.\nAgent: Raise the client\
+  \ and server limits:\n       grpcurl -plaintext -max-msg-sz 8388608 -d @ localhost:50051 mypackage.MyService/Upload\n\
+  ```"
+examples:
+- input: Explore a gRPC API interactively
+  output: evans --host localhost --port 50051 -r
+- input: Send a 5MB payload via grpcurl
+  output: grpcurl -plaintext -max-msg-sz 8388608 -d @ localhost:50051 mypackage.MyService/Upload < big.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grpc-advanced.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grpc-advanced
+  generic:
+    system_prompt: 'You own Grpc Advanced end to end. You do it through advanced-grpc-client: Interactively
+      explore and call gRPC services with evans, plus advanced grpcurl flags. The commands are real, e.g.
+      `go install github.com/ktr0731/evans@latest`. You run and verify the real CLI commands before you
+      claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

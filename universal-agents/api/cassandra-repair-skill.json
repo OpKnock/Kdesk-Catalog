@@ -1,0 +1,259 @@
+{
+  "name": "cassandra-repair",
+  "display_name": "Cassandra Repair",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Runs and monitors Cassandra anti-entropy repairs: full/incremental repairs, repair state, and post-repair verification.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cqlsh",
+    "nodetool"
+  ],
+  "capabilities": [
+    {
+      "name": "run-repair",
+      "description": "Execute and schedule repairs.",
+      "commands": [
+        "nodetool repair -pr",
+        "nodetool repair -full mykeyspace",
+        "nodetool repair -pr mykeyspace users",
+        "nodetool repair -pr -dc dc1 mykeyspace",
+        "nodetool repair -pr --parallelism parallel mykeyspace"
+      ],
+      "examples": [
+        "nodetool repair -pr mykeyspace users",
+        "nodetool repair -full mykeyspace",
+        "nodetool repair -pr -dc dc1 dc2 mykeyspace"
+      ],
+      "parameters": [
+        {
+          "name": "keyspace",
+          "type": "string",
+          "description": "Keyspace to repair"
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table to repair"
+        },
+        {
+          "name": "dc",
+          "type": "string",
+          "description": "Datacenter filter"
+        }
+      ]
+    },
+    {
+      "name": "repair-status",
+      "description": "Monitor repair state and consistency.",
+      "commands": [
+        "nodetool repair -pr -st $(date -d '1 hour ago' +%s000) mykeyspace",
+        "nodetool netstats",
+        "nodetool status",
+        "nodetool getstreamthroughput",
+        "nodetool tpstats | grep -E 'REPAIR|Repair'"
+      ],
+      "examples": [
+        "nodetool netstats | grep -E 'Repair|Streaming'",
+        "nodetool status | grep -E 'UN|DN'",
+        "nodetool tpstats | grep Repair"
+      ],
+      "parameters": [
+        {
+          "name": "start_time",
+          "type": "string",
+          "description": "Repair range start (ms epoch)"
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "description": "Repair range end (ms epoch)"
+        }
+      ]
+    },
+    {
+      "name": "verification",
+      "description": "Verify consistency after repair.",
+      "commands": [
+        "cqlsh -e \"CONSISTENCY QUORUM\"",
+        "nodetool status -r",
+        "nodetool describecluster",
+        "nodetool getendpoints mykeyspace users <pk>",
+        "cqlsh -e \"SELECT COUNT(*) FROM mykeyspace.users\""
+      ],
+      "examples": [
+        "nodetool status -r",
+        "nodetool getendpoints mykeyspace users 42",
+        "cqlsh -e \"CONSISTENCY QUORUM; SELECT COUNT(*) FROM mykeyspace.users\""
+      ],
+      "parameters": [
+        {
+          "name": "consistency",
+          "type": "string",
+          "description": "Consistency level for verification reads"
+        },
+        {
+          "name": "partition_key",
+          "type": "string",
+          "description": "PK to check endpoints for"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Cassandra Repair",
+      "type": "documentation",
+      "source": "https://cassandra.apache.org/doc/latest/cassandra/operating/repair.html",
+      "description": "Repair concepts and commands"
+    },
+    {
+      "title": "nodetool Reference",
+      "type": "documentation",
+      "source": "https://cassandra.apache.org/doc/latest/cassandra/operating/nodetool/",
+      "description": "repair, netstats, status options"
+    },
+    {
+      "title": "Repair Strategies",
+      "type": "documentation",
+      "source": "https://thelastpickle.com/blog/2017/09/18/repairs-in-cassandra.html",
+      "description": "Datastax repair best practices"
+    }
+  ],
+  "instructions": "# Cassandra Repair\n\n## What this skill does\n\nRuns anti-entropy repairs: primary-range (incremental) and full repairs, datacenter-scoped repairs, monitoring stream rates, and verifying consistency afterward.\n\n## When to use\n\n- Detected drift between replicas (inconsistency)\n- Routine maintenance (weekly incremental, monthly full)\n- After node additions/removals\n\n## Real commands\n\n```bash\n# Primary-range repair (recommended default)\nnodetool repair -pr\n\n# Full repair of one keyspace\nnodetool repair -full mykeyspace\n\n# Table-scoped\nnodetool repair -pr mykeyspace users\n\n# Datacenter-scoped\nnodetool repair -pr -dc dc1 mykeyspace\n\n# Monitor\nnodetool netstats | grep -E 'Repair|Streaming'\nnodetool status -r\n```\n\n## Scheduling\n\n- Run repairs from a dedicated node, not app nodes\n- Incremental repairs daily; full repairs monthly\n\n## Testing\n\n- Verify QUORUM reads return consistent counts after repair\n- Check nodetool status shows UN for all nodes\n\n## Best practices\n\n- Run repairs off-peak with stream throttling\n- Monitor repair duration and failure rates\n- Always run -pr to avoid overlapping repairs",
+  "examples": [
+    {
+      "input": "Two replicas disagree on a partition",
+      "output": "Runs nodetool repair -pr on the keyspace, watches netstats streaming, and verifies endpoints agree with getendpoints."
+    },
+    {
+      "input": "Set up regular repairs",
+      "output": "Shows a weekly cron using nodetool repair -pr and a monthly -full, with stream throttling guidance."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cassandra-repair.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cassandra-repair"
+    },
+    "generic": {
+      "system_prompt": "You work Cassandra Repair hands-on. You do it through run-repair: Execute and schedule repairs. The commands are real, e.g. `nodetool repair -pr`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cassandra-repair",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "run-repair",
+        "name": "keyspace",
+        "type": "string",
+        "description": "Keyspace to repair"
+      },
+      {
+        "capability": "run-repair",
+        "name": "table",
+        "type": "string",
+        "description": "Table to repair"
+      },
+      {
+        "capability": "run-repair",
+        "name": "dc",
+        "type": "string",
+        "description": "Datacenter filter"
+      },
+      {
+        "capability": "repair-status",
+        "name": "start_time",
+        "type": "string",
+        "description": "Repair range start (ms epoch)"
+      },
+      {
+        "capability": "repair-status",
+        "name": "end_time",
+        "type": "string",
+        "description": "Repair range end (ms epoch)"
+      },
+      {
+        "capability": "verification",
+        "name": "consistency",
+        "type": "string",
+        "description": "Consistency level for verification reads"
+      },
+      {
+        "capability": "verification",
+        "name": "partition_key",
+        "type": "string",
+        "description": "PK to check endpoints for"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cqlsh",
+    "nodetool"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/cassandra-repair-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/cassandra-repair-skill.yaml",
+    "checksum": "0fe8ad3652165dbbb1c74a2b70b9849c819c32ffe21f49a4f67b871dd07ebc60"
+  }
+}

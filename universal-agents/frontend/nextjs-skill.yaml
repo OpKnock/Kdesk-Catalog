@@ -1,0 +1,130 @@
+name: nextjs
+display_name: nextjs
+category: frontend
+subcategory: general
+description: 'Builds full-stack React apps with Next.js App Router: server components, route handlers,
+  middleware, and Vercel/Docker deploys.'
+version: 2.0.0
+tags:
+- frontend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- name: scaffold-dev
+  description: Create, run, and lint Next.js projects.
+  commands:
+  - npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir
+  - npm run dev
+  - npm run build
+  - npm run lint
+  - npm run start
+  examples:
+  - npx create-next-app@latest store --typescript --app --no-tailwind
+  - npm run dev -- --port 3100
+  - npm run build && npm run start
+  parameters:
+  - name: app
+    type: string
+    description: Use App Router (default true)
+  - name: tailwind
+    type: string
+    description: Include Tailwind CSS setup
+  - name: src-dir
+    type: string
+    description: Place app code under src/
+- name: diagnose
+  description: Inspect Next.js setup and build output.
+  commands:
+  - npx next info
+  - npx next lint --dir src
+  - npx next build --debug
+  - npx next dev --turbo
+  - npx next telemetry disable
+  examples:
+  - npx next info | grep -i versions
+  - npx next lint --file src/app/page.tsx --fix
+  - npx next dev --turbo --port 3000
+  parameters:
+  - name: dir
+    type: string
+    description: Directory to lint
+  - name: file
+    type: string
+    description: Lint a single file
+  - name: turbo
+    type: string
+    description: Enable Turbopack dev server
+knowledge:
+- title: Next.js Docs
+  type: documentation
+  source: https://nextjs.org/docs
+  description: App Router, data fetching, caching, and deployment
+- title: Next.js CLI
+  type: documentation
+  source: https://nextjs.org/docs/app/api-reference/cli
+  description: create-next-app, next dev, build, start, lint, info
+- title: Vercel Deploy
+  type: documentation
+  source: https://vercel.com/docs
+  description: Vercel platform deployment and previews
+instructions: "# Next.js\n\nBuild full-stack React applications with Next.js App Router and real CLI.\n\
+  \n## When to Use\n\n- React apps needing SSR/SSG and API routes\n- Marketing + app hybrids with incremental\
+  \ static regeneration\n- Teams standardizing on one full-stack React framework\n\n## Scaffold\n\n```bash\n\
+  npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir\nnpm run dev\n```\n\
+  \n## Server Components and data fetching\n\n```tsx\n// app/products/page.tsx\nexport default async function\
+  \ Products() {\n  const res = await fetch('https://api.example.com/products', { next: { revalidate:\
+  \ 300 } });\n  const products = await res.json();\n  return <ul>{products.map(p => <li key={p.id}>{p.name}</li>)}</ul>;\n\
+  }\n```\n\nUse `revalidate` for ISR, `cache: 'no-store'` for dynamic data.\n\n## Route handlers\n\n```typescript\n\
+  // app/api/orders/route.ts\nimport { NextResponse } from 'next/server';\n\nexport async function POST(request:\
+  \ Request) {\n  const body = await request.json();\n  return NextResponse.json({ ok: true, id: body.id\
+  \ }, { status: 201 });\n}\n```\n\n## Middleware\n\n```typescript\n// middleware.ts\nexport function\
+  \ middleware(request: NextRequest) {\n  const token = request.cookies.get('token');\n  if (!token &&\
+  \ request.nextUrl.pathname.startsWith('/dashboard')) {\n    return NextResponse.redirect(new URL('/login',\
+  \ request.url));\n  }\n  return NextResponse.next();\n}\n```\n\n## Build and deploy\n\n```bash\nnpm\
+  \ run build\nnpx next build --debug\n\n# Vercel\nvercel --prod\n\n# Docker\ndocker build -t myapp .\n\
+  docker run -p 3000:3000 myapp\n```\n\n## Best practices\n\n- Move client interactivity to `use client`\
+  \ boundaries; keep the rest server components.\n- Set `next/font` to self-host fonts and avoid layout\
+  \ shift.\n- Gate merges on `npm run lint` and `npm run build`.\n- Use `next info` when diagnosing version/env\
+  \ issues.\n\n## Testing\n\n```bash\nnpm run build\nnpm run lint\n```\n\nRun both in CI before deploying\
+  \ to any environment."
+examples:
+- input: Create a storefront with SSR product pages and an order API.
+  output: Scaffolds with the app router, adds a server component product page with ISR, a POST route handler
+    for orders, and deploys via vercel --prod.
+- input: Protect the dashboard route with a login redirect.
+  output: Adds middleware.ts that checks the token cookie and redirects unauthenticated requests to /login.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nextjs.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nextjs
+  generic:
+    system_prompt: 'You own nextjs end to end. You do it through scaffold-dev: Create, run, and lint Next.js
+      projects. The commands are real, e.g. `npx create-next-app@latest my-app --typescript --tailwind
+      --eslint --app --src-dir`. You prefer the shortest safe path, and you reproduce failures before
+      diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

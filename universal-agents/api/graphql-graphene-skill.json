@@ -1,0 +1,173 @@
+{
+  "name": "graphql-graphene",
+  "display_name": "Graphql Graphene",
+  "category": "api",
+  "subcategory": "general",
+  "description": "GraphQL in Python with Graphene: define schema and resolvers with Python classes, integrate with Django/Flask, and run queries.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pip",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "graphene-schema",
+      "description": "Define Graphene schemas, wire Django/Flask integration, and test queries.",
+      "commands": [
+        "pip install graphene django-graphql-graphene",
+        "python -c \"import graphene; s=graphene.Schema(query=Query); print(s.execute('{ hello }').data)\"",
+        "python manage.py graphql_schema --schema myapp.schema.schema --out schema.graphql",
+        "python manage.py runserver",
+        "curl -s -X POST http://localhost:8000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hello }\"}' | jq"
+      ],
+      "examples": [
+        "python -c \"import graphene; s=graphene.Schema(query=Query); print(s.execute('{ hello }').data)\"",
+        "python manage.py graphql_schema --schema myapp.schema.schema --out schema.graphql",
+        "curl -s -X POST http://localhost:8000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hello }\"}' | jq"
+      ],
+      "parameters": [
+        {
+          "name": "schema-module",
+          "type": "string",
+          "description": "Python module path to the Schema"
+        },
+        {
+          "name": "output-file",
+          "type": "string",
+          "description": "SDL export path"
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "GraphQL HTTP endpoint"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Graphene docs",
+      "type": "documentation",
+      "source": "https://docs.graphene-python.org/",
+      "description": "ObjectTypes, resolvers, mutations, and schema execution"
+    },
+    {
+      "title": "Graphene Django",
+      "type": "documentation",
+      "source": "https://docs.graphene-python.org/projects/django/en/latest/",
+      "description": "Django integration, relay, and schema export"
+    }
+  ],
+  "instructions": "# GraphQL Graphene\n\n## What this skill does\n\nGraphene builds GraphQL schemas in Python with classes: ObjectType for objects, resolvers as methods, and Schema for the root. Graphene-Django adds ORM-friendly fields.\n\n## When to use\n\n- Adding GraphQL to a Python/Django service\n- Reusing existing ORM models in a graph\n- Python teams that want code-first GraphQL\n\n## Real commands\n\n```bash\n# Install\npip install graphene graphene-django\n\n# Inline smoke test\npython -c \"import graphene; s=graphene.Schema(query=Query); print(s.execute('{ hello }').data)\"\n\n# Export SDL for client tooling\npython manage.py graphql_schema --schema myapp.schema.schema --out schema.graphql\n\n# Serve and query\npython manage.py runserver\ncurl -s -X POST http://localhost:8000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hello }\"}' | jq\n```\n\n## Schema example\n\n```python\nimport graphene\n\nclass Order(graphene.ObjectType):\n    id = graphene.ID()\n    status = graphene.String()\n\nclass Query(graphene.ObjectType):\n    hello = graphene.String()\n    order = graphene.Field(Order, id=graphene.ID(required=True))\n\n    def resolve_hello(self, info):\n        return \"world\"\n\n    def resolve_order(self, info, id):\n        return Orders.get(id)  # None -> graphene returns null\n\nschema = graphene.Schema(query=Query)\n```\n\n## Testing\n\n```bash\n# Execute without HTTP\npython -c \"from myapp.schema import schema; r=schema.execute('{ order(id: \\\"1\\\") { id status } }'); print(r.data, r.errors)\"\n```\n\n## Best practices\n\n- Code-first: keep schema classes near the models they expose.\n- Use graphene-django's DjangoObjectType to avoid hand-written fields.\n- Export SDL to schema.graphql for the client pipeline.\n- Resolve N+1 queries with select_related/prefetch_related.\n- Return errors as GraphQL errors, not Python exceptions leaking.\n",
+  "examples": [
+    {
+      "input": "Expose Django models via GraphQL",
+      "output": "Define DjangoObjectType classes and a Query with resolvers, wire graphene-django in urls.py, and runserver to test."
+    },
+    {
+      "input": "Export the schema for codegen",
+      "output": "python manage.py graphql_schema --schema myapp.schema.schema --out schema.graphql and feed it to codegen."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-graphene.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql-graphene"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Graphql Graphene. You do it through graphene-schema: Define Graphene schemas, wire Django/Flask integration, and test queries. The commands are real, e.g. `pip install graphene django-graphql-graphene`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "graphql-graphene",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "graphene-schema",
+        "name": "schema-module",
+        "type": "string",
+        "description": "Python module path to the Schema"
+      },
+      {
+        "capability": "graphene-schema",
+        "name": "output-file",
+        "type": "string",
+        "description": "SDL export path"
+      },
+      {
+        "capability": "graphene-schema",
+        "name": "endpoint",
+        "type": "string",
+        "description": "GraphQL HTTP endpoint"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pip",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/graphql-graphene-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/graphql-graphene-skill.yaml",
+    "checksum": "8b4076f124a5cc0ff632bfe0869edd02ad79bbaf2ea9a8c6d259bb4bc9148db9"
+  }
+}

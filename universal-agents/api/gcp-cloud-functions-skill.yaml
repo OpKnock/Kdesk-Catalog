@@ -1,0 +1,105 @@
+name: gcp-cloud-functions
+display_name: Gcp Cloud Functions
+category: api
+subcategory: general
+description: 'Deploy and manage Cloud Functions (Gen2): deploy from source, set env vars, view logs, and
+  invoke functions for testing.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- gcloud
+capabilities:
+- name: gcf-deploy
+  description: Deploy, invoke, log, and configure Cloud Functions.
+  commands:
+  - gcloud functions deploy orders-processor --runtime=nodejs20 --trigger-topic=orders --region=us-central1
+    --gen2
+  - gcloud functions deploy hello --runtime=python312 --trigger-http --allow-unauthenticated --gen2
+  - gcloud functions call orders-processor --region=us-central1 --data='{"orderId":"1"}'
+  - gcloud functions logs read orders-processor --region=us-central1 --limit=20
+  - gcloud functions describe orders-processor --region=us-central1 --format='value(serviceConfig.uri)'
+  - gcloud functions delete orders-processor --region=us-central1 --quiet
+  examples:
+  - gcloud functions deploy hello --runtime=python312 --trigger-http --allow-unauthenticated --gen2
+  - gcloud functions call orders-processor --region=us-central1 --data='{"orderId":"1"}'
+  - gcloud functions logs read orders-processor --region=us-central1 --limit=20
+  parameters:
+  - name: function-name
+    type: string
+    description: Function name to deploy
+  - name: runtime
+    type: string
+    description: nodejs20, python312, go122
+  - name: trigger
+    type: string
+    description: http, topic, bucket, or schedule trigger
+knowledge:
+- title: Cloud Functions docs
+  type: documentation
+  source: https://cloud.google.com/functions/docs
+  description: Gen2 functions, triggers, deployment, and environment variables
+- title: gcloud functions reference
+  type: documentation
+  source: https://cloud.google.com/sdk/gcloud/reference/functions
+  description: deploy, call, logs read, and describe commands
+instructions: "# GCP Cloud Functions\n\n## What this skill does\n\nCloud Functions runs single-purpose\
+  \ serverless functions triggered by HTTP, Pub/Sub, storage, or schedules. Gen2 functions run on Cloud\
+  \ Run infrastructure with more scaling control.\n\n## When to use\n\n- Event-driven glue: process a\
+  \ message, resize an image, webhook handler\n- Cheap scaling for variable workloads\n- Prototyping serverless\
+  \ quickly\n\n## Real commands\n\n```bash\n# HTTP function\n gcloud functions deploy hello --runtime=python312\
+  \ --trigger-http --allow-unauthenticated --gen2\n\n# Pub/Sub-triggered function\n gcloud functions deploy\
+  \ orders-processor --runtime=nodejs20 --trigger-topic=orders --region=us-central1 --gen2\n\n# Invoke\
+  \ and read logs\n gcloud functions call orders-processor --region=us-central1 --data='{\"orderId\":\"\
+  1\"}'\n gcloud functions logs read orders-processor --region=us-central1 --limit=20\n\n# Get the URL\n\
+  \ gcloud functions describe orders-processor --region=us-central1 --format='value(serviceConfig.uri)'\n\
+  ```\n\n## Env vars and retries\n\n```bash\n gcloud functions deploy orders-processor --set-env-vars=DB_URL=postgres://...\
+  \ --max-retries=3 --gen2\n```\n\n## Testing\n\n```bash\n# Direct HTTP invocation\nURL=$(gcloud functions\
+  \ describe hello --region=us-central1 --gen2 --format='value(serviceConfig.uri)')\ncurl -s -X POST \"\
+  $URL\" -H 'Content-Type: application/json' -d '{\"msg\":\"ping\"}'\n```\n\n## Best practices\n\n- Make\
+  \ functions idempotent; Pub/Sub may retry delivery.\n- Set `--max-retries` deliberately (0 for fire-and-forget).\n\
+  - Keep cold starts low: minimal dependencies, no heavy init.\n- Use env vars via `--set-env-vars`, never\
+  \ secrets in source.\n- Use secrets via Secret Manager references for credentials.\n"
+examples:
+- input: Deploy an image resize function
+  output: gcloud functions deploy with a gcs trigger on the bucket, set env vars for output bucket, invoke
+    via test upload, and check gcloud functions logs read.
+- input: Debug a failing function
+  output: gcloud functions logs read <name> --limit=50 and re-invoke with gcloud functions call to reproduce
+    the error.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gcp-cloud-functions.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gcp-cloud-functions
+  generic:
+    system_prompt: 'You own Gcp Cloud Functions end to end. You do it through gcf-deploy: Deploy, invoke,
+      log, and configure Cloud Functions. The commands are real, e.g. `gcloud functions deploy orders-processor
+      --runtime=nodejs20 --trigger-topic=orders...`. You run and verify the real CLI commands before you
+      claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

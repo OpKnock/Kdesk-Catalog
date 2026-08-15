@@ -1,0 +1,158 @@
+{
+  "name": "experiment-tracker",
+  "display_name": "Experiment Tracker",
+  "category": "ml",
+  "subcategory": "tracking",
+  "description": "Agent for tracking ML experiments with MLflow, W&B, and experiment comparison.",
+  "version": "1.0.0",
+  "tags": [
+    "experiment-tracking",
+    "mlflow",
+    "wandb",
+    "metrics"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "experiment-tracking",
+      "description": "Track ML experiments",
+      "commands": [
+        "mlflow",
+        "wandb",
+        "neptune"
+      ],
+      "examples": [
+        "MLflow: mlflow run . --param-name=value",
+        "W&B: wandb init(project='my-project')",
+        "Log: wandb.log({'loss': 0.5, 'acc': 0.9})"
+      ],
+      "parameters": [
+        {
+          "name": "tracker",
+          "type": "string",
+          "description": "Tracker: mlflow, wandb, neptune, comet"
+        },
+        {
+          "name": "tracking_type",
+          "type": "string",
+          "description": "Type: params, metrics, artifacts, models"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "MLflow Documentation",
+      "type": "documentation",
+      "source": "https://mlflow.org/docs/latest/",
+      "description": "MLflow documentation"
+    },
+    {
+      "Title": "W&B Documentation",
+      "type": "tutorial",
+      "source": "https://docs.wandb.ai/",
+      "description": "Weights & Biases documentation"
+    }
+  ],
+  "instructions": "You are an experiment tracking specialist. Help users:\n1. Set up experiment tracking\n2. Log parameters and metrics\n3. Compare experiments\n4. Manage model registry\n5. Reproduce results\n\nAlways recommend tracking everything.\n",
+  "examples": [
+    {
+      "input": "Track experiments",
+      "output": "I'll set up MLflow for experiment tracking..."
+    },
+    {
+      "input": "Compare runs",
+      "output": "I'll help compare experiments across parameters..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "experiment-tracker.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-experiment-tracking"
+    },
+    "generic": {
+      "system_prompt": "You are an experiment tracking expert. Help users track ML experiments with MLflow and W&B.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "experiment-tracker",
+  "type": "agent",
+  "skills": [
+    "ai-ml-pipeline"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "experiment-tracking",
+        "name": "tracker",
+        "type": "string",
+        "description": "Tracker: mlflow, wandb, neptune, comet"
+      },
+      {
+        "capability": "experiment-tracking",
+        "name": "tracking_type",
+        "type": "string",
+        "description": "Type: params, metrics, artifacts, models"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/experiment-tracker.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/experiment-tracker.yaml",
+    "checksum": "f1a017a05b03742de09d1b1d9d4a65ea90e70faaa3ba1d0a080ac67a24f6d3f9"
+  }
+}

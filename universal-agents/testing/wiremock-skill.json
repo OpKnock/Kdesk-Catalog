@@ -1,0 +1,247 @@
+{
+  "name": "wiremock",
+  "display_name": "wiremock",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Stubs HTTP APIs with WireMock standalone, managing mappings, requests journal, and delays via the admin API.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "java"
+  ],
+  "capabilities": [
+    {
+      "name": "wiremock-start",
+      "description": "Start WireMock standalone or in Docker.",
+      "commands": [
+        "java -jar wiremock-standalone.jar --port 8080",
+        "docker run -d -p 8080:8080 --name wiremock wiremock/wiremock",
+        "java -jar wiremock-standalone.jar --root-dir stubs --port 8080 --verbose",
+        "docker run -d -p 8080:8080 -v $PWD/stubs:/home/wiremock wiremock/wiremock"
+      ],
+      "examples": [
+        "docker run -d -p 8080:8080 --name wiremock wiremock/wiremock",
+        "java -jar wiremock-standalone.jar --root-dir stubs --port 8080",
+        "docker run -d -p 8080:8080 -v $PWD/stubs:/home/wiremock wiremock/wiremock"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "number",
+          "description": "Server port"
+        },
+        {
+          "name": "rootDir",
+          "type": "string",
+          "description": "Stubs directory"
+        }
+      ]
+    },
+    {
+      "name": "stub-mappings",
+      "description": "Create and manage stub mappings via admin API.",
+      "commands": [
+        "curl -X POST http://localhost:8080/__admin/mappings -d '{\"request\":{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"status\":200,\"jsonBody\":{\"users\":[]}}}'",
+        "curl -s http://localhost:8080/__admin/mappings",
+        "curl -X DELETE http://localhost:8080/__admin/mappings/{id}",
+        "curl -X POST http://localhost:8080/__admin/mappings/reset",
+        "curl -s -X POST http://localhost:8080/__admin/mappings -d '{\"request\":{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"fixedDelayMilliseconds\":2000,\"status\":200}}'"
+      ],
+      "examples": [
+        "curl -X POST http://localhost:8080/__admin/mappings -d '{\"request\":{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"status\":200,\"jsonBody\":{\"users\":[]}}}'",
+        "curl -s http://localhost:8080/__admin/mappings",
+        "curl -X POST http://localhost:8080/__admin/mappings/reset"
+      ],
+      "parameters": [
+        {
+          "name": "request",
+          "type": "object",
+          "description": "Request matcher"
+        },
+        {
+          "name": "response",
+          "type": "object",
+          "description": "Response definition"
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "description": "Fixed delay milliseconds"
+        }
+      ]
+    },
+    {
+      "name": "requests-journal",
+      "description": "Verify received requests.",
+      "commands": [
+        "curl -s http://localhost:8080/__admin/requests",
+        "curl -s http://localhost:8080/__admin/requests?limit=10",
+        "curl -X POST http://localhost:8080/__admin/requests/reset",
+        "curl -s http://localhost:8080/__admin/requests/find -d '{\"method\":\"POST\",\"url\":\"/api/orders\"}'"
+      ],
+      "examples": [
+        "curl -s http://localhost:8080/__admin/requests",
+        "curl -X POST http://localhost:8080/__admin/requests/reset",
+        "curl -s http://localhost:8080/__admin/requests/find -d '{\"method\":\"POST\",\"url\":\"/api/orders\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "Method filter"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "URL filter"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "WireMock Documentation",
+      "type": "documentation",
+      "source": "https://wiremock.org/docs/",
+      "description": "Mappings, admin API, and standalone usage"
+    },
+    {
+      "title": "WireMock Stubbing Reference",
+      "type": "documentation",
+      "source": "https://wiremock.org/docs/stubbing/",
+      "description": "Request matching and response templating"
+    }
+  ],
+  "instructions": "# WireMock\n\nAPI stubbing for tests and development.\n\n## What This Skill Does\n\n- Serves stubbed responses for any HTTP API\n- Creates mappings via the admin REST API\n- Simulates delays, faults, and failures\n- Journals requests for verification\n\n\n## When to Use\n\n- Frontend dev against a stubbed backend\n- Testing error and latency scenarios\n- Contract verification in integration tests\n\n## Real Commands\n\n```bash\n# Start\njava -jar wiremock-standalone.jar --port 8080\ndocker run -d -p 8080:8080 --name wiremock wiremock/wiremock\n\n# Stub a mapping\ncurl -X POST http://localhost:8080/__admin/mappings -d '{\n  \"request\": {\"method\": \"GET\", \"url\": \"/api/users\"},\n  \"response\": {\"status\": 200, \"jsonBody\": {\"users\": []}}\n}'\n\n# Simulate delay\ncurl -X POST http://localhost:8080/__admin/mappings -d '{\n  \"request\": {\"method\": \"GET\", \"url\": \"/api/users\"},\n  \"response\": {\"fixedDelayMilliseconds\": 2000, \"status\": 200}\n}'\n\n# Verify requests\ncurl -s http://localhost:8080/__admin/requests\ncurl -X POST http://localhost:8080/__admin/requests/reset\n```\n\n## Best Practices\n\n- Load mappings from __files + mappings dir at startup\n- Reset state between test suites\n- Use response templating for dynamic data\n- Verify request counts for call assertions\n- Mirror the real API contract in stubs",
+  "examples": [
+    {
+      "input": "Stub the payments API for UI dev",
+      "output": "Agent starts WireMock with Docker and posts mappings for payment endpoints with sample bodies."
+    },
+    {
+      "input": "Test a timeout handling path",
+      "output": "Agent adds a mapping with fixedDelayMilliseconds and verifies the client's timeout behavior."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "wiremock.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-wiremock"
+    },
+    "generic": {
+      "system_prompt": "Your lane is wiremock. You do it through wiremock-start: Start WireMock standalone or in Docker. The commands are real, e.g. `java -jar wiremock-standalone.jar --port 8080`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "wiremock",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "wiremock-start",
+        "name": "port",
+        "type": "number",
+        "description": "Server port"
+      },
+      {
+        "capability": "wiremock-start",
+        "name": "rootDir",
+        "type": "string",
+        "description": "Stubs directory"
+      },
+      {
+        "capability": "stub-mappings",
+        "name": "request",
+        "type": "object",
+        "description": "Request matcher"
+      },
+      {
+        "capability": "stub-mappings",
+        "name": "response",
+        "type": "object",
+        "description": "Response definition"
+      },
+      {
+        "capability": "stub-mappings",
+        "name": "delay",
+        "type": "number",
+        "description": "Fixed delay milliseconds"
+      },
+      {
+        "capability": "requests-journal",
+        "name": "method",
+        "type": "string",
+        "description": "Method filter"
+      },
+      {
+        "capability": "requests-journal",
+        "name": "url",
+        "type": "string",
+        "description": "URL filter"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "java"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/wiremock-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/wiremock-skill.yaml",
+    "checksum": "15326cff58d6ef9ef15b083baf597a4bda59e1633ed4b629702c5342da186794"
+  }
+}

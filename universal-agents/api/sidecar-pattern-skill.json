@@ -1,0 +1,173 @@
+{
+  "name": "sidecar-pattern",
+  "display_name": "Sidecar Pattern",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted sidecar pattern skill: istio-proxy operations, envoy sidecar config, container inspection, and multi-container pod management with kubectl.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "envoy",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "sidecar-ops",
+      "description": "Operate sidecar containers: inspect, log, configure, restart",
+      "commands": [
+        "kubectl get pods -l app=api -o jsonpath='{.items[0].spec.containers[*].name}'",
+        "kubectl logs pod/api-7d9f -c istio-proxy",
+        "kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15090/stats/prometheus | head -5",
+        "envoy --config-path envoy.yaml",
+        "kubectl get pod api-7d9f -o jsonpath='{.spec.containers[*].name}'"
+      ],
+      "examples": [
+        "kubectl logs pod/api-7d9f -c istio-proxy --tail=50",
+        "kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15020/healthz",
+        "kubectl delete pod api-7d9f"
+      ],
+      "parameters": [
+        {
+          "name": "pod",
+          "type": "string",
+          "description": "Pod name containing the sidecar"
+        },
+        {
+          "name": "container",
+          "type": "string",
+          "description": "Sidecar container name, e.g. istio-proxy"
+        },
+        {
+          "name": "config_path",
+          "type": "string",
+          "description": "Envoy config file path for standalone runs"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Azure sidecar pattern",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar",
+      "description": "Sidecar pattern rationale and lifecycle"
+    },
+    {
+      "title": "Istio proxy docs",
+      "type": "documentation",
+      "source": "https://istio.io/latest/docs/ops/deployment/architecture/",
+      "description": "istio-proxy sidecar responsibilities"
+    }
+  ],
+  "instructions": "# Sidecar Pattern\n\nHand-crafted skill for operating sidecar containers in Kubernetes.\n\n## What this skill does\n\n- Lists containers inside a pod to confirm the sidecar\n- Reads sidecar logs and hits its local stats endpoints\n- Runs standalone envoy with a custom config for local testing\n\n## When to use\n\n- Verifying istio-proxy or log-shipper sidecars are healthy\n- Debugging a sidecar that restarts in a crash loop\n- Prototyping a proxy sidecar locally before deploying\n\n## Real commands\n\n```bash\n# What containers run in the pod?\nkubectl get pods -l app=api -o jsonpath='{.items[0].spec.containers[*].name}'\n\n# Sidecar logs\nkubectl logs pod/api-7d9f -c istio-proxy --tail=50\n\n# Stats from inside the sidecar\nkubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15090/stats/prometheus | head -5\n\n# Health check endpoint of the sidecar\nkubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15020/healthz\n\n# Standalone envoy for local config iteration\nenvoy --config-path envoy.yaml\n```\n\n## Pod spec\n\n```yaml\nspec:\n  containers:\n    - name: api\n      image: registry.example.com/api:v2.1\n    - name: istio-proxy\n      image: proxyv2\n```\n\n## Testing\n\n```bash\nkubectl logs pod/api-7d9f -c istio-proxy --tail=20\nkubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15090/stats/prometheus | grep istio_requests_total | head\n```\n\n## Best practices\n\n- Give every sidecar a name and liveness probe in the pod spec\n- Share volumes and localhost networking between app and sidecar\n- Never let the app depend on the sidecar being the source of truth\n",
+  "examples": [
+    {
+      "input": "Is the istio-proxy sidecar healthy?",
+      "output": "kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15020/healthz, and tail logs with kubectl logs pod/api-7d9f -c istio-proxy --tail=50."
+    },
+    {
+      "input": "Why is my log sidecar crash-looping?",
+      "output": "kubectl logs pod/api-7d9f -c log-shipper --previous shows the last run's stderr; check the shared volume path in the pod spec."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "sidecar-pattern.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-sidecar-pattern"
+    },
+    "generic": {
+      "system_prompt": "You work Sidecar Pattern hands-on. You do it through sidecar-ops: Operate sidecar containers: inspect, log, configure, restart. The commands are real, e.g. `kubectl get pods -l app=api -o jsonpath={.items[0].spec.containers[*].name}`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "sidecar-pattern",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sidecar-ops",
+        "name": "pod",
+        "type": "string",
+        "description": "Pod name containing the sidecar"
+      },
+      {
+        "capability": "sidecar-ops",
+        "name": "container",
+        "type": "string",
+        "description": "Sidecar container name, e.g. istio-proxy"
+      },
+      {
+        "capability": "sidecar-ops",
+        "name": "config_path",
+        "type": "string",
+        "description": "Envoy config file path for standalone runs"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "envoy",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/sidecar-pattern-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/sidecar-pattern-skill.yaml",
+    "checksum": "4f1985e63d66a7cf8a1d6b3e87910ed798f90be4f37b536ab3ce273a20759580"
+  }
+}

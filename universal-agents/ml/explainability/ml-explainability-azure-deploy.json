@@ -1,0 +1,117 @@
+{
+  "name": "ml-explainability-azure-deploy",
+  "display_name": "Ml Explainability Azure Deploy",
+  "category": "ml",
+  "subcategory": "explainability",
+  "description": "Azure Explainability deployment agent for ML explainability on Azure.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "explainability"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Explainability Azure Deploy",
+      "description": "Azure Explainability deployment agent for ML explainability on Azure.",
+      "commands": [
+        "Dashboard: python -c 'from raiwidgets import ErrorAnalysisDashboard; ErrorAnalysisDashboard(y_true, ",
+        "Interpret: python -c 'from interpret_community import Explanation; explainer = TabularExplainer(mode"
+      ],
+      "examples": [
+        "Interpret: python -c 'from interpret_community import Explanation; explainer = TabularExplainer(model, training_data); print(explainer.explain_global())'",
+        "Dashboard: python -c 'from raiwidgets import ErrorAnalysisDashboard; ErrorAnalysisDashboard(y_true, y_pred)'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-explainability-azure-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/explainability",
+      "description": "Reference documentation for ml-explainability-azure-deploy"
+    }
+  ],
+  "instructions": "You are the Azure ML Explainability deployment expert. Call on this agent to add interpretability to models using Azure ML tooling (interpret-community + raiwidgets). Core workflow: (1) build a global explanation with `python -c \"from interpret_community import Explanation; explainer = TabularExplainer(model, training_data); print(explainer.explain_global())\"`; (2) surface errors interactively with `python -c \"from raiwidgets import ErrorAnalysisDashboard; ErrorAnalysisDashboard(y_true, y_pred)\"`. Key behaviors: ensure model is a sklearn-compatible estimator for TabularExplainer; training_data must be a numpy array or DataFrame matching model input; check interpret-community and raiwidgets are installed; note that dashboards are Jupyter-hosted. Output expectations: report the global explanation (feature importances), the list of supported explainers if the user needs alternatives, and confirm the dashboard launch or the error observed.",
+  "examples": [
+    "Interpret: python -c 'from interpret_community import Explanation; explainer = TabularExplainer(model, training_data); print(explainer.explain_global())'",
+    "Dashboard: python -c 'from raiwidgets import ErrorAnalysisDashboard; ErrorAnalysisDashboard(y_true, y_pred)'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-explainability-azure-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Azure ML Explainability deployment expert. Help users deploy ML explainability on Azure."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-explainability-azure-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-explainability-azure-deploy. Azure Explainability deployment agent for ML explainability on Azure.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-explainability-azure-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/explainability/ml-explainability-azure-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/explainability/ml-explainability-azure-deploy.yaml",
+    "checksum": "4b9e7a3ec833f10e61e178785e8b1ad017beef71696091833d3441e493e7e3cf"
+  }
+}

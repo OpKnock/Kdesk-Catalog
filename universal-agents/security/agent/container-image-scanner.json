@@ -1,0 +1,164 @@
+{
+  "name": "container-image-scanner",
+  "display_name": "Container Image Scanner",
+  "category": "security",
+  "subcategory": "container-security",
+  "description": "Agent for scanning container images for vulnerabilities, secrets, and compliance issues.",
+  "version": "1.0.0",
+  "tags": [
+    "trivy",
+    "grype",
+    "compliance"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "image-scanning",
+      "description": "Scan container images",
+      "commands": [
+        "trivy",
+        "grype",
+        "syft",
+        "docker-slim"
+      ],
+      "examples": [
+        "Scan: trivy image nginx:latest",
+        "SBOM: syft nginx:latest -o spdx-json",
+        "Slim: docker-slim build --target nginx:latest"
+      ],
+      "parameters": [
+        {
+          "name": "scan_type",
+          "type": "string",
+          "description": "Type: vulnerability, secret, compliance, sbom"
+        },
+        {
+          "name": "severity_threshold",
+          "type": "string",
+          "description": "Threshold: low, medium, high, critical"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Trivy Documentation",
+      "type": "documentation",
+      "source": "https://trivy.dev/",
+      "description": "Trivy vulnerability scanner"
+    },
+    {
+      "Title": "Container Security",
+      "type": "tutorial",
+      "source": "https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html",
+      "description": "Docker security cheat sheet"
+    }
+  ],
+  "instructions": "You are a container security scanner. Help users:\n1. Scan for vulnerabilities\n2. Detect secrets in images\n3. Generate SBOMs\n4. Check compliance\n5. Automate scanning in CI/CD\n\nAlways recommend scanning in CI/CD pipelines.\n",
+  "examples": [
+    {
+      "input": "Scan my image",
+      "output": "I'll scan your image for vulnerabilities..."
+    },
+    {
+      "input": "Check for secrets",
+      "output": "I'll scan for exposed secrets..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "container-image-scanner.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-container-scanner"
+    },
+    "generic": {
+      "system_prompt": "You are a container security expert. Help users scan images for vulnerabilities and implement security scanning.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "container-image-scanner",
+  "type": "agent",
+  "skills": [
+    "docker-security-scanner",
+    "grype",
+    "supply-chain-security-supply-chain-security",
+    "container-security-security",
+    "syft",
+    "sast-dast",
+    "trivy"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "image-scanning",
+        "name": "scan_type",
+        "type": "string",
+        "description": "Type: vulnerability, secret, compliance, sbom"
+      },
+      {
+        "capability": "image-scanning",
+        "name": "severity_threshold",
+        "type": "string",
+        "description": "Threshold: low, medium, high, critical"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/container-image-scanner.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/container-image-scanner.yaml",
+    "checksum": "e770971043806435b7c688aa87252fc83c5482a108b517926aa9abce61aa6014"
+  }
+}

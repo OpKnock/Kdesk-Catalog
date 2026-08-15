@@ -1,0 +1,181 @@
+name: api-compliance-scanner
+version: 2.0.0
+type: skill
+category: security
+description: 'Implements compliance scanning: install scanners, run baseline checks, and fix misconfigurations
+  against GDPR and SOC 2.'
+keywords:
+- api-compliance
+- gdpr
+- compliance-scanning
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-compliance-scanner.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-compliance-scanner
+  generic:
+    system_prompt: 'You take the Api Compliance Scanner seat. You do it through scanner-setup: Install
+      and configure compliance scanners locally and in CI. The commands are real, e.g. `pip install checkov`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: scanner-setup
+  description: Install and configure compliance scanners locally and in CI
+  commands:
+  - pip install checkov
+  - pip install prowler
+  - pip install scoutsuite
+  - brew install tfsec
+  - checkov --version && tfsec --version
+  examples:
+  - pip install checkov prowler scoutsuite && checkov --version
+  - brew install tfsec && tfsec --version
+  - pip install checkov && checkov -d . --quiet
+  parameters:
+  - name: scanner
+    type: string
+    description: checkov, tfsec, prowler, scoutsuite
+  - name: target
+    type: string
+    description: Scan target
+- name: baseline-scanning
+  description: Run baseline scans and fix the highest-severity findings
+  commands:
+  - checkov -d . --quiet
+  - tfsec .
+  - prowler aws --group group17
+  - scout aws --report-dir reports/scout --services ec2,s3
+  - checkov -d . --check CKV_AWS_20 --quiet
+  examples:
+  - checkov -d . --quiet && tfsec .
+  - prowler aws --group group17 --severity high
+  - scout aws --report-dir reports/scout --services ec2,s3
+  parameters:
+  - name: dir
+    type: string
+    description: Directory to scan
+  - name: check
+    type: string
+    description: Specific check ID
+prerequisites:
+- scout-suite
+- prowler
+- checkov
+tools:
+- scout-suite
+- prowler
+- checkov
+- tfsec
+- node.js
+- python
+examples:
+- input: Scan our AWS infrastructure for compliance gaps
+  output: Runs checkov and prowler baselines, fixes critical findings, and re-verifies
+- input: Add compliance scanning to CI
+  output: Adds checkov and tfsec steps so IaC PRs are scanned automatically
+instructions: '# API Compliance (Implementation)
+
+
+  Gets compliance scanning running and fixes baseline findings.
+
+
+  ## When to Use
+
+  - No scanning exists yet
+
+  - Preparing infrastructure for compliance
+
+  - Quick wins on misconfigurations
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Install
+
+  pip install checkov prowler scoutsuite
+
+  brew install tfsec
+
+
+  # Baseline scans
+
+  checkov -d . --quiet
+
+  tfsec .
+
+  prowler aws --group group17 --severity high
+
+  scout aws --report-dir reports/scout --services ec2,s3
+
+
+  # Targeted check
+
+  checkov -d . --check CKV_AWS_20 --quiet
+
+  ```
+
+
+  ## Fix Loop
+
+  1. Run baseline
+
+  2. Fix critical findings
+
+  3. Re-scan
+
+  4. Baseline accepted risks
+
+
+  ## CI Hook
+
+  Add `checkov -d . --quiet` as a pipeline step so new misconfigurations fail fast.
+
+
+  ## Testing
+
+  Verify fixes by re-running the exact failing check ID.
+
+
+  ## Best Practices
+
+  - Fix encryption and logging checks first
+
+  - Keep scanner versions pinned'
+display_name: Api Compliance Scanner
+knowledge:
+- title: Checkov Quickstart
+  type: documentation
+  source: https://www.checkov.io/1.Introduction/Quickstart.html
+  description: Install and run checkov
+- title: Prowler AWS Checks
+  type: documentation
+  source: https://docs.prowler.com/projects/prowler-open-source/en/latest/
+  description: AWS check groups

@@ -1,0 +1,187 @@
+name: kubectx
+display_name: kubectx
+category: devops
+subcategory: general
+description: Switches Kubernetes contexts and namespaces fast with kubectx/kubens, including fuzzy aliases
+  and cross-platform install.
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+- kubectx
+- kubens
+capabilities:
+- name: context-switching
+  description: List, switch, and fuzzy-search kubectl contexts.
+  commands:
+  - kubectx
+  - kubectx prod-east
+  - kubectx -
+  - kubectx -c
+  - kubectx <old> <new>
+  - kubectl config get-contexts
+  examples:
+  - kubectx
+  - kubectx prod-east
+  - kubectx -
+  parameters:
+  - name: context
+    type: string
+    description: Context name to switch to
+  - name: prev
+    type: string
+    description: Toggle back to previous context with -
+- name: namespace-switching
+  description: List and switch namespaces within the current context.
+  commands:
+  - kubens
+  - kubens kube-system
+  - kubens -
+  - kubens -c
+  - kubens default
+  examples:
+  - kubens
+  - kubens kube-system
+  - kubens -
+  parameters:
+  - name: namespace
+    type: string
+    description: Namespace to switch to
+  - name: toggle
+    type: boolean
+    description: Return to previous namespace with -
+knowledge:
+- title: kubectx GitHub
+  type: documentation
+  source: https://github.com/ahmetb/kubectx
+  description: kubectx and kubens usage, fzf integration, aliases
+- title: Kubernetes kubectl config
+  type: documentation
+  source: https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
+  description: Configuring access to multiple clusters
+instructions: '# kubectx / kubens
+
+
+  Switch Kubernetes contexts and namespaces in one keystroke.
+
+
+  ## What This Skill Does
+
+
+  - Lists and switches contexts without remembering long names
+
+  - Switches namespaces inside the current context
+
+  - Toggles between last two contexts/namespaces with `-`
+
+  - Integrates with fzf for fuzzy search
+
+  - Works with completion scripts and aliases
+
+
+  ## When to Use
+
+
+  - Multi-cluster day-to-day operations
+
+  - Rapid context hopping during incidents
+
+  - Terminal workflows where kubectl config use-context is too slow
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Contexts
+
+  kubectx                       # list all
+
+  kubectx prod-east             # switch
+
+  kubectx -                     # toggle back
+
+  kubectx -c                    # current
+
+  kubectx old new               # rename
+
+
+  # Namespaces
+
+  kubens                        # list
+
+  kubens kube-system            # switch
+
+  kubens -                      # toggle back
+
+  kubens -c                     # current
+
+  ```
+
+
+  ## With fzf
+
+
+  ```bash
+
+  # fuzzy switch
+
+  kubectx                     # press tab or use fzf if installed
+
+  kubens
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Install completions: `source <(kubectx --completion zsh)`
+
+  - Add aliases `alias kx=kubectx` and `alias kns=kubens` to shell profile
+
+  - Verify switch with `kubectl config current-context` in scripts
+
+  - Pair with `KUBECONFIG` merge for vendor contexts
+
+  - Use `kubens -` during incident toggling between app and kube-system'
+examples:
+- input: I keep mistyping long context names
+  output: Agent installs kubectx with fzf integration and shows fuzzy-switch workflow plus the - toggle
+- input: Jump into kube-system for a DNS fix
+  output: Agent switches context, runs kubens kube-system, and returns with kubens -
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kubectx.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kubectx
+  generic:
+    system_prompt: 'You take the kubectx seat. You do it through context-switching: List, switch, and
+      fuzzy-search kubectl contexts. The commands are real, e.g. `kubectx`. You verify each step you report
+      and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

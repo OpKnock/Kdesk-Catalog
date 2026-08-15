@@ -1,0 +1,180 @@
+name: databricks
+display_name: Databricks
+category: data
+subcategory: general
+description: 'Works with Databricks: clusters, jobs, notebooks, and DBFS from the Databricks CLI.'
+version: 2.0.0
+tags:
+- data
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- databricks
+capabilities:
+- name: databricks-cli
+  description: Manage workspaces, clusters, jobs, and files via databricks CLI
+  commands:
+  - databricks configure --token
+  - databricks clusters list
+  - databricks jobs list
+  - databricks fs ls dbfs:/mnt/data
+  - databricks run now --job-id 123 --wait
+  examples:
+  - databricks workspace list /
+  - databricks jobs run-now --job-id 42 --jar-params '["--env", "prod"]'
+  - databricks fs cp local.csv dbfs:/mnt/data/landing/
+  parameters:
+  - name: job-id
+    type: integer
+    description: ID of the job to trigger
+  - name: wait
+    type: boolean
+    description: Block until the run completes
+  - name: profile
+    type: string
+    description: Named profile from the CLI config file
+knowledge:
+- title: Databricks CLI docs
+  type: documentation
+  source: https://docs.databricks.com/en/dev-tools/cli/index.html
+  description: Authentication, commands, and migration from legacy CLI
+- title: Databricks jobs API
+  type: documentation
+  source: https://docs.databricks.com/en/jobs/index.html
+  description: Job creation, run triggers, and monitoring
+instructions: '# Databricks
+
+
+  Manage Databricks workspaces from the CLI: clusters, jobs, notebooks, and DBFS
+
+  files for lakehouse workloads.
+
+
+  ## When to Use
+
+
+  - Kicking off production jobs and monitoring runs
+
+  - Managing clusters for interactive and batch workloads
+
+  - Moving data in/out of DBFS
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Auth setup
+
+  sudo databricks configure --token
+
+
+  # Cluster management
+
+  databricks clusters list
+
+  databricks clusters start --cluster-id 1234-5678-abcd
+
+
+  # Jobs
+
+  databricks jobs list
+
+  databricks jobs run-now --job-id 42
+
+  sudo databricks run now --job-id 42 --wait
+
+  sudo databricks run list --job-id 42 --limit 5
+
+
+  # Files
+
+  databricks fs ls dbfs:/mnt/data
+
+  databricks fs cp ./input.csv dbfs:/mnt/data/landing/input.csv
+
+  databricks fs mkdirs dbfs:/mnt/warehouse
+
+
+  # Workspace
+
+  databricks workspace list /
+
+  databricks workspace export notebook.py
+
+  ```
+
+
+  ## Run Monitoring
+
+
+  ```bash
+
+  sudo databricks run get --run-id 12345
+
+  databricks run list --job-id 42 --limit 10 --output json | jq ''.runs[].state''
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use a service principal token in CI; rotate regularly
+
+  - Pin cluster runtime versions in job configs
+
+  - Upload data to DBFS/Unity Catalog before jobs, never from notebooks
+
+  - Monitor run states; alert on FAILED/SKIPPED
+
+  - Use `--profile` per environment
+
+
+  ## Example Response
+
+
+  For a failed job: gets the run details and log paths, pulls the Spark error from
+
+  logs, and proposes the fix or rerun with adjusted parameters.'
+examples:
+- input: Run the nightly ETL job
+  output: Looks up the job ID, runs databricks jobs run-now with --wait, and reports the final state and
+    runtime
+- input: Upload data for the pipeline
+  output: Creates the DBFS path with mkdirs and copies files with databricks fs cp, verifying with fs
+    ls
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: databricks.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-databricks
+  generic:
+    system_prompt: 'Your lane is Databricks. You do it through databricks-cli: Manage workspaces, clusters,
+      jobs, and files via databricks CLI. The commands are real, e.g. `databricks configure --token`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

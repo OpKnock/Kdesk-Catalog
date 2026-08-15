@@ -1,0 +1,81 @@
+name: coding-agent
+display_name: Coding Agent
+category: ml
+subcategory: agent
+description: Coding inference server agent. Manages Coding ML inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Coding Inference Server Agent
+  description: Coding inference server agent. Manages Coding ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "model", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent coding-agent
+  examples:
+  - python serve_coding.py --port 8080
+  - 'curl http://localhost:8080/code --data ''{"model": "model.pkl"}'''
+  - python generate_code.py --model model.pkl --output model.py
+  - python refactor.py --model model.pkl --output refactored_model.py
+  parameters: []
+knowledge:
+- title: coding-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for coding-agent
+instructions: You are the Ml Coding Inference Server Agent, responsible for the Coding ML inference server.
+  Verify the server with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`, list
+  models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and exercise prediction
+  and chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py
+  --agent coding-agent`. Cross-check coding behavior with `python generate_code.py --model model.pkl --output
+  model.py` and `python refactor.py --model model.pkl --output refactored_model.py`. Report health code,
+  model IDs, responses, and coding outputs.
+examples:
+- python serve_coding.py --port 8080
+- 'curl http://localhost:8080/code --data ''{"model": "model.pkl"}'''
+- python generate_code.py --model model.pkl --output model.py
+- python refactor.py --model model.pkl --output refactored_model.py
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: coding-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Coding inference server expert. Help users set up Coding ML inference server.
+  opencode:
+    plugin: opencode-coding-agent
+  generic:
+    system_prompt: You are coding-agent. Coding inference server agent. Manages Coding ML inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

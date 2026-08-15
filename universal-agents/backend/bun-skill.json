@@ -1,0 +1,200 @@
+{
+  "name": "bun",
+  "display_name": "Bun",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Develops and runs JavaScript/TypeScript backend services with the Bun runtime, bundler, test runner, and package manager.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bun"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "bun init",
+        "bun install",
+        "bun run dev",
+        "bun run build",
+        "bun compile --outfile app server.ts"
+      ],
+      "description": "Initialize projects, run scripts, and compile executables with Bun.",
+      "name": "bun-runtime",
+      "examples": [
+        "bun init -y",
+        "bun run src/server.ts --port 3000",
+        "bun compile --minify --outfile api main.ts"
+      ],
+      "parameters": [
+        {
+          "description": "Entry file to run or compile",
+          "name": "entrypoint",
+          "type": "string"
+        },
+        {
+          "description": "Output path for compiled binary",
+          "name": "outfile",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "bun test",
+        "bun test --coverage",
+        "bun bench",
+        "bun lint",
+        "bun fmt --check"
+      ],
+      "description": "Run unit tests, benchmarks, and linting.",
+      "name": "bun-testing",
+      "examples": [
+        "bun test test/unit/*.test.ts",
+        "bun bench bench/parse.bench.ts",
+        "bun test --coverage --coverage-reporter=text"
+      ],
+      "parameters": [
+        {
+          "description": "Test file or glob to run",
+          "name": "path",
+          "type": "string"
+        },
+        {
+          "description": "Collect coverage",
+          "name": "coverage",
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Bun Docs",
+      "description": "Runtime, bundler, test runner, and package manager reference",
+      "source": "https://bun.sh/docs",
+      "type": "documentation"
+    },
+    {
+      "title": "Bun API Reference",
+      "description": "HTTP server, SQL, WebSocket, and file APIs",
+      "source": "https://bun.com/docs/api",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Bun\n\nBackend development with the Bun runtime and toolchain.\n\n## When to Use\n\n- Running TypeScript server code without a separate compile step\n- Building APIs with Bun.serve, Hono, or Elysia\n- Packaging services as single-file executables with bun compile\n- Fast installs and task running where npm is slow\n\n## Commands\n\n```bash\n# Scaffold a new project\nbun init\n\n# Install dependencies from package.json\nbun install\n\n# Add a dependency\nbun add hono\nbun add -d typescript\n\n# Run a script or TS file directly\nbun run dev\nbun run src/server.ts\n\n# Test runner\nbun test\nbun test --coverage\n\n# Benchmark\nbun bench\n\n# Lint and format\nbun lint\nbun fmt --check\n\n# Compile to a standalone binary\nbun compile --outfile app server.ts\n```\n\n## HTTP Server\n\n```typescript\n// server.ts\nconst server = Bun.serve({\n  port: 3000,\n  fetch(req) {\n    return new Response(`Hello ${new URL(req.url).pathname}`);\n  },\n});\nconsole.log(`Listening on ${server.url}`);\n```\n\n## Best Practices\n\n- Use bunx instead of npx for one-off tools\n- Run bun --bun to force Bun over node when scripts call node\n- Put shared types in a single tsconfig with strict mode\n- Use bun test --coverage in CI to enforce thresholds\n- Compile production binaries with bun compile --minify for smaller artifacts\n- Pin bun.lock in version control for reproducible installs",
+  "examples": [
+    {
+      "input": "Create a quick HTTP API with Bun",
+      "output": "Agent scaffolds with bun init, writes a Bun.serve handler with routing, and runs bun run src/server.ts to verify."
+    },
+    {
+      "input": "Bundle my service into a single executable",
+      "output": "Agent runs bun compile --minify --outfile api main.ts and explains flags for including assets and setting the target platform."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "bun.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-bun"
+    },
+    "generic": {
+      "system_prompt": "You own Bun end to end. You do it through bun-runtime: Initialize projects, run scripts, and compile executables with Bun. The commands are real, e.g. `bun init`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "bun",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "bun-runtime",
+        "name": "entrypoint",
+        "type": "string",
+        "description": "Entry file to run or compile"
+      },
+      {
+        "capability": "bun-runtime",
+        "name": "outfile",
+        "type": "string",
+        "description": "Output path for compiled binary"
+      },
+      {
+        "capability": "bun-testing",
+        "name": "path",
+        "type": "string",
+        "description": "Test file or glob to run"
+      },
+      {
+        "capability": "bun-testing",
+        "name": "coverage",
+        "type": "boolean",
+        "description": "Collect coverage"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bun"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/bun-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/bun-skill.yaml",
+    "checksum": "13a759313ee10079fbcc03d7798599e7010311d43f896d6c7f6a533093319fdc"
+  }
+}

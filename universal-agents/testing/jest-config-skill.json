@@ -1,0 +1,248 @@
+{
+  "name": "jest-config",
+  "display_name": "jest-config",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Configures Jest for JS/TS projects: presets, coverage thresholds, module mappers, reporters, and watch plugins.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "jest-initialization",
+      "description": "Initialize and inspect Jest configuration.",
+      "commands": [
+        "npx jest --init",
+        "npx jest --showConfig",
+        "npx jest --listTests",
+        "npx jest --clearCache",
+        "npx jest --debug"
+      ],
+      "examples": [
+        "npx jest --init",
+        "npx jest --showConfig",
+        "npx jest --listTests"
+      ],
+      "parameters": [
+        {
+          "name": "showConfig",
+          "type": "boolean",
+          "description": "Print resolved config"
+        },
+        {
+          "name": "debug",
+          "type": "boolean",
+          "description": "Print config debugging info"
+        }
+      ]
+    },
+    {
+      "name": "config-options",
+      "description": "Configure environments, mappers, and transforms.",
+      "commands": [
+        "npx jest --env=jsdom",
+        "npx jest --testMatch='**/*.test.ts'",
+        "npx jest --testPathIgnorePatterns=/node_modules/",
+        "npx jest --moduleNameMapper='{\"^@/(.*)$\":\"<rootDir>/src/$1\"}'",
+        "npx jest --coverage"
+      ],
+      "examples": [
+        "npx jest --env=jsdom",
+        "npx jest --testMatch='**/*.test.ts'",
+        "npx jest --moduleNameMapper='{\"^@/(.*)$\":\"<rootDir>/src/$1\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "env",
+          "type": "string",
+          "description": "Test environment: node, jsdom"
+        },
+        {
+          "name": "testMatch",
+          "type": "array",
+          "description": "Test file patterns"
+        },
+        {
+          "name": "moduleNameMapper",
+          "type": "object",
+          "description": "Module alias mapping"
+        }
+      ]
+    },
+    {
+      "name": "coverage-and-reporters",
+      "description": "Coverage thresholds and custom reporters.",
+      "commands": [
+        "npx jest --coverage --coverageThreshold='{\"global\":{\"lines\":80}}'",
+        "npx jest --coverageReporters=lcov,text-summary",
+        "npx jest --reporters=default --reporters=jest-junit",
+        "npx jest --coverageDirectory=coverage"
+      ],
+      "examples": [
+        "npx jest --coverage --coverageThreshold='{\"global\":{\"lines\":80}}'",
+        "npx jest --coverageReporters=lcov,text-summary",
+        "npx jest --reporters=default --reporters=jest-junit"
+      ],
+      "parameters": [
+        {
+          "name": "coverageThreshold",
+          "type": "object",
+          "description": "Global or per-file thresholds"
+        },
+        {
+          "name": "coverageReporters",
+          "type": "array",
+          "description": "Report formats: lcov, html, text"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Jest Configuration",
+      "type": "documentation",
+      "source": "https://jestjs.io/docs/configuration",
+      "description": "All Jest config options"
+    },
+    {
+      "title": "Jest CLI Options",
+      "type": "documentation",
+      "source": "https://jestjs.io/docs/cli",
+      "description": "Command line flags reference"
+    }
+  ],
+  "instructions": "# Jest Configuration\n\nTune Jest for your project's testing needs.\n\n## What This Skill Does\n\n- Initializes and validates Jest configs\n- Sets environments, transforms, and module mappers\n- Configures coverage thresholds and reporters\n- Optimizes watch mode and caching\n\n## When to Use\n\n- Setting up Jest for a new project\n- Migrating tests between environments\n- Enforcing coverage policies\n\n## Real Commands\n\n```bash\n# Init and inspect\nnpx jest --init\nnpx jest --showConfig\nnpx jest --listTests\n\n# Runtime config flags\nnpx jest --env=jsdom\nnpx jest --testMatch='**/*.test.ts'\nnpx jest --moduleNameMapper='{\"^@/(.*)$\":\"<rootDir>/src/$1\"}'\n\n# Coverage\nnpx jest --coverage --coverageThreshold='{\"global\":{\"lines\":80}}'\nnpx jest --coverageReporters=lcov,text-summary\n\n# Reporters\nnpx jest --reporters=default --reporters=jest-junit\n```\n\n## jest.config.js\n\n```js\nmodule.exports = {\n  testEnvironment: 'jsdom',\n  moduleNameMapper: {\n    '^@/(.*)$': '<rootDir>/src/$1'\n  },\n  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],\n  coverageThreshold: {\n    global: { lines: 80, statements: 80, branches: 70, functions: 80 }\n  }\n};\n```\n\n## Best Practices\n\n- Keep config in code (jest.config.js) for reviewability\n- Use setupFilesAfterEnv for global mocks\n- Set thresholds that fail the build on regression\n- Cache mappers/transforms to keep suites fast\n- Document non-obvious moduleNameMapper aliases",
+  "examples": [
+    {
+      "input": "Configure Jest for a TS project with path aliases",
+      "output": "Agent writes jest.config.js with ts-jest transform, moduleNameMapper for @/ aliases, and jsdom env."
+    },
+    {
+      "input": "Enforce 80% coverage in CI",
+      "output": "Agent sets coverageThreshold globally and runs npx jest --ci --coverage with the junit reporter."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "jest-config.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-jest-config"
+    },
+    "generic": {
+      "system_prompt": "Your lane is jest-config. You do it through jest-initialization: Initialize and inspect Jest configuration. The commands are real, e.g. `npx jest --init`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "jest-config",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jest-initialization",
+        "name": "showConfig",
+        "type": "boolean",
+        "description": "Print resolved config"
+      },
+      {
+        "capability": "jest-initialization",
+        "name": "debug",
+        "type": "boolean",
+        "description": "Print config debugging info"
+      },
+      {
+        "capability": "config-options",
+        "name": "env",
+        "type": "string",
+        "description": "Test environment: node, jsdom"
+      },
+      {
+        "capability": "config-options",
+        "name": "testMatch",
+        "type": "array",
+        "description": "Test file patterns"
+      },
+      {
+        "capability": "config-options",
+        "name": "moduleNameMapper",
+        "type": "object",
+        "description": "Module alias mapping"
+      },
+      {
+        "capability": "coverage-and-reporters",
+        "name": "coverageThreshold",
+        "type": "object",
+        "description": "Global or per-file thresholds"
+      },
+      {
+        "capability": "coverage-and-reporters",
+        "name": "coverageReporters",
+        "type": "array",
+        "description": "Report formats: lcov, html, text"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/jest-config-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/jest-config-skill.yaml",
+    "checksum": "4cbb002dd2be3d9bbc43abb96b5ec5f6aa91a210cb38193679b36e442fa8bd6a"
+  }
+}

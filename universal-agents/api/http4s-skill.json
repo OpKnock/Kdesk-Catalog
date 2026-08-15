@@ -1,0 +1,171 @@
+{
+  "name": "http4s",
+  "display_name": "Http4S",
+  "category": "api",
+  "subcategory": "general",
+  "description": "http4s pure-functional HTTP in Scala: sbt project scaffolding, streaming routes, and running servers with curl verification.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "sbt"
+  ],
+  "capabilities": [
+    {
+      "name": "http4s-sbt",
+      "description": "Scaffold, build, and run http4s applications with sbt.",
+      "commands": [
+        "sbt new http4s/http4s.g8 --name=http4s-quickstart",
+        "sbt run",
+        "sbt test",
+        "curl -s -X POST http://localhost:8080/hello/World",
+        "sbt \"runMain com.example.quickstart.Server\""
+      ],
+      "examples": [
+        "sbt new http4s/http4s.g8 --name=api",
+        "sbt \"run --port 9090\"",
+        "curl -s http://localhost:8080/"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Server port, default 8080."
+        },
+        {
+          "name": "scala_version",
+          "type": "string",
+          "description": "Scala version for the build (e.g. 2.13 or 3)."
+        },
+        {
+          "name": "project_name",
+          "type": "string",
+          "description": "Project name from the giter8 template."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "http4s Docs",
+      "type": "documentation",
+      "source": "https://http4s.org/",
+      "description": "Official http4s documentation and guides."
+    },
+    {
+      "title": "http4s Quickstart",
+      "type": "documentation",
+      "source": "https://http4s.org/docs/quickstart/",
+      "description": "giter8 quickstart template and sbt workflow."
+    }
+  ],
+  "instructions": "# http4s\n\nPure-functional HTTP servers in Scala with http4s.\n\n## What this skill does\n\n- Scaffolds http4s projects with sbt.\n- Writes effectful routes (IO, fs2 streams).\n- Runs servers with Ember and verifies with curl.\n- Tests routes without starting a listener.\n\n## When to use\n\n- A Scala service needs a typed, functional HTTP layer.\n- Streaming responses (SSE, file uploads) fit fs2 well.\n- Teams coming from cats-effect want end-to-end FP.\n\n## Real commands\n\n```bash\n# Scaffold\nsbt new http4s/http4s.g8 --name=http4s-quickstart\ncd http4s-quickstart\n\n# Run\nsbt run\n# or with a custom port\nsbt \"run --port 9090\"\n\n# Test\nsbt test\n\n# Verify\ncurl -s -X POST http://localhost:8080/hello/World\n```\n\n## Route example\n\n```scala\nimport org.http4s.*\nimport org.http4s.dsl.io.*\n\nval routes = HttpRoutes.of[IO] {\n  case GET -> Root =>\n    Ok(\"Hello, http4s!\")\n  case req @ POST -> Root / \"hello\" / name =>\n    Ok(s\"Hello, $name\")\n}\n```\n\n## Server\n\n```scala\nimport org.http4s.ember.server.EmberServerBuilder\nimport com.comcast.ip4s.*\n\nEmberServerBuilder\n  .default[IO]\n  .withHost(ipv4\"0.0.0.0\")\n  .withPort(port\"8080\")\n  .withHttpApp(routes.orNotFound)\n  .build\n  .use(_ => IO.never)\n  .unsafeRunSync()\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:8080/\nsbt test\n```\n\n## Best practices\n\n- Keep routes pure: return F[_] responses, never block.\n- Use http4s-dsl matchers for typed path extraction.\n- Prefer Ember for new projects; blaze for legacy needs.\n- Test with the `http4s-laws`/munit-supertest style rather than booting a server.\n\n## Example exchange\n\n```\nUser: Serve JSON from an http4s route.\nAgent: Use the json4s/circe entity encoder:\n       case GET -> Root / \"health\" => Ok(Map(\"status\" -> \"ok\").asJson)\n```",
+  "examples": [
+    {
+      "input": "Scaffold an http4s quickstart project",
+      "output": "sbt new http4s/http4s.g8 --name=http4s-quickstart"
+    },
+    {
+      "input": "Run and verify the server",
+      "output": "sbt run & curl -s -X POST http://localhost:8080/hello/World"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "http4s.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-http4s"
+    },
+    "generic": {
+      "system_prompt": "You work Http4S hands-on. You do it through http4s-sbt: Scaffold, build, and run http4s applications with sbt. The commands are real, e.g. `sbt new http4s/http4s.g8 --name=http4s-quickstart`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "http4s",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "http4s-sbt",
+        "name": "port",
+        "type": "integer",
+        "description": "Server port, default 8080."
+      },
+      {
+        "capability": "http4s-sbt",
+        "name": "scala_version",
+        "type": "string",
+        "description": "Scala version for the build (e.g. 2.13 or 3)."
+      },
+      {
+        "capability": "http4s-sbt",
+        "name": "project_name",
+        "type": "string",
+        "description": "Project name from the giter8 template."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "sbt"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/http4s-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/http4s-skill.yaml",
+    "checksum": "84f350c68dd639be206e8f1c0f856844e481440c218801b47b4ca207406ac7f2"
+  }
+}

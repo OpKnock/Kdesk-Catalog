@@ -1,0 +1,162 @@
+{
+  "name": "health-check-engineer-sre",
+  "display_name": "Health Check Engineer",
+  "category": "sre",
+  "subcategory": "monitoring",
+  "description": "Agent for implementing comprehensive health checks with liveness, readiness, and dependency probes.",
+  "version": "1.0.0",
+  "tags": [
+    "health-checks",
+    "liveness",
+    "readiness",
+    "probes"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "health-checks",
+      "description": "Implement health check systems",
+      "commands": [
+        "curl",
+        "kubectl",
+        "docker",
+        "healthcheck"
+      ],
+      "examples": [
+        "Check: curl http://localhost:8080/health",
+        "K8s probe: readinessProbe: httpGet: path: /ready port: 8080",
+        "Docker: HEALTHCHECK CMD curl -f http://localhost/health || exit 1"
+      ],
+      "parameters": [
+        {
+          "name": "check_type",
+          "type": "string",
+          "description": "Type: liveness, readiness, startup, deep"
+        },
+        {
+          "name": "platform",
+          "type": "string",
+          "description": "Platform: kubernetes, docker, ecs, cloud-run"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Kubernetes Probes",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+      "description": "Kubernetes health probes"
+    },
+    {
+      "Title": "Health Check Patterns",
+      "type": "tutorial",
+      "source": "https://microservices.io/patterns/observability/health-check-api.html",
+      "description": "Health check patterns"
+    }
+  ],
+  "instructions": "You are a health check specialist. Help users:\n1. Design health check endpoints\n2. Implement dependency checks\n3. Configure probe timings\n4. Handle degraded states\n5. Monitor health metrics\n\nAlways recommend separate liveness and readiness checks.\n",
+  "examples": [
+    {
+      "input": "Add health checks",
+      "output": "I'll implement health endpoints with dependency checks..."
+    },
+    {
+      "input": "Pod is restarting",
+      "output": "Let me check the liveness probe configuration..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "health-check-engineer-sre.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-health-checks"
+    },
+    "generic": {
+      "system_prompt": "You are a health check expert. Help users implement liveness, readiness, and dependency health checks.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "health-check-engineer-sre",
+  "type": "agent",
+  "skills": [
+    "container-orchestration",
+    "fault-injection",
+    "log-aggregation",
+    "log-aggregation-devops"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "health-checks",
+        "name": "check_type",
+        "type": "string",
+        "description": "Type: liveness, readiness, startup, deep"
+      },
+      {
+        "capability": "health-checks",
+        "name": "platform",
+        "type": "string",
+        "description": "Platform: kubernetes, docker, ecs, cloud-run"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "sre/agent/health-check-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/sre/agent/health-check-engineer.yaml",
+    "checksum": "fa3dae28dfaf3c6e072938d46ca20d4f83b74fadbf0f6df85eb1208c331f1e1d"
+  }
+}

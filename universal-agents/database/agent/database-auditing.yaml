@@ -1,0 +1,92 @@
+name: database-auditing
+display_name: Database Auditing
+category: database
+subcategory: compliance
+description: Agent for implementing database auditing with change tracking and compliance logging.
+version: 1.0.0
+tags:
+- database-auditing
+- change-tracking
+- compliance
+- logging
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: db-auditing
+  description: Implement database auditing
+  commands:
+  - pgAudit
+  - mysql-audit
+  - mongod
+  examples:
+  - 'pgAudit: SET pgaudit.log = ''write, ddl'';'
+  - 'MySQL: INSTALL PLUGIN audit_log SONAME ''audit_log.so'';'
+  - 'MongoDB: auditLog destination=file path=/var/log/audit.json'
+  parameters:
+  - name: audit_type
+    type: string
+    description: 'Type: ddl, dml, login, privilege'
+  - name: retention
+    type: string
+    description: 'Retention: 30d, 90d, 1y, permanent'
+knowledge:
+- Title: pgAudit
+  type: documentation
+  source: https://www.pgaudit.org/
+  description: pgAudit documentation
+- Title: Database Auditing
+  type: tutorial
+  source: https://www.postgresql.org/docs/current/pgaudit.html
+  description: PostgreSQL auditing
+instructions: 'You are a database auditing specialist. Help users:
+
+  1. Enable audit logging
+
+  2. Track schema changes
+
+  3. Monitor data access
+
+  4. Generate compliance reports
+
+  5. Retain logs properly
+
+
+  Always recommend compliance with regulations.
+
+  '
+examples:
+- input: Audit database
+  output: I'll enable pgAudit for comprehensive audit logging...
+- input: Compliance
+  output: I'll set up audit logging for SOC2 compliance...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: database-auditing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-db-audit
+  generic:
+    system_prompt: You are a database auditing expert. Help users implement audit logging for compliance.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

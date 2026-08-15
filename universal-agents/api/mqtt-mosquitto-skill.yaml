@@ -1,0 +1,178 @@
+name: mqtt-mosquitto
+display_name: Mqtt Mosquitto
+category: api
+subcategory: general
+description: 'Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS
+  listeners.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- mosquitto
+- mosquitto_passwd
+- mosquitto_pub
+- mosquitto_sub
+capabilities:
+- name: mosquitto-operations
+  description: Run the mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, retained
+    messages and TLS.
+  commands:
+  - mosquitto -c /etc/mosquitto/mosquitto.conf
+  - mosquitto_pub -h localhost -t sensors/temp -m "21.5"
+  - mosquitto_sub -h localhost -t 'sensors/#' -v
+  - mosquitto_passwd -c /etc/mosquitto/passwd myuser
+  - mosquitto_pub -h localhost -t test -m "keep" -r -q 1
+  examples:
+  - mosquitto_sub -t '$SYS/#' -v
+  - mosquitto_pub -h broker.example.com -p 8883 --cafile ca.crt -t secure/topic -m hi
+  - mosquitto_sub -q 2 -t 'orders/+' -v
+  parameters:
+  - name: host
+    type: string
+    description: Broker hostname or IP
+  - name: port
+    type: integer
+    description: Broker port (1883 plain, 8883 TLS)
+  - name: topic
+    type: string
+    description: Topic or topic filter with wildcards
+knowledge:
+- title: Mosquitto Man Pages
+  type: documentation
+  source: https://mosquitto.org/man/
+  description: mosquitto, mosquitto_pub, mosquitto_sub, mosquitto_passwd reference
+- title: mosquitto.conf man page
+  type: documentation
+  source: https://mosquitto.org/man/mosquitto-conf-5.html
+  description: Listener, auth, TLS and logging configuration
+instructions: '# Mosquitto
+
+
+  Mosquitto is the reference open-source MQTT broker, ideal for small/medium deployments and local dev.
+
+
+  ## What this skill does
+
+
+  - Starts and configures the mosquitto daemon
+
+  - Publishes/subscribes with the command-line clients
+
+  - Manages password files and TLS listeners
+
+
+  ## When to use
+
+
+  - Local MQTT development and testing
+
+  - Small production deployments
+
+  - Teaching/verifying MQTT semantics
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Run broker with config
+
+  mosquitto -c /etc/mosquitto/mosquitto.conf
+
+
+  # Pub/sub basics
+
+  mosquitto_pub -h localhost -t sensors/temp -m "21.5"
+
+  mosquitto_sub -h localhost -t ''sensors/#'' -v
+
+
+  # QoS 1 + retained
+
+  mosquitto_pub -h localhost -t test -m "keep" -r -q 1
+
+
+  # Password file
+
+  mosquitto_passwd -c /etc/mosquitto/passwd myuser
+
+
+  # TLS publish
+
+  mosquitto_pub -h broker.example.com -p 8883 --cafile ca.crt -t secure/topic -m hi
+
+  ```
+
+
+  ## Config essentials
+
+
+  ```conf
+
+  listener 1883
+
+  allow_anonymous false
+
+  password_file /etc/mosquitto/passwd
+
+  listener 8883
+
+  certfile /etc/mosquitto/certs/server.crt
+
+  keyfile /etc/mosquitto/certs/server.key
+
+  ```
+
+
+  ## Best practices
+
+
+  - Always disable `allow_anonymous` in production
+
+  - Use `$SYS/#` to verify broker health
+
+  - Test QoS 2 delivery with `mosquitto_sub -q 2`'
+examples:
+- input: Set up a local broker with username/password auth
+  output: The agent writes a mosquitto.conf, creates the passwd file with mosquitto_passwd, and verifies
+    with authenticated pub/sub.
+- input: Why is my subscriber not receiving messages?
+  output: The agent tests with `mosquitto_sub -t '#' -v` to check wildcard coverage, then verifies the
+    publish actually reaches the broker with `$SYS` counters.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mqtt-mosquitto.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-mqtt-mosquitto
+  generic:
+    system_prompt: 'You own Mqtt Mosquitto end to end. You do it through mosquitto-operations: Run the
+      mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, retained messages and TLS.
+      The commands are real, e.g. `mosquitto -c /etc/mosquitto/mosquitto.conf`. You run and verify the
+      real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

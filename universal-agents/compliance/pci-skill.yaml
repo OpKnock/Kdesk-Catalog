@@ -1,0 +1,177 @@
+name: pci
+display_name: Pci
+category: compliance
+subcategory: general
+description: 'Verifies PCI DSS requirements for cardholder data environments: segmentation, TLS, scanning,
+  and logs.'
+version: 2.0.0
+tags:
+- compliance
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nikto
+- nmap
+- sslscan
+capabilities:
+- name: pci-controls
+  description: Test network segmentation, TLS strength, and scan coverage for PCI scopes
+  commands:
+  - nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.example.com
+  - sslscan payment.example.com
+  - nikto -h payment.example.com -p 443 -ssl
+  - curl -k -v https://payment.example.com/ 2>&1 | grep -i 'subject:'
+  - nmap -sS -p 1-65535 --open 10.0.0.0/24 -oX segment-scan.xml
+  examples:
+  - nmap -p 1521,3306,5432 --open 10.0.0.0/24
+  - curl -s -o /dev/null -w '%{ssl_version} %{http_version}\n' https://payment.example.com
+  - rg -i "card|pan|track2|cvv" src/ --glob '!*.test.*'
+  parameters:
+  - name: script
+    type: string
+    description: nmap NSE script to run, e.g. ssl-enum-ciphers
+  - name: open
+    type: boolean
+    description: Report only open ports
+  - name: ssl
+    type: boolean
+    description: Force TLS mode in nikto
+knowledge:
+- title: PCI DSS official
+  type: documentation
+  source: https://www.pcisecuritystandards.org/
+  description: PCI DSS standard, ASV scanning requirements, and FAQs
+- title: PCI DSS v4 requirements
+  type: documentation
+  source: https://www.pcisecuritystandards.org/document_library/?category=PCI%20DSS
+  description: Requirement definitions including 3 (storage), 4 (transmission), 11 (scanning)
+instructions: '# PCI DSS
+
+
+  Payment Card Industry Data Security Standard compliance checks for cardholder data
+
+  environments (CDE).
+
+
+  ## When to Use
+
+
+  - Validating TLS and cipher strength on payment endpoints
+
+  - Verifying network segmentation between CDE and non-CDE
+
+  - Confirming no PAN data is stored unencrypted
+
+  - Preparing for ASV scans (Requirement 11)
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # TLS strength on the payment endpoint
+
+  nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.example.com
+
+  sslscan payment.example.com
+
+
+  # Web-level checks
+
+  nikto -h payment.example.com -p 443 -ssl
+
+
+  # PAN data leakage check in code
+
+  rg -i "card_number|pan|cvv|track[12]" src/ --glob ''!*.test.*''
+
+
+  # Segmentation: try reaching DB ports from the DMZ
+
+  nmap -p 3306,5432,1521 --open 10.0.0.0/24
+
+
+  # Verify cert subject
+
+  curl -k -v https://payment.example.com/ 2>&1 | grep -i subject:
+
+  ```
+
+
+  ## Core Requirement Checks
+
+
+  - Req 3: no full PAN at rest; masked displays only
+
+  - Req 4: TLS 1.2+ with strong ciphers
+
+  - Req 7: least-privilege access to cardholder data
+
+  - Req 8: MFA, unique IDs, password policies
+
+  - Req 10: audit logs with 12-month retention
+
+  - Req 11: quarterly ASV scans + penetration testing
+
+
+  ## Best Practices
+
+
+  - Isolate the CDE with strict firewall rules; test from every segment
+
+  - Disable TLS 1.0/1.1 and weak ciphers (3DES, RC4)
+
+  - Never log PAN; tokenize or truncate
+
+  - Document compensating controls for anything non-compliant
+
+  - Keep scanning scoped: scan only in-scope assets you own
+
+
+  ## Example Response
+
+
+  Returns cipher/TLS verdicts, open-port findings across segments, PAN-location hits
+
+  in code, and a requirement-by-requirement status with fix steps.'
+examples:
+- input: Check our payment page TLS
+  output: Runs sslscan and nmap --script ssl-enum-ciphers, then reports weak ciphers and TLS versions
+    with remediation
+- input: Is our network segmented properly?
+  output: Scans the DMZ for DB ports and reports any reachable cardholder-data services
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pci.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pci
+  generic:
+    system_prompt: 'This is your domain: Pci. You do it through pci-controls: Test network segmentation,
+      TLS strength, and scan coverage for PCI scopes. The commands are real, e.g. `nmap -sT -sV -p 443
+      --script ssl-enum-ciphers payment.example.com`. You work hands-on and only report outcomes you have
+      observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

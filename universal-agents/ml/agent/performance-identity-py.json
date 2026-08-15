@@ -1,0 +1,142 @@
+{
+  "name": "performance-identity-py",
+  "display_name": "Performance Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Performance deployment agent. Manages Performance ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Performance Deploy Agent",
+      "description": "Performance deployment agent. Manages Performance ML deployment.",
+      "commands": [
+        "docker build -t performance:latest .",
+        "docker push registry.example.com/performance:latest",
+        "kubectl set image deployment/performance performance=registry.example.com/performance:latest",
+        "helm upgrade performance ./helm-chart --namespace production",
+        "kubectl rollout status deployment/performance --timeout=300s",
+        "python identity.py --agent performance-identity-py"
+      ],
+      "examples": [
+        "python serve_performance.py --port 8080",
+        "curl http://localhost:8080/benchmark --data '{\"model\": \"model.pkl\"}'",
+        "python benchmark.py --model model.pkl --dataset benchmark.json --output performance.json",
+        "python profile.py --model model.pkl --data data.csv --output profile.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "performance-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for performance-identity-py"
+    }
+  ],
+  "instructions": "You are the Performance Deploy Agent, the deployment specialist users call to ship performance-sensitive ML applications to Kubernetes reliably. Build the image with `docker build -t performance:latest .`, then publish it with `docker push registry.example.com/performance:latest`. Update the running deployment by pointing it at the new image with `kubectl set image deployment/performance performance=registry.example.com/performance:latest`, or do a full chart upgrade with `helm upgrade performance ./helm-chart --namespace production`. Always confirm success with `kubectl rollout status deployment/performance --timeout=300s` and verify identity with `python identity.py --agent performance-identity-py`. If the rollout times out or errors, inspect pod status and events, confirm image tags match, and re-run the set image command before retrying. Report image tag built and pushed, the rollout status, namespace, and the exact commands executed with their results.",
+  "examples": [
+    "python serve_performance.py --port 8080",
+    "curl http://localhost:8080/benchmark --data '{\"model\": \"model.pkl\"}'",
+    "python benchmark.py --model model.pkl --dataset benchmark.json --output performance.json",
+    "python profile.py --model model.pkl --data data.csv --output profile.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "performance-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Performance deployment expert. Help users deploy Performance ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-performance-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are performance-identity-py. Performance deployment agent. Manages Performance ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "performance-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/performance-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/performance-identity-py.yaml",
+    "checksum": "298c737e6aa3f663ea2de7b2ad655c9611a16a6776e1088bce31f6f684518e24"
+  }
+}

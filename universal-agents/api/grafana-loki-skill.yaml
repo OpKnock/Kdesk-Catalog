@@ -1,0 +1,182 @@
+name: grafana-loki
+display_name: Grafana Loki
+category: api
+subcategory: general
+description: 'Log aggregation with Grafana Loki: query logs with logcli, filter with LogQL, and manage
+  labels and retention.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- logcli
+capabilities:
+- name: loki-queries
+  description: Query Loki logs via logcli and inspect label usage.
+  commands:
+  - logcli query '{job="orders"} |= "ERROR"' --limit=50 --since=1h
+  - logcli labels --since=24h
+  - logcli series --since=24h --match='{job="orders"}'
+  - logcli query 'sum by (level) (count_over_time({job="orders"}[5m]))' --since=1h
+  - curl -s 'http://localhost:3100/loki/api/v1/labels' | jq '.data.values'
+  examples:
+  - logcli query '{job="orders"} |= "ERROR"' --limit=50 --since=1h
+  - logcli labels --since=24h
+  - logcli query 'sum by (level) (count_over_time({job="orders"}[5m]))' --since=1h
+  parameters:
+  - name: label-filter
+    type: string
+    description: LogQL label selector like {job="orders"}
+  - name: line-filter
+    type: string
+    description: Line filter like |= "ERROR"
+  - name: since
+    type: string
+    description: Lookback window like 1h
+knowledge:
+- title: LogQL reference
+  type: documentation
+  source: https://grafana.com/docs/loki/latest/logql/
+  description: Label selectors, line filters, and log metric queries
+- title: logcli docs
+  type: documentation
+  source: https://grafana.com/docs/loki/latest/query/logcli/
+  description: logcli query and series commands
+instructions: '# Grafana Loki
+
+
+  ## What this skill does
+
+
+  Loki is a log aggregation system that indexes labels, not content, making it cheap to store high-volume
+  logs. logcli queries logs with LogQL: label selectors, line filters, and log-range metrics.
+
+
+  ## When to use
+
+
+  - Centralized log search across services
+
+  - Error rate derivation from logs (count_over_time)
+
+  - Auditing label cardinality
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Simple search with line filter
+
+  logcli query ''{job="orders"} |= "ERROR"'' --limit=50 --since=1h
+
+
+  # All labels in use
+
+  logcli labels --since=24h
+
+
+  # Series for a selector
+
+  logcli series --since=24h --match=''{job="orders"}''
+
+
+  # Log-rate metric: errors per minute by level
+
+  logcli query ''sum by (level) (count_over_time({job="orders"}[5m]))'' --since=1h
+
+
+  # REST API
+
+  curl -s ''http://localhost:3100/loki/api/v1/labels'' | jq ''.data.values''
+
+  ```
+
+
+  ## LogQL patterns
+
+
+  ```logql
+
+  # Line filters (fast, cheap)
+
+  {job="orders"} |~ "(5\d\d|panic)"
+
+  # Parsing JSON fields
+
+  {job="orders"} | json | level = "error"
+
+  # Rate of matched lines
+
+  sum(rate({job="orders"} |= "ERROR" [5m]))
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  # Verify a known log line is queryable
+
+  logcli query ''{job="orders", service="payments"}'' --since=5m | grep ''order-123''
+
+  ```
+
+
+  ## Best practices
+
+
+  - Use label selectors for cost, line filters for precision.
+
+  - Keep label cardinality low: no per-user or per-request labels.
+
+  - Prefer `|= "string"` over regex where possible (faster).
+
+  - Derive error rates with count_over_time instead of shipping separate metrics.
+
+  - Set retention per tenant/stream; Loki grows with cardinality, not volume.
+
+  '
+examples:
+- input: Find all ERROR lines in orders in the last hour
+  output: logcli query '{job="orders"} |= "ERROR"' --since=1h and iterate the line filter to narrow context.
+- input: Check error rate from logs for an SLO
+  output: Run sum(rate({job="orders"} |= "ERROR"[5m])) as a LogQL metric query and chart it in Grafana.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grafana-loki.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grafana-loki
+  generic:
+    system_prompt: 'This is your domain: Grafana Loki. You do it through loki-queries: Query Loki logs
+      via logcli and inspect label usage. The commands are real, e.g. `logcli query {job=orders} |= ERROR
+      --limit=50 --since=1h`. You verify each step you report and stay honest about what you have not
+      run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

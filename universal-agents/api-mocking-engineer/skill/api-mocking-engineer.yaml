@@ -1,0 +1,118 @@
+name: api-mocking-engineer
+version: 2.0.0
+type: skill
+category: testing
+description: 'Evaluates and operates advanced mock server tools: Mountebank imposter protocol, Hoverfly
+  simulation, and service virtualization for microservice test environments.'
+keywords:
+- api-mocking
+- mock-server
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-mocking-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-mocking-engineer
+  generic:
+    system_prompt: 'You take the api-mocking-engineer seat. You do it through mountebank: Create protocol-level
+      mock services (imposters) with Mountebank. The commands are real, e.g. `npm install -g mountebank`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: mountebank
+  description: Create protocol-level mock services (imposters) with Mountebank
+  commands:
+  - npm install -g mountebank
+  - mb start --port 2525
+  - 'curl -s -X POST http://localhost:2525/imposters -H ''Content-Type: application/json'' -d ''{"port":4545,"protocol":"http","stubs":[{"responses":[{"is":{"statusCode":200,"body":"ok"}}]}]}'''
+  - curl -s http://localhost:4545/anything
+  - curl -s http://localhost:2525/imposters | jq '.imposters | length'
+  examples:
+  - mb start --port 2525 runs the Mountebank control plane
+  - POST /imposters with protocol http creates a mock on port 4545
+  - GET /imposters lists active mock services
+  parameters:
+  - name: protocol
+    type: string
+    description: http, https, tcp, or smtp imposter protocol
+  - name: port
+    type: integer
+    description: Port for the mock service
+  - name: stubs
+    type: array
+    description: Predicates and responses defining mock behavior
+- name: hoverfly
+  description: Simulate and record APIs with Hoverfly in capture mode
+  commands:
+  - docker run --name hoverfly -p 8888:8888 -p 8500:8500 spectolabs/hoverfly:latest
+  - 'curl -s -X PUT http://localhost:8888/api/v2/hoverfly/mode -d ''{"mode":"capture"}'' -H ''Content-Type:
+    application/json'''
+  - curl -s http://localhost:8500/api/v2/hoverfly/state
+  - 'curl -s -X PUT http://localhost:8888/api/v2/hoverfly/mode -d ''{"mode":"simulate"}'' -H ''Content-Type:
+    application/json'''
+  examples: []
+  parameters: []
+prerequisites:
+- prism
+- wiremock
+- msw
+- openapi
+tools:
+- prism
+- wiremock
+- msw
+- openapi
+- node.js
+- python
+examples:
+- input: Mock an SMTP provider in tests
+  output: Starts Mountebank and creates an smtp imposter that captures mail and returns 250 OK
+- input: Replay recorded production traffic
+  output: Switches Hoverfly to capture mode, plays traffic, then simulate mode replays it offline
+instructions: "# API Mocking Engineer\n\nService virtualization with Mountebank and Hoverfly.\n\n## What\
+  \ This Skill Does\n- Creates protocol-level mocks (HTTP, TCP, SMTP) with Mountebank\n- Captures and\
+  \ replays traffic with Hoverfly\n- Supports stateful and conditional mock responses\n\n## When to Use\n\
+  - Virtualizing downstream services for integration testing\n- Simulating email/SMS providers over SMTP\n\
+  - Replaying recorded traffic in CI environments\n\n## Real Commands\n\n```bash\nmb start --port 2525\n\
+  curl -s -X POST http://localhost:2525/imposters -H 'Content-Type: application/json' \\\n  -d '{\"port\"\
+  :4545,\"protocol\":\"http\",\"stubs\":[{\"responses\":[{\"is\":{\"statusCode\":200,\"body\":\"ok\"}}]}]}'\n\
+  curl -s http://localhost:4545/anything\n```\n\n## Mountebank Predicates\n- Deep equality: { deepEqual:\
+  \ { path: '/a' } }\n- Contains: { contains: { body: 'error' } }\n- JSONPath: { jsonpath: { selector:\
+  \ '$..status' } }\n- Proxy: forward unmatched requests to a real target\n\n## Testing\n- Verify imposter\
+  \ state via the admin API\n- Record traffic with Hoverfly, export simulations, replay offline\n\n##\
+  \ Best Practices\n- Use JSONPath predicates over brittle body matching\n- Export simulations to files\
+  \ for CI reproducibility\n- Prefer imposter scopes that mirror production topology"
+display_name: api-mocking-engineer
+knowledge:
+- title: Mountebank API Docs
+  type: documentation
+  source: http://www.mbtest.org/docs/api/overview
+  description: Imposter-based service virtualization API
+- title: Hoverfly Docs
+  type: documentation
+  source: https://docs.hoverfly.io/en/latest/
+  description: API simulation and testing proxy modes

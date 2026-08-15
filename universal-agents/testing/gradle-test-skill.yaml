@@ -1,0 +1,136 @@
+name: gradle-test
+display_name: gradle-test
+category: testing
+subcategory: general
+description: Runs JVM test suites with Gradle, including test filtering, caching, parallel execution,
+  and reports.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ./gradlew
+capabilities:
+- name: gradle-testing
+  description: Run Gradle test tasks with filters.
+  commands:
+  - ./gradlew test
+  - ./gradlew test --tests "com.example.OrderServiceTest"
+  - ./gradlew test --tests "*Service*"
+  - ./gradlew test --rerun-tasks
+  - ./gradlew test --info
+  examples:
+  - ./gradlew test
+  - ./gradlew test --tests "com.example.OrderServiceTest"
+  - ./gradlew test --tests "*Service*" --rerun-tasks
+  parameters:
+  - name: tests
+    type: string
+    description: Test class/method pattern
+  - name: rerunTasks
+    type: boolean
+    description: Ignore up-to-date cache
+  - name: info
+    type: boolean
+    description: Verbose logging
+- name: parallel-and-cache
+  description: Speed up builds with parallelism and caching.
+  commands:
+  - ./gradlew test --parallel
+  - ./gradlew test --max-workers=4
+  - ./gradlew test --build-cache
+  - ./gradlew test --continuous
+  - ./gradlew test --watch-fs
+  examples:
+  - ./gradlew test --parallel
+  - ./gradlew test --build-cache
+  - ./gradlew test --continuous
+  parameters:
+  - name: maxWorkers
+    type: number
+    description: Worker limit
+  - name: buildCache
+    type: boolean
+    description: Enable build cache
+- name: reports-and-coverage
+  description: Generate test reports and coverage with JaCoCo.
+  commands:
+  - ./gradlew test jacocoTestReport
+  - ./gradlew test --tests "*Service*" jacocoTestCoverageVerification
+  - ./gradlew test --console=plain
+  - ./gradlew cleanTest test
+  examples:
+  - ./gradlew test jacocoTestReport
+  - ./gradlew cleanTest test
+  - ./gradlew test --console=plain
+  parameters:
+  - name: report
+    type: string
+    description: Report task, e.g. jacocoTestReport
+  - default: all
+    description: Test name filter pattern, e.g. *Service* for --tests.
+    name: tests
+    type: string
+knowledge:
+- title: Gradle Java Testing
+  type: documentation
+  source: https://docs.gradle.org/current/userguide/java_testing.html
+  description: Test task configuration and filtering
+- title: Gradle Test Filtering
+  type: documentation
+  source: https://docs.gradle.org/current/userguide/java_testing.html#test_filtering
+  description: --tests patterns
+- title: JaCoCo Gradle Plugin
+  type: documentation
+  source: https://docs.gradle.org/current/userguide/jacoco_plugin.html
+  description: Coverage reports and verification
+instructions: "# Gradle Test\n\nRun and optimize JVM tests with the Gradle build tool.\n\n## What This\
+  \ Skill Does\n\n- Executes test tasks with class/method filters\n- Parallelizes and caches test execution\n\
+  - Generates JaCoCo coverage reports and gates\n- Watches files for continuous testing\n\n## When to\
+  \ Use\n\n- Running the full suite in CI\n- Debugging a specific test class\n- Speeding up a slow build\n\
+  \n## Real Commands\n\n```bash\n# Run all\n./gradlew test\n\n# Filtered\n./gradlew test --tests \"com.example.OrderServiceTest\"\
+  \n./gradlew test --tests \"*Service*\"\n\n# Speed\n./gradlew test --parallel --build-cache\n./gradlew\
+  \ test --continuous\n\n# Fresh and verbose\n./gradlew cleanTest test\n./gradlew test --rerun-tasks\n\
+  \n# Coverage\n./gradlew test jacocoTestReport\n./gradlew test jacocoTestCoverageVerification\n```\n\n\
+  ## Test Config (build.gradle)\n\n```groovy\ntest {\n    useJUnitPlatform()\n    maxParallelForks = 4\n\
+  \    testLogging {\n        events \"passed\", \"skipped\", \"failed\"\n    }\n}\njacocoTestCoverageVerification\
+  \ {\n    violationRules {\n        rule { limit { minimum = 0.8 } }\n    }\n}\n```\n\n## Best Practices\n\
+  \n- Use --tests patterns for targeted reruns\n- Run with --build-cache in CI\n- Gate on JaCoCo minimum\
+  \ coverage\n- Use --continuous locally for TDD\n- Keep unit tests free of external services"
+examples:
+- input: Run just the payment tests
+  output: Agent runs ./gradlew test --tests "*Payment*" and shows the results summary.
+- input: Enforce 80% coverage
+  output: Agent configures jacocoTestCoverageVerification with a 0.8 limit and runs the verification task.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gradle-test.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gradle-test
+  generic:
+    system_prompt: 'Your lane is gradle-test. You do it through gradle-testing: Run Gradle test tasks
+      with filters. The commands are real, e.g. `./gradlew test`. You answer with exact commands, not
+      abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

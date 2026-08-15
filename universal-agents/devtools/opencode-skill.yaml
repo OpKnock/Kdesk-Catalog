@@ -1,0 +1,187 @@
+name: opencode
+display_name: Opencode
+category: devtools
+subcategory: general
+description: 'Operates the opencode CLI agent: run tasks headlessly, manage auth and providers, configure
+  models, and manage sessions.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- opencode
+capabilities:
+- name: agent-runs
+  description: Run opencode agents in the terminal and headlessly.
+  commands:
+  - opencode
+  - opencode run 'fix the failing test in src/'
+  - opencode run --model claude-sonnet-4 'explain this repo'
+  - opencode run -o share.json 'summarize changes'
+  - opencode --print-logs
+  examples:
+  - opencode run 'fix the failing test in src/'
+  - opencode run --model claude-sonnet-4 'explain this repo'
+  - opencode --print-logs
+  parameters:
+  - name: prompt
+    type: string
+    description: Task prompt
+  - name: model
+    type: string
+    description: Model provider:model id
+- name: auth-and-config
+  description: Authenticate providers and manage opencode configuration.
+  commands:
+  - opencode auth login
+  - opencode auth logout
+  - opencode auth list
+  - opencode serve
+  - opencode --help
+  examples:
+  - opencode auth login
+  - opencode auth list
+  - opencode serve
+  parameters:
+  - name: provider
+    type: string
+    description: Auth provider
+  - name: scope
+    type: string
+    description: Auth scope requested at login
+knowledge:
+- title: opencode Documentation
+  type: documentation
+  source: https://opencode.ai/docs
+  description: CLI reference, configuration, agents, and providers
+- title: opencode GitHub
+  type: documentation
+  source: https://github.com/anomalyco/opencode
+  description: Source, issues, and releases
+instructions: '# opencode CLI Agent
+
+
+  Drive the opencode AI coding agent from the terminal.
+
+
+  ## What This Skill Does
+
+
+  - Starts interactive agent sessions
+
+  - Runs headless task prompts with specific models
+
+  - Manages provider authentication
+
+  - Serves opencode over HTTP for integrations
+
+  - Tunes output with flags and output modes
+
+
+  ## When to Use
+
+
+  - Automating code tasks from scripts/CI
+
+  - Delegating repo-wide refactors to an agent
+
+  - Choosing models per task difficulty
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Interactive
+
+  opencode
+
+  opencode --model claude-sonnet-4
+
+
+  # Headless task runs
+
+  opencode run ''fix the failing test in src/''
+
+  opencode run --model gpt-5 ''explain the auth flow in this repo''
+
+  opencode run -o output.txt ''generate a migration plan''
+
+  opencode run --continue ''now apply the plan''
+
+
+  # Auth and providers
+
+  opencode auth login
+
+  opencode auth logout
+
+  opencode auth list
+
+
+  # Server mode
+
+  opencode serve
+
+
+  # Diagnostics
+
+  opencode --print-logs
+
+  opencode --help
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Start with --print-logs when debugging agent behavior
+
+  - Use --continue to chain follow-up tasks on one session
+
+  - Pin --model per task type (cheap model for summaries)
+
+  - Use headless mode with output files for CI automation
+
+  - Keep the agent focused: one clear goal per prompt'
+examples:
+- input: Automate a weekly dependency update task
+  output: Agent schedules opencode run with a pinned model to audit and update deps, capturing output
+- input: Explain a complex repo to a new teammate
+  output: Agent runs an opencode task with --model on the docs path and produces an architecture summary
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: opencode.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-opencode
+  generic:
+    system_prompt: 'Your lane is Opencode. You do it through agent-runs: Run opencode agents in the terminal
+      and headlessly. The commands are real, e.g. `opencode`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

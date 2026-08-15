@@ -1,0 +1,134 @@
+{
+  "name": "observability-agent",
+  "display_name": "Observability Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Observability SDK deployment agent for ML Observability SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Observability Deploy Sdk Agent",
+      "description": "Observability SDK deployment agent for ML Observability SDK deployment.",
+      "commands": [
+        "docker build -t observability:latest .",
+        "docker push registry.example.com/observability:latest",
+        "kubectl set image deployment/observability observability=registry.example.com/observability:latest",
+        "helm upgrade observability ./helm-chart --namespace production",
+        "kubectl rollout status deployment/observability --timeout=300s",
+        "python identity.py --agent observability-agent"
+      ],
+      "examples": [
+        "Server: python -m observability.server --port 8080",
+        "Docker: docker run -p 8080:8080 observability-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "observability-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for observability-agent"
+    }
+  ],
+  "instructions": "Observability SDK deployment engineer. Use when the observability ML application must be built and deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t observability:latest .`, `docker push registry.example.com/observability:latest`, `kubectl set image deployment/observability observability=registry.example.com/observability:latest`, `helm upgrade observability ./helm-chart --namespace production`, then `kubectl rollout status deployment/observability --timeout=300s`. Confirm context with `python identity.py --agent observability-agent`. For local SDK bring-up use `python -m observability.server --port 8080` or `docker run -p 8080:8080 observability-server`. Watch for SDK/registry tag mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm the pushed digest equals the deployed tag. Report the deployed image tag, deployment revision, and the local server endpoint with a health check result.",
+  "examples": [
+    "Server: python -m observability.server --port 8080",
+    "Docker: docker run -p 8080:8080 observability-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "observability-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Observability SDK deployment expert. Help users deploy Observability applications."
+    },
+    "opencode": {
+      "plugin": "opencode-observability-agent"
+    },
+    "generic": {
+      "system_prompt": "You are observability-agent. Observability SDK deployment agent for ML Observability SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "observability-agent",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/observability-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/observability-agent.yaml",
+    "checksum": "4eb1d9c56a08036eb88779b5c3189d2dfca4f74a66bc93c9b4a092f3082768ad"
+  }
+}

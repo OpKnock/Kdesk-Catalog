@@ -1,0 +1,196 @@
+name: project-management
+version: 2.0.0
+type: skill
+category: management
+description: 'Manages projects with GitHub Projects and CLI trackers: issue planning, sprint views, and
+  status automation via gh.'
+keywords:
+- project-management
+- planning
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: project-management.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-project-management
+  generic:
+    system_prompt: 'You work project-management hands-on. You do it through github-projects: Plan and
+      track work with GitHub Projects. The commands are real, e.g. `gh project list --owner @me`. You
+      work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: github-projects
+  description: Plan and track work with GitHub Projects.
+  commands:
+  - gh project list --owner @me
+  - gh project view 1 --owner @me
+  - gh issue create --title 'Add caching layer' --body 'Context...' --project 1 --label enhancement
+  - gh project item-add 1 --owner @me --url https://github.com/owner/repo/issues/42
+  - gh project item-edit 1 --owner @me --id PVTI_123 --field Status --project-number 1
+  examples:
+  - gh project list --owner org-name
+  - gh issue create --title 'Fix checkout bug' --project 1 --label bug,sev2
+  - gh project view 1 --owner @me --field Status | head -20
+  parameters:
+  - name: project
+    type: number
+    description: Project number
+  - name: owner
+    type: string
+    description: 'Project owner: @me or org'
+  - name: label
+    type: string
+    description: Issue labels, comma-separated
+- name: tracking
+  description: Manage issues, milestones, and sprints.
+  commands:
+  - gh issue list --repo owner/repo --state open --label bug
+  - gh issue edit 42 --repo owner/repo --milestone 'Sprint 24'
+  - gh issue close 42 --repo owner/repo --reason completed
+  - gh api repos/{owner}/{repo}/milestones -q '.[] | {title, open_issues}'
+  - gh issue list --repo owner/repo --assignee @me --state open
+  examples:
+  - gh issue list --repo owner/repo --search 'label:bug is:open sort:created-asc'
+  - gh issue edit 42 --repo owner/repo --add-label 'in-review'
+  - gh api repos/{owner}/{repo}/milestones --jq '.[].title'
+  parameters:
+  - name: milestone
+    type: string
+    description: Milestone title
+  - name: repo
+    type: string
+    description: owner/repo
+  - name: assignee
+    type: string
+    description: Issue assignee filter
+prerequisites:
+- jira
+- asana
+- linear
+- github
+tools:
+- jira
+- asana
+- linear
+- github
+- slack
+examples:
+- input: Plan next sprint for the checkout team.
+  output: Lists backlog issues, assigns sprint milestone, adds top items to the project view, and checks
+    capacity.
+- input: Get my open workload across repos.
+  output: Queries gh issue list --assignee @me per repo and aggregates by priority labels.
+instructions: '# Project Management
+
+
+  Run sprints with trackable, automatable artifacts.
+
+
+  ## When to Use
+
+
+  - Sprint planning and backlog grooming
+
+  - Cross-team status visibility
+
+  - Release tracking with milestones
+
+
+  ## Plan with Projects
+
+
+  ```bash
+
+  gh project list --owner @me
+
+  gh project view 1 --owner @me
+
+  gh issue create --title ''Add caching layer'' --project 1 --label enhancement
+
+  ```
+
+
+  ## Sprint cadence
+
+
+  - Plan: move ready issues into the sprint milestone.
+
+  - Daily: check `gh issue list --assignee @me`.
+
+  - Close: close completed with reason completed.
+
+  - Retro: review cycle time from issue history.
+
+
+  ## Milestones as sprints
+
+
+  ```bash
+
+  gh issue edit 42 --repo owner/repo --milestone ''Sprint 24''
+
+  gh api repos/{owner}/{repo}/milestones -q ''.[] | {title, open_issues}''
+
+  ```
+
+
+  ## Status automation
+
+
+  Wire Project item status to PR/issue events: closed -> Done, PR review requested -> In Review.
+
+
+  ## Best practices
+
+
+  - Every task: one issue with acceptance criteria.
+
+  - Labels encode priority and type, not emotion.
+
+  - Keep Status views filtered by team to avoid noise.
+
+  - Review project metrics (cycle time, WIP) each retro.
+
+
+  ## Testing
+
+
+  Audit that all open milestone issues have assignees and acceptance criteria.'
+display_name: project-management
+knowledge:
+- title: GitHub Projects
+  type: documentation
+  source: https://docs.github.com/en/issues/planning-and-tracking-with-projects
+  description: Projects, views, and automation
+- title: GitHub CLI manual
+  type: documentation
+  source: https://cli.github.com/manual/
+  description: gh project and gh issue commands
+- title: Milestones
+  type: documentation
+  source: https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones
+  description: Sprint grouping with milestones

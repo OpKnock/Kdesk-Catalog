@@ -1,0 +1,188 @@
+name: git-crypt
+display_name: git-crypt
+category: security
+subcategory: general
+description: Transparently encrypts sensitive files in Git repositories with git-crypt, keyed by GPG users
+  or symmetric keys.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- git
+- git-crypt
+capabilities:
+- name: repo-setup
+  description: Initialize encryption, define .gitattributes, and add collaborators.
+  commands:
+  - git-crypt init
+  - git-crypt add-gpg-user user@example.com
+  - git-crypt add-gpg-user --trusted admin@example.com
+  - git-crypt status
+  - git-crypt export-key /tmp/team.key
+  examples:
+  - git-crypt init
+  - git-crypt add-gpg-user alice@example.com
+  - git-crypt status
+  parameters:
+  - name: user
+    type: string
+    description: GPG email or key ID of the collaborator
+  - name: keyFile
+    type: string
+    description: Path to export the symmetric key
+- name: encryption-lifecycle
+  description: Encrypt tracked files, lock/unlock working copies, and verify encryption state.
+  commands:
+  - git-crypt lock
+  - git-crypt unlock
+  - git-crypt unlock /tmp/team.key
+  - git-crypt status -f .env
+  - git cat-file blob HEAD:.env | head -c 16
+  examples:
+  - git-crypt unlock
+  - git-crypt lock
+  - git-crypt status
+  parameters:
+  - name: keyFile
+    type: string
+    description: Symmetric key file for unlocking without GPG
+  - name: revision
+    type: string
+    description: Git revision to inspect encryption state
+knowledge:
+- title: git-crypt GitHub
+  type: documentation
+  source: https://github.com/AGWA/git-crypt
+  description: Setup, GPG integration, and FAQ
+- title: git-crypt README Guide
+  type: documentation
+  source: https://github.com/AGWA/git-crypt/blob/master/README.md
+  description: Quick start and common usage patterns
+instructions: '# git-crypt
+
+
+  Transparent file encryption inside Git repositories.
+
+
+  ## What This Skill Does
+
+
+  - Initializes a repository for git-crypt encryption
+
+  - Encrypts files matched by .gitattributes on commit
+
+  - Decrypts working copies on unlock for authorized collaborators
+
+  - Manages collaborator GPG keys and symmetric fallback keys
+
+
+  ## When to Use
+
+
+  - Committing .env files, keys, or configs with secrets to a shared repo
+
+  - Enabling a team to clone and decrypt without extra tooling
+
+  - Replacing ad-hoc encryption of config files
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Initialize and grant access
+
+  cd repo
+
+  git-crypt init
+
+  git-crypt add-gpg-user user@example.com
+
+
+  # Mark files for encryption
+
+  cat >> .gitattributes <<EOF
+
+  .env filter=git-crypt diff=git-crypt
+
+  *.key filter=git-crypt diff=git-crypt
+
+  EOF
+
+
+  # Verify what will be encrypted
+
+  git-crypt status
+
+
+  # Collaborate: unlock and lock
+
+  git-crypt unlock        # with your GPG key
+
+  git-crypt unlock /tmp/team.key   # with symmetric key
+
+  git-crypt lock
+
+
+  # Export a shared symmetric key for CI
+
+  # (NOT for teams with per-user GPG keys)
+
+  git-crypt export-key /tmp/team.key
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Never commit the exported symmetric key to the repository
+
+  - Prefer per-user GPG keys; export a shared key only for CI bots
+
+  - Test by cloning fresh: encrypted files should read as ciphertext in a locked clone
+
+  - Rotate keys by exporting a new key and re-adding GPG users
+
+  - Keep .gitattributes explicit and review it on pull requests'
+examples:
+- input: Encrypt .env files in my repo
+  output: Agent runs git-crypt init, adds .env and *.key to .gitattributes with the git-crypt filter,
+    commits, and verifies with git-crypt status.
+- input: A new teammate needs decryption access
+  output: Agent imports their GPG key and runs git-crypt add-gpg-user their@email.com, then commits the
+    .gitattributes changes so a fresh clone unlocks for them.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: git-crypt.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-git-crypt
+  generic:
+    system_prompt: 'You work git-crypt hands-on. You do it through repo-setup: Initialize encryption,
+      define .gitattributes, and add collaborators. The commands are real, e.g. `git-crypt init`. You
+      verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

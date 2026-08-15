@@ -1,0 +1,208 @@
+{
+  "name": "akka-http",
+  "display_name": "Akka Http",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Builds streaming, reactive HTTP services in Scala with Akka HTTP: route DSL, JSON marshalling, TestKit testing, and sbt workflows.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "java",
+    "sbt"
+  ],
+  "capabilities": [
+    {
+      "name": "project-scaffold",
+      "description": "Create an Akka HTTP project from the giter8 template and manage deps.",
+      "commands": [
+        "sbt new akka/akka-http-quickstart-scala.g8",
+        "sbt update",
+        "sbt compile",
+        "sbt run",
+        "curl http://localhost:8080/hello"
+      ],
+      "examples": [
+        "sbt new akka/akka-http-quickstart-scala.g8 --name=my-api",
+        "sbt \"runMain com.example.Main 8080\"",
+        "curl http://localhost:8080/hello?name=world"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Project name for the giter8 template"
+        },
+        {
+          "name": "port",
+          "type": "number",
+          "description": "Port for the HTTP server binding"
+        }
+      ]
+    },
+    {
+      "name": "test-and-build",
+      "description": "Test routes with akka-http-testkit, package, and run in CI.",
+      "commands": [
+        "sbt test",
+        "sbt \"testOnly com.example.RouteSpec\"",
+        "sbt assembly",
+        "sbt clean test assembly",
+        "java -jar target/scala-2.13/my-api-assembly-0.1.0.jar"
+      ],
+      "examples": [
+        "sbt test",
+        "sbt assembly && java -jar target/scala-2.13/my-api-assembly-0.1.0.jar",
+        "sbt \"testOnly *HealthSpec*\""
+      ],
+      "parameters": [
+        {
+          "name": "test_filter",
+          "type": "string",
+          "description": "Test name pattern for testOnly"
+        },
+        {
+          "name": "assembly_output",
+          "type": "string",
+          "description": "Path to the fat jar"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Akka HTTP Docs",
+      "type": "documentation",
+      "source": "https://doc.akka.io/docs/akka-http/current/",
+      "description": "Route DSL, directives, marshalling, client API"
+    },
+    {
+      "title": "Akka HTTP TestKit",
+      "type": "documentation",
+      "source": "https://doc.akka.io/docs/akka-http/current/routing-dsl/testkit.html",
+      "description": "Route testing"
+    },
+    {
+      "title": "Akka Quickstart",
+      "type": "documentation",
+      "source": "https://doc.akka.io/docs/akka-http/current/introduction.html",
+      "description": "Giter8 template walkthrough"
+    }
+  ],
+  "instructions": "# Akka HTTP\n\n## What this skill does\n\nCreates reactive HTTP services in Scala with Akka HTTP: bootstrapping via giter8, route DSL composition, JSON marshalling of case classes, TestKit testing, and sbt-assembly packaging.\n\n## When to use\n\n- A streaming, backpressure-aware REST API in Scala\n- Adding WebSockets or SSE to an actor system\n- Refactoring a Play app into lighter Akka HTTP routes\n\n## Real commands\n\n```bash\nsbt new akka/akka-http-quickstart-scala.g8 --name=my-api\n\nsbt compile\nsbt run\ncurl http://localhost:8080/hello?name=world\n\nsbt test\nsbt \"testOnly com.example.UserRouteSpec\"\n\nsbt assembly\njava -jar target/scala-2.13/my-api-assembly-0.1.0.jar\n```\n\n## Route example\n\n```scala\nimport akka.http.scaladsl.server.Directives._\n\nval route =\n  pathPrefix(\"api\") {\n    get {\n      path(\"users\" / LongNumber) { id =>\n        complete(s\"user $id\")\n      }\n    }\n  }\n```\n\n## Testing\n\n- Use akka-http-testkit + scalatest: `Post(\"/users\") ~> route ~> check`\n- Assert status and JSON with responseAs[String] or a marshaller\n\n## Best practices\n\n- Put routes in traits that can be mixed into tests\n- Use typed marshalling instead of raw strings\n- Pin Akka versions in build.sbt\n- Prefer pipelining/backlog tuning on the HttpServer for production",
+  "examples": [
+    {
+      "input": "Scaffold an Akka HTTP API",
+      "output": "Runs `sbt new akka/akka-http-quickstart-scala.g8`, then `sbt run`, and confirms `curl http://localhost:8080/hello` responds."
+    },
+    {
+      "input": "Why does POST return 405?",
+      "output": "Walks the route tree: a missing post directive makes POST fall through to the get route; demonstrates adding `post { complete(...) }`."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "akka-http.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-akka-http"
+    },
+    "generic": {
+      "system_prompt": "You work Akka Http hands-on. You do it through project-scaffold: Create an Akka HTTP project from the giter8 template and manage deps. The commands are real, e.g. `sbt new akka/akka-http-quickstart-scala.g8`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "akka-http",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "project-scaffold",
+        "name": "name",
+        "type": "string",
+        "description": "Project name for the giter8 template"
+      },
+      {
+        "capability": "project-scaffold",
+        "name": "port",
+        "type": "number",
+        "description": "Port for the HTTP server binding"
+      },
+      {
+        "capability": "test-and-build",
+        "name": "test_filter",
+        "type": "string",
+        "description": "Test name pattern for testOnly"
+      },
+      {
+        "capability": "test-and-build",
+        "name": "assembly_output",
+        "type": "string",
+        "description": "Path to the fat jar"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "java",
+    "sbt"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/akka-http-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/akka-http-skill.yaml",
+    "checksum": "bfcc7da5ff31baebcaf985debecbd3223d80b4c4c64653f911283044501ab48c"
+  }
+}

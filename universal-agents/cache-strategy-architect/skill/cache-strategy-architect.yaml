@@ -1,0 +1,192 @@
+name: cache-strategy-architect
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Architects caching systems end to end: CDN, reverse proxy, application cache, and database
+  layers with coherence strategies.'
+keywords:
+- caching
+- redis
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cache-strategy-architect.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cache-strategy-architect
+  generic:
+    system_prompt: 'You work cache-strategy-architect hands-on. You do it through layer-caching: Design
+      and operate CDN and reverse-proxy caching. The commands are real, e.g. `curl -sI http://localhost:80/static/app.js`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- commands:
+  - curl -sI http://localhost:80/static/app.js
+  - curl -s -o /dev/null -w "%{http_code} %{time_total}" http://localhost:80/api
+  - nginx -t
+  - nginx -s reload
+  description: Design and operate CDN and reverse-proxy caching.
+  name: layer-caching
+  examples:
+  - curl -sI http://localhost:80/static/app.js | grep -i cache
+  - 'curl -s -o /dev/null -w "%{http_code}" -H "Cache-Control: max-age=0" http://localhost:80/api'
+  parameters:
+  - description: URL to inspect cache headers for
+    name: url
+    type: string
+  - name: header
+    type: string
+    description: HTTP header to inspect (Cache-Control, ETag, Vary)
+- commands:
+  - redis-cli publish cache.invalidate "user:123"
+  - redis-cli unlink user:123
+  - redis-cli --scan --pattern "user:*"
+  - redis-cli dbsize
+  description: Design invalidation and write policies.
+  name: coherence-design
+  examples:
+  - redis-cli unlink "article:*"
+  - redis-cli publish cache.invalidate "orders:42"
+  parameters:
+  - description: Key to invalidate
+    name: key
+    type: string
+  - name: pattern
+    type: string
+    description: Key pattern to scan or invalidate
+prerequisites:
+- redis
+- memcached
+- varnish
+- cdn
+tools:
+- redis
+- memcached
+- varnish
+- cdn
+- node.js
+- python
+examples:
+- input: Design caching for a read-heavy product API
+  output: Agent maps data to CDN (public), nginx (shared), Redis (hot user data) layers and defines TTL
+    + invalidation keys.
+- input: Users see stale data after updates
+  output: Agent audits Cache-Control headers with curl -sI, finds the missing invalidation, and wires
+    unlink on writes.
+instructions: '# Cache Strategy Architect
+
+
+  Design coherent multi-layer caching.
+
+
+  ## When to Use
+
+
+  - Designing cache layout for new or scaling systems
+
+  - Debugging stale reads across CDN/proxy/app/db caches
+
+  - Choosing TTL, validation, and invalidation strategies
+
+
+  ## Layers
+
+
+  1. CDN: static assets, public edge content
+
+  2. Reverse proxy (nginx/varnish): shared public responses
+
+  3. Application cache (Redis/Memcached): hot data, sessions
+
+  4. Database cache: query results, read replicas
+
+
+  ## Headers
+
+
+  - Cache-Control: max-age, s-maxage, no-store
+
+  - ETag: revalidation token
+
+  - Vary: key by Accept-Language, Authorization where needed
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Inspect cache behavior
+
+  curl -sI http://localhost:80/static/app.js | grep -i cache
+
+  curl -s -o /dev/null -w "%{http_code} %{time_total}" http://localhost:80/api
+
+
+  # Coherence operations
+
+  redis-cli publish cache.invalidate "user:123"
+
+  redis-cli unlink user:123
+
+  redis-cli --scan --pattern "user:*"
+
+  redis-cli dbsize
+
+
+  # Proxy reload
+
+  nginx -t
+
+  nginx -s reload
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Cache public data at the edge; private data in app cache only
+
+  - Use ETag revalidation over long TTLs for volatile content
+
+  - Invalidate by key pattern after writes, not just by TTL
+
+  - Add jitter to TTLs to avoid thundering herd
+
+  - Measure hit rates per layer before tuning
+
+  - Never cache sensitive responses without no-store'
+display_name: cache-strategy-architect
+knowledge:
+- title: HTTP Caching
+  description: Cache-Control, ETag, and validation
+  source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching
+  type: documentation
+- title: Redis Patterns
+  description: Cache patterns and coherence
+  source: https://redis.io/docs/latest/develop/use/patterns/
+  type: documentation

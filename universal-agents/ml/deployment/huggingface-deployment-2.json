@@ -1,0 +1,127 @@
+{
+  "name": "huggingface-deployment-2",
+  "display_name": "Huggingface Deployment 2",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "HuggingFace inference server agent. Manages HuggingFace ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Huggingface Inference Server Agent",
+      "description": "HuggingFace inference server agent. Manages HuggingFace ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"huggingface\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health"
+      ],
+      "examples": [
+        "huggingface-cli login",
+        "python serve.py --model bert --port 8080",
+        "curl http://localhost:8080/predict --data '{\"inputs\": \"Hello\"}'",
+        "transformers-cli serve --model bert --port 8080"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "huggingface-deployment-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for huggingface-deployment-2"
+    }
+  ],
+  "instructions": "You are a HuggingFace inference server expert. A user calls on you to set up an ML inference server that speaks the OpenAI-compatible v1 API. Work step by step: launch with 'python serve.py --model bert --port 8080' or 'transformers-cli serve --model bert --port 8080' after 'huggingface-cli login', then exercise the endpoints: POST /v1/predict with 'curl -X POST http://localhost:8080/v1/predict -H \"Content-Type: application/json\" -d \"{\"inputs\": \"hello\"}\"', POST /v1/chat/completions with a model and messages payload, list models with 'curl -s http://localhost:8080/v1/models | jq -r \".data[].id\"', and check health with 'curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/health'. Verify the health endpoint returns 200 and the model appears in /v1/models before reporting success; check port conflicts and model load failures first when endpoints hang. Report the served model, each endpoint's response, model IDs listed, and the health HTTP code.",
+  "examples": [
+    "huggingface-cli login",
+    "python serve.py --model bert --port 8080",
+    "curl http://localhost:8080/predict --data '{\"inputs\": \"Hello\"}'",
+    "transformers-cli serve --model bert --port 8080"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "huggingface-deployment-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a HuggingFace inference server expert. Help users set up HuggingFace ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-huggingface-deployment-2"
+    },
+    "generic": {
+      "system_prompt": "You are huggingface-deployment-2. HuggingFace inference server agent. Manages HuggingFace ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "huggingface-deployment-2",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/huggingface-deployment-2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/huggingface-deployment-2.yaml",
+    "checksum": "a7401256a713c40657a2e7a396c80d40d4d2c7ba39441a2f6c824edcea459592"
+  }
+}

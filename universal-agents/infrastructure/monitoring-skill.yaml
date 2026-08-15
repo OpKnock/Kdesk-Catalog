@@ -1,0 +1,236 @@
+name: monitoring-infrastructure
+display_name: monitoring-infrastructure
+category: infrastructure
+subcategory: general
+description: 'Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat,
+  iostat, and sar.'
+version: 2.0.0
+tags:
+- infrastructure
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- free
+- iostat
+- sar
+- top
+- uptime
+- vmstat
+capabilities:
+- name: host-metrics
+  description: Collect instant host utilization snapshots.
+  commands:
+  - uptime
+  - vmstat 1 5
+  - free -h
+  - iostat -x 1 3
+  - top -b -n 1 | head -25
+  examples:
+  - vmstat 2 10
+  - iostat -x -d 1 3 | grep -E 'Device|sda'
+  - free -h && df -h | grep -v tmpfs
+  parameters:
+  - name: interval
+    type: number
+    description: Sample interval in seconds
+  - name: count
+    type: number
+    description: Number of samples
+  - name: extended
+    type: string
+    description: -x extended statistics for iostat
+- name: history
+  description: Review historical utilization with sysstat sar.
+  commands:
+  - sar -u 1 3
+  - sar -r 1 3
+  - sar -d 1 3
+  - sar -n DEV 1 3
+  - sar -q 1 3
+  examples:
+  - sar -u -f /var/log/sysstat/sa10
+  - sar -n TCP 1 5
+  - sar -q 1 5
+  parameters:
+  - name: report
+    type: string
+    description: 'Report type: -u CPU, -r memory, -d disk, -n network, -q load'
+  - name: interval
+    type: number
+    description: Sample interval
+  - name: file
+    type: string
+    description: Historical sa file with -f
+knowledge:
+- title: sysstat (sar/iostat)
+  type: documentation
+  source: https://github.com/sysstat/sysstat
+  description: sar, iostat, and sadf system monitoring tools
+- title: vmstat man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man8/vmstat.8.html
+  description: Virtual memory and system statistics
+- title: Linux Performance
+  type: documentation
+  source: https://www.brendangregg.com/linuxperf.html
+  description: Brendan Gregg's performance tools map and method
+instructions: '# Host Monitoring
+
+
+  Measure host health with the standard Linux toolbox.
+
+
+  ## When to Use
+
+
+  - Investigating a slow host or application
+
+  - Checking whether a problem is CPU, memory, disk, or network
+
+  - Baseline capacity for autoscaling decisions
+
+
+  ## Quick triage
+
+
+  ```bash
+
+  uptime
+
+  free -h
+
+  vmstat 1 5
+
+  ```
+
+
+  `uptime` load averages vs CPU count tells you if the box is oversubscribed.
+
+
+  ## CPU
+
+
+  ```bash
+
+  vmstat 1 5   # us, sy, id, wa columns
+
+  sar -u 1 3
+
+  ```
+
+
+  High `wa` = disk-bound; high `sy` = system call overhead.
+
+
+  ## Memory
+
+
+  ```bash
+
+  free -h
+
+  sar -r 1 3
+
+  ```
+
+
+  Watch `available`, not just `free` - caches reclaim gracefully.
+
+
+  ## Disk
+
+
+  ```bash
+
+  iostat -x 1 3
+
+  df -h | grep -v tmpfs
+
+  ```
+
+
+  `%util` near 100% with long `await` means the disk is saturated.
+
+
+  ## Network
+
+
+  ```bash
+
+  sar -n DEV 1 3
+
+  ```
+
+
+  ## Saturation signals
+
+
+  - CPU: run queue length > cores for sustained periods
+
+  - Memory: sustained swapping in `si`/`so`
+
+  - Disk: `%util` saturation or high `await`
+
+  - Network: dropped packets in `/proc/net/dev`
+
+
+  ## Best practices
+
+
+  - Keep sysstat enabled so you can answer "what changed at 02:00?"
+
+  - Correlate metrics with deploys; most incidents follow releases.
+
+  - Feed these into Prometheus exporters for alerting.
+
+  - Record a baseline after each major release.
+
+
+  ## Testing
+
+
+  ```bash
+
+  sar -u 1 5 && vmstat 1 3
+
+  ```
+
+
+  Generate load and confirm metrics move - otherwise the collector is broken.'
+examples:
+- input: The app host is slow; where is the bottleneck?
+  output: Runs uptime, vmstat, free, and iostat, and isolates whether load, memory pressure, or disk I/O
+    is saturated.
+- input: Was the box swapping during the 2am incident?
+  output: Reads sar -r from the archived sa file for that day and checks si/so swap columns.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: monitoring-infrastructure.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-monitoring
+  generic:
+    system_prompt: 'This is your domain: monitoring-infrastructure. You do it through host-metrics: Collect
+      instant host utilization snapshots. The commands are real, e.g. `uptime`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

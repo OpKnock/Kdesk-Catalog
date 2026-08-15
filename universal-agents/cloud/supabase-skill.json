@@ -1,0 +1,238 @@
+{
+  "name": "supabase",
+  "display_name": "supabase",
+  "category": "cloud",
+  "subcategory": "general",
+  "description": "Builds apps with Supabase: local development, migrations, auth, storage, and database operations with the supabase CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx",
+    "psql"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx supabase init",
+        "npx supabase start",
+        "npx supabase stop",
+        "npx supabase status",
+        "npx supabase db reset"
+      ],
+      "description": "Run the local Supabase stack.",
+      "name": "supabase-local",
+      "examples": [
+        "npx supabase start --exclude auth",
+        "npx supabase status -o env",
+        "npx supabase stop --no-backup"
+      ],
+      "parameters": [
+        {
+          "description": "Project reference",
+          "name": "project-ref",
+          "type": "string"
+        },
+        {
+          "name": "db",
+          "type": "string",
+          "description": "Local database name"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "npx supabase migration new create_users",
+        "npx supabase db push",
+        "npx supabase db diff --linked",
+        "npx supabase db lint",
+        "psql \"postgresql://postgres:postgres@localhost:54322/postgres\" -c \"SELECT 1\""
+      ],
+      "description": "Manage migrations and database operations.",
+      "name": "supabase-db",
+      "examples": [
+        "npx supabase db diff -f users_table --linked",
+        "npx supabase migration list",
+        "npx supabase db reset --no-seed"
+      ],
+      "parameters": [
+        {
+          "description": "Migration name",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "description": "Diff against linked project",
+          "name": "linked",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "npx supabase functions deploy myfunc",
+        "npx supabase functions serve",
+        "npx supabase storage create-bucket avatars --public",
+        "npx supabase projects list",
+        "npx supabase link --project-ref abcdef"
+      ],
+      "description": "Manage auth users, storage buckets, and functions.",
+      "name": "supabase-auth-storage",
+      "examples": [
+        "npx supabase functions deploy myfunc --project-ref abcdef",
+        "npx supabase storage empty-bucket avatars",
+        "npx supabase projects list"
+      ],
+      "parameters": [
+        {
+          "description": "Storage bucket name",
+          "name": "bucket",
+          "type": "string"
+        },
+        {
+          "description": "Edge function name",
+          "name": "function",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Supabase Docs",
+      "description": "Database, auth, storage, and functions",
+      "source": "https://supabase.com/docs",
+      "type": "documentation"
+    },
+    {
+      "title": "Supabase CLI",
+      "description": "Local dev and migration workflow",
+      "source": "https://supabase.com/docs/guides/cli",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Supabase\n\nBackend-as-a-service on Postgres.\n\n## When to Use\n\n- Postgres-backed apps without server management\n- Auth (email, OAuth) and Row Level Security\n- Storage buckets for user files\n- Edge functions for custom logic\n\n## Commands\n\n```bash\n# Local stack\nnpx supabase init\nnpx supabase start\nnpx supabase status\nnpx supabase stop\nnpx supabase db reset\n\n# Migrations\nnpx supabase migration new create_users\nnpx supabase db push\nnpx supabase db diff -f users_table --linked\nnpx supabase migration list\n\n# Link to a hosted project\nnpx supabase link --project-ref abcdef\nnpx supabase projects list\n\n# Functions\nnpx supabase functions serve\nnpx supabase functions deploy myfunc\n\n# Storage\nnpx supabase storage create-bucket avatars --public\n```\n\n## Best Practices\n\n- Do all schema work via migrations, never ad-hoc SQL in prod\n- Use RLS policies for row-level security by default\n- Keep the local stack in sync with prod via db diff\n- Run supabase functions serve for local edge function dev\n- Rotate service role keys; use anon key on clients\n- Reset local DB from migrations, not snapshots",
+  "examples": [
+    {
+      "input": "Add a table to my Supabase project",
+      "output": "Agent writes a migration with npx supabase migration new, fills in SQL, and applies with db push."
+    },
+    {
+      "input": "Deploy an edge function",
+      "output": "Agent serves it locally with functions serve, then deploys with functions deploy against the linked project."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "supabase.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-supabase"
+    },
+    "generic": {
+      "system_prompt": "You take the supabase seat. You do it through supabase-local: Run the local Supabase stack. The commands are real, e.g. `npx supabase init`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "supabase",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "supabase-local",
+        "name": "project-ref",
+        "type": "string",
+        "description": "Project reference"
+      },
+      {
+        "capability": "supabase-local",
+        "name": "db",
+        "type": "string",
+        "description": "Local database name"
+      },
+      {
+        "capability": "supabase-db",
+        "name": "name",
+        "type": "string",
+        "description": "Migration name"
+      },
+      {
+        "capability": "supabase-db",
+        "name": "linked",
+        "type": "boolean",
+        "description": "Diff against linked project"
+      },
+      {
+        "capability": "supabase-auth-storage",
+        "name": "bucket",
+        "type": "string",
+        "description": "Storage bucket name"
+      },
+      {
+        "capability": "supabase-auth-storage",
+        "name": "function",
+        "type": "string",
+        "description": "Edge function name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx",
+    "psql"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/supabase-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/supabase-skill.yaml",
+    "checksum": "6a385744b9918d981aeeebc9b936ff47ea0d6a88687a83430ee404d3246e6082"
+  }
+}

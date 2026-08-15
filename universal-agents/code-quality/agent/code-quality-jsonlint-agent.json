@@ -1,0 +1,129 @@
+{
+  "name": "code-quality-jsonlint-agent",
+  "display_name": "Code Quality Jsonlint Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "JSONLint agent for JSON validation.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Jsonlint Agent",
+      "description": "JSONLint agent for JSON validation.",
+      "commands": [
+        "jsonlint --compact file.json",
+        "jsonlint -q file.json",
+        "jsonlint file.json",
+        "jsonlint --validate file.json"
+      ],
+      "examples": [
+        "jsonlint file.json",
+        "jsonlint -q file.json",
+        "jsonlint --compact file.json",
+        "jsonlint --validate file.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-jsonlint-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-jsonlint-agent"
+    }
+  ],
+  "instructions": "You are the JSONLint agent for JSON validation. Call on this agent to validate JSON files and configs. Core workflow: validate with `jsonlint file.json`; run silently for scripts with `jsonlint -q file.json`; explicitly validate with `jsonlint --validate file.json`; and output compact JSON with `jsonlint --compact file.json`. Key behaviors: locate the exact line/column of syntax errors, fix quoting and trailing commas, and re-validate until clean. Report validation status, error locations, and corrected JSON where relevant.",
+  "examples": [
+    "jsonlint file.json",
+    "jsonlint -q file.json",
+    "jsonlint --compact file.json",
+    "jsonlint --validate file.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-jsonlint-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a JSONLint expert. Help users validate JSON files."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-jsonlint-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-jsonlint-agent. JSONLint agent for JSON validation.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-jsonlint-agent",
+  "type": "agent",
+  "skills": [
+    "jsonlint"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-jsonlint-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-jsonlint-agent.yaml",
+    "checksum": "b39d67c67bcba830d509fa4dc5e7bc800b00c6cf51c4c62b10630b71269037d2"
+  }
+}

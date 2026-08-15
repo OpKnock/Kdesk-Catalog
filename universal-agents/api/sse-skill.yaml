@@ -1,0 +1,101 @@
+name: sse
+display_name: Sse
+category: api
+subcategory: general
+description: 'Hand-crafted core Server-Sent Events skill: event stream protocol, curl -N consumption,
+  Last-Event-ID replay, and simple push endpoints.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pip
+capabilities:
+- name: sse-consumption
+  description: Consume and produce Server-Sent Events streams
+  commands:
+  - curl -N http://localhost:8080/events
+  - 'curl -N -H ''Accept: text/event-stream'' http://localhost:8080/updates | grep -E ''^data:'''
+  - 'curl -N -H ''Last-Event-ID: 14'' http://localhost:8080/events'
+  - curl -N --no-buffer http://localhost:8080/stream > events.log
+  - pip install sseclient-py
+  examples:
+  - curl -N http://localhost:8080/events
+  - 'curl -N -H ''Accept: text/event-stream'' http://localhost:8080/updates | grep -E ''^data:'''
+  - 'curl -N -H ''Last-Event-ID: 14'' http://localhost:8080/events'
+  parameters:
+  - name: url
+    type: string
+    description: Event stream endpoint
+  - name: last_event_id
+    type: string
+    description: Replay cursor via Last-Event-ID header
+  - name: output
+    type: string
+    description: Where to capture the stream
+knowledge:
+- title: MDN Using Server-Sent Events
+  type: documentation
+  source: https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
+  description: EventSource API and stream format
+- title: SSE spec (HTML5)
+  type: documentation
+  source: https://html.spec.whatwg.org/multipage/server-sent-events.html
+  description: event/data/id/retry fields
+instructions: "# Server-Sent Events (SSE)\n\nHand-crafted skill for one-way push with Server-Sent Events.\n\
+  \n## What this skill does\n\n- Consumes event streams from the terminal with curl -N\n- Parses data:\
+  \ lines and replays missed events with Last-Event-ID\n- Serves push endpoints that flush events incrementally\n\
+  \n## When to use\n\n- One-way server push to browsers (no WebSocket needed)\n- Live dashboards and activity\
+  \ feeds\n- Simpler alternative to polling for slow-changing data\n\n## Real commands\n\n```bash\n# Consume\
+  \ a stream, printing each event as it arrives\ncurl -N http://localhost:8080/events\n\n# Keep only payload\
+  \ lines\ncurl -N -H 'Accept: text/event-stream' http://localhost:8080/updates | grep -E '^data:'\n\n\
+  # Replay after a disconnect: tell the server where to resume\ncurl -N -H 'Last-Event-ID: 14' http://localhost:8080/events\n\
+  \n# Capture to a file\ncurl -N --no-buffer http://localhost:8080/stream > events.log\n\n# Python client\n\
+  pip install sseclient-py\n```\n\n## Stream format\n\n```\nid: 15\ndata: {\"user\":42,\"event\":\"login\"\
+  }\n\nid: 16\ndata: {\"user\":7,\"event\":\"logout\"}\n```\n\n## Python consumer\n\n```python\nimport\
+  \ sseclient, requests\n\nresp = requests.get(\"http://localhost:8080/events\", stream=True)\nfor event\
+  \ in sseclient.SSEClient(resp).events():\n    print(event.id, event.data)\n```\n\n## Testing\n\n```bash\n\
+  curl -N http://localhost:8080/events | head -3\ncurl -N --no-buffer http://localhost:8080/stream > events.log\
+  \ && wc -l events.log\n```\n\n## Best practices\n\n- Send id: lines and honor Last-Event-ID on the server\n\
+  - Send a comment line every 15s to keep proxies from timing out\n- Set Content-Type: text/event-stream\
+  \ and never buffer responses\n"
+examples:
+- input: Watch a live events feed from the terminal
+  output: curl -N http://localhost:8080/events streams each event line as the server sends it.
+- input: Client missed events during a reconnect
+  output: 'Server should track event ids and accept curl -N -H ''Last-Event-ID: <last>'' to replay from
+    that id.'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: sse.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-sse
+  generic:
+    system_prompt: 'This is your domain: Sse. You do it through sse-consumption: Consume and produce Server-Sent
+      Events streams. The commands are real, e.g. `curl -N http://localhost:8080/events`. You answer with
+      exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

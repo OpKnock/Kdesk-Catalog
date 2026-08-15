@@ -1,0 +1,171 @@
+{
+  "name": "pulsar-consumer-go",
+  "display_name": "Pulsar Consumer Go",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Pulsar consumers in Go: consumer creation, subscription modes, message handling and retries with pulsar-client-go.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bin/pulsar-client"
+  ],
+  "capabilities": [
+    {
+      "name": "pulsar-go-consumer",
+      "description": "Write Go Pulsar consumers: subscribe with ack modes, receive messages and handle redelivery.",
+      "commands": [
+        "go get github.com/apache/pulsar-client-go/pulsar",
+        "go mod tidy",
+        "go run consumer.go",
+        "go test ./...",
+        "bin/pulsar-client consume my-topic -s my-sub -n 5 --subscription-type Shared"
+      ],
+      "examples": [
+        "go run consumer.go",
+        "bin/pulsar-client consume my-topic -s worker -n 10",
+        "go test -run TestConsumer -v ./..."
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic to consume from"
+        },
+        {
+          "name": "subscription",
+          "type": "string",
+          "description": "Subscription name"
+        },
+        {
+          "name": "sub_type",
+          "type": "string",
+          "description": "Exclusive, Shared, Failover or Key_Shared"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "pulsar-client-go",
+      "type": "documentation",
+      "source": "https://github.com/apache/pulsar-client-go",
+      "description": "Go client API and examples"
+    },
+    {
+      "title": "Pulsar Go client docs",
+      "type": "documentation",
+      "source": "https://pulsar.apache.org/docs/3.0.x/client-libraries-go/",
+      "description": "Consumer and producer usage for Go"
+    }
+  ],
+  "instructions": "# Pulsar Consumer (Go)\n\nConsume messages from Pulsar topics with the official Go client.\n\n## What this skill does\n\n- Creates consumers with subscription modes\n- Handles ack/negative-ack\n- Processes with redelivery semantics\n\n## When to use\n\n- Go services consuming Pulsar events\n- Worker pools over shared subscriptions\n\n## Real commands\n\n```bash\n# Dependency\ngo get github.com/apache/pulsar-client-go/pulsar\ngo mod tidy\n\n# Run and verify\ngo run consumer.go\ngo test ./...\n\n# Quick consume via Pulsar CLI tools\nbin/pulsar-client consume my-topic -s my-sub -n 5 --subscription-type Shared\n```\n\n## Consumer code\n\n```go\nclient, _ := pulsar.NewClient(pulsar.ClientOptions{URL: \"pulsar://localhost:6650\"})\ndefer client.Close()\n\nconsumer, _ := client.Subscribe(pulsar.ConsumerOptions{\n    Topic:            \"my-topic\",\n    SubscriptionName: \"worker\",\n    Type:             pulsar.Shared,\n})\ndefer consumer.Close()\n\nfor i := 0; i < 10; i++ {\n    msg, err := consumer.Receive(context.Background())\n    if err != nil { break }\n    fmt.Printf(\"%s: %s\\n\", msg.Topic(), string(msg.Payload()))\n    consumer.Ack(msg)\n}\n```\n\n## Best practices\n\n- Ack or negative-ack every message\n- Use Shared for parallel workers, Failover for ordered hot-standby\n- Set ReceiverQueueSize appropriately per workload",
+  "examples": [
+    {
+      "input": "Write a Go worker that consumes order events",
+      "output": "The agent writes a Shared consumer with ack handling and runs it with go run."
+    },
+    {
+      "input": "Messages get stuck unacked in my subscription",
+      "output": "The agent explains ack timeouts, negative-ack redelivery and consumer blocking."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pulsar-consumer-go.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pulsar-consumer-go"
+    },
+    "generic": {
+      "system_prompt": "You own Pulsar Consumer Go end to end. You do it through pulsar-go-consumer: Write Go Pulsar consumers: subscribe with ack modes, receive messages and handle redelivery. The commands are real, e.g. `go get github.com/apache/pulsar-client-go/pulsar`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pulsar-consumer-go",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pulsar-go-consumer",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic to consume from"
+      },
+      {
+        "capability": "pulsar-go-consumer",
+        "name": "subscription",
+        "type": "string",
+        "description": "Subscription name"
+      },
+      {
+        "capability": "pulsar-go-consumer",
+        "name": "sub_type",
+        "type": "string",
+        "description": "Exclusive, Shared, Failover or Key_Shared"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bin/pulsar-client"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/pulsar-consumer-go-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/pulsar-consumer-go-skill.yaml",
+    "checksum": "d4cf943f295cc04b7471fcac8530a0b8f33ee83d9dcb88e06b2e2c28e7e548f6"
+  }
+}

@@ -1,0 +1,149 @@
+name: testing-pyramid-architect
+version: 2.0.0
+type: skill
+category: testing
+description: Architects test strategies across the pyramid with tiered suites, coverage budgets, and CI
+  orchestration.
+keywords:
+- testing-pyramid
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: testing-pyramid-architect.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-testing-pyramid-architect
+  generic:
+    system_prompt: 'You take the testing-pyramid-architect seat. You do it through tier-strategy: Define
+      and enforce tiered test suites. The commands are real, e.g. `pytest tests/unit -n 4`. You run and
+      verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: tier-strategy
+  description: Define and enforce tiered test suites.
+  commands:
+  - pytest tests/unit -n 4
+  - pytest tests/integration --cov=src
+  - npx jest --testPathPattern=tests/unit
+  - npx playwright test tests/e2e --grep @critical
+  - mvn verify -Dit.test=*IT
+  examples:
+  - pytest tests/unit -n 4
+  - npx jest --testPathPattern=tests/unit
+  - npx playwright test tests/e2e --grep @critical
+  parameters:
+  - name: tier
+    type: string
+    description: 'Tier directory: unit, integration, e2e'
+  - name: framework
+    type: string
+    description: Framework per tier
+- name: coverage-budgets
+  description: Enforce coverage budgets per tier.
+  commands:
+  - pytest --cov=src --cov-fail-under=80 tests/unit
+  - npx jest --coverage --coverageThreshold='{"global":{"lines":80}}'
+  - go test -coverprofile=coverage.out ./... && awk '/total:/{print $3}' coverage.out
+  - dotnet test --collect:"XPlat Code Coverage" --threshold=80
+  examples:
+  - pytest --cov=src --cov-fail-under=80 tests/unit
+  - npx jest --coverage --coverageThreshold='{"global":{"lines":80}}'
+  - go test -coverprofile=coverage.out ./...
+  parameters:
+  - name: threshold
+    type: number
+    description: Minimum coverage percentage
+  - name: covFailUnder
+    type: number
+    description: pytest fail threshold
+- name: ci-orchestration
+  description: Orchestrate tiers across CI stages.
+  commands:
+  - npm run test:unit && npm run test:api
+  - pytest tests/unit -m 'not e2e'
+  - npx playwright test tests/e2e --shard=1/4
+  - pytest -m smoke tests/
+  - npx jest --ci --changedSince=main
+  examples:
+  - npm run test:unit && npm run test:api
+  - npx playwright test tests/e2e --shard=1/4
+  - pytest -m smoke tests/
+  parameters:
+  - name: stage
+    type: string
+    description: CI stage for the tier
+  - default: '4'
+    description: Total shards for e2e parallelization, e.g. 4 for 1/4.
+    name: shards
+    type: integer
+prerequisites:
+- jest
+- pytest
+- cypress
+- playwright
+tools:
+- jest
+- pytest
+- cypress
+- playwright
+- vitest
+- mocha
+examples:
+- input: Our 900 E2E tests take an hour
+  output: Agent maps tests down the pyramid, moves stable flows to API/integration, and shards the remaining
+    E2E.
+- input: Design the test strategy for a new service
+  output: Agent defines tiers with tools, coverage budgets, and CI stages, and shows the target distribution.
+instructions: "# Testing Pyramid Architecture\n\nDesign test suites that are fast, trustworthy, and maintainable.\n\
+  \n## What This Skill Does\n\n- Defines unit/integration/E2E tiers with tools per tier\n- Sets coverage\
+  \ budgets per tier\n- Orchestrates CI stages for fast feedback\n- Uses smoke tests and sharding to control\
+  \ runtime\n\n## When to Use\n\n- Redesigning a slow, all-E2E suite\n- Onboarding testing standards for\
+  \ a team\n- Balancing speed and confidence in CI\n\n## Real Commands\n\n```bash\n# Tiers\npytest tests/unit\
+  \ -n 4\npytest tests/integration --cov=src\nnpx jest --testPathPattern=tests/unit\nnpx playwright test\
+  \ tests/e2e --grep @critical\n\n# Budgets\npytest --cov=src --cov-fail-under=80 tests/unit\nnpx jest\
+  \ --coverage --coverageThreshold='{\"global\":{\"lines\":80}}'\n\n# CI stages\nnpm run test:unit &&\
+  \ npm run test:api\nnpx playwright test tests/e2e --shard=1/4\npytest -m smoke tests/\n```\n\n## Target\
+  \ Distribution\n\n```text\nUnit (60%):      jest/pytest/go test - ms feedback\nIntegration (30%): testcontainers/supertest\
+  \ - seconds\nE2E (10%):      playwright/cypress - minutes\n```\n\n## CI Stage Design\n\n```yaml\nstages:\n\
+  \  unit:    pytest -n 4 tests/unit && npx jest tests/unit\n  api:     pytest tests/integration && newman\
+  \ run collection.json\n  e2e:     npx playwright test tests/e2e --shard=1/4\n```\n\n## Best Practices\n\
+  \n- Push tests down the pyramid; E2E is the last resort\n- Budgets per tier prevent coverage theater\n\
+  - Run unit tests on every push; e2e on merge and nightly\n- Shard E2E; keep each stage under 15 minutes\n\
+  - Review the pyramid quarterly as the app evolves"
+display_name: testing-pyramid-architect
+knowledge:
+- title: Test Pyramid - Martin Fowler
+  type: documentation
+  source: https://martinfowler.com/bliki/TestPyramid.html
+  description: The classic test pyramid concept
+- title: Google Testing Blog
+  type: documentation
+  source: https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html
+  description: Why E2E-heavy suites are slow and brittle
+- title: pyramid by Vladimir Khorikov
+  type: documentation
+  source: https://enterprisecraftsmanship.com/posts/test-pyramid-anti-patterns/
+  description: Common anti-patterns in test pyramids

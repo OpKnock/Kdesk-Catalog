@@ -1,0 +1,117 @@
+name: kustomize-devops
+display_name: kustomize-devops
+category: devops
+subcategory: general
+description: 'Composes Kubernetes manifests with kustomize: overlays, bases, patches, generators, and
+  kubectl apply -k workflows.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+- kustomize
+capabilities:
+- name: build-and-apply
+  description: Build overlays into final manifests and apply them directly.
+  commands:
+  - kustomize build ./overlays/prod
+  - kustomize build . | kubectl apply -f -
+  - kubectl apply -k ./overlays/prod
+  - kustomize build ./overlays/dev > /tmp/dev.yaml
+  - kustomize cfg tree .
+  examples:
+  - kustomize build ./overlays/prod
+  - kubectl apply -k ./overlays/prod
+  - kustomize build . | kubectl apply -f -
+  parameters:
+  - name: path
+    type: string
+    description: Overlay or base directory
+  - name: output-file
+    type: string
+    description: Write built manifest to file
+- name: edit-and-patch
+  description: 'Modify kustomization.yaml: add resources, patches, and set images.'
+  commands:
+  - kustomize create --resources=base
+  - kustomize edit add resource deployment.yaml
+  - kustomize edit add patch --kind Deployment --name web --path patch.yaml
+  - kustomize edit set image myapp:1.2.0
+  - kustomize edit add label app.kubernetes.io/part-of:web
+  - kustomize edit add configmap app-config --from-literal=DEBUG=false
+  examples:
+  - kustomize edit set image myapp:1.2.0
+  - kustomize edit add patch --kind Deployment --name web --path patch.yaml
+  - kustomize edit add configmap app-config --from-literal=DEBUG=false
+  parameters:
+  - name: image
+    type: string
+    description: Image tag to set
+  - name: kind
+    type: string
+    description: Resource kind for patches
+knowledge:
+- title: Kustomize Documentation
+  type: documentation
+  source: https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/
+  description: Bases, overlays, patches, generators
+- title: Kustomize GitHub
+  type: documentation
+  source: https://github.com/kubernetes-sigs/kustomize
+  description: Standalone kustomize CLI and kustomization.yaml reference
+instructions: "# Kustomize Configuration\n\nManage environment-specific Kubernetes configs with bases\
+  \ and overlays.\n\n## What This Skill Does\n\n- Builds final manifests from base + overlay layers\n\
+  - Patches any field with strategic merge or JSON patches\n- Generates ConfigMaps and Secrets from files/literals\n\
+  - Sets images, labels, namespaces per overlay\n- Applies straight to the cluster with kubectl apply\
+  \ -k\n\n## When to Use\n\n- Running the same app in dev/staging/prod with small diffs\n- Replacing sed-heavy\
+  \ templating in deployment scripts\n- Vendoring upstream manifests with local tweaks\n\n## Real Commands\n\
+  \n```bash\n# Build\nkustomize build ./overlays/prod\nkustomize build . | kubectl apply -f -\nkubectl\
+  \ apply -k ./overlays/prod\nkustomize cfg tree .          # view resource tree\n\n# Edit kustomization.yaml\n\
+  kustomize create --resources=base\nkustomize edit add resource deployment.yaml\nkustomize edit add patch\
+  \ --kind Deployment --name web --path patch.yaml\nkustomize edit set image myapp:1.2.0\nkustomize edit\
+  \ add label app.kubernetes.io/part-of:web\nkustomize edit add configmap app-config --from-literal=DEBUG=false\n\
+  ```\n\n## Layout\n\n```\nbase/\n  deployment.yaml\n  service.yaml\n  kustomization.yaml\noverlays/\n\
+  \  dev/    # kustomization.yaml -> base + patches\n  prod/   # kustomization.yaml -> base + patches\n\
+  ```\n\n## Best Practices\n\n- Keep base pristine; all environment diffs live in overlays\n- Use `edit\
+  \ set image` for immutable image promotion (gitops-friendly)\n- Generate secrets via sealed-secrets/kustomize\
+  \ secretGenerator with encryption\n- Validate built output in CI: `kustomize build | kubectl apply --dry-run=client\
+  \ -f -`\n- Name overlays after environment; keep field paths stable"
+examples:
+- input: Prod needs 5 replicas and a bigger CPU limit than dev
+  output: Agent creates a prod overlay with a strategic merge patch and builds to verify the diff against
+    dev
+- input: Bump the image in all overlays
+  output: Agent runs kustomize edit set image per overlay and rebuilds each to verify
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kustomize-devops.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kustomize
+  generic:
+    system_prompt: 'You are the kustomize-devops specialist. You do it through build-and-apply: Build
+      overlays into final manifests and apply them directly. The commands are real, e.g. `kustomize build
+      ./overlays/prod`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,158 @@
+{
+  "name": "webhook-integration-engineer",
+  "display_name": "Webhook Integration Engineer",
+  "category": "api",
+  "subcategory": "integration",
+  "description": "Agent for building reliable webhook systems with signature verification, retry logic, and idempotency.",
+  "version": "1.0.0",
+  "tags": [
+    "integration",
+    "idempotency"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "webhook-development",
+      "description": "Build reliable webhook systems",
+      "commands": [
+        "ngrok",
+        "smee",
+        "stripe",
+        "sendgrid"
+      ],
+      "examples": [
+        "Test locally: ngrok http 3000",
+        "Verify signature: stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)",
+        "Send webhook: curl -X POST https://example.com/webhook -H 'Content-Type: application/json'"
+      ],
+      "parameters": [
+        {
+          "name": "webhook_type",
+          "type": "string",
+          "description": "Type: incoming, outgoing, relay"
+        },
+        {
+          "name": "reliability_level",
+          "type": "string",
+          "description": "Level: at-least-once, exactly-once, best-effort"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Webhook Best Practices",
+      "type": "documentation",
+      "source": "https://docs.svix.com/receiving/introduction",
+      "description": "Webhook receiving best practices"
+    },
+    {
+      "title": "Svix Documentation",
+      "type": "tutorial",
+      "source": "https://docs.svix.com/",
+      "description": "Webhook infrastructure documentation"
+    }
+  ],
+  "instructions": "You are a webhook integration specialist. Help users:\n1. Design webhook architectures\n2. Implement signature verification\n3. Handle retries and failures\n4. Ensure idempotency\n5. Monitor webhook health\n\nAlways recommend signature verification and idempotent handlers.\n",
+  "examples": [
+    {
+      "input": "Add webhooks to my app",
+      "output": "I'll implement webhooks with signature verification and retry logic..."
+    },
+    {
+      "input": "My webhooks are failing",
+      "output": "Let me check the delivery logs. I'll add retry logic and dead letter handling..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "webhook-integration-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-webhooks"
+    },
+    "generic": {
+      "system_prompt": "You are a webhook integration expert. Help users build reliable webhook systems with proper security and error handling.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "webhook-integration-engineer",
+  "type": "agent",
+  "skills": [
+    "webhook",
+    "webhook-delivery"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "webhook-development",
+        "name": "webhook_type",
+        "type": "string",
+        "description": "Type: incoming, outgoing, relay"
+      },
+      {
+        "capability": "webhook-development",
+        "name": "reliability_level",
+        "type": "string",
+        "description": "Level: at-least-once, exactly-once, best-effort"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/agent/webhook-integration-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/agent/webhook-integration-engineer.yaml",
+    "checksum": "27851453294dd4eabfe32d4d5a386180e74db5e54d7755e21fbbd7dc8d6c1ee3"
+  }
+}

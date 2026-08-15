@@ -1,0 +1,116 @@
+name: rust
+display_name: rust
+category: backend
+subcategory: general
+description: 'Builds Rust backends: cargo projects, workspace management, builds, tests, benchmarks, and
+  clippy-driven quality.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cargo
+capabilities:
+- commands:
+  - cargo new myapp
+  - cargo build
+  - cargo build --release
+  - cargo run
+  - cargo add tokio --features full
+  description: Create and build Rust projects and workspaces.
+  name: cargo-build
+  examples:
+  - cargo new myapp --bin
+  - cargo build --release --features rustls
+  - cargo install cargo-watch
+  parameters:
+  - description: Binary name
+    name: bin
+    type: string
+  - description: Cargo features to enable
+    name: features
+    type: string
+- commands:
+  - cargo test
+  - cargo test -- --nocapture
+  - cargo clippy -- -D warnings
+  - cargo fmt --check
+  - cargo bench
+  description: Test, lint, and benchmark Rust code.
+  name: cargo-quality
+  examples:
+  - cargo test --workspace
+  - cargo clippy --all-targets -- -D warnings
+  - cargo fmt --all -- --check
+  parameters:
+  - description: Test name filter
+    name: test-filter
+    type: string
+  - description: Lint all targets including tests
+    name: all-targets
+    type: boolean
+knowledge:
+- title: Rust Book
+  description: Language guide
+  source: https://doc.rust-lang.org/book/
+  type: documentation
+- title: Cargo Book
+  description: Build system and registry reference
+  source: https://doc.rust-lang.org/cargo/
+  type: documentation
+- title: Rust API Guidelines
+  description: Library design recommendations
+  source: https://rust-lang.github.io/api-guidelines/
+  type: documentation
+instructions: "# Rust\n\nBackend development with the Rust toolchain.\n\n## When to Use\n\n- Performance-critical\
+  \ services and hot paths\n- Network daemons with tokio/axum\n- Tools that ship as single static binaries\n\
+  - Systems where memory safety matters\n\n## Commands\n\n```bash\n# New project\ncargo new myapp\ncargo\
+  \ new myapp --bin\n\n# Build\ncargo build\ncargo build --release\n\n# Add deps\ncargo add tokio --features\
+  \ full\ncargo add axum serde --features serde/derive\n\n# Run\ncargo run\n\n# Test\ncargo test\ncargo\
+  \ test -- --nocapture\n\n# Lint\ncargo clippy -- -D warnings\n\n# Format\ncargo fmt --check\n\n# Bench\n\
+  cargo bench\n```\n\n## Axum Example\n\n```rust\nuse axum::{routing::get, Router};\n\n#[tokio::main]\n\
+  async fn main() {\n    let app = Router::new().route(\"/health\", get(|| async { \"ok\" }));\n    let\
+  \ listener = tokio::net::TcpListener::bind(\"0.0.0.0:8080\").await.unwrap();\n    axum::serve(listener,\
+  \ app).await.unwrap();\n}\n```\n\n## Best Practices\n\n- Treat clippy warnings as errors in CI: cargo\
+  \ clippy -- -D warnings\n- Use feature flags to keep dependencies lean\n- Prefer error types over panics\
+  \ in library code\n- Benchmark hot paths with cargo bench before optimizing\n- Pin lockfile (Cargo.lock)\
+  \ for applications\n- Test with cargo test --workspace in monorepos"
+examples:
+- input: Set up a Rust HTTP service with axum
+  output: Agent runs cargo new, adds axum/tokio/serde, writes a router, and verifies with cargo run +
+    curl.
+- input: Why does my Rust release build slow down CI?
+  output: Agent checks incremental builds, suggests cargo build --release with sccache caching, and trimming
+    features.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rust.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rust
+  generic:
+    system_prompt: 'Your lane is rust. You do it through cargo-build: Create and build Rust projects and
+      workspaces. The commands are real, e.g. `cargo new myapp`. You verify each step you report and stay
+      honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

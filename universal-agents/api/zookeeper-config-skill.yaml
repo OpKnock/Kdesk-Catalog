@@ -1,0 +1,194 @@
+name: zookeeper-config
+display_name: Zookeeper Config
+category: api
+subcategory: general
+description: 'Manage ZooKeeper-backed configuration: zkCli CRUD on config nodes, watch-based updates,
+  and service discovery registration.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- zkcli.sh
+capabilities:
+- name: zk-config
+  description: Read, write, and watch configuration in ZooKeeper
+  commands:
+  - zkCli.sh -server localhost:2181
+  - zkCli.sh create /config/app '{"port":8080}'
+  - zkCli.sh get /config/app
+  - zkCli.sh set /config/app '{"port":9090}'
+  - zkCli.sh ls /config
+  examples:
+  - zkCli.sh -server zk1:2181,zk2:2181,zk3:2181 create /config/feature-flags '{"newUi":true}'
+  - zkCli.sh get -s /config/app
+  - zkCli.sh deleteall /config/app
+  parameters:
+  - name: server
+    type: string
+    description: ZooKeeper ensemble, e.g. host1:2181,host2:2181
+  - name: path
+    type: string
+    description: ZNode path, e.g. /config/app
+  - name: data
+    type: string
+    description: Node data, often JSON
+knowledge:
+- title: ZooKeeper CLI Guide
+  type: documentation
+  source: https://zookeeper.apache.org/doc/current/zookeeperCLI.html
+  description: 'All zkCli commands: create, get, set, ls, watch'
+- title: ZooKeeper Programmer Guide
+  type: documentation
+  source: https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html
+  description: ZNode model, watches, and sessions
+instructions: '# ZooKeeper Config
+
+
+  ## What this skill does
+
+  Use ZooKeeper as a distributed configuration store: create and update ZNodes with zkCli, read config
+  at startup, and subscribe to changes with watches.
+
+
+  ## When to use
+
+  - Coordinating config across many API instances
+
+  - Feature flags that need live updates
+
+  - Service discovery registration
+
+
+  ## Real commands
+
+  ```bash
+
+  # Connect to an ensemble
+
+  zkCli.sh -server localhost:2181
+
+
+  # Create a config node
+
+  zkCli.sh create /config/app ''{"port":8080}''
+
+
+  # Read config
+
+  zkCli.sh get /config/app
+
+
+  # Read with stat (version for optimistic updates)
+
+  zkCli.sh get -s /config/app
+
+
+  # Update config (all clients with watches get notified)
+
+  zkCli.sh set /config/app ''{"port":9090}''
+
+
+  # List children
+
+  zkCli.sh ls /config
+
+
+  # Delete recursively
+
+  zkCli.sh deleteall /config/app
+
+  ```
+
+
+  ## Ephemeral nodes for discovery
+
+  ```bash
+
+  # Ephemeral node: vanishes when the session dies
+
+  zkCli.sh create -e /services/orders/instance-1 ''192.168.0.5:8080''
+
+  ```
+
+
+  ## Client pattern
+
+  ```
+
+  1. Connect to the ensemble
+
+  2. Read /config/app at startup
+
+  3. Set a watch on the node
+
+  4. On NodeDataChanged, re-read and hot-reload
+
+  ```
+
+
+  ## Best practices
+
+  - Keep config under a dedicated root (e.g. /config)
+
+  - Store JSON; validate before applying
+
+  - Use `get -s` to check version for CAS-style updates
+
+  - Never store secrets: use a vault instead
+
+  - Prefer ephemeral+sequential nodes for discovery
+
+
+  ## Testing
+
+  ```bash
+
+  zkCli.sh create /config/app ''{"port":8080}''
+
+  zkCli.sh get /config/app
+
+  zkCli.sh set /config/app ''{"port":9090}''
+
+  zkCli.sh get /config/app
+
+  ```'
+examples:
+- input: Update the app port config live
+  output: Sets the ZNode with zkCli, confirms the new value, and notes that watching clients will reload.
+- input: Register an instance for discovery
+  output: Creates an ephemeral node under /services and explains its lifecycle.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: zookeeper-config.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-zookeeper-config
+  generic:
+    system_prompt: 'Your lane is Zookeeper Config. You do it through zk-config: Read, write, and watch
+      configuration in ZooKeeper. The commands are real, e.g. `zkCli.sh -server localhost:2181`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

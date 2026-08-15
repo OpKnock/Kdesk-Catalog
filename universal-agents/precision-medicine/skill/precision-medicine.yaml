@@ -1,0 +1,204 @@
+name: precision-medicine
+version: 2.0.0
+type: skill
+category: healthcare
+description: 'Analyzes genomic and clinical data with bioinformatics tooling: alignment QC with samtools,
+  variant filtering with bcftools, and BLAST searches.'
+keywords:
+- precision-medicine
+- clinical-data
+- bioinformatics
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: precision-medicine.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-precision-medicine
+  generic:
+    system_prompt: 'You work precision-medicine hands-on. You do it through alignment: Inspect and QC
+      aligned sequencing data. The commands are real, e.g. `samtools flagstat sample.bam`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: alignment
+  description: Inspect and QC aligned sequencing data.
+  commands:
+  - samtools flagstat sample.bam
+  - samtools view -h sample.bam | head -30
+  - samtools view -b -o chr1.bam sample.bam chr1
+  - samtools idxstats sample.bam
+  - samtools depth -a -r chr1:1000-2000 sample.bam | head
+  examples:
+  - samtools flagstat sample.bam | grep -E 'total|mapped'
+  - samtools view -c -F 4 sample.bam
+  - samtools index sample.bam && samtools idxstats sample.bam | head -10
+  parameters:
+  - name: bam
+    type: string
+    description: Alignment file
+  - name: region
+    type: string
+    description: chr:start-end region
+  - name: filter
+    type: string
+    description: SAM flag filter like -F 4
+- name: variants
+  description: Filter and summarize variant calls.
+  commands:
+  - bcftools stats variants.vcf.gz > stats.txt
+  - bcftools view -f PASS variants.vcf.gz
+  - bcftools view -i 'QUAL>30 && DP>20' variants.vcf.gz | bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\n'
+    | head
+  - bcftools filter -i 'INFO/DP>20' -o filtered.vcf.gz variants.vcf.gz
+  - bcftools query -l variants.vcf.gz
+  examples:
+  - bcftools view -i 'INFO/AF>0.1' variants.vcf.gz | bcftools stats - | head -40
+  - bcftools query -f '%CHROM:%POS %REF>%ALT %QUAL\n' variants.vcf.gz | head
+  - bcftools view -v snps variants.vcf.gz | bcftools stats - > snps.stats
+  parameters:
+  - name: vcf
+    type: string
+    description: Variant call file
+  - name: expression
+    type: string
+    description: bcftools filter expression
+  - name: format
+    type: string
+    description: bcftools query output format
+prerequisites:
+- python
+- biopython
+- hl7-fhir
+- r
+tools:
+- python
+- biopython
+- hl7-fhir
+- r
+- spark
+examples:
+- input: QC the new WGS sample before analysis.
+  output: Runs samtools flagstat and idxstats, then bcftools stats on the variant file, and compares against
+    thresholds.
+- input: Extract high-quality SNVs in the exome region.
+  output: Filters variants with QUAL/DP expressions, keeps PASS calls, and outputs a TSV of positions.
+instructions: '# Precision Medicine
+
+
+  Process genomic data reproducibly with the htslib toolchain.
+
+
+  ## When to Use
+
+
+  - Variant calling QC and filtering
+
+  - Aligning or assessing WGS/WES reads
+
+  - Cohort comparison on variant burden
+
+
+  ## Alignment QC
+
+
+  ```bash
+
+  samtools flagstat sample.bam
+
+  samtools idxstats sample.bam
+
+  ```
+
+
+  Check: total reads, mapped %, duplicates, and per-chromosome coverage.
+
+
+  ## Region extraction
+
+
+  ```bash
+
+  samtools index sample.bam
+
+  samtools view -b -o chr1.bam sample.bam chr1
+
+  ```
+
+
+  ## Variant QC
+
+
+  ```bash
+
+  bcftools stats variants.vcf.gz > stats.txt
+
+  bcftools view -i ''QUAL>30 && DP>20'' variants.vcf.gz | bcftools query -f ''%CHROM\t%POS\t%REF\t%ALT\n''
+  | head
+
+  ```
+
+
+  ## Filtering policy
+
+
+  - Genotype quality and depth thresholds per platform.
+
+  - Keep PASS-only calls in clinical pipelines.
+
+  - Annotate with VEP/ANNOVAR before interpretation.
+
+
+  ## Best practices
+
+
+  - Record pipeline versions with every dataset.
+
+  - Use gzip+bcsf compressed VCFs for storage.
+
+  - Never round-trip BAM through text without flags preservation.
+
+  - Validate sample IDs against manifests early.
+
+
+  ## Testing
+
+
+  Run flagstat/stats on a control sample and compare against the reference baseline.'
+display_name: precision-medicine
+knowledge:
+- title: samtools
+  type: documentation
+  source: https://www.htslib.org/doc/samtools.html
+  description: BAM alignment utilities
+- title: bcftools
+  type: documentation
+  source: https://samtools.github.io/bcftools/
+  description: VCF variant processing and filtering
+- title: NCBI BLAST
+  type: documentation
+  source: https://www.ncbi.nlm.nih.gov/books/NBK279690/
+  description: Sequence similarity search tools

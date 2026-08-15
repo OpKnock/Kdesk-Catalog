@@ -1,0 +1,180 @@
+name: yaml
+display_name: Yaml
+category: api
+subcategory: general
+description: 'Work with YAML: query and transform with yq, validate with yamllint, merge multi-document
+  files, and convert between YAML and JSON.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- yamllint
+capabilities:
+- name: yaml-processing
+  description: Query, validate, and transform YAML documents
+  commands:
+  - yq eval '.metadata.name' deployment.yaml
+  - yq eval '.spec.containers[0].image' pod.yaml
+  - yq eval-all 'select(di == 0) * select(di == 1)' base.yaml overlay.yaml
+  - yamllint -d relaxed docker-compose.yml
+  - yq eval -o=json . config.yaml > config.json
+  examples:
+  - yq eval '.data | keys' configmap.yaml
+  - yq eval '.spec.template.spec.containers[].image' deployment.yaml | sort -u
+  - python -c "import yaml;print(yaml.safe_load(open('config.yaml')))"
+  parameters:
+  - name: expression
+    type: string
+    description: jq-style query expression
+  - name: format
+    type: string
+    description: 'Output format: yaml, json, xml, csv'
+  - name: file
+    type: string
+    description: Input YAML file
+knowledge:
+- title: yq on GitHub
+  type: documentation
+  source: https://github.com/mikefarah/yq
+  description: Installation and expression syntax for yq
+- title: YAML 1.2 Spec
+  type: documentation
+  source: https://yaml.org/spec/1.2.2/
+  description: Official YAML specification
+instructions: '# YAML
+
+
+  ## What this skill does
+
+  Parse, query, and transform YAML files with yq; validate syntax and style with yamllint; merge multi-document
+  files; and convert between YAML and JSON for API tooling.
+
+
+  ## When to use
+
+  - Reading config from k8s manifests or CI files
+
+  - Transforming YAML in scripts/CI
+
+  - Validating hand-written YAML
+
+
+  ## Real commands
+
+  ```bash
+
+  # Query values
+
+  yq eval ''.metadata.name'' deployment.yaml
+
+  yq eval ''.spec.containers[0].image'' pod.yaml
+
+
+  # List keys
+
+  yq eval ''.data | keys'' configmap.yaml
+
+
+  # All images in a template
+
+  yq eval ''.spec.template.spec.containers[].image'' deployment.yaml | sort -u
+
+
+  # Merge base + overlay
+
+  yq eval-all ''select(di == 0) * select(di == 1)'' base.yaml overlay.yaml
+
+
+  # Validate with yamllint (relaxed for k8s)
+
+  yamllint -d relaxed docker-compose.yml
+
+
+  # Convert YAML -> JSON
+
+  yq eval -o=json . config.yaml > config.json
+
+
+  # Convert JSON -> YAML
+
+  cat spec.json | yq eval -P - > spec.yaml
+
+  ```
+
+
+  ## Python fallback
+
+  ```bash
+
+  python -c "import yaml,pprint;pprint.pprint(yaml.safe_load(open(''config.yaml'')))"
+
+  ```
+
+
+  ## Gotchas
+
+  - `yq` (mikefarah) vs `yq` (kislyuk): different syntax
+
+  - Use `-e` to exit non-zero when no matches
+
+  - Quote keys with special characters: `.\"app.kubernetes.io/name\"`
+
+
+  ## Best practices
+
+  - Always lint YAML in CI before using it
+
+  - Avoid tabs; YAML forbids them in indentation
+
+  - Use `eastl` for alignment style consistency
+
+
+  ## Testing
+
+  ```bash
+
+  yamllint config.yaml && echo OK
+
+  yq eval ''.spec.replicas'' deployment.yaml
+
+  ```'
+examples:
+- input: Extract image tags from all deployments
+  output: Runs yq over each manifest and lists unique images.
+- input: Merge two config files
+  output: Uses yq eval-all to merge base with overlay and prints the result.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: yaml.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-yaml
+  generic:
+    system_prompt: 'You work Yaml hands-on. You do it through yaml-processing: Query, validate, and transform
+      YAML documents. The commands are real, e.g. `yq eval .metadata.name deployment.yaml`. You verify
+      each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

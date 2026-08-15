@@ -1,0 +1,166 @@
+{
+  "name": "elasticsearch-snapshots",
+  "display_name": "Elasticsearch Snapshots",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Elasticsearch snapshot and restore: register snapshot repositories, create and list snapshots, and restore indices from backups.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "snapshot-lifecycle",
+      "description": "Manage snapshot repositories, take snapshots, list them, and restore data.",
+      "commands": [
+        "curl -s -X PUT 'localhost:9200/_snapshot/my_backup' -H 'Content-Type: application/json' -d '{\"type\":\"s3\",\"settings\":{\"bucket\":\"es-backups\",\"region\":\"us-east-1\"}}' | jq",
+        "curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date +%Y%m%d)' -H 'Content-Type: application/json' -d '{\"indices\":\"orders,users\",\"ignore_unavailable\":true}' | jq",
+        "curl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false' | jq '.snapshots[].snapshot'",
+        "curl -s 'localhost:9200/_snapshot/my_backup/snap_20240101/_status' | jq '.snapshots[0].stats.incremental'",
+        "curl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H 'Content-Type: application/json' -d '{\"indices\":\"orders\",\"rename_pattern\":\"(.+)\",\"rename_replacement\":\"restored_$1\"}' | jq"
+      ],
+      "examples": [
+        "curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date +%Y%m%d)' -H 'Content-Type: application/json' -d '{\"indices\":\"orders\"}' | jq",
+        "curl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false' | jq '.snapshots | length'",
+        "curl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H 'Content-Type: application/json' -d '{\"indices\":\"orders\"}' | jq"
+      ],
+      "parameters": [
+        {
+          "name": "repository",
+          "type": "string",
+          "description": "Snapshot repository name"
+        },
+        {
+          "name": "snapshot",
+          "type": "string",
+          "description": "Snapshot name, e.g. snap_20240101"
+        },
+        {
+          "name": "indices",
+          "type": "array",
+          "description": "Indices to snapshot or restore"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Snapshot and Restore",
+      "type": "documentation",
+      "source": "https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshot-restore.html",
+      "description": "Repositories, snapshot APIs, restore workflows, and SLM policy config"
+    },
+    {
+      "title": "S3 Repository Plugin",
+      "type": "documentation",
+      "source": "https://www.elastic.co/guide/en/elasticsearch/plugins/current/repository-s3.html",
+      "description": "Registering S3-backed repositories with IAM credentials"
+    }
+  ],
+  "instructions": "# Elasticsearch Snapshots\n\n## What this skill does\n\nSnapshots back up indices to a repository (S3, GCS, Azure, or shared filesystem) with incremental deduplication. Restore brings indices back with optional renaming. This skill covers the whole lifecycle.\n\n## When to use\n\n- Scheduled nightly backups of indices\n- Restoring a corrupted index or migrating data between clusters\n- Verifying backups are actually restorable\n\n## Real commands\n\n```bash\n# Register an S3 repository (one-time per cluster)\ncurl -s -X PUT 'localhost:9200/_snapshot/my_backup' -H 'Content-Type: application/json' -d '{\"type\":\"s3\",\"settings\":{\"bucket\":\"es-backups\",\"region\":\"us-east-1\"}}' | jq\n\n# Take a snapshot of specific indices\ncurl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date +%Y%m%d)' -H 'Content-Type: application/json' -d '{\"indices\":\"orders,users\",\"ignore_unavailable\":true}' | jq\n\n# List snapshots and inspect status\ncurl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false' | jq '.snapshots[].snapshot'\ncurl -s 'localhost:9200/_snapshot/my_backup/snap_20240101/_status' | jq '.snapshots[0].stats.incremental'\n\n# Restore with rename to avoid clobbering\ncurl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H 'Content-Type: application/json' -d '{\"indices\":\"orders\",\"rename_pattern\":\"(.+)\",\"rename_replacement\":\"restored_$1\"}' | jq\n```\n\n## SLM policy example\n\n```json\n{\n  \"schedule\": \"0 30 2 * * ?\",\n  \"name\": \"nightly-snap\",\n  \"repository\": \"my_backup\",\n  \"indices\": [\"orders\", \"users\"],\n  \"retention\": {\"count\": 14}\n}\n```\n\n## Testing restores\n\n```bash\n# Monthly drill: restore into renamed index and delete after verification\ncurl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H 'Content-Type: application/json' -d '{\"indices\":\"orders\",\"rename_pattern\":\"(.+)\",\"rename_replacement\":\"restored_$1\"}' | jq\ncurl -s 'localhost:9200/_cat/indices/restored_orders?v' | jq\n```\n\n## Best practices\n\n- Never restore over a live index; always use rename_pattern.\n- Enable `wait_for_completion=true` in scripts or poll _status.\n- Retain at least 14 daily snapshots and run a restore drill monthly.\n- Ensure the repo bucket has versioning for extra safety.\n",
+  "examples": [
+    {
+      "input": "Set up nightly S3 backups",
+      "output": "Register the S3 repository, create an SLM policy with a 2:30 AM schedule and 14-snapshot retention, and verify with GET _snapshot/my_backup/_all."
+    },
+    {
+      "input": "Restore last night's orders index",
+      "output": "List snapshots with _all?verbose=false, find snap_YYYYMMDD, then POST _restore with rename_pattern/replacement to restored_orders."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "elasticsearch-snapshots.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-elasticsearch-snapshots"
+    },
+    "generic": {
+      "system_prompt": "You are the Elasticsearch Snapshots specialist. You do it through snapshot-lifecycle: Manage snapshot repositories, take snapshots, list them, and restore data. The commands are real, e.g. `curl -s -X PUT localhost:9200/_snapshot/my_backup -H Content-Type: application/json -d...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "elasticsearch-snapshots",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "snapshot-lifecycle",
+        "name": "repository",
+        "type": "string",
+        "description": "Snapshot repository name"
+      },
+      {
+        "capability": "snapshot-lifecycle",
+        "name": "snapshot",
+        "type": "string",
+        "description": "Snapshot name, e.g. snap_20240101"
+      },
+      {
+        "capability": "snapshot-lifecycle",
+        "name": "indices",
+        "type": "array",
+        "description": "Indices to snapshot or restore"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/elasticsearch-snapshots-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/elasticsearch-snapshots-skill.yaml",
+    "checksum": "5c58034646e13394cd4aa38f3b3a406ae41534c83a7fe5200686d4efde27b710"
+  }
+}

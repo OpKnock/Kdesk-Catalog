@@ -1,0 +1,120 @@
+{
+  "name": "ml-explainability-deploy",
+  "display_name": "Ml Explainability Deploy",
+  "category": "ml",
+  "subcategory": "explainability",
+  "description": "Explainability deployment agent for ML explainability service deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "explainability"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Explainability Deploy",
+      "description": "Explainability deployment agent for ML explainability service deployment.",
+      "commands": [
+        "Server: python -m explainability.server --port 8080",
+        "Health: curl http://localhost:8080/health",
+        "API: curl http://localhost:8080/explain -X POST -H 'Content-Type: application/json' -d '{\"model\": \"m"
+      ],
+      "examples": [
+        "Server: python -m explainability.server --port 8080",
+        "API: curl http://localhost:8080/explain -X POST -H 'Content-Type: application/json' -d '{\"model\": \"my_model\", \"input\": [1.0, 2.0]}'",
+        "Health: curl http://localhost:8080/health"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-explainability-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/explainability",
+      "description": "Reference documentation for ml-explainability-deploy"
+    }
+  ],
+  "instructions": "You are the Model Explainability deployment expert. Call on this agent to deploy and operate model explainability / interpretability services. Core workflow: (1) start with `python -m explainability.server --port 8080`; (2) check health with `curl http://localhost:8080/health`; (3) request explanations with `curl http://localhost:8080/explain -X POST -H 'Content-Type: application/json' -d '{\"model\": \"my_model\", \"input\": [1.0, 2.0]}'`. Key behaviors: verify the model name is registered/served by the service; confirm input shape matches the model's feature vector; if /explain errors, check the request JSON schema and model availability; if /health is non-200, check port and module issues. Output expectations: report service health, the explanation output (feature attributions) for each request, and any input/model validation errors.",
+  "examples": [
+    "Server: python -m explainability.server --port 8080",
+    "API: curl http://localhost:8080/explain -X POST -H 'Content-Type: application/json' -d '{\"model\": \"my_model\", \"input\": [1.0, 2.0]}'",
+    "Health: curl http://localhost:8080/health"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-explainability-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an explainability deployment expert. Help users deploy model explainability and interpretability services."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-explainability-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-explainability-deploy. Explainability deployment agent for ML explainability service deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-explainability-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/explainability/ml-explainability-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/explainability/ml-explainability-deploy.yaml",
+    "checksum": "c8aa64217dbce1828da3d694801295eacb3fd3f0db36be9e6f1192848f4eda4d"
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "name": "stress-testing",
+  "display_name": "Stress Testing",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted stress testing skill: ab, wrk, hey, siege, and k6 load generators with connection/throughput benchmarking and bottleneck detection.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "hey",
+    "siege",
+    "wrk"
+  ],
+  "capabilities": [
+    {
+      "name": "load-generation",
+      "description": "Stress APIs with ab, wrk, hey, siege, and k6",
+      "commands": [
+        "ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users",
+        "wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users",
+        "hey -z 60s -c 200 http://localhost:8080/api/v1/users",
+        "k6 run --vus 50 --duration 2m stress.js",
+        "siege -c 100 -t 60s http://localhost:8080/api/v1/users"
+      ],
+      "examples": [
+        "ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users",
+        "wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users",
+        "k6 run --vus 50 --duration 2m stress.js"
+      ],
+      "parameters": [
+        {
+          "name": "concurrency",
+          "type": "integer",
+          "description": "Concurrent connections or VUs"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Test duration for time-based generators"
+        },
+        {
+          "name": "requests",
+          "type": "integer",
+          "description": "Total request count for ab"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ApacheBench manual",
+      "type": "documentation",
+      "source": "https://httpd.apache.org/docs/2.4/programs/ab.html",
+      "description": "ab options and output metrics"
+    },
+    {
+      "title": "k6 docs",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/k6/latest/",
+      "description": "Scripting load tests with thresholds"
+    }
+  ],
+  "instructions": "# Stress Testing\n\nHand-crafted skill for pushing APIs to their limits.\n\n## What this skill does\n\n- Generates sustained load with ab, wrk, hey, siege, and k6\n- Reports throughput, latency percentiles, and failure counts\n- Finds the breaking point before users do\n\n## When to use\n\n- Capacity planning before a launch\n- Verifying autoscaling kicks in\n- Reproducing latency issues under concurrency\n\n## Real commands\n\n```bash\n# ApacheBench: 10k requests, 100 concurrent, keep-alive\nab -n 10000 -c 100 -k http://localhost:8080/api/v1/users\n\n# wrk: 4 threads, 100 connections, 30s\nwrk -t4 -c100 -d30s http://localhost:8080/api/v1/users\n\n# hey: 60s with 200 concurrent\nhey -z 60s -c 200 http://localhost:8080/api/v1/users\n\n# k6 with thresholds\nk6 run --vus 50 --duration 2m stress.js\n\n# siege: 100 concurrent for 60s\nsiege -c 100 -t 60s http://localhost:8080/api/v1/users\n```\n\n## Reading results\n\n- Requests per second vs concurrency: find the knee\n- Failed requests and socket timeouts indicate the ceiling\n- Watch server CPU/mem during the run: kubectl top or top\n\n## k6 thresholds\n\n```javascript\nexport const options = {\n  vus: 50,\n  duration: \"2m\",\n  thresholds: {\n    http_req_failed: [\"rate<0.01\"],\n    http_req_duration: [\"p(95)<800\"],\n  },\n};\n```\n\n## Testing\n\n```bash\nab -n 5000 -c 50 -k http://localhost:8080/health\nhey -z 30s -c 100 http://localhost:8080/api/v1/users\n```\n\n## Best practices\n\n- Warm up before measuring; cold caches skew results\n- Ramp concurrency in steps and record each plateau\n- Never stress production: use staging with identical sizing\n",
+  "examples": [
+    {
+      "input": "How many requests/sec can my API handle?",
+      "output": "wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users reports Requests/sec, latency, and socket errors."
+    },
+    {
+      "input": "Find the concurrency where latency explodes",
+      "output": "Run hey at -c 50, 100, 200, 400 and compare p95 latencies; the knee is your capacity limit."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "stress-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-stress-testing"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Stress Testing. You do it through load-generation: Stress APIs with ab, wrk, hey, siege, and k6. The commands are real, e.g. `ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "stress-testing",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "load-generation",
+        "name": "concurrency",
+        "type": "integer",
+        "description": "Concurrent connections or VUs"
+      },
+      {
+        "capability": "load-generation",
+        "name": "duration",
+        "type": "string",
+        "description": "Test duration for time-based generators"
+      },
+      {
+        "capability": "load-generation",
+        "name": "requests",
+        "type": "integer",
+        "description": "Total request count for ab"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "hey",
+    "siege",
+    "wrk"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/stress-testing-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/stress-testing-skill.yaml",
+    "checksum": "e5e4f904e5b7d80dc974b60433a8866424f0b1591a86fc1f897c4cf7f2b56716"
+  }
+}

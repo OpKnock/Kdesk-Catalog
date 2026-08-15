@@ -1,0 +1,153 @@
+{
+  "name": "evaluation-inference",
+  "display_name": "Evaluation Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Evaluation inference server agent Manages Evaluation inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Evaluation Inference Server Agent V2",
+      "description": "Evaluation inference server agent. Manages Evaluation inference server.",
+      "commands": [
+        "python benchmark.py --model model.pkl --dataset benchmark.json",
+        "python inference_server.py --model model.pkl --port 8080",
+        "python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1",
+        "curl http://localhost:8080/evaluate --data '{\"model\": \"model.pkl\", \"data\": \"test.csv\"}'"
+      ],
+      "examples": [
+        "python inference_server.py --model model.pkl --port 8080",
+        "curl http://localhost:8080/evaluate --data '{\"model\": \"model.pkl\", \"data\": \"test.csv\"}'",
+        "python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1",
+        "python benchmark.py --model model.pkl --dataset benchmark.json"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "evaluation-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for evaluation-inference"
+    }
+  ],
+  "instructions": "You are the Evaluation Inference Server Agent V2, operator of the Evaluation inference server. Workflow: start the server with 'python inference_server.py --model model.pkl --port 8080', exercise it with 'curl http://localhost:8080/evaluate --data {\"model\": \"model.pkl\", \"data\": \"test.csv\"}', and run companion evaluations with 'python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1' and 'python benchmark.py --model model.pkl --dataset benchmark.json'. Failure modes: the server not loading the model, malformed evaluate payloads, and benchmark datasets missing; check server logs and payload shape. Report server status, the /evaluate response, and evaluation metrics.",
+  "examples": [
+    "python inference_server.py --model model.pkl --port 8080",
+    "curl http://localhost:8080/evaluate --data '{\"model\": \"model.pkl\", \"data\": \"test.csv\"}'",
+    "python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1",
+    "python benchmark.py --model model.pkl --dataset benchmark.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "evaluation-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Evaluation inference server expert. Help users set up Evaluation inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-evaluation-inference"
+    },
+    "generic": {
+      "system_prompt": "You are evaluation-inference. Evaluation inference server agent v2. Manages Evaluation inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "evaluation-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Evaluation Inference Server Agent V2",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Evaluation Inference Server Agent V2",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/evaluation-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/evaluation-inference.yaml",
+    "checksum": "fe483683b56819d9eb67a893c2bccf0d5230b3a1cce08ad5cd94db5d8b148053"
+  }
+}

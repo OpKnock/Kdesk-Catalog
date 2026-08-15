@@ -1,0 +1,171 @@
+{
+  "name": "maven-dependency-scan",
+  "display_name": "Maven Dependency Scan",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mvn"
+  ],
+  "capabilities": [
+    {
+      "name": "dependency-check",
+      "description": "Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS findings",
+      "commands": [
+        "mvn org.owasp:dependency-check-maven:check",
+        "mvn dependency-check:check -DfailBuildOnCVSS=7 -Dformat=ALL",
+        "mvn dependency-check:update-only",
+        "mvn dependency-check:aggregate -Dformat=JSON",
+        "mvn dependency-check:check -DnvdApiKey=$NVD_API_KEY -DsuppressionFiles=suppressions.xml"
+      ],
+      "examples": [
+        "mvn org.owasp:dependency-check-maven:check -Dformat=HTML",
+        "mvn dependency-check:aggregate -Dformat=ALL -DoutputDirectory=target/dc",
+        "mvn verify -Ddependency-check.failBuildOnCVSS=8"
+      ],
+      "parameters": [
+        {
+          "name": "failBuildOnCVSS",
+          "type": "number",
+          "description": "Fail the build when a vulnerability with CVSS score >= this value is found"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Report format: HTML, JSON, XML, SARIF, CSV, or ALL"
+        },
+        {
+          "name": "suppressionFiles",
+          "type": "string",
+          "description": "XML file listing false-positive suppressions"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OWASP Dependency-Check docs",
+      "type": "documentation",
+      "source": "https://jeremylong.github.io/DependencyCheck/",
+      "description": "Maven plugin goals, NVD API setup, suppression file format"
+    },
+    {
+      "title": "Dependency-Check Maven plugin",
+      "type": "documentation",
+      "source": "https://jeremylong.github.io/DependencyCheck/dependency-check-maven/",
+      "description": "Plugin configuration properties and CI usage"
+    }
+  ],
+  "instructions": "# Maven Dependency Scan\n\nUses OWASP Dependency-Check to identify known vulnerabilities (CVE) in every direct\nand transitive Maven dependency.\n\n## When to Use\n\n- Scanning a Maven project before release\n- Enforcing a CVSS threshold gate in CI\n- Checking a dependency tree for CVEs after a version bump\n\n## Real Commands\n\n```bash\n# Basic scan (writes report to target/dependency-check-report.html)\nmvn org.owasp:dependency-check-maven:check\n\n# Fail the build on CVSS >= 7, all report formats\nmvn dependency-check:check -DfailBuildOnCVSS=7 -Dformat=ALL\n\n# Update the local NVD cache only (no scan)\nmvn dependency-check:update-only -DnvdApiKey=$NVD_API_KEY\n\n# Aggregate across all modules of a multi-module build\nmvn dependency-check:aggregate -Dformat=JSON -DoutputDirectory=target/dc\n\n# With suppression file for known false positives\nmvn dependency-check:check -DsuppressionFiles=suppressions.xml\n```\n\n## Suppressions Example (suppressions.xml)\n\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<suppressions xmlns=\"https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd\">\n  <suppress>\n    <notes>Only affects Windows builds</notes>\n    <packageUrl regex=\"true\">^pkg:maven/.*</packageUrl>\n    <cve>CVE-2023-99999</cve>\n  </suppress>\n</suppressions>\n```\n\n## Best Practices\n\n- Export an NVD API key (`-DnvdApiKey`) to avoid rate-limit failures\n- Start with `-DfailBuildOnCVSS=11` to baseline, then tighten to 7\n- Keep suppressions file reviewed and commented\n- Cache reports (`-DoutputDirectory=target/dc`) for auditing\n\n## Example Response\n\nA scan that finds a vulnerable log4j transitive dep reports the exact package\ncoordinates, the CVE ID, CVSS score, and the affected version range, then the agent\nrecommends the upgraded version.",
+  "examples": [
+    {
+      "input": "Scan this project for vulnerable dependencies",
+      "output": "Runs mvn dependency-check:check -Dformat=ALL, reads the HTML report for CVE matches, and lists each vulnerable GAV with its fix version"
+    },
+    {
+      "input": "Block builds with critical CVEs",
+      "output": "Adds mvn dependency-check:check -DfailBuildOnCVSS=7 to the CI verify stage and documents -DnvdApiKey setup"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "maven-dependency-scan.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-maven-dependency-scan"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Maven Dependency Scan. You do it through dependency-check: Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS findings. The commands are real, e.g. `mvn org.owasp:dependency-check-maven:check`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "maven-dependency-scan",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "dependency-check",
+        "name": "failBuildOnCVSS",
+        "type": "number",
+        "description": "Fail the build when a vulnerability with CVSS score >= this value is found"
+      },
+      {
+        "capability": "dependency-check",
+        "name": "format",
+        "type": "string",
+        "description": "Report format: HTML, JSON, XML, SARIF, CSV, or ALL"
+      },
+      {
+        "capability": "dependency-check",
+        "name": "suppressionFiles",
+        "type": "string",
+        "description": "XML file listing false-positive suppressions"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mvn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/maven-dependency-scan-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/maven-dependency-scan-skill.yaml",
+    "checksum": "406ab70fb5ba5b141671569dd8971a4d823645d665249a0ecd32def3e010779c"
+  }
+}

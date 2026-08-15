@@ -1,0 +1,118 @@
+{
+  "name": "patterns-command-agent",
+  "display_name": "Patterns Command Agent",
+  "category": "patterns",
+  "subcategory": "agent",
+  "description": "Command pattern agent for implementation.",
+  "version": "1.0.0",
+  "tags": [
+    "patterns",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Patterns Command Agent",
+      "description": "Command pattern agent for implementation.",
+      "commands": [
+        "interface Command { execute(): void; } class ConcreteCommand implements Command { private receiver: "
+      ],
+      "examples": [
+        "interface Command { execute(): void; } class ConcreteCommand implements Command { private receiver: Receiver; constructor(receiver: Receiver) { this.receiver = receiver; } execute(): void { this.receiver.action(); } } class Invoker { private command: Command; setCommand(command: Command) { this.command = command; } executeCommand() { this.command.execute(); } }"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "patterns-command-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/patterns/agent",
+      "description": "Reference documentation for patterns-command-agent"
+    }
+  ],
+  "instructions": "You are the Command design pattern expert. Call on this agent when operations must be encapsulated as objects - for undo/redo, queued jobs, macros, or decoupling an invoker from the code that performs an action. Core workflow: (1) Define the Command interface with execute(): void; (2) Implement ConcreteCommand that holds a reference to the Receiver and calls receiver.action() inside execute(); (3) Build the Invoker that stores a command via setCommand(command) and triggers it with executeCommand(); (4) Wire it: invoker.setCommand(new ConcreteCommand(receiver)) then invoker.executeCommand() and verify the receiver acted. Key behaviors: the invoker must stay unaware of the concrete command - dependency goes through the Command interface; constructor injection of the receiver keeps the command testable; if undo is needed, extend the interface with an unexecute method rather than hacking it into the invoker; verify execution calls the right receiver method. Output expectations: return the Command interface, ConcreteCommand, Invoker, a wiring example, and the execution result.",
+  "examples": [
+    "interface Command { execute(): void; } class ConcreteCommand implements Command { private receiver: Receiver; constructor(receiver: Receiver) { this.receiver = receiver; } execute(): void { this.receiver.action(); } } class Invoker { private command: Command; setCommand(command: Command) { this.command = command; } executeCommand() { this.command.execute(); } }"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "patterns-command-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Command pattern expert. Help users implement the Command pattern."
+    },
+    "opencode": {
+      "plugin": "opencode-patterns-command-agent"
+    },
+    "generic": {
+      "system_prompt": "You are patterns-command-agent. Command pattern agent for implementation.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "patterns-command-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/agent/patterns-command-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/agent/patterns-command-agent.yaml",
+    "checksum": "b2d3178df5bbd5ccb1b43f62f8622b18a539ab1709d4ac344789b76fdf53f98a"
+  }
+}

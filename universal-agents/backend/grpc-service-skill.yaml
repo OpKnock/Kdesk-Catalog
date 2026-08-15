@@ -1,0 +1,123 @@
+name: grpc-service
+display_name: Grpc Service
+category: backend
+subcategory: general
+description: Builds gRPC services with protobuf definitions, grpcurl inspection, and language-specific
+  code generation.
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- buf
+- grpcurl
+- protoc
+capabilities:
+- commands:
+  - protoc --go_out=. --go-grpc_out=. proto/order.proto
+  - protoc --python_out=. --grpc_python_out=. proto/order.proto
+  - protoc --js_out=import_style=commonjs,binary:./out proto/order.proto
+  - buf generate
+  - buf lint
+  description: Compile protobuf definitions and generate server/client stubs.
+  name: protobuf-codegen
+  examples:
+  - protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. proto/*.proto
+  - buf generate --path proto
+  - buf breaking --against .git#branch=main
+  parameters:
+  - description: Output directory for generated code
+    name: out
+    type: string
+  - description: Protobuf file to compile
+    name: proto-file
+    type: string
+- commands:
+  - grpcurl -plaintext localhost:50051 list
+  - grpcurl -plaintext -d "{\"id\":\"1\"}" localhost:50051 order.OrderService/GetOrder
+  - grpcurl -plaintext localhost:50051 describe order.OrderService
+  - buf curl --schema proto localhost:50051 order.OrderService/GetOrder -d "{\"id\":\"1\"}"
+  description: Call and inspect gRPC services without writing code.
+  name: grpc-debugging
+  examples:
+  - grpcurl -plaintext localhost:50051 list order
+  - grpcurl -plaintext -import-path proto -proto order.proto -d "{}" localhost:50051 order.OrderService/CreateOrder
+  - grpcurl -plaintext localhost:50051 describe order.Order
+  parameters:
+  - description: Service name
+    name: service
+    type: string
+  - description: Method name
+    name: method
+    type: string
+  - description: JSON request body
+    name: data
+    type: string
+knowledge:
+- title: gRPC Docs
+  description: Concepts, languages, and codegen guides
+  source: https://grpc.io/docs/
+  type: documentation
+- title: Protobuf Language Guide
+  description: proto3 field types and rules
+  source: https://protobuf.dev/programming-guides/proto3/
+  type: documentation
+- title: grpcurl
+  description: CLI for calling gRPC services
+  source: https://github.com/fullstorydev/grpcurl
+  type: documentation
+instructions: "# gRPC Service\n\nBuild high-performance RPC services with protobuf.\n\n## When to Use\n\
+  \n- Internal service-to-service communication\n- Streaming workloads (bidirectional streams)\n- Polyglot\
+  \ systems needing generated clients\n- Services needing strict typed contracts\n\n## Proto Example\n\
+  \n```proto\nsyntax = \"proto3\";\n\npackage order;\n\nservice OrderService {\n  rpc GetOrder(GetOrderRequest)\
+  \ returns (Order);\n}\n\nmessage GetOrderRequest {\n  string id = 1;\n}\n\nmessage Order {\n  string\
+  \ id = 1;\n  double total = 2;\n  repeated string items = 3;\n}\n```\n\n## Commands\n\n```bash\n# Generate\
+  \ Go stubs\nprotoc --go_out=. --go_opt=paths=source_relative \\\n  --go-grpc_out=. proto/order.proto\n\
+  \n# Python stubs\nprotoc --python_out=. --grpc_python_out=. proto/order.proto\n\n# Buf workflow\nbuf\
+  \ lint\nbuf generate\nbuf breaking --against .git#branch=main\n\n# Inspect and call live servers\ngrpcurl\
+  \ -plaintext localhost:50051 list\ngrpcurl -plaintext -d '{\"id\":\"1\"}' localhost:50051 order.OrderService/GetOrder\n\
+  grpcurl -plaintext localhost:50051 describe order.OrderService\n```\n\n## Best Practices\n\n- Never\
+  \ break wire compatibility; add fields instead of renaming\n- Use buf breaking in CI to catch incompatible\
+  \ changes\n- Set deadlines on every client call; servers enforce them too\n- Keep messages small; gRPC\
+  \ default max message is 4MB\n- Reserve field numbers when planning for removal\n- Always run a plaintext\
+  \ grpcurl check before enabling TLS"
+examples:
+- input: Call my gRPC service from the CLI
+  output: Agent uses grpcurl -plaintext list to discover services, then invokes a method with -d JSON
+    payload.
+- input: My gRPC clients are breaking between versions
+  output: Agent adds buf breaking CI check and explains field number etiquette.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grpc-service.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grpc-service
+  generic:
+    system_prompt: 'You work Grpc Service hands-on. You do it through protobuf-codegen: Compile protobuf
+      definitions and generate server/client stubs. The commands are real, e.g. `protoc --go_out=. --go-grpc_out=.
+      proto/order.proto`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

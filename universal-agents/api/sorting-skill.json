@@ -1,0 +1,175 @@
+{
+  "name": "sorting",
+  "display_name": "Sorting",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted sorting skill: sort data on the command line and in code — sort, sort -h for human sizes, jq sort_by, and SQL ORDER BY for API responses.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "python",
+    "sort",
+    "sqlite3"
+  ],
+  "capabilities": [
+    {
+      "name": "sort-data",
+      "description": "Sort files, JSON, and database results with the right tool",
+      "commands": [
+        "sort -t, -k2 -n sales.csv",
+        "du -sh * | sort -h",
+        "jq 'sort_by(.price) | reverse' products.json",
+        "python -c 'data = [3,1,2]; print(sorted(data, key=lambda x: -x))'",
+        "sqlite3 app.db \"SELECT name FROM users ORDER BY created_at DESC LIMIT 10;\""
+      ],
+      "examples": [
+        "sort -t, -k2 -n sales.csv",
+        "du -sh * | sort -h | tail -5",
+        "jq 'sort_by(.price)' products.json"
+      ],
+      "parameters": [
+        {
+          "name": "field",
+          "type": "integer",
+          "description": "Sort key column for sort -k"
+        },
+        {
+          "name": "reverse",
+          "type": "boolean",
+          "description": "Descending order"
+        },
+        {
+          "name": "numeric",
+          "type": "boolean",
+          "description": "Numeric compare instead of lexicographic"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GNU sort manual",
+      "type": "documentation",
+      "source": "https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html",
+      "description": "sort flags: -k, -n, -h, -t, -r"
+    },
+    {
+      "title": "jq manual (sort functions)",
+      "type": "documentation",
+      "source": "https://jqlang.github.io/jq/manual/#sort-sort_by",
+      "description": "sort_by and friends"
+    }
+  ],
+  "instructions": "# Sorting\n\nHand-crafted skill for sorting data correctly on the CLI and in code.\n\n## What this skill does\n\n- Sorts CSV and text by column with numeric awareness\n- Sorts human-readable sizes like 4.2K and 1.3G\n- Sorts JSON arrays and SQL results for API work\n\n## When to use\n\n- Ordering report data before pasting into a table\n- Checking the largest files or slowest endpoints\n- Deciding the sort order an API should return\n\n## Real commands\n\n```bash\n# CSV by column 2 numerically\nsort -t, -k2 -n sales.csv\n\n# Human sizes\ndu -sh * | sort -h | tail -5\n\n# JSON by price, then reversed\njq 'sort_by(.price)' products.json\njq 'sort_by(.price) | reverse' products.json\n\n# Python\npython -c 'data = [3,1,2]; print(sorted(data, key=lambda x: -x))'\n\n# SQL\nsqlite3 app.db \"SELECT name FROM users ORDER BY created_at DESC LIMIT 10;\"\n```\n\n## Comparing strings vs numbers\n\n- sort -n for numeric, plain sort for lexicographic (10 < 2!)\n- sort -h understands 2K < 1M\n- jq sort_by compares numbers correctly when they are numbers\n\n## Testing\n\n```bash\nprintf 'b,2\na,10\nc,1\n' | sort -t, -k2 -n   # c,1 b,2 a,10\nprintf 'b,2\na,10\nc,1\n' | sort              # a,10 b,2 c,1\n```\n\n## Best practices\n\n- Always state -n or -h: lexicographic ordering of numbers misleads\n- For APIs, sort server-side; clients should never re-sort big pages\n- Add secondary keys: sort -k1,1 -k2,2n for stable results\n",
+  "examples": [
+    {
+      "input": "Which 5 directories use the most disk?",
+      "output": "du -sh */ 2>/dev/null | sort -h | tail -5 lists the largest by human-readable size."
+    },
+    {
+      "input": "Sort products cheapest-first in JSON",
+      "output": "jq 'sort_by(.price)' products.json returns the array ordered by the price field ascending."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "sorting.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-sorting"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Sorting. You do it through sort-data: Sort files, JSON, and database results with the right tool. The commands are real, e.g. `sort -t, -k2 -n sales.csv`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "sorting",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sort-data",
+        "name": "field",
+        "type": "integer",
+        "description": "Sort key column for sort -k"
+      },
+      {
+        "capability": "sort-data",
+        "name": "reverse",
+        "type": "boolean",
+        "description": "Descending order"
+      },
+      {
+        "capability": "sort-data",
+        "name": "numeric",
+        "type": "boolean",
+        "description": "Numeric compare instead of lexicographic"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python",
+    "sort",
+    "sqlite3"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/sorting-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/sorting-skill.yaml",
+    "checksum": "b7611ce467624bc7df56ea78d46706b7c91f92600a420d51b7bb2946a471b800"
+  }
+}

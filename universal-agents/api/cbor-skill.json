@@ -1,0 +1,242 @@
+{
+  "name": "cbor",
+  "display_name": "Cbor",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Encodes and decodes CBOR (RFC 8949) data with cbor2 (Python) and cbor (Node.js), including hex inspection and streaming.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "file",
+    "node",
+    "npm",
+    "pip",
+    "python",
+    "xxd"
+  ],
+  "capabilities": [
+    {
+      "name": "python-cbor2",
+      "description": "Encode/decode CBOR with the cbor2 library.",
+      "commands": [
+        "pip install cbor2",
+        "python -c \"import cbor2; d=cbor2.dumps({'hello':'world'}); print(d.hex())\"",
+        "python -c \"import cbor2; print(cbor2.loads(bytes.fromhex('a16568656c6c6f65776f726c64')))\"",
+        "python -c \"import cbor2; print(len(cbor2.dumps({'hello':'world'})))\""
+      ],
+      "examples": [
+        "python -c \"import cbor2; d=cbor2.dumps({'hello':'world', 'n': 42}); print(d.hex())\"",
+        "python -c \"import cbor2; print(cbor2.loads(cbor2.dumps({'a':[1,2,3]})))\"",
+        "python -c \"import cbor2; print(cbor2.dumps(1234567890123456789).hex())\""
+      ],
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Value to encode"
+        },
+        {
+          "name": "hex",
+          "type": "string",
+          "description": "Hex string to decode"
+        }
+      ]
+    },
+    {
+      "name": "node-cbor",
+      "description": "Encode/decode CBOR with the Node.js cbor package.",
+      "commands": [
+        "npm install cbor",
+        "node -e \"const cbor=require('cbor'); console.log(cbor.encode({hello:'world'}).toString('hex'))\"",
+        "node -e \"const cbor=require('cbor'); cbor.decodeFirst(Buffer.from('a16568656c6c6f65776f726c64','hex')).then(console.log)\"",
+        "node -e \"const cbor=require('cbor'); const b=cbor.encode([1,2,3]); console.log(b.length, b.toString('hex'))\""
+      ],
+      "examples": [
+        "node -e \"const cbor=require('cbor'); console.log(cbor.encode({a:1,b:'x'}).toString('hex'))\"",
+        "node -e \"const cbor=require('cbor'); cbor.decodeFirst(cbor.encode(1234567890123456789n ? 1234567890123456789 : 42)).then(console.log)\"",
+        "node -e \"const cbor=require('cbor'); cbor.encodeCanonical({b:1,a:2}).toString('hex').then ? cbor.encodeCanonical({b:1,a:2}).then(b=>console.log(b.toString('hex'))) : console.log(cbor.encodeCanonical({b:1,a:2}).toString('hex'))\""
+      ],
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "JS value to encode"
+        },
+        {
+          "name": "hex",
+          "type": "string",
+          "description": "Hex input to decode"
+        }
+      ]
+    },
+    {
+      "name": "inspect",
+      "description": "Inspect raw CBOR bytes.",
+      "commands": [
+        "xxd data.cbor | head -20",
+        "xxd data.cbor | grep -A2 -B2 'a1'",
+        "python -c \"import cbor2; data=open('data.cbor','rb').read(); print(cbor2.loads(data))\"",
+        "file data.cbor"
+      ],
+      "examples": [
+        "xxd data.cbor | head -10",
+        "python -c \"import cbor2; print(cbor2.loads(open('data.cbor','rb').read()))\"",
+        "file data.cbor && xxd data.cbor | head -5"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "CBOR file path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RFC 8949 (CBOR)",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc8949",
+      "description": "CBOR specification"
+    },
+    {
+      "title": "cbor2 (Python)",
+      "type": "documentation",
+      "source": "https://cbor2.readthedocs.io/",
+      "description": "Python CBOR library"
+    },
+    {
+      "title": "cbor.me Playground",
+      "type": "documentation",
+      "source": "https://cbor.me/",
+      "description": "Interactive CBOR decode tool"
+    }
+  ],
+  "instructions": "# CBOR\n\n## What this skill does\n\nEncodes and decodes CBOR (RFC 8949) data: cbor2 for Python, cbor for Node.js, hex inspection with xxd, and size comparison against JSON.\n\n## When to use\n\n- Compact binary encoding for APIs or IoT payloads\n- Reducing payload size vs JSON\n- Debugging raw CBOR byte streams\n\n## Real commands\n\n```bash\n# Python\npip install cbor2\npython -c \"import cbor2; d=cbor2.dumps({'hello':'world'}); print(d.hex())\"\npython -c \"import cbor2; print(cbor2.loads(bytes.fromhex('a16568656c6c6f65776f726c64')))\"\n\n# Node\nnpm install cbor\nnode -e \"const cbor=require('cbor'); console.log(cbor.encode({hello:'world'}).toString('hex'))\"\nnode -e \"const cbor=require('cbor'); cbor.decodeFirst(Buffer.from('a16568656c6c6f65776f726c64','hex')).then(console.log)\"\n\n# Inspect raw bytes\nxxd data.cbor | head -10\nfile data.cbor\n```\n\n## Testing\n\n- Round-trip encode/decode and compare with the original\n- Compare byte lengths vs JSON.stringify for the same data\n\n## Best practices\n\n- Use canonical encoding when hashing payloads\n- Prefer definite-length items for streaming\n- Validate sizes; CBOR can embed large indefinite strings",
+  "examples": [
+    {
+      "input": "Show the CBOR encoding of our telemetry sample",
+      "output": "Encodes the sample with cbor2 and shows the hex bytes with annotations from RFC 8949 (map header, string lengths)."
+    },
+    {
+      "input": "Is CBOR smaller than JSON for our payload?",
+      "output": "Compares len(cbor2.dumps(x)) against len(json.dumps(x).encode()) and recommends when to switch."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cbor.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cbor"
+    },
+    "generic": {
+      "system_prompt": "You work Cbor hands-on. You do it through python-cbor2: Encode/decode CBOR with the cbor2 library. The commands are real, e.g. `pip install cbor2`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cbor",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "python-cbor2",
+        "name": "value",
+        "type": "string",
+        "description": "Value to encode"
+      },
+      {
+        "capability": "python-cbor2",
+        "name": "hex",
+        "type": "string",
+        "description": "Hex string to decode"
+      },
+      {
+        "capability": "node-cbor",
+        "name": "value",
+        "type": "string",
+        "description": "JS value to encode"
+      },
+      {
+        "capability": "node-cbor",
+        "name": "hex",
+        "type": "string",
+        "description": "Hex input to decode"
+      },
+      {
+        "capability": "inspect",
+        "name": "file",
+        "type": "string",
+        "description": "CBOR file path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "file",
+    "node",
+    "npm",
+    "pip",
+    "python",
+    "xxd"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/cbor-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/cbor-skill.yaml",
+    "checksum": "4e5cc5f4ff39ddb9b18ce75152d7e85e89e0ca6fd0e7d7d5aae9896f8d4015ad"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "name": "patterns-strategy-agent",
+  "display_name": "Patterns Strategy Agent",
+  "category": "patterns",
+  "subcategory": "agent",
+  "description": "Strategy pattern agent for implementation.",
+  "version": "1.0.0",
+  "tags": [
+    "patterns",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Patterns Strategy Agent",
+      "description": "Strategy pattern agent for implementation.",
+      "commands": [
+        "interface Strategy { execute(a: number, b: number): number; } class AddStrategy implements Strategy "
+      ],
+      "examples": [
+        "interface Strategy { execute(a: number, b: number): number; } class AddStrategy implements Strategy { execute(a: number, b: number): number { return a + b; } } class Context { private strategy: Strategy; setStrategy(strategy: Strategy) { this.strategy = strategy; } executeStrategy(a: number, b: number) { return this.strategy.execute(a, b); } }"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "patterns-strategy-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/patterns/agent",
+      "description": "Reference documentation for patterns-strategy-agent"
+    }
+  ],
+  "instructions": "You are the Strategy design pattern expert. Call on this agent when interchangeable algorithms must be selected at runtime - e.g. different pricing, sorting, or validation strategies - while the calling context stays untouched. Core workflow: (1) Define the Strategy interface with execute(a: number, b: number): number; (2) Implement concrete strategies such as AddStrategy that return a + b; (3) Build the Context that holds the current strategy via setStrategy(strategy) and delegates with executeStrategy(a, b) calling this.strategy.execute(a, b); (4) Swap strategies at runtime and verify each produces its expected result. Key behaviors: the context must depend only on the Strategy interface, never a concrete implementation; setStrategy enables runtime swapping - expose it whenever the algorithm can change; ensure each strategy honors the same contract so results stay comparable; add new algorithms as new strategy classes without touching the context. Output expectations: return the Strategy interface, concrete strategies, the Context, a swap example, and the results from each strategy.",
+  "examples": [
+    "interface Strategy { execute(a: number, b: number): number; } class AddStrategy implements Strategy { execute(a: number, b: number): number { return a + b; } } class Context { private strategy: Strategy; setStrategy(strategy: Strategy) { this.strategy = strategy; } executeStrategy(a: number, b: number) { return this.strategy.execute(a, b); } }"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "patterns-strategy-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Strategy pattern expert. Help users implement the Strategy pattern."
+    },
+    "opencode": {
+      "plugin": "opencode-patterns-strategy-agent"
+    },
+    "generic": {
+      "system_prompt": "You are patterns-strategy-agent. Strategy pattern agent for implementation.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "patterns-strategy-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/agent/patterns-strategy-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/agent/patterns-strategy-agent.yaml",
+    "checksum": "1ab25d2d62693c1e3e49f895912e4f923d8a945ffedd6efb7eecba45010009d9"
+  }
+}

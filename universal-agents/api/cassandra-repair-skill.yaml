@@ -1,0 +1,205 @@
+name: cassandra-repair
+display_name: Cassandra Repair
+category: api
+subcategory: general
+description: 'Runs and monitors Cassandra anti-entropy repairs: full/incremental repairs, repair state,
+  and post-repair verification.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cqlsh
+- nodetool
+capabilities:
+- name: run-repair
+  description: Execute and schedule repairs.
+  commands:
+  - nodetool repair -pr
+  - nodetool repair -full mykeyspace
+  - nodetool repair -pr mykeyspace users
+  - nodetool repair -pr -dc dc1 mykeyspace
+  - nodetool repair -pr --parallelism parallel mykeyspace
+  examples:
+  - nodetool repair -pr mykeyspace users
+  - nodetool repair -full mykeyspace
+  - nodetool repair -pr -dc dc1 dc2 mykeyspace
+  parameters:
+  - name: keyspace
+    type: string
+    description: Keyspace to repair
+  - name: table
+    type: string
+    description: Table to repair
+  - name: dc
+    type: string
+    description: Datacenter filter
+- name: repair-status
+  description: Monitor repair state and consistency.
+  commands:
+  - nodetool repair -pr -st $(date -d '1 hour ago' +%s000) mykeyspace
+  - nodetool netstats
+  - nodetool status
+  - nodetool getstreamthroughput
+  - nodetool tpstats | grep -E 'REPAIR|Repair'
+  examples:
+  - nodetool netstats | grep -E 'Repair|Streaming'
+  - nodetool status | grep -E 'UN|DN'
+  - nodetool tpstats | grep Repair
+  parameters:
+  - name: start_time
+    type: string
+    description: Repair range start (ms epoch)
+  - name: end_time
+    type: string
+    description: Repair range end (ms epoch)
+- name: verification
+  description: Verify consistency after repair.
+  commands:
+  - cqlsh -e "CONSISTENCY QUORUM"
+  - nodetool status -r
+  - nodetool describecluster
+  - nodetool getendpoints mykeyspace users <pk>
+  - cqlsh -e "SELECT COUNT(*) FROM mykeyspace.users"
+  examples:
+  - nodetool status -r
+  - nodetool getendpoints mykeyspace users 42
+  - cqlsh -e "CONSISTENCY QUORUM; SELECT COUNT(*) FROM mykeyspace.users"
+  parameters:
+  - name: consistency
+    type: string
+    description: Consistency level for verification reads
+  - name: partition_key
+    type: string
+    description: PK to check endpoints for
+knowledge:
+- title: Cassandra Repair
+  type: documentation
+  source: https://cassandra.apache.org/doc/latest/cassandra/operating/repair.html
+  description: Repair concepts and commands
+- title: nodetool Reference
+  type: documentation
+  source: https://cassandra.apache.org/doc/latest/cassandra/operating/nodetool/
+  description: repair, netstats, status options
+- title: Repair Strategies
+  type: documentation
+  source: https://thelastpickle.com/blog/2017/09/18/repairs-in-cassandra.html
+  description: Datastax repair best practices
+instructions: '# Cassandra Repair
+
+
+  ## What this skill does
+
+
+  Runs anti-entropy repairs: primary-range (incremental) and full repairs, datacenter-scoped repairs,
+  monitoring stream rates, and verifying consistency afterward.
+
+
+  ## When to use
+
+
+  - Detected drift between replicas (inconsistency)
+
+  - Routine maintenance (weekly incremental, monthly full)
+
+  - After node additions/removals
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Primary-range repair (recommended default)
+
+  nodetool repair -pr
+
+
+  # Full repair of one keyspace
+
+  nodetool repair -full mykeyspace
+
+
+  # Table-scoped
+
+  nodetool repair -pr mykeyspace users
+
+
+  # Datacenter-scoped
+
+  nodetool repair -pr -dc dc1 mykeyspace
+
+
+  # Monitor
+
+  nodetool netstats | grep -E ''Repair|Streaming''
+
+  nodetool status -r
+
+  ```
+
+
+  ## Scheduling
+
+
+  - Run repairs from a dedicated node, not app nodes
+
+  - Incremental repairs daily; full repairs monthly
+
+
+  ## Testing
+
+
+  - Verify QUORUM reads return consistent counts after repair
+
+  - Check nodetool status shows UN for all nodes
+
+
+  ## Best practices
+
+
+  - Run repairs off-peak with stream throttling
+
+  - Monitor repair duration and failure rates
+
+  - Always run -pr to avoid overlapping repairs'
+examples:
+- input: Two replicas disagree on a partition
+  output: Runs nodetool repair -pr on the keyspace, watches netstats streaming, and verifies endpoints
+    agree with getendpoints.
+- input: Set up regular repairs
+  output: Shows a weekly cron using nodetool repair -pr and a monthly -full, with stream throttling guidance.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cassandra-repair.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cassandra-repair
+  generic:
+    system_prompt: 'You work Cassandra Repair hands-on. You do it through run-repair: Execute and schedule
+      repairs. The commands are real, e.g. `nodetool repair -pr`. You work hands-on and only report outcomes
+      you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

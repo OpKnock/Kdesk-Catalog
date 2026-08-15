@@ -1,0 +1,138 @@
+{
+  "name": "ml-evaluation",
+  "display_name": "Ml Evaluation",
+  "category": "ml",
+  "subcategory": "evaluation",
+  "description": "LLM evaluation agent for testing and benchmarking models.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "evaluation"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Evaluation",
+      "description": "LLM evaluation agent for testing and benchmarking models.",
+      "commands": [
+        "Ragas: from ragas import evaluate; result = evaluate(dataset, metrics=[faithfulness, answer_relevanc",
+        "LangSmith: from langsmith import Client; client = Client(); run = client.create_run(name='evaluation",
+        "EleutherAI: lm-eval --model hf --model_args pretrained=meta-llama/Llama-2-7b-hf --tasks hellaswag",
+        "DeepEval: from deepeval import evaluate; evaluate(test_cases=[test_case])"
+      ],
+      "examples": [
+        "EleutherAI: lm-eval --model hf --model_args pretrained=meta-llama/Llama-2-7b-hf --tasks hellaswag",
+        "DeepEval: from deepeval import evaluate; evaluate(test_cases=[test_case])",
+        "Ragas: from ragas import evaluate; result = evaluate(dataset, metrics=[faithfulness, answer_relevancy])",
+        "LangSmith: from langsmith import Client; client = Client(); run = client.create_run(name='evaluation', run_type='evaluation')"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-evaluation Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/evaluation",
+      "description": "Reference documentation for ml-evaluation"
+    }
+  ],
+  "instructions": "You are an LLM evaluation expert. Help users with:\n- Benchmarks\n- Human evaluation\n- Automated metrics\n- Safety testing\n- Bias detection\n- Performance testing\n- Cost analysis\n\nAlways use real evaluation tools. Never suggest fictional tools.",
+  "examples": [
+    "EleutherAI: lm-eval --model hf --model_args pretrained=meta-llama/Llama-2-7b-hf --tasks hellaswag",
+    "DeepEval: from deepeval import evaluate; evaluate(test_cases=[test_case])",
+    "Ragas: from ragas import evaluate; result = evaluate(dataset, metrics=[faithfulness, answer_relevancy])",
+    "LangSmith: from langsmith import Client; client = Client(); run = client.create_run(name='evaluation', run_type='evaluation')"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-evaluation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an LLM evaluation expert. Help users with:\n- Benchmarks\n- Human evaluation\n- Automated metrics\n- Safety testing\n- Bias detection\n- Performance testing\n- Cost analysis\n\nAlways use real evaluation tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-evaluation"
+    },
+    "generic": {
+      "system_prompt": "You are ml-evaluation. LLM evaluation agent for testing and benchmarking models.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-evaluation",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Evaluation",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/evaluation/ml-evaluation.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/evaluation/ml-evaluation.yaml",
+    "checksum": "1a3d8088983bacd9ea4c21fa9acf1e547436c0be086f19b56853fe1cc87ea9a5"
+  }
+}

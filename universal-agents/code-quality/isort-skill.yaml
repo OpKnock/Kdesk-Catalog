@@ -1,0 +1,201 @@
+name: isort
+display_name: isort
+category: code-quality
+subcategory: general
+description: 'Sorts Python imports with isort: config profiles, black compatibility, section handling,
+  and CI checks.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- isort
+capabilities:
+- commands:
+  - isort src/
+  - isort --check-only src/
+  - isort --diff src/
+  - isort --profile black src/
+  - isort file1.py file2.py
+  description: Sort imports with control over profiles.
+  name: isort-sort
+  examples:
+  - isort --check-only --diff src/
+  - isort --profile black --line-length 100 src/
+  - isort --skip venv --skip migrations src/
+  parameters:
+  - description: Files or directories
+    name: paths
+    type: string
+  - description: black, django, google
+    name: profile
+    type: string
+  - description: Check without writing
+    name: check-only
+    type: boolean
+- commands:
+  - isort --version
+  - isort --settings-path pyproject.toml src/
+  - isort --show-config
+  - isort --resolve-all-configs src/
+  description: Configure import sections and settings.
+  name: isort-config
+  examples:
+  - isort --show-config | grep -A5 profile
+  - python -m isort src/
+  parameters:
+  - description: Config file path
+    name: settings-path
+    type: string
+  - name: profile
+    type: string
+    description: 'Sorting profile: black, django'
+knowledge:
+- title: isort Docs
+  description: Usage, config, and profiles
+  source: https://pycqa.github.io/isort/
+  type: documentation
+- title: isort on GitHub
+  description: Source and examples
+  source: https://github.com/PyCQA/isort
+  type: documentation
+instructions: '# isort
+
+
+  Sort Python imports consistently.
+
+
+  ## When to Use
+
+
+  - Enforcing import ordering across a Python codebase
+
+  - Pairing with black for a full formatting story
+
+  - Grouping stdlib, third-party, and first-party imports
+
+  - CI gates that catch import drift
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Sort a directory
+
+  isort src/
+
+
+  # Check only
+
+  isort --check-only src/
+
+
+  # Show diff
+
+  isort --diff src/
+
+
+  # Black-compatible profile
+
+  isort --profile black src/
+
+  ```
+
+
+  ## Config Example
+
+
+  ```toml
+
+  # pyproject.toml
+
+  [tool.isort]
+
+  profile = "black"
+
+  line_length = 100
+
+  skip = ["migrations", "venv"]
+
+  known_first_party = ["myapp"]
+
+  ```
+
+
+  ## Import Order
+
+
+  ```python
+
+  # stdlib first
+
+  import os
+
+  import sys
+
+
+  # third-party
+
+  import requests
+
+
+  # first-party
+
+  from myapp import utils
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use profile = black so black and isort agree
+
+  - Add known_first_party for your own packages
+
+  - Run isort --check-only in CI, sort in pre-commit
+
+  - Keep sections: stdlib, third-party, first-party
+
+  - Skip generated files and migrations
+
+  - Run isort before black for stable results'
+examples:
+- input: Sort imports across my project
+  output: Agent runs isort src/ with the black profile and reviews the diff before committing.
+- input: isort and black keep fighting
+  output: Agent sets profile = black in pyproject.toml and aligns line lengths.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: isort.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-isort
+  generic:
+    system_prompt: 'You take the isort seat. You do it through isort-sort: Sort imports with control over
+      profiles. The commands are real, e.g. `isort src/`. You verify each step you report and stay honest
+      about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

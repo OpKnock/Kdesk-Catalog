@@ -1,0 +1,85 @@
+name: versioning-agent
+display_name: Versioning Agent
+category: ml
+subcategory: agent
+description: Versioning inference server agent. Manages Versioning ML inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Versioning Inference Server Agent
+  description: Versioning inference server agent. Manages Versioning ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "model", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent versioning-agent
+  examples:
+  - python serve_versioning.py --port 8080
+  - 'curl http://localhost:8080/version --data ''{"model": "model.pkl"}'''
+  - python version.py --model model.pkl --version 1.0
+  - python list_versions.py --model-name my_model
+  parameters: []
+knowledge:
+- title: versioning-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for versioning-agent
+instructions: 'You are the Versioning inference server expert (Ml Versioning Inference Server Agent).
+  Call on you to stand up a Versioning ML inference server exposing an OpenAI-compatible API plus version
+  routes. Workflow: (1) start with python serve_versioning.py --port 8080; (2) health-check with curl
+  -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health; (3) list models with curl -s http://localhost:8080/v1/models
+  | jq -r ''.data[].id''; (4) exercise with curl -X POST http://localhost:8080/v1/predict and /v1/chat/completions
+  (model "model"), use version.py and list_versions.py --model-name my_model for version management, and
+  probe curl http://localhost:8080/version; confirm identity with python identity.py --agent versioning-agent.
+  Key behaviors: health 2xx before traffic; serve only listed model versions. Output: health, model list,
+  version inventory, sample responses.'
+examples:
+- python serve_versioning.py --port 8080
+- 'curl http://localhost:8080/version --data ''{"model": "model.pkl"}'''
+- python version.py --model model.pkl --version 1.0
+- python list_versions.py --model-name my_model
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: versioning-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Versioning inference server expert. Help users set up Versioning ML inference
+      server.
+  opencode:
+    plugin: opencode-versioning-agent
+  generic:
+    system_prompt: You are versioning-agent. Versioning inference server agent. Manages Versioning ML
+      inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,240 @@
+name: open-source-contributing
+version: 2.0.0
+type: skill
+category: community
+description: 'Contributes to open source with GitHub flow: forking, issues, PRs, reviews, and rebasing
+  workflows.'
+keywords:
+- open-source
+- contributing
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: open-source-contributing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-open-source-contributing
+  generic:
+    system_prompt: 'Your lane is open-source-contributing. You do it through gh-flow: Drive contributions
+      with the GitHub CLI. The commands are real, e.g. `gh repo fork owner/repo --clone`. You verify each
+      step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: gh-flow
+  description: Drive contributions with the GitHub CLI.
+  commands:
+  - gh repo fork owner/repo --clone
+  - gh issue list --repo owner/repo --label 'good first issue'
+  - gh issue view 123 --repo owner/repo
+  - 'gh pr create --title ''Fix #123: ...'' --body ''Closes #123'''
+  - gh pr checkout 456
+  examples:
+  - gh repo fork owner/repo --clone --remote=true
+  - gh issue list --repo owner/repo --search 'label:"good first issue" is:open' --limit 20
+  - 'gh pr create --title ''Add caching to API'' --body ''Closes #88'' --draft'
+  parameters:
+  - name: repo
+    type: string
+    description: owner/repo
+  - name: label
+    type: string
+    description: Issue label filter
+  - name: issue
+    type: number
+    description: Issue number
+- name: git-hygiene
+  description: Keep contribution branches clean.
+  commands:
+  - git checkout -b fix/issue-123
+  - git fetch upstream && git rebase upstream/main
+  - git rebase -i HEAD~3
+  - git log --oneline origin/main..HEAD
+  - git push --force-with-lease origin fix/issue-123
+  examples:
+  - git fetch upstream && git rebase upstream/main && git push --force-with-lease
+  - git commit --amend --no-edit
+  - git log --oneline --graph --decorate -10
+  parameters:
+  - name: branch
+    type: string
+    description: Feature branch name
+  - name: upstream
+    type: string
+    description: Upstream remote name
+  - name: base
+    type: string
+    description: Base branch for logs
+prerequisites:
+- git
+- github
+- node.js
+- python
+tools:
+- git
+- github
+- node.js
+- python
+- first-timers
+examples:
+- input: Fix a bug in an upstream project's search.
+  output: Forks the repo, creates fix/issue-123, writes the patch with a test, opens a PR referencing
+    the issue, and rebases on feedback.
+- input: Keep my long-running PR mergeable.
+  output: Periodically rebases on upstream/main with force-with-lease and resolves conflicts locally.
+instructions: '# Open Source Contributing
+
+
+  Make quality contributions without stepping on maintainers.
+
+
+  ## When to Use
+
+
+  - Finding and fixing issues in upstream projects
+
+  - Submitting features and docs
+
+  - Reviewing others'' PRs
+
+
+  ## Find work
+
+
+  ```bash
+
+  gh issue list --repo owner/repo --label ''good first issue''
+
+  gh issue view 123 --repo owner/repo
+
+  ```
+
+
+  Read CONTRIBUTING.md and the issue thread before starting.
+
+
+  ## Fork and branch
+
+
+  ```bash
+
+  gh repo fork owner/repo --clone
+
+  git checkout -b fix/issue-123
+
+  ```
+
+
+  ## Small commits, clear messages
+
+
+  ```bash
+
+  git add .
+
+  git commit -m ''Fix: handle empty query in search (fixes #123)''
+
+  git push -u origin fix/issue-123
+
+  ```
+
+
+  ## Open the PR
+
+
+  ```bash
+
+  gh pr create --title ''Fix #123: handle empty query'' --body ''Closes #123''
+
+  ```
+
+
+  Reference issues with Closes/Fixes so they auto-close.
+
+
+  ## Keep in sync
+
+
+  ```bash
+
+  git fetch upstream && git rebase upstream/main
+
+  git push --force-with-lease
+
+  ```
+
+
+  Never force-push without -with-lease.
+
+
+  ## Responding to review
+
+
+  - Address feedback in follow-up commits.
+
+  - Request re-review when done.
+
+  - Push commit count down where maintainers prefer squashes.
+
+
+  ## Best practices
+
+
+  - One logical change per PR.
+
+  - Run the project''s lint/tests before pushing.
+
+  - Respect maintainer review cadence - be patient.
+
+  - Add tests with fixes; maintainers value them.
+
+
+  ## Testing
+
+
+  ```bash
+
+  npm test
+
+  npx eslint . --max-warnings 0
+
+  ```
+
+
+  Pass the project''s own checks before opening the PR.'
+display_name: open-source-contributing
+knowledge:
+- title: GitHub Flow
+  type: documentation
+  source: https://docs.github.com/en/get-started/quickstart/github-flow
+  description: Branching and PR workflow
+- title: GitHub CLI
+  type: documentation
+  source: https://cli.github.com/manual/
+  description: gh fork, issue, pr, run commands
+- title: Contributing guide
+  type: documentation
+  source: https://opensource.guide/how-to-contribute/
+  description: How to start contributing to projects

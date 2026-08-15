@@ -1,0 +1,166 @@
+{
+  "name": "factory",
+  "display_name": "Factory",
+  "category": "patterns",
+  "subcategory": "general",
+  "description": "Implements the Factory Method and Abstract Factory patterns in Go: creating objects through interfaces with go test verification.",
+  "version": "2.0.0",
+  "tags": [
+    "patterns"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "go",
+      "description": "Implement and test factory patterns in Go.",
+      "commands": [
+        "go mod init example.com/factory",
+        "go build ./...",
+        "go vet ./...",
+        "go test ./...",
+        "go test -run TestCreatePayment -v"
+      ],
+      "examples": [
+        "go test ./... -cover",
+        "go run ./cmd/example",
+        "go test -run 'Test.*Card' -v ./..."
+      ],
+      "parameters": [
+        {
+          "name": "run",
+          "type": "string",
+          "description": "Test regex filter"
+        },
+        {
+          "name": "cover",
+          "type": "string",
+          "description": "Coverage report"
+        },
+        {
+          "name": "module",
+          "type": "string",
+          "description": "Go module path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Refactoring Guru: Factory Method",
+      "type": "documentation",
+      "source": "https://refactoring.guru/design-patterns/factory-method",
+      "description": "Factory intent, structure, and usage"
+    },
+    {
+      "title": "Go by Example",
+      "type": "documentation",
+      "source": "https://gobyexample.com/interfaces",
+      "description": "Interfaces in Go"
+    }
+  ],
+  "instructions": "# Factory Pattern\n\nCreate objects without coupling callers to concrete types.\n\n## When to Use\n\n- Object creation varies by config/context\n- Decoupling construction from usage\n- Encapsulating complex initialization\n\n## Example (Go)\n\n```go\npackage factory\n\ntype Payment interface {\n\tCharge(amount int) string\n}\n\ntype CardPayment struct{}\n\nfunc (CardPayment) Charge(amount int) string { return \"card:\" + fmt.Sprint(amount) }\n\ntype WalletPayment struct{}\n\nfunc (WalletPayment) Charge(amount int) string { return \"wallet:\" + fmt.Sprint(amount) }\n\nfunc NewPayment(kind string) Payment {\n\tswitch kind {\n\tcase \"card\":\n\t\treturn CardPayment{}\n\tcase \"wallet\":\n\t\treturn WalletPayment{}\n\t}\n\tpanic(\"unknown payment kind: \" + kind)\n}\n```\n\n## Test\n\n```go\nfunc TestNewPayment(t *testing.T) {\n\tif got := NewPayment(\"card\").Charge(100); got != \"card:100\" {\n\t\tt.Errorf(\"unexpected: %s\", got)\n\t}\n}\n```\n\n```bash\ngo test ./...\n```\n\n## Variants\n\n- Factory Method: one creation point, subclasses decide.\n- Abstract Factory: families of related objects.\n- In Go, a plain function returning an interface is the idiomatic factory.\n\n## Best practices\n\n- Return interfaces, consume interfaces.\n- Validate inputs in the factory and fail fast.\n- Keep factories side-effect free where possible.\n- Test every product the factory can produce.\n\n## Testing\n\nTable-test all kinds, including unknown kind panics.",
+  "examples": [
+    {
+      "input": "Create payments based on provider config.",
+      "output": "Implements NewPayment(kind) returning the Payment interface and table-tests card/wallet branches."
+    },
+    {
+      "input": "Add a new provider without touching callers.",
+      "output": "Adds the new product type and one case to the factory; callers unchanged."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "factory.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-factory"
+    },
+    "generic": {
+      "system_prompt": "You work Factory hands-on. You do it through go: Implement and test factory patterns in Go. The commands are real, e.g. `go mod init example.com/factory`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "factory",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "go",
+        "name": "run",
+        "type": "string",
+        "description": "Test regex filter"
+      },
+      {
+        "capability": "go",
+        "name": "cover",
+        "type": "string",
+        "description": "Coverage report"
+      },
+      {
+        "capability": "go",
+        "name": "module",
+        "type": "string",
+        "description": "Go module path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/factory-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/factory-skill.yaml",
+    "checksum": "69aaf05996a3638045fa986109d57b22242d821db04d641760766794809b4ea6"
+  }
+}

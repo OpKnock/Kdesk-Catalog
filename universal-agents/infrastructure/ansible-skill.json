@@ -1,0 +1,226 @@
+{
+  "name": "ansible-infrastructure",
+  "display_name": "ansible-infrastructure",
+  "category": "infrastructure",
+  "subcategory": "general",
+  "description": "Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets.",
+  "version": "2.0.0",
+  "tags": [
+    "infrastructure"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "ansible",
+    "ansible-playbook"
+  ],
+  "capabilities": [
+    {
+      "name": "playbooks",
+      "description": "Write and run Ansible playbooks against inventories.",
+      "commands": [
+        "ansible-playbook -i inventory/prod.ini site.yml",
+        "ansible-playbook site.yml --tags deploy",
+        "ansible-playbook site.yml --check --diff",
+        "ansible-playbook site.yml --limit web --start-at-task 'nginx: restart'",
+        "ansible-playbook site.yml -e env=staging"
+      ],
+      "examples": [
+        "ansible-playbook -i inventory/prod.ini site.yml --check",
+        "ansible-playbook site.yml --tags nginx,deploy --diff",
+        "ansible-playbook site.yml --limit 'web:!web-3'"
+      ],
+      "parameters": [
+        {
+          "name": "inventory",
+          "type": "string",
+          "description": "Inventory file or directory"
+        },
+        {
+          "name": "tags",
+          "type": "string",
+          "description": "Comma-separated tags to run"
+        },
+        {
+          "name": "limit",
+          "type": "string",
+          "description": "Host pattern subset to target"
+        }
+      ]
+    },
+    {
+      "name": "ad-hoc",
+      "description": "Run one-off modules across hosts without a playbook.",
+      "commands": [
+        "ansible all -m ping -i inventory/prod.ini",
+        "ansible web -m service -a 'name=nginx state=restarted' -b",
+        "ansible db -m shell -a 'df -h /data'",
+        "ansible all -m apt -a 'name=unattended-upgrades state=present' -b",
+        "ansible all -m gather_facts --limit web"
+      ],
+      "examples": [
+        "ansible web -m service -a 'name=nginx state=started' -b --become-user=root",
+        "ansible all -m ping --one-line",
+        "ansible db -m command -a 'free -m'"
+      ],
+      "parameters": [
+        {
+          "name": "module",
+          "type": "string",
+          "description": "Module like service, apt, ping, shell"
+        },
+        {
+          "name": "args",
+          "type": "string",
+          "description": "Module arguments as key=value string"
+        },
+        {
+          "name": "become",
+          "type": "string",
+          "description": "Elevate privileges with -b"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Ansible Docs",
+      "type": "documentation",
+      "source": "https://docs.ansible.com/ansible/latest/index.html",
+      "description": "Playbooks, modules, and best practices"
+    },
+    {
+      "title": "Ansible CLI",
+      "type": "documentation",
+      "source": "https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html",
+      "description": "ansible-playbook options and tags"
+    },
+    {
+      "title": "Ansible Galaxy",
+      "type": "documentation",
+      "source": "https://galaxy.ansible.com/",
+      "description": "Community roles for common services"
+    }
+  ],
+  "instructions": "# Ansible\n\nAutomate server provisioning and configuration with Ansible.\n\n## When to Use\n\n- Bootstrapping and configuring VM fleets\n- Enforcing service state (installed, running, enabled)\n- Reproducible multi-environment deploys\n\n## Inventory\n\n```ini\n[web]\nweb-1 ansible_host=10.0.1.11\nweb-2 ansible_host=10.0.1.12\n\n[db]\ndb-1 ansible_host=10.0.2.21\n\n[all:vars]\nansible_user=deploy\nansible_ssh_private_key_file=~/.ssh/deploy_key\n```\n\n## Playbook structure\n\n```yaml\n- name: Configure web servers\n  hosts: web\n  become: true\n  tasks:\n    - name: Install nginx\n      apt:\n        name: nginx\n        state: present\n    - name: Restart nginx on config change\n      service:\n        name: nginx\n        state: restarted\n      notify: reload nginx\n  handlers:\n    - name: reload nginx\n      service: { name: nginx, state: reloaded }\n```\n\n## Run safely\n\n```bash\nansible-playbook -i inventory/prod.ini site.yml --check --diff\nansible-playbook site.yml --tags deploy\n```\n\nAlways run `--check --diff` first on an unknown codebase.\n\n## Ad-hoc operations\n\n```bash\nansible all -m ping -i inventory/prod.ini\nansible web -m service -a 'name=nginx state=restarted' -b\n```\n\n## Roles\n\n```bash\nansible-galaxy init roles/nginx\nansible-galaxy install -r requirements.yml\n```\n\n## Best practices\n\n- Idempotent tasks: each run converges to the same state.\n- Keep secrets in ansible-vault, never in vars files.\n- Use handlers for restart-on-change, never restart unconditionally.\n- Run check mode in CI on every PR.\n\n## Testing\n\n```bash\nansible-lint site.yml\nansible-playbook site.yml --syntax-check\n```\n\nGate merges on both.",
+  "examples": [
+    {
+      "input": "Install and start nginx on the web fleet.",
+      "output": "Writes a playbook with apt + service tasks, runs with -b against the web group, and verifies with ansible web -m ping."
+    },
+    {
+      "input": "Restart the DB replica after a config change without downtime.",
+      "output": "Uses ansible db -m service with state=restarted, or adds a handler triggered by config file changes."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ansible-infrastructure.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ansible"
+    },
+    "generic": {
+      "system_prompt": "Your lane is ansible-infrastructure. You do it through playbooks: Write and run Ansible playbooks against inventories. The commands are real, e.g. `ansible-playbook -i inventory/prod.ini site.yml`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ansible-infrastructure",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "playbooks",
+        "name": "inventory",
+        "type": "string",
+        "description": "Inventory file or directory"
+      },
+      {
+        "capability": "playbooks",
+        "name": "tags",
+        "type": "string",
+        "description": "Comma-separated tags to run"
+      },
+      {
+        "capability": "playbooks",
+        "name": "limit",
+        "type": "string",
+        "description": "Host pattern subset to target"
+      },
+      {
+        "capability": "ad-hoc",
+        "name": "module",
+        "type": "string",
+        "description": "Module like service, apt, ping, shell"
+      },
+      {
+        "capability": "ad-hoc",
+        "name": "args",
+        "type": "string",
+        "description": "Module arguments as key=value string"
+      },
+      {
+        "capability": "ad-hoc",
+        "name": "become",
+        "type": "string",
+        "description": "Elevate privileges with -b"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "ansible",
+    "ansible-playbook"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/ansible-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/ansible-skill.yaml",
+    "checksum": "a17e2f7ee4646c0ba2d28f5f9b6b17584813f2cdbafa6eb3d8847c77b11e139b"
+  }
+}

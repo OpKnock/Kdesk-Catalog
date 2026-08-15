@@ -1,0 +1,171 @@
+{
+  "name": "helm-charts",
+  "display_name": "Helm Charts",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Helm chart authoring and lifecycle: chart scaffolding, linting, template rendering, installs, upgrades, rollbacks, and values management.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "helm"
+  ],
+  "capabilities": [
+    {
+      "name": "chart-lifecycle",
+      "description": "Create, lint, render, install, upgrade, and roll back Helm charts.",
+      "commands": [
+        "helm create mychart",
+        "helm lint ./mychart",
+        "helm template ./mychart",
+        "helm install myapp ./mychart -n default",
+        "helm upgrade --install myapp ./mychart --set image.tag=v2 --namespace default"
+      ],
+      "examples": [
+        "helm template ./mychart --values values-prod.yaml | kubectl apply --dry-run=client -f -",
+        "helm rollback myapp 1 -n default",
+        "helm list -n default"
+      ],
+      "parameters": [
+        {
+          "name": "chart_path",
+          "type": "string",
+          "description": "Path to the chart directory."
+        },
+        {
+          "name": "release_name",
+          "type": "string",
+          "description": "Release name for install/upgrade."
+        },
+        {
+          "name": "values_file",
+          "type": "string",
+          "description": "YAML values file to merge."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Helm Docs",
+      "type": "documentation",
+      "source": "https://helm.sh/docs/",
+      "description": "Official Helm documentation: charts, templating, and CLI."
+    },
+    {
+      "title": "Chart Template Guide",
+      "type": "documentation",
+      "source": "https://helm.sh/docs/chart_template_guide/",
+      "description": "Deep dive into Helm templating functions and patterns."
+    }
+  ],
+  "instructions": "# Helm Charts\n\nAuthor and operate Kubernetes applications with Helm.\n\n## What this skill does\n\n- Scaffolds charts with standard directory structure.\n- Lints charts and renders templates for review.\n- Installs, upgrades, and rolls back releases.\n- Manages values across environments.\n\n## When to use\n\n- Packaging an application for repeatable deployment.\n- Parameterizing manifests per environment.\n- Auditing what a chart will actually create before install.\n\n## Real commands\n\n```bash\n# Scaffold a chart\nhelm create mychart\n\n# Lint\nhelm lint ./mychart\n\n# Render templates (no cluster needed)\nhelm template ./mychart\nhelm template ./mychart --values values-prod.yaml\n\n# Install\nhelm install myapp ./mychart -n default\n\n# Upgrade with values\nhelm upgrade --install myapp ./mychart --set image.tag=v2 --namespace default\n\n# Roll back and list\nhelm rollback myapp 1 -n default\nhelm list -n default\n```\n\n## Chart layout\n\n```text\nmychart/\n  Chart.yaml\n  values.yaml\n  charts/\n  templates/\n    deployment.yaml\n    service.yaml\n    _helpers.tpl\n```\n\n## Example values\n\n```yaml\nreplicaCount: 3\nimage:\n  repository: nginx\n  tag: 1.27\n  pullPolicy: IfNotPresent\nservice:\n  type: ClusterIP\n  port: 80\nresources:\n  limits:\n    cpu: 500m\n    memory: 512Mi\n```\n\n## Testing\n\n```bash\nhelm lint ./mychart && helm template ./mychart --dry-run\nhelm install myapp ./mychart -n default --dry-run --debug\n```\n\n## Best practices\n\n- Use `helm template` + `kubectl diff` before every prod upgrade.\n- Never edit a release's live manifests; always `helm upgrade`.\n- Pin images via values, not hardcoded tags in templates.\n- Add dependency charts with `helm dependency update` and commit Chart.lock.\n\n## Example exchange\n\n```\nUser: Preview what mychart would deploy with prod values.\nAgent: helm template ./mychart --values values-prod.yaml | kubectl diff -f -\n```",
+  "examples": [
+    {
+      "input": "Create a new chart called mychart",
+      "output": "helm create mychart"
+    },
+    {
+      "input": "Install myapp from ./mychart with a new image tag",
+      "output": "helm upgrade --install myapp ./mychart --set image.tag=v2 -n default"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "helm-charts.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-helm-charts"
+    },
+    "generic": {
+      "system_prompt": "You own Helm Charts end to end. You do it through chart-lifecycle: Create, lint, render, install, upgrade, and roll back Helm charts. The commands are real, e.g. `helm create mychart`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "helm-charts",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "chart-lifecycle",
+        "name": "chart_path",
+        "type": "string",
+        "description": "Path to the chart directory."
+      },
+      {
+        "capability": "chart-lifecycle",
+        "name": "release_name",
+        "type": "string",
+        "description": "Release name for install/upgrade."
+      },
+      {
+        "capability": "chart-lifecycle",
+        "name": "values_file",
+        "type": "string",
+        "description": "YAML values file to merge."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "helm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/helm-charts-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/helm-charts-skill.yaml",
+    "checksum": "f29b8e4d902be64afcbfae0b871382997a033cca1a7cdcf22b985a59500d731d"
+  }
+}

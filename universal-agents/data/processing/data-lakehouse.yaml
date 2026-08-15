@@ -1,0 +1,104 @@
+name: data-lakehouse
+display_name: Data Lakehouse
+category: data
+subcategory: processing
+description: Data Lakehouse agent for Delta Lake, Iceberg, Hudi.
+version: 1.0.0
+tags:
+- data
+- processing
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Data Lakehouse
+  description: Data Lakehouse agent for Delta Lake, Iceberg, Hudi.
+  commands:
+  - 'Hudi: hudi-cli --command describe表 --table tableName'
+  - 'Iceberg: spark-sql --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog'
+  - 'Time travel: SELECT * FROM table TIMESTAMP AS OF ''2023-01-01'''
+  - 'Delta: DESCRIBE DETAIL delta.`/path/to/table`'
+  examples:
+  - 'Delta: DESCRIBE DETAIL delta.`/path/to/table`'
+  - 'Iceberg: spark-sql --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog'
+  - 'Hudi: hudi-cli --command describe表 --table tableName'
+  - 'Time travel: SELECT * FROM table TIMESTAMP AS OF ''2023-01-01'''
+  parameters: []
+knowledge:
+- title: data-lakehouse Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/data/processing
+  description: Reference documentation for data-lakehouse
+instructions: 'You are a Data Lakehouse expert. Help users with:
+
+  - Delta Lake configuration
+
+  - Iceberg tables
+
+  - Hudi datasets
+
+  - Schema evolution
+
+  - Time travel
+
+  - ACID transactions
+
+  - Data compaction
+
+
+  Always use real Lakehouse tools. Never suggest fictional tools.'
+examples:
+- 'Delta: DESCRIBE DETAIL delta.`/path/to/table`'
+- 'Iceberg: spark-sql --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog'
+- 'Hudi: hudi-cli --command describe表 --table tableName'
+- 'Time travel: SELECT * FROM table TIMESTAMP AS OF ''2023-01-01'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-lakehouse.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Data Lakehouse expert. Help users with:
+
+      - Delta Lake configuration
+
+      - Iceberg tables
+
+      - Hudi datasets
+
+      - Schema evolution
+
+      - Time travel
+
+      - ACID transactions
+
+      - Data compaction
+
+
+      Always use real Lakehouse tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-data-lakehouse
+  generic:
+    system_prompt: You are data-lakehouse. Data Lakehouse agent for Delta Lake, Iceberg, Hudi.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,224 @@
+{
+  "name": "shell-scripting",
+  "display_name": "shell-scripting",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Writes robust POSIX/bash scripts: syntax checking, shellcheck linting, error handling with set -euo pipefail, and cross-platform portability.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bash",
+    "checkbashisms",
+    "command",
+    "local",
+    "readonly",
+    "set",
+    "shellcheck",
+    "shfmt",
+    "timeout",
+    "trap"
+  ],
+  "capabilities": [
+    {
+      "name": "script-quality",
+      "description": "Validate and lint shell scripts for correctness.",
+      "commands": [
+        "bash -n script.sh",
+        "shellcheck script.sh",
+        "shellcheck -x -S warning script.sh",
+        "shfmt -w script.sh",
+        "bash -x script.sh",
+        "checkbashisms script.sh"
+      ],
+      "examples": [
+        "bash -n script.sh",
+        "shellcheck -x -S warning script.sh",
+        "shfmt -w script.sh"
+      ],
+      "parameters": [
+        {
+          "name": "script",
+          "type": "string",
+          "description": "Script file path"
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "Minimum severity: error, warning, info, style"
+        }
+      ]
+    },
+    {
+      "name": "robust-patterns",
+      "description": "Write error-safe scripts with strict mode and defensive patterns.",
+      "commands": [
+        "set -euo pipefail",
+        "trap 'echo failed at line $LINENO; exit 1' ERR",
+        "timeout 60 curl -sS https://example.com",
+        "command -v jq >/dev/null || { echo 'jq required'; exit 1; }",
+        "readonly CONFIG=/etc/app.conf",
+        "local TMPFILE=$(mktemp)"
+      ],
+      "examples": [
+        "set -euo pipefail",
+        "trap 'echo failed at line $LINENO' ERR",
+        "command -v jq >/dev/null || exit 1"
+      ],
+      "parameters": [
+        {
+          "name": "var",
+          "type": "string",
+          "description": "Variable name for readonly/local"
+        },
+        {
+          "name": "timeout-seconds",
+          "type": "integer",
+          "description": "Timeout for guarded commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ShellCheck",
+      "type": "documentation",
+      "source": "https://www.shellcheck.net/",
+      "description": "Shell script linting tool and rule catalog"
+    },
+    {
+      "title": "Bash Reference Manual",
+      "type": "documentation",
+      "source": "https://www.gnu.org/software/bash/manual/bash.html",
+      "description": "Bash language reference"
+    },
+    {
+      "title": "POSIX Shell Utilities",
+      "type": "documentation",
+      "source": "https://pubs.opengroup.org/onlinepubs/9699919799/utilities/contents.html",
+      "description": "Portable shell command definitions"
+    }
+  ],
+  "instructions": "# Shell Scripting\n\nWrite correct, portable, debuggable shell scripts.\n\n## What This Skill Does\n\n- Checks syntax and lints with shellcheck\n- Formats consistently with shfmt\n- Enforces strict error handling (set -euo pipefail)\n- Uses traps for cleanup and error reporting\n- Handles args, env vars, and external tool checks\n\n## When to Use\n\n- Automating CI steps, deploys, or ops tasks\n- Porting scripts between bash/sh environments\n- Debugging subtle quoting and expansion bugs\n\n## Real Commands\n\n```bash\n# Validate\nbash -n script.sh\nshellcheck script.sh\nshellcheck -x -S warning script.sh    # follow sources, min severity\nshfmt -w script.sh\ncheckbashisms script.sh               # POSIX portability\n\n# Debug\nbash -x script.sh\nbash -x -v script.sh\n\n# Strict patterns\nset -euo pipefail\ntrap 'echo failed at line $LINENO' ERR\ncommand -v jq >/dev/null || { echo 'jq is required'; exit 1; }\nreadonly CONFIG=/etc/app.conf\nlocal TMPFILE=$(mktemp)\ntrap 'rm -f \"$TMPFILE\"' EXIT\n```\n\n## Script Skeleton\n\n```bash\n#!/usr/bin/env bash\nset -euo pipefail\n\nusage() { echo \"usage: $0 <env>\"; exit 1; }\n[[ $# -eq 1 ]] || usage\n\nenv=\"$1\"\necho \"deploying to $env\"\n```\n\n## Best Practices\n\n- Always lint with shellcheck before committing\n- Quote every expansion: \"$var\", \"$(cmd)\"\n- Use -euo pipefail in every non-interactive script\n- Use local in functions; mktemp + EXIT trap for temp files\n- Prefer bash -n in CI pre-commit hooks",
+  "examples": [
+    {
+      "input": "My deploy script fails mysteriously on quoting",
+      "output": "Agent runs shellcheck, fixes SC2086-style unquoted expansions, and tests with bash -x"
+    },
+    {
+      "input": "Make a script portable to POSIX sh",
+      "output": "Agent replaces bashisms flagged by checkbashisms and re-lints"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "shell-scripting.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-shell-scripting"
+    },
+    "generic": {
+      "system_prompt": "Your lane is shell-scripting. You do it through script-quality: Validate and lint shell scripts for correctness. The commands are real, e.g. `bash -n script.sh`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "shell-scripting",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "script-quality",
+        "name": "script",
+        "type": "string",
+        "description": "Script file path"
+      },
+      {
+        "capability": "script-quality",
+        "name": "severity",
+        "type": "string",
+        "description": "Minimum severity: error, warning, info, style"
+      },
+      {
+        "capability": "robust-patterns",
+        "name": "var",
+        "type": "string",
+        "description": "Variable name for readonly/local"
+      },
+      {
+        "capability": "robust-patterns",
+        "name": "timeout-seconds",
+        "type": "integer",
+        "description": "Timeout for guarded commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bash",
+    "checkbashisms",
+    "command",
+    "local",
+    "readonly",
+    "set",
+    "shellcheck",
+    "shfmt",
+    "timeout",
+    "trap"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/shell-scripting-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/shell-scripting-skill.yaml",
+    "checksum": "c53147a0a8d77109595cc046a3c8e347625a9506a70a2c03701d19d61128517c"
+  }
+}

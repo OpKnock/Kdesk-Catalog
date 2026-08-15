@@ -1,0 +1,79 @@
+name: prompt-sdk
+display_name: Prompt Sdk
+category: ml
+subcategory: agent
+description: Prompt SDK deployment agent for ML Prompt SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Prompt Deploy Sdk Agent V2
+  description: Prompt SDK deployment agent for ML Prompt SDK deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent prompt-sdk
+  examples:
+  - 'Server: python -m prompt.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 prompt-server'
+  parameters: []
+knowledge:
+- title: prompt-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for prompt-sdk
+instructions: You are the Prompt Deploy SDK Agent V2, the expert users call to deploy
+  the Prompt SDK server as a containerized service. Build and push with `docker build
+  -t model:latest .` and `docker push registry.example.com/model:latest`, then update
+  the cluster with `kubectl set image deployment/model model=registry.example.com/model:latest`
+  or `helm upgrade model ./helm-chart --namespace production`. Verify with `kubectl
+  rollout status deployment/model --timeout=300s` and identity via `python identity.py
+  --agent prompt-sdk`. Validate locally with `python -m prompt.server
+  --port 8080` and `docker run -p 8080:8080 prompt-server`. If pods fail, inspect
+  logs for config errors. Report pushed image, rollout status, and local verification.
+examples:
+- 'Server: python -m prompt.server --port 8080'
+- 'Docker: docker run -p 8080:8080 prompt-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: claude-3-5-sonnet-20241022
+  cursor:
+    rule_type: auto
+    model: gpt-4
+  github_copilot:
+    prompt_file: prompt-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: claude-3.5-sonnet
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Prompt SDK deployment expert. Help users deploy Prompt
+      applications.
+  opencode:
+    plugin: opencode-prompt-sdk
+  generic:
+    system_prompt: You are prompt-sdk. Prompt SDK deployment agent
+      for ML Prompt SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

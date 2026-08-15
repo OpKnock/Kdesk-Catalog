@@ -1,0 +1,216 @@
+{
+  "name": "error-handling-architect-error-handling-architect",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Designs robust error handling: structured errors, observability with Sentry, static analysis, and graceful degradation patterns.",
+  "keywords": [
+    "error-handling",
+    "sentry"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "error-handling-architect-error-handling-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-error-handling-architect"
+    },
+    "generic": {
+      "system_prompt": "You own error-handling-architect-error-handling-architect end to end. You do it through error-observability: Instrument and monitor errors with sentry-cli. The commands are real, e.g. `sentry-cli login`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "error-observability",
+      "description": "Instrument and monitor errors with sentry-cli.",
+      "commands": [
+        "sentry-cli login",
+        "sentry-cli releases new -p app app@1.2.0",
+        "sentry-cli releases set-commits --auto app@1.2.0",
+        "sentry-cli debug-files upload -o org -p app ./build/",
+        "sentry-cli send-event -m 'test event' -l error",
+        "sentry-cli releases finalize app@1.2.0"
+      ],
+      "examples": [
+        "sentry-cli releases new -p app app@1.2.0",
+        "sentry-cli send-event -m 'test event' -l error",
+        "sentry-cli debug-files upload -o org -p app ./build/"
+      ],
+      "parameters": [
+        {
+          "name": "release",
+          "type": "string",
+          "description": "Release version"
+        },
+        {
+          "name": "project",
+          "type": "string",
+          "description": "Sentry project slug"
+        }
+      ]
+    },
+    {
+      "name": "static-analysis-gates",
+      "description": "Catch error-handling bugs before runtime with linters.",
+      "commands": [
+        "golangci-lint run --enable=errcheck,staticcheck ./...",
+        "mypy --strict --warn-unreachable src/",
+        "cargo clippy -- -D warnings",
+        "eslint --max-warnings 0 src/",
+        "ruff check src/ --select E,F,B",
+        "pytest --tb=short --maxfail=1 tests/"
+      ],
+      "examples": [
+        "golangci-lint run --enable=errcheck,staticcheck ./...",
+        "cargo clippy -- -D warnings",
+        "ruff check src/ --select E,F,B"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Path to analyze"
+        },
+        {
+          "name": "rules",
+          "type": "string",
+          "description": "Rule set to enable"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "sentry",
+    "bugsnag"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "sentry",
+    "bugsnag",
+    "elasticsearch",
+    "grafana"
+  ],
+  "examples": [
+    {
+      "input": "Errors are silently ignored in our Go service",
+      "output": "Agent enables errcheck, fixes swallow points, and adds structured logging + Sentry release"
+    },
+    {
+      "input": "Set up error monitoring for a new release",
+      "output": "Agent creates the Sentry release, uploads sourcemaps, and verifies with a test event"
+    }
+  ],
+  "instructions": "# Error Handling Architecture\n\nBuild systems that fail predictably, log meaningfully, and recover gracefully.\n\n## What This Skill Does\n\n- Designs structured error types and propagation\n- Instruments errors with Sentry (releases, sourcemaps)\n- Enforces error-handling linters in CI\n- Patterns: retries, circuit breakers, fallbacks\n- Writes error codes and runbook documentation\n\n## When to Use\n\n- A service swallows errors silently\n- Onboarding error monitoring\n- Setting error-handling standards for a team\n\n## Real Commands\n\n```bash\n# Sentry release workflow\nsentry-cli login\nsentry-cli releases new -p app app@1.2.0\nsentry-cli releases set-commits --auto app@1.2.0\nsentry-cli debug-files upload -o org -p app ./build/\nsentry-cli releases finalize app@1.2.0\nsentry-cli send-event -m 'test event' -l error\n\n# Lint gates\ngolangci-lint run --enable=errcheck,staticcheck ./...\nmypy --strict --warn-unreachable src/\ncargo clippy -- -D warnings\neslint --max-warnings 0 src/\nruff check src/ --select E,F,B\npytest --tb=short --maxfail=1 tests/\n```\n\n## Design Principles\n\n- Never swallow errors: log with context or propagate\n- Use typed errors with codes (HTTP 4xx/5xx mapping)\n- Retry transient failures with jitter and max attempts\n- Circuit-break downstream calls after thresholds\n- Provide fallbacks: cached responses, degraded modes\n\n## Best Practices\n\n- Fail CI on ignored errors (errcheck/clippy -D warnings)\n- Attach request IDs to all error logs\n- Alias releases in Sentry for every deploy\n- Write a runbook per error code class\n- Test failure paths, not just happy paths",
+  "display_name": "error-handling-architect-error-handling-architect",
+  "knowledge": [
+    {
+      "title": "Sentry CLI",
+      "type": "documentation",
+      "source": "https://docs.sentry.io/cli/",
+      "description": "sentry-cli releases, uploads, and events"
+    },
+    {
+      "title": "errcheck",
+      "type": "documentation",
+      "source": "https://github.com/kisielk/errcheck",
+      "description": "Check ignored errors in Go"
+    },
+    {
+      "title": "golangci-lint",
+      "type": "documentation",
+      "source": "https://golangci-lint.run/",
+      "description": "Go lint runner with error-handling rules"
+    }
+  ],
+  "id": "error-handling-architect-error-handling-architect",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "error-observability",
+        "name": "release",
+        "type": "string",
+        "description": "Release version"
+      },
+      {
+        "capability": "error-observability",
+        "name": "project",
+        "type": "string",
+        "description": "Sentry project slug"
+      },
+      {
+        "capability": "static-analysis-gates",
+        "name": "path",
+        "type": "string",
+        "description": "Path to analyze"
+      },
+      {
+        "capability": "static-analysis-gates",
+        "name": "rules",
+        "type": "string",
+        "description": "Rule set to enable"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "sentry",
+    "bugsnag"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "error-handling-architect/skill/error-handling-architect.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/error-handling-architect/skill/error-handling-architect.yaml",
+    "checksum": "6c5f761ccdf25d6c174a2c4e0a2ef85b7f15ce8ccf2f712af09955d6d79d5ef7"
+  }
+}

@@ -1,0 +1,96 @@
+name: markdownlint
+display_name: markdownlint
+category: code-quality
+subcategory: general
+description: Lints Markdown files with markdownlint/markdownlint-cli2, enforcing consistent heading, list,
+  and link style.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: markdown-linting
+  description: Check and fix Markdown style violations with configurable rule sets
+  commands:
+  - npx markdownlint-cli2 'docs/**/*.md'
+  - npx markdownlint-cli2 --fix .
+  - npx markdownlint-cli2 --config .markdownlint-cli2.yaml README.md
+  - npx markdownlint-cli2 '**/*.md' '#node_modules' '#vendor'
+  - npx markdownlint-cli2 --output markdownlint-report.json '**/*.md'
+  examples:
+  - npx markdownlint-cli2 --fix docs/
+  - npx markdownlint-cli2 README.md CHANGELOG.md
+  - npx markdownlint-cli2 '**/*.md' --config .markdownlint-cli2.yaml
+  parameters:
+  - name: config
+    type: string
+    description: Path to a config file (.markdownlint-cli2.yaml/jsonc or .markdownlint.json)
+  - name: fix
+    type: boolean
+    description: Automatically fix fixable violations
+  - name: output
+    type: string
+    description: Write the report to a file instead of stdout
+knowledge:
+- title: markdownlint-cli2 GitHub
+  type: documentation
+  source: https://github.com/DavidAnson/markdownlint-cli2
+  description: CLI usage, glob handling, and config file formats
+- title: markdownlint rules
+  type: documentation
+  source: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+  description: Full list of MD001-MD058 rules and their rationale
+instructions: "# Markdownlint\n\nLints Markdown files against a rule set covering headings, lists, indentation,\
+  \ links,\nand code fences so documentation stays consistent.\n\n## When to Use\n\n- Enforcing consistent\
+  \ docs style in a repo\n- Catching broken link syntax or mixed list markers in README files\n- Pre-commit/CI\
+  \ checks for markdown\n\n## Real Commands\n\n```bash\n# Check one file\nnpx markdownlint-cli2 README.md\n\
+  \n# Check all markdown in docs/, ignoring node_modules and vendor\nnpx markdownlint-cli2 'docs/**/*.md'\
+  \ '#node_modules' '#vendor'\n\n# Auto-fix\nnpx markdownlint-cli2 --fix 'docs/**/*.md'\n\n# Custom config\n\
+  npx markdownlint-cli2 --config .markdownlint-cli2.yaml .\n\n# JSON report for CI\nnpx markdownlint-cli2\
+  \ --output report.json '**/*.md' '#node_modules'\n```\n\n## Config (.markdownlint-cli2.yaml)\n\n```yaml\n\
+  config:\n  MD013:\n    line_length: 100\n  MD024: false\n  MD033: false\nignores:\n  - 'node_modules/**'\n\
+  ```\n\n## CI\n\n```yaml\n- name: Lint docs\n  run: npx markdownlint-cli2 '**/*.md' '#node_modules' '#dist'\n\
+  ```\n\n## Best Practices\n\n- Use glob ignores (`#node_modules`) rather than editing files\n- Disable\
+  \ rules deliberately (MD013 long lines, MD033 inline HTML) per team taste\n- Run `--fix` before review,\
+  \ then address remaining warnings manually\n- Check config is committed so CI matches local behavior"
+examples:
+- input: Fix all markdown style issues in docs/
+  output: Runs npx markdownlint-cli2 --fix 'docs/**/*.md', then re-runs without --fix to confirm zero
+    violations
+- input: Set up markdown linting in CI
+  output: Creates .markdownlint-cli2.yaml, adds a GitHub Actions step running npx markdownlint-cli2 '**/*.md'
+    '#node_modules'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: markdownlint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-markdownlint
+  generic:
+    system_prompt: 'You own markdownlint end to end. You do it through markdown-linting: Check and fix
+      Markdown style violations with configurable rule sets. The commands are real, e.g. `npx markdownlint-cli2
+      docs/**/*.md`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

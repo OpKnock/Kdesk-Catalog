@@ -1,0 +1,160 @@
+name: pulsar-geo-replication
+display_name: Pulsar Geo Replication
+category: api
+subcategory: general
+description: 'Pulsar geo-replication: cluster configuration, namespace replication, and cross-region topic
+  replication.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- bin/pulsar-admin
+capabilities:
+- name: pulsar-geo-replication
+  description: Configure namespaces for replication across clusters and monitor replication state.
+  commands:
+  - bin/pulsar-admin clusters list
+  - bin/pulsar-admin namespaces set-clusters public/default --clusters primary,backup
+  - bin/pulsar-admin namespaces get-clusters public/default
+  - bin/pulsar-admin topics stats persistent://primary/my-topic | jq '.replication'
+  - bin/pulsar-admin topics stats-internal persistent://primary/my-topic | jq '.replicationBacklog'
+  examples:
+  - bin/pulsar-admin namespaces set-clusters public/default --clusters us-east,eu-west
+  - bin/pulsar-admin namespaces get-clusters public/default
+  - bin/pulsar-admin topics stats persistent://primary/my-topic | jq '.replicationBacklog'
+  parameters:
+  - name: namespace
+    type: string
+    description: Tenant/namespace, e.g. public/default
+  - name: clusters
+    type: array
+    description: Cluster names participating in replication
+  - name: topic
+    type: string
+    description: Persistent topic to inspect
+knowledge:
+- title: Pulsar Geo-replication docs
+  type: documentation
+  source: https://pulsar.apache.org/docs/3.0.x/administration-geo/
+  description: Cluster and namespace replication configuration
+- title: Replication concepts
+  type: documentation
+  source: https://pulsar.apache.org/docs/3.0.x/concepts-replication/
+  description: How geo-replication works
+instructions: '# Pulsar Geo-Replication
+
+
+  Geo-replication copies messages between clusters so data lives close to consumers worldwide.
+
+
+  ## What this skill does
+
+
+  - Configures namespace replication across clusters
+
+  - Inspects replication state and backlog
+
+  - Troubleshoots lag between regions
+
+
+  ## When to use
+
+
+  - Multi-region disaster recovery
+
+  - Global fan-out with local reads
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Cluster inventory
+
+  bin/pulsar-admin clusters list
+
+
+  # Enable replication for a namespace
+
+  bin/pulsar-admin namespaces set-clusters public/default --clusters primary,backup
+
+  bin/pulsar-admin namespaces get-clusters public/default
+
+
+  # Monitor replication
+
+  bin/pulsar-admin topics stats persistent://primary/my-topic | jq ''.replication''
+
+  bin/pulsar-admin topics stats-internal persistent://primary/my-topic | jq ''.replicationBacklog''
+
+  ```
+
+
+  ## broker.conf (both clusters)
+
+
+  ```conf
+
+  replicationClusters=primary,backup
+
+  ```
+
+
+  ## Behavior
+
+
+  - Messages replicate only when both clusters in the namespace list
+
+  - Producers write locally; messages async-replicate
+
+
+  ## Best practices
+
+
+  - Use persistent topics for replication
+
+  - Watch replicationBacklog per remote cluster
+
+  - Test failover by promoting the backup cluster'
+examples:
+- input: Replicate my topic from us-east to eu-west
+  output: The agent adds both clusters to the namespace and verifies replication stats.
+- input: Replication is lagging behind
+  output: The agent checks replicationBacklog, cluster connectivity and message TTLs.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pulsar-geo-replication.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pulsar-geo-replication
+  generic:
+    system_prompt: 'You own Pulsar Geo Replication end to end. You do it through pulsar-geo-replication:
+      Configure namespaces for replication across clusters and monitor replication state. The commands
+      are real, e.g. `bin/pulsar-admin clusters list`. You work hands-on and only report outcomes you
+      have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

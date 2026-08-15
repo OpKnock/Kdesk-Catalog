@@ -1,0 +1,171 @@
+{
+  "name": "render",
+  "display_name": "Render",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Render deployment skill: render.yaml blueprints, render-cli deploy/logs/secret management, and the Render API for service inspection.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "render"
+  ],
+  "capabilities": [
+    {
+      "name": "render-deploy",
+      "description": "Deploy and manage Render.com services with blueprint and CLI",
+      "commands": [
+        "render login",
+        "render deploy <service-id>",
+        "render logs <service-id> --tail",
+        "render secret list <service-id>",
+        "curl -s https://api.render.com/v1/services -H \"Authorization: Bearer $RENDER_API_KEY\" | jq '.[0].name'"
+      ],
+      "examples": [
+        "render deploy srv-abc123",
+        "render logs srv-abc123 --tail",
+        "curl -s https://api.render.com/v1/services -H \"Authorization: Bearer $RENDER_API_KEY\" | jq -r '.[].serviceDetails.url'"
+      ],
+      "parameters": [
+        {
+          "name": "service_id",
+          "type": "string",
+          "description": "Render service identifier like srv-abc123"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "Region in render.yaml, e.g. oregon or frankfurt"
+        },
+        {
+          "name": "plan",
+          "type": "string",
+          "description": "Instance plan, e.g. starter or pro"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Render Blueprint spec",
+      "type": "documentation",
+      "source": "https://render.com/docs/blueprint-spec",
+      "description": "render.yaml services, databases, jobs, and env groups"
+    },
+    {
+      "title": "render-cli repository",
+      "type": "documentation",
+      "source": "https://github.com/render-oss/render-cli",
+      "description": "render deploy, logs, secret commands"
+    }
+  ],
+  "instructions": "# Render\n\nHand-crafted skill for deploying services to Render.com.\n\n## What this skill does\n\n- Defines services, databases, and cron jobs in a render.yaml blueprint\n- Deploys and tails logs with the official render-cli\n- Manages environment secrets and inspects services via the API\n\n## When to use\n\n- Shipping a web service or API to Render\n- Converting manual dashboard clicks into GitOps blueprint deploys\n- Debugging failed deploys from the CLI\n\n## Real commands\n\n```bash\n# Authenticate the CLI\nrender login\n\n# Deploy the latest commit of a service\nrender deploy srv-abc123\n\n# Stream logs\nrender logs srv-abc123 --tail\n\n# List environment secrets\nrender secret list srv-abc123\n\n# Inspect services via the API\ncurl -s https://api.render.com/v1/services -H \"Authorization: Bearer $RENDER_API_KEY\" | jq -r '.[].serviceDetails.url'\n```\n\n## render.yaml blueprint\n\n```yaml\nservices:\n  - type: web\n    name: api\n    runtime: node\n    plan: starter\n    region: oregon\n    buildCommand: npm ci && npm run build\n    startCommand: node dist/index.js\n    healthCheckPath: /healthz\n    envVars:\n      - key: DATABASE_URL\n        fromDatabase:\n          name: db\n          property: connectionString\ndatabases:\n  - name: db\n    plan: starter\n    databaseName: app\n```\n\n## Testing a deploy\n\n```bash\ncurl -sf https://api.onrender.com/healthz && echo healthy\nrender logs srv-abc123 --tail\n```\n\n## Best practices\n\n- Keep the startCommand minimal; Render restarts on health check failure\n- Store secrets as env vars, never in the blueprint\n- Merge the blueprint via Git to enable automatic deploys\n",
+  "examples": [
+    {
+      "input": "Deploy my API after a commit",
+      "output": "render deploy srv-abc123, then render logs srv-abc123 --tail and curl the /healthz path."
+    },
+    {
+      "input": "What services do I have on Render?",
+      "output": "curl -s https://api.render.com/v1/services -H \"Authorization: Bearer $RENDER_API_KEY\" | jq -r '.[].name'."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "render.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-render"
+    },
+    "generic": {
+      "system_prompt": "You own Render end to end. You do it through render-deploy: Deploy and manage Render.com services with blueprint and CLI. The commands are real, e.g. `render login`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "render",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "render-deploy",
+        "name": "service_id",
+        "type": "string",
+        "description": "Render service identifier like srv-abc123"
+      },
+      {
+        "capability": "render-deploy",
+        "name": "region",
+        "type": "string",
+        "description": "Region in render.yaml, e.g. oregon or frankfurt"
+      },
+      {
+        "capability": "render-deploy",
+        "name": "plan",
+        "type": "string",
+        "description": "Instance plan, e.g. starter or pro"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "render"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/render-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/render-skill.yaml",
+    "checksum": "70c291445e644577b4704e820c8400cbe2873cec08ccfa24e4205b5ef10805cf"
+  }
+}

@@ -1,0 +1,91 @@
+name: ml-hybrid-python-agent
+display_name: Ml Hybrid Python Agent
+category: ml
+subcategory: agent
+description: ML Hybrid Python agent for hybrid cloud deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Hybrid Python Agent
+  description: ML Hybrid Python agent for hybrid cloud deployment.
+  commands:
+  - 'Hybrid: python -c ''import ray; ray.init(address="auto"); remote_model = ray.remote(Model).options(nu'
+  - 'Edge: python -c ''import onnxruntime as ort; session = ort.InferenceSession("model.onnx", providers=['
+  - 'Sync: python -c ''import boto3; s3 = boto3.client("s3"); s3.download_file("bucket", "model.pkl",
+    "mod'
+  examples:
+  - 'Sync: python -c ''import boto3; s3 = boto3.client("s3"); s3.download_file("bucket", "model.pkl",
+    "model.pkl")'''
+  - 'Edge: python -c ''import onnxruntime as ort; session = ort.InferenceSession("model.onnx", providers=["CPUExecutionProvider"])'''
+  - 'Hybrid: python -c ''import ray; ray.init(address="auto"); remote_model = ray.remote(Model).options(num_cpus=2).remote()'''
+  parameters: []
+knowledge:
+- title: ml-hybrid-python-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-hybrid-python-agent
+instructions: 'You are a Python ML hybrid cloud expert. Help users with:
+
+  - Multi-cloud deployment
+
+  - Edge-cloud synchronization
+
+  - Hybrid inference
+
+  - Cost optimization
+
+
+  Always use real Python hybrid cloud tools and best practices.'
+examples:
+- 'Sync: python -c ''import boto3; s3 = boto3.client("s3"); s3.download_file("bucket", "model.pkl", "model.pkl")'''
+- 'Edge: python -c ''import onnxruntime as ort; session = ort.InferenceSession("model.onnx", providers=["CPUExecutionProvider"])'''
+- 'Hybrid: python -c ''import ray; ray.init(address="auto"); remote_model = ray.remote(Model).options(num_cpus=2).remote()'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-hybrid-python-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Python ML hybrid cloud expert. Help users with:
+
+      - Multi-cloud deployment
+
+      - Edge-cloud synchronization
+
+      - Hybrid inference
+
+      - Cost optimization
+
+
+      Always use real Python hybrid cloud tools and best practices.'
+  opencode:
+    plugin: opencode-ml-hybrid-python-agent
+  generic:
+    system_prompt: You are ml-hybrid-python-agent. ML Hybrid Python agent for hybrid cloud deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

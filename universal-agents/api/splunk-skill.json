@@ -1,0 +1,173 @@
+{
+  "name": "splunk",
+  "display_name": "Splunk",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Splunk skill: SPL search commands, monitor inputs, the REST search/jobs API, and HTTP Event Collector ingestion for log pipelines.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./splunk",
+    "splunk"
+  ],
+  "capabilities": [
+    {
+      "name": "splunk-search-ingest",
+      "description": "Search, ingest, and manage Splunk from the CLI and REST API",
+      "commands": [
+        "./splunk start --accept-license",
+        "splunk search \"index=_internal level=ERROR earliest=-1h | stats count by sourcetype\"",
+        "splunk add monitor /var/log/api.log -index main -sourcetype api_logs",
+        "curl -k -u admin:changeme 'https://localhost:8089/services/search/jobs' -d 'search=index=main status>=500 earliest=-15m&output_mode=json'",
+        "curl -k -X POST 'https://localhost:8088/services/collector/event' -H \"Authorization: Splunk $HEC_TOKEN\" -d '{\"event\":\"api started\",\"sourcetype\":\"api_events\"}'"
+      ],
+      "examples": [
+        "splunk search \"index=_internal ERROR | top sourcetype\"",
+        "splunk add monitor /var/log/api.log -index main -sourcetype api_logs",
+        "curl -k -X POST 'https://localhost:8088/services/collector/event' -H \"Authorization: Splunk $HEC_TOKEN\" -d '{\"event\":\"test\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "SPL search string"
+        },
+        {
+          "name": "index",
+          "type": "string",
+          "description": "Index to search or ingest into"
+        },
+        {
+          "name": "sourcetype",
+          "type": "string",
+          "description": "Sourcetype label for parsing"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Splunk docs",
+      "type": "documentation",
+      "source": "https://docs.splunk.com/Documentation",
+      "description": "SPL reference, CLI, and REST API"
+    },
+    {
+      "title": "HEC docs",
+      "type": "documentation",
+      "source": "https://docs.splunk.com/Documentation/Splunk/latest/Data/AboutHEC",
+      "description": "HTTP Event Collector endpoints and tokens"
+    }
+  ],
+  "instructions": "# Splunk\n\nHand-crafted skill for searching and ingesting logs with Splunk.\n\n## What this skill does\n\n- Runs SPL searches from the CLI with time and stats clauses\n- Adds file monitors as data inputs\n- Ingests JSON events via HTTP Event Collector and queries via REST\n\n## When to use\n\n- Digging into errors across a fleet of hosts\n- Onboarding a new application log file\n- Automating searches for dashboards and alerts\n\n## Real commands\n\n```bash\n# Start the platform (first run)\n./splunk start --accept-license\n\n# Search\nsplunk search \"index=_internal level=ERROR earliest=-1h | stats count by sourcetype\"\n\n# Top error sources\nsplunk search \"index=_internal ERROR | top sourcetype\"\n\n# Monitor a log file\nsplunk add monitor /var/log/api.log -index main -sourcetype api_logs\n\n# REST: run a search job\ncurl -k -u admin:changeme 'https://localhost:8089/services/search/jobs' -d 'search=index=main status>=500 earliest=-15m&output_mode=json'\n\n# HEC: push an event\ncurl -k -X POST 'https://localhost:8088/services/collector/event' -H \"Authorization: Splunk $HEC_TOKEN\" -d '{\"event\":\"api started\",\"sourcetype\":\"api_events\"}'\n```\n\n## SPL patterns\n\n- index=main sourcetype=access_combined status>=500\n- | timechart count by status\n- | stats avg(latency) by host\n\n## Testing\n\n```bash\ncurl -k -X POST 'https://localhost:8088/services/collector/event' -H \"Authorization: Splunk $HEC_TOKEN\" -d '{\"event\":\"smoke\",\"sourcetype\":\"api_events\"}'\nsplunk search \"index=main sourcetype=api_events earliest=-5m\"\n```\n\n## Best practices\n\n- Always bound searches with earliest/latest\n- Give every app its own sourcetype for parsing rules\n- Use HEC tokens scoped per index for production ingestion\n",
+  "examples": [
+    {
+      "input": "Which sourcetypes produced the most errors in the last hour?",
+      "output": "splunk search \"index=_internal level=ERROR earliest=-1h | stats count by sourcetype\"."
+    },
+    {
+      "input": "Send a JSON event from my app",
+      "output": "curl -k -X POST 'https://localhost:8088/services/collector/event' -H \"Authorization: Splunk $HEC_TOKEN\" -d '{\"event\":{\"level\":\"error\",\"msg\":\"boom\"},\"sourcetype\":\"api_events\"}'."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "splunk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-splunk"
+    },
+    "generic": {
+      "system_prompt": "You are the Splunk specialist. You do it through splunk-search-ingest: Search, ingest, and manage Splunk from the CLI and REST API. The commands are real, e.g. `./splunk start --accept-license`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "splunk",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "splunk-search-ingest",
+        "name": "query",
+        "type": "string",
+        "description": "SPL search string"
+      },
+      {
+        "capability": "splunk-search-ingest",
+        "name": "index",
+        "type": "string",
+        "description": "Index to search or ingest into"
+      },
+      {
+        "capability": "splunk-search-ingest",
+        "name": "sourcetype",
+        "type": "string",
+        "description": "Sourcetype label for parsing"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./splunk",
+    "splunk"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/splunk-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/splunk-skill.yaml",
+    "checksum": "54be8e583a877372ca27734d79bc24841dd4247c6a5f67db1d8f877b2de3ea02"
+  }
+}

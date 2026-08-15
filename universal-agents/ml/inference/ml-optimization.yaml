@@ -1,0 +1,106 @@
+name: ml-optimization
+display_name: Ml Optimization
+category: ml
+subcategory: inference
+description: ML optimization agent for model compression and acceleration.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Optimization
+  description: ML optimization agent for model compression and acceleration.
+  commands:
+  - 'Pruning: import torch.nn.utils.prune as prune; prune.l1_unstructured(module, name=''weight'', amount=0'
+  - 'ONNX: torch.onnx.export(model, dummy_input, ''model.onnx'')'
+  - 'TensorRT: trtexec --onnx=model.onnx --saveEngine=model.engine'
+  - 'Quantization: from optimum.onnxruntime import ORTQuantizer; quantizer = ORTQuantizer.from_pretrained'
+  examples:
+  - 'ONNX: torch.onnx.export(model, dummy_input, ''model.onnx'')'
+  - 'TensorRT: trtexec --onnx=model.onnx --saveEngine=model.engine'
+  - 'Quantization: from optimum.onnxruntime import ORTQuantizer; quantizer = ORTQuantizer.from_pretrained(model);
+    quantizer.quantize(save_dir=''quantized'')'
+  - 'Pruning: import torch.nn.utils.prune as prune; prune.l1_unstructured(module, name=''weight'', amount=0.3)'
+  parameters: []
+knowledge:
+- title: ml-optimization Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-optimization
+instructions: 'You are an ML optimization expert. Help users with:
+
+  - Quantization
+
+  - Pruning
+
+  - Distillation
+
+  - ONNX export
+
+  - TensorRT
+
+  - Core ML
+
+  - Edge deployment
+
+
+  Always use real optimization tools. Never suggest fictional tools.'
+examples:
+- 'ONNX: torch.onnx.export(model, dummy_input, ''model.onnx'')'
+- 'TensorRT: trtexec --onnx=model.onnx --saveEngine=model.engine'
+- 'Quantization: from optimum.onnxruntime import ORTQuantizer; quantizer = ORTQuantizer.from_pretrained(model);
+  quantizer.quantize(save_dir=''quantized'')'
+- 'Pruning: import torch.nn.utils.prune as prune; prune.l1_unstructured(module, name=''weight'', amount=0.3)'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-optimization.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an ML optimization expert. Help users with:
+
+      - Quantization
+
+      - Pruning
+
+      - Distillation
+
+      - ONNX export
+
+      - TensorRT
+
+      - Core ML
+
+      - Edge deployment
+
+
+      Always use real optimization tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-optimization
+  generic:
+    system_prompt: You are ml-optimization. ML optimization agent for model compression and acceleration.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

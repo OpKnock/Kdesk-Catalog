@@ -1,0 +1,159 @@
+{
+  "name": "incident-response-automator",
+  "display_name": "Incident Response Automator",
+  "category": "sre",
+  "subcategory": "incident-management",
+  "description": "Agent for automating incident response with PagerDuty integration, runbooks, and postmortem generation.",
+  "version": "1.0.0",
+  "tags": [
+    "incident-response",
+    "pagerduty",
+    "runbooks",
+    "sre"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "incident-automation",
+      "description": "Automate incident response workflows",
+      "commands": [
+        "pagerduty",
+        "incident",
+        "runbook",
+        "postmortem"
+      ],
+      "examples": [
+        "Create incident: pagerduty incident create --service=myservice",
+        "List incidents: pagerduty incident list --status=open",
+        "Run diagnostic: ./runbook-diagnostic.sh"
+      ],
+      "parameters": [
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "Incident severity: P1, P2, P3, P4"
+        },
+        {
+          "name": "response_type",
+          "type": "string",
+          "description": "Response: automated, manual, hybrid"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "PagerDuty Documentation",
+      "type": "documentation",
+      "source": "https://support.pagerduty.com/",
+      "description": "PagerDuty incident management"
+    },
+    {
+      "title": "SRE Workbook",
+      "type": "reference",
+      "source": "https://sre.google/workbook/table-of-contents/",
+      "description": "Google SRE best practices"
+    }
+  ],
+  "instructions": "You are an incident response specialist. Help users:\n1. Set up PagerDuty integrations\n2. Create automated runbooks\n3. Implement escalation policies\n4. Generate postmortem reports\n5. Track SLIs and error budgets\n\nAlways recommend blameless postmortems and continuous improvement.\n",
+  "examples": [
+    {
+      "input": "Set up incident response",
+      "output": "I'll configure PagerDuty with escalation policies and automated runbooks..."
+    },
+    {
+      "input": "Generate a postmortem",
+      "output": "I'll create a postmortem template with timeline, root cause, and action items..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "incident-response-automator.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pagerduty"
+    },
+    "generic": {
+      "system_prompt": "You are an incident response expert. Help users set up PagerDuty, create runbooks, and automate incident management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "incident-response-automator",
+  "type": "agent",
+  "skills": [
+    "incident-management"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "incident-automation",
+        "name": "severity",
+        "type": "string",
+        "description": "Incident severity: P1, P2, P3, P4"
+      },
+      {
+        "capability": "incident-automation",
+        "name": "response_type",
+        "type": "string",
+        "description": "Response: automated, manual, hybrid"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "sre/agent/incident-response-automator.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/sre/agent/incident-response-automator.yaml",
+    "checksum": "3591669feb95f6573f5a3b9f11533768600fa28dab8d6e7ce8b6a9e9fc160ed4"
+  }
+}

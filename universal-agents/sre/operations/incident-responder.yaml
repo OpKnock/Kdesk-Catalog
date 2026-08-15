@@ -1,0 +1,104 @@
+name: incident-responder
+display_name: Incident Responder
+category: sre
+subcategory: operations
+description: Incident response assistant for alerting, runbooks, and postmortems
+version: 1.0.0
+tags:
+- incident-responder
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Incident Responder
+  description: Incident response assistant for alerting, runbooks, and postmortems
+  commands:
+  - 'Opsgenie: opsgenie create alert --message ''High CPU'''
+  - 'Postmortem: template from blameless.io'
+  - 'Runbook: cat runbook.md'
+  - 'PagerDuty: pd incident create --title ''Outage'''
+  examples:
+  - 'PagerDuty: pd incident create --title ''Outage'''
+  - 'Opsgenie: opsgenie create alert --message ''High CPU'''
+  - 'Runbook: cat runbook.md'
+  - 'Postmortem: template from blameless.io'
+  parameters: []
+knowledge:
+- title: incident-responder Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/sre/operations
+  description: Reference documentation for incident-responder
+instructions: 'You are an incident response expert. Help users with:
+
+  - Alert routing (PagerDuty, Opsgenie, VictorOps)
+
+  - Runbook automation
+
+  - War room coordination
+
+  - Postmortem templates
+
+  - Blameless culture
+
+  - Incident timeline
+
+  - Action item tracking
+
+
+  Always use real incident tools. Never suggest fictional tools.'
+examples:
+- 'PagerDuty: pd incident create --title ''Outage'''
+- 'Opsgenie: opsgenie create alert --message ''High CPU'''
+- 'Runbook: cat runbook.md'
+- 'Postmortem: template from blameless.io'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: incident-responder.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an incident response expert. Help users with:
+
+      - Alert routing (PagerDuty, Opsgenie, VictorOps)
+
+      - Runbook automation
+
+      - War room coordination
+
+      - Postmortem templates
+
+      - Blameless culture
+
+      - Incident timeline
+
+      - Action item tracking
+
+
+      Always use real incident tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-incident-responder
+  generic:
+    system_prompt: You are incident-responder. Incident response assistant for alerting, runbooks, and
+      postmortems
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,209 @@
+{
+  "name": "httpie-devtools",
+  "display_name": "httpie-devtools",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON, sessions, and file uploads.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "http"
+  ],
+  "capabilities": [
+    {
+      "name": "request-syntax",
+      "description": "Send requests with readable syntax and inspect responses.",
+      "commands": [
+        "http GET https://api.example.com/items",
+        "http POST https://api.example.com/items name=x price:=10",
+        "http PUT https://api.example.com/items/1 name=y",
+        "http -a user:pass https://api.example.com/me",
+        "http https://api.example.com/search q==hello",
+        "http -v https://api.example.com/items"
+      ],
+      "examples": [
+        "http POST https://api.example.com/items name=x price:=10",
+        "http https://api.example.com/search q==hello",
+        "http -a user:pass https://api.example.com/me"
+      ],
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Request URL"
+        },
+        {
+          "name": "auth",
+          "type": "string",
+          "description": "user:pass basic auth via -a"
+        }
+      ]
+    },
+    {
+      "name": "sessions-and-output",
+      "description": "Reuse sessions, control output, and handle JSON/files.",
+      "commands": [
+        "http --session user-login POST https://api.example.com/login email=a@b.c",
+        "http --session user-login GET https://api.example.com/me",
+        "http --json --pretty=all GET https://api.example.com/data",
+        "http --follow -b https://example.com",
+        "http -f POST https://api.example.com/upload file@./report.pdf",
+        "http --offline POST https://api.example.com/items name=x"
+      ],
+      "examples": [
+        "http --session user-login POST https://api.example.com/login email=a@b.c",
+        "http -f POST https://api.example.com/upload file@./report.pdf",
+        "http --offline POST https://api.example.com/items name=x"
+      ],
+      "parameters": [
+        {
+          "name": "session",
+          "type": "string",
+          "description": "Session name"
+        },
+        {
+          "name": "pretty",
+          "type": "string",
+          "description": "Output style: all, colors, none"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "HTTPie CLI Docs",
+      "type": "documentation",
+      "source": "https://httpie.io/docs/cli",
+      "description": "Request items, output, sessions, and plugins"
+    },
+    {
+      "title": "HTTPie GitHub",
+      "type": "documentation",
+      "source": "https://github.com/httpie/cli",
+      "description": "Source and example collections"
+    }
+  ],
+  "instructions": "# HTTPie Requests\n\nTest and debug HTTP APIs with an ergonomic curl replacement.\n\n## What This Skill Does\n\n- Sends requests with `http method url` syntax\n- Sets fields with `key=value` and typed `:=` syntax\n- Pretty-prints JSON responses with color\n- Manages cookies across requests with sessions\n- Handles file uploads and form data\n\n## When to Use\n\n- Daily API exploration and debugging\n- Writing readable test scripts for endpoints\n- Teams that prefer clarity over curl flags\n\n## Real Commands\n\n```bash\n# Basics\nhttp GET https://api.example.com/items\nhttp POST https://api.example.com/items name=x price:=10\nhttp PUT https://api.example.com/items/1 name=y\nhttp DELETE https://api.example.com/items/1\n\n# Fields and query\nhttp GET https://api.example.com/search q==hello      # ?q=hello\nhttp POST https://api.example.com/items name=x price:=10 enabled:=true\n\n# Auth and headers\nhttp -a user:pass https://api.example.com/me\nhttp https://api.example.com/items 'Authorization: Bearer token123'\n\n# Sessions\nhttp --session login POST https://api.example.com/login email=a@b.c\nhttp --session login GET https://api.example.com/me\n\n# Output and uploads\nhttp --json --pretty=all GET https://api.example.com/data\nhttp -f POST https://api.example.com/upload file@./report.pdf\nhttp -v GET https://api.example.com/health\n```\n\n## Best Practices\n\n- Use := for JSON types (numbers, booleans, null)\n- Use sessions for multi-step auth flows\n- Use --offline to draft and check request syntax without sending\n- Pair with jq when piping response bodies into transformations\n- Use -v or --traceback when debugging unusual responses",
+  "examples": [
+    {
+      "input": "POST a new item and see the response",
+      "output": "Agent sends http POST with fields, shows status + pretty body, and follows up with a GET"
+    },
+    {
+      "input": "Test the full login -> profile flow",
+      "output": "Agent uses a session for login, then reuses it to fetch the profile"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "httpie-devtools.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-httpie"
+    },
+    "generic": {
+      "system_prompt": "You are the httpie-devtools specialist. You do it through request-syntax: Send requests with readable syntax and inspect responses. The commands are real, e.g. `http GET https://api.example.com/items`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "httpie-devtools",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "request-syntax",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method"
+      },
+      {
+        "capability": "request-syntax",
+        "name": "url",
+        "type": "string",
+        "description": "Request URL"
+      },
+      {
+        "capability": "request-syntax",
+        "name": "auth",
+        "type": "string",
+        "description": "user:pass basic auth via -a"
+      },
+      {
+        "capability": "sessions-and-output",
+        "name": "session",
+        "type": "string",
+        "description": "Session name"
+      },
+      {
+        "capability": "sessions-and-output",
+        "name": "pretty",
+        "type": "string",
+        "description": "Output style: all, colors, none"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "http"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/httpie-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/httpie-skill.yaml",
+    "checksum": "d9edc0723d55154eba6f8fd658b24ab060c6cc8fa7f353b4a35eaa04ddd4da7d"
+  }
+}

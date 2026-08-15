@@ -1,0 +1,167 @@
+{
+  "name": "turbo-lint",
+  "display_name": "turbo-lint",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "turbo-lint",
+      "description": "Execute lint tasks in a Turborepo with caching and filtering",
+      "commands": [
+        "npx turbo lint",
+        "npx turbo run lint --filter=web",
+        "npx turbo run lint --affected",
+        "npx turbo lint --continue",
+        "npx turbo run lint --parallel --concurrency=6"
+      ],
+      "examples": [
+        "npx turbo run lint --filter=@acme/*",
+        "npx turbo run lint test --affected --base=main",
+        "npx turbo lint --output-logs=hash-only"
+      ],
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "Include only matching packages, e.g. web or @acme/*"
+        },
+        {
+          "name": "affected",
+          "type": "boolean",
+          "description": "Run only packages affected by the change (uses git)"
+        },
+        {
+          "name": "output-logs",
+          "type": "string",
+          "description": "new-only, full, hash-only, none - log verbosity"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Turborepo docs",
+      "type": "documentation",
+      "source": "https://turbo.build/repo/docs",
+      "description": "Task running, caching, and filters reference"
+    },
+    {
+      "title": "Turbo filters",
+      "type": "documentation",
+      "source": "https://turbo.build/repo/docs/reference/filters",
+      "description": "All --filter syntaxes: package names, directories, and combinations"
+    }
+  ],
+  "instructions": "# Turbo Lint\n\nRuns lint tasks across a Turborepo with content-based caching so unchanged packages\nare skipped entirely.\n\n## When to Use\n\n- Linting all packages in a monorepo\n- Linting only affected packages per PR\n- Combining lint+test+build in one cached pipeline\n\n## Real Commands\n\n```bash\n# Lint every package with a lint script\nnpx turbo lint\n\n# Lint one package\nnpx turbo run lint --filter=web\n\n# Lint all packages in a scope\nnpx turbo run lint --filter=@acme/*\n\n# Only packages affected since main\nnpx turbo run lint --affected --base=origin/main\n\n# Don't stop on first failure\nnpx turbo lint --continue\n\n# Run multiple tasks in one pipeline run\nnpx turbo run lint test build --affected --parallel\n```\n\n## Turbo Config (turbo.json)\n\n```json\n{\n  \"$schema\": \"https://turbo.build/schema.json\",\n  \"tasks\": {\n    \"lint\": {\n      \"dependsOn\": [\"^lint\"],\n      \"outputs\": []\n    }\n  }\n}\n```\n\n## Best Practices\n\n- Declare `lint` as a task so caching works consistently\n- Use `--affected --base=origin/main` in CI to lint only PR changes\n- Verify cache hits with `--output-logs=hash-only` or `--dry=json`\n- Combine with `--continue` so one failing package doesn't mask others\n\n## Example Response\n\nShows per-package task status (cached/full), durations, and error counts, with\n`TURBO_CACHED` markers for skipped packages.",
+  "examples": [
+    {
+      "input": "Lint everything in the monorepo",
+      "output": "Runs npx turbo run lint --parallel and summarizes per-package results, noting cache hits"
+    },
+    {
+      "input": "Lint only what this PR touched",
+      "output": "Runs npx turbo run lint --affected --base=origin/main and reports only the affected packages"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "turbo-lint.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-turbo-lint"
+    },
+    "generic": {
+      "system_prompt": "Your lane is turbo-lint. You do it through turbo-lint: Execute lint tasks in a Turborepo with caching and filtering. The commands are real, e.g. `npx turbo lint`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "turbo-lint",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "turbo-lint",
+        "name": "filter",
+        "type": "string",
+        "description": "Include only matching packages, e.g. web or @acme/*"
+      },
+      {
+        "capability": "turbo-lint",
+        "name": "affected",
+        "type": "boolean",
+        "description": "Run only packages affected by the change (uses git)"
+      },
+      {
+        "capability": "turbo-lint",
+        "name": "output-logs",
+        "type": "string",
+        "description": "new-only, full, hash-only, none - log verbosity"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/turbo-lint-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/turbo-lint-skill.yaml",
+    "checksum": "2a9df58a5c6a859aa7eebe0783ae781871840c5786faf1ba60e2e364385ddc20"
+  }
+}

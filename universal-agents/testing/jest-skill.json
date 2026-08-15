@@ -1,0 +1,254 @@
+{
+  "name": "jest",
+  "display_name": "jest",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Writes and runs JavaScript/TypeScript tests with Jest: unit tests, mocks, snapshots, and watch mode.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "global.fetch",
+    "jest.mock('./api",
+    "jest.usefaketimers",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "jest-running",
+      "description": "Run Jest suites with filters and watch mode.",
+      "commands": [
+        "npx jest",
+        "npx jest src/order.test.js",
+        "npx jest -t \"calculates total\"",
+        "npx jest --watch",
+        "npx jest --ci --coverage"
+      ],
+      "examples": [
+        "npx jest src/order.test.js",
+        "npx jest -t \"calculates total\"",
+        "npx jest --watch"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Test file or directory"
+        },
+        {
+          "name": "testNamePattern",
+          "type": "string",
+          "description": "Test name filter (-t)"
+        },
+        {
+          "name": "ci",
+          "type": "boolean",
+          "description": "CI mode (no watch, deterministic)"
+        }
+      ]
+    },
+    {
+      "name": "mocking",
+      "description": "Mock modules, timers, and fetch calls.",
+      "commands": [
+        "npx jest --coverage --silent",
+        "jest.mock('./api')",
+        "jest.useFakeTimers()",
+        "global.fetch = jest.fn()",
+        "npx jest --restoreMocks"
+      ],
+      "examples": [
+        "jest.mock('./api')",
+        "jest.useFakeTimers()",
+        "global.fetch = jest.fn(() => Promise.resolve({ json: () => Promise.resolve({}) }))"
+      ],
+      "parameters": [
+        {
+          "name": "module",
+          "type": "string",
+          "description": "Module to mock"
+        },
+        {
+          "default": "false",
+          "description": "Restore mocks between tests with --restoreMocks.",
+          "name": "restoreMocks",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "snapshots",
+      "description": "Create, update, and review snapshots.",
+      "commands": [
+        "npx jest --updateSnapshot",
+        "npx jest --ci --snapshotSummary",
+        "npx jest -t \"renders\" --updateSnapshot",
+        "npx jest --watch --updateSnapshot"
+      ],
+      "examples": [
+        "npx jest --updateSnapshot",
+        "npx jest --ci --snapshotSummary",
+        "npx jest -t \"renders\" --updateSnapshot"
+      ],
+      "parameters": [
+        {
+          "name": "updateSnapshot",
+          "type": "boolean",
+          "description": "Update snapshot files"
+        },
+        {
+          "default": "false",
+          "description": "CI mode with --ci --snapshotSummary output.",
+          "name": "ci",
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Jest Documentation",
+      "type": "documentation",
+      "source": "https://jestjs.io/docs/getting-started",
+      "description": "Test writing, matchers, and mocking"
+    },
+    {
+      "title": "Jest Snapshot Testing",
+      "type": "documentation",
+      "source": "https://jestjs.io/docs/snapshot-testing",
+      "description": "Snapshot workflows and pitfalls"
+    }
+  ],
+  "instructions": "# Jest\n\nUnit and integration testing for JavaScript and TypeScript.\n\n## What This Skill Does\n\n- Runs test suites with filters and watch mode\n- Writes assertions with rich matchers\n- Mocks modules, timers, and network calls\n- Maintains snapshot tests safely\n\n## When to Use\n\n- Adding tests to JS/TS services\n- Debugging a failing unit test\n- Regression protection for pure logic\n\n## Real Commands\n\n```bash\n# Run\nnpx jest\nnpx jest src/order.test.js\nnpx jest -t \"calculates total\"\nnpx jest --watch\nnpx jest --ci --coverage\n\n# Snapshots\nnpx jest --updateSnapshot\nnpx jest --ci --snapshotSummary\n\n# Debug\nnpx jest --coverage --silent\n```\n\n## Sample Test\n\n```js\ntest('calculates total with discount', () => {\n  const order = new Order([{ price: 10, qty: 2 }, { price: 5, qty: 1 }]);\n  expect(order.total(0.1)).toBeCloseTo(22.5);\n});\n\ntest('applies discount once', () => {\n  const order = new Order([{ price: 10, qty: 2 }]);\n  const spy = jest.spyOn(order, 'discount');\n  order.total(0.1);\n  expect(spy).toHaveBeenCalledTimes(1);\n});\n```\n\n## Best Practices\n\n- Use toBeCloseTo for floats; never toBe on decimals\n- Keep unit tests synchronous and fast\n- Mock external APIs; test real behavior in integration\n- Review snapshot diffs carefully in PRs\n- Run --watch during development, --ci in pipelines",
+  "examples": [
+    {
+      "input": "Test my discount logic",
+      "output": "Agent writes unit tests with edge cases, runs npx jest -t discount, and reports coverage for the module."
+    },
+    {
+      "input": "A snapshot changed unexpectedly",
+      "output": "Agent shows the snapshot diff, verifies it's intentional, and updates with --updateSnapshot."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "jest.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-jest"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: jest. You do it through jest-running: Run Jest suites with filters and watch mode. The commands are real, e.g. `npx jest`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "jest",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jest-running",
+        "name": "path",
+        "type": "string",
+        "description": "Test file or directory"
+      },
+      {
+        "capability": "jest-running",
+        "name": "testNamePattern",
+        "type": "string",
+        "description": "Test name filter (-t)"
+      },
+      {
+        "capability": "jest-running",
+        "name": "ci",
+        "type": "boolean",
+        "description": "CI mode (no watch, deterministic)"
+      },
+      {
+        "capability": "mocking",
+        "name": "module",
+        "type": "string",
+        "description": "Module to mock"
+      },
+      {
+        "capability": "mocking",
+        "name": "restoreMocks",
+        "type": "boolean",
+        "description": "Restore mocks between tests with --restoreMocks."
+      },
+      {
+        "capability": "snapshots",
+        "name": "updateSnapshot",
+        "type": "boolean",
+        "description": "Update snapshot files"
+      },
+      {
+        "capability": "snapshots",
+        "name": "ci",
+        "type": "boolean",
+        "description": "CI mode with --ci --snapshotSummary output."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "global.fetch",
+    "jest.mock('./api",
+    "jest.usefaketimers",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/jest-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/jest-skill.yaml",
+    "checksum": "3d06cf47d86ef19667501a5f9855a4a7ca7a50ebf85627566340ffac6bf41969"
+  }
+}

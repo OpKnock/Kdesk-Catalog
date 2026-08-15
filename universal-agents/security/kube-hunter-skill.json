@@ -1,0 +1,206 @@
+{
+  "name": "kube-hunter",
+  "display_name": "kube-hunter",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Probes Kubernetes clusters for exploitable attack surfaces with kube-hunter active and passive scans.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kube-hunter"
+  ],
+  "capabilities": [
+    {
+      "name": "cluster-hunting",
+      "description": "Scan clusters locally, remotely, or across CIDR ranges.",
+      "commands": [
+        "kube-hunter",
+        "kube-hunter --remote 10.0.0.5:6443",
+        "kube-hunter --cidr 10.0.0.0/24",
+        "kube-hunter --active",
+        "kube-hunter --interface eth0"
+      ],
+      "examples": [
+        "kube-hunter --remote k8s-api.example.com:6443",
+        "kube-hunter --cidr 192.168.1.0/24",
+        "kube-hunter --active --remote 10.0.0.5:6443"
+      ],
+      "parameters": [
+        {
+          "name": "remote",
+          "type": "string",
+          "description": "Remote endpoint host:port to scan"
+        },
+        {
+          "name": "cidr",
+          "type": "string",
+          "description": "CIDR range to scan for clusters"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "description": "Run active exploits/hunting checks"
+        }
+      ]
+    },
+    {
+      "name": "reporting",
+      "description": "Capture findings to reports and logs.",
+      "commands": [
+        "kube-hunter --report report.json --format json",
+        "kube-hunter --report report.html --format html",
+        "kube-hunter --log /tmp/kube-hunter.log",
+        "kube-hunter --active --report report.html"
+      ],
+      "examples": [
+        "kube-hunter --report report.html",
+        "kube-hunter --report findings.json --format json",
+        "kube-hunter --active --report report.html"
+      ],
+      "parameters": [
+        {
+          "name": "report",
+          "type": "string",
+          "description": "Report file path"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Report format: html, json, console"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "kube-hunter GitHub",
+      "type": "documentation",
+      "source": "https://github.com/aquasecurity/kube-hunter",
+      "description": "Usage, hunting scenarios, and output formats"
+    },
+    {
+      "title": "kube-hunter Hunting Scenarios",
+      "type": "documentation",
+      "source": "https://github.com/aquasecurity/kube-hunter/blob/master/docs/HUNTING_SCENARIOS.md",
+      "description": "Attack scenarios probed by the tool"
+    }
+  ],
+  "instructions": "# kube-hunter\n\nPenetration-test your Kubernetes cluster's attack surface.\n\n## What This Skill Does\n\n- Discovers clusters on local interfaces, remotes, or CIDRs\n- Runs passive checks for known misconfigurations\n- Runs active hunts for exposed API, dashboard, or RBAC issues\n- Reports vulnerabilities with severity and remediation\n\n## When to Use\n\n- Pre-launch security assessment of a cluster\n- Checking whether admin interfaces are exposed externally\n- Recurring attack-surface audits\n\n## Real Commands\n\n```bash\n# Discover from the local network\nkube-hunter\nkube-hunter --interface eth0\n\n# Scan a remote API server\nkube-hunter --remote k8s-api.example.com:6443\n\n# Scan a subnet\nkube-hunter --cidr 10.0.0.0/24\n\n# Active hunting (tests exploits, use with care)\nkube-hunter --active --remote 10.0.0.5:6443\n\n# Reporting\nkube-hunter --report report.html\nkube-hunter --report findings.json --format json\n```\n\n## Best Practices\n\n- Run active hunts only against test clusters or with authorization\n- Pair with kube-bench (static CIS) for complementary coverage\n- Re-run after networking or RBAC changes\n- Treat findings as attack-surface candidates, not proof of compromise\n- Automate passive scans weekly; active scans on release cadence",
+  "examples": [
+    {
+      "input": "Is my cluster API exposed to the internet?",
+      "output": "Agent runs kube-hunter --remote api.example.com:6443 in passive mode and reports exposed services with severity."
+    },
+    {
+      "input": "Run a full attack-surface audit",
+      "output": "Agent runs kube-hunter --cidr 10.0.0.0/24 --report report.html and summarizes high-severity findings with remediation steps."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kube-hunter.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kube-hunter"
+    },
+    "generic": {
+      "system_prompt": "You work kube-hunter hands-on. You do it through cluster-hunting: Scan clusters locally, remotely, or across CIDR ranges. The commands are real, e.g. `kube-hunter`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kube-hunter",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cluster-hunting",
+        "name": "remote",
+        "type": "string",
+        "description": "Remote endpoint host:port to scan"
+      },
+      {
+        "capability": "cluster-hunting",
+        "name": "cidr",
+        "type": "string",
+        "description": "CIDR range to scan for clusters"
+      },
+      {
+        "capability": "cluster-hunting",
+        "name": "active",
+        "type": "boolean",
+        "description": "Run active exploits/hunting checks"
+      },
+      {
+        "capability": "reporting",
+        "name": "report",
+        "type": "string",
+        "description": "Report file path"
+      },
+      {
+        "capability": "reporting",
+        "name": "format",
+        "type": "string",
+        "description": "Report format: html, json, console"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kube-hunter"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/kube-hunter-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/kube-hunter-skill.yaml",
+    "checksum": "0c7d1b0f915300f809388b204e1a6e6e556e2877f78b27a5872fb8716b71f6c1"
+  }
+}

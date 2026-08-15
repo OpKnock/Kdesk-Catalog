@@ -1,0 +1,134 @@
+{
+  "name": "privacy",
+  "display_name": "Privacy",
+  "category": "ml",
+  "subcategory": "privacy",
+  "description": "Privacy SDK deployment agent for ML Privacy SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "privacy"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Privacy Deploy Sdk",
+      "description": "Privacy SDK deployment agent for ML Privacy SDK deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent privacy"
+      ],
+      "examples": [
+        "Server: python -m privacy.server --port 8080",
+        "Docker: docker run -p 8080:8080 privacy-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "privacy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/privacy",
+      "description": "Reference documentation for privacy"
+    }
+  ],
+  "instructions": "You are the Privacy SDK deployment expert. Call on this agent to build, containerize, and roll out the Privacy application service. Core workflow: (1) run the service locally to validate with 'python -m privacy.server --port 8080' and smoke-test via 'docker run -p 8080:8080 privacy-server'; (2) package and publish the image with 'docker build -t model:latest .' then 'docker push registry.example.com/model:latest'; (3) promote to Kubernetes with 'kubectl set image deployment/model model=registry.example.com/model:latest'; (4) manage releases via 'helm upgrade model ./helm-chart --namespace production' and confirm completion with 'kubectl rollout status deployment/model --timeout=300s'; identify the agent with 'python identity.py --agent privacy'. Key behaviors: verify image tags match between push and set-image steps, check helm values and namespace exist, and treat failed rollouts by inspecting pod status before retrying. Output: deployed revision, rollout status, and any registry/Helm/K8s errors with remediation.",
+  "examples": [
+    "Server: python -m privacy.server --port 8080",
+    "Docker: docker run -p 8080:8080 privacy-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "privacy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Privacy SDK deployment expert. Help users deploy Privacy applications."
+    },
+    "opencode": {
+      "plugin": "opencode-privacy"
+    },
+    "generic": {
+      "system_prompt": "You are privacy. Privacy SDK deployment agent for ML Privacy SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "privacy",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/privacy/privacy.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/privacy/privacy.yaml",
+    "checksum": "cae8e73d0d129785a4388f7ee6d06c9b33c7481c21e5f59b3da144e14746e00d"
+  }
+}

@@ -1,0 +1,129 @@
+name: api-graphql-schema-design
+version: 2.0.0
+type: skill
+category: backend
+description: Designs advanced GraphQL schemas — interfaces, unions, custom scalars — and federated graphs
+  with Apollo Federation subgraphs.
+keywords:
+- graphql
+- schema
+- subscriptions
+- federation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-graphql-schema-design.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-graphql-schema-design
+  generic:
+    system_prompt: 'You work Api Graphql Schema Design hands-on. You do it through schema-design: Model
+      enterprise GraphQL schemas with shared type patterns and schema-first authoring. The commands are
+      real, e.g. `npx graphql-codegen init`. You verify each step you report and stay honest about what
+      you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: schema-design
+  description: Model enterprise GraphQL schemas with shared type patterns and schema-first authoring
+  commands:
+  - npx graphql-codegen init
+  - npx graphql-codegen --config codegen.yml
+  - strawberry export-schema -o schema.graphql
+  - npm run graphql:schema:print > schema.graphql
+  - npx graphql-inspector validate schema.graphql
+  examples:
+  - npx graphql-codegen --config codegen.yml && git diff --stat
+  - strawberry export-schema -o schema.graphql && graphql-inspector validate schema.graphql
+  - npx graphql-inspector validate documents/**/*.graphql schema.graphql
+  parameters:
+  - name: schema
+    type: string
+    description: Path to GraphQL SDL schema file
+  - name: config
+    type: string
+    description: graphql-codegen config path
+- name: federation
+  description: Compose subgraphs into a supergraph with Apollo Federation and Rover
+  commands:
+  - rover subgraph publish my-graph@prod --name inventory --schema ./inventory.graphql --routing-url http://inventory:4001
+  - rover supergraph compose --config supergraph.yaml --output supergraph.graphql
+  - rover dev --supergraph-config supergraph.yaml
+  - rover graph introspect http://localhost:4001/graphql > local.graphql
+  - rover subgraph check my-graph@prod --name inventory --schema ./inventory.graphql
+  examples:
+  - rover supergraph compose --config supergraph.yaml --output supergraph.graphql
+  - rover subgraph check my-graph@prod --name products --schema ./products.graphql
+  - rover dev --supergraph-config supergraph.yaml --watch
+  parameters:
+  - name: graphRef
+    type: string
+    description: Apollo graph ref like my-graph@prod
+  - name: subgraph
+    type: string
+    description: Subgraph name
+prerequisites:
+- apollo-server
+- graphql-codegen
+- dataloader
+tools:
+- apollo-server
+- graphql-codegen
+- dataloader
+- node.js
+- python
+examples:
+- input: Optimize GraphQL N+1 queries
+  output: Adds DataLoader batching in resolvers so field lookups are batched and cached per request
+- input: Implement federation across team boundaries
+  output: Creates products and inventory subgraphs with @key entities, composes them with rover, and publishes
+    to Apollo GraphOS
+instructions: "# API GraphQL (Schema Design & Federation)\n\nDesigns advanced GraphQL schemas and composes\
+  \ them into federated graphs.\n\n## When to Use\n- Enterprise GraphQL with multiple teams\n- Schema-first\
+  \ design with governance\n- Composing subgraphs into a supergraph\n- Adding real-time via subscriptions\n\
+  \n## Real Commands\n\n```bash\n# Generate types from schema\nnpx graphql-codegen init\nnpx graphql-codegen\
+  \ --config codegen.yml\n\n# Export schema (Python/Strawberry)\nstrawberry export-schema -o schema.graphql\n\
+  \n# Introspect a running server\nrover graph introspect http://localhost:4001/graphql > local.graphql\n\
+  \n# Compose supergraph\nrover supergraph compose --config supergraph.yaml --output supergraph.graphql\n\
+  ```\n\n## Supergraph Config\n\n```yaml\n# supergraph.yaml\nsubgraphs:\n  inventory:\n    routing_url:\
+  \ http://inventory:4001/graphql\n    schema:\n      file: ./inventory.graphql\n  products:\n    routing_url:\
+  \ http://products:4002/graphql\n    schema:\n      file: ./products.graphql\n```\n\n## Testing\nUse\
+  \ `rover subgraph check` against the prod schema before publishing to catch breaking subgraph changes.\n\
+  \n## Best Practices\n- Keep subgraph boundaries at team ownership lines\n- Run `rover subgraph check`\
+  \ on every subgraph PR\n- Version and back up the composed supergraph"
+display_name: Api Graphql Schema Design
+knowledge:
+- title: Apollo Federation Docs
+  type: documentation
+  source: https://www.apollographql.com/docs/federation/
+  description: Subgraph authoring, entities, supergraph composition
+- title: Rover CLI
+  type: documentation
+  source: https://www.apollographql.com/docs/rover/
+  description: Subgraph publish, compose, check commands
+- title: GraphQL Code Generator
+  type: documentation
+  source: https://the-guild.dev/graphql/codegen/docs
+  description: Type-safe codegen from schemas

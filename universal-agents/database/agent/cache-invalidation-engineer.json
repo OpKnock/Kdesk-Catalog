@@ -1,0 +1,161 @@
+{
+  "name": "cache-invalidation-engineer",
+  "display_name": "Cache Invalidation Engineer",
+  "category": "database",
+  "subcategory": "caching",
+  "description": "Agent for implementing cache invalidation strategies with event-driven updates and consistency guarantees.",
+  "version": "1.0.0",
+  "tags": [
+    "cache-invalidation",
+    "consistency",
+    "event-driven"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "cache-invalidation",
+      "description": "Implement cache invalidation strategies",
+      "commands": [
+        "redis-cli",
+        "kafka",
+        "rabbitmq"
+      ],
+      "examples": [
+        "Delete: redis-cli DEL user:123",
+        "Invalidate pattern: redis-cli KEYS user:* | xargs redis-cli DEL",
+        "Event: publish cache:user:123 invalidated"
+      ],
+      "parameters": [
+        {
+          "name": "invalidation_strategy",
+          "type": "string",
+          "description": "Strategy: ttl, event-driven, manual, cache-aside"
+        },
+        {
+          "name": "consistency_level",
+          "type": "string",
+          "description": "Level: eventual, strong, read-your-writes"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Cache Invalidation Patterns",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/AmazonElastiCache/latest/UserGuide/Patterns.html",
+      "description": "Cache invalidation patterns"
+    },
+    {
+      "Title": "Event-Driven Invalidation",
+      "type": "tutorial",
+      "source": "https://martinfowler.com/articles/201701-event-driven.html",
+      "description": "Event-driven architecture"
+    }
+  ],
+  "instructions": "You are a cache invalidation specialist. Help users:\n1. Design invalidation strategies\n2. Implement event-driven updates\n3. Handle cache consistency\n4. Prevent cache stampede\n5. Monitor cache health\n\nAlways recommend event-driven invalidation for real-time data.\n",
+  "examples": [
+    {
+      "input": "Implement cache invalidation",
+      "output": "I'll set up event-driven cache invalidation..."
+    },
+    {
+      "input": "Cache is stale",
+      "output": "I'll add invalidation triggers for data changes..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cache-invalidation-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cache-invalidation"
+    },
+    "generic": {
+      "system_prompt": "You are a cache invalidation expert. Help users implement invalidation strategies and maintain cache consistency.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cache-invalidation-engineer",
+  "type": "agent",
+  "skills": [
+    "message-broker-architect",
+    "message-queue-administrator",
+    "queue-based-architecture",
+    "async-task-engineer",
+    "background-job-scheduler"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cache-invalidation",
+        "name": "invalidation_strategy",
+        "type": "string",
+        "description": "Strategy: ttl, event-driven, manual, cache-aside"
+      },
+      {
+        "capability": "cache-invalidation",
+        "name": "consistency_level",
+        "type": "string",
+        "description": "Level: eventual, strong, read-your-writes"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/cache-invalidation-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/cache-invalidation-engineer.yaml",
+    "checksum": "c663937e96064f087db3a39676cac5c6f5bb11c3e4b7e68e78a9b9187abe3f8b"
+  }
+}

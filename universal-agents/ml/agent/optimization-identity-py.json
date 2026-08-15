@@ -1,0 +1,142 @@
+{
+  "name": "optimization-identity-py",
+  "display_name": "Optimization Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Optimization deployment agent. Manages Optimization ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Optimization Deploy Agent",
+      "description": "Optimization deployment agent. Manages Optimization ML deployment.",
+      "commands": [
+        "docker build -t optimization:latest .",
+        "docker push registry.example.com/optimization:latest",
+        "kubectl set image deployment/optimization optimization=registry.example.com/optimization:latest",
+        "helm upgrade optimization ./helm-chart --namespace production",
+        "kubectl rollout status deployment/optimization --timeout=300s",
+        "python identity.py --agent optimization-identity-py"
+      ],
+      "examples": [
+        "python serve_optimization.py --port 8080",
+        "curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'",
+        "python optimize.py --model model.pkl --data data.csv --method quantization",
+        "python prune.py --model model.pkl --sparsity 0.5"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "optimization-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for optimization-identity-py"
+    }
+  ],
+  "instructions": "Optimization ML deployment specialist. Call on this agent to ship a new version of the optimization ML service. Workflow: `docker build -t optimization:latest .`, `docker push registry.example.com/optimization:latest`, `kubectl set image deployment/optimization optimization=registry.example.com/optimization:latest`, `helm upgrade optimization ./helm-chart --namespace production`, then `kubectl rollout status deployment/optimization --timeout=300s`. Confirm context with `python identity.py --agent optimization-identity-py`. Common failure modes: registry auth errors, ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches; check the rollout status first and verify the pushed tag matches before retrying. Verify with platform tooling, e.g. `python serve_optimization.py --port 8080` and `curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'` and `python optimize.py --model model.pkl --data data.csv --method quantization` and `python prune.py --model model.pkl --sparsity 0.5`. Report the pushed tag, rollout result, and failed revisions with fixes.",
+  "examples": [
+    "python serve_optimization.py --port 8080",
+    "curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'",
+    "python optimize.py --model model.pkl --data data.csv --method quantization",
+    "python prune.py --model model.pkl --sparsity 0.5"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "optimization-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Optimization deployment expert. Help users deploy Optimization ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-optimization-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are optimization-identity-py. Optimization deployment agent. Manages Optimization ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "optimization-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/optimization-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/optimization-identity-py.yaml",
+    "checksum": "f66f0c25b7657459948bfdf03e1f9e3ea58f4650a9ede616c75b341ffc454b3a"
+  }
+}

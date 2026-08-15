@@ -1,0 +1,209 @@
+{
+  "name": "ssh",
+  "display_name": "ssh",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts, and verbose troubleshooting.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "ssh"
+  ],
+  "capabilities": [
+    {
+      "name": "connections",
+      "description": "Connect with keys, ports, and options.",
+      "commands": [
+        "ssh user@host",
+        "ssh -p 2222 user@host",
+        "ssh -i ~/.ssh/id_ed25519 user@host",
+        "ssh -t user@host 'sudo systemctl status nginx'",
+        "ssh -J jumpuser@bastion user@target",
+        "ssh -N -L 5432:localhost:5432 user@dbhost"
+      ],
+      "examples": [
+        "ssh -i ~/.ssh/id_ed25519 user@host",
+        "ssh -t user@host 'sudo systemctl status nginx'",
+        "ssh -J jumpuser@bastion user@target"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Remote host"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "SSH port"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Identity file"
+        }
+      ]
+    },
+    {
+      "name": "tunnels-and-forwarding",
+      "description": "Forward ports, set up SOCKS proxies, and tunnel traffic.",
+      "commands": [
+        "ssh -L 8080:localhost:80 user@host",
+        "ssh -R 3000:localhost:3000 user@host",
+        "ssh -D 1080 -N user@host",
+        "ssh -L 3306:db.internal:3306 user@bastion",
+        "ssh -o ExitOnForwardFailure=yes -L 8080:localhost:80 user@host",
+        "ssh -vvv user@host"
+      ],
+      "examples": [
+        "ssh -L 3306:db.internal:3306 user@bastion",
+        "ssh -D 1080 -N user@host",
+        "ssh -vvv user@host"
+      ],
+      "parameters": [
+        {
+          "name": "local-port",
+          "type": "integer",
+          "description": "Local port for -L"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Forward target host:port"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ssh Manual",
+      "type": "documentation",
+      "source": "https://man.openbsd.org/ssh",
+      "description": "SSH options and usage"
+    },
+    {
+      "title": "ssh_config Manual",
+      "type": "documentation",
+      "source": "https://man.openbsd.org/ssh_config",
+      "description": "Client configuration file reference"
+    }
+  ],
+  "instructions": "# SSH Connections\n\nConnect and tunnel to remote hosts securely.\n\n## What This Skill Does\n\n- Connects with keys, ports, and command execution\n- Configures per-host options in ~/.ssh/config\n- Forwards local/remote ports and SOCKS proxies\n- Uses jump hosts and agent forwarding\n- Troubleshoots with verbose output\n\n## When to Use\n\n- Any remote shell access\n- Exposing local services through tunnels\n- Multi-hop bastion environments\n\n## Real Commands\n\n```bash\n# Basic connections\nssh user@host\nssh -p 2222 user@host\nssh -i ~/.ssh/id_ed25519 user@host\nssh -t user@host 'sudo systemctl status nginx'\nssh -J jumpuser@bastion user@target\n\n# Tunnels\nssh -L 8080:localhost:80 user@host          # local forward\nssh -L 3306:db.internal:3306 user@bastion   # through bastion\nssh -R 3000:localhost:3000 user@host        # remote forward\nssh -D 1080 -N user@host                    # SOCKS proxy\nssh -o ExitOnForwardFailure=yes -L 8080:localhost:80 user@host\n\n# Debug\nssh -vvv user@host\n```\n\n## ~/.ssh/config\n\n```\nHost prod\n  HostName 10.0.0.5\n  User deploy\n  IdentityFile ~/.ssh/id_ed25519\n  ServerAliveInterval 30\n```\n\n## Best Practices\n\n- Use config aliases over long flag lists\n- Prefer -J for bastions; forward agent only when needed\n- Add ExitOnForwardFailure to fail fast on tunnels\n- Use -N for tunnels with no shell\n- Verify fingerprints (ssh-keygen -F) before first connect",
+  "examples": [
+    {
+      "input": "Reach a database behind a bastion",
+      "output": "Agent sets up a local forward through the bastion and verifies connectivity"
+    },
+    {
+      "input": "Debug a connection refused issue",
+      "output": "Agent runs ssh -vvv, isolates the failing stage (DNS, TCP, auth, exec)"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ssh.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ssh"
+    },
+    "generic": {
+      "system_prompt": "You are the ssh specialist. You do it through connections: Connect with keys, ports, and options. The commands are real, e.g. `ssh user@host`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ssh",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "connections",
+        "name": "host",
+        "type": "string",
+        "description": "Remote host"
+      },
+      {
+        "capability": "connections",
+        "name": "port",
+        "type": "integer",
+        "description": "SSH port"
+      },
+      {
+        "capability": "connections",
+        "name": "key",
+        "type": "string",
+        "description": "Identity file"
+      },
+      {
+        "capability": "tunnels-and-forwarding",
+        "name": "local-port",
+        "type": "integer",
+        "description": "Local port for -L"
+      },
+      {
+        "capability": "tunnels-and-forwarding",
+        "name": "target",
+        "type": "string",
+        "description": "Forward target host:port"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "ssh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/ssh-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/ssh-skill.yaml",
+    "checksum": "cd2e355643d4aaf6f998f4764da0c77130befcb098c6ec40669d512407b6c4fe"
+  }
+}

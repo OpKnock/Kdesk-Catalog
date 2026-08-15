@@ -1,0 +1,98 @@
+name: performance-baseline
+display_name: Performance Baseline
+category: api
+subcategory: general
+description: 'Establish performance baselines: k6 load tests, thresholds, trend stats, and regression
+  comparison.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- k6
+capabilities:
+- name: k6-baseline-testing
+  description: Write and run k6 load tests with thresholds, virtual users and summary statistics.
+  commands:
+  - k6 run --vus 50 --duration 30s script.js
+  - k6 inspect script.js
+  - k6 run --summary-trend-stats="avg,p(95),p(99)" script.js
+  - k6 run --env BASE_URL=https://staging.example.com script.js
+  - k6 run --out json=results.json script.js
+  examples:
+  - k6 run --vus 20 --duration 1m --summary-trend-stats='avg,p(90),p(95)' script.js
+  - k6 inspect script.js
+  - k6 run --out json=results.json --vus 100 --duration 2m script.js
+  parameters:
+  - name: vus
+    type: integer
+    description: Number of virtual users
+  - name: duration
+    type: string
+    description: Test duration like 30s or 1m
+  - name: script
+    type: string
+    description: Path to the k6 test script
+knowledge:
+- title: k6 Documentation
+  type: documentation
+  source: https://grafana.com/docs/k6/latest/
+  description: Scripting, thresholds, executors and outputs
+- title: k6 Metrics Reference
+  type: documentation
+  source: https://grafana.com/docs/k6/latest/using-k6/metrics/
+  description: Built-in metrics and trend statistics
+instructions: "# Performance Baselines\n\nBaselines give you a number to compare against every release,\
+  \ catching regressions early.\n\n## What this skill does\n\n- Writes k6 scenarios with realistic load\n\
+  - Sets thresholds that fail the build\n- Stores results for comparison\n\n## When to use\n\n- Before\
+  \ big releases\n- After infra changes (DB, caches, deploys)\n\n## Real commands\n\n```bash\n# Run a\
+  \ load test\nk6 run --vus 50 --duration 30s script.js\n\n# Inspect script structure\nk6 inspect script.js\n\
+  \n# Custom stats\nk6 run --summary-trend-stats=\"avg,p(95),p(99)\" script.js\n\n# Environment override\n\
+  k6 run --env BASE_URL=https://staging.example.com script.js\n\n# JSON output for comparison\nk6 run\
+  \ --out json=results.json script.js\n```\n\n## Script with thresholds\n\n```js\nimport http from 'k6/http';\n\
+  import { check, sleep } from 'k6';\n\nexport const options = {\n  vus: 50,\n  duration: '1m',\n  thresholds:\
+  \ {\n    http_req_duration: ['p(95)<500'],\n    http_req_failed: ['rate<0.01'],\n  },\n};\n\nexport\
+  \ default function () {\n  const res = http.get('http://localhost:8080/api/health');\n  check(res, {\
+  \ 'status 200': (r) => r.status === 200 });\n  sleep(1);\n}\n```\n\n## Best practices\n\n- Fix the baseline\
+  \ dataset and environment for comparability\n- Compare p(95), not averages\n- Run in CI with thresholds\
+  \ to gate releases"
+examples:
+- input: Establish a baseline for my checkout endpoint
+  output: The agent writes a k6 scenario for checkout, runs it with p(95) stats, and records the results.
+- input: Is the latest release slower than last week?
+  output: The agent re-runs the same k6 script and compares p(95) against the stored baseline.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: performance-baseline.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-performance-baseline
+  generic:
+    system_prompt: 'Your lane is Performance Baseline. You do it through k6-baseline-testing: Write and
+      run k6 load tests with thresholds, virtual users and summary statistics. The commands are real,
+      e.g. `k6 run --vus 50 --duration 30s script.js`. You verify each step you report and stay honest
+      about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

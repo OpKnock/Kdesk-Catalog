@@ -1,0 +1,116 @@
+name: chaos-mesh
+display_name: Chaos Mesh
+category: api
+subcategory: general
+description: 'Run Kubernetes chaos experiments with Chaos Mesh: install via helm, apply PodChaos/NetworkChaos,
+  and inspect injection status.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- helm
+- kubectl
+capabilities:
+- name: chaos-mesh-install
+  description: Install Chaos Mesh CRDs and controller in the cluster
+  commands:
+  - helm repo add chaos-mesh https://charts.chaos-mesh.org
+  - helm install chaos-mesh chaos-mesh/chaos-mesh --namespace chaos-mesh --create-namespace
+  - kubectl get pods -n chaos-mesh
+  - kubectl get crd | grep chaos
+  examples:
+  - helm repo add chaos-mesh https://charts.chaos-mesh.org && helm install chaos-mesh chaos-mesh/chaos-mesh
+    --namespace chaos-mesh --create-namespace
+  - kubectl get pods -n chaos-mesh -w
+  - kubectl get crd | grep chaos
+  parameters:
+  - name: namespace
+    type: string
+    description: Namespace for Chaos Mesh, default chaos-mesh
+- name: chaos-injection
+  description: Apply PodChaos and NetworkChaos resources and observe fault injection
+  commands:
+  - kubectl apply -f pod-kill.yaml
+  - kubectl get podchaos -n myapp
+  - kubectl get networkchaos -n myapp
+  - kubectl describe podchaos pod-kill-nginx -n myapp
+  examples:
+  - kubectl apply -f pod-kill.yaml && kubectl get podchaos -n myapp
+  - kubectl apply -f network-loss.yaml && kubectl get networkchaos -n myapp
+  - kubectl describe networkchaos network-loss -n myapp
+  parameters:
+  - name: chaos_kind
+    type: string
+    description: podchaos, networkchaos, stresschaos, or iochaos
+  - name: manifest
+    type: string
+    description: Path to chaos YAML manifest
+knowledge:
+- title: Chaos Mesh Docs
+  type: documentation
+  source: https://chaos-mesh.org/docs/
+  description: Chaos Mesh install, experiment types, and CLI reference
+- title: Chaos Mesh Dashboard
+  type: documentation
+  source: https://chaos-mesh.org/docs/basic-features/dashboard/
+  description: Dashboard usage for managing experiments
+instructions: "# Chaos Mesh\n\nRun Kubernetes chaos experiments natively with Chaos Mesh.\n\n## When to\
+  \ Use\n\n- Fault injection on pods, network, CPU, memory, and IO\n- Declarative chaos as CRDs in git\n\
+  - Observing service behavior under real faults\n\n## Install\n\n```bash\nhelm repo add chaos-mesh https://charts.chaos-mesh.org\n\
+  helm install chaos-mesh chaos-mesh/chaos-mesh --namespace chaos-mesh --create-namespace\nkubectl get\
+  \ pods -n chaos-mesh\n```\n\n## PodChaos (Kill)\n\n```yaml\napiVersion: chaos-mesh.org/v1alpha1\nkind:\
+  \ PodChaos\nmetadata:\n  name: pod-kill-nginx\n  namespace: myapp\nspec:\n  action: pod-kill\n  mode:\
+  \ one\n  selector:\n    namespaces: [myapp]\n    labelSelectors:\n      app: nginx\n  duration: 30s\n\
+  ```\n\n```bash\nkubectl apply -f pod-kill.yaml\nkubectl get podchaos -n myapp\nkubectl describe podchaos\
+  \ pod-kill-nginx -n myapp\n```\n\n## NetworkChaos (Loss)\n\n```yaml\napiVersion: chaos-mesh.org/v1alpha1\n\
+  kind: NetworkChaos\nmetadata:\n  name: network-loss\n  namespace: myapp\nspec:\n  action: loss\n  mode:\
+  \ all\n  selector:\n    labelSelectors:\n      app: api\n  loss:\n    loss: \"30\"\n  duration: 30s\n\
+  ```\n\n## Observe and Clean\n\n```bash\nkubectl get networkchaos -n myapp\nkubectl describe networkchaos\
+  \ network-loss -n myapp\nkubectl delete networkchaos --all -n myapp\n```\n\n## Testing\n\n```bash\n\
+  # During the fault, request the API and watch failures\ncurl -s -o /dev/null -w \"%{http_code}\\n\"\
+  \ http://api.example.com/health\n```\n\n## Best Practices\n\n- Target pods with precise labelSelectors\n\
+  - Use mode: one for small blast radius first\n- Always set duration; verify expiration\n- Run in staging\
+  \ before production\n- Use the dashboard for experiment history\n- Combine with alerting to validate\
+  \ observability"
+examples:
+- input: Inject 30% network loss on my API pods.
+  output: The agent writes a NetworkChaos manifest with loss 30% targeting app=api, applies it, and monitors
+    with kubectl get networkchaos.
+- input: Kill one nginx pod to test failover.
+  output: The agent applies a PodChaos manifest with action pod-kill, mode one, and verifies injection
+    via kubectl describe podchaos.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: chaos-mesh.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-chaos-mesh
+  generic:
+    system_prompt: 'This is your domain: Chaos Mesh. You do it through chaos-mesh-install: Install Chaos
+      Mesh CRDs and controller in the cluster. The commands are real, e.g. `helm repo add chaos-mesh https://charts.chaos-mesh.org`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

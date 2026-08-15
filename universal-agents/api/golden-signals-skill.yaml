@@ -1,0 +1,114 @@
+name: golden-signals
+display_name: Golden Signals
+category: api
+subcategory: general
+description: 'Monitor the four golden signals (latency, traffic, errors, saturation) for services: derive
+  them from Prometheus metrics and wire dashboards and alerts.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- promtool
+capabilities:
+- name: golden-signals
+  description: Query the four golden signals from Prometheus and set up alerting.
+  commands:
+  - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m]))
+    by (le))' | jq '.data.result[0].value[1]'
+  - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total[5m]))'
+    | jq '.data.result[0].value[1]'
+  - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total{code=~"5.."}[5m]))
+    / sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'
+  - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=rate(process_cpu_seconds_total[1m])
+    * 100' | jq '.data.result[0].value[1]'
+  - promtool check rules golden-signals.rules.yml
+  examples:
+  - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m]))
+    by (le))' | jq '.data.result[0].value[1]'
+  - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total{code=~"5.."}[5m]))
+    / sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'
+  - promtool check rules golden-signals.rules.yml
+  parameters:
+  - name: prometheus-url
+    type: string
+    description: Prometheus API endpoint
+  - name: signal
+    type: string
+    description: latency, traffic, errors, or saturation
+  - name: threshold
+    type: string
+    description: Alert threshold for the signal
+knowledge:
+- title: The Four Golden Signals (Google SRE)
+  type: documentation
+  source: https://sre.google/sre-book/monitoring-distributed-systems/
+  description: Latency, traffic, errors, and saturation definitions
+- title: Prometheus querying
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/querying/basics/
+  description: Metric queries for each golden signal
+instructions: "# Golden Signals\n\n## What this skill does\n\nThe four golden signals are the minimum\
+  \ set of metrics to understand user-facing health: latency (time to serve), traffic (request rate),\
+  \ errors (failure rate), and saturation (how full the service is).\n\n## When to use\n\n- Building the\
+  \ first monitoring dashboard for a service\n- Deciding what to alert on before adding noise\n- Reviewing\
+  \ whether existing metrics cover all four signals\n\n## Real commands\n\n```bash\n# 1. Latency: p99\
+  \ request duration\ncurl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99,\
+  \ sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq '.data.result[0].value[1]'\n\n\
+  # 2. Traffic: requests per second\ncurl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total[5m]))'\
+  \ | jq '.data.result[0].value[1]'\n\n# 3. Errors: share of 5xx\ncurl -s 'http://prometheus:9090/api/v1/query'\
+  \ --data-urlencode 'query=sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))'\
+  \ | jq '.data.result[0].value[1]'\n\n# 4. Saturation: CPU utilization\ncurl -s 'http://prometheus:9090/api/v1/query'\
+  \ --data-urlencode 'query=rate(process_cpu_seconds_total[1m]) * 100' | jq '.data.result[0].value[1]'\n\
+  \n# Validate alert rules\npromtool check rules golden-signals.rules.yml\n```\n\n## Alert rules example\n\
+  \n```yaml\ngroups:\n  - name: golden\n    rules:\n      - alert: HighLatency\n        expr: histogram_quantile(0.99,\
+  \ sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 1\n        for: 10m\n      - alert:\
+  \ HighErrorRate\n        expr: sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))\
+  \ > 0.01\n        for: 5m\n```\n\n## Dashboard layout\n\n- Row 1: p50/p99 latency lines\n- Row 2: request\
+  \ rate (by code class)\n- Row 3: error ratio + count\n- Row 4: CPU, memory, queue depth\n\n## Best practices\n\
+  \n- Measure latency in percentiles, never averages.\n- Alert on error ratio, not raw error counts (traffic\
+  \ changes skew them).\n- Add queue depth and CPU as saturation proxies when no direct metric exists.\n\
+  - Attach each alert to a runbook; a signal without a response path is noise.\n- Review the four signals\
+  \ before adding any other metric to dashboards.\n"
+examples:
+- input: Build the first dashboard for the orders service
+  output: Query p99 latency, request rate, error ratio, and CPU from Prometheus and lay them out in the
+    four-signal dashboard rows.
+- input: Are we alerting on the right things?
+  output: Check that alerts cover latency, error rate, and saturation; drop raw metric alerts that duplicate
+    these.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: golden-signals.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-golden-signals
+  generic:
+    system_prompt: 'You take the Golden Signals seat. You do it through golden-signals: Query the four
+      golden signals from Prometheus and set up alerting. The commands are real, e.g. `curl -s http://prometheus:9090/api/v1/query
+      --data-urlencode...`. You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

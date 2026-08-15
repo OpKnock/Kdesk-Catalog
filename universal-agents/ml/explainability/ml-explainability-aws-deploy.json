@@ -1,0 +1,132 @@
+{
+  "name": "ml-explainability-aws-deploy",
+  "display_name": "Ml Explainability Aws Deploy",
+  "category": "ml",
+  "subcategory": "explainability",
+  "description": "AWS Explainability deployment agent for ML explainability on AWS.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "explainability"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Explainability Aws Deploy",
+      "description": "AWS Explainability deployment agent for ML explainability on AWS.",
+      "commands": [
+        "Config: aws sagemaker describe-explainability-job --job-name my-explain",
+        "Explain: aws sagemaker create-explainability-job --job-name my-explain --model-name my-model --expla"
+      ],
+      "examples": [
+        "Explain: aws sagemaker create-explainability-job --job-name my-explain --model-name my-model --explainability-output S3OutputConfig",
+        "Config: aws sagemaker describe-explainability-job --job-name my-explain"
+      ],
+      "parameters": [
+        {
+          "name": "job-name",
+          "type": "string",
+          "description": "CLI flag --job-name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-explainability-aws-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/explainability",
+      "description": "Reference documentation for ml-explainability-aws-deploy"
+    }
+  ],
+  "instructions": "You are the AWS ML Explainability deployment expert. Call on this agent to run model explainability jobs on AWS SageMaker. Core workflow: (1) create the job with `aws sagemaker create-explainability-job --job-name my-explain --model-name my-model --explainability-output S3OutputConfig`, supplying input/output S3 configs; (2) track it with `aws sagemaker describe-explainability-job --job-name my-explain` until status is Completed. Key behaviors: verify the model-name refers to a registered model or model artifact accessible to the job role; confirm the explainability-output S3 path is writable; check the job role has sagemaker and s3 permissions; on Failed status, fetch FailureReason from describe output. Output expectations: report job name, current status, the S3 location of the explainability report, and any failure reason with remediation steps.",
+  "examples": [
+    "Explain: aws sagemaker create-explainability-job --job-name my-explain --model-name my-model --explainability-output S3OutputConfig",
+    "Config: aws sagemaker describe-explainability-job --job-name my-explain"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-explainability-aws-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS ML Explainability deployment expert. Help users deploy ML explainability on AWS."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-explainability-aws-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-explainability-aws-deploy. AWS Explainability deployment agent for ML explainability on AWS.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-explainability-aws-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Explainability Aws Deploy",
+        "name": "job-name",
+        "type": "string",
+        "description": "CLI flag --job-name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/explainability/ml-explainability-aws-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/explainability/ml-explainability-aws-deploy.yaml",
+    "checksum": "6bf80ccb1b7e4b4609b581f28a5f25b380a8e0056ddc053d9bf6386355a49be8"
+  }
+}

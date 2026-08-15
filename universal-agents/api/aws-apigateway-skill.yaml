@@ -1,0 +1,186 @@
+name: aws-apigateway
+display_name: Aws Apigateway
+category: api
+subcategory: general
+description: 'Manages AWS API Gateway REST APIs: creating APIs and resources, deploying to stages, and
+  invoking endpoints via curl.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- aws
+capabilities:
+- name: api-lifecycle
+  description: Create REST APIs, resources, methods, and deployments.
+  commands:
+  - aws apigateway create-rest-api --name my-api
+  - aws apigateway get-rest-apis
+  - aws apigateway get-resources --rest-api-id <api-id>
+  - aws apigateway create-deployment --rest-api-id <api-id> --stage-name prod
+  - aws apigateway get-stages --rest-api-id <api-id>
+  examples:
+  - aws apigateway create-rest-api --name my-api --endpoint-configuration types=REGIONAL
+  - aws apigateway create-deployment --rest-api-id <api-id> --stage-name prod --stage-description "v1.2.0"
+  - aws apigateway get-rest-apis --query 'items[].{id:id,name:name}' --output table
+  parameters:
+  - name: api_name
+    type: string
+    description: Name of the REST API
+  - name: stage_name
+    type: string
+    description: Deployment stage name
+  - name: region
+    type: string
+    description: AWS region
+- name: invoke-and-test
+  description: Invoke deployed endpoints and test integration.
+  commands:
+  - 'curl -X POST https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users -H "Content-Type: application/json"
+    -d ''{"name":"alice"}'''
+  - curl -s https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users?limit=10
+  - aws apigateway test-invoke-method --rest-api-id <api-id> --resource-id <res-id> --http-method GET
+    --path-with-query-string '/users'
+  - curl -s -o /dev/null -w "%{http_code}\n" https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/health
+  examples:
+  - 'curl -X POST https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users -H "Content-Type: application/json"
+    -d ''{"name":"alice"}'''
+  - aws apigateway test-invoke-method --rest-api-id <api-id> --resource-id <res-id> --http-method GET
+    --path-with-query-string '/users?limit=5'
+  - curl -i https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users | head -30
+  parameters:
+  - name: api_id
+    type: string
+    description: REST API ID
+  - name: resource_id
+    type: string
+    description: Resource ID for the method
+  - name: http_method
+    type: string
+    description: GET/POST/PUT/DELETE
+knowledge:
+- title: API Gateway Developer Guide
+  type: documentation
+  source: https://docs.aws.amazon.com/apigateway/latest/developerguide/
+  description: REST APIs, stages, integrations
+- title: AWS CLI apigateway Reference
+  type: documentation
+  source: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/apigateway/index.html
+  description: CLI commands for API Gateway
+- title: API Gateway Best Practices
+  type: documentation
+  source: https://docs.aws.amazon.com/whitepapers/latest/api-gateway-best-practices/
+  description: Design and operations guidance
+instructions: '# AWS API Gateway
+
+
+  ## What this skill does
+
+
+  Manages AWS API Gateway REST APIs: creating APIs and resources, adding methods, deploying to stages,
+  and invoking endpoints via curl and test-invoke-method.
+
+
+  ## When to use
+
+
+  - Exposing Lambda functions or HTTP backends as managed APIs
+
+  - Adding a deployment/stage for a release
+
+  - Debugging a 502/500 from an integration
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create an API
+
+  aws apigateway create-rest-api --name my-api
+
+
+  # List resources to find the root id
+
+  aws apigateway get-resources --rest-api-id <api-id>
+
+
+  # Deploy to a stage
+
+  aws apigateway create-deployment --rest-api-id <api-id> --stage-name prod
+
+
+  # Invoke from the CLI
+
+  aws apigateway test-invoke-method --rest-api-id <api-id> --resource-id <res-id> --http-method GET --path-with-query-string
+  ''/users''
+
+
+  # Invoke from curl
+
+  curl -X POST https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users -H "Content-Type: application/json"
+  -d ''{"name":"alice"}''
+
+  ```
+
+
+  ## Testing
+
+
+  - Use test-invoke-method to debug before deploying
+
+  - Check stage variables and logs after deployment
+
+
+  ## Best practices
+
+
+  - Deploy to dev/stage/prod stages; never reuse a stage for releases
+
+  - Enable access logging and tracing for production stages
+
+  - Use usage plans + API keys for client throttling
+
+  - Prefer REST API vs HTTP API by feature needs (WAF, custom domains)'
+examples:
+- input: Deploy the new version to production
+  output: Creates a deployment with `aws apigateway create-deployment --stage-name prod`, lists stages,
+    and smoke-tests with curl against the execute-api URL.
+- input: Debug a 502 from our Lambda integration
+  output: Runs test-invoke-method for the failing route, inspects the integration response/log, and checks
+    the Lambda execution role and function errors.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: aws-apigateway.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-aws-apigateway
+  generic:
+    system_prompt: 'You are the Aws Apigateway specialist. You do it through api-lifecycle: Create REST
+      APIs, resources, methods, and deployments. The commands are real, e.g. `aws apigateway create-rest-api
+      --name my-api`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,142 @@
+{
+  "name": "scalability-identity-py",
+  "display_name": "Scalability Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Scalability deployment agent. Manages Scalability ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Scalability Deploy Agent",
+      "description": "Scalability deployment agent. Manages Scalability ML deployment.",
+      "commands": [
+        "docker build -t scalability:latest .",
+        "docker push registry.example.com/scalability:latest",
+        "kubectl set image deployment/scalability scalability=registry.example.com/scalability:latest",
+        "helm upgrade scalability ./helm-chart --namespace production",
+        "kubectl rollout status deployment/scalability --timeout=300s",
+        "python identity.py --agent scalability-identity-py"
+      ],
+      "examples": [
+        "python serve_scalability.py --port 8080",
+        "curl http://localhost:8080/scale --data '{\"model\": \"model.pkl\"}'",
+        "python scale.py --model model.pkl --workers 4 --port 8080",
+        "python load_balance.py --model model.pkl --instances 3"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "scalability-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for scalability-identity-py"
+    }
+  ],
+  "instructions": "You are the Scalability Deploy Agent, the deployment specialist users call to ship ML applications built for scale. Build and publish with `docker build -t scalability:latest .` and `docker push registry.example.com/scalability:latest`, then update the workload with `kubectl set image deployment/scalability scalability=registry.example.com/scalability:latest` or `helm upgrade scalability ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/scalability --timeout=300s` and identity via `python identity.py --agent scalability-identity-py`. Before rollout, tune scaling with `python scale.py --model model.pkl --workers 4 --port 8080` and `python load_balance.py --model model.pkl --instances 3`. Report rollout status, scaling parameters, load-balancing config, and deploy commands.",
+  "examples": [
+    "python serve_scalability.py --port 8080",
+    "curl http://localhost:8080/scale --data '{\"model\": \"model.pkl\"}'",
+    "python scale.py --model model.pkl --workers 4 --port 8080",
+    "python load_balance.py --model model.pkl --instances 3"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "scalability-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Scalability deployment expert. Help users deploy Scalability ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-scalability-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are scalability-identity-py. Scalability deployment agent. Manages Scalability ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "scalability-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/scalability-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/scalability-identity-py.yaml",
+    "checksum": "739bbd8e30839a467fa6d3aff4c3c5dd5e006273db19da102728e0186a252555"
+  }
+}

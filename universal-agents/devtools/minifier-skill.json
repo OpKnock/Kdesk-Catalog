@@ -1,0 +1,227 @@
+{
+  "name": "minifier",
+  "display_name": "minifier",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Minifies JavaScript, CSS, HTML, and images for production: terser, esbuild, cssnano, html-minifier, and gzip/brotli compression.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "brotli",
+    "esbuild",
+    "gzip",
+    "npx",
+    "terser"
+  ],
+  "capabilities": [
+    {
+      "name": "javascript-minification",
+      "description": "Minify and mangle JS bundles with terser and esbuild.",
+      "commands": [
+        "terser input.js -o output.min.js",
+        "npx terser input.js --compress --mangle --source-map",
+        "esbuild app.js --minify --bundle --outfile=app.min.js",
+        "esbuild --minify --target=es2020 app.js -o app.min.js",
+        "npx uglifyjs input.js -c -m -o output.min.js"
+      ],
+      "examples": [
+        "terser input.js -o output.min.js",
+        "esbuild app.js --minify --bundle --outfile=app.min.js",
+        "npx uglifyjs input.js -c -m -o output.min.js"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Input file"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output file"
+        },
+        {
+          "name": "mangle",
+          "type": "boolean",
+          "description": "Rename variables to short names"
+        }
+      ]
+    },
+    {
+      "name": "css-html-and-compression",
+      "description": "Minify CSS/HTML and apply gzip/brotli for transfer size.",
+      "commands": [
+        "npx cssnano styles.css styles.min.css",
+        "npx html-minifier-terser --collapse-whitespace --remove-comments index.html -o index.min.html",
+        "gzip -9 -k -c bundle.js > bundle.js.gz",
+        "brotli -q 11 -o bundle.js.br bundle.js",
+        "npx svgo -f assets/icons -o assets/icons-min"
+      ],
+      "examples": [
+        "npx cssnano styles.css styles.min.css",
+        "npx html-minifier-terser --collapse-whitespace index.html -o index.min.html",
+        "brotli -q 11 -o bundle.js.br bundle.js"
+      ],
+      "parameters": [
+        {
+          "name": "level",
+          "type": "integer",
+          "description": "Compression level (gzip 1-9, brotli 0-11)"
+        },
+        {
+          "name": "quality",
+          "type": "integer",
+          "description": "SVG/asset quality"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Terser",
+      "type": "documentation",
+      "source": "https://terser.org/",
+      "description": "Terser options: compress, mangle, source maps"
+    },
+    {
+      "title": "esbuild Minify",
+      "type": "documentation",
+      "source": "https://esbuild.github.io/api/#minify",
+      "description": "esbuild minify flags and targets"
+    },
+    {
+      "title": "cssnano",
+      "type": "documentation",
+      "source": "https://cssnano.co/",
+      "description": "CSS minifier plugins and presets"
+    },
+    {
+      "title": "html-minifier-terser",
+      "type": "documentation",
+      "source": "https://github.com/terser/html-minifier-terser",
+      "description": "HTML minification options"
+    }
+  ],
+  "instructions": "# Asset Minification\n\nShrink JavaScript, CSS, HTML, and images for production delivery.\n\n## What This Skill Does\n\n- Minifies and mangles JS (terser/esbuild/uglify)\n- Compresses CSS (cssnano) and HTML\n- Optimizes SVG (svgo)\n- Applies gzip/brotli transfer encodings\n- Measures before/after sizes\n\n## When to Use\n\n- Build pipeline release steps\n- Reducing bundle size for page speed budgets\n- Preparing static assets for CDN upload\n\n## Real Commands\n\n```bash\n# JavaScript\nterser input.js -o output.min.js\nnpx terser input.js --compress --mangle --source-map\nesbuild app.js --minify --bundle --outfile=app.min.js\nesbuild --minify --target=es2020 app.js -o app.min.js\nnpx uglifyjs input.js -c -m -o output.min.js\n\n# CSS / HTML / SVG\nnpx cssnano styles.css styles.min.css\nnpx html-minifier-terser --collapse-whitespace --remove-comments index.html -o index.min.html\nnpx svgo -f assets/icons -o assets/icons-min\n\n# Transfer compression\ngzip -9 -k -c bundle.js > bundle.js.gz\nbrotli -q 11 -o bundle.js.br bundle.js\n\n# Verify\nls -lh input.js output.min.js output.min.js.gz\n```\n\n## Best Practices\n\n- Generate source maps in staging builds for debugging\n- Minify at build time, not runtime\n- Precompress with brotli for HTTP servers that support it\n- Check bundle budgets in CI after minification\n- Verify no behavior change: diff runtime tests before/after",
+  "examples": [
+    {
+      "input": "Shrink our 2MB JS bundle",
+      "output": "Agent runs esbuild with minify + bundle, compares sizes, and adds brotli precompression"
+    },
+    {
+      "input": "Minify all SVGs in a folder",
+      "output": "Agent runs svgo over the directory and reports total savings"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "minifier.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-minifier"
+    },
+    "generic": {
+      "system_prompt": "You take the minifier seat. You do it through javascript-minification: Minify and mangle JS bundles with terser and esbuild. The commands are real, e.g. `terser input.js -o output.min.js`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "minifier",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "javascript-minification",
+        "name": "input",
+        "type": "string",
+        "description": "Input file"
+      },
+      {
+        "capability": "javascript-minification",
+        "name": "output",
+        "type": "string",
+        "description": "Output file"
+      },
+      {
+        "capability": "javascript-minification",
+        "name": "mangle",
+        "type": "boolean",
+        "description": "Rename variables to short names"
+      },
+      {
+        "capability": "css-html-and-compression",
+        "name": "level",
+        "type": "integer",
+        "description": "Compression level (gzip 1-9, brotli 0-11)"
+      },
+      {
+        "capability": "css-html-and-compression",
+        "name": "quality",
+        "type": "integer",
+        "description": "SVG/asset quality"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "brotli",
+    "esbuild",
+    "gzip",
+    "npx",
+    "terser"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/minifier-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/minifier-skill.yaml",
+    "checksum": "7d90649b2fba4f63cd605fff073a4b5514b10855c881919284e31f97ab0cf2c9"
+  }
+}

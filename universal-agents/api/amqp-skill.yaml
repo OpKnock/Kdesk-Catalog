@@ -1,0 +1,221 @@
+name: amqp
+display_name: Amqp
+category: api
+subcategory: general
+description: 'Operates AMQP brokers (RabbitMQ) with rabbitmqctl and rabbitmqadmin: queue/exchange inspection,
+  message publish/get, and user management.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- rabbitmqadmin
+- rabbitmqctl
+capabilities:
+- name: broker-ops
+  description: Inspect broker status, queues, exchanges, and bindings.
+  commands:
+  - rabbitmqctl status
+  - rabbitmqctl list_queues name messages consumers
+  - rabbitmqadmin list exchanges name type
+  - rabbitmqctl list_bindings
+  - rabbitmqctl list_channels
+  examples:
+  - rabbitmqctl list_queues name messages messages_ready messages_unacknowledged
+  - rabbitmqadmin list queues vhost name messages -f table
+  - rabbitmqctl list_exchanges name type durable
+  parameters:
+  - name: vhost
+    type: string
+    description: Virtual host filter, e.g. /api
+  - name: queue
+    type: string
+    description: Queue name to inspect
+- name: queue-management
+  description: Declare, purge, delete queues and publish/consume for debugging.
+  commands:
+  - rabbitmqadmin declare queue name=orders durable=true
+  - rabbitmqadmin declare exchange name=events type=topic
+  - rabbitmqadmin publish exchange=events routing_key=order.created payload='{"id":1}'
+  - rabbitmqadmin get queue=orders count=10 requeue=false
+  - rabbitmqctl purge_queue orders
+  examples:
+  - rabbitmqadmin publish exchange=events routing_key=order.created payload='hello' -u guest -p guest
+  - rabbitmqadmin get queue=orders count=5
+  - rabbitmqctl purge_queue orders -p /api
+  parameters:
+  - name: routing_key
+    type: string
+    description: Routing key for topic exchanges
+  - name: payload
+    type: string
+    description: Message body to publish
+  - name: count
+    type: number
+    description: Number of messages to fetch
+- name: user-management
+  description: Manage AMQP users and permissions across vhosts.
+  commands:
+  - rabbitmqctl add_user svc-user secret123
+  - rabbitmqctl set_permissions -p / svc-user ".*" ".*" ".*"
+  - rabbitmqctl list_users
+  - rabbitmqctl delete_user svc-user
+  - rabbitmqctl change_password svc-user newsecret
+  examples:
+  - rabbitmqctl set_permissions -p /api svc-user "^orders.*" ".*" ".*"
+  - rabbitmqctl list_permissions -p /
+  - rabbitmqctl authenticate_user svc-user secret123
+  parameters:
+  - name: user
+    type: string
+    description: RabbitMQ username
+  - name: vhost
+    type: string
+    description: Vhost to grant permissions on
+  - name: permissions
+    type: string
+    description: Configure-write-read regex triple
+knowledge:
+- title: RabbitMQ Docs
+  type: documentation
+  source: https://www.rabbitmq.com/docs
+  description: AMQP concepts, reliability
+- title: rabbitmqctl
+  type: documentation
+  source: https://www.rabbitmq.com/docs/man/rabbitmqctl.8
+  description: CLI command reference
+- title: rabbitmqadmin
+  type: documentation
+  source: https://www.rabbitmq.com/docs/management-cli
+  description: HTTP-API admin CLI
+- title: AMQP Concepts
+  type: documentation
+  source: https://www.rabbitmq.com/tutorials/amqp-concepts
+  description: Exchanges, bindings, consumers
+instructions: '# AMQP
+
+
+  ## What this skill does
+
+
+  Operates AMQP brokers with RabbitMQ tooling: inspecting queues/exchanges/bindings, managing users and
+  permissions, publishing and consuming test messages, and troubleshooting delivery.
+
+
+  ## When to use
+
+
+  - Messages pile up in a queue and consumers are idle
+
+  - Setting up an exchange topology for events
+
+  - Debugging redelivery, unacked messages, or routing misses
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Status and queues
+
+  rabbitmqctl status
+
+  rabbitmqctl list_queues name messages messages_ready messages_unacknowledged
+
+
+  # Exchanges and bindings
+
+  rabbitmqadmin list exchanges name type
+
+  rabbitmqctl list_bindings source_name destination_name routing_key
+
+
+  # Publish and consume test messages
+
+  rabbitmqadmin publish exchange=events routing_key=order.created payload=''{"id":1}''
+
+  rabbitmqadmin get queue=orders count=5
+
+
+  # Purge a stuck queue
+
+  rabbitmqctl purge_queue orders
+
+
+  # Users
+
+  rabbitmqctl add_user svc-user secret123
+
+  rabbitmqctl set_permissions -p / svc-user ".*" ".*" ".*"
+
+  ```
+
+
+  ## Common failure patterns
+
+
+  - messages_unacknowledged high: consumer died mid-processing
+
+  - Routing misses: binding key does not match routing key pattern
+
+  - Publisher confirms: enable in clients for durability
+
+
+  ## Testing
+
+
+  - Use rabbitmqadmin publish/get as a black-box smoke test
+
+  - Verify auth with `rabbitmqctl authenticate_user <user> <pass>`
+
+
+  ## Best practices
+
+
+  - Grant least-privilege regexes per vhost
+
+  - Monitor messages_ready/unacknowledged with alerts
+
+  - Prefer dead-letter queues over purge_queue'
+examples:
+- input: Orders are stuck in the queue, why?
+  output: Runs `rabbitmqctl list_queues name messages messages_ready messages_unacknowledged consumers`;
+    if unacked is high and consumers low, checks consumer health and suggests requeue/redelivery policies.
+- input: Create a topic exchange for order events
+  output: Declares `rabbitmqadmin declare exchange name=events type=topic`, adds bindings for order.*,
+    verifies with publish + get.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: amqp.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-amqp
+  generic:
+    system_prompt: 'Your lane is Amqp. You do it through broker-ops: Inspect broker status, queues, exchanges,
+      and bindings. The commands are real, e.g. `rabbitmqctl status`. You verify each step you report
+      and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

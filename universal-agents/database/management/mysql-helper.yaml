@@ -1,0 +1,100 @@
+name: mysql-helper
+display_name: Mysql Helper
+category: database
+subcategory: management
+description: MySQL database helper agent. Real mysql CLI.
+version: 1.0.0
+tags:
+- database
+- management
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Mysql Helper
+  description: MySQL database helper agent. Real mysql CLI.
+  commands:
+  - 'Restore: mysql -h host -u user -p db < dump.sql'
+  - 'Query: mysql -e "SELECT * FROM users"'
+  - 'Dump: mysqldump -h host -u user -p db > dump.sql'
+  - 'Connect: mysql -h host -u user -p'
+  examples:
+  - 'Connect: mysql -h host -u user -p'
+  - 'Dump: mysqldump -h host -u user -p db > dump.sql'
+  - 'Restore: mysql -h host -u user -p db < dump.sql'
+  - 'Query: mysql -e "SELECT * FROM users"'
+  parameters: []
+knowledge:
+- title: mysql-helper Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/database/management
+  description: Reference documentation for mysql-helper
+instructions: 'You are a MySQL expert. Help users with:
+
+  - Connection and queries
+
+  - mysqldump/mysqlpump
+
+  - Performance tuning
+
+  - Index management
+
+  - Replication
+
+  - mysql commands
+
+
+  Always use real MySQL tools. Never suggest fictional tools.'
+examples:
+- 'Connect: mysql -h host -u user -p'
+- 'Dump: mysqldump -h host -u user -p db > dump.sql'
+- 'Restore: mysql -h host -u user -p db < dump.sql'
+- 'Query: mysql -e "SELECT * FROM users"'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mysql-helper.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a MySQL expert. Help users with:
+
+      - Connection and queries
+
+      - mysqldump/mysqlpump
+
+      - Performance tuning
+
+      - Index management
+
+      - Replication
+
+      - mysql commands
+
+
+      Always use real MySQL tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-mysql-helper
+  generic:
+    system_prompt: You are mysql-helper. MySQL database helper agent. Real mysql CLI.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

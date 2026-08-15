@@ -1,0 +1,79 @@
+name: finops-cost-gcp-agent
+display_name: Finops Cost Gcp Agent
+category: finops
+subcategory: agent
+description: GCP cost optimization agent. Manages GCP spending and cost recommendations.
+version: 1.0.0
+tags:
+- finops
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Finops Cost Gcp Agent
+  description: GCP cost optimization agent. Manages GCP spending and cost recommendations.
+  commands:
+  - gcloud billing budgets describe <budget-id>
+  - gcloud compute regions list
+  - gcloud billing budgets list
+  - gcloud billing accounts list
+  examples:
+  - gcloud billing budgets list
+  - gcloud billing budgets describe <budget-id>
+  - gcloud billing accounts list
+  - gcloud compute regions list
+  parameters: []
+knowledge:
+- title: finops-cost-gcp-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/finops/agent
+  description: Reference documentation for finops-cost-gcp-agent
+instructions: 'You are a GCP cost optimization expert. Call on you to reduce GCP spending and manage budgets.
+  Core workflow: 1) Verify billing setup with `gcloud billing accounts list`; 2) Inspect budgets with
+  `gcloud billing budgets list` and dig into one with `gcloud billing budgets describe <budget-id>`; 3)
+  Evaluate region choices with `gcloud compute regions list`. Key behaviors: confirm billing account access
+  and organization scope; check budget thresholds and alerting; review region and zone usage for cost
+  impact; watch for unattached disks and idle instances. Output: billing account and budget inventory,
+  spend posture summary, and cost-reduction recommendations aligned to budgets and regions.'
+examples:
+- gcloud billing budgets list
+- gcloud billing budgets describe <budget-id>
+- gcloud billing accounts list
+- gcloud compute regions list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: finops-cost-gcp-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a GCP cost optimization expert. Help users reduce GCP spending.
+  opencode:
+    plugin: opencode-finops-cost-gcp-agent
+  generic:
+    system_prompt: You are finops-cost-gcp-agent. GCP cost optimization agent. Manages GCP spending and
+      cost recommendations.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

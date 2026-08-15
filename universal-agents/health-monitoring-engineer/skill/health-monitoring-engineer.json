@@ -1,0 +1,236 @@
+{
+  "name": "health-monitoring-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "sre",
+  "description": "Turns service health into metrics: exposes /metrics endpoints, validates with promtool, and answers ad-hoc queries against Prometheus.",
+  "keywords": [
+    "health-monitoring",
+    "rum"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "health-monitoring-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-health-monitoring-engineer"
+    },
+    "generic": {
+      "system_prompt": "You work health-monitoring-engineer hands-on. You do it through metrics-endpoints: Expose and validate Prometheus-format metrics. The commands are real, e.g. `promtool check metrics http://localhost:9100/metrics`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "metrics-endpoints",
+      "description": "Expose and validate Prometheus-format metrics.",
+      "commands": [
+        "promtool check metrics http://localhost:9100/metrics",
+        "curl -s http://localhost:9100/metrics | head -40",
+        "promtool check metric-label http://localhost:9100/metrics '^up$'",
+        "node_exporter --collector.textfile.directory=/var/lib/node_exporter/textfile",
+        "curl -s http://localhost:9100/metrics | grep -E '^process_cpu_seconds_total'"
+      ],
+      "examples": [
+        "promtool check metrics http://localhost:9090/metrics --lint=error",
+        "curl -s http://localhost:9100/metrics | grep '^node_memory_' | head",
+        "node_exporter --web.listen-address=:9100 --collector.filesystem"
+      ],
+      "parameters": [
+        {
+          "name": "metrics-url",
+          "type": "string",
+          "description": "URL of the /metrics endpoint"
+        },
+        {
+          "name": "lint",
+          "type": "string",
+          "description": "Lint level for metric families: none, warning, error"
+        },
+        {
+          "name": "collector",
+          "type": "string",
+          "description": "node_exporter collector to enable"
+        }
+      ]
+    },
+    {
+      "name": "query",
+      "description": "Query Prometheus for health signals.",
+      "commands": [
+        "promtool query instant http://localhost:9090 'up'",
+        "promtool query range http://localhost:9090 'rate(http_requests_total[5m])' --start=-30m",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up{job=\"api\"}'",
+        "promtool query instant http://localhost:9090 '100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)'",
+        "curl -G http://localhost:9090/api/v1/targets | jq '.data.activeTargets | length'"
+      ],
+      "examples": [
+        "promtool query instant http://localhost:9090 'sum by (job) (up)'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up' | jq '.data.result'",
+        "promtool query range http://localhost:9090 'histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))'"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "PromQL expression"
+        },
+        {
+          "name": "start",
+          "type": "string",
+          "description": "Range start like --start=-30m"
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "Prometheus base URL"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "prometheus",
+    "grafana",
+    "blackbox-exporter",
+    "node.js"
+  ],
+  "tools": [
+    "prometheus",
+    "grafana",
+    "blackbox-exporter",
+    "node.js",
+    "python",
+    "curl"
+  ],
+  "examples": [
+    {
+      "input": "Why is the API target down in Prometheus?",
+      "output": "Checks activeTargets via the API, then curls the /metrics endpoint and inspects listener/port config, fixing the scrape target."
+    },
+    {
+      "input": "Expose node health metrics for the fleet.",
+      "output": "Starts node_exporter with textfile collectors and validates the /metrics output with promtool check metrics."
+    }
+  ],
+  "instructions": "# Health Monitoring\n\nInstrument services with /metrics and validate the pipeline end-to-end.\n\n## When to Use\n\n- Adding Prometheus-format metrics to a service\n- Verifying metric quality before dashboards rely on them\n- Answering quick health questions from production data\n\n## Expose metrics\n\nStandard HTTP server + prometheus client:\n\n```go\nhttp.Handle(\"/metrics\", promhttp.Handler())\nlog.Fatal(http.ListenAndServe(\":9100\", nil))\n```\n\n```bash\ncurl -s http://localhost:9100/metrics | head -40\n```\n\n## Validate with promtool\n\n```bash\npromtool check metrics http://localhost:9100/metrics --lint=error\n```\n\nLint catches bad naming, missing units, and duplicate families before dashboards break.\n\n## Node-level health\n\n```bash\nnode_exporter --web.listen-address=:9100 --collector.filesystem\ncurl -s http://localhost:9100/metrics | grep '^node_load1'\n```\n\n## Answer queries\n\n```bash\npromtool query instant http://localhost:9090 'up{job=\"api\"}'\npromtool query instant http://localhost:9090 '100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)'\n```\n\n## Best practices\n\n- Follow Prometheus naming: `unit_verb`, e.g. `http_requests_total`.\n- Add `_total` for counters and document HELP lines.\n- Keep high-cardinality labels (user_id, path) out of metrics.\n- Scrape from a sidecar or scraper; never rely on curl alone in prod.\n\n## Testing\n\n```bash\npromtool check metrics http://localhost:9100/metrics --lint=error\ncurl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets | length'\n```\n\nVerify targets are up after every scrape-config change.",
+  "display_name": "health-monitoring-engineer",
+  "knowledge": [
+    {
+      "title": "Promtool",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/command-line/promtool/",
+      "description": "promtool check metrics and query commands"
+    },
+    {
+      "title": "node_exporter",
+      "type": "documentation",
+      "source": "https://github.com/prometheus/node_exporter",
+      "description": "Host metrics exporter and collectors"
+    },
+    {
+      "title": "Prometheus HTTP API",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/querying/api/",
+      "description": "Instant and range query API"
+    }
+  ],
+  "id": "health-monitoring-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "metrics-endpoints",
+        "name": "metrics-url",
+        "type": "string",
+        "description": "URL of the /metrics endpoint"
+      },
+      {
+        "capability": "metrics-endpoints",
+        "name": "lint",
+        "type": "string",
+        "description": "Lint level for metric families: none, warning, error"
+      },
+      {
+        "capability": "metrics-endpoints",
+        "name": "collector",
+        "type": "string",
+        "description": "node_exporter collector to enable"
+      },
+      {
+        "capability": "query",
+        "name": "query",
+        "type": "string",
+        "description": "PromQL expression"
+      },
+      {
+        "capability": "query",
+        "name": "start",
+        "type": "string",
+        "description": "Range start like --start=-30m"
+      },
+      {
+        "capability": "query",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Prometheus base URL"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "prometheus",
+    "grafana",
+    "blackbox-exporter",
+    "node.js"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "health-monitoring-engineer/skill/health-monitoring-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/health-monitoring-engineer/skill/health-monitoring-engineer.yaml",
+    "checksum": "6a6621650f03f84877554f916880fba793108c4ddfc89417d7384096f0c8779e"
+  }
+}

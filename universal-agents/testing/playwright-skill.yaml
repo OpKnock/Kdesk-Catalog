@@ -1,0 +1,138 @@
+name: playwright
+display_name: playwright
+category: testing
+subcategory: general
+description: 'Writes and runs browser automation tests with Playwright: locators, fixtures, screenshots,
+  and visual comparisons.'
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+- page.getbyrole('button',
+- page.getbytestid('checkout-form
+- page.locator('[data-cy=price
+- page.screenshot({
+capabilities:
+- name: playwright-testing
+  description: Run browser tests with projects and tags.
+  commands:
+  - npx playwright test
+  - npx playwright test tests/checkout.spec.ts
+  - npx playwright test --project=chromium --grep @smoke
+  - npx playwright test --headed
+  - npx playwright test --grep-invert @slow
+  examples:
+  - npx playwright test tests/checkout.spec.ts
+  - npx playwright test --grep @smoke
+  - npx playwright test --headed
+  parameters:
+  - name: file
+    type: string
+    description: Test file or directory
+  - name: grep
+    type: string
+    description: Test tag/title filter
+  - name: headed
+    type: boolean
+    description: Visible browser mode
+- name: locators-and-assertions
+  description: Interact with pages using role and test-id locators.
+  commands:
+  - npx playwright test --debug
+  - 'page.getByRole(''button'', { name: ''Submit'' })'
+  - page.getByTestId('checkout-form')
+  - page.locator('[data-cy=price]')
+  - npx playwright test --trace on
+  examples:
+  - 'page.getByRole(''button'', { name: ''Submit'' }).click()'
+  - expect(page.getByTestId('order-confirmed')).toBeVisible()
+  - npx playwright test --debug
+  parameters:
+  - name: role
+    type: string
+    description: ARIA role to locate
+  - name: testId
+    type: string
+    description: data-testid value
+- name: fixtures-and-screenshots
+  description: Use fixtures, screenshots, and storage state.
+  commands:
+  - npx playwright screenshot --device='iPhone 13' --full-page https://example.com iphone.png
+  - 'page.screenshot({ path: ''checkout.png'', fullPage: true })'
+  - npx playwright test --update-snapshots
+  - npx playwright test --config=playwright.config.ts --reporter=list
+  - npx playwright show-report
+  examples:
+  - npx playwright screenshot --device='iPhone 13' --full-page https://example.com iphone.png
+  - npx playwright test --update-snapshots
+  - npx playwright show-report
+  parameters:
+  - name: device
+    type: string
+    description: Emulated device
+  - name: updateSnapshots
+    type: boolean
+    description: Update golden snapshots
+knowledge:
+- title: Playwright Introduction
+  type: documentation
+  source: https://playwright.dev/docs/intro
+  description: Installation, first test, and core concepts
+- title: Playwright Locators
+  type: documentation
+  source: https://playwright.dev/docs/locators
+  description: Locator strategies and best practices
+instructions: "# Playwright\n\nBrowser automation and E2E testing for modern web apps.\n\n## What This\
+  \ Skill Does\n\n- Runs browser tests with role-based locators\n- Captures screenshots and visual snapshots\n\
+  - Uses fixtures for shared setup and auth state\n- Emulates devices and network conditions\n\n## When\
+  \ to Use\n\n- E2E regression suites for web UIs\n- Cross-browser compatibility checks\n- Visual regression\
+  \ testing\n\n## Real Commands\n\n```bash\n# Run\nnpx playwright test\nnpx playwright test tests/checkout.spec.ts\
+  \ --headed\nnpx playwright test --grep @smoke\n\n# Debug\nnpx playwright test --debug\nnpx playwright\
+  \ test --trace on\n\n# Screenshots\nnpx playwright screenshot --device='iPhone 13' --full-page https://example.com\
+  \ iphone.png\nnpx playwright test --update-snapshots\n\n# Reports\nnpx playwright show-report\n```\n\
+  \n## Sample Spec\n\n```ts\nimport { test, expect } from '@playwright/test';\n\ntest('adds item to cart',\
+  \ async ({ page }) => {\n  await page.goto('/products/42');\n  await page.getByRole('button', { name:\
+  \ 'Add to cart' }).click();\n  await expect(page.getByTestId('cart-count')).toHaveText('1');\n});\n\
+  ```\n\n## Best Practices\n\n- Prefer getByRole/getByLabel over CSS selectors\n- Use data-testid for\
+  \ non-semantic elements\n- Keep tests independent; reset state in beforeEach\n- Run a smoke subset on\
+  \ PRs, full suite nightly\n- Use fixtures to authenticate once and share storage state"
+examples:
+- input: Test adding a product to the cart
+  output: Agent writes a spec with role-based locators, runs it headed for debugging, and verifies the
+    cart count assertion.
+- input: Screenshot the mobile homepage
+  output: Agent runs playwright screenshot with the iPhone device emulation and saves a full-page PNG.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: playwright.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-playwright
+  generic:
+    system_prompt: 'You are the playwright specialist. You do it through playwright-testing: Run browser
+      tests with projects and tags. The commands are real, e.g. `npx playwright test`. You work hands-on
+      and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

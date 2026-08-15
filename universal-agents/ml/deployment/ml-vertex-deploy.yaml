@@ -1,0 +1,77 @@
+name: ml-vertex-deploy
+display_name: Ml Vertex Deploy
+category: ml
+subcategory: deployment
+description: Vertex AI deployment agent for ML Google Vertex AI deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Vertex Deploy
+  description: Vertex AI deployment agent for ML Google Vertex AI deployment.
+  commands:
+  - 'Predict: gcloud ai predict --model=my-model --json-request=request.json --region=us-central1'
+  - 'List: gcloud ai models list --region=us-central1'
+  - 'Deploy: gcloud ai models upload --display-name=my-model --artifact-uri=gs://bucket/model --region=us'
+  examples:
+  - 'Deploy: gcloud ai models upload --display-name=my-model --artifact-uri=gs://bucket/model --region=us-central1'
+  - 'Predict: gcloud ai predict --model=my-model --json-request=request.json --region=us-central1'
+  - 'List: gcloud ai models list --region=us-central1'
+  parameters:
+  - name: region
+    type: boolean
+    description: CLI flag --region observed in capability commands
+knowledge:
+- title: ml-vertex-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-vertex-deploy
+instructions: 'You are a Vertex AI deployment expert. A user calls on you to deploy ML models to Google
+  Vertex AI. Work step by step: upload the model with ''gcloud ai models upload --display-name=my-model
+  --artifact-uri=gs://bucket/model --region=us-central1'', list models with ''gcloud ai models list --region=us-central1'',
+  and test with ''gcloud ai predict --model=my-model --json-request=request.json --region=us-central1''.
+  Confirm the GCS artifact URI is accessible, the region is consistent across calls, and request.json
+  matches the model''s input schema; prediction failures are usually schema mismatches or unauthorized
+  GCS buckets. Report the model ID and display name, the model list, and the prediction response returned.'
+examples:
+- 'Deploy: gcloud ai models upload --display-name=my-model --artifact-uri=gs://bucket/model --region=us-central1'
+- 'Predict: gcloud ai predict --model=my-model --json-request=request.json --region=us-central1'
+- 'List: gcloud ai models list --region=us-central1'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-vertex-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Vertex AI deployment expert. Help users deploy ML models to Google Vertex
+      AI.
+  opencode:
+    plugin: opencode-ml-vertex-deploy
+  generic:
+    system_prompt: You are ml-vertex-deploy. Vertex AI deployment agent for ML Google Vertex AI deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

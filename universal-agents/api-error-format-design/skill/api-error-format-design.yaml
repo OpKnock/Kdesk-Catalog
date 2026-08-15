@@ -1,0 +1,165 @@
+name: api-error-format-design
+version: 2.0.0
+type: skill
+category: backend
+description: 'Designs error formats and schemas: RFC 9457 problem details modeling, status mapping, and
+  OpenAPI error components.'
+keywords:
+- error-format
+- problem-details
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-error-format-design.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-error-format-design
+  generic:
+    system_prompt: 'You are the Api Error Format Design specialist. You do it through format-design: Model
+      problem-details schemas and map domain codes to HTTP statuses. The commands are real, e.g. `node
+      -e const p={type:https://api.example/errors,title:Bad...`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: format-design
+  description: Model problem-details schemas and map domain codes to HTTP statuses
+  commands:
+  - node -e "const p={type:'https://api.example/errors',title:'Bad Request',status:400,code:'VALIDATION_1001',instance:'/api/users'};console.log(JSON.stringify(p,null,2))"
+  - python -c "import json;p={'title':'Not Found','status':404,'code':'NOT_FOUND'};print(json.dumps(p))"
+  - node -e "const map=[[400,'VALIDATION'],[401,'AUTH'],[403,'FORBIDDEN'],[404,'NOT_FOUND'],[409,'CONFLICT'],[429,'RATE'],[500,'INTERNAL'],[502,'UPSTREAM']];console.log(map.map(x=>x.join('
+    -> ')).join('\n'))"
+  - node -e "console.log(['client','server','integration'].map(f=>f+'_errors').join(' '))"
+  - python -c "print({400:'VALIDATION_1XXX',500:'INTERNAL_5XXX'})"
+  examples:
+  - node -e "const map=[[400,'VALIDATION'],[401,'AUTH'],[403,'FORBIDDEN'],[404,'NOT_FOUND'],[429,'RATE']];console.log(map.map(x=>x.join('
+    -> ')).join('\n'))"
+  - node -e "const p={title:'Conflict',status:409,code:'CONFLICT_2001'};console.log(JSON.stringify(p))"
+  - python -c "import json;print(json.dumps({'status':503,'code':'UPSTREAM_9001'}))"
+  parameters:
+  - name: status
+    type: string
+    description: HTTP status
+  - name: code
+    type: string
+    description: Domain error code
+- name: schema-authoring
+  description: Author reusable error schemas in OpenAPI components
+  commands:
+  - node -e "const s={components:{schemas:{Problem:{type:'object',properties:{title:{type:'string'},status:{type:'integer'},code:{type:'string'}}}},required:['title','status','code']}};console.log(JSON.stringify(s,null,2))"
+  - swagger-cli validate openapi.yaml
+  - redocly lint openapi.yaml
+  - npx @stoplight/spectral-cli lint openapi.yaml
+  - node -e "const s={Problem:{type:'object'}};console.log(Object.keys(s)[0]) "
+  examples:
+  - node -e "const s={components:{schemas:{Problem:{type:'object',properties:{title:{type:'string'},status:{type:'integer'},code:{type:'string'}}}}}};console.log(JSON.stringify(s,null,2))"
+  - swagger-cli validate openapi.yaml && redocly lint openapi.yaml
+  - npx @stoplight/spectral-cli lint --ruleset error-rules.yaml openapi.yaml
+  parameters:
+  - name: spec
+    type: string
+    description: OpenAPI spec path
+prerequisites:
+- node.js
+- python
+- openapi
+tools:
+- node.js
+- python
+- openapi
+- postman
+examples:
+- input: Design the error format for a new REST API
+  output: Defines RFC 9457-based problem details with a status-to-family mapping and reusable OpenAPI
+    components
+- input: Document error schemas in OpenAPI
+  output: Adds Problem schemas with per-code examples and validates the spec
+instructions: '# API Error (Format Design)
+
+
+  Designs the error contract before implementation: formats, status mapping, and reusable schemas.
+
+
+  ## When to Use
+
+  - Greenfield API error design
+
+  - Standardizing across services
+
+  - Defining what clients can rely on
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Draft the format
+
+  node -e "const p={type:''https://api.example/errors'',title:''Bad Request'',status:400,code:''VALIDATION_1001'',instance:''/api/users''};console.log(JSON.stringify(p,null,2))"
+
+
+  # Define status mapping
+
+  node -e "const map=[[400,''VALIDATION''],[401,''AUTH''],[403,''FORBIDDEN''],[404,''NOT_FOUND''],[429,''RATE'']];console.log(map.map(x=>x.join(''
+  -> '')).join(''\n''))"
+
+
+  # Reusable schema
+
+  node -e "const s={components:{schemas:{Problem:{type:''object'',properties:{title:{type:''string''},status:{type:''integer''},code:{type:''string''}}}}}};console.log(JSON.stringify(s,null,2))"
+
+  ```
+
+
+  ## Design Principles
+
+  - Machine-readable `code`, human-readable `title`
+
+  - Status codes map to error families
+
+  - `instance` points to the failing request
+
+
+  ## Testing
+
+  Validate the spec with swagger-cli after adding error components.
+
+
+  ## Best Practices
+
+  - Keep error responses in the spec from day one
+
+  - Add examples per status code'
+display_name: Api Error Format Design
+knowledge:
+- title: RFC 9457
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc9457
+  description: Problem details specification
+- title: OpenAPI Components
+  type: documentation
+  source: https://spec.openapis.org/oas/v3.1.0#components-object
+  description: Reusable schemas

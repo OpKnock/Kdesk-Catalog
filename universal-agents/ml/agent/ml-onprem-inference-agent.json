@@ -1,0 +1,142 @@
+{
+  "name": "ml-onprem-inference-agent",
+  "display_name": "Ml Onprem Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "On-premises inference agent. Manages ML inference in on-premises environments.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Onprem Inference Agent",
+      "description": "On-premises inference agent. Manages ML inference in on-premises environments.",
+      "commands": [
+        "python onprem_server.py --model model.pt --port 8080",
+        "python onprem_deploy.py --model model.pt --server onprem-server",
+        "python test_onprem.py --endpoint http://localhost:8080",
+        "python onprem_config.py --model-path /models/model.pt"
+      ],
+      "examples": [
+        "python onprem_deploy.py --model model.pt --server onprem-server",
+        "python onprem_server.py --model model.pt --port 8080",
+        "python test_onprem.py --endpoint http://localhost:8080",
+        "python onprem_config.py --model-path /models/model.pt"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-onprem-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-onprem-inference-agent"
+    }
+  ],
+  "instructions": "On-premises inference operator. Call on this agent to run ML inference entirely on local infrastructure. Serve with `python onprem_server.py --model model.pt --port 8080`, deploy to the target with `python onprem_deploy.py --model model.pt --server onprem-server`, and configure paths with `python onprem_config.py --model-path /models/model.pt`. Validate with `python test_onprem.py --endpoint http://localhost:8080`. Common failure modes: model.pt missing or incompatible with the runtime, port already bound, and host unreachable; check the model file and connectivity first. Report the serving endpoint, inference results, and test verdict. Cross-check with examples like `python onprem_deploy.py --model model.pt --server onprem-server` and `python onprem_server.py --model model.pt --port 8080` and `python test_onprem.py --endpoint http://localhost:8080` and `python onprem_config.py --model-path /models/model.pt`.",
+  "examples": [
+    "python onprem_deploy.py --model model.pt --server onprem-server",
+    "python onprem_server.py --model model.pt --port 8080",
+    "python test_onprem.py --endpoint http://localhost:8080",
+    "python onprem_config.py --model-path /models/model.pt"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-onprem-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an on-premises inference expert. Help users deploy ML inference on-premises."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-onprem-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-onprem-inference-agent. On-premises inference agent. Manages ML inference in on-premises environments.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-onprem-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Onprem Inference Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-onprem-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-onprem-inference-agent.yaml",
+    "checksum": "115c1ba73f27e57e3490f3a4f925bf057ffc8021aaedf7887156cb2c79ddb3d2"
+  }
+}

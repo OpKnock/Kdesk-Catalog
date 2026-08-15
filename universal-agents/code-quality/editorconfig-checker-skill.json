@@ -1,0 +1,207 @@
+{
+  "name": "editorconfig-checker",
+  "display_name": "editorconfig-checker",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Verifies files comply with .editorconfig rules using editorconfig-checker in local and CI workflows.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "editorconfig-checker",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "editorconfig-checker",
+        "editorconfig-checker -exclude \"**/vendor/**\"",
+        "editorconfig-checker -config .eccrc",
+        "editorconfig-checker file.txt",
+        "editorconfig-checker -version"
+      ],
+      "description": "Check files against .editorconfig.",
+      "name": "ecc-check",
+      "examples": [
+        "editorconfig-checker -exclude \"dist/**\"",
+        "editorconfig-checker -no-color",
+        "editorconfig-checker -verbose"
+      ],
+      "parameters": [
+        {
+          "description": "Glob patterns to exclude",
+          "name": "exclude",
+          "type": "string"
+        },
+        {
+          "description": "Config file path",
+          "name": "config",
+          "type": "string"
+        },
+        {
+          "description": "Verbose output",
+          "name": "verbose",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "editorconfig-checker -help",
+        "editorconfig-checker -debug",
+        "npx editorconfig-checker",
+        "editorconfig-checker -disable-indent-size"
+      ],
+      "description": "Manage .editorconfig and checker config.",
+      "name": "ecc-config",
+      "examples": [
+        "npx editorconfig-checker -exclude \"**/node_modules/**\"",
+        "editorconfig-checker -disable-max-line-length"
+      ],
+      "parameters": [
+        {
+          "description": "Checks to disable",
+          "name": "disable",
+          "type": "string"
+        },
+        {
+          "name": "debug",
+          "type": "boolean",
+          "description": "Show debug output"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "editorconfig-checker on GitHub",
+      "description": "Usage and config reference",
+      "source": "https://github.com/editorconfig-checker/editorconfig-checker",
+      "type": "documentation"
+    },
+    {
+      "title": "EditorConfig Spec",
+      "description": "File format specification",
+      "source": "https://editorconfig.org",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# editorconfig-checker\n\nEnforce editor conventions across the repo.\n\n## When to Use\n\n- Ensuring consistent indentation and line endings\n- Enforcing charset and end-of-line rules repo-wide\n- CI gates on .editorconfig compliance\n- Catching files created by Windows/macOS editors\n\n## .editorconfig Example\n\n```ini\nroot = true\n\n[*]\ncharset = utf-8\nend_of_line = lf\nindent_style = space\nindent_size = 2\ntrim_trailing_whitespace = true\ninsert_final_newline = true\n\n[*.py]\nindent_size = 4\n```\n\n## Commands\n\n```bash\n# Install\ngo install github.com/editorconfig-checker/editorconfig-checker/cmd/editorconfig-checker@latest\n# or\nnpx editorconfig-checker\n\n# Check the repo\neditorconfig-checker\n\n# Exclude paths\neditorconfig-checker -exclude \"**/vendor/**,dist/**\"\n\n# Custom config\neditorconfig-checker -config .eccrc\n\n# Verbose/debug\neditorconfig-checker -verbose\neditorconfig-checker -debug\n```\n\n## Best Practices\n\n- Define root = true and per-extension rules\n- Run editorconfig-checker in pre-commit and CI\n- Exclude generated and vendored directories\n- Pair with a formatter for the actual file writes\n- Commit .editorconfig so editors adopt it automatically",
+  "examples": [
+    {
+      "input": "Check my repo for editorconfig violations",
+      "output": "Agent runs editorconfig-checker, lists violating files, and fixes indentation/line endings."
+    },
+    {
+      "input": "Add editorconfig checking to CI",
+      "output": "Agent adds an editorconfig-checker job with the repo config and excludes for generated files."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "editorconfig-checker.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-editorconfig-checker"
+    },
+    "generic": {
+      "system_prompt": "You take the editorconfig-checker seat. You do it through ecc-check: Check files against .editorconfig. The commands are real, e.g. `editorconfig-checker`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "editorconfig-checker",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ecc-check",
+        "name": "exclude",
+        "type": "string",
+        "description": "Glob patterns to exclude"
+      },
+      {
+        "capability": "ecc-check",
+        "name": "config",
+        "type": "string",
+        "description": "Config file path"
+      },
+      {
+        "capability": "ecc-check",
+        "name": "verbose",
+        "type": "boolean",
+        "description": "Verbose output"
+      },
+      {
+        "capability": "ecc-config",
+        "name": "disable",
+        "type": "string",
+        "description": "Checks to disable"
+      },
+      {
+        "capability": "ecc-config",
+        "name": "debug",
+        "type": "boolean",
+        "description": "Show debug output"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "editorconfig-checker",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/editorconfig-checker-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/editorconfig-checker-skill.yaml",
+    "checksum": "6659688ecb31ea5bc1ebd55276b867adbd5b276a0f65433d57e795a24f6a1b08"
+  }
+}

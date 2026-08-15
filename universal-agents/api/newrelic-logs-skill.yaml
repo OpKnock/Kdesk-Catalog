@@ -1,0 +1,100 @@
+name: newrelic-logs
+display_name: Newrelic Logs
+category: api
+subcategory: general
+description: 'Ship and query logs in New Relic: Logs API ingestion, Fluent Bit/Fluentd configs, and NRQL
+  log queries.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- newrelic
+capabilities:
+- name: newrelic-logs-ingestion
+  description: Send logs to New Relic via the Logs API and query them with NRQL.
+  commands:
+  - 'curl -X POST https://log-api.newrelic.com/log/v1 -H "Api-Key: $NR_LICENSE_KEY" -d @log.json'
+  - 'curl -X POST ''https://log-api.newrelic.com/log/v1?Api-Key=$NR_LICENSE_KEY'' -H ''Content-Type: application/json''
+    -d ''{"logs":[{"message":"hello"}]}'''
+  - 'curl -s -X POST ''https://api.newrelic.com/v2/alerts_nrql_conditions.json'' -H ''Api-Key: $NR_API_KEY''
+    -d @alert.json'
+  - 'newrelic nerdgraph query --apiKey $NR_API_KEY --query ''{ actor { nrql( query: "SELECT count(*) FROM
+    Log SINCE 1 hour ago" ) } }'''
+  examples:
+  - 'curl -X POST https://log-api.newrelic.com/log/v1 -H "Api-Key: $NR_LICENSE_KEY" -d ''{"logs":[{"timestamp":1710000000000,"message":"order
+    placed","attributes":{"service":"orders"}}]}'''
+  - 'newrelic nerdgraph query --apiKey $NR_API_KEY --query ''{ actor { nrql( query: "SELECT * FROM Log
+    WHERE service = ''orders'' SINCE 1 day ago" ) } }'''
+  parameters:
+  - name: api_key
+    type: string
+    description: New Relic license or API key
+  - name: message
+    type: string
+    description: Log message content
+  - name: attributes
+    type: object
+    description: Key-value attributes attached to the log
+knowledge:
+- title: New Relic Logs Docs
+  type: documentation
+  source: https://docs.newrelic.com/docs/logs/
+  description: Logs API, forwarding agents and querying
+- title: Logs API reference
+  type: documentation
+  source: https://docs.newrelic.com/docs/logs/logs-api/introduction-logs-api/
+  description: Endpoint details and payload format
+instructions: "# New Relic Logs\n\nShip application logs to New Relic for centralized search, alerting\
+  \ and correlation with metrics/traces.\n\n## What this skill does\n\n- Ingests logs via the HTTP Logs\
+  \ API\n- Configures Fluent Bit/FluentD forwarding\n- Queries logs with NRQL\n\n## When to use\n\n- Centralizing\
+  \ logs across services\n- Alerting on log patterns\n\n## Real commands\n\n```bash\n# Ingest a single\
+  \ log line\ncurl -X POST https://log-api.newrelic.com/log/v1 \\\n  -H \"Api-Key: $NR_LICENSE_KEY\" \\\
+  \n  -d '{\"logs\":[{\"timestamp\":1710000000000,\"message\":\"order placed\",\"attributes\":{\"service\"\
+  :\"orders\"}}]}'\n\n# Query via GraphQL/NRQL\nnewrelic nerdgraph query --apiKey $NR_API_KEY \\\n  --query\
+  \ '{ actor { nrql( query: \"SELECT count(*) FROM Log WHERE service = 'orders' SINCE 1 day ago\" ) }\
+  \ }'\n```\n\n## Fluent Bit output\n\n```ini\n[OUTPUT]\n    Name  http\n    Match *\n    Host  log-api.newrelic.com\n\
+  \    Port  443\n    URI   /log/v1\n    Header Api-Key ${NR_LICENSE_KEY}\n```\n\n## Best practices\n\n\
+  - Add structured attributes (service, level, trace.id)\n- Batch logs to avoid rate limits\n- Set NRQL\
+  \ alert conditions on error patterns"
+examples:
+- input: Ship my app logs to New Relic
+  output: The agent sets up Fluent Bit output config or a curl Logs API test, then shows the NRQL query
+    to verify arrival.
+- input: Alert when 5xx log lines spike
+  output: The agent creates an NRQL alert condition on Log counts with status 5xx.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: newrelic-logs.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-newrelic-logs
+  generic:
+    system_prompt: 'You work Newrelic Logs hands-on. You do it through newrelic-logs-ingestion: Send logs
+      to New Relic via the Logs API and query them with NRQL. The commands are real, e.g. `curl -X POST
+      https://log-api.newrelic.com/log/v1 -H Api-Key: $NR_LICENSE_KEY -d @log.json`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

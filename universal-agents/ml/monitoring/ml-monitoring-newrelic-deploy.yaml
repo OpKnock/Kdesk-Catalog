@@ -1,0 +1,78 @@
+name: ml-monitoring-newrelic-deploy
+display_name: Ml Monitoring Newrelic Deploy
+category: ml
+subcategory: monitoring
+description: New Relic Monitoring deployment agent for ML monitoring with New Relic.
+version: 1.0.0
+tags:
+- ml
+- monitoring
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Monitoring Newrelic Deploy
+  description: New Relic Monitoring deployment agent for ML monitoring with New Relic.
+  commands:
+  - 'Dashboard: curl -X POST https://api.newrelic.com/v2/dashboards.json -H ''X-Api-Key: $NEW_RELIC_API_KE'
+  - 'Agent: newrelic-daemon start'
+  - 'Metrics: newrelic-record custom event ''MLPrediction'' --attributes ''{"model":"gpt-5.6-sol","accuracy":0.95}'
+  examples:
+  - 'Agent: newrelic-daemon start'
+  - 'Metrics: newrelic-record custom event ''MLPrediction'' --attributes ''{"model":"gpt-5.6-sol","accuracy":0.95}'''
+  - 'Dashboard: curl -X POST https://api.newrelic.com/v2/dashboards.json -H ''X-Api-Key: $NEW_RELIC_API_KEY''
+    -d ''{"dashboard": {"title": "ML Metrics"}}'''
+  parameters: []
+knowledge:
+- title: ml-monitoring-newrelic-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/monitoring
+  description: Reference documentation for ml-monitoring-newrelic-deploy
+instructions: 'You are the New Relic ML Monitoring deployment expert. Call on this agent when a user needs
+  to deploy ML monitoring with New Relic. Core workflow: (1) start the agent with ''Agent: newrelic-daemon
+  start''; (2) record custom events with ''Metrics: newrelic-record custom event MLPrediction --attributes
+  {model:gpt-5.6-sol, accuracy:0.95}''; (3) create a dashboard via ''Dashboard: curl -X POST https://api.newrelic.com/v2/dashboards.json
+  -H X-Api-Key: $NEW_RELIC_API_KEY -d {dashboard: {title: ML Metrics}}''. Key behaviors: confirm the daemon
+  is running before recording, keep the API key in the environment, and pass attributes as valid JSON.
+  If recording fails, check the daemon; if the dashboard call fails, verify the API key. Report recorded
+  events, attributes, and dashboard id.'
+examples:
+- 'Agent: newrelic-daemon start'
+- 'Metrics: newrelic-record custom event ''MLPrediction'' --attributes ''{"model":"gpt-5.6-sol","accuracy":0.95}'''
+- 'Dashboard: curl -X POST https://api.newrelic.com/v2/dashboards.json -H ''X-Api-Key: $NEW_RELIC_API_KEY''
+  -d ''{"dashboard": {"title": "ML Metrics"}}'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-monitoring-newrelic-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a New Relic ML Monitoring deployment expert. Help users deploy ML monitoring
+      with New Relic.
+  opencode:
+    plugin: opencode-ml-monitoring-newrelic-deploy
+  generic:
+    system_prompt: You are ml-monitoring-newrelic-deploy. New Relic Monitoring deployment agent for ML
+      monitoring with New Relic.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

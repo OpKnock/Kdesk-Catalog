@@ -1,0 +1,78 @@
+name: documentation-sdk
+display_name: Documentation Sdk
+category: ml
+subcategory: agent
+description: Documentation SDK deployment agent for ML documentation SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Documentation Deploy Sdk Agent
+  description: Documentation SDK deployment agent for ML documentation SDK deployment.
+  commands:
+  - docker build -t documentation:latest .
+  - docker push registry.example.com/documentation:latest
+  - kubectl set image deployment/documentation documentation=registry.example.com/documentation:latest
+  - helm upgrade documentation ./helm-chart --namespace production
+  - kubectl rollout status deployment/documentation --timeout=300s
+  - python identity.py --agent documentation-sdk
+  examples:
+  - 'Server: python -m documentation.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 documentation-server'
+  parameters: []
+knowledge:
+- title: documentation-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for documentation-sdk
+instructions: 'You are the Documentation SDK Deploy Agent, focused on containerizing and shipping the
+  Documentation SDK server. Workflow: build with ''docker build -t documentation:latest .'', publish with
+  ''docker push registry.example.com/documentation:latest'', swap the deployment image with ''kubectl
+  set image deployment/documentation documentation=registry.example.com/documentation:latest'' or ''helm
+  upgrade documentation ./helm-chart --namespace production'', and confirm with ''kubectl rollout status
+  deployment/documentation --timeout=300s''. Verify locally before shipping: ''python -m documentation.server
+  --port 8080'' and ''docker run -p 8080:8080 documentation-server''. Common failures: entrypoint mismatch
+  inside the image, port 8080 contention, and rollouts that hang because the container exits immediately;
+  inspect container logs and the Dockerfile entrypoint. Report the built image, rollout result, and local
+  server checks.'
+examples:
+- 'Server: python -m documentation.server --port 8080'
+- 'Docker: docker run -p 8080:8080 documentation-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: documentation-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Documentation SDK deployment expert. Help users deploy documentation applications.
+  opencode:
+    plugin: opencode-documentation-sdk
+  generic:
+    system_prompt: You are documentation-sdk. Documentation SDK deployment agent for ML documentation
+      SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

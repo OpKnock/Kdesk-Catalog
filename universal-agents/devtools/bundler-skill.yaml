@@ -1,0 +1,199 @@
+name: bundler
+display_name: bundler
+category: devtools
+subcategory: general
+description: 'Manages Ruby gem dependencies with Bundler: Gemfile authoring, install, update, exec, audit,
+  and gem packaging.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- bundle
+capabilities:
+- name: dependency-management
+  description: Install, add, update, and verify Ruby gem dependencies.
+  commands:
+  - bundle init
+  - bundle install --jobs 4
+  - bundle add rails --version '~> 7.1'
+  - bundle update --all
+  - bundle outdated
+  - bundle check
+  - bundle config set path vendor/bundle
+  examples:
+  - bundle install --jobs 4
+  - bundle add rspec --group test
+  - bundle outdated
+  parameters:
+  - name: gem
+    type: string
+    description: Gem name
+  - name: version
+    type: string
+    description: Version constraint
+  - name: group
+    type: string
+    description: Gem group, e.g. test, development
+- name: runtime-and-audit
+  description: Run gems in the bundle context and audit for vulnerabilities.
+  commands:
+  - bundle exec rspec
+  - bundle exec rake db:migrate
+  - bundle audit check --update
+  - bundle exec rubocop
+  - bundle lock --add-platform x86_64-linux
+  - bundle clean --force
+  examples:
+  - bundle exec rspec
+  - bundle audit check --update
+  - bundle lock --add-platform x86_64-linux
+  parameters:
+  - name: command
+    type: string
+    description: Command to run in bundle context
+  - name: platform
+    type: string
+    description: Platform to add to lockfile
+knowledge:
+- title: Bundler Documentation
+  type: documentation
+  source: https://bundler.io/docs.html
+  description: Gemfile syntax, CLI, and guides
+- title: bundle-audit
+  type: documentation
+  source: https://github.com/rubysec/bundler-audit
+  description: Audit Gemfile.lock for known vulnerabilities
+instructions: '# Bundler for Ruby
+
+
+  Manage Ruby gem dependencies deterministically with Bundler.
+
+
+  ## What This Skill Does
+
+
+  - Author Gemfile and resolve Gemfile.lock
+
+  - Installs gems into the bundle path
+
+  - Updates and reports outdated gems
+
+  - Runs commands inside the bundle context (bundle exec)
+
+  - Audits dependencies for vulnerabilities
+
+  - Builds new gem skeletons
+
+
+  ## When to Use
+
+
+  - Any Ruby project with dependencies
+
+  - Upgrading a Rails app''s gem set
+
+  - CI: install from lockfile deterministically
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Project setup
+
+  bundle init
+
+  bundle add rails --version ''~> 7.1''
+
+  bundle add rspec --group test
+
+  bundle install --jobs 4
+
+  bundle config set path vendor/bundle
+
+
+  # Maintenance
+
+  bundle update --all
+
+  bundle outdated
+
+  bundle check
+
+  bundle lock --add-platform x86_64-linux
+
+
+  # Runtime
+
+  bundle exec rspec
+
+  bundle exec rake db:migrate
+
+  bundle exec rubocop
+
+
+  # Security
+
+  bundle audit check --update
+
+  bundle audit fix --patch
+
+
+  # Packaging
+
+  bundle gem my_gem
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Commit Gemfile.lock for apps (not for gems)
+
+  - Use groups: development/test/production separation
+
+  - Run bundle audit in CI to fail on vulnerable deps
+
+  - Use `bundle exec` to avoid version conflicts
+
+  - Add platforms to the lockfile for multi-OS teams'
+examples:
+- input: Set up a new Rails project with bundler
+  output: Agent inits the Gemfile, adds rails, installs, and confirms bundle check passes
+- input: Our lockfile has known vulnerabilities
+  output: Agent runs bundle audit, proposes targeted updates, and applies bundle update for affected gems
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: bundler.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-bundler
+  generic:
+    system_prompt: 'You own bundler end to end. You do it through dependency-management: Install, add,
+      update, and verify Ruby gem dependencies. The commands are real, e.g. `bundle init`. You run and
+      verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

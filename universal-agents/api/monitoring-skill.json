@@ -1,0 +1,173 @@
+{
+  "name": "monitoring",
+  "display_name": "Monitoring",
+  "category": "api",
+  "subcategory": "general",
+  "description": "End-to-end monitoring stack operations: Prometheus targets, Grafana datasources and dashboards, alerting rules, and uptime checks.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "promtool"
+  ],
+  "capabilities": [
+    {
+      "name": "monitoring-stack",
+      "description": "Operate a Prometheus + Grafana stack: provision datasources, manage dashboards and validate alert rules.",
+      "commands": [
+        "docker run -d --name grafana -p 3000:3000 grafana/grafana",
+        "curl -u admin:admin -X POST http://localhost:3000/api/datasources -H \"Content-Type: application/json\" -d '{\"name\":\"Prometheus\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\"}'",
+        "promtool check rules /etc/prometheus/rules.yml",
+        "curl -X POST http://localhost:9090/-/reload",
+        "curl -s http://localhost:9090/api/v1/alertmanagers"
+      ],
+      "examples": [
+        "curl -u admin:admin -X POST http://localhost:3000/api/datasources -d @datasource.json",
+        "promtool check rules /etc/prometheus/rules.yml",
+        "curl -s http://localhost:9090/api/v1/rules"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Datasource or endpoint URL"
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "description": "Basic auth user for Grafana/API"
+        },
+        {
+          "name": "rules_file",
+          "type": "string",
+          "description": "Path to Prometheus alerting rules file"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Grafana Docs",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/grafana/latest/",
+      "description": "Provisioning, dashboards, HTTP API and alerting"
+    },
+    {
+      "title": "Prometheus Alerting",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/",
+      "description": "Alerting rule syntax and evaluation"
+    }
+  ],
+  "instructions": "# Monitoring\n\nA monitoring stack turns raw metrics into alerting and dashboards.\n\n## What this skill does\n\n- Boots Grafana and connects it to Prometheus\n- Validates alert rules with promtool and hot-reloads config\n- Covers synthetic uptime and availability checks\n\n## When to use\n\n- Standing up observability for a new environment\n- Fixing a broken scrape target or dashboard\n- Adding alert rules that must not fire falsely\n\n## Real commands\n\n```bash\n# Start Grafana\n docker run -d --name grafana -p 3000:3000 grafana/grafana\n\n# Provision Prometheus datasource via API\ncurl -u admin:admin -X POST http://localhost:3000/api/datasources \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\":\"Prometheus\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\"}'\n\n# Validate alert rules and reload\npromtool check rules /etc/prometheus/rules.yml\ncurl -X POST http://localhost:9090/-/reload\n\n# Inspect active rules\ncurl -s http://localhost:9090/api/v1/rules\n```\n\n## Rule example\n\n```yaml\ngroups:\n- name: availability\n  rules:\n  - alert: InstanceDown\n    expr: up == 0\n    for: 2m\n    labels: { severity: critical }\n```\n\n## Best practices\n\n- Check rules with promtool before reloading\n- Add `for:` durations to suppress transient blips\n- Monitor the monitor: alert on `up == 0` for prometheus itself",
+  "examples": [
+    {
+      "input": "Add my existing Prometheus to Grafana",
+      "output": "The agent provisions the datasource through the Grafana API with curl and verifies the health endpoint."
+    },
+    {
+      "input": "My alert fires on every restart, why?",
+      "output": "The agent reviews the `for:` clause and `up` semantics and adjusts the rule with promtool check rules."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "monitoring.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-monitoring"
+    },
+    "generic": {
+      "system_prompt": "You own Monitoring end to end. You do it through monitoring-stack: Operate a Prometheus + Grafana stack: provision datasources, manage dashboards and validate alert rules. The commands are real, e.g. `docker run -d --name grafana -p 3000:3000 grafana/grafana`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "monitoring",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "monitoring-stack",
+        "name": "url",
+        "type": "string",
+        "description": "Datasource or endpoint URL"
+      },
+      {
+        "capability": "monitoring-stack",
+        "name": "username",
+        "type": "string",
+        "description": "Basic auth user for Grafana/API"
+      },
+      {
+        "capability": "monitoring-stack",
+        "name": "rules_file",
+        "type": "string",
+        "description": "Path to Prometheus alerting rules file"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "promtool"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/monitoring-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/monitoring-skill.yaml",
+    "checksum": "896498e4c0558386f4260565e46836ff61e0131d3cffa27efbf06ce8f5a8d087"
+  }
+}

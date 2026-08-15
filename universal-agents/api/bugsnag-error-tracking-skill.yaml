@@ -1,0 +1,200 @@
+name: bugsnag-error-tracking
+display_name: Bugsnag Error Tracking
+category: api
+subcategory: general
+description: 'Tracks errors with Bugsnag: uploading source maps, notifying via API, and managing releases
+  with the bugsnag CLI.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- bugsnag-cli
+- npx
+capabilities:
+- name: sourcemaps
+  description: Upload source maps so stack traces are readable.
+  commands:
+  - bugsnag-cli sourcemap upload --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --source-map ./dist/app.js.map
+  - npx bugsnag-sourcemaps upload --api-key $BUGSNAG_API_KEY --minified-file dist/bundle.js --source-map
+    dist/bundle.js.map --app-version 1.2.3
+  - bugsnag-cli sourcemap upload --api-key $KEY --app-version 1.2.3 --source-map ./dist/*.map
+  - npx bugsnag-sourcemaps upload --api-key $KEY --minified-file dist/bundle.js --source-map dist/bundle.js.map
+    --public-path /assets
+  examples:
+  - bugsnag-cli sourcemap upload --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --source-map ./dist/app.js.map
+  - npx bugsnag-sourcemaps upload --api-key $KEY --minified-file dist/bundle.js --source-map dist/bundle.js.map
+    --app-version 1.2.3
+  - npx bugsnag-sourcemaps upload --api-key $KEY --minified-file dist/app.js --source-map dist/app.js.map
+    --upload-sources
+  parameters:
+  - name: api_key
+    type: string
+    description: Bugsnag project API key
+  - name: app_version
+    type: string
+    description: Version the map belongs to
+  - name: source_map
+    type: string
+    description: Path to .map file
+- name: notify-api
+  description: Send errors to Bugsnag's notify API.
+  commands:
+  - 'curl -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d ''{"apiKey":"$BUGSNAG_API_KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"TestError","message":"manual
+    notify"}],"severity":"warning"}]}'''
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json"
+    -d ''{"apiKey":"$BUGSNAG_API_KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"Probe","message":"healthcheck"}]}]}'''
+  - 'curl -s -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d ''{"apiKey":"$BUGSNAG_API_KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"Probe","message":"ok"}],"severity":"info"}]}'''
+  examples:
+  - 'curl -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d ''{"apiKey":"$KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"Test","message":"hello"}]}]}'''
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json"
+    -d ''{"apiKey":"$KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"Probe","message":"test"}]}]}'''
+  - 'curl -s -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d ''{"apiKey":"$KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"InfoProbe","message":"ok"}],"severity":"info","context":"ci"}]}'''
+  parameters:
+  - name: error_class
+    type: string
+    description: Error class name
+  - name: message
+    type: string
+    description: Error message
+  - name: severity
+    type: string
+    description: error, warning, or info
+- name: releases
+  description: Track releases so Bugsnag links errors to versions.
+  commands:
+  - bugsnag-cli release --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --stage production
+  - bugsnag-cli releases list --api-key $KEY --project-root .
+  - bugsnag-cli --version
+  - bugsnag-cli help
+  examples:
+  - bugsnag-cli release --api-key $KEY --app-version 1.2.3 --stage production
+  - bugsnag-cli release --api-key $KEY --app-version 1.2.4 --stage staging --metadata "commit=$(git rev-parse
+    HEAD)"
+  - bugsnag-cli releases list --api-key $KEY
+  parameters:
+  - name: app_version
+    type: string
+    description: Version being released
+  - name: stage
+    type: string
+    description: Deployment stage
+knowledge:
+- title: Bugsnag Docs
+  type: documentation
+  source: https://docs.bugsnag.com/
+  description: SDK integration and CLI
+- title: Bugsnag Source Maps
+  type: documentation
+  source: https://docs.bugsnag.com/platforms/javascript/source-maps/
+  description: Source map upload process
+- title: Error Tracking API
+  type: documentation
+  source: https://docs.bugsnag.com/api/error-tracking/
+  description: Notify endpoint payloads
+instructions: '# Bugsnag Error Tracking
+
+
+  ## What this skill does
+
+
+  Tracks errors with Bugsnag: uploading source maps per release so stack traces are readable, sending
+  test notifications to the notify API, and recording releases via the bugsnag CLI.
+
+
+  ## When to use
+
+
+  - Minified JS stack traces are unreadable (missing source maps)
+
+  - Verifying API keys/notifications from CI
+
+  - Associating errors with app versions
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Upload a source map
+
+  bugsnag-cli sourcemap upload --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --source-map ./dist/app.js.map
+
+
+  # Alternative: npx sourcemap uploader
+
+  npx bugsnag-sourcemaps upload --api-key $KEY --minified-file dist/bundle.js --source-map dist/bundle.js.map
+  --app-version 1.2.3
+
+
+  # Send a test event
+
+  curl -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d ''{"apiKey":"$KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"Test","message":"hello"}]}]}''
+
+
+  # Record a release
+
+  bugsnag-cli release --api-key $KEY --app-version 1.2.3 --stage production
+
+  ```
+
+
+  ## Testing
+
+
+  - Send a notify probe and confirm 200
+
+  - Upload a map then trigger an error; verify the stack trace is de-minified
+
+
+  ## Best practices
+
+
+  - Upload source maps in the same CI job as the deploy
+
+  - Pin the app-version to your release tag
+
+  - Send releases with stage + metadata for filtering'
+examples:
+- input: Stack traces are minified gibberish
+  output: Uploads the map with bugsnag-cli sourcemap upload for the failing app-version and verifies the
+    next error shows original sources.
+- input: Verify our Bugsnag API key works from CI
+  output: Sends a severity-info probe to notify.bugsnag.com and checks the HTTP status plus appearance
+    in the dashboard.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: bugsnag-error-tracking.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-bugsnag-error-tracking
+  generic:
+    system_prompt: 'Your lane is Bugsnag Error Tracking. You do it through sourcemaps: Upload source maps
+      so stack traces are readable. The commands are real, e.g. `bugsnag-cli sourcemap upload --api-key
+      $BUGSNAG_API_KEY --app-version 1.2.3 --source-map...`. You work hands-on and only report outcomes
+      you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

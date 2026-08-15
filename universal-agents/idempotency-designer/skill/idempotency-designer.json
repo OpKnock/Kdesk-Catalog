@@ -1,0 +1,235 @@
+{
+  "name": "idempotency-designer-idempotency-designer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Designs idempotent APIs and consumers: idempotency keys, Redis SETNX locks, unique constraints, and replay-safe workflows.",
+  "keywords": [
+    "idempotency",
+    "idempotency-key"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "idempotency-designer-idempotency-designer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-idempotency-designer"
+    },
+    "generic": {
+      "system_prompt": "You are the idempotency-designer-idempotency-designer specialist. You do it through redis-locks: Implement idempotency keys with Redis atomic primitives. The commands are real, e.g. `redis-cli SET order:key:abc123 processed NX EX 900`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "redis-locks",
+      "description": "Implement idempotency keys with Redis atomic primitives.",
+      "commands": [
+        "redis-cli SET order:key:abc123 processed NX EX 900",
+        "redis-cli SETNX order:key:abc123 processed",
+        "redis-cli GET order:key:abc123",
+        "redis-cli EXPIRE order:key:abc123 900",
+        "redis-cli EVAL \"if redis.call('GET', KEYS[1]) == ARGV[1] then redis.call('DEL', KEYS[1]) return 1 else return 0 end\" 1 order:key:abc123 done"
+      ],
+      "examples": [
+        "redis-cli SET charge:key:xyz 202 accepted NX EX 300",
+        "redis-cli --eval lua/check-and-set.lua order:key:abc123 , request-id-1",
+        "redis-cli GET charge:key:xyz"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Idempotency key: namespace:key:value"
+        },
+        {
+          "name": "NX",
+          "type": "string",
+          "description": "Only set if key does not exist"
+        },
+        {
+          "name": "EX",
+          "type": "number",
+          "description": "TTL in seconds for the lock"
+        }
+      ]
+    },
+    {
+      "name": "api-tests",
+      "description": "Verify idempotent behavior against live APIs.",
+      "commands": [
+        "curl -i -X POST http://localhost:8080/orders -H 'Idempotency-Key: abc-123' -H 'Content-Type: application/json' -d '{\"sku\":\"A1\"}'",
+        "curl -i -X POST http://localhost:8080/orders -H 'Idempotency-Key: abc-123' -H 'Content-Type: application/json' -d '{\"sku\":\"A1\"}'",
+        "curl -i -X POST http://localhost:8080/orders -H 'Idempotency-Key: abc-456' -H 'Content-Type: application/json' -d '{\"sku\":\"A1\"}'",
+        "k6 run --vus 20 --duration 10s idempotency-test.js",
+        "ab -n 200 -c 20 -p payload.json -T application/json -H 'Idempotency-Key: load-test-1' http://localhost:8080/orders"
+      ],
+      "examples": [
+        "curl -i -X POST http://localhost:8080/payments -H 'Idempotency-Key: pay-1' -d '{\"amount\":100}' | head -12",
+        "k6 run --vus 50 --duration 10s idempotency-test.js",
+        "curl -i -X DELETE http://localhost:8080/orders/42"
+      ],
+      "parameters": [
+        {
+          "name": "Idempotency-Key",
+          "type": "string",
+          "description": "Client-generated replay key"
+        },
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method under test"
+        },
+        {
+          "name": "vus",
+          "type": "number",
+          "description": "k6 concurrent virtual users"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "redis",
+    "node.js",
+    "python",
+    "postgresql"
+  ],
+  "tools": [
+    "redis",
+    "node.js",
+    "python",
+    "postgresql",
+    "stripe-cli"
+  ],
+  "examples": [
+    {
+      "input": "The payment webhook redelivers the same event twice.",
+      "output": "Adds a Redis SETNX idempotency guard keyed by event id, stores the first response, and returns it on redelivery."
+    },
+    {
+      "input": "Verify concurrent duplicate order creation is safe.",
+      "output": "Runs the k6 concurrency test with a shared idempotency key and confirms exactly one row is inserted."
+    }
+  ],
+  "instructions": "# Idempotency Design\n\nMake writes safe to retry without double effects.\n\n## When to Use\n\n- Payment and order APIs where clients retry\n- Webhook consumers that redeliver events\n- Queue workers with at-least-once delivery\n\n## Idempotency key pattern\n\n1. Client sends `Idempotency-Key` header.\n2. Server tries `SET key status NX EX 900` in Redis.\n3. If key exists, return the stored response instead of re-processing.\n\n```bash\nredis-cli SET charge:key:abc 202 accepted NX EX 300\nredis-cli GET charge:key:abc\n```\n\nIf NX fails, load the stored response and return it with 200.\n\n## Key rules\n\n- Keys must be unique per logical operation, random per client.\n- TTL the lock (300-900s) to bound storage.\n- Return the same response body for replays - clients compare it.\n\n## Database uniqueness\n\nAdd a unique constraint as the source of truth:\n\n```sql\nCREATE UNIQUE INDEX uq_payment_request\n  ON payments(request_id) WHERE status <> 'failed';\n```\n\n## Testing replays\n\n```bash\ncurl -i -X POST http://localhost:8080/orders -H 'Idempotency-Key: abc-123' -d '{\"sku\":\"A1\"}'\ncurl -i -X POST http://localhost:8080/orders -H 'Idempotency-Key: abc-123' -d '{\"sku\":\"A1\"}'\n```\n\nThe second call must not create a second order.\n\n## Concurrency test\n\n```js\n// idempotency-test.js\nimport http from 'k6/http';\nconst key = 'k6-' + Date.now();\n\nexport default function () {\n  http.post('http://localhost:8080/orders',\n    JSON.stringify({ sku: 'A1' }),\n    { headers: { 'Idempotency-Key': key, 'Content-Type': 'application/json' } });\n}\n```\n\n```bash\nk6 run --vus 20 --duration 10s idempotency-test.js\n```\n\nExactly one order must be created despite 20 concurrent requests.\n\n## Best practices\n\n- Log the idempotency key with every write for audit.\n- Never reuse a key with different payloads.\n- Test that failures during processing do not poison the lock.\n\n## Testing\n\nRun sequential replay tests and the k6 concurrency test in CI.",
+  "display_name": "idempotency-designer-idempotency-designer",
+  "knowledge": [
+    {
+      "title": "Redis SETNX",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/setnx/",
+      "description": "Atomic set-if-not-exists for idempotency keys"
+    },
+    {
+      "title": "AWS Lambda Idempotency",
+      "type": "documentation",
+      "source": "https://docs.powertools.aws.dev/lambda/python/latest/utilities/idempotency/",
+      "description": "Idempotency pattern for event-driven handlers"
+    },
+    {
+      "title": "Stripe Idempotency Guide",
+      "type": "documentation",
+      "source": "https://docs.stripe.com/api/idempotent_requests",
+      "description": "Production idempotency key semantics and responses"
+    }
+  ],
+  "id": "idempotency-designer-idempotency-designer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-locks",
+        "name": "key",
+        "type": "string",
+        "description": "Idempotency key: namespace:key:value"
+      },
+      {
+        "capability": "redis-locks",
+        "name": "NX",
+        "type": "string",
+        "description": "Only set if key does not exist"
+      },
+      {
+        "capability": "redis-locks",
+        "name": "EX",
+        "type": "number",
+        "description": "TTL in seconds for the lock"
+      },
+      {
+        "capability": "api-tests",
+        "name": "Idempotency-Key",
+        "type": "string",
+        "description": "Client-generated replay key"
+      },
+      {
+        "capability": "api-tests",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method under test"
+      },
+      {
+        "capability": "api-tests",
+        "name": "vus",
+        "type": "number",
+        "description": "k6 concurrent virtual users"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis",
+    "node.js",
+    "python",
+    "postgresql"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "idempotency-designer/skill/idempotency-designer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/idempotency-designer/skill/idempotency-designer.yaml",
+    "checksum": "1b359c382a73c156e5adf700b09afa799e0c664f5c0bbab3f4b54e1dbb8cc163"
+  }
+}

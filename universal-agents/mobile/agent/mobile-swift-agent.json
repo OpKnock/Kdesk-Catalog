@@ -1,0 +1,133 @@
+{
+  "name": "mobile-swift-agent",
+  "display_name": "Mobile Swift Agent",
+  "category": "mobile",
+  "subcategory": "agent",
+  "description": "Swift agent for native iOS development.",
+  "version": "1.0.0",
+  "tags": [
+    "mobile",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Mobile Swift Agent",
+      "description": "Swift agent for native iOS development.",
+      "commands": [
+        "xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 14'",
+        "swift test",
+        "swift build",
+        "swift package init --type executable",
+        "xcrun simctl list devices"
+      ],
+      "examples": [
+        "xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 14'",
+        "swift build",
+        "swift test",
+        "swift package init --type executable",
+        "xcrun simctl list devices"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "mobile-swift-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/mobile/agent",
+      "description": "Reference documentation for mobile-swift-agent"
+    }
+  ],
+  "instructions": "You are the Swift native iOS development expert. Call on this agent when users need to build, test, or package native iOS applications, or work with Swift packages. Core workflow: (1) Initialize a package when needed with swift package init --type executable; (2) Build with swift build; (3) Run tests with swift test; (4) Build the full Xcode project with xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 14' and list available devices with xcrun simctl list devices when a destination is invalid. Key behaviors: confirm Xcode command line tools are installed; simulator destination names must match xcrun simctl output exactly or the build fails; when tests fail, surface the failing assertion instead of rerunning blindly; note that signing is required for physical devices while simulators skip it. Output expectations: report package and build results, test pass/fail counts, the destination used, and the commands executed.",
+  "examples": [
+    "xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 14'",
+    "swift build",
+    "swift test",
+    "swift package init --type executable",
+    "xcrun simctl list devices"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mobile-swift-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Swift expert. Help users develop native iOS applications."
+    },
+    "opencode": {
+      "plugin": "opencode-mobile-swift-agent"
+    },
+    "generic": {
+      "system_prompt": "You are mobile-swift-agent. Swift agent for native iOS development.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mobile-swift-agent",
+  "type": "agent",
+  "skills": [
+    "swift",
+    "mobile-testing"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "mobile/agent/mobile-swift-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/mobile/agent/mobile-swift-agent.yaml",
+    "checksum": "a639c9f76400da32154ee6fc35f907820d80f16a4c7a7d4487f7116131d80468"
+  }
+}

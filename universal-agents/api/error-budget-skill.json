@@ -1,0 +1,171 @@
+{
+  "name": "error-budget",
+  "display_name": "Error Budget",
+  "category": "api",
+  "subcategory": "general",
+  "description": "SLO and error budget management: compute error budgets from Prometheus metrics, track burn rates, and trigger alerts when budgets deplete.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "promtool"
+  ],
+  "capabilities": [
+    {
+      "name": "budget-calculations",
+      "description": "Query availability and latency SLIs, compute burn, and alert on budget depletion.",
+      "commands": [
+        "curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total{job=\"api\"}[5m]))' | jq '.data.result[0].value'",
+        "curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=(1 - sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))) * 100' | jq '.data.result[0].value[1]'",
+        "curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq",
+        "promtool check rules prometheus/rules.yml",
+        "promtool test rules test.yml"
+      ],
+      "examples": [
+        "curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=(1 - sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))) * 100' | jq '.data.result[0].value[1]'",
+        "curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq",
+        "promtool check rules prometheus/rules.yml"
+      ],
+      "parameters": [
+        {
+          "name": "prometheus-url",
+          "type": "string",
+          "description": "Prometheus API endpoint"
+        },
+        {
+          "name": "slo-target",
+          "type": "string",
+          "description": "SLO target, e.g. 99.9% availability"
+        },
+        {
+          "name": "window",
+          "type": "string",
+          "description": "Evaluation window like 5m or 30d"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Google SRE Workbook: Error Budgets",
+      "type": "documentation",
+      "source": "https://sre.google/workbook/error-budget/",
+      "description": "Budget computation, burn rate alerts, and budget depletion policy"
+    },
+    {
+      "title": "Prometheus Query API",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/querying/api/",
+      "description": "Instant and range queries against Prometheus"
+    }
+  ],
+  "instructions": "# Error Budget\n\n## What this skill does\n\nAn error budget is the allowed failure over an SLO period: at 99.9% availability over 30 days, 43 minutes of error is the budget. This skill computes SLIs from Prometheus, tracks burn, and wires alerts.\n\n## When to use\n\n- Setting up SLOs for a new service\n- Deciding whether a release can proceed (budget check)\n- Investigating which window consumed the budget\n\n## Real commands\n\n```bash\n# Request rate (RPS)\ncurl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total{job=\"api\"}[5m]))' | jq '.data.result[0].value'\n\n# Availability SLI (percent of good requests)\ncurl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=(1 - sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))) * 100' | jq '.data.result[0].value[1]'\n\n# Latency SLI (P95)\ncurl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq\n\n# Validate alert rules\npromtool check rules prometheus/rules.yml\npromtool test rules test.yml\n```\n\n## Burn rate example (Prometheus rule)\n\n```yaml\ngroups:\n  - name: slo\n    rules:\n      - alert: ErrorBudgetBurnRate\n        expr: (1 - sum(rate(http_requests_total{code=~\"5..\"}[1h])) / sum(rate(http_requests_total[1h]))) < 0.99\n        for: 15m\n        labels:\n          severity: page\n```\n\n## Budget math\n\n- 99.9% over 30 days = 43m 12s budget\n- 99.95% over 30 days = 21m 36s\n- Monthly budget seconds = (1 - target) * days * 86400\n\n## Best practices\n\n- Alert on burn rate (budget depletion speed), not raw error count.\n- Use a 1h fast-burn and 6h slow-burn alert pair.\n- Review budget consumption weekly in the on-call report.\n- Freeze risky releases when burn crosses ~15% of the monthly budget.\n",
+  "examples": [
+    {
+      "input": "Compute our current availability",
+      "output": "Query the availability SLI formula against Prometheus and compare the value to the SLO target, converting the shortfall to remaining budget minutes."
+    },
+    {
+      "input": "Budget nearly exhausted this month",
+      "output": "Check 1h and 6h burn rates, review which errors contributed via code=~\"5..\", and decide on a release freeze or on-call escalation."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "error-budget.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-error-budget"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Error Budget. You do it through budget-calculations: Query availability and latency SLIs, compute burn, and alert on budget depletion. The commands are real, e.g. `curl -s http://prometheus:9090/api/v1/query --data-urlencode...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "error-budget",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "budget-calculations",
+        "name": "prometheus-url",
+        "type": "string",
+        "description": "Prometheus API endpoint"
+      },
+      {
+        "capability": "budget-calculations",
+        "name": "slo-target",
+        "type": "string",
+        "description": "SLO target, e.g. 99.9% availability"
+      },
+      {
+        "capability": "budget-calculations",
+        "name": "window",
+        "type": "string",
+        "description": "Evaluation window like 5m or 30d"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "promtool"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/error-budget-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/error-budget-skill.yaml",
+    "checksum": "28da0a152c4986cbe85fae516bf23717746b269c28af521b66cd25a0d8bd5bad"
+  }
+}

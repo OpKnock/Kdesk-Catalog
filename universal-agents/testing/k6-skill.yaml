@@ -1,0 +1,136 @@
+name: k6
+display_name: k6
+category: testing
+subcategory: general
+description: Load-tests APIs with k6 scripts, scenarios, thresholds, and Grafana Cloud reporting.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- k6
+capabilities:
+- name: k6-runs
+  description: Run k6 test scripts with virtual users and durations.
+  commands:
+  - k6 run script.js
+  - k6 run -u 100 -d 30s script.js
+  - k6 run --vus 50 --duration 2m script.js
+  - k6 run --iterations 1000 script.js
+  - k6 run --env BASE_URL=https://staging.example.com script.js
+  examples:
+  - k6 run -u 100 -d 30s script.js
+  - k6 run --iterations 1000 script.js
+  - k6 run --env BASE_URL=https://staging.example.com script.js
+  parameters:
+  - name: vus
+    type: number
+    description: Virtual users
+  - name: duration
+    type: string
+    description: Test duration, e.g. 30s, 2m
+  - name: iterations
+    type: number
+    description: Total iterations
+- name: thresholds-and-reports
+  description: Assert performance and export results.
+  commands:
+  - k6 run --summary-trend-stats="avg,p(95),p(99)" script.js
+  - k6 run --out json=results.json script.js
+  - k6 run --out web-dashboard script.js
+  - k6 run --tag env=staging script.js
+  - k6 login cloud
+  examples:
+  - k6 run --summary-trend-stats="avg,p(95),p(99)" script.js
+  - k6 run --out json=results.json script.js
+  - k6 run --out web-dashboard script.js
+  parameters:
+  - name: out
+    type: string
+    description: Output destination, e.g. json=file, cloud
+  - name: tag
+    type: string
+    description: Result tag, e.g. env=staging
+- name: cloud-integration
+  description: Run tests in k6 Cloud and inspect archives.
+  commands:
+  - k6 cloud run script.js
+  - k6 run --out cloud script.js
+  - k6 archive script.js
+  - k6 inspect script.js
+  - k6 cloud start --name "weekly capacity" script.js
+  examples:
+  - k6 cloud run script.js
+  - k6 archive script.js
+  - k6 inspect script.js
+  parameters:
+  - name: name
+    type: string
+    description: Cloud run name
+  - default: cloud
+    description: 'Result output destination: cloud or a local sink.'
+    name: out
+    type: string
+knowledge:
+- title: k6 Documentation
+  type: documentation
+  source: https://grafana.com/docs/k6/
+  description: Test authoring, executors, and thresholds
+- title: k6 CLI Reference
+  type: documentation
+  source: https://grafana.com/docs/k6/using-k6/k6-options/reference/
+  description: All CLI flags and options
+instructions: "# k6\n\nLoad testing with developer-friendly JavaScript scripts.\n\n## What This Skill\
+  \ Does\n\n- Runs scenarios with virtual users, iterations, and ramps\n- Asserts SLOs with thresholds\n\
+  - Exports JSON/cloud results\n- Archives tests for reproducibility\n\n## When to Use\n\n- Capacity planning\
+  \ and soak tests\n- SLO validation under load\n- API regression performance checks\n\n## Real Commands\n\
+  \n```bash\n# Run\nk6 run script.js\nk6 run -u 100 -d 30s script.js\nk6 run --iterations 1000 script.js\n\
+  k6 run --env BASE_URL=https://staging.example.com script.js\n\n# Outputs\nk6 run --summary-trend-stats=\"\
+  avg,p(95),p(99)\" script.js\nk6 run --out json=results.json script.js\n\n# Cloud\nk6 login cloud\nk6\
+  \ cloud run script.js\n```\n\n## Sample Script\n\n```js\nimport http from 'k6/http';\nimport { check,\
+  \ sleep } from 'k6';\n\nexport const options = {\n  scenarios: {\n    load: { executor: 'ramping-vus',\
+  \ stages: [\n      { duration: '1m', target: 50 },\n      { duration: '5m', target: 200 },\n      {\
+  \ duration: '1m', target: 0 }\n    ]}\n  },\n  thresholds: {\n    http_req_failed: ['rate<0.01'],\n\
+  \    http_req_duration: ['p(95)<500']\n  }\n};\n\nexport default function () {\n  const res = http.get(`${__ENV.BASE_URL}/v1/products`);\n\
+  \  check(res, { 'status is 200': (r) => r.status === 200 });\n  sleep(1);\n}\n```\n\n## Best Practices\n\
+  \n- Ramp VUs gradually; test both steady state and spikes\n- Set thresholds that mirror SLOs\n- Check\
+  \ p(95)/p(99), not just averages\n- Use __ENV for environment-specific URLs\n- Archive scripts for reproducible\
+  \ runs"
+examples:
+- input: Load test the catalog API
+  output: Agent writes a k6 script with ramping VUs and thresholds, runs it, and reports pass/fail against
+    the SLOs.
+- input: Can the API handle 1000 concurrent users?
+  output: Agent runs k6 with -u 1000 -d 5m against staging and analyzes the p95 latency and error rate.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: k6.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-k6
+  generic:
+    system_prompt: 'You are the k6 specialist. You do it through k6-runs: Run k6 test scripts with virtual
+      users and durations. The commands are real, e.g. `k6 run script.js`. You run and verify the real
+      CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

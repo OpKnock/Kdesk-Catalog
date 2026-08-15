@@ -1,0 +1,101 @@
+name: tekton
+display_name: Tekton
+category: api
+subcategory: general
+description: 'Hand-crafted Tekton skill: task and pipeline YAML, tkn CLI runs and logs, and pipelinerun
+  inspection for CI/CD on Kubernetes.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+- tkn
+capabilities:
+- name: tekton-pipelines
+  description: Create and run Tekton pipelines with the tkn CLI
+  commands:
+  - kubectl apply -f tasks/build-image.yaml
+  - tkn task list -n ci
+  - tkn pipeline start build-deploy --showlog -n ci
+  - tkn pipelinerun list -n ci
+  - tkn pipelinerun logs -f build-deploy-run-abc -n ci
+  - kubectl get pipelineruns -n ci -w
+  examples:
+  - tkn pipeline start build-deploy --showlog -n ci
+  - tkn pipelinerun logs -f build-deploy-run-abc -n ci
+  - kubectl apply -f pipeline.yaml
+  parameters:
+  - name: namespace
+    type: string
+    description: Namespace for tasks/pipelines
+  - name: pipeline
+    type: string
+    description: Pipeline name to start
+  - name: run_name
+    type: string
+    description: Pipelinerun name for logs
+knowledge:
+- title: Tekton CLI docs
+  type: documentation
+  source: https://tekton.dev/docs/cli/
+  description: tkn task, pipeline, pipelinerun commands
+- title: Tekton pipeline docs
+  type: documentation
+  source: https://tekton.dev/docs/pipelines/
+  description: Tasks, pipelines, results, workspaces
+instructions: "# Tekton\n\nHand-crafted skill for CI/CD pipelines with Tekton on Kubernetes.\n\n## What\
+  \ this skill does\n\n- Applies Task and Pipeline YAML into a cluster\n- Starts pipelines and streams\
+  \ logs with the tkn CLI\n- Inspects pipelineruns and their step statuses\n\n## When to use\n\n- Kubernetes-native\
+  \ CI where Pods do the work\n- Replacing cloud CI for cluster-based builds\n- Per-namespace pipelines\
+  \ with shared tasks\n\n## Real commands\n\n```bash\n# Apply task definitions\nkubectl apply -f tasks/build-image.yaml\n\
+  \n# Inventory\ntkn task list -n ci\ntkn pipeline list -n ci\n\n# Start a run and watch it\ntkn pipeline\
+  \ start build-deploy --showlog -n ci\n\n# Inspect runs\ntkn pipelinerun list -n ci\nkubectl get pipelineruns\
+  \ -n ci -w\n\n# Stream logs of a finished run\ntkn pipelinerun logs -f build-deploy-run-abc -n ci\n\
+  ```\n\n## Pipeline example\n\n```yaml\napiVersion: tekton.dev/v1\nkind: Pipeline\nmetadata:\n  name:\
+  \ build-deploy\nspec:\n  tasks:\n    - name: build-image\n      taskRef:\n        name: build-image\n\
+  \    - name: deploy\n      taskRef:\n        name: deploy\n      runAfter: [build-image]\n```\n\n##\
+  \ Testing\n\n```bash\nkubectl apply -f tasks/build-image.yaml\ntkn task start build-image --showlog\
+  \ -n ci\ntkn taskrun list -n ci\n```\n\n## Best practices\n\n- Version tasks in a shared git repo and\
+  \ apply them in CI\n- Use workspaces (PVCs) for caching between tasks\n- Set timeouts on tasks so stuck\
+  \ runs do not hold namespaces\n"
+examples:
+- input: Run the deploy pipeline now
+  output: tkn pipeline start build-deploy --showlog -n ci streams every step until completion.
+- input: Why did the last run fail?
+  output: tkn pipelinerun list -n ci to get the run name, then tkn pipelinerun logs -f <run> -n ci to
+    see the failing step.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: tekton.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-tekton
+  generic:
+    system_prompt: 'You are the Tekton specialist. You do it through tekton-pipelines: Create and run
+      Tekton pipelines with the tkn CLI. The commands are real, e.g. `kubectl apply -f tasks/build-image.yaml`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

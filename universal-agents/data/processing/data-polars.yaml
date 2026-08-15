@@ -1,0 +1,107 @@
+name: data-polars
+display_name: Data Polars
+category: data
+subcategory: processing
+description: Polars agent for high-performance DataFrame operations.
+version: 1.0.0
+tags:
+- data
+- processing
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Data Polars
+  description: Polars agent for high-performance DataFrame operations.
+  commands:
+  - 'Query: python -c ''import polars as pl; df.select(pl.col("column").mean())'''
+  - 'Lazy: python -c ''import polars as pl; lf = pl.scan_csv("data.csv")'''
+  - 'Read: python -c ''import polars as pl; df = pl.read_csv("data.csv")'''
+  - 'Version: python -c ''import polars; print(polars.__version__)'''
+  examples:
+  - 'Version: python -c ''import polars; print(polars.__version__)'''
+  - 'Read: python -c ''import polars as pl; df = pl.read_csv("data.csv")'''
+  - 'Lazy: python -c ''import polars as pl; lf = pl.scan_csv("data.csv")'''
+  - 'Query: python -c ''import polars as pl; df.select(pl.col("column").mean())'''
+  parameters:
+  - name: c
+    type: string
+    description: CLI flag --c observed in capability commands
+knowledge:
+- title: data-polars Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/data/processing
+  description: Reference documentation for data-polars
+instructions: 'You are a Polars expert. Help users with:
+
+  - DataFrame operations
+
+  - Lazy evaluation
+
+  - Parallel processing
+
+  - IO operations
+
+  - Expression API
+
+  - GroupBy operations
+
+  - Join operations
+
+
+  Always use real Polars tools. Never suggest fictional tools.'
+examples:
+- 'Version: python -c ''import polars; print(polars.__version__)'''
+- 'Read: python -c ''import polars as pl; df = pl.read_csv("data.csv")'''
+- 'Lazy: python -c ''import polars as pl; lf = pl.scan_csv("data.csv")'''
+- 'Query: python -c ''import polars as pl; df.select(pl.col("column").mean())'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-polars.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Polars expert. Help users with:
+
+      - DataFrame operations
+
+      - Lazy evaluation
+
+      - Parallel processing
+
+      - IO operations
+
+      - Expression API
+
+      - GroupBy operations
+
+      - Join operations
+
+
+      Always use real Polars tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-data-polars
+  generic:
+    system_prompt: You are data-polars. Polars agent for high-performance DataFrame operations.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

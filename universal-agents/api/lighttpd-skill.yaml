@@ -1,0 +1,113 @@
+name: lighttpd
+display_name: Lighttpd
+category: api
+subcategory: general
+description: 'Configure and operate the lighttpd web server: config validation, foreground/daemon modes,
+  module enablement, and simple virtual hosts.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- lighttpd
+- lighttpd-enable-mod
+- systemctl
+capabilities:
+- name: lighttpd-run
+  description: Validate config and start lighttpd in various modes.
+  commands:
+  - lighttpd -f /etc/lighttpd/lighttpd.conf -t
+  - lighttpd -f /etc/lighttpd/lighttpd.conf -D
+  - systemctl start lighttpd
+  - systemctl reload lighttpd
+  - lighttpd -v
+  examples:
+  - lighttpd -f /etc/lighttpd/lighttpd.conf -t
+  - lighttpd -f /etc/lighttpd/lighttpd.conf -D
+  - systemctl reload lighttpd
+  parameters:
+  - name: config
+    type: string
+    description: lighttpd config file path.
+  - name: foreground
+    type: boolean
+    description: -D runs in foreground for debugging.
+- name: lighttpd-modules
+  description: Enable modules and configure virtual hosts.
+  commands:
+  - lighttpd-enable-mod fastcgi
+  - lighttpd-enable-mod mod_rewrite
+  - lighttpd-enable-mod mod_compress
+  - curl -sI http://localhost/ | head -5
+  examples:
+  - lighttpd-enable-mod fastcgi
+  - lighttpd-enable-mod mod_compress
+  - curl -sI http://localhost/ | head -5
+  parameters:
+  - name: module
+    type: string
+    description: Module name to enable.
+knowledge:
+- title: lighttpd Documentation
+  type: documentation
+  source: https://redmine.lighttpd.net/projects/lighttpd/wiki
+  description: Official lighttpd wiki and documentation.
+- title: lighttpd Configuration
+  type: documentation
+  source: https://redmine.lighttpd.net/projects/lighttpd/wiki/Docs_Configuration
+  description: Configuration reference.
+instructions: "# lighttpd\n\nConfigure and run the lighttpd web server.\n\n## What this skill does\n\n\
+  - Validates configuration files before applying.\n- Runs lighttpd in daemon or foreground mode.\n- Enables\
+  \ modules and virtual hosts.\n\n## When to use\n\n- Lightweight static file serving and reverse proxying.\n\
+  - Embedded devices and low-memory VMs.\n- Auditing or tuning existing lighttpd installs.\n\n## Real\
+  \ commands\n\n```bash\n# Validate config\nlighttpd -f /etc/lighttpd/lighttpd.conf -t\n\n# Run in foreground\
+  \ (debug)\nlighttpd -f /etc/lighttpd/lighttpd.conf -D\n\n# Run via systemd\nsystemctl start lighttpd\n\
+  systemctl reload lighttpd\n\n# Version\nlighttpd -v\n\n# Enable modules (Debian/Ubuntu wrappers)\nlighttpd-enable-mod\
+  \ fastcgi\nlighttpd-enable-mod mod_compress\nlighttpd-enable-mod mod_rewrite\n\n# Test the server\n\
+  curl -sI http://localhost/ | head -5\n```\n\n## Config example\n\n```\nserver.document-root = \"/var/www/html\"\
+  \nserver.port = 80\nserver.username = \"www-data\"\nserver.groupname = \"www-data\"\n\nserver.modules\
+  \ += (\"mod_compress\")\ncompress.cache-dir = \"/var/cache/lighttpd/compress/\"\ncompress.filetype =\
+  \ (\"text/plain\", \"text/html\", \"application/json\")\n\nserver.modules += (\"mod_fastcgi\")\nfastcgi.server\
+  \ = (\n  \"/api\" => (( \"host\" => \"127.0.0.1\", \"port\" => 9000 ))\n)\n```\n\n## Testing\n\n```bash\n\
+  lighttpd -f /etc/lighttpd/lighttpd.conf -t && echo \"config OK\"\n```\n\n## Best practices\n\n- Always\
+  \ run -t before reload to avoid taking the site down.\n- Run as a non-root user; bind low ports via\
+  \ capabilities or systemd.\n- Check error.log for module loading failures after enabling modules.\n"
+examples:
+- input: Validate my lighttpd config
+  output: lighttpd -f /etc/lighttpd/lighttpd.conf -t
+- input: Add compression to lighttpd
+  output: lighttpd-enable-mod mod_compress, add compress.* directives, then systemctl reload lighttpd.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: lighttpd.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-lighttpd
+  generic:
+    system_prompt: 'Your lane is Lighttpd. You do it through lighttpd-run: Validate config and start lighttpd
+      in various modes. The commands are real, e.g. `lighttpd -f /etc/lighttpd/lighttpd.conf -t`. You
+      prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

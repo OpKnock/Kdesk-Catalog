@@ -1,0 +1,189 @@
+{
+  "name": "api-testing-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "testing",
+  "description": "Orchestrates API testing in CI: GitHub Actions workflows, local testing with act, test splitting, and result reporting to pull requests.",
+  "keywords": [
+    "api-testing"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-testing-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-testing-specialist"
+    },
+    "generic": {
+      "system_prompt": "You take the api-testing-specialist seat. You do it through ci-orchestration: Run API tests in GitHub Actions. The commands are real, e.g. `gh workflow run api-tests.yml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "ci-orchestration",
+      "description": "Run API tests in GitHub Actions",
+      "commands": [
+        "gh workflow run api-tests.yml",
+        "gh run list --workflow=api-tests.yml --limit 5",
+        "gh run view --log-failed",
+        "gh run watch"
+      ],
+      "examples": [
+        "gh workflow run triggers tests on demand",
+        "gh run view --log-failed shows failures",
+        "gh run watch tails the run"
+      ],
+      "parameters": [
+        {
+          "name": "workflow",
+          "type": "string",
+          "description": "Workflow file name"
+        },
+        {
+          "name": "ref",
+          "type": "string",
+          "description": "Branch or tag"
+        },
+        {
+          "name": "inputs",
+          "type": "object",
+          "description": "Workflow dispatch inputs"
+        }
+      ]
+    },
+    {
+      "name": "local-execution",
+      "description": "Run CI workflows locally with act",
+      "commands": [
+        "act -l",
+        "act -W .github/workflows/api-tests.yml",
+        "act -W .github/workflows/api-tests.yml -j test",
+        "act --secret-file .secrets --pull=false"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "jest",
+    "pytest",
+    "postman",
+    "newman"
+  ],
+  "tools": [
+    "jest",
+    "pytest",
+    "postman",
+    "newman",
+    "supertest",
+    "rest-assured"
+  ],
+  "examples": [
+    {
+      "input": "Add API tests to CI",
+      "output": "Writes a GitHub Actions workflow and triggers it with gh workflow run"
+    },
+    {
+      "input": "Debug CI locally",
+      "output": "Runs act with the workflow file and fixes failures without pushing"
+    }
+  ],
+  "instructions": "# API Testing Specialist\n\nCI orchestration for API tests.\n\n## What This Skill Does\n- Runs API tests in pipelines\n- Replicates workflows locally\n- Reports results to PRs\n\n## When to Use\n- New CI pipelines for APIs\n- Debugging flaky CI runs\n- Enforcing test gates\n\n## Real Commands\n\n```bash\ngh workflow run api-tests.yml\ngh run view --log-failed\nact -l\nact -W .github/workflows/api-tests.yml -j test\n```\n\n## Workflow Example\n\n```yaml\nname: api-tests\non: [push, workflow_dispatch]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm ci\n      - run: npx jest --ci --coverage\n```\n\n## Testing\n- Run act locally before pushing\n- Split long suites across jobs\n- Upload reports as artifacts\n\n\n## Best Practices\n- Cache dependencies in CI\n- Pin action versions\n- Fail fast on critical suites",
+  "display_name": "api-testing-specialist",
+  "knowledge": [
+    {
+      "title": "GitHub Actions Docs",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/actions",
+      "description": "Workflow authoring and runners"
+    },
+    {
+      "title": "act Docs",
+      "type": "documentation",
+      "source": "https://github.com/nektos/act",
+      "description": "Run GitHub Actions locally"
+    }
+  ],
+  "id": "api-testing-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ci-orchestration",
+        "name": "workflow",
+        "type": "string",
+        "description": "Workflow file name"
+      },
+      {
+        "capability": "ci-orchestration",
+        "name": "ref",
+        "type": "string",
+        "description": "Branch or tag"
+      },
+      {
+        "capability": "ci-orchestration",
+        "name": "inputs",
+        "type": "object",
+        "description": "Workflow dispatch inputs"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "jest",
+    "pytest",
+    "postman",
+    "newman"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-testing-specialist/skill/api-testing-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-testing-specialist/skill/api-testing-specialist.yaml",
+    "checksum": "2fa97e6df7329c1b8f3713d156880869bcd8f92dc3a9aecac6c82c2758dc2c1e"
+  }
+}

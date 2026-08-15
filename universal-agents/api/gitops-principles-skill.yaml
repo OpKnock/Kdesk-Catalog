@@ -1,0 +1,184 @@
+name: gitops-principles
+display_name: Gitops Principles
+category: api
+subcategory: general
+description: 'GitOps principles and workflows: declarative cluster state in git, pull-based sync, and
+  safe rollback practices with kubectl and flux.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- flux
+- kubectl
+capabilities:
+- name: gitops-workflow
+  description: 'Apply GitOps practices: declarative manifests, sync reconciliation, and rollbacks.'
+  commands:
+  - kubectl apply --dry-run=client -f manifests/ -o yaml > /dev/null && echo 'valid'
+  - kubectl diff -f manifests/
+  - kubectl apply -f manifests/
+  - flux reconcile kustomization apps --with-source
+  - kubectl rollout status deployment/orders -n app --timeout=120s
+  - kubectl rollout undo deployment/orders -n app
+  examples:
+  - kubectl diff -f manifests/ && kubectl apply -f manifests/
+  - kubectl rollout undo deployment/orders -n app
+  - flux reconcile kustomization apps --with-source
+  parameters:
+  - name: manifest-dir
+    type: string
+    description: Directory with declarative manifests
+  - name: deployment
+    type: string
+    description: Deployment to verify or roll back
+  - name: namespace
+    type: string
+    description: Target namespace
+knowledge:
+- title: GitOps Principles (CNCF)
+  type: documentation
+  source: https://opengitops.dev/
+  description: 'The OpenGitOps principles: declarative, versioned, pulled, and continuous'
+- title: Weaveworks GitOps guide
+  type: documentation
+  source: https://www.weave.works/technologies/gitops/
+  description: GitOps workflow patterns and benefits
+instructions: '# GitOps Principles
+
+
+  ## What this skill does
+
+
+  GitOps treats git as the single source of truth for infrastructure: desired state is declarative in
+  repos, agents (Flux/Argo) pull and apply it, and rollback is a git revert.
+
+
+  ## When to use
+
+
+  - Moving from click-ops to pull-based delivery
+
+  - Making every change reviewable and revertible
+
+  - Recovering a cluster by re-syncing from git
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Validate before applying
+
+  kubectl apply --dry-run=client -f manifests/ -o yaml > /dev/null && echo ''valid''
+
+
+  # Diff what would change
+
+  kubectl diff -f manifests/
+
+
+  # Apply (when not using a GitOps agent)
+
+  kubectl apply -f manifests/
+
+
+  # Force the agent to sync
+
+  flux reconcile kustomization apps --with-source
+
+
+  # Verify and roll back
+
+  kubectl rollout status deployment/orders -n app --timeout=120s
+
+  kubectl rollout undo deployment/orders -n app
+
+  ```
+
+
+  ## Core principles
+
+
+  1. Declarative: desired state expressed as manifests.
+
+  2. Versioned: changes go through git with review.
+
+  3. Pulled: agents fetch and apply; nobody applies ad hoc.
+
+  4. Continuous: the cluster always converges to git.
+
+
+  ## Workflow example
+
+
+  ```bash
+
+  git checkout -b fix/rollback-orders
+
+  git revert <breaking-commit>
+
+  kubectl diff -f manifests/ | head -40
+
+  # review the diff, then merge; the agent applies the revert
+
+  ```
+
+
+  ## Best practices
+
+
+  - Review every change via MR/PR before merge.
+
+  - Prefer agents (Flux/Argo) over human kubectl apply.
+
+  - Keep secrets out of git (Sealed Secrets, external-secrets).
+
+  - Add drift detection alerts for out-of-sync resources.
+
+  - Practice disaster recovery: re-sync a blank cluster from git.
+
+  '
+examples:
+- input: Revert a bad deployment the GitOps way
+  output: git revert the commit that changed the manifests, merge, and let the sync agent converge; verify
+    with kubectl rollout status.
+- input: Ensure no one applies ad hoc changes
+  output: Move all changes through MRs, use a GitOps agent with prune, and alert on resources that diverge
+    from git.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gitops-principles.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gitops-principles
+  generic:
+    system_prompt: 'You are the Gitops Principles specialist. You do it through gitops-workflow: Apply
+      GitOps practices: declarative manifests, sync reconciliation, and rollbacks. The commands are real,
+      e.g. `kubectl apply --dry-run=client -f manifests/ -o yaml > /dev/null && echo valid`. You verify
+      each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

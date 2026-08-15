@@ -1,0 +1,74 @@
+name: vllm-docker
+display_name: Vllm Docker
+category: ml
+subcategory: inference
+description: vLLM SDK deployment agent for ML vLLM SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Vllm Deploy Sdk
+  description: vLLM SDK deployment agent for ML vLLM SDK deployment.
+  commands:
+  - 'Docker: docker run --gpus all -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-2-7b-cha'
+  - 'Server: python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-chat-hf'
+  examples:
+  - 'Server: python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-chat-hf'
+  - 'Docker: docker run --gpus all -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-2-7b-chat-hf'
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: vllm-docker Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for vllm-docker
+instructions: 'You are the vLLM SDK deployment expert. Call on this agent when a user needs to deploy
+  vLLM for OpenAI-compatible LLM serving on GPUs. Core workflow: (1) launch directly with ''Server: python
+  -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-chat-hf''; (2) run containerized
+  with GPU access via ''Docker: docker run --gpus all -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-2-7b-chat-hf''.
+  Key behaviors: confirm GPU availability before the --gpus all run, verify the model id is valid, and
+  check the port mapping. If the server fails, check CUDA and model download; if Docker fails, verify
+  the NVIDIA container toolkit. Report the launch command used, model id, and the OpenAI endpoint URL
+  to query.'
+examples:
+- 'Server: python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-chat-hf'
+- 'Docker: docker run --gpus all -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-2-7b-chat-hf'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: vllm-docker.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a vLLM SDK deployment expert. Help users deploy vLLM applications.
+  opencode:
+    plugin: opencode-vllm-docker
+  generic:
+    system_prompt: You are vllm-docker. vLLM SDK deployment agent for ML vLLM SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,187 @@
+{
+  "name": "api-sec-sql-injection",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks.",
+  "keywords": [
+    "api-security",
+    "owasp"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-sec-sql-injection.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-sec-sql-injection"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Api Sec Sql Injection. You do it through sql-injection: Detect SQL injection in API parameters. The commands are real, e.g. `sqlmap -u https://api.example.com/search?q=1 --batch --level=2`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "sql-injection",
+      "description": "Detect SQL injection in API parameters",
+      "commands": [
+        "sqlmap -u \"https://api.example.com/search?q=1\" --batch --level=2",
+        "sqlmap -u \"https://api.example.com/login\" --data \"email=a&pass=b\" --batch",
+        "curl -s \"https://api.example.com/search?q=1'\" | head -5",
+        "curl -s \"https://api.example.com/search?q=1%20OR%201=1\" -o /dev/null -w '%{http_code}\\n'"
+      ],
+      "examples": [
+        "sqlmap --batch automates detection non-interactively",
+        "--level=2 deepens payload testing",
+        "curl with quotes probes for raw SQL errors"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Target URL with parameters"
+        },
+        {
+          "name": "level",
+          "type": "integer",
+          "description": "sqlmap test level 1-5"
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "description": "POST body for parameter testing"
+        }
+      ]
+    },
+    {
+      "name": "method-abuse",
+      "description": "Test HTTP method handling and fuzzing",
+      "commands": [
+        "curl -s -X OPTIONS https://api.example.com/users -D- -o /dev/null | grep -i allow",
+        "curl -s -X TRACE https://api.example.com/ -o /dev/null -w '%{http_code}\\n'",
+        "curl -s -X PATCH https://api.example.com/users/1 -H 'Content-Type: application/json' -d '{\"role\":\"admin\"}' -w '\\n%{http_code}\\n'",
+        "npx fuzzapi --target https://api.example.com/users"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "owasp-zap"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "owasp-zap",
+    "helmet",
+    "cors"
+  ],
+  "examples": [
+    {
+      "input": "Test /search for SQLi",
+      "output": "Runs sqlmap at level 2 and confirms parameter-based injection"
+    },
+    {
+      "input": "Check method restrictions",
+      "output": "Probes OPTIONS/TRACE and checks the Allow header"
+    }
+  ],
+  "instructions": "# API Security v3 - Injection Testing\n\nInjection and tampering tests.\n\n## What This Skill Does\n- Automates SQLi detection with sqlmap\n- Probes parameters manually\n- Tests HTTP method and mass-assignment abuse\n\n## When to Use\n- Pentest-style API reviews\n- New endpoint security checks\n- Bug bounty triage\n\n## Real Commands\n\n```bash\nsqlmap -u \"https://api.example.com/search?q=1\" --batch --level=2\ncurl -s \"https://api.example.com/search?q=1'\" | head -5\ncurl -s -X OPTIONS https://api.example.com/users -D- -o /dev/null | grep -i allow\n```\n\n## Test Checklist\n- SQL injection on all query params\n- Mass assignment on PUT/PATCH bodies\n- Disallowed methods returning 200\n- CRLF injection in headers\n\n## Testing\n- Use a disposable test database\n- Limit payloads to non-destructive probes\n- Document every finding with evidence\n\n## Best Practices\n- Only scan authorized environments\n- Combine static review with dynamic probes\n- Verify fixes with the same payloads",
+  "display_name": "Api Sec Sql Injection",
+  "knowledge": [
+    {
+      "title": "sqlmap Docs",
+      "type": "documentation",
+      "source": "https://sqlmap.org/usage.html",
+      "description": "sqlmap usage and options"
+    },
+    {
+      "title": "OWASP Injection Cheat Sheet",
+      "type": "documentation",
+      "source": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+      "description": "Injection prevention guidance"
+    }
+  ],
+  "id": "api-sec-sql-injection",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sql-injection",
+        "name": "url",
+        "type": "string",
+        "description": "Target URL with parameters"
+      },
+      {
+        "capability": "sql-injection",
+        "name": "level",
+        "type": "integer",
+        "description": "sqlmap test level 1-5"
+      },
+      {
+        "capability": "sql-injection",
+        "name": "data",
+        "type": "string",
+        "description": "POST body for parameter testing"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "owasp-zap"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-sec-sql-injection/skill/api-sec-sql-injection.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-sec-sql-injection/skill/api-sec-sql-injection.yaml",
+    "checksum": "8f1a0a1e31f4b7c8c587ef175c10f3274999994403b8c7d19d595869be720675"
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "name": "ml-dvc-agent",
+  "display_name": "Ml Dvc Agent",
+  "category": "ml",
+  "subcategory": "monitoring",
+  "description": "Data Version Control (DVC) agent. Manages data versioning and ML pipelines.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "monitoring"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Dvc Agent",
+      "description": "Data Version Control (DVC) agent. Manages data versioning and ML pipelines.",
+      "commands": [
+        "dvc pull",
+        "dvc push",
+        "dvc add data/train.csv",
+        "dvc init",
+        "dvc metrics show",
+        "dvc repro",
+        "dvc dag"
+      ],
+      "examples": [
+        "dvc init",
+        "dvc add data/train.csv",
+        "dvc push",
+        "dvc pull",
+        "dvc repro"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-dvc-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/monitoring",
+      "description": "Reference documentation for ml-dvc-agent"
+    }
+  ],
+  "instructions": "You are the Data Version Control (DVC) expert. Call on this agent when a user needs to manage data versioning and ML pipelines. Core workflow: (1) initialize with 'dvc init' and track data with 'dvc add data/train.csv'; (2) sync artifacts with 'dvc push' to remote storage and 'dvc pull' to retrieve them; (3) run the pipeline with 'dvc repro' and inspect the graph with 'dvc dag', then review results with 'dvc metrics show'. Key behaviors: initialize before adding files, confirm the remote is configured before push, and run repro after changing data or code. If push fails, check remote credentials; if repro fails, inspect stage dependencies. Report the tracked files, pipeline graph, and metrics values.",
+  "examples": [
+    "dvc init",
+    "dvc add data/train.csv",
+    "dvc push",
+    "dvc pull",
+    "dvc repro",
+    "dvc dag",
+    "dvc metrics show"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-dvc-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a DVC expert. Help users manage data versioning and ML pipelines."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-dvc-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-dvc-agent. Data Version Control (DVC) agent. Manages data versioning and ML pipelines.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-dvc-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/monitoring/ml-dvc-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/monitoring/ml-dvc-agent.yaml",
+    "checksum": "f32eaf7948840a421fddd9e8cc4d24e1c184e561f0daa18d2a88d20a884a80f1"
+  }
+}

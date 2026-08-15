@@ -1,0 +1,167 @@
+{
+  "name": "pylint",
+  "display_name": "pylint",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Lints Python code with Pylint, enforcing style and catching bugs via a configurable rule system.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pylint"
+  ],
+  "capabilities": [
+    {
+      "name": "pylint-linting",
+      "description": "Run Pylint with custom rc files, score thresholds, and CI formats",
+      "commands": [
+        "pylint src/",
+        "pylint --rcfile=.pylintrc app tests",
+        "pylint --fail-under=9 src/",
+        "pylint --output-format=json src/ > pylint.json",
+        "pylint --disable=missing-docstring,too-many-arguments src/"
+      ],
+      "examples": [
+        "pylint --generate-rcfile > .pylintrc",
+        "pylint --fail-under=9 --reports=y src/",
+        "pylint --errors-only src/"
+      ],
+      "parameters": [
+        {
+          "name": "fail-under",
+          "type": "number",
+          "description": "Exit non-zero if the final score is below this value"
+        },
+        {
+          "name": "output-format",
+          "type": "string",
+          "description": "text, colorized, json, parseable, or sarif"
+        },
+        {
+          "name": "rcfile",
+          "type": "string",
+          "description": "Configuration file to use"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Pylint docs",
+      "type": "documentation",
+      "source": "https://pylint.readthedocs.io/",
+      "description": "CLI reference, message codes, and rcfile format"
+    },
+    {
+      "title": "Pylint message codes",
+      "type": "documentation",
+      "source": "https://pylint.readthedocs.io/en/stable/technical_reference/features.html",
+      "description": "All error, warning, refactor, convention codes"
+    }
+  ],
+  "instructions": "# Pylint\n\nChecks Python code for errors, style problems, and design smells, scoring each\nmodule on a 0-10 scale.\n\n## When to Use\n\n- Enforcing style and naming conventions\n- Catching unused imports, undefined vars, and bad redefinitions\n- Gatekeeping merge requests with a minimum score\n\n## Real Commands\n\n```bash\n# Install\npip install pylint\n\n# Basic run\npylint src/\n\n# Generate a config file\npylint --generate-rcfile > .pylintrc\n\n# Use the config with a score gate\npylint --rcfile=.pylintrc --fail-under=9 src/\n\n# Errors only\npylint --errors-only src/\n\n# JSON for CI\npylint --output-format=json src/ > pylint-report.json\n\n# Disable specific checks inline\npylint --disable=too-many-locals,too-many-branches src/\n```\n\n## Config (.pylintrc)\n\n```ini\n[MESSAGES CONTROL]\ndisable=missing-docstring,too-many-arguments,invalid-name\n\n[MASTER]\nfail-under=9\nload-plugins=pylint.extensions.docparams\n```\n\n## CI\n\n```yaml\n- name: Pylint\n  run: pylint --rcfile=.pylintrc --fail-under=9 src/\n```\n\n## Best Practices\n\n- Commit a generated `.pylintrc`; don't rely on defaults\n- Set `fail-under` a bit below a perfect score so regressions fail but noise is allowed\n- Keep `--disable` lists small and reviewed\n- Use `# pylint: disable=...` inline comments sparingly\n\n## Example Response\n\nReports per-module scores, message counts by category (E/W/R/C), and the worst\noffenders with `file:line` references.",
+  "examples": [
+    {
+      "input": "Lint this Python package",
+      "output": "Runs pylint src/ with the project rcfile, reports the module scores and top problems, then fixes errors and re-runs"
+    },
+    {
+      "input": "Add a score gate to CI",
+      "output": "Sets fail-under=9 in .pylintrc and adds pylint --rcfile=.pylintrc src/ to CI"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pylint.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pylint"
+    },
+    "generic": {
+      "system_prompt": "You take the pylint seat. You do it through pylint-linting: Run Pylint with custom rc files, score thresholds, and CI formats. The commands are real, e.g. `pylint src/`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pylint",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pylint-linting",
+        "name": "fail-under",
+        "type": "number",
+        "description": "Exit non-zero if the final score is below this value"
+      },
+      {
+        "capability": "pylint-linting",
+        "name": "output-format",
+        "type": "string",
+        "description": "text, colorized, json, parseable, or sarif"
+      },
+      {
+        "capability": "pylint-linting",
+        "name": "rcfile",
+        "type": "string",
+        "description": "Configuration file to use"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pylint"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/pylint-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/pylint-skill.yaml",
+    "checksum": "e764b3e1da5d5d5f13f37f98d64475d0b23fea97b261a6e64e8301b61b26ddf3"
+  }
+}

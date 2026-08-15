@@ -1,0 +1,212 @@
+name: grafana-monitoring
+display_name: grafana-monitoring
+category: monitoring
+subcategory: general
+description: 'Monitors systems with Grafana: datasource health, alert rules, provisioning as code, and
+  API-driven dashboards.'
+version: 2.0.0
+tags:
+- monitoring
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: api-ops
+  description: Operate Grafana via its HTTP API.
+  commands:
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/health'
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/datasources | jq ''.[]
+    | {name, type, url}'''
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' ''http://localhost:3000/api/dashboards/uid/my-dash''
+    | jq ''.dashboard.title'''
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/alerts | jq ''.[] |
+    {name, state}'''
+  - 'curl -s -X POST -H ''Authorization: Bearer $GRAFANA_TOKEN'' -H ''Content-Type: application/json''
+    -d ''{"text":"release v3.2.0"}'' http://localhost:3000/api/annotations'
+  examples:
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/health | jq ''.database'''
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/alerts | jq ''[.[].state]
+    | group_by(.) | map({state: .[0], count: length})'''
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/datasources | jq ''length'''
+  parameters:
+  - name: token
+    type: string
+    description: Grafana service account token
+  - name: endpoint
+    type: string
+    description: 'API path: /api/health, /api/alerts...'
+  - name: uid
+    type: string
+    description: Dashboard uid
+- name: provisioning
+  description: Manage Grafana as code with provisioning files.
+  commands:
+  - 'curl -s -X POST -H ''Authorization: Bearer $GRAFANA_TOKEN'' -H ''Content-Type: application/json''
+    http://localhost:3000/api/dashboards/db -d @dashboard.json'
+  - 'curl -s -X DELETE -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/datasources/uid/$DS_UID'
+  - 'curl -s -X POST -H ''Authorization: Bearer $GRAFANA_TOKEN'' -H ''Content-Type: application/json''
+    http://localhost:3000/api/datasources -d ''{"name":"Loki","type":"loki","url":"http://loki:3100","access":"proxy"}'''
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/folders | jq ''.[]
+    | {id, title}'''
+  - 'curl -s -X POST -H ''Authorization: Bearer $GRAFANA_TOKEN'' -H ''Content-Type: application/json''
+    -d ''{"title":"Team Dashboards","uid":"team-dash"}'' http://localhost:3000/api/folders'
+  examples:
+  - 'curl -s -X POST -H ''Authorization: Bearer $GRAFANA_TOKEN'' -H ''Content-Type: application/json''
+    http://localhost:3000/api/datasources -d ''{"name":"Prometheus","type":"prometheus","url":"http://prometheus:9090","access":"proxy"}'''
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/folders | jq ''length'''
+  - 'curl -s -X POST -H ''Authorization: Bearer $GRAFANA_TOKEN'' -H ''Content-Type: application/json''
+    http://localhost:3000/api/dashboards/db -d @dashboard.json | jq ''.status'''
+  parameters:
+  - name: name
+    type: string
+    description: Datasource or folder name
+  - name: type
+    type: string
+    description: 'Datasource type: prometheus, loki, tempo'
+  - name: url
+    type: string
+    description: Datasource backend URL
+knowledge:
+- title: Grafana HTTP API
+  type: documentation
+  source: https://grafana.com/docs/grafana/latest/developers/http_api/
+  description: Health, datasources, dashboards, and alerts API
+- title: Grafana Alerting
+  type: documentation
+  source: https://grafana.com/docs/grafana/latest/alerting/
+  description: Alert rules, contact points, and silences
+- title: Provisioning
+  type: documentation
+  source: https://grafana.com/docs/grafana/latest/administration/provisioning/
+  description: Dashboard and datasource provisioning files
+instructions: '# Grafana Monitoring
+
+
+  Keep dashboards honest and alerts effective.
+
+
+  ## When to Use
+
+
+  - Datasource connectivity issues
+
+  - Rolling out dashboards as code
+
+  - Alert rule audits before incidents
+
+
+  ## Health checks
+
+
+  ```bash
+
+  curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/health
+
+  curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/datasources | jq ''.[]
+  | {name, type, url}''
+
+  ```
+
+
+  ## Dashboards as code
+
+
+  Export dashboards to JSON, review in git, and apply via API:
+
+
+  ```bash
+
+  curl -s -X POST -H ''Authorization: Bearer $GRAFANA_TOKEN'' -H ''Content-Type: application/json'' http://localhost:3000/api/dashboards/db
+  -d @dashboard.json
+
+  ```
+
+
+  ## Alert rule hygiene
+
+
+  - Every rule has an owner and an actionable summary.
+
+  - Test rules against recorded data before enabling.
+
+  - Review firing alert counts weekly.
+
+
+  ```bash
+
+  curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/alerts | jq ''.[] | {name,
+  state}''
+
+  ```
+
+
+  ## Annotations for deploys
+
+
+  ```bash
+
+  curl -s -X POST -H ''Authorization: Bearer $GRAFANA_TOKEN'' -H ''Content-Type: application/json'' -d
+  ''{"text":"release v3.2.0"}'' http://localhost:3000/api/annotations
+
+  ```
+
+
+  ## Best practices
+
+
+  - Use service accounts with folder-scoped permissions.
+
+  - Provision datasources from files in production.
+
+  - Correlate dashboards with alert rules by name convention.
+
+  - Version dashboards in git; diff before apply.
+
+
+  ## Testing
+
+
+  ```bash
+
+  curl -s -H ''Authorization: Bearer $GRAFANA_TOKEN'' http://localhost:3000/api/health
+
+  ```
+
+
+  Validate dashboard JSON with a dry-run before applying to prod.'
+examples:
+- input: The Prometheus datasource is erroring in Grafana.
+  output: Checks datasource health via API, verifies the Prometheus URL is reachable, and re-creates the
+    datasource with correct access mode.
+- input: Add a release annotation after deploy.
+  output: Posts the annotation with version and commit, and verifies it appears in the dashboard.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grafana-monitoring.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grafana
+  generic:
+    system_prompt: 'You are the grafana-monitoring specialist. You do it through api-ops: Operate Grafana
+      via its HTTP API. The commands are real, e.g. `curl -s -H Authorization: Bearer $GRAFANA_TOKEN http://localhost:3000/api/health`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

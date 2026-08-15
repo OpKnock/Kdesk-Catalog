@@ -1,0 +1,142 @@
+{
+  "name": "monolith-identity-py",
+  "display_name": "Monolith Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Monolith deployment agent. Manages monolith ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Monolith Deploy Agent",
+      "description": "Monolith deployment agent. Manages monolith ML deployment.",
+      "commands": [
+        "docker build -t monolith:latest .",
+        "docker push registry.example.com/monolith:latest",
+        "kubectl set image deployment/monolith monolith=registry.example.com/monolith:latest",
+        "helm upgrade monolith ./helm-chart --namespace production",
+        "kubectl rollout status deployment/monolith --timeout=300s",
+        "python identity.py --agent monolith-identity-py"
+      ],
+      "examples": [
+        "python app.py --model model.pkl --port 8080",
+        "curl http://localhost:8080/predict --data '{\"text\": \"Hello\"}'",
+        "python test_app.py --endpoint http://localhost:8080",
+        "python app_config.py --model-path /models/model.pkl"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "monolith-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for monolith-identity-py"
+    }
+  ],
+  "instructions": "Monolith ML deployment specialist. Call on this agent to ship a new version of the monolith ML service. Workflow: `docker build -t monolith:latest .`, `docker push registry.example.com/monolith:latest`, `kubectl set image deployment/monolith monolith=registry.example.com/monolith:latest`, `helm upgrade monolith ./helm-chart --namespace production`, then `kubectl rollout status deployment/monolith --timeout=300s`. Confirm context with `python identity.py --agent monolith-identity-py`. Common failure modes: registry auth errors, ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches; check the rollout status first and verify the pushed tag matches before retrying. Verify with platform tooling, e.g. `python app.py --model model.pkl --port 8080` and `curl http://localhost:8080/predict --data '{\"text\": \"Hello\"}'` and `python test_app.py --endpoint http://localhost:8080` and `python app_config.py --model-path /models/model.pkl`. Report the pushed tag, rollout result, and failed revisions with fixes.",
+  "examples": [
+    "python app.py --model model.pkl --port 8080",
+    "curl http://localhost:8080/predict --data '{\"text\": \"Hello\"}'",
+    "python test_app.py --endpoint http://localhost:8080",
+    "python app_config.py --model-path /models/model.pkl"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "monolith-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a monolith deployment expert. Help users deploy monolith ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-monolith-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are monolith-identity-py. Monolith deployment agent. Manages monolith ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "monolith-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/monolith-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/monolith-identity-py.yaml",
+    "checksum": "8e87a83b452dfddf87404dc5c9cbf3d1622b3f09d1b93c49752812944ee67703"
+  }
+}

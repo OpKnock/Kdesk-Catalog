@@ -1,0 +1,172 @@
+{
+  "name": "error-tracking",
+  "display_name": "Error Tracking",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Error tracking and release monitoring with Sentry: upload source maps, query issues, manage releases, and analyze crash reports.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "sentry-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "sentry-ops",
+      "description": "Manage Sentry releases, upload artifacts, query issues, and inspect events.",
+      "commands": [
+        "sentry-cli releases new -p my-project 1.2.3",
+        "sentry-cli releases set-commits --auto 1.2.3",
+        "sentry-cli sourcemaps upload -p my-project --release 1.2.3 ./dist/assets",
+        "curl -s 'https://sentry.io/api/0/projects/org/project/issues/?query=is:unresolved&statsPeriod=24h' -H 'Authorization: Bearer $SENTRY_TOKEN' | jq '.[] | {id: .id, title: .title, count: .count}'",
+        "sentry-cli releases finalize 1.2.3",
+        "sentry-cli debug-files list -p my-project --release 1.2.3"
+      ],
+      "examples": [
+        "sentry-cli releases new -p my-project 1.2.3 && sentry-cli releases set-commits --auto 1.2.3",
+        "sentry-cli sourcemaps upload -p my-project --release 1.2.3 ./dist/assets",
+        "curl -s 'https://sentry.io/api/0/projects/org/project/issues/?query=is:unresolved&statsPeriod=24h' -H 'Authorization: Bearer $SENTRY_TOKEN' | jq '.[] | {title: .title, count: .count}'"
+      ],
+      "parameters": [
+        {
+          "name": "project",
+          "type": "string",
+          "description": "Sentry project slug"
+        },
+        {
+          "name": "release",
+          "type": "string",
+          "description": "Release version, e.g. 1.2.3"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Issue search query like is:unresolved"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Sentry CLI Reference",
+      "type": "documentation",
+      "source": "https://docs.sentry.io/cli/",
+      "description": "All sentry-cli commands: releases, sourcemaps, debug-files, events"
+    },
+    {
+      "title": "Sentry Releases API",
+      "type": "documentation",
+      "source": "https://docs.sentry.io/api/releases/",
+      "description": "Release and issue APIs for automation"
+    }
+  ],
+  "instructions": "# Error Tracking\n\n## What this skill does\n\nError tracking collects stack traces, groups them into issues, and ties them to releases. This skill covers Sentry operations: creating releases, uploading source maps, querying issues, and validating event ingestion.\n\n## When to use\n\n- Deploying a release and confirming source maps match\n- Triaging the most frequent errors after a launch\n- Automating release tracking in CI\n\n## Real commands\n\n```bash\n# Create and finalize a release\nsentry-cli releases new -p my-project 1.2.3\nsentry-cli releases set-commits --auto 1.2.3\nsentry-cli releases finalize 1.2.3\n\n# Upload source maps so stack traces are readable\nsentry-cli sourcemaps upload -p my-project --release 1.2.3 ./dist/assets\n\n# List unresolved issues from the API\ncurl -s 'https://sentry.io/api/0/projects/org/project/issues/?query=is:unresolved&statsPeriod=24h' -H 'Authorization: Bearer $SENTRY_TOKEN' | jq '.[] | {id: .id, title: .title, count: .count}'\n\n# Verify uploaded artifacts\nsentry-cli debug-files list -p my-project --release 1.2.3\n```\n\n## CI release step example\n\n```bash\nsentry-cli releases new -p my-project \"$CI_COMMIT_SHA\"\nsentry-cli releases set-commits --auto \"$CI_COMMIT_SHA\"\nsentry-cli sourcemaps upload -p my-project --release \"$CI_COMMIT_SHA\" ./dist/assets\nsentry-cli releases finalize \"$CI_COMMIT_SHA\"\n```\n\n## Testing\n\n```bash\n# Send a test event to verify ingestion\ncurl -s -X POST 'https://sentry.io/api/0/store/' -H 'Content-Type: application/json' -H \"X-Sentry-Auth: sentry_key=$SENTRY_DSN_KEY\" -d '{\"message\":\"test event\",\"event_id\":\"id1234567890abcdef\"}' | jq\n```\n\n## Best practices\n\n- Upload source maps with the exact release tag your SDK reports.\n- Use `--auto` for set-commits so each release links to git history.\n- Set up ownership rules to route issues to the right team.\n- Mark resolved issues with a comment referencing the fixing release.\n- Monitor unresolved issue count, not total volume, in dashboards.\n",
+  "examples": [
+    {
+      "input": "Stack traces are minified garbage",
+      "output": "Upload source maps with sentry-cli sourcemaps upload -p my-project --release 1.2.3 ./dist/assets and confirm with debug-files list."
+    },
+    {
+      "input": "Find the top error after release 1.2.3",
+      "output": "Query the issues API with query=is:unresolved&release=1.2.3 and sort by count to triage the biggest offenders."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "error-tracking.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-error-tracking"
+    },
+    "generic": {
+      "system_prompt": "You own Error Tracking end to end. You do it through sentry-ops: Manage Sentry releases, upload artifacts, query issues, and inspect events. The commands are real, e.g. `sentry-cli releases new -p my-project 1.2.3`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "error-tracking",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sentry-ops",
+        "name": "project",
+        "type": "string",
+        "description": "Sentry project slug"
+      },
+      {
+        "capability": "sentry-ops",
+        "name": "release",
+        "type": "string",
+        "description": "Release version, e.g. 1.2.3"
+      },
+      {
+        "capability": "sentry-ops",
+        "name": "query",
+        "type": "string",
+        "description": "Issue search query like is:unresolved"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "sentry-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/error-tracking-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/error-tracking-skill.yaml",
+    "checksum": "7d6c2f1016e8b4912d9efca163e417cfcda05c462e5952bf55eae7854c967d5f"
+  }
+}

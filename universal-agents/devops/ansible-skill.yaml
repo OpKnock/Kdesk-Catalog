@@ -1,0 +1,100 @@
+name: ansible
+display_name: ansible
+category: devops
+subcategory: general
+description: 'Automates infrastructure with Ansible: ad-hoc commands, playbooks, roles, and vault secrets.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ansible
+- ansible-galaxy
+- ansible-playbook
+capabilities:
+- name: ansible-playbooks
+  description: Run ad-hoc tasks and playbooks across inventories
+  commands:
+  - ansible all -i inventory.yml -m ping
+  - ansible-playbook -i inventory.yml playbooks/deploy.yml
+  - ansible-playbook --syntax-check playbooks/deploy.yml
+  - ansible-playbook -i inventory.yml playbooks/deploy.yml --check --diff
+  - ansible-galaxy init roles/webserver
+  examples:
+  - ansible all -i inventory.yml -m command -a 'uptime'
+  - ansible-playbook -i inventory.yml playbooks/deploy.yml --limit web --tags nginx
+  - ansible-vault encrypt secrets.yml
+  parameters:
+  - name: inventory
+    type: string
+    description: Inventory file or directory (-i)
+  - name: check
+    type: boolean
+    description: 'Dry-run: report changes without applying'
+  - name: tags
+    type: string
+    description: Run only tasks with these tags
+knowledge:
+- title: Ansible docs
+  type: documentation
+  source: https://docs.ansible.com/ansible/latest/index.html
+  description: Playbooks, modules, inventory, and vault
+- title: Ansible Galaxy
+  type: documentation
+  source: https://galaxy.ansible.com/
+  description: Community roles and collections
+instructions: "# Ansible\n\nConfiguration management and automation: idempotent playbooks, roles, ad-hoc\n\
+  commands, and encrypted secrets.\n\n## When to Use\n\n- Provisioning/configuring servers at scale\n\
+  - Repeating multi-step setup idempotently\n- Rolling out config changes with validation\n\n## Real Commands\n\
+  \n```bash\n# Connectivity\nsudo ansible all -i inventory.yml -m ping\n\n# Ad-hoc\nsudo ansible all -i\
+  \ inventory.yml -m command -a 'uptime'\nsudo ansible web -i inventory.yml -m apt -a 'name=nginx state=latest'\
+  \ -b\n\n# Playbooks\nsudo ansible-playbook --syntax-check playbooks/deploy.yml\nsudo ansible-playbook\
+  \ -i inventory.yml playbooks/deploy.yml --check --diff\nsudo ansible-playbook -i inventory.yml playbooks/deploy.yml\n\
+  \n# Scoped runs\nsudo ansible-playbook -i inventory.yml playbooks/deploy.yml --limit web --tags nginx\n\
+  \n# Roles\nsudo ansible-galaxy init roles/webserver\nsudo ansible-galaxy install geerlingguy.nginx -p\
+  \ roles/\n\n# Secrets\nsudo ansible-vault create secrets.yml\nsudo ansible-vault encrypt secrets.yml\n\
+  sudo ansible-playbook -i inventory.yml playbooks/deploy.yml --ask-vault-pass\n```\n\n## Playbook Example\n\
+  \n```yaml\n- hosts: web\n  become: true\n  tasks:\n    - name: Install nginx\n      apt:\n        name:\
+  \ nginx\n        state: latest\n    - name: Start nginx\n      service:\n        name: nginx\n     \
+  \   state: started\n        enabled: true\n```\n\n## Best Practices\n\n- Always run `--check --diff`\
+  \ before applying to production\n- Keep playbooks idempotent (state=..., not shell)\n- Use `--limit`\
+  \ and tags for targeted rollouts\n- Encrypt secrets with ansible-vault; never plaintext\n- Version inventories\
+  \ as code, per environment\n\n## Example Response\n\nFor a rollout: syntax-checks, dry-runs with --check\
+  \ --diff, applies to the target\nhosts, and reports changed/ok/failed per host."
+examples:
+- input: Deploy nginx config to all web servers
+  output: Writes the playbook, syntax-checks, dry-runs, then applies with --limit web and reports results
+- input: Check server health across the fleet
+  output: Runs ad-hoc ping + uptime commands and summarizes per-host status
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ansible.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ansible
+  generic:
+    system_prompt: 'You take the ansible seat. You do it through ansible-playbooks: Run ad-hoc tasks and
+      playbooks across inventories. The commands are real, e.g. `ansible all -i inventory.yml -m ping`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

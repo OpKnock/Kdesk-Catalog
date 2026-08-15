@@ -1,0 +1,235 @@
+{
+  "name": "internationalization",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "frontend",
+  "description": "Localizes applications with gettext and i18next: extraction, translation catalogs, pluralization, and locale builds.",
+  "keywords": [
+    "i18n",
+    "translation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "internationalization.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-internationalization"
+    },
+    "generic": {
+      "system_prompt": "You work internationalization hands-on. You do it through gettext: Extract and compile translations with GNU gettext tools. The commands are real, e.g. `xgettext -o locale/messages.pot src/**/*.js --keyword=_`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "gettext",
+      "description": "Extract and compile translations with GNU gettext tools.",
+      "commands": [
+        "xgettext -o locale/messages.pot src/**/*.js --keyword=_",
+        "msginit -i locale/messages.pot -o locale/de/LC_MESSAGES/messages.po -l de",
+        "msgfmt -o locale/de/LC_MESSAGES/messages.mo locale/de/LC_MESSAGES/messages.po",
+        "msgmerge --update locale/de/LC_MESSAGES/messages.po locale/messages.pot",
+        "msguniq -o deduped.po locale/de/LC_MESSAGES/messages.po"
+      ],
+      "examples": [
+        "xgettext -o messages.pot src/**/*.py --keyword=_ --language=Python",
+        "msgmerge --backup=off --update de.po messages.pot",
+        "msgfmt --check-format -o de.mo de.po"
+      ],
+      "parameters": [
+        {
+          "name": "keyword",
+          "type": "string",
+          "description": "Translation function to extract"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "description": "Source language: Python, C, JavaScript"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "description": "Target locale, e.g. de, fr_FR"
+        }
+      ]
+    },
+    {
+      "name": "i18next",
+      "description": "Manage JSON translation catalogs with i18next tooling.",
+      "commands": [
+        "npx i18next -c i18next-parser.config.js 'src/**/*.tsx'",
+        "npx i18next 'src/**/*.tsx' --locales en,de,fr --defaultLocale en",
+        "npm install i18next react-i18next i18next-browser-languagedetector",
+        "npx lingui extract",
+        "npx lingui compile"
+      ],
+      "examples": [
+        "npx i18next 'src/**/*.tsx' --locales en,de --output public/locales",
+        "npx lingui extract --clean",
+        "npx i18next --namespace translation --locales en,ja"
+      ],
+      "parameters": [
+        {
+          "name": "locales",
+          "type": "string",
+          "description": "Locale list to extract catalogs for"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "i18next namespace name"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Parser config file"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "react",
+    "i18next",
+    "formatjs"
+  ],
+  "tools": [
+    "node.js",
+    "react",
+    "i18next",
+    "formatjs",
+    "crowdin"
+  ],
+  "examples": [
+    {
+      "input": "Add German and French to a Python CLI.",
+      "output": "Extracts with xgettext, initializes de/fr catalogs with msginit, translates, and compiles .mo files with msgfmt."
+    },
+    {
+      "input": "Extract new React strings after a feature release.",
+      "output": "Runs npx i18next across the tsx sources, merges catalogs, and flags untranslated keys in CI."
+    }
+  ],
+  "instructions": "# Internationalization\n\nLocalize apps with the standard message catalog workflow.\n\n## When to Use\n\n- Shipping a product in multiple languages\n- Centralizing user-facing strings for translators\n- Handling plurals and dates correctly per locale\n\n## gettext workflow\n\n1. Extract:\n```bash\nxgettext -o locale/messages.pot src/**/*.js --keyword=_\n```\n\n2. Initialize a locale:\n```bash\nmsginit -i locale/messages.pot -o locale/de/LC_MESSAGES/messages.po -l de\n```\n\n3. Translate (human or machine) then compile:\n```bash\nmsgfmt -o locale/de/LC_MESSAGES/messages.mo locale/de/LC_MESSAGES/messages.po\n```\n\n4. Merge new strings:\n```bash\nmsgmerge --update locale/de/LC_MESSAGES/messages.po locale/messages.pot\n```\n\n## Plurals\n\n```po\nmsgid \"%d item\"\nmsgid_plural \"%d items\"\nmsgstr[0] \"%d Element\"\nmsgstr[1] \"%d Elemente\"\n```\n\n## i18next JSON catalogs\n\n```bash\nnpx i18next 'src/**/*.tsx' --locales en,de,fr --defaultLocale en\n```\n\nExtract keys like `t('checkout.title')` into `locales/en/translation.json`.\n\n## Best practices\n\n- Never concatenate translated strings; use placeholders.\n- Keep dates/numbers via Intl APIs, not string formats.\n- Key by semantic id (checkout.title) or English source text consistently.\n- Run extraction in CI and fail on missing translations for ship locales.\n\n## Testing\n\n```bash\nmsgfmt --check-format -o de.mo de.po\nnode -e \"const {t}=require('./i18n'); t('checkout.title')\" | grep -v checkout.title\n```\n\nA missing key must fail the build.",
+  "display_name": "internationalization",
+  "knowledge": [
+    {
+      "title": "GNU gettext manual",
+      "type": "documentation",
+      "source": "https://www.gnu.org/software/gettext/manual/",
+      "description": "xgettext, msginit, msgfmt, msgmerge workflow"
+    },
+    {
+      "title": "i18next",
+      "type": "documentation",
+      "source": "https://www.i18next.com/",
+      "description": "JavaScript internationalization framework"
+    },
+    {
+      "title": "Lingui",
+      "type": "documentation",
+      "source": "https://lingui.dev/",
+      "description": "Message extraction and compilation for JS"
+    }
+  ],
+  "id": "internationalization",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "gettext",
+        "name": "keyword",
+        "type": "string",
+        "description": "Translation function to extract"
+      },
+      {
+        "capability": "gettext",
+        "name": "language",
+        "type": "string",
+        "description": "Source language: Python, C, JavaScript"
+      },
+      {
+        "capability": "gettext",
+        "name": "locale",
+        "type": "string",
+        "description": "Target locale, e.g. de, fr_FR"
+      },
+      {
+        "capability": "i18next",
+        "name": "locales",
+        "type": "string",
+        "description": "Locale list to extract catalogs for"
+      },
+      {
+        "capability": "i18next",
+        "name": "namespace",
+        "type": "string",
+        "description": "i18next namespace name"
+      },
+      {
+        "capability": "i18next",
+        "name": "config",
+        "type": "string",
+        "description": "Parser config file"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "react",
+    "i18next",
+    "formatjs"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "internationalization/skill/internationalization.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/internationalization/skill/internationalization.yaml",
+    "checksum": "299d51765fac5194cd6f946ef4520c89030ba22446e068381f9f25843cbef1ae"
+  }
+}

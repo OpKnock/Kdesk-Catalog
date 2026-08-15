@@ -1,0 +1,104 @@
+name: redis-pubsub-python
+display_name: Redis Pubsub Python
+category: api
+subcategory: general
+description: 'Hand-crafted Python pub/sub skill using redis-py: thread-safe subscription loops, pattern
+  subscriptions, and non-blocking get_message polling.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pip
+- python
+- redis-cli
+capabilities:
+- name: redis-py-pubsub
+  description: Publish and subscribe from Python with the redis-py PubSub object
+  commands:
+  - pip install redis
+  - python -c 'import redis; r=redis.Redis(host="localhost", port=6379); print(r.publish("news", "breaking"))'
+  - python -c 'import redis; r=redis.Redis(); p=r.pubsub(); p.subscribe("news"); print(p.get_message(timeout=3))'
+  - redis-cli subscribe news
+  - redis-cli psubscribe orders.*
+  examples:
+  - python -c 'import redis; r=redis.Redis(); print(r.publish("news", "hello"))'
+  - python -c 'import redis; p=redis.Redis().pubsub(); p.psubscribe("orders.*"); print(p.get_message(timeout=3))'
+  - redis-cli publish news "second message"
+  parameters:
+  - name: timeout
+    type: integer
+    description: get_message polling timeout in seconds before returning None
+  - name: channel
+    type: string
+    description: Channel name for subscribe()
+  - name: pattern
+    type: string
+    description: Glob pattern for psubscribe(), e.g. orders.*
+knowledge:
+- title: redis-py repository
+  type: documentation
+  source: https://github.com/redis/redis-py
+  description: PubSub class, get_message, listen, and threading notes
+- title: Redis pub/sub documentation
+  type: documentation
+  source: https://redis.io/docs/latest/develop/data-types/pubsub/
+  description: Channel and pattern semantics for PUBLISH/SUBSCRIBE
+instructions: "# Redis Pub/Sub in Python\n\nHand-crafted skill for Redis publish/subscribe with redis-py.\n\
+  \n## What this skill does\n\n- Publishes messages to channels and checks the subscriber count return\
+  \ value\n- Subscribes with non-blocking get_message(timeout=...) polling loops\n- Matches multiple channels\
+  \ with psubscribe glob patterns\n\n## When to use\n\n- Broadcasting cache-invalidation events to web\
+  \ workers\n- Lightweight event bus between Python services\n- Debugging why a subscriber is not receiving\
+  \ messages\n\n## Real commands\n\n```bash\n# Install the client\npip install redis\n\n# Publish; prints\
+  \ the number of subscribers that received it\npython -c 'import redis; r=redis.Redis(); print(r.publish(\"\
+  news\", \"breaking\"))'\n\n# Subscribe and poll for up to 3 seconds\npython -c 'import redis; p=redis.Redis().pubsub();\
+  \ p.subscribe(\"news\"); print(p.get_message(timeout=3))'\n\n# Pattern subscribe\npython -c 'import\
+  \ redis; p=redis.Redis().pubsub(); p.psubscribe(\"orders.*\"); print(p.get_message(timeout=3))'\n\n\
+  # CLI counterpart for testing\nredis-cli subscribe news\nredis-cli publish news \"second message\"\n\
+  ```\n\n## Listener loop\n\n```python\nimport redis\n\nr = redis.Redis()\np = r.pubsub()\np.subscribe(\"\
+  news\")\nfor msg in p.listen():\n    if msg[\"type\"] == \"message\":\n        print(msg[\"channel\"\
+  ], msg[\"data\"])\n```\n\n## Testing\n\n```bash\n# Terminal A: subscriber loop\npython listener.py\n\
+  # Terminal B: publisher\nredis-cli publish news \"hello from cli\"\n```\n\n## Best practices\n\n- Call\
+  \ p.close() before process exit to avoid lingering connections\n- Ignore the initial subscribe confirmation\
+  \ message in listen() by type check\n- Prefer one shared connection pool when many threads publish\n"
+examples:
+- input: Publish a message and know how many clients got it
+  output: python -c 'import redis; print(redis.Redis().publish("news", "hello"))' prints the subscriber
+    count.
+- input: Why is my listener not seeing messages?
+  output: Check the listener is in a listen() loop, not a one-shot get_message() call, and that the channel
+    name matches exactly; use redis-cli pubsub channels to verify.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: redis-pubsub-python.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-redis-pubsub-python
+  generic:
+    system_prompt: 'Your lane is Redis Pubsub Python. You do it through redis-py-pubsub: Publish and subscribe
+      from Python with the redis-py PubSub object. The commands are real, e.g. `pip install redis`. You
+      answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

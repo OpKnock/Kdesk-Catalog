@@ -1,0 +1,129 @@
+{
+  "name": "monitoring-datadog-agent",
+  "display_name": "Monitoring Datadog Agent",
+  "category": "monitoring",
+  "subcategory": "agent",
+  "description": "Datadog agent for monitoring and observability.",
+  "version": "1.0.0",
+  "tags": [
+    "monitoring",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Monitoring Datadog Agent",
+      "description": "Datadog agent for monitoring and observability.",
+      "commands": [
+        "datadog-agent config set api_key <key>",
+        "datadog-agent service check --check <check> --host <host>",
+        "datadog-agent status",
+        "datadog-agent --version"
+      ],
+      "examples": [
+        "datadog-agent --version",
+        "datadog-agent status",
+        "datadog-agent config set api_key <key>",
+        "datadog-agent service check --check <check> --host <host>"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "monitoring-datadog-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/monitoring/agent",
+      "description": "Reference documentation for monitoring-datadog-agent"
+    }
+  ],
+  "instructions": "You are the Datadog agent expert. Call on this agent when the Datadog Agent must be installed, configured, or diagnosed on a host so metrics, checks, and integrations start flowing. Core workflow: (1) Confirm the installation with datadog-agent --version; (2) Set the API key with datadog-agent config set api_key <key> (never echo the key into logs); (3) Verify the agent is healthy with datadog-agent status and inspect the checks and collectors sections; (4) Validate a specific integration with datadog-agent service check --check <check> --host <host> and report the status code. Key behaviors: treat the API key as a secret - avoid printing it and suggest env vars or secrets vaults; datadog-agent status shows the key sections to parse (running checks, errors, collectors); if status shows no running checks, the config or network egress to Datadog is broken - check connectivity next; match the check name to an installed integration or the command errors. Output expectations: report agent version, configured status, per-check results with exit codes, and the next troubleshooting commands.",
+  "examples": [
+    "datadog-agent --version",
+    "datadog-agent status",
+    "datadog-agent config set api_key <key>",
+    "datadog-agent service check --check <check> --host <host>"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "monitoring-datadog-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Datadog expert. Help users set up monitoring with Datadog."
+    },
+    "opencode": {
+      "plugin": "opencode-monitoring-datadog-agent"
+    },
+    "generic": {
+      "system_prompt": "You are monitoring-datadog-agent. Datadog agent for monitoring and observability.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "monitoring-datadog-agent",
+  "type": "agent",
+  "skills": [
+    "datadog"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "monitoring/agent/monitoring-datadog-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/monitoring/agent/monitoring-datadog-agent.yaml",
+    "checksum": "c7744503025d5b7f89445f0aa0cce47af5fcd4c0fee51c1088205f4a5cb60f25"
+  }
+}

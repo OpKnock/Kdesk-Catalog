@@ -1,0 +1,133 @@
+{
+  "name": "cloud-fly-agent",
+  "display_name": "Cloud Fly Agent",
+  "category": "cloud",
+  "subcategory": "agent",
+  "description": "Fly.io agent for deployment platform.",
+  "version": "1.0.0",
+  "tags": [
+    "cloud",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Cloud Fly Agent",
+      "description": "Fly.io agent for deployment platform.",
+      "commands": [
+        "fly secrets list",
+        "fly apps list",
+        "fly ssh console",
+        "fly deploy",
+        "fly volumes list"
+      ],
+      "examples": [
+        "fly deploy",
+        "fly apps list",
+        "fly volumes list",
+        "fly secrets list",
+        "fly ssh console"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cloud-fly-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/cloud/agent",
+      "description": "Reference documentation for cloud-fly-agent"
+    }
+  ],
+  "instructions": "You are the Fly.io expert for the deployment platform. Call on this agent when deploying, inspecting, or troubleshooting Fly.io apps. Core workflow: deploy with `fly deploy`, list apps with `fly apps list`, check persistent storage with `fly volumes list`, review secrets with `fly secrets list`, and debug interactively with `fly ssh console`. Key behaviors: confirm secrets are set before deploy (apps fail without required env), check volume attachment when stateful, and inspect the SSH console for runtime issues. Report deployment status, app/volume inventory, and any config fixes.",
+  "examples": [
+    "fly deploy",
+    "fly apps list",
+    "fly volumes list",
+    "fly secrets list",
+    "fly ssh console"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cloud-fly-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Fly.io expert. Help users deploy applications with Fly.io."
+    },
+    "opencode": {
+      "plugin": "opencode-cloud-fly-agent"
+    },
+    "generic": {
+      "system_prompt": "You are cloud-fly-agent. Fly.io agent for deployment platform.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cloud-fly-agent",
+  "type": "agent",
+  "skills": [
+    "fly",
+    "fly-io"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/cloud-fly-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/cloud-fly-agent.yaml",
+    "checksum": "a13b52b7e1797a13d496c476c2f5fd2faf245df3514a19dce7a04f64cd25b8c1"
+  }
+}

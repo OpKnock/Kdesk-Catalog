@@ -1,0 +1,216 @@
+{
+  "name": "kubernetes",
+  "display_name": "kubernetes",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Architects Kubernetes clusters end-to-end: cluster creation with kind/k3s, RBAC, namespaces, quotas, and multi-cluster access.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "k3s",
+    "kind",
+    "kubeadm",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "cluster-creation",
+      "description": "Create local and production-style clusters with kind, k3s, and kubeadm.",
+      "commands": [
+        "kind create cluster --name dev --config kind-config.yaml",
+        "kind get clusters",
+        "curl -sfL https://get.k3s.io | sh -",
+        "k3s kubectl get nodes",
+        "kubeadm init --pod-network-cidr=10.244.0.0/16",
+        "kind delete cluster --name dev"
+      ],
+      "examples": [
+        "kind create cluster --name dev --config kind-config.yaml",
+        "curl -sfL https://get.k3s.io | sh -",
+        "kubeadm init --pod-network-cidr=10.244.0.0/16"
+      ],
+      "parameters": [
+        {
+          "name": "cluster-name",
+          "type": "string",
+          "description": "Cluster name"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Kind cluster config file"
+        }
+      ]
+    },
+    {
+      "name": "rbac-and-quotas",
+      "description": "Configure namespaces, RBAC, quotas, and limits.",
+      "commands": [
+        "kubectl create namespace staging",
+        "kubectl create serviceaccount ci-bot -n staging",
+        "kubectl create rolebinding ci-bot-binding --role=edit --serviceaccount=staging:ci-bot -n staging",
+        "kubectl apply -f resourcequota.yaml",
+        "kubectl apply -f limitrange.yaml",
+        "kubectl get quotas,limits -n staging"
+      ],
+      "examples": [
+        "kubectl create rolebinding ci-bot-binding --role=edit --serviceaccount=staging:ci-bot -n staging",
+        "kubectl apply -f resourcequota.yaml",
+        "kubectl auth can-i list pods --as=system:serviceaccount:staging:ci-bot"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace name"
+        },
+        {
+          "name": "serviceaccount",
+          "type": "string",
+          "description": "Service account name"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kubernetes Documentation",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/",
+      "description": "Concepts, tasks, reference for the full platform"
+    },
+    {
+      "title": "kind",
+      "type": "documentation",
+      "source": "https://kind.sigs.k8s.io/",
+      "description": "Kubernetes in Docker for local clusters"
+    },
+    {
+      "title": "K3s",
+      "type": "documentation",
+      "source": "https://docs.k3s.io/",
+      "description": "Lightweight certified Kubernetes distribution"
+    },
+    {
+      "title": "RBAC Authorization",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/",
+      "description": "Roles, ClusterRoles, bindings"
+    }
+  ],
+  "instructions": "# Kubernetes Platform Engineering\n\nDesign, create, and govern Kubernetes clusters: from local kind to production control planes.\n\n## What This Skill Does\n\n- Creates clusters (kind, k3s, kubeadm) with repeatable configs\n- Configures namespaces, RBAC, quotas, and limit ranges\n- Manages multi-cluster access via kubeconfig contexts\n- Sets up CNI, ingress, and storage foundations\n- Audits access with kubectl auth can-i\n\n## When to Use\n\n- Standing up dev/test clusters locally\n- Bootstrapping a production control plane with kubeadm\n- Building multi-tenant namespaces with quotas and RBAC\n\n## Real Commands\n\n```bash\n# Local clusters\nkind create cluster --name dev --config kind-config.yaml\nkind get clusters\nkind delete cluster --name dev\ncurl -sfL https://get.k3s.io | sh -\nk3s kubectl get nodes\n\n# Production-style\nkubeadm init --pod-network-cidr=10.244.0.0/16\nkubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml\n\n# Tenancy\nkubectl create namespace staging\nkubectl create serviceaccount ci-bot -n staging\nkubectl create rolebinding ci-bot-binding --role=edit --serviceaccount=staging:ci-bot -n staging\nkubectl apply -f resourcequota.yaml\nkubectl auth can-i list pods --as=system:serviceaccount:staging:ci-bot\n```\n\n## ResourceQuota Example\n\n```yaml\napiVersion: v1\nkind: ResourceQuota\nmetadata: { name: staging-quota, namespace: staging }\nspec:\n  hard:\n    requests.cpu: \"8\"\n    requests.memory: 16Gi\n    limits.cpu: \"16\"\n    limits.memory: 32Gi\n    count/pods: \"100\"\n```\n\n## Best Practices\n\n- Version cluster configs (kind-config, kubeadm.yaml) in git\n- Separate namespaces per team with quotas to prevent noisy-neighbor\n- Least-privilege RBAC: default deny, explicit allow\n- Test RBAC with --as impersonation before granting\n- Use kubectl auth can-i in CI to verify permissions",
+  "examples": [
+    {
+      "input": "Give the CI bot edit access to staging only",
+      "output": "Agent creates the serviceaccount and rolebinding in staging, then verifies with kubectl auth can-i impersonation"
+    },
+    {
+      "input": "Set up a local dev cluster with 3 workers",
+      "output": "Agent writes a kind config with control-plane + 3 workers, creates the cluster, and verifies node readiness"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kubernetes.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kubernetes"
+    },
+    "generic": {
+      "system_prompt": "You work kubernetes hands-on. You do it through cluster-creation: Create local and production-style clusters with kind, k3s, and kubeadm. The commands are real, e.g. `kind create cluster --name dev --config kind-config.yaml`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kubernetes",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cluster-creation",
+        "name": "cluster-name",
+        "type": "string",
+        "description": "Cluster name"
+      },
+      {
+        "capability": "cluster-creation",
+        "name": "config",
+        "type": "string",
+        "description": "Kind cluster config file"
+      },
+      {
+        "capability": "rbac-and-quotas",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace name"
+      },
+      {
+        "capability": "rbac-and-quotas",
+        "name": "serviceaccount",
+        "type": "string",
+        "description": "Service account name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "k3s",
+    "kind",
+    "kubeadm",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/kubernetes-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/kubernetes-skill.yaml",
+    "checksum": "4188184b4789eafa79abb66c1a0444014405c5131972e95df7d034d0f9d8ed2e"
+  }
+}

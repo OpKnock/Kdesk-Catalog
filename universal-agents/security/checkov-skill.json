@@ -1,0 +1,206 @@
+{
+  "name": "checkov-security",
+  "display_name": "checkov-security",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Scans Terraform, CloudFormation, Kubernetes, Dockerfile, and other IaC for misconfigurations with 1000+ built-in policies and SARIF/JUnit output.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "checkov"
+  ],
+  "capabilities": [
+    {
+      "name": "iac-scanning",
+      "description": "Scan directories, files, and frameworks for policy violations.",
+      "commands": [
+        "checkov -d .",
+        "checkov -f main.tf",
+        "checkov -d . --framework terraform",
+        "checkov -d . --skip-check CKV_AWS_123",
+        "checkov -d . --check CKV_AWS_* --compact"
+      ],
+      "examples": [
+        "checkov -d terraform/ --framework terraform",
+        "checkov -f kubernetes/deployment.yaml --framework kubernetes",
+        "checkov -d . --check CKV_AWS_126"
+      ],
+      "parameters": [
+        {
+          "name": "directory",
+          "type": "string",
+          "description": "Root directory to scan recursively"
+        },
+        {
+          "name": "framework",
+          "type": "string",
+          "description": "Framework filter: terraform, cloudformation, kubernetes, dockerfile, secrets, all"
+        },
+        {
+          "name": "check",
+          "type": "string",
+          "description": "Comma-separated check IDs to include or skip"
+        }
+      ]
+    },
+    {
+      "name": "reporting",
+      "description": "Emit reports in CI-friendly formats and enforce severity gates.",
+      "commands": [
+        "checkov -d . -o sarif --output-file-path scan.sarif",
+        "checkov -d . -o junitxml --output-file-path reports/",
+        "checkov -d . --soft-fail --skip-framework secrets",
+        "checkov -d . --quiet"
+      ],
+      "examples": [
+        "checkov -d . -o sarif --output-file-path results/scan.sarif",
+        "checkov -d . -o junitxml --output-file-path test-results/",
+        "checkov -d . --soft-fail"
+      ],
+      "parameters": [
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output format: cli, json, sarif, junitxml, github_failed_only"
+        },
+        {
+          "name": "softFail",
+          "type": "boolean",
+          "description": "Return exit code 0 even if checks fail"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Checkov Documentation",
+      "type": "documentation",
+      "source": "https://www.checkov.io/",
+      "description": "Policy reference, CLI usage, and custom policy authoring"
+    },
+    {
+      "title": "Checkov GitHub",
+      "type": "documentation",
+      "source": "https://github.com/bridgecrewio/checkov",
+      "description": "Supported IaC formats and check catalog"
+    }
+  ],
+  "instructions": "# Checkov\n\nStatic analysis for infrastructure-as-code with a broad policy library.\n\n## What This Skill Does\n\n- Scans Terraform, CloudFormation, Kubernetes, Helm, Dockerfile, Bicep, ARM, and secrets\n- Fails CI on HIGH/CRITICAL misconfigurations\n- Outputs SARIF for GitHub code scanning and JUnit XML for CI dashboards\n- Supports custom policies written in Python or YAML\n- Skips noisy checks while tracking baseline suppressions\n\n## When to Use\n\n- Pre-merge IaC review for cloud misconfigurations\n- Container image and Dockerfile security scanning\n- Compliance evidence for CIS and cloud best-practice baselines\n\n## Real Commands\n\n```bash\n# Full recursive scan\ncheckov -d .\n\n# Framework-scoped, quiet, compact\ncheckov -d terraform/ --framework terraform --quiet --compact\n\n# Single file\ncheckov -f main.tf\n\n# SARIF for GitHub code scanning\ncheckov -d . -o sarif --output-file-path results/\n\n# JUnit XML for CI\ncheckov -d . -o junitxml --output-file-path test-results/\n\n# Skip a known-false-positive\ncheckov -d . --skip-check CKV_AWS_123\n\n# Only high severity and soft-fail in dev\ncheckov -d . --skip-check CKV_AWS_* --soft-fail --quiet\n```\n\n## Custom Policy (YAML)\n\n```yaml\nmetadata:\n  id: CKV2_CUSTOM_001\n  name: No public S3 buckets\ncategory: S3\ncheck:\n  - resource_types:\n      - aws_s3_bucket\n    conditions:\n      - cond_type: attribute\n        resource_types: [aws_s3_bucket]\n        attribute: acl\n        operator: not_equals\n        value: public-read\n```\n\n## Best Practices\n\n- Scan at PR time, not just nightly, to catch drift early\n- Use --compact and --quiet to keep logs actionable\n- Route SARIF output to GitHub code scanning for inline annotations\n- Exclude the .terraform directory unless reviewing modules\n- Track suppressions in checkov's baseline file to make them reviewable",
+  "examples": [
+    {
+      "input": "Scan my repo before a deploy",
+      "output": "Agent runs checkov -d . --framework terraform --quiet, lists HIGH/CRITICAL findings with check IDs, and proposes resource-level fixes."
+    },
+    {
+      "input": "Add Checkov to CI with SARIF upload",
+      "output": "Agent adds a checkov -d . -o sarif step that fails the job on CRITICAL, then uploads results as a code-scanning artifact."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "checkov-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-checkov"
+    },
+    "generic": {
+      "system_prompt": "You take the checkov-security seat. You do it through iac-scanning: Scan directories, files, and frameworks for policy violations. The commands are real, e.g. `checkov -d .`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "checkov-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "iac-scanning",
+        "name": "directory",
+        "type": "string",
+        "description": "Root directory to scan recursively"
+      },
+      {
+        "capability": "iac-scanning",
+        "name": "framework",
+        "type": "string",
+        "description": "Framework filter: terraform, cloudformation, kubernetes, dockerfile, secrets, all"
+      },
+      {
+        "capability": "iac-scanning",
+        "name": "check",
+        "type": "string",
+        "description": "Comma-separated check IDs to include or skip"
+      },
+      {
+        "capability": "reporting",
+        "name": "output",
+        "type": "string",
+        "description": "Output format: cli, json, sarif, junitxml, github_failed_only"
+      },
+      {
+        "capability": "reporting",
+        "name": "softFail",
+        "type": "boolean",
+        "description": "Return exit code 0 even if checks fail"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "checkov"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/checkov-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/checkov-skill.yaml",
+    "checksum": "222f268a36826821777032807fc02dafd358396690bd0e96bb85610fb2cd45c9"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "name": "slither",
+  "display_name": "Slither",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Static analysis for Solidity smart contracts with Slither, detecting vulnerabilities and printing contract info.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "slither",
+    "slither-check-erc"
+  ],
+  "capabilities": [
+    {
+      "name": "slither-analysis",
+      "description": "Run Slither detectors, printers, and inheritance checks on Solidity projects",
+      "commands": [
+        "slither contracts/",
+        "slither . --filter-paths node_modules",
+        "slither --print contract-summary contracts/Token.sol",
+        "slither --exclude-dependencies --json out.json contracts/",
+        "slither-check-erc contracts/Token.sol --erc ERC20"
+      ],
+      "examples": [
+        "slither --exclude reentrancy-no-eth contracts/",
+        "slither --detect assembly --json report.json .",
+        "slither --print inheritance contracts/"
+      ],
+      "parameters": [
+        {
+          "name": "detect",
+          "type": "string",
+          "description": "Comma-separated detector list to run, e.g. reentrancy-eth,uninitialized-state"
+        },
+        {
+          "name": "exclude",
+          "type": "string",
+          "description": "Comma-separated detectors to skip"
+        },
+        {
+          "name": "filter-paths",
+          "type": "string",
+          "description": "Skip paths matching this regex, e.g. node_modules"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Slither docs",
+      "type": "documentation",
+      "source": "https://github.com/crytic/slither",
+      "description": "Installation, CLI, detectors, and printers"
+    },
+    {
+      "title": "Slither wiki",
+      "type": "documentation",
+      "source": "https://github.com/crytic/slither/wiki",
+      "description": "Detector list and usage examples"
+    }
+  ],
+  "instructions": "# Slither\n\nFast static analysis framework for Solidity that finds vulnerabilities, prints\ncontract structure, and generates inheritance graphs.\n\n## When to Use\n\n- Pre-deployment vulnerability scan of contracts\n- Understanding an unfamiliar contract's structure\n- CI gate for Solidity projects\n\n## Real Commands\n\n```bash\n# Install\npip install slither-analyzer\n\n# Analyze a project (uses truffle/hardhat config when present)\nslither .\n\n# Analyze a directory of contracts\nslither contracts/\n\n# Exclude vendored code\nslither . --filter-paths node_modules\n\n# Run specific detectors\nslither --detect reentrancy-eth,uninitialized-state contracts/\n\n# JSON report\nslither . --json out.json\n\n# Print contract summary\nslither --print contract-summary contracts/Token.sol\n\n# Check ERC compliance\nslither-check-erc contracts/Token.sol --erc ERC20\n```\n\n## Common Detectors\n\n- `reentrancy-eth` / `reentrancy-no-eth` - reentrancy\n- `uninitialized-state` - uninitialized storage\n- `suicidal` - selfdestruct paths\n- `arbitrary-send-erc20` - arbitrary token sends\n\n## CI\n\n```bash\nslither . --filter-paths node_modules --json slither-report.json\n```\n\n## Best Practices\n\n- Run with the project's compiler config (hardhat.config.js / truffle-config.js)\n- Combine with Mythril (symbolic execution) and manual review\n- Treat every High finding as a blocker before mainnet deploy\n- Check the upgradeability-detector (`--detect upgrades`) on proxy contracts\n\n## Example Response\n\nLists findings as `file.sol:line: Impact: message [detector-name]`, plus the contract\nsummary and inheritance output requested.",
+  "examples": [
+    {
+      "input": "Audit these contracts before deployment",
+      "output": "Runs slither . --filter-paths node_modules --json slither-report.json and summarizes findings by impact with file:line references"
+    },
+    {
+      "input": "Is this token contract ERC-20 compliant?",
+      "output": "Runs slither-check-erc contracts/Token.sol --erc ERC20 and reports compliance status per method"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "slither.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-slither"
+    },
+    "generic": {
+      "system_prompt": "You own Slither end to end. You do it through slither-analysis: Run Slither detectors, printers, and inheritance checks on Solidity projects. The commands are real, e.g. `slither contracts/`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "slither",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "slither-analysis",
+        "name": "detect",
+        "type": "string",
+        "description": "Comma-separated detector list to run, e.g. reentrancy-eth,uninitialized-state"
+      },
+      {
+        "capability": "slither-analysis",
+        "name": "exclude",
+        "type": "string",
+        "description": "Comma-separated detectors to skip"
+      },
+      {
+        "capability": "slither-analysis",
+        "name": "filter-paths",
+        "type": "string",
+        "description": "Skip paths matching this regex, e.g. node_modules"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "slither",
+    "slither-check-erc"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/slither-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/slither-skill.yaml",
+    "checksum": "2ef46f5031ecb5077dc2559255c4d2dcdb92e23134e58b1f4d7731f9ae6fe733"
+  }
+}

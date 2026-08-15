@@ -1,0 +1,211 @@
+{
+  "name": "monorepo",
+  "display_name": "monorepo",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Manages monorepo builds with pnpm workspaces, Turborepo, and Nx: task orchestration, affected builds, versioning, and changesets.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx",
+    "pnpm"
+  ],
+  "capabilities": [
+    {
+      "name": "workspace-commands",
+      "description": "Run commands across workspace packages with pnpm.",
+      "commands": [
+        "pnpm -r test",
+        "pnpm --filter @org/api test",
+        "pnpm -r --workspace-concurrency=4 build",
+        "pnpm -F @org/web add lodash",
+        "pnpm list -r --depth=-1"
+      ],
+      "examples": [
+        "pnpm -r test",
+        "pnpm --filter @org/api test",
+        "pnpm -F @org/web add lodash"
+      ],
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "Package filter, e.g. @org/api"
+        },
+        {
+          "name": "recursive",
+          "type": "boolean",
+          "description": "Run in all workspaces (-r)"
+        }
+      ]
+    },
+    {
+      "name": "task-orchestration",
+      "description": "Orchestrate build tasks and version packages with Turborepo/Nx and changesets.",
+      "commands": [
+        "npx turbo run build",
+        "npx turbo run lint --filter=@org/api",
+        "npx turbo run test --affected --base=origin/main",
+        "nx affected -t build --base=main",
+        "npx changeset add",
+        "npx changeset version"
+      ],
+      "examples": [
+        "npx turbo run build",
+        "npx turbo run test --affected --base=origin/main",
+        "npx changeset version"
+      ],
+      "parameters": [
+        {
+          "name": "task",
+          "type": "string",
+          "description": "Task name, e.g. build, test, lint"
+        },
+        {
+          "name": "affected",
+          "type": "boolean",
+          "description": "Run only for changed packages"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Turborepo Documentation",
+      "type": "documentation",
+      "source": "https://turborepo.dev/docs",
+      "description": "Task pipelines, caching, and remote caching"
+    },
+    {
+      "title": "Nx Documentation",
+      "type": "documentation",
+      "source": "https://nx.dev/",
+      "description": "affected commands, project graphs, generators"
+    },
+    {
+      "title": "pnpm Workspaces",
+      "type": "documentation",
+      "source": "https://pnpm.io/workspaces",
+      "description": "Workspace config and filter syntax"
+    },
+    {
+      "title": "Changesets",
+      "type": "documentation",
+      "source": "https://github.com/changesets/changesets",
+      "description": "Versioning and publishing monorepo packages"
+    }
+  ],
+  "instructions": "# Monorepo Engineering\n\nStructure and run multi-package repositories efficiently.\n\n## What This Skill Does\n\n- Manages pnpm workspaces and package filters\n- Orchestrates tasks with Turborepo/Nx caching\n- Runs affected-only tasks on CI\n- Versions packages with changesets\n- Handles cross-package dependency graphs\n\n## When to Use\n\n- Multi-package JS/TS repos sharing tooling\n- CI builds taking too long (caching/affected)\n- Publishing multiple packages in lockstep\n\n## Real Commands\n\n```bash\n# pnpm workspaces\npnpm -r test\npnpm --filter @org/api test\npnpm -r --workspace-concurrency=4 build\npnpm -F @org/web add lodash\npnpm list -r --depth=-1\n\n# Turborepo\nnpx turbo run build\nnpx turbo run lint --filter=@org/api\nnpx turbo run test --affected --base=origin/main\nnpx turbo run dev --parallel\n\n# Nx\nnx affected -t build --base=main\nnx run-many -t test --projects=@org/api,@org/web\nnx graph\n\n# Versioning\nnpx changeset add\nnpx changeset version\nnpx changeset publish\n```\n\n## Best Practices\n\n- Use filter/affected to keep CI fast and focused\n- Commit turbo/nx cache config; enable remote caching\n- One lockfile, consistent dependency versions across packages\n- Use changesets for atomic version decisions\n- Keep build-time dependencies shallow; use workspace:* protocols",
+  "examples": [
+    {
+      "input": "CI tests keep running for unchanged packages",
+      "output": "Agent sets up turbo affected pipelines against origin/main and rewires CI"
+    },
+    {
+      "input": "Release two packages together",
+      "output": "Agent creates a changeset, versions both packages, and publishes with tags"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "monorepo.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-monorepo"
+    },
+    "generic": {
+      "system_prompt": "Your lane is monorepo. You do it through workspace-commands: Run commands across workspace packages with pnpm. The commands are real, e.g. `pnpm -r test`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "monorepo",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "workspace-commands",
+        "name": "filter",
+        "type": "string",
+        "description": "Package filter, e.g. @org/api"
+      },
+      {
+        "capability": "workspace-commands",
+        "name": "recursive",
+        "type": "boolean",
+        "description": "Run in all workspaces (-r)"
+      },
+      {
+        "capability": "task-orchestration",
+        "name": "task",
+        "type": "string",
+        "description": "Task name, e.g. build, test, lint"
+      },
+      {
+        "capability": "task-orchestration",
+        "name": "affected",
+        "type": "boolean",
+        "description": "Run only for changed packages"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx",
+    "pnpm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/monorepo-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/monorepo-skill.yaml",
+    "checksum": "399da8f8d7483512117d61c33d6479c500b4383cfa4c86a6b70517e678c3788a"
+  }
+}

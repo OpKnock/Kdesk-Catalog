@@ -1,0 +1,131 @@
+name: kafka-lag-monitoring
+display_name: Kafka Lag Monitoring
+category: api
+subcategory: general
+description: 'Monitor Kafka consumer lag: describe groups per topic/partition, inspect member assignment,
+  reset offsets safely, and compute end-to-end lag from the CLI.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kafka-consumer-groups.sh
+- kafka-run-class.sh
+capabilities:
+- name: lag-inspection
+  description: Inspect consumer group lag per partition and per member.
+  commands:
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments --members --verbose
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments --state
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --all-groups
+  examples:
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments --members --verbose
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --all-groups | grep -A2 payments
+  parameters:
+  - name: group
+    type: string
+    description: Consumer group ID.
+  - name: verbose
+    type: boolean
+    description: Show per-member partition assignment.
+- name: offset-ops
+  description: Get raw offsets and reset group offsets for replay or repairs.
+  commands:
+  - kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group payments --topic
+    orders --to-earliest --execute
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group payments --topic
+    orders --to-datetime 2026-08-01T00:00:00.000 --execute
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group payments --topic
+    orders --shift-by -100 --execute
+  examples:
+  - kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group payments --topic
+    orders --to-earliest --execute
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group payments --topic
+    orders --shift-by -100 --execute
+  parameters:
+  - name: group
+    type: string
+    description: Group to reset.
+  - name: topic
+    type: string
+    description: Topic to reset offsets for.
+  - name: mode
+    type: string
+    description: 'Reset mode: to-earliest, to-latest, to-datetime, shift-by.'
+knowledge:
+- title: kafka-consumer-groups.sh
+  type: documentation
+  source: https://kafka.apache.org/documentation/#basic_ops_consumer_group
+  description: Official consumer group CLI operations reference.
+- title: Kafka Lag Concepts
+  type: documentation
+  source: https://kafka.apache.org/documentation/#consumer_fetching
+  description: How consumer offsets and lag are tracked.
+instructions: "# Kafka Lag Monitoring\n\nTrack and manage consumer lag with the official Kafka CLI.\n\n\
+  ## What this skill does\n\n- Reports per-partition LAG for consumer groups.\n- Shows member-to-partition\
+  \ assignment.\n- Resets offsets for replay, repairs, and backfills.\n\n## When to use\n\n- Investigating\
+  \ slow consumers and growing lag.\n- Rolling back consumers after a bad deployment.\n- Calculating end-to-end\
+  \ processing delay.\n\n## Real commands\n\n```bash\n# Per-partition lag for one group\nkafka-consumer-groups.sh\
+  \ --bootstrap-server localhost:9092 \\\n  --describe --group payments\n\n# Which member owns which partitions\n\
+  kafka-consumer-groups.sh --bootstrap-server localhost:9092 \\\n  --describe --group payments --members\
+  \ --verbose\n\n# Group state (Stable/PreparingRebalance/Dead)\nkafka-consumer-groups.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --describe --group payments --state\n\n# Raw latest offsets\nkafka-run-class.sh\
+  \ kafka.tools.GetOffsetShell \\\n  --broker-list localhost:9092 --topic orders --time -1\n\n# Reset\
+  \ to earliest (requires no active members)\nkafka-consumer-groups.sh --bootstrap-server localhost:9092\
+  \ \\\n  --reset-offsets --group payments --topic orders --to-earliest --execute\n\n# Replay from a specific\
+  \ datetime\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 \\\n  --reset-offsets --group\
+  \ payments --topic orders \\\n  --to-datetime 2026-08-01T00:00:00.000 --execute\n\n# Shift offsets back\
+  \ 100 records\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 \\\n  --reset-offsets --group\
+  \ payments --topic orders --shift-by -100 --execute\n```\n\n## Config example (alerting)\n\n```bash\n\
+  # Poll lag every minute and alert when LAG > 10000\nwatch -n 60 'kafka-consumer-groups.sh --bootstrap-server\
+  \ localhost:9092 --describe --group payments'\n```\n\n## Testing\n\n```bash\n# Dry-run a reset before\
+  \ executing\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 \\\n  --reset-offsets --group\
+  \ payments --topic orders --to-earliest --dry-run\n```\n\n## Best practices\n\n- Reset only with the\
+  \ group stopped (members cause -execute to fail).\n- Alert on lag growth rate, not just absolute lag.\n\
+  - Pair lag with max.poll.interval.ms: repeated rebalances inflate lag.\n"
+examples:
+- input: Which consumer is behind and by how much?
+  output: kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments shows
+    LAG per partition; use --members --verbose to map partitions to hosts.
+- input: Replay the last hour of orders
+  output: Compute the timestamp, then --reset-offsets --group payments --topic orders --to-datetime ...
+    --execute with the consumer stopped.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kafka-lag-monitoring.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kafka-lag-monitoring
+  generic:
+    system_prompt: 'This is your domain: Kafka Lag Monitoring. You do it through lag-inspection: Inspect
+      consumer group lag per partition and per member. The commands are real, e.g. `kafka-consumer-groups.sh
+      --bootstrap-server localhost:9092 --describe --group payments`. You work hands-on and only report
+      outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

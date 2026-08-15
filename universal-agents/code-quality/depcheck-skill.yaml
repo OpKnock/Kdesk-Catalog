@@ -1,0 +1,176 @@
+name: depcheck
+display_name: depcheck
+category: code-quality
+subcategory: general
+description: 'Finds unused and missing dependencies with depcheck: unused imports, missing deps, and configuration
+  analysis.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- commands:
+  - npx depcheck
+  - npx depcheck --json
+  - npx depcheck --ignores="eslint,prettier"
+  - npx depcheck --skip-missing=false
+  - npx depcheck --specials=eslint
+  description: Scan projects for unused dependencies.
+  name: depcheck-scan
+  examples:
+  - npx depcheck --json | python -m json.tool
+  - npx depcheck --ignores="@types/*,vitest"
+  - npx depcheck --config .depcheckrc
+  parameters:
+  - description: Packages to ignore
+    name: ignores
+    type: string
+  - description: JSON output
+    name: json
+    type: boolean
+  - description: 'Special parsers: eslint, webpack'
+    name: specials
+    type: string
+- commands:
+  - npm uninstall unused-package
+  - npm prune
+  - npm ls --depth=0
+  - npm ls unused-package
+  description: Remove unused dependencies safely.
+  name: depcheck-cleanup
+  examples:
+  - npm ls --depth=0 | grep -v "deduped"
+  - npm uninstall lodash --save
+  parameters:
+  - description: Package name
+    name: package
+    type: string
+  - name: save
+    type: boolean
+    description: Update package.json on removal
+knowledge:
+- title: depcheck on GitHub
+  description: Usage, ignores, and specials
+  source: https://github.com/depcheck/depcheck
+  type: documentation
+- title: npm Docs
+  description: Removing packages
+  source: https://docs.npmjs.com/cli/v10/commands/npm-uninstall
+  type: documentation
+instructions: '# depcheck
+
+
+  Find unused and missing dependencies.
+
+
+  ## When to Use
+
+
+  - Cleaning up package.json bloat
+
+  - Catching dependencies used only via side-effect imports
+
+  - Verifying that every import resolves to an installed package
+
+  - Reducing install time and attack surface
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Basic scan
+
+  npx depcheck
+
+
+  # JSON output for scripting
+
+  npx depcheck --json
+
+
+  # Ignore dev-tooling packages
+
+  npx depcheck --ignores="eslint,prettier,@types/*"
+
+
+  # Report missing dependencies too
+
+  npx depcheck --skip-missing=false
+
+
+  # Enable special parsers
+
+  npx depcheck --specials=eslint,webpack
+
+
+  # Verify remaining tree
+
+  npm ls --depth=0
+
+
+  # Remove what is unused
+
+  npm uninstall lodash
+
+  npm prune
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run depcheck before PRs that touch package.json
+
+  - Add @types/* and build tools to --ignores deliberately
+
+  - Review JSON output programmatically in CI
+
+  - Re-run tests after removing packages
+
+  - Update the lockfile with npm prune afterward
+
+  - Treat missing dependencies as a CI failure'
+examples:
+- input: Clean up my unused npm dependencies
+  output: Agent runs npx depcheck --json, reviews the unused list, removes them with npm uninstall, and
+    runs tests.
+- input: My build works locally but fails in CI with "module not found"
+  output: Agent runs depcheck --skip-missing=false to find undeclared imports and adds them to package.json.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: depcheck.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-depcheck
+  generic:
+    system_prompt: 'This is your domain: depcheck. You do it through depcheck-scan: Scan projects for
+      unused dependencies. The commands are real, e.g. `npx depcheck`. You verify each step you report
+      and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

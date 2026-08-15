@@ -1,0 +1,218 @@
+name: load-testing
+display_name: Load Testing
+category: api
+subcategory: general
+description: 'General HTTP load testing with ab, wrk, hey, vegeta, and jmeter: quick benchmarks, target
+  files, and baseline reports.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- hey
+- jmeter
+- vegeta
+- wrk
+capabilities:
+- name: quick-bench
+  description: Run quick benchmarks with ab, wrk, and hey.
+  commands:
+  - ab -n 1000 -c 50 http://localhost:8080/
+  - wrk -t8 -c200 -d30s http://localhost:8080/
+  - hey -n 10000 -c 200 http://localhost:8080/
+  - 'ab -n 1000 -c 50 -k -H ''Accept: application/json'' http://localhost:8080/api'
+  examples:
+  - ab -n 1000 -c 50 http://localhost:8080/
+  - wrk -t8 -c200 -d30s http://localhost:8080/
+  - hey -n 10000 -c 200 http://localhost:8080/
+  parameters:
+  - name: url
+    type: string
+    description: Target URL.
+  - name: requests
+    type: integer
+    description: Total requests (ab/hey).
+  - name: concurrency
+    type: integer
+    description: Concurrent connections.
+  - name: duration
+    type: string
+    description: Duration for wrk, e.g. 30s.
+- name: vegeta-jmeter
+  description: Run scripted attacks with vegeta and JMeter plans.
+  commands:
+  - vegeta attack -duration=30s -rate=100 -targets=targets.txt | vegeta report
+  - vegeta attack -targets=targets.txt -duration=1m | vegeta report -type=json > report.json
+  - jmeter -n -t plan.jmx -l results.jtl -Jthreads=50
+  - vegeta report -type=hist[0,100ms,200ms,500ms] < results.bin
+  examples:
+  - vegeta attack -duration=30s -rate=100 -targets=targets.txt | vegeta report
+  - jmeter -n -t plan.jmx -l results.jtl -Jthreads=50
+  - vegeta report -type=hist[0,100ms,200ms,500ms] < results.bin
+  parameters:
+  - name: rate
+    type: integer
+    description: Requests per second (vegeta).
+  - name: targets
+    type: string
+    description: Vegeta targets file.
+  - name: jmx
+    type: string
+    description: JMeter plan file.
+knowledge:
+- title: Vegeta
+  type: documentation
+  source: https://github.com/tsenart/vegeta
+  description: Vegeta load testing tool documentation.
+- title: Apache Bench
+  type: documentation
+  source: https://httpd.apache.org/docs/2.4/programs/ab.html
+  description: ab tool documentation.
+- title: wrk
+  type: documentation
+  source: https://github.com/wg/wrk
+  description: wrk HTTP benchmarking tool.
+instructions: '# Load Testing (General)
+
+
+  Benchmark HTTP services with the standard load testing toolkit.
+
+
+  ## What this skill does
+
+
+  - Runs quick benchmarks with ab, wrk, and hey.
+
+  - Runs scripted attacks with vegeta and JMeter.
+
+  - Produces baseline reports for later comparisons.
+
+
+  ## When to use
+
+
+  - Smoke benchmarks after deployments.
+
+  - Capacity baselining before tuning.
+
+  - Choosing the right tool for a scenario.
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # ab: 1000 requests, 50 concurrent
+
+  ab -n 1000 -c 50 http://localhost:8080/
+
+
+  # ab keep-alive with header
+
+  ab -n 1000 -c 50 -k -H ''Accept: application/json'' http://localhost:8080/api
+
+
+  # wrk: 8 threads, 200 connections, 30s
+
+  wrk -t8 -c200 -d30s http://localhost:8080/
+
+
+  # hey: 10k requests, 200 workers
+
+  hey -n 10000 -c 200 http://localhost:8080/
+
+
+  # vegeta: 100 rps for 30s
+
+  echo ''GET http://localhost:8080/'' | vegeta attack -duration=30s -rate=100 | vegeta report
+
+
+  # vegeta from targets file
+
+  vegeta attack -duration=1m -rate=100 -targets=targets.txt | vegeta report -type=json > report.json
+
+
+  # JMeter non-GUI
+
+  jmeter -n -t plan.jmx -l results.jtl -Jthreads=50
+
+  ```
+
+
+  ## targets.txt example
+
+
+  ```text
+
+  GET http://localhost:8080/
+
+  POST http://localhost:8080/api/orders
+
+  Content-Type: application/json
+
+
+  {"id":1}
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  hey -n 100 -c 10 http://localhost:8080/healthz   # smoke before the real run
+
+  ```
+
+
+  ## Best practices
+
+
+  - Warm up the service before measuring; first requests skew results.
+
+  - Record the exact command+flags with results for reproducibility.
+
+  - Use keep-alive for realistic persistent connections.
+
+  '
+examples:
+- input: Quick benchmark of the login endpoint
+  output: 'ab -n 1000 -c 50 -k -H ''Accept: application/json'' http://localhost:8080/api/login'
+- input: Sustained 100rps for a minute
+  output: echo 'GET http://localhost:8080/' | vegeta attack -duration=1m -rate=100 | vegeta report
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: load-testing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-load-testing
+  generic:
+    system_prompt: 'This is your domain: Load Testing. You do it through quick-bench: Run quick benchmarks
+      with ab, wrk, and hey. The commands are real, e.g. `ab -n 1000 -c 50 http://localhost:8080/`. You
+      work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

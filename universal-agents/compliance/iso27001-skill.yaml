@@ -1,0 +1,179 @@
+name: iso27001
+display_name: Iso27001
+category: compliance
+subcategory: general
+description: 'Supports ISO 27001 ISMS work: asset inventory, risk assessment, control verification, and
+  evidence collection.'
+version: 2.0.0
+tags:
+- iso27001
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- docker
+- gitleaks
+- nmap
+- openssl
+capabilities:
+- name: isms-evidence
+  description: Collect security evidence for ISO 27001 Annex A controls
+  commands:
+  - nmap -sV -p 22,443,8443 --open 10.0.0.0/24
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:9200/_cat/health
+  - openssl cipherlist -v tls1_2
+  - gitleaks detect --source . --report-path gitleaks.json
+  - docker compose ps --format json
+  examples:
+  - nuclei -l targets.txt -severity critical,high
+  - rg -i "password|api_key|secret" config/ --hidden
+  - curl -s localhost:9090/metrics | head -20
+  parameters:
+  - name: open
+    type: boolean
+    description: Show only open ports in nmap output
+  - name: report-path
+    type: string
+    description: Where to write the secret-scan report
+  - name: severity
+    type: string
+    description: Nuclei severity filter, e.g. critical,high
+knowledge:
+- title: ISO/IEC 27001 standard
+  type: documentation
+  source: https://www.iso.org/standard/27001
+  description: The official ISMS requirements standard
+- title: Annex A control reference
+  type: documentation
+  source: https://www.iso.org/standard/27002
+  description: ISO 27002 control catalogue mapped to Annex A
+instructions: '# ISO 27001
+
+
+  Information Security Management System (ISMS) support: evidence gathering for
+
+  Annex A controls, asset inventories, and risk assessments.
+
+
+  ## When to Use
+
+
+  - Collecting audit evidence for certification or surveillance audits
+
+  - Building the asset inventory (A.5.9)
+
+  - Verifying technical controls: patching, encryption, access (A.8)
+
+  - Preparing the Statement of Applicability (SoA)
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Asset discovery on a subnet
+
+  nmap -sV -p 22,443,8443 --open 10.0.0.0/24 -oX assets.xml
+
+
+  # Patch level: check SSH versions
+
+  nmap -sV -p 22 10.0.0.5
+
+
+  # Secret hygiene evidence
+
+  sudo gitleaks detect --source . --report-path gitleaks.json
+
+
+  # Access control: review users
+
+  rg -i -n "admin|root" docker-compose.yml k8s/ | head -30
+
+
+  # Monitoring: metrics endpoint reachable
+
+  curl -s localhost:9090/metrics | head -5
+
+
+  # Backups: verify job runs
+
+  crontab -l && docker compose ps --format json
+
+  ```
+
+
+  ## Common Evidence Pack
+
+
+  - A.5.9 asset inventory (nmap -oX output + owner table)
+
+  - A.8.8 vulnerability management (nuclei/grype reports)
+
+  - A.8.9/A.8.10 secrets management (gitleaks report, vault config)
+
+  - A.8.16 monitoring (metrics, alert rules)
+
+  - A.8.13 backup policy + restore test logs
+
+
+  ## Best Practices
+
+
+  - Keep the SoA honest: mark controls as applicable or not, with justification
+
+  - Tie every control to concrete evidence artifacts
+
+  - Schedule recurring scans so evidence has dates
+
+  - Document risk treatment: accept, mitigate, transfer, avoid
+
+  - Update the ISMS after infrastructure changes
+
+
+  ## Example Response
+
+
+  Returns an evidence matrix mapping Annex A controls to artifacts collected
+
+  (scans, config excerpts), with gaps and risk-level suggestions.'
+examples:
+- input: Collect evidence for our surveillance audit
+  output: Runs nmap asset scan, gitleaks secret scan, and metrics checks, then maps results to Annex A
+    controls in an evidence table
+- input: Verify our patch management control
+  output: Scans hosts with nmap -sV and reports outdated software versions with CVEs, then links findings
+    to A.8.8
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: iso27001.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-iso27001
+  generic:
+    system_prompt: 'You work Iso27001 hands-on. You do it through isms-evidence: Collect security evidence
+      for ISO 27001 Annex A controls. The commands are real, e.g. `nmap -sV -p 22,443,8443 --open 10.0.0.0/24`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

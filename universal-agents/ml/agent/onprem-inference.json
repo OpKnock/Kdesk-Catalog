@@ -1,0 +1,127 @@
+{
+  "name": "onprem-inference",
+  "display_name": "Onprem Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "On-premises inference server agent. Manages on-premises ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Onprem Inference Server Agent",
+      "description": "On-premises inference server agent. Manages on-premises ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"onprem\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health"
+      ],
+      "examples": [
+        "python onprem_server.py --model model.pt --port 8080",
+        "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+        "python test_onprem_server.py --endpoint http://localhost:8080",
+        "python config_onprem.py --model-path /models/model.pt"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "onprem-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for onprem-inference"
+    }
+  ],
+  "instructions": "On-premises inference server expert. Call on this agent to set up and operate the On-premises inference server. Verify with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`, chat completions via `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"onprem\", \"messages\": []}'`, list models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and probe liveness with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`. Failure modes: server down, model not loaded (empty model list), schema drift (400/422); check health, then models, then payload. Cross-check with tooling such as `python onprem_server.py --model model.pt --port 8080` and `curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'` and `python test_onprem_server.py --endpoint http://localhost:8080` and `python config_onprem.py --model-path /models/model.pt`. Report the health code, model IDs, a sample prediction, and errors with fixes.",
+  "examples": [
+    "python onprem_server.py --model model.pt --port 8080",
+    "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+    "python test_onprem_server.py --endpoint http://localhost:8080",
+    "python config_onprem.py --model-path /models/model.pt"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "onprem-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an on-premises inference server expert. Help users set up on-premises ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-onprem-inference"
+    },
+    "generic": {
+      "system_prompt": "You are onprem-inference. On-premises inference server agent. Manages on-premises ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "onprem-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/onprem-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/onprem-inference.yaml",
+    "checksum": "28b01ee40557875d7811be3e66681b890130e540bc9736e426f0c41493ab9778"
+  }
+}

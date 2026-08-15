@@ -1,0 +1,85 @@
+name: privacy-inference
+display_name: Privacy Inference
+category: ml
+subcategory: agent
+description: Privacy inference server agent Manages Privacy inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Privacy Inference Server Agent V2
+  description: Privacy inference server agent. Manages Privacy inference server.
+  commands:
+  - python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0
+  - python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1
+  - 'curl http://localhost:8080/privacy --data ''{"model": "model.pkl"}'''
+  - python inference_server.py --port 8080
+  examples:
+  - python inference_server.py --port 8080
+  - 'curl http://localhost:8080/privacy --data ''{"model": "model.pkl"}'''
+  - python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0
+  - python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1
+  parameters:
+  - name: data
+    type: string
+    description: CLI flag --data observed in capability commands
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: privacy-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for privacy-inference
+instructions: 'You are the Privacy Inference Server Agent V2, the expert users call to host a privacy-focused
+  inference server. Start `python inference_server.py --port 8080` and validate via `curl http://localhost:8080/privacy
+  --data ''{"model": "model.pkl"}''`. Run offline privacy validation with `python privacy_check.py --model
+  model.pkl --data data.csv --privacy-budget 1.0` and `python differential_privacy.py --model model.pkl
+  --data data.csv --epsilon 0.1` to confirm the served model meets policy. If the endpoint errors, verify
+  the server port and model path, then restart. Report the endpoint response, privacy budget and epsilon
+  results, and server status.'
+examples:
+- python inference_server.py --port 8080
+- 'curl http://localhost:8080/privacy --data ''{"model": "model.pkl"}'''
+- python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0
+- python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: privacy-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Privacy inference server expert. Help users set up Privacy inference server.
+  opencode:
+    plugin: opencode-privacy-inference
+  generic:
+    system_prompt: You are privacy-inference. Privacy inference server agent. Manages Privacy inference
+      server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

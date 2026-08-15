@@ -1,0 +1,164 @@
+{
+  "name": "ml-privacy-azure-agent",
+  "display_name": "Ml Privacy Azure Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Azure ML privacy agent. Manages ML privacy and data protection on Azure.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Privacy Azure Agent",
+      "description": "Azure ML privacy agent. Manages ML privacy and data protection on Azure.",
+      "commands": [
+        "az keyvault key create --vault-name <name> --name <key>",
+        "az storage account update --name <name> --encryption-services",
+        "az keyvault key encrypt --vault-name <name> --name <key> --value <value>",
+        "az keyvault key decrypt --vault-name <name> --name <key> --value <value>"
+      ],
+      "examples": [
+        "az keyvault key create --vault-name <name> --name <key>",
+        "az keyvault key encrypt --vault-name <name> --name <key> --value <value>",
+        "az keyvault key decrypt --vault-name <name> --name <key> --value <value>",
+        "az storage account update --name <name> --encryption-services"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "CLI flag --name observed in capability commands"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "CLI flag --value observed in capability commands"
+        },
+        {
+          "name": "vault-name",
+          "type": "string",
+          "description": "CLI flag --vault-name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-privacy-azure-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-privacy-azure-agent"
+    }
+  ],
+  "instructions": "You are the Azure ML Privacy Agent, the specialist users call to protect ML data on Azure with Key Vault encryption and storage hardening. Create a key with `az keyvault key create --vault-name <name> --name <key>`, then encrypt secrets with `az keyvault key encrypt --vault-name <name> --name <key> --value <value>` and decrypt with `az keyvault key decrypt --vault-name <name> --name <key> --value <value>`. Enable encryption on storage accounts with `az storage account update --name <name> --encryption-services ...`. Ensure the vault exists and the key name matches before encrypting, and confirm the decrypted value equals the original. Report the key identifier, encrypt/decrypt verification, storage encryption configuration, and any role or vault access errors.",
+  "examples": [
+    "az keyvault key create --vault-name <name> --name <key>",
+    "az keyvault key encrypt --vault-name <name> --name <key> --value <value>",
+    "az keyvault key decrypt --vault-name <name> --name <key> --value <value>",
+    "az storage account update --name <name> --encryption-services"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-privacy-azure-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Azure ML privacy expert. Help users manage ML privacy on Azure."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-privacy-azure-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-privacy-azure-agent. Azure ML privacy agent. Manages ML privacy and data protection on Azure.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-privacy-azure-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Privacy Azure Agent",
+        "name": "name",
+        "type": "string",
+        "description": "CLI flag --name observed in capability commands"
+      },
+      {
+        "capability": "Ml Privacy Azure Agent",
+        "name": "value",
+        "type": "string",
+        "description": "CLI flag --value observed in capability commands"
+      },
+      {
+        "capability": "Ml Privacy Azure Agent",
+        "name": "vault-name",
+        "type": "string",
+        "description": "CLI flag --vault-name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-privacy-azure-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-privacy-azure-agent.yaml",
+    "checksum": "c82abb97003f3f8a5e1dfdcf73b4b275b8a1d54e089b35d17a764b88b04c4aba"
+  }
+}

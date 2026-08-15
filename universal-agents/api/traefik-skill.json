@@ -1,0 +1,171 @@
+{
+  "name": "traefik",
+  "display_name": "Traefik",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Traefik skill: routing config with docker provider, entrypoints, TLS, and dashboard inspection for edge routing and reverse proxy tasks.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker"
+  ],
+  "capabilities": [
+    {
+      "name": "traefik-routing",
+      "description": "Run Traefik and configure routers/services/middlewares",
+      "commands": [
+        "docker run -d -p 80:80 -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock traefik:v3.0 --api.insecure=true",
+        "curl -s localhost:8080/api/http/routers | jq",
+        "curl -s localhost:8080/api/http/services | jq",
+        "docker service ls",
+        "curl -sk https://localhost -H 'Host: app.local' -o /dev/null -w '%{http_code}'"
+      ],
+      "examples": [
+        "curl -s localhost:8080/api/http/routers | jq '.[] | {name, rule, service}'",
+        "docker run -d -p 80:80 -v /var/run/docker.sock:/var/run/docker.sock traefik:v3.0 --providers.docker=true",
+        "curl -sk https://localhost -H 'Host: app.local' -o /dev/null -w '%{http_code}'"
+      ],
+      "parameters": [
+        {
+          "name": "rule",
+          "type": "string",
+          "description": "Host/Path matcher, e.g. Host(`app.local`)"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "docker, file, or kubernetescrd"
+        },
+        {
+          "name": "entrypoint",
+          "type": "string",
+          "description": "web or websecure"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Traefik Docker provider",
+      "type": "documentation",
+      "source": "https://doc.traefik.io/traefik/providers/docker/",
+      "description": "Labels and docker discovery"
+    },
+    {
+      "title": "Traefik API",
+      "type": "documentation",
+      "source": "https://doc.traefik.io/traefik/operations/api/",
+      "description": "Dashboard and HTTP API endpoints"
+    }
+  ],
+  "instructions": "# Traefik\n\nHand-crafted skill for edge routing with Traefik.\n\n## What this skill does\n\n- Boots Traefik with docker provider discovery\n- Exposes routers and services via the HTTP API\n- Verifies TLS and routing rules end to end\n\n## When to use\n\n- Adding a reverse proxy to a compose stack\n- Inspecting which container serves which host rule\n- Debugging 404s from bad router matchers\n\n## Real commands\n\n```bash\n# Run with docker provider + API\ndocker run -d -p 80:80 -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock traefik:v3.0 --api.insecure=true\n\n# Inspect state\ncurl -s localhost:8080/api/http/routers | jq\ncurl -s localhost:8080/api/http/services | jq\n\n# Label-based routing on a container\ndocker run -d --label 'traefik.http.routers.app.rule=Host(`app.local`)' --label 'traefik.http.services.app.loadbalancer.server.port=80' nginx\n\n# Verify\ncurl -sk https://localhost -H 'Host: app.local' -o /dev/null -w '%{http_code}'\n```\n\n## File provider config\n\n```yaml\nhttp:\n  routers:\n    app:\n      rule: Host(`app.local`)\n      service: app\n      tls: {}\n  services:\n    app:\n      loadBalancer:\n        servers:\n          - url: http://backend:3000\n```\n\n## Testing\n\n```bash\ncurl -s localhost:8080/api/http/routers | jq '.[] | {name, rule}'\ncurl -sk https://localhost -H 'Host: app.local' -o /dev/null -w '%{http_code}'\n```\n\n## Best practices\n\n- Use the file provider for production rules; docker labels for local\n- Pin Traefik version tags; v3 changed labels syntax\n- Enable access logging before debugging routing\n",
+  "examples": [
+    {
+      "input": "Route app.local to a container",
+      "output": "Add traefik.http.routers.app.rule=Host(`app.local`) labels and verify with curl -H 'Host: app.local'."
+    },
+    {
+      "input": "Which router matches my request?",
+      "output": "curl -s localhost:8080/api/http/routers | jq to list rules, or check the dashboard at :8080/dashboard/."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "traefik.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-traefik"
+    },
+    "generic": {
+      "system_prompt": "You work Traefik hands-on. You do it through traefik-routing: Run Traefik and configure routers/services/middlewares. The commands are real, e.g. `docker run -d -p 80:80 -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "traefik",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "traefik-routing",
+        "name": "rule",
+        "type": "string",
+        "description": "Host/Path matcher, e.g. Host(`app.local`)"
+      },
+      {
+        "capability": "traefik-routing",
+        "name": "provider",
+        "type": "string",
+        "description": "docker, file, or kubernetescrd"
+      },
+      {
+        "capability": "traefik-routing",
+        "name": "entrypoint",
+        "type": "string",
+        "description": "web or websecure"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/traefik-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/traefik-skill.yaml",
+    "checksum": "ae5d3fc4794e5fbb7fa08316dced7ec7949ae1466fe5a5b3ac239ce40ab76a24"
+  }
+}

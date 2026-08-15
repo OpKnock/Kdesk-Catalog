@@ -1,0 +1,282 @@
+{
+  "report": "full-repository-audit",
+  "version": "1.0.0",
+  "generated": "2026-08-13T21:05:00Z",
+  "tool": "manual forensic audit (PowerShell + source inspection)",
+  "repository": {
+    "root": "C:\\Users\\wagde\\Kdesk-Catalog",
+    "git": {
+      "branch": "main",
+      "commits": 0,
+      "tracked_files": 0,
+      "all_files_untracked": true
+    }
+  },
+  "directory_counts_excluding_git": {
+    ".github": 0,
+    ".pytest_cache": 5,
+    "agents": 3532,
+    "archive": 38,
+    "platform-agents": 130955,
+    "reports": 3,
+    "schemas": 1,
+    "scripts": 42,
+    "skills": 2288,
+    "tests": 14,
+    "universal-agents": 5818,
+    "workflows": 1766,
+    "total": 144426
+  },
+  "extension_counts_excluding_git": {
+    ".md": 119318,
+    ".json": 10495,
+    ".yaml": 8775,
+    ".mdc": 5818,
+    ".py": 40,
+    ".pyc": 16,
+    ".gitignore": 2,
+    "(no extension)": 2,
+    ".TAG": 1
+  },
+  "source_of_truth": {
+    "universal-agents_yaml": 2909,
+    "agents_yaml": 1766,
+    "skills_yaml": 1143,
+    "agents_json": 1766,
+    "skills_json": 1143,
+    "workflows_json": 1766,
+    "universal_agents_json": 2909,
+    "layout": "universal-agents/<family>/agent|skill/<name>.yaml (1,109 nested) + <family>/*.yaml flat (1,800; skills as *-skill.yaml)",
+    "nested_agents": 831,
+    "nested_skills": 278,
+    "flat_yaml": 1800,
+    "flat_agents_estimated": 935,
+    "flat_skills_estimated": 865
+  },
+  "platforms": {
+    "count": 45,
+    "platform_dirs": [
+      "codegpt",
+      "tabnine",
+      "supermaven",
+      "firebender",
+      "cody",
+      "void",
+      "google_jules",
+      "warp",
+      "mux",
+      "opencode",
+      "neovate",
+      "kiro",
+      "mcpjam",
+      "junie",
+      "kilo_code",
+      "openhands",
+      "windsurf",
+      "trae",
+      "zencoder",
+      "zed",
+      "qoder",
+      "pi",
+      "roo_code",
+      "qwen_code",
+      "grok_build",
+      "codex_cli",
+      "codebuddy",
+      "continue",
+      "commandcode",
+      "cline",
+      "amp",
+      "amazon_q",
+      "augment",
+      "antigravity",
+      "crush",
+      "firebase_studio",
+      "goose",
+      "aider",
+      "gemini_cli",
+      "devin",
+      "factory_droid",
+      "cursor",
+      "github_copilot",
+      "claude_code",
+      "generic"
+    ],
+    "family_breakdown": {
+      "core_legacy": [
+        "claude_code",
+        "cursor",
+        "github_copilot",
+        "windsurf",
+        "opencode",
+        "generic"
+      ],
+      "skill_md_new": 23,
+      "rules_md_mdc_new": 7,
+      "special_new": [
+        "goose",
+        "aider",
+        "openhands"
+      ],
+      "single_file_new": [
+        "google_jules",
+        "warp",
+        "codegpt",
+        "cody",
+        "firebender"
+      ],
+      "deprecated_fragments_only": [
+        "void"
+      ]
+    },
+    "files_per_platform": "2,909-2,911",
+    "total_platform_files": 130955,
+    "note": "README claims 158,313 - STALE; measured 130,955"
+  },
+  "pipeline": {
+    "converter": "scripts/universal-converter.py (860 lines, 45 platforms)",
+    "json_generator": "scripts/yaml-to-json.py (agents/, skills/, workflows/)",
+    "wiring": "scripts/wire-skills.py -> skills/wiring.json",
+    "skill_tools_extraction": "scripts/extract-skill-tools.py",
+    "parameters_extraction": "scripts/extract-parameters.py",
+    "schema_check": "scripts/schema-check.py -> schemas/universal-agent.schema.json",
+    "validation": "scripts/validate-conversion.py (12 checks)",
+    "curation": "catalog-rename.py (L1), catalog-collapse.py (L3), de-fingerprint.py, merge-candidates-v2.py, catalog-hygiene.py",
+    "assemblers": "instructions-assembler.py, handcraft-assembler.py, assemble-single-file-platforms.py",
+    "report": "CONVERSION-REPORT.md 2026-08-11: 0 conversion errors, 0 schema violations, 4,234 converter warnings"
+  },
+  "wiring": {
+    "wired_agents": 631,
+    "wired_skills": 465,
+    "total_links": 4534,
+    "evidence_links": 4528,
+    "manual_links": 6,
+    "skills_with_tool_evidence": 1081,
+    "skills_without_commands": 62,
+    "unwired_agents": 1161,
+    "overrides_file": "skills/wiring-overrides.yaml",
+    "note": "README claims 608 agents / 4,237 links / 53 conceptual - STALE; CONVERSION-REPORT.md is authoritative"
+  },
+  "tests": "115 passed, 3 skipped",
+  "stale_documentation": [
+    "none (all stale numbers refreshed 2026-08-13)"
+  ],
+  "portability_issues": {
+    "hardcoded_windows_paths": 13,
+    "files": [
+      {
+        "script": "deep-audit.py",
+        "line": 24,
+        "var": "ROOT",
+        "value": "C:\\Users\\wagde\\Kdesk-Catalog"
+      },
+      {
+        "script": "differentiate-ml-variants.py",
+        "line": 14
+      },
+      {
+        "script": "fix-multidoc-skills.py",
+        "line": 12
+      },
+      {
+        "script": "fix-copilot-prompt-files.py",
+        "line": 4
+      },
+      {
+        "script": "fix-name-collisions.py",
+        "line": 5
+      },
+      {
+        "script": "fix-skill-commands.py",
+        "line": 23
+      },
+      {
+        "script": "handcraft-assembler.py",
+        "line": 13
+      },
+      {
+        "script": "handcraft-assembler.py",
+        "line": 14,
+        "var": "CONTENT_DIR (temp)"
+      },
+      {
+        "script": "instructions-assembler.py",
+        "line": 13
+      },
+      {
+        "script": "instructions-assembler.py",
+        "line": 14
+      },
+      {
+        "script": "verify-all.py",
+        "line": 17,
+        "var": "AGENTS_DIR"
+      },
+      {
+        "script": "verify-subagents.py",
+        "line": 20,
+        "var": "ROOT"
+      },
+      {
+        "script": "verify-install.py",
+        "line": 9,
+        "var": "CLAUDE",
+        "value": "C:\\Users\\wagde\\.claude"
+      }
+    ],
+    "other": "verify-install.py line 19 contains dead placeholder logic (`if False else False`)"
+  },
+  "ci_status": {
+    "has_ci": false,
+    "github_workflows": 0,
+    ".github_contents": [
+      "ISSUE_TEMPLATE only"
+    ],
+    "action_required": "create .github/workflows/ci.yml"
+  },
+  "gitignore": {
+    "ignored_generated": [
+      "agents/",
+      "skills/*",
+      "workflows/",
+      "platform-agents/",
+      "universal-agents/manifests/"
+    ],
+    "kept_wiring": [
+      "skills/wiring-overrides.yaml"
+    ],
+    "python": [
+      "__pycache__/",
+      "*.pyc",
+      ".venv/",
+      "venv/"
+    ],
+    "os_editor": [
+      ".DS_Store",
+      "Thumbs.db",
+      ".idea/",
+      ".vscode/"
+    ]
+  },
+  "archive": {
+    "count": 38,
+    "layout": "archive/universal-agents/{ml,database}/... (database/agent, ml/{agent,deployment,embedding,inference,rag,vector-db})",
+    "note": "git-tracked and recoverable (catalog-collapse.py + curation)"
+  },
+  "known_limits_from_conversion_report": [
+    "No agent declares skill references in source YAML (wiring is evidence-derived, provenance-marked)",
+    "1,267 items have no capability parameters (inputs = {})",
+    "1,866 items have no prerequisites/dependencies",
+    "No outputs defined anywhere in source (outputs = {})",
+    "62 command-less skills stay unwired",
+    "Content ~95% template-generated; curation evidence-gated, not human-perfect"
+  ],
+  "next_steps": [
+    "fix stale docs (README/AGENTS.md/schema description)",
+    "fix hard-coded paths in 11 scripts",
+    "create docs/ARCHITECTURE.md + docs/platform-matrix.md",
+    "create .github/workflows/ci.yml",
+    "implement kdesk package (domain models, registry, capability model, adapters, graph, workflow engine, installer, doctor, security, provenance, license, quality, duplicate detection)",
+    "generate remaining required reports"
+  ]
+}

@@ -1,0 +1,201 @@
+name: logging-structured
+display_name: Logging Structured
+category: api
+subcategory: general
+description: 'Work with structured (JSON) logs: validate lines, filter by level/service with jq, and aggregate
+  counts for dashboards.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- awk
+- grep
+- python3
+- tail
+capabilities:
+- name: jq-filter
+  description: Filter and project structured log fields with jq.
+  commands:
+  - jq -r 'select(.level=="error") | .ts + " " + .msg' app.log
+  - jq '. | {service, level, duration_ms}' app.log | head -20
+  - jq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' app.log
+  - 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' app.log'
+  examples:
+  - jq -r 'select(.level=="error") | .ts + " " + .msg' app.log
+  - jq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' app.log
+  - 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' app.log'
+  parameters:
+  - name: file
+    type: string
+    description: JSON log file.
+  - name: filter
+    type: string
+    description: jq filter expression.
+- name: validate-produce
+  description: Validate log lines parse and produce well-formed JSON logs.
+  commands:
+  - grep '"level":"error"' app.log | jq -r '.msg'
+  - python3 -m json.tool <(tail -1 app.log)
+  - tail -f app.log | jq -r '[.ts, .level, .msg] | @tsv'
+  - 'awk ''!/^{/ {print "MALFORMED: " $0}'' app.log | head'
+  examples:
+  - grep '"level":"error"' app.log | jq -r '.msg'
+  - python3 -m json.tool <(tail -1 app.log)
+  - tail -f app.log | jq -r '[.ts, .level, .msg] | @tsv'
+  parameters:
+  - name: pattern
+    type: string
+    description: Regex to pre-filter lines.
+knowledge:
+- title: jq manual
+  type: documentation
+  source: https://jqlang.github.io/jq/manual/
+  description: jq language reference.
+- title: Structured Logging Best Practices
+  type: documentation
+  source: https://pkg.go.dev/log/slog#hdr-Levels
+  description: Structured log levels and field conventions.
+instructions: '# Structured Logging
+
+
+  Analyze and produce JSON-formatted logs with jq and Python.
+
+
+  ## What this skill does
+
+
+  - Filters structured logs by level, service, and latency fields.
+
+  - Projects only the fields you need for analysis.
+
+  - Detects malformed (non-JSON) log lines.
+
+
+  ## When to use
+
+
+  - Debugging slow requests from latency fields.
+
+  - Building dashboards from log aggregates.
+
+  - Enforcing structured logging in app output.
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Error lines with timestamp + message
+
+  jq -r ''select(.level=="error") | .ts + " " + .msg'' app.log
+
+
+  # Project key fields
+
+  jq ''. | {service, level, duration_ms}'' app.log | head -20
+
+
+  # Slow requests as TSV
+
+  jq -r ''select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv'' app.log
+
+
+  # Count by service
+
+  jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' app.log
+
+
+  # Error messages via grep + jq
+
+  grep ''"level":"error"'' app.log | jq -r ''.msg''
+
+
+  # Validate the last line parses
+
+  python3 -m json.tool <(tail -1 app.log)
+
+
+  # Live streaming as TSV
+
+  tail -f app.log | jq -r ''[.ts, .level, .msg] | @tsv''
+
+
+  # Find malformed lines
+
+  awk ''!/^{/ {print "MALFORMED: " $0}'' app.log | head
+
+  ```
+
+
+  ## Log line example
+
+
+  ```json
+
+  {"ts":"2026-08-10T09:12:33Z","level":"error","service":"checkout","msg":"payment declined","duration_ms":450,"code":"CARD_DECLINED"}
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  echo ''{"level":"info","msg":"boot"}'' | jq -e ''.level=="info"'' && echo valid
+
+  ```
+
+
+  ## Best practices
+
+
+  - Emit one JSON object per line; multiline JSON breaks pipelines.
+
+  - Always include ts, level, msg, and a correlation id field.
+
+  - Keep the schema stable; add fields, never rename existing ones.
+
+  '
+examples:
+- input: List all errors with timestamps
+  output: jq -r 'select(.level=="error") | .ts + " " + .msg' app.log
+- input: Which service logs the most?
+  output: 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' app.log'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: logging-structured.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-logging-structured
+  generic:
+    system_prompt: 'You work Logging Structured hands-on. You do it through jq-filter: Filter and project
+      structured log fields with jq. The commands are real, e.g. `jq -r select(.level==error) | .ts +
+      + .msg app.log`. You answer with exact commands, not abstractions, and flag anything you have not
+      verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,173 @@
+name: api-error-handling-engineer
+version: 2.0.0
+type: skill
+category: backend
+description: 'Designs and implements error handling: RFC 9457 formats, error catalogs, middleware, and
+  OpenAPI documentation for REST and GraphQL.'
+keywords:
+- api-error-handling-engineer
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-error-handling-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-error-handling-engineer
+  generic:
+    system_prompt: 'You are the api-error-handling-engineer specialist. You do it through error-format-impl:
+      Implement RFC 9457 problem details in REST services. The commands are real, e.g. `npm install http-errors`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: error-format-impl
+  description: Implement RFC 9457 problem details in REST services
+  commands:
+  - npm install http-errors
+  - node -e "const h=require('http-errors');const e=h(400,'Bad Request');e.code='VALIDATION_1001';console.log(e.status,e.code)"
+  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{}'' |
+    python -m json.tool'
+  - node -e "const p={type:'https://api.example/errors/validation',title:'Validation failed',status:422,code:'VALIDATION_1001',errors:[{field:'email',reason:'required'}]};console.log(JSON.stringify(p,null,2))"
+  - curl -s http://localhost:3000/api/missing -w '\n%{http_code}'
+  examples:
+  - node -e "const p={type:'https://api.example/errors/validation',title:'Validation failed',status:422,code:'VALIDATION_1001',errors:[{field:'email',reason:'required'}]};console.log(JSON.stringify(p,null,2))"
+  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{}'' |
+    python -m json.tool'
+  - curl -s http://localhost:3000/api/missing -w '\n%{http_code}'
+  parameters:
+  - name: status
+    type: string
+    description: HTTP status
+  - name: code
+    type: string
+    description: Error code
+- name: graphql-errors
+  description: 'Design GraphQL error policies: extensions, codes, and partial results'
+  commands:
+  - node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Not authorized',{extensions:{code:'UNAUTHENTICATED'}});console.log(e.extensions)"
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    me { id } }"}'''
+  - node -e "console.log('null fields + errors array = partial success')"
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    broken }"}'' | python -m json.tool'
+  - node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Too complex',{extensions:{code:'COMPLEXITY'}});console.log(e.message)"
+  examples:
+  - node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Not authorized',{extensions:{code:'UNAUTHENTICATED'}});console.log(e.extensions)"
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    broken }"}'' | python -m json.tool'
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    me { id } }"}'''
+  parameters:
+  - name: code
+    type: string
+    description: GraphQL error code
+  - name: message
+    type: string
+    description: Error message
+prerequisites:
+- node.js
+- python
+- openapi
+tools:
+- node.js
+- python
+- openapi
+- postman
+- swagger-ui
+examples:
+- input: Design a consistent error format for REST and GraphQL
+  output: Defines problem details for REST and extensions codes for GraphQL sharing one code catalog
+- input: Add error documentation to OpenAPI
+  output: Documents error schemas with examples for each code in the spec
+instructions: '# API Error Handling Engineer
+
+
+  Designs and implements error handling across REST and GraphQL.
+
+
+  ## When to Use
+
+  - New API needs an error contract
+
+  - Mixing REST and GraphQL errors
+
+  - Standardizing validation failures
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Problem details
+
+  node -e "const p={type:''https://api.example/errors/validation'',title:''Validation failed'',status:422,code:''VALIDATION_1001'',errors:[{field:''email'',reason:''required''}]};console.log(JSON.stringify(p,null,2))"
+
+
+  # Probe REST
+
+  curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{}'' | python
+  -m json.tool
+
+
+  # GraphQL errors
+
+  node -e "const {GraphQLError}=require(''graphql'');const e=new GraphQLError(''Not authorized'',{extensions:{code:''UNAUTHENTICATED''}});console.log(e.extensions)"
+
+  curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+  broken }"}'' | python -m json.tool
+
+  ```
+
+
+  ## REST vs GraphQL
+
+  - REST: status + problem details
+
+  - GraphQL: always 200, errors array with extensions.code
+
+  - Keep the same codes across both
+
+
+  ## Testing
+
+  Test both valid and invalid inputs and assert shapes.
+
+
+  ## Best Practices
+
+  - Document every code in the catalog
+
+  - Never leak internal error details'
+display_name: api-error-handling-engineer
+knowledge:
+- title: RFC 9457
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc9457
+  description: Problem details standard
+- title: GraphQL Error Spec
+  type: documentation
+  source: https://spec.graphql.org/draft/#sec-Errors
+  description: Error response format

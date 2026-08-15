@@ -1,0 +1,173 @@
+name: api-middleware-fastify-plugins
+version: 2.0.0
+type: skill
+category: backend
+description: 'Builds Fastify APIs with the official plugin ecosystem: @fastify/cors, @fastify/rate-limit,
+  @fastify/jwt, @fastify/helmet, and @fastify/sensible for unified error responses.'
+keywords:
+- api-middleware
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-middleware-fastify-plugins.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-middleware-fastify-plugins
+  generic:
+    system_prompt: 'You take the Api Middleware Fastify Plugins seat. You do it through fastify-plugins:
+      Register and configure Fastify plugin middleware. The commands are real, e.g. `npm install fastify
+      @fastify/cors @fastify/rate-limit @fastify/jwt @fastify/helmet...`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: fastify-plugins
+  description: Register and configure Fastify plugin middleware
+  commands:
+  - npm install fastify @fastify/cors @fastify/rate-limit @fastify/jwt @fastify/helmet @fastify/sensible
+  - npm init fastify
+  - node server.js
+  - 'curl -s -H ''Origin: https://app.example.com'' -D- http://localhost:3000/api | grep -i ''access-control'''
+  - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/api
+  examples:
+  - 'await app.register(require(''@fastify/cors''), { origin: [''https://app.example.com''] })'
+  - 'await app.register(require(''@fastify/rate-limit''), { max: 60, timeWindow: ''1 minute'' })'
+  - 'await app.register(require(''@fastify/jwt''), { secret: process.env.JWT_SECRET })'
+  parameters:
+  - name: origin
+    type: array
+    description: Allowed CORS origins for @fastify/cors
+  - name: timeWindow
+    type: string
+    description: Rate limit window like '1 minute' or '1 hour'
+  - name: secret
+    type: string
+    description: JWT signing secret for @fastify/jwt
+- name: plugin-encapsulation
+  description: Use Fastify plugin encapsulation to scope middleware to route subsets
+  commands:
+  - fastify start -p 3000 app.js
+  - 'node -e "const f=require(''fastify'')(); console.log(f.register ? ''fastify ready'' : ''no'')"'
+  - curl -s http://localhost:3000/docs -o /dev/null -w '%{http_code}\n'
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- express
+- fastify
+tools:
+- node.js
+- python
+- express
+- fastify
+- koa
+examples:
+- input: Protect /admin routes with JWT
+  output: Registers @fastify/jwt globally and uses onRequest hooks on the admin route subset
+- input: Add CORS to a Fastify API
+  output: Registers @fastify/cors with an explicit origin allowlist and verifies with a curl preflight
+instructions: '# API Middleware v3 - Fastify Plugins
+
+
+  Middleware via the official Fastify plugin ecosystem.
+
+
+  ## What This Skill Does
+
+  - Registers CORS, rate limiting, JWT auth, helmet, and error plugins
+
+  - Uses Fastify encapsulation to scope plugins to route prefixes
+
+  - Provides uniform error envelopes with @fastify/sensible
+
+
+  ## When to Use
+
+  - Starting a new Fastify service that needs cross-cutting concerns
+
+  - Migrating Express middleware to Fastify plugins
+
+  - Adding scoped auth to admin route subsets
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npm install fastify @fastify/cors @fastify/rate-limit @fastify/jwt @fastify/helmet @fastify/sensible
+
+  node server.js
+
+  curl -s -H ''Origin: https://app.example.com'' -D- http://localhost:3000/api | grep -i ''access-control''
+
+  ```
+
+
+  ## Plugin Registration
+
+
+  ```js
+
+  const app = require(''fastify'')({ logger: true });
+
+  await app.register(require(''@fastify/helmet''));
+
+  await app.register(require(''@fastify/cors''), { origin: [''https://app.example.com''] });
+
+  await app.register(require(''@fastify/rate-limit''), { max: 60, timeWindow: ''1 minute'' });
+
+  await app.register(require(''@fastify/jwt''), { secret: process.env.JWT_SECRET });
+
+  ```
+
+
+  ## Testing
+
+  - Check CORS preflight returns Access-Control-Allow-Origin for allowed origins
+
+  - Hammer an endpoint to confirm 429 after the limit
+
+  - Verify unauthorized requests return 401 without a valid JWT
+
+
+  ## Best Practices
+
+  - Register auth plugins before routes that need protection
+
+  - Scope heavy plugins (rate limit) to prefixes with encapsulation
+
+  - Use sensible''s httpErrors for consistent error shapes'
+display_name: Api Middleware Fastify Plugins
+knowledge:
+- title: Fastify Plugins Guide
+  type: documentation
+  source: https://fastify.dev/docs/latest/Guides/Plugins-Guide/
+  description: Encapsulation, context, and plugin registration in Fastify
+- title: '@fastify/rate-limit'
+  type: documentation
+  source: https://github.com/fastify/fastify-rate-limit
+  description: Rate limiting plugin supporting in-memory and Redis stores

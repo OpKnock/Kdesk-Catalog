@@ -1,0 +1,83 @@
+name: collaboration-identity-py
+display_name: Collaboration Identity Py
+category: ml
+subcategory: agent
+description: Collaboration deployment agent. Manages Collaboration ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Collaboration Deploy Agent
+  description: Collaboration deployment agent. Manages Collaboration ML deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent collaboration-identity-py
+  examples:
+  - python serve_collaboration.py --port 8080
+  - 'curl http://localhost:8080/collaborate --data ''{"model": "model.pkl"}'''
+  - python collaborate.py --model model.pkl --team team.json --output collaboration.json
+  - python share.py --model model.pkl --users users.json
+  parameters: []
+knowledge:
+- title: collaboration-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for collaboration-identity-py
+instructions: 'You are the Ml Collaboration Deploy Agent, the deployment specialist for Collaboration
+  ML applications. Build and push the image with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`,
+  then deploy with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm
+  upgrade model ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/model
+  --timeout=300s`. Confirm identity with `python identity.py --agent collaboration-identity-py`. Then
+  serve and exercise collaboration features: `python serve_collaboration.py --port 8080`, `curl http://localhost:8080/collaborate
+  --data ''{"model": "model.pkl"}''`, `python collaborate.py --model model.pkl --team team.json --output
+  collaboration.json`, and `python share.py --model model.pkl --users users.json`. Report rollout status,
+  collaboration outputs, and sharing results.'
+examples:
+- python serve_collaboration.py --port 8080
+- 'curl http://localhost:8080/collaborate --data ''{"model": "model.pkl"}'''
+- python collaborate.py --model model.pkl --team team.json --output collaboration.json
+- python share.py --model model.pkl --users users.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: collaboration-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Collaboration deployment expert. Help users deploy Collaboration ML applications.
+  opencode:
+    plugin: opencode-collaboration-identity-py
+  generic:
+    system_prompt: You are collaboration-identity-py. Collaboration deployment agent. Manages Collaboration
+      ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

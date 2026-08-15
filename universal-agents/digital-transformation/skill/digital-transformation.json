@@ -1,0 +1,215 @@
+{
+  "name": "digital-transformation",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "strategy",
+  "description": "Drives digital transformation with real tooling: dbt analytics pipelines, workflow orchestration with Airflow, and data platform migrations.",
+  "keywords": [
+    "digital-transformation",
+    "automation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "digital-transformation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-digital-transformation"
+    },
+    "generic": {
+      "system_prompt": "You work digital-transformation hands-on. You do it through analytics-engineering: Build and test analytics pipelines with dbt. The commands are real, e.g. `dbt init analytics_project`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "analytics-engineering",
+      "description": "Build and test analytics pipelines with dbt.",
+      "commands": [
+        "dbt init analytics_project",
+        "dbt run --select staging",
+        "dbt test --select tag:core",
+        "dbt build --select +marts",
+        "dbt docs generate",
+        "dbt compile --select models/marts"
+      ],
+      "examples": [
+        "dbt run --select staging",
+        "dbt test --select tag:core",
+        "dbt docs generate"
+      ],
+      "parameters": [
+        {
+          "name": "select",
+          "type": "string",
+          "description": "Node selection, e.g. staging, +marts"
+        },
+        {
+          "name": "project",
+          "type": "string",
+          "description": "Project name for dbt init"
+        }
+      ]
+    },
+    {
+      "name": "workflow-orchestration",
+      "description": "Schedule and operate data workflows with Airflow and Dagster.",
+      "commands": [
+        "airflow db migrate",
+        "airflow users create --username admin --firstname A --lastname U --role Admin --email a@b.c",
+        "airflow dags list",
+        "airflow dags trigger etl_pipeline",
+        "airflow tasks test etl_pipeline extract 2026-08-10",
+        "dagster job list"
+      ],
+      "examples": [
+        "airflow dags list",
+        "airflow dags trigger etl_pipeline",
+        "airflow tasks test etl_pipeline extract 2026-08-10"
+      ],
+      "parameters": [
+        {
+          "name": "dag-id",
+          "type": "string",
+          "description": "Airflow DAG id"
+        },
+        {
+          "name": "task-id",
+          "type": "string",
+          "description": "Task id to test"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "aws",
+    "terraform",
+    "kubernetes",
+    "github"
+  ],
+  "tools": [
+    "aws",
+    "terraform",
+    "kubernetes",
+    "github",
+    "jira"
+  ],
+  "examples": [
+    {
+      "input": "Replace a spreadsheet reporting process",
+      "output": "Agent designs a dbt pipeline with tests, an Airflow schedule, and a dashboard view"
+    },
+    {
+      "input": "Measure adoption of the new platform",
+      "output": "Agent defines metrics models and a dashboard query plan, then generates docs"
+    }
+  ],
+  "instructions": "# Digital Transformation Engineering\n\nModernize operations with data platforms, workflow automation, and measurable adoption.\n\n## What This Skill Does\n\n- Builds analytics engineering stacks with dbt\n- Orchestrates data workflows with Airflow/Dagster\n- Models adoption metrics and KPIs\n- Migrates legacy pipelines to modern warehouses\n- Automates reporting with dashboards\n\n## When to Use\n\n- Moving an org from spreadsheets to a data platform\n- Standardizing ETL/ELT with versioned models\n- Building executive dashboards on trusted data\n\n## Real Commands\n\n```bash\n# dbt\ndbt init analytics_project\ndbt run --select staging\ndbt test --select tag:core\ndbt build --select +marts\ndbt docs generate && dbt docs serve\ndbt compile --select models/marts\n\n# Airflow\nairflow db migrate\nairflow users create --username admin --firstname A --lastname U --role Admin --email a@b.c\nairflow dags list\nairflow dags trigger etl_pipeline\nairflow tasks test etl_pipeline extract 2026-08-10\nairflow scheduler\n\n# Dagster\ndagster job list\ndagster materialize -m myrepo\ndagit\n```\n\n## Transformation Roadmap\n\n1. Inventory current processes and data sources\n2. Stand up a warehouse + dbt models (staging -> marts)\n3. Orchestrate dependencies with Airflow DAGs\n4. Define KPIs and dashboards\n5. Train teams; measure adoption monthly\n\n## Best Practices\n\n- Model for trust: test everything with dbt tests\n- Orchestrate with idempotent tasks and retries\n- Version data definitions like code\n- Start with one high-value process; expand after measurable wins\n- Track adoption metrics to justify the platform",
+  "display_name": "digital-transformation",
+  "knowledge": [
+    {
+      "title": "dbt Documentation",
+      "type": "documentation",
+      "source": "https://docs.getdbt.com/",
+      "description": "dbt models, tests, docs, and CLI"
+    },
+    {
+      "title": "Apache Airflow Docs",
+      "type": "documentation",
+      "source": "https://airflow.apache.org/docs/",
+      "description": "Airflow core, operators, and CLI"
+    },
+    {
+      "title": "AWS Digital Transformation",
+      "type": "documentation",
+      "source": "https://aws.amazon.com/executive-insights/content/digital-transformation/",
+      "description": "Digital transformation guidance and patterns"
+    }
+  ],
+  "id": "digital-transformation",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "analytics-engineering",
+        "name": "select",
+        "type": "string",
+        "description": "Node selection, e.g. staging, +marts"
+      },
+      {
+        "capability": "analytics-engineering",
+        "name": "project",
+        "type": "string",
+        "description": "Project name for dbt init"
+      },
+      {
+        "capability": "workflow-orchestration",
+        "name": "dag-id",
+        "type": "string",
+        "description": "Airflow DAG id"
+      },
+      {
+        "capability": "workflow-orchestration",
+        "name": "task-id",
+        "type": "string",
+        "description": "Task id to test"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws",
+    "terraform",
+    "kubernetes",
+    "github"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "digital-transformation/skill/digital-transformation.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/digital-transformation/skill/digital-transformation.yaml",
+    "checksum": "914bad42009da351873cbd82eda0e44ac2f86a4b8f5b54b8820cecba2cad9b49"
+  }
+}

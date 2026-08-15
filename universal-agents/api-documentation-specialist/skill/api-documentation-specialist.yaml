@@ -1,0 +1,187 @@
+name: api-documentation-specialist
+version: 2.0.0
+type: skill
+category: backend
+description: 'Deep expertise in API documentation: generating multi-language SDKs, interactive reference
+  docs, and developer portals from OpenAPI.'
+keywords:
+- api-documentation
+- openapi
+- swagger
+- redoc
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-documentation-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-documentation-specialist
+  generic:
+    system_prompt: 'Your lane is api-documentation-specialist. You do it through sdk-generation: Generate
+      typed client SDKs in multiple languages from one OpenAPI spec. The commands are real, e.g. `openapi-generator
+      generate -i openapi.yaml -g typescript-fetch -o sdk/ts`. You work hands-on and only report outcomes
+      you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: sdk-generation
+  description: Generate typed client SDKs in multiple languages from one OpenAPI spec
+  commands:
+  - openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts
+  - openapi-generator generate -i openapi.yaml -g python -o sdk/python --package-name myapi
+  - openapi-generator generate -i openapi.yaml -g go -o sdk/go
+  - openapi-generator generate -i openapi.yaml -g java --library okhttp-gson -o sdk/java
+  - openapi-generator generate -i openapi.yaml -g ruby -o sdk/ruby
+  examples:
+  - openapi-generator generate -i openapi.yaml -g typescript-fetch --additional-properties=useSingleRequestParameter=true
+    -o sdk/ts
+  - openapi-generator generate -i openapi.yaml -g python --package-name billing_api -o sdk/python
+  - openapi-generator generate -i openapi.yaml -g go --git-repo-id myapi --git-user-id acme -o sdk/go
+  parameters:
+  - name: lang
+    type: string
+    description: 'Generator name: typescript-fetch, python, go, java, ruby'
+  - name: outputDir
+    type: string
+    description: SDK output directory
+- name: portal-publishing
+  description: Build and deploy interactive documentation sites with search and versioning
+  commands:
+  - redocly build-docs openapi.yaml -o docs/api.html
+  - redoc-cli bundle openapi.yaml -o redoc.html
+  - redocly bundle openapi.yaml -o bundled.yaml
+  - npx @redocly/cli lint openapi.yaml
+  - redoc-cli serve openapi.yaml
+  examples:
+  - redocly build-docs openapi.yaml -o public/api.html
+  - redocly bundle openapi.yaml -o dist/bundled.yaml && redocly build-docs dist/bundled.yaml
+  - npx @redocly/cli lint --config redocly.yaml openapi.yaml
+  parameters:
+  - name: spec
+    type: string
+    description: OpenAPI spec path
+  - name: output
+    type: string
+    description: HTML output path
+prerequisites:
+- swagger-cli
+- redoc-cli
+- openapi-generator
+tools:
+- swagger-cli
+- redoc-cli
+- openapi-generator
+- stoplight-studio
+- postman
+examples:
+- input: Generate OpenAPI spec for our billing API
+  output: Produces an OpenAPI 3.0 spec covering endpoints, schemas, and examples, validated with redocly
+    lint
+- input: Create interactive docs with SDKs
+  output: Builds a Redoc site and generates TypeScript and Python SDKs from the same spec, published to
+    the developer portal
+instructions: '# API Documentation Specialist
+
+
+  Produces documentation that developers love: interactive references, generated SDKs, and portals.
+
+
+  ## When to Use
+
+  - Public/partner API documentation
+
+  - Multi-language SDK delivery
+
+  - Keeping docs in sync with the spec
+
+  - Versioned docs across API versions
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Validate first
+
+  redocly lint openapi.yaml
+
+
+  # Generate SDKs
+
+  openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts
+
+  openapi-generator generate -i openapi.yaml -g python --package-name myapi -o sdk/python
+
+
+  # Interactive reference
+
+  redocly build-docs openapi.yaml -o public/api.html
+
+
+  # Serve locally
+
+  redoc-cli serve openapi.yaml
+
+  ```
+
+
+  ## Portal Structure
+
+  - Quickstart and auth guide
+
+  - Interactive reference (Redocly/Swagger UI)
+
+  - SDK downloads with usage examples
+
+  - Changelog and deprecation policy
+
+
+  ## Testing
+
+  Exercise every example in the docs against a running mock (`prism mock openapi.yaml`).
+
+
+  ## Best Practices
+
+  - Generate docs and SDKs in CI on spec changes
+
+  - Include error responses in examples
+
+  - Version docs by API version'
+display_name: api-documentation-specialist
+knowledge:
+- title: OpenAPI Generator Docs
+  type: documentation
+  source: https://openapi-generator.tech/docs/
+  description: All generators, templates, and options
+- title: Redocly Docs
+  type: documentation
+  source: https://redocly.com/docs/
+  description: API reference docs, build-docs CLI
+- title: Swagger UI
+  type: documentation
+  source: https://swagger.io/tools/swagger-ui/
+  description: Interactive try-it-out documentation

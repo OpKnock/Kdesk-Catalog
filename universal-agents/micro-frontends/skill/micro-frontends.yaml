@@ -1,0 +1,140 @@
+name: micro-frontends
+version: 2.0.0
+type: skill
+category: frontend
+description: 'Architects micro-frontend platforms with single-spa, Module Federation, and Nx workspaces:
+  composition, sharing, and independent deploys.'
+keywords:
+- micro-frontends
+- module-federation
+- single-spa
+- independent-deploy
+- composition
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: micro-frontends.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-micro-frontends
+  generic:
+    system_prompt: 'You work micro-frontends hands-on. You do it through single-spa: Build and register
+      micro-frontend applications. The commands are real, e.g. `npx create-single-spa --moduleType root-config`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: single-spa
+  description: Build and register micro-frontend applications.
+  commands:
+  - npx create-single-spa --moduleType root-config
+  - npx create-single-spa --moduleType app-parcel
+  - npm run build -- --watch
+  - npx serve -s dist -l 9000
+  - npm run importmap
+  examples:
+  - npx create-single-spa --moduleType app-parcel --framework react
+  - npx create-single-spa --moduleType root-config --dir root
+  - npm run build && npx serve -s dist -l 8080
+  parameters:
+  - name: moduleType
+    type: string
+    description: root-config, app-parcel, or utility-module
+  - name: framework
+    type: string
+    description: react, vue, angular, svelte for the parcel
+  - name: port
+    type: number
+    description: Serve port for the app
+- name: nx
+  description: Manage monorepo builds and dependencies with Nx.
+  commands:
+  - npx nx graph
+  - npx nx run shell:build --configuration=production
+  - npx nx affected:build --base=main
+  - npx nx run-many --target=test --all
+  - npx nx migrate latest
+  examples:
+  - npx nx affected:test --base=origin/main
+  - npx nx build shell --with-deps
+  - npx nx run-many --target=lint --parallel=3
+  parameters:
+  - name: target
+    type: string
+    description: build, test, lint target
+  - name: base
+    type: string
+    description: Git base for affected computation
+  - name: project
+    type: string
+    description: Project name like shell or orders
+prerequisites:
+- node.js
+- react
+- webpack
+- single-spa
+tools:
+- node.js
+- react
+- webpack
+- single-spa
+- vite
+examples:
+- input: Split a checkout UI into an independently deployed app.
+  output: Creates the checkout single-spa app, wires the remote into the shell via Module Federation,
+    and sets up an Nx build pipeline.
+- input: Update shared React without breaking other apps.
+  output: Bumps the shared singleton version, runs npx nx affected:test, and smoke-tests composed shell
+    routes.
+instructions: "# Micro-Frontends\n\nCompose independent frontend apps into one product.\n\n## When to\
+  \ Use\n\n- Multiple teams shipping one web product independently\n- Migrating a monolith UI in slices\n\
+  - Sharing a shell, auth, and navigation\n\n## single-spa composition\n\n```bash\nnpx create-single-spa\
+  \ --moduleType root-config\nnpx create-single-spa --moduleType app-parcel --framework react\n```\n\n\
+  Root config registers apps with lifecycle functions (bootstrap/mount/unmount).\n\n## Module Federation\
+  \ sharing\n\n```js\n// webpack config of shell\nnew ModuleFederationPlugin({\n  name: 'shell',\n  remotes:\
+  \ { orders: 'orders@http://localhost:9001/remoteEntry.js' },\n  shared: { react: { singleton: true }\
+  \ }\n});\n```\n\nSingletons prevent duplicate React instances - version them carefully.\n\n## Nx monorepo\
+  \ management\n\n```bash\nnpx nx graph\nnpx nx run-many --target=test --all\nnpx nx affected:build --base=main\n\
+  ```\n\nOnly rebuild what changed using `affected`.\n\n## Contracts between apps\n\n- Shared props: user,\
+  \ locale, navigation state.\n- Routing: each app owns its routes; the shell owns top-level segments.\n\
+  - Styling: design tokens via shared packages, not global CSS.\n- Events: pub/sub on window or a shared\
+  \ bus, versioned payloads.\n\n## Best practices\n\n- Version and document the integration contract.\n\
+  - Every app deploys independently; no release trains.\n- Shared UI in a versioned package, not duplicated\
+  \ code.\n- E2E the shell + key apps in a single smoke suite.\n\n## Testing\n\n```bash\nnpx nx affected:test\
+  \ --base=origin/main\n```\n\nRun integration smoke tests across the composed shell weekly."
+display_name: micro-frontends
+knowledge:
+- title: single-spa Docs
+  type: documentation
+  source: https://single-spa.js.org/docs/getting-started-overview
+  description: Root configs, applications, and parcels
+- title: Module Federation
+  type: documentation
+  source: https://webpack.js.org/concepts/module-federation/
+  description: Sharing modules across builds
+- title: Nx Docs
+  type: documentation
+  source: https://nx.dev/
+  description: Monorepo tooling for micro-frontends

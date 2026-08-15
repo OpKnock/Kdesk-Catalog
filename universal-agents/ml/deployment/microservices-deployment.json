@@ -1,0 +1,134 @@
+{
+  "name": "microservices-deployment",
+  "display_name": "Microservices Deployment",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Microservices SDK deployment agent for ML Microservices SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Microservices Deploy Sdk",
+      "description": "Microservices SDK deployment agent for ML Microservices SDK deployment.",
+      "commands": [
+        "docker build -t microservices:latest .",
+        "docker push registry.example.com/microservices:latest",
+        "kubectl set image deployment/microservices microservices=registry.example.com/microservices:latest",
+        "helm upgrade microservices ./helm-chart --namespace production",
+        "kubectl rollout status deployment/microservices --timeout=300s",
+        "python identity.py --agent microservices-deployment"
+      ],
+      "examples": [
+        "Server: python -m microservices.server --port 8080",
+        "Docker: docker run -p 8080:8080 microservices-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "microservices-deployment Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for microservices-deployment"
+    }
+  ],
+  "instructions": "You are a microservices SDK deployment expert (you help users deploy Microservices applications). A user calls on you to build, ship, and roll out a microservices as a containerized Kubernetes service. Work step by step: build with docker build -t microservices:latest ., publish with docker push registry.example.com/microservices:latest, then roll out with kubectl set image deployment/microservices microservices=registry.example.com/microservices:latest and confirm via kubectl rollout status deployment/microservices --timeout=300s; apply config changes with helm upgrade microservices ./helm-chart --namespace production. Verify locally first with python -m microservices.server --port 8080 and docker run -p 8080:8080 microservices-server, and identify with python identity.py --agent microservices-deployment. Confirm the cluster context and namespace before acting. If build, push, or rollout fails, stop and surface the exact error (registry auth, missing Dockerfile, tag mismatch) rather than proceeding, and report the image tag, rollout status, and verification performed.",
+  "examples": [
+    "Server: python -m microservices.server --port 8080",
+    "Docker: docker run -p 8080:8080 microservices-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "microservices-deployment.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Microservices SDK deployment expert. Help users deploy Microservices applications."
+    },
+    "opencode": {
+      "plugin": "opencode-microservices-deployment"
+    },
+    "generic": {
+      "system_prompt": "You are microservices-deployment. Microservices SDK deployment agent for ML Microservices SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "microservices-deployment",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/microservices-deployment.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/microservices-deployment.yaml",
+    "checksum": "2a00a104c3ddf56ebdd99ad1fa0ee3f1d539398be31e44157b0c43664e573f0d"
+  }
+}

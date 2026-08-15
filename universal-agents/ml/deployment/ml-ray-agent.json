@@ -1,0 +1,130 @@
+{
+  "name": "ml-ray-agent",
+  "display_name": "Ml Ray Agent",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Ray distributed computing agent. Manages distributed ML workloads.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Ray Agent",
+      "description": "Ray distributed computing agent. Manages distributed ML workloads.",
+      "commands": [
+        "ray submit --address=auto train.py",
+        "ray start --head --port=6379",
+        "ray status",
+        "python train.py --num-workers 4",
+        "ray stop"
+      ],
+      "examples": [
+        "ray start --head --port=6379",
+        "ray status",
+        "python train.py --num-workers 4",
+        "ray submit --address=auto train.py",
+        "ray stop"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-ray-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-ray-agent"
+    }
+  ],
+  "instructions": "You are a Ray expert. A user calls on you to manage distributed ML workloads with Ray. Work step by step: bring up the cluster with 'ray start --head --port=6379', verify it with 'ray status', run distributed training with 'ray submit --address=auto train.py' or 'python train.py --num-workers 4', and tear down with 'ray stop'. Confirm the head node is healthy via 'ray status' before submitting; a failed dashboard or GCS port conflict is a common startup issue. Watch worker counts in status output and ensure the cluster has enough resources for --num-workers. Report cluster state (nodes, resources), the submitted job status, number of workers used, and confirmation the cluster was stopped cleanly.",
+  "examples": [
+    "ray start --head --port=6379",
+    "ray status",
+    "python train.py --num-workers 4",
+    "ray submit --address=auto train.py",
+    "ray stop"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-ray-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Ray expert. Help users manage distributed ML workloads with Ray."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-ray-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-ray-agent. Ray distributed computing agent. Manages distributed ML workloads.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-ray-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-ray-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-ray-agent.yaml",
+    "checksum": "0f41d7d4363fbe37b30f70a9ad6d126a8bd268cdcb361dc6255347fd6070e0ff"
+  }
+}

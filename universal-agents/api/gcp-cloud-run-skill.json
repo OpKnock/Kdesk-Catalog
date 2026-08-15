@@ -1,0 +1,172 @@
+{
+  "name": "gcp-cloud-run",
+  "display_name": "Gcp Cloud Run",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Deploy and operate containers on Cloud Run: deploy revisions, configure scaling and env vars, manage traffic splits, and view logs.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "gcloud"
+  ],
+  "capabilities": [
+    {
+      "name": "cloud-run",
+      "description": "Deploy revisions, manage traffic, scale, and configure Cloud Run services.",
+      "commands": [
+        "gcloud run deploy orders --image=gcr.io/my-project/orders:v1.2.3 --region=us-central1 --allow-unauthenticated",
+        "gcloud run services describe orders --region=us-central1 --format='value(status.url)'",
+        "gcloud run services update-traffic orders --region=us-central1 --to-revisions=orders-00001=10,orders-00002=90",
+        "gcloud run services update orders --region=us-central1 --min-instances=1 --max-instances=20 --set-env-vars=LOG_LEVEL=info",
+        "gcloud run revisions list --service=orders --region=us-central1",
+        "gcloud run services logs read orders --region=us-central1 --limit=50"
+      ],
+      "examples": [
+        "gcloud run deploy orders --image=gcr.io/my-project/orders:v1.2.3 --region=us-central1 --allow-unauthenticated",
+        "gcloud run services update-traffic orders --region=us-central1 --to-revisions=orders-00001=10,orders-00002=90",
+        "gcloud run services describe orders --region=us-central1 --format='value(status.url)'"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Cloud Run service name"
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "description": "Container image reference"
+        },
+        {
+          "name": "revision-traffic",
+          "type": "string",
+          "description": "Traffic split spec like rev1=50,rev2=50"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Cloud Run docs",
+      "type": "documentation",
+      "source": "https://cloud.google.com/run/docs",
+      "description": "Deploying containers, traffic management, scaling, and secrets"
+    },
+    {
+      "title": "gcloud run reference",
+      "type": "documentation",
+      "source": "https://cloud.google.com/sdk/gcloud/reference/run",
+      "description": "deploy, services, revisions, and logs commands"
+    }
+  ],
+  "instructions": "# GCP Cloud Run\n\n## What this skill does\n\nCloud Run runs stateless containers on a serverless platform that scales to zero. Every deploy creates a revision; traffic can be split across revisions for canary releases.\n\n## When to use\n\n- Deploying containerized APIs without managing servers\n- Canary releases via traffic splitting\n- Autoscaling webhooks and batch jobs\n\n## Real commands\n\n```bash\n# Deploy a revision\n gcloud run deploy orders --image=gcr.io/my-project/orders:v1.2.3 --region=us-central1 --allow-unauthenticated\n\n# Get the URL\n gcloud run services describe orders --region=us-central1 --format='value(status.url)'\n\n# Canary: 10% to new revision\n gcloud run services update-traffic orders --region=us-central1 --to-revisions=orders-00001=10,orders-00002=90\n\n# Scaling and env\n gcloud run services update orders --region=us-central1 --min-instances=1 --max-instances=20 --set-env-vars=LOG_LEVEL=info\n\n# Logs\n gcloud run services logs read orders --region=us-central1 --limit=50\n```\n\n## Rollback\n\n```bash\n# Return all traffic to the previous revision\n gcloud run services update-traffic orders --region=us-central1 --to-latest\n```\n\n## Testing\n\n```bash\n# Warm the container and check headers\ncurl -sI \"$(gcloud run services describe orders --region=us-central1 --format='value(status.url)')/health\" | grep -i 'HTTP'\n```\n\n## Best practices\n\n- Use `--no-allow-unauthenticated` for internal services and add IAM.\n- Set `--max-instances` to cap cold-start and cost spikes.\n- Deploy immutable tags (v1.2.3) so revisions are identifiable.\n- Split traffic 10% and watch metrics before full rollout.\n- Use Secret Manager env references for credentials.\n",
+  "examples": [
+    {
+      "input": "Canary release v1.2.3 on Cloud Run",
+      "output": "Deploy the new image (creates a new revision), split 10% traffic with update-traffic, monitor, then move to 100%."
+    },
+    {
+      "input": "Roll back a bad deploy",
+      "output": "Use gcloud run services update-traffic orders --region=us-central1 --to-revisions=<previous-rev>=100 to pin back."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "gcp-cloud-run.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-gcp-cloud-run"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Gcp Cloud Run. You do it through cloud-run: Deploy revisions, manage traffic, scale, and configure Cloud Run services. The commands are real, e.g. `gcloud run deploy orders --image=gcr.io/my-project/orders:v1.2.3 --region=us-central1...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "gcp-cloud-run",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cloud-run",
+        "name": "service",
+        "type": "string",
+        "description": "Cloud Run service name"
+      },
+      {
+        "capability": "cloud-run",
+        "name": "image",
+        "type": "string",
+        "description": "Container image reference"
+      },
+      {
+        "capability": "cloud-run",
+        "name": "revision-traffic",
+        "type": "string",
+        "description": "Traffic split spec like rev1=50,rev2=50"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "gcloud"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/gcp-cloud-run-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/gcp-cloud-run-skill.yaml",
+    "checksum": "ebeda9251cec8cbd70bd17195457c7d3dde6ced05f4c7d5903088424c48c8dbc"
+  }
+}

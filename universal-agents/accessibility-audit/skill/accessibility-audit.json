@@ -1,0 +1,231 @@
+{
+  "name": "accessibility-audit",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "frontend",
+  "description": "Runs automated accessibility audits against web pages with pa11y, axe-core, and Lighthouse, producing WCAG 2.x violation reports and CI gates.",
+  "keywords": [
+    "accessibility",
+    "wcag",
+    "aria",
+    "audit"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "accessibility-audit.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-accessibility-audit"
+    },
+    "generic": {
+      "system_prompt": "You take the accessibility-audit seat. You do it through audit-page: Run an accessibility scan of a single URL and capture violations in machine-readable format. The commands are real, e.g. `npx pa11y https://example.com --reporter=json`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "audit-page",
+      "description": "Run an accessibility scan of a single URL and capture violations in machine-readable format.",
+      "commands": [
+        "npx pa11y https://example.com --reporter=json",
+        "npx lighthouse https://example.com --output=json --output-path=./lighthouse-report.json",
+        "npx axe https://example.com --exit",
+        "pa11y --config .pa11yci https://example.com",
+        "npx pa11y-ci --sitemap https://example.com/sitemap.xml"
+      ],
+      "examples": [
+        "npx pa11y --standard WCAG2AA --threshold 5 https://example.com/login",
+        "npx lighthouse https://example.com --only-categories=accessibility --output=html --output-path=report.html",
+        "pa11y --include-notices https://example.com"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Target page URL to audit"
+        },
+        {
+          "name": "standard",
+          "type": "string",
+          "description": "WCAG conformance level: WCAG2A, WCAG2AA, WCAG2AAA"
+        },
+        {
+          "name": "threshold",
+          "type": "number",
+          "description": "Maximum number of errors before the run fails"
+        }
+      ]
+    },
+    {
+      "name": "ci-integration",
+      "description": "Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI.",
+      "commands": [
+        "npm install --save-dev pa11y-ci",
+        "npx pa11y-ci",
+        "pa11y-ci --sitemap https://example.com/sitemap.xml --json > results.json",
+        "npx lhci autorun --config=./lighthouserc.json"
+      ],
+      "examples": [
+        "npx pa11y-ci --sitemap https://example.com/sitemap.xml",
+        "npx lhci healthcheck && npx lhci autorun",
+        "npm install --save-dev @lhci/cli"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Path to .pa11yci or lighthouserc config file"
+        },
+        {
+          "name": "sitemap",
+          "type": "string",
+          "description": "Sitemap URL to crawl for multi-page audits"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "axe-core",
+    "lighthouse",
+    "jest-axe"
+  ],
+  "tools": [
+    "node.js",
+    "axe-core",
+    "lighthouse",
+    "jest-axe",
+    "storybook"
+  ],
+  "examples": [
+    {
+      "input": "Audit our login page for WCAG AA issues",
+      "output": "Runs `npx pa11y --standard WCAG2AA --reporter=json https://example.com/login`, parses the JSON, groups violations by rule (color-contrast, aria-required-attr), and reports counts plus fixes."
+    },
+    {
+      "input": "Add accessibility checks to CI",
+      "output": "Installs pa11y-ci, creates a .pa11yci with the staging URL set, and adds a CI job that fails when the error threshold is exceeded."
+    }
+  ],
+  "instructions": "# Accessibility Audit\n\n## What this skill does\n\nRuns automated accessibility audits on web apps using pa11y, axe-core and Lighthouse. It produces WCAG conformance violation lists, severity counts, and Lighthouse accessibility scores that can be wired into CI so regressions fail the build.\n\n## When to use\n\n- Checking a page or site for WCAG 2.1/2.2 conformance\n- Accessibility regressions keep appearing in a SPA (contrast, alt text, ARIA)\n- Setting up automated accessibility gates in a CI pipeline\n\n## Real commands\n\n```bash\n# Single-page audit with JSON output\nnpx pa11y https://example.com --reporter=json\n\n# Lighthouse accessibility-only run\nnpx lighthouse https://example.com --only-categories=accessibility --output=json --output-path=./a11y.json\n\n# Fail if more than 5 errors\npa11y --standard WCAG2AA --threshold 5 https://example.com/login\n\n# axe-core with exit code 1 on violations\nnpx axe https://example.com --exit\n\n# Audit every URL in a sitemap\nnpx pa11y-ci --sitemap https://example.com/sitemap.xml\n```\n\n## .pa11yci config\n\n```json\n{\n  \"defaults\": {\n    \"standard\": \"WCAG2AA\",\n    \"timeout\": 30000,\n    \"chromeLaunchConfig\": { \"args\": [\"--no-sandbox\"] }\n  },\n  \"urls\": {\n    \"https://example.com/\": [\"a11y/landmarks-one-main\"]\n  }\n}\n```\n\n## Testing\n\n- Run `npx pa11y-ci` locally first; exit code is non-zero when violations exceed threshold\n- Archive `results.json` as a CI artifact\n\n## Best practices\n\n- Default to `WCAG2AA`, escalate to `WCAG2AAA` for public content\n- Combine pa11y (DOM) with axe-core (in-page rules) for broader coverage\n- Treat `threshold 0` as the long-term goal; escalate thresholds gradually\n- Run headless Chrome in CI to keep the footprint small",
+  "display_name": "accessibility-audit",
+  "knowledge": [
+    {
+      "title": "pa11y Documentation",
+      "type": "documentation",
+      "source": "https://pa11y.org/",
+      "description": "CLI options, config format, and reporters"
+    },
+    {
+      "title": "axe-core Docs",
+      "type": "documentation",
+      "source": "https://www.deque.com/axe/core-documentation/",
+      "description": "axe-core rules engine and rule catalog"
+    },
+    {
+      "title": "Lighthouse Accessibility Audits",
+      "type": "documentation",
+      "source": "https://developer.chrome.com/docs/lighthouse/accessibility/",
+      "description": "How Lighthouse scores accessibility"
+    },
+    {
+      "title": "WCAG 2.2 Guidelines",
+      "type": "documentation",
+      "source": "https://www.w3.org/TR/WCAG22/",
+      "description": "WCAG success criteria used by audit standards"
+    }
+  ],
+  "id": "accessibility-audit",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "audit-page",
+        "name": "url",
+        "type": "string",
+        "description": "Target page URL to audit"
+      },
+      {
+        "capability": "audit-page",
+        "name": "standard",
+        "type": "string",
+        "description": "WCAG conformance level: WCAG2A, WCAG2AA, WCAG2AAA"
+      },
+      {
+        "capability": "audit-page",
+        "name": "threshold",
+        "type": "number",
+        "description": "Maximum number of errors before the run fails"
+      },
+      {
+        "capability": "ci-integration",
+        "name": "config",
+        "type": "string",
+        "description": "Path to .pa11yci or lighthouserc config file"
+      },
+      {
+        "capability": "ci-integration",
+        "name": "sitemap",
+        "type": "string",
+        "description": "Sitemap URL to crawl for multi-page audits"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "axe-core",
+    "lighthouse",
+    "jest-axe"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "accessibility-audit/skill/accessibility-audit.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/accessibility-audit/skill/accessibility-audit.yaml",
+    "checksum": "9e93474072f12d7a2b494962aeb2a6279f1769047f63e89a7742fa66f20057ec"
+  }
+}

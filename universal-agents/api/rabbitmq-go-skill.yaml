@@ -1,0 +1,95 @@
+name: rabbitmq-go
+display_name: Rabbitmq Go
+category: api
+subcategory: general
+description: 'RabbitMQ clients in Go with amqp091-go: connection/channel management, publish/consume,
+  and consumer recovery.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- rabbitmqctl
+capabilities:
+- name: rabbitmq-go-client
+  description: Write Go RabbitMQ publishers and consumers, manage channels and handle reconnects.
+  commands:
+  - go get github.com/rabbitmq/amqp091-go
+  - go mod tidy
+  - go run publisher.go
+  - go run consumer.go
+  - rabbitmqctl list_queues name messages consumers
+  examples:
+  - go run publisher.go
+  - rabbitmqctl list_queues name messages
+  - 'go test ./... '
+  parameters:
+  - name: queue
+    type: string
+    description: Queue name
+  - name: exchange
+    type: string
+    description: Exchange name
+  - name: url
+    type: string
+    description: amqp:// connection URL
+knowledge:
+- title: amqp091-go GitHub
+  type: documentation
+  source: https://github.com/rabbitmq/amqp091-go
+  description: Go client API, docs and examples
+- title: RabbitMQ Go guide
+  type: documentation
+  source: https://www.rabbitmq.com/clients/go-api-guide.html
+  description: Connection, channel and consumer semantics
+instructions: "# RabbitMQ Go\n\nUse amqp091-go for RabbitMQ in Go: robust connection handling and channel-based\
+  \ messaging.\n\n## What this skill does\n\n- Connects with dial config and channels\n- Publishes and\
+  \ consumes messages\n- Implements reconnection\n\n## When to use\n\n- Go services with RabbitMQ\n- Worker\
+  \ queues and pub/sub\n\n## Real commands\n\n```bash\n# Dependency\ngo get github.com/rabbitmq/amqp091-go\n\
+  go mod tidy\n\n# Run clients\ngo run publisher.go\ngo run consumer.go\n\n# Inspect from CLI\nrabbitmqctl\
+  \ list_queues name messages consumers\n```\n\n## Publisher\n\n```go\nconn, _ := amqp091.Dial(\"amqp://guest:guest@localhost:5672/\"\
+  )\nch, _ := conn.Channel()\nch.PublishWithContext(ctx, \"\", \"tasks\", false, false,\n    amqp091.Publishing{ContentType:\
+  \ \"text/plain\", Body: []byte(\"job\")})\n```\n\n## Consumer\n\n```go\nmsgs, _ := ch.Consume(\"tasks\"\
+  , \"\", true, false, false, false, nil)\nfor d := range msgs {\n    process(d.Body)\n}\n```\n\n## Best\
+  \ practices\n\n- Reconnect with backoff on connection loss\n- Use prefetch (Qos) for fair dispatch\n\
+  - Close channels when done; never share channels across goroutines"
+examples:
+- input: Publish jobs to a RabbitMQ queue from Go
+  output: The agent writes a publisher with a durable queue and verifies with rabbitmqctl list_queues.
+- input: Consume jobs with a prefetch limit
+  output: The agent sets ch.Qos(5, 0, false) and writes the consume loop.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rabbitmq-go.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rabbitmq-go
+  generic:
+    system_prompt: 'You are the Rabbitmq Go specialist. You do it through rabbitmq-go-client: Write Go
+      RabbitMQ publishers and consumers, manage channels and handle reconnects. The commands are real,
+      e.g. `go get github.com/rabbitmq/amqp091-go`. You run and verify the real CLI commands before you
+      claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

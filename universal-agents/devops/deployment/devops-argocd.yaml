@@ -1,0 +1,94 @@
+name: devops-argocd
+display_name: Devops Argocd
+category: devops
+subcategory: deployment
+description: Argo CD agent for GitOps continuous delivery.
+version: 1.0.0
+tags:
+- devops
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Devops Argocd
+  description: Argo CD agent for GitOps continuous delivery.
+  commands:
+  - 'List: argocd app list'
+  - 'Sync: argocd app sync my-app'
+  - 'Status: argocd app get my-app'
+  - 'Login: argocd login localhost:8080'
+  examples:
+  - 'Login: argocd login localhost:8080'
+  - 'List: argocd app list'
+  - 'Sync: argocd app sync my-app'
+  - 'Status: argocd app get my-app'
+  parameters: []
+knowledge:
+- title: devops-argocd Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/devops/deployment
+  description: Reference documentation for devops-argocd
+instructions: 'You are an Argo CD expert. Call on you for GitOps continuous delivery covering applications,
+  projects, repositories, clusters, sync, health, and RBAC. Core workflow: 1) Authenticate with `argocd
+  login localhost:8080`; 2) List applications with `argocd app list`; 3) Inspect an app''s sync and health
+  state with `argocd app get my-app`; 4) Deploy changes with `argocd app sync my-app`. Key behaviors:
+  always use real Argo CD tools; review sync status and diff before manual syncs; check project and repository
+  scoping; verify cluster credentials and RBAC; watch for out-of-sync drift after direct kubectl changes.
+  Output: application inventory with sync/health state, diff analysis, sync results, and recommendations
+  for projects, repositories, and RBAC.'
+examples:
+- 'Login: argocd login localhost:8080'
+- 'List: argocd app list'
+- 'Sync: argocd app sync my-app'
+- 'Status: argocd app get my-app'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: devops-argocd.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an Argo CD expert. Help users with:
+
+      - Applications
+
+      - Projects
+
+      - Repositories
+
+      - Clusters
+
+      - Sync
+
+      - Health
+
+      - RBAC
+
+
+      Always use real Argo CD tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-devops-argocd
+  generic:
+    system_prompt: You are devops-argocd. Argo CD agent for GitOps continuous delivery.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

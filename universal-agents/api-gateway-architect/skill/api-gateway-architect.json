@@ -1,0 +1,216 @@
+{
+  "name": "api-gateway-architect",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Architects API gateway landscapes: gateway selection, multi-gateway topology, Nginx/Traefik/Kong patterns, and failover design.",
+  "keywords": [
+    "api-gateway",
+    "kong",
+    "traefik",
+    "aws-api-gateway"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-gateway-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-gateway-architect"
+    },
+    "generic": {
+      "system_prompt": "You are the api-gateway-architect specialist. You do it through gateway-selection: Evaluate and select gateway technologies for the architecture. The commands are real, e.g. `node -e const g=[{name:Kong,use:plugins},{name:Traefik,use:k8s-native},{name:NGINX,use:lua...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "gateway-selection",
+      "description": "Evaluate and select gateway technologies for the architecture",
+      "commands": [
+        "node -e \"const g=[{name:'Kong',use:'plugins'},{name:'Traefik',use:'k8s-native'},{name:'NGINX',use:'lua/openresty'},{name:'AWS',use:'managed'}];console.table(g)\"",
+        "helm repo add traefik https://helm.traefik.io/traefik && helm search repo traefik | head -5",
+        "docker search kong | head -5",
+        "nginx -v 2>&1",
+        "node -e \"console.log('criteria: team skills, traffic, plugins, cost')\""
+      ],
+      "examples": [
+        "node -e \"const g=[{name:'Kong',use:'plugins'},{name:'Traefik',use:'k8s-native'},{name:'NGINX',use:'lua/openresty'},{name:'AWS',use:'managed'}];console.table(g)\"",
+        "helm repo add traefik https://helm.traefik.io/traefik && helm search repo traefik | head -5",
+        "nginx -v 2>&1"
+      ],
+      "parameters": [
+        {
+          "name": "criteria",
+          "type": "string",
+          "description": "Selection criteria"
+        },
+        {
+          "name": "candidate",
+          "type": "string",
+          "description": "Gateway candidate"
+        }
+      ]
+    },
+    {
+      "name": "topology-design",
+      "description": "Design multi-gateway topologies with failover and isolation",
+      "commands": [
+        "node -e \"console.log('edge LB -> gateway pool -> services')\"",
+        "kubectl get svc -A | grep -E 'traefik|kong'",
+        "node -e \"console.log('zones: public gw, internal gw, partner gw')\"",
+        "curl -s http://localhost:8000/status | python -m json.tool",
+        "node -e \"console.log('failover: active-active with health checks')\""
+      ],
+      "examples": [
+        "kubectl get svc -A | grep -E 'traefik|kong'",
+        "curl -s http://localhost:8000/status | python -m json.tool",
+        "node -e \"console.log('zones: public gw, internal gw, partner gw')\""
+      ],
+      "parameters": [
+        {
+          "name": "zone",
+          "type": "string",
+          "description": "Gateway zone: public, internal, partner"
+        },
+        {
+          "name": "nodes",
+          "type": "string",
+          "description": "Number of gateway nodes"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "kong",
+    "traefik",
+    "aws-cli",
+    "docker"
+  ],
+  "tools": [
+    "kong",
+    "traefik",
+    "aws-cli",
+    "docker",
+    "kubernetes",
+    "nginx"
+  ],
+  "examples": [
+    {
+      "input": "Choose a gateway for the microservices platform",
+      "output": "Evaluates Kong, Traefik, NGINX, and AWS against traffic, plugins, and team criteria, then recommends one"
+    },
+    {
+      "input": "Design gateway redundancy",
+      "output": "Designs an active-active gateway pool with health checks and zone isolation"
+    }
+  ],
+  "instructions": "# API Gateway Architect\n\nDesigns the gateway layer of the system: choice, topology, and operations.\n\n## When to Use\n- Choosing a gateway for the org\n- Designing gateway redundancy\n- Splitting public/internal/partner traffic\n\n## Real Commands\n\n```bash\n# Compare candidates\nnode -e \"const g=[{name:'Kong',use:'plugins'},{name:'Traefik',use:'k8s-native'},{name:'NGINX',use:'lua/openresty'},{name:'AWS',use:'managed'}];console.table(g)\"\n\n# Inventory current gateways\nkubectl get svc -A | grep -E 'traefik|kong'\n\n# Health of the gateway pool\ncurl -s http://localhost:8000/status | python -m json.tool\n```\n\n## Topology\nedge LB -> gateway pool (active-active) -> services, with separate zones for public, internal, and partner traffic.\n\n## Failover Design\n- Two or more gateway nodes\n- Health checks on every node\n- Shared config state (DB or Git)\n\n## Testing\nKill a gateway node and verify traffic keeps flowing.\n\n## Best Practices\n- Match the gateway to team skills\n- Isolate zones to limit blast radius",
+  "display_name": "api-gateway-architect",
+  "knowledge": [
+    {
+      "title": "API Gateway Comparison",
+      "type": "documentation",
+      "source": "https://www.getambassador.io/resources/kubernetes-api-gateway",
+      "description": "Gateway landscape comparison"
+    },
+    {
+      "title": "NGINX Docs",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/",
+      "description": "Reverse proxy configuration"
+    },
+    {
+      "title": "AWS API Gateway",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html",
+      "description": "Managed gateway features"
+    }
+  ],
+  "id": "api-gateway-architect",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "gateway-selection",
+        "name": "criteria",
+        "type": "string",
+        "description": "Selection criteria"
+      },
+      {
+        "capability": "gateway-selection",
+        "name": "candidate",
+        "type": "string",
+        "description": "Gateway candidate"
+      },
+      {
+        "capability": "topology-design",
+        "name": "zone",
+        "type": "string",
+        "description": "Gateway zone: public, internal, partner"
+      },
+      {
+        "capability": "topology-design",
+        "name": "nodes",
+        "type": "string",
+        "description": "Number of gateway nodes"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kong",
+    "traefik",
+    "aws-cli",
+    "docker"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-gateway-architect/skill/api-gateway-architect.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-gateway-architect/skill/api-gateway-architect.yaml",
+    "checksum": "cfa3baeeb106b3e5bd4bf280a2cd597fa2d53bc7c6ce74ddef86cba1f69f2998"
+  }
+}

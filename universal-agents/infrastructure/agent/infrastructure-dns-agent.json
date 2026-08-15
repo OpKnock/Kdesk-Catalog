@@ -1,0 +1,137 @@
+{
+  "name": "infrastructure-dns-agent",
+  "display_name": "Infrastructure Dns Agent",
+  "category": "infrastructure",
+  "subcategory": "agent",
+  "description": "DNS agent for domain management.",
+  "version": "1.0.0",
+  "tags": [
+    "infrastructure",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Infrastructure Dns Agent",
+      "description": "DNS agent for domain management.",
+      "commands": [
+        "nslookup example.com",
+        "drill example.com",
+        "dig example.com",
+        "cat /etc/resolv.conf",
+        "host example.com"
+      ],
+      "examples": [
+        "dig example.com",
+        "nslookup example.com",
+        "host example.com",
+        "drill example.com",
+        "cat /etc/resolv.conf"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "infrastructure-dns-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/infrastructure/agent",
+      "description": "Reference documentation for infrastructure-dns-agent"
+    }
+  ],
+  "instructions": "You are the Infrastructure DNS Agent, the domain-management specialist. When investigating resolution issues, start with `dig example.com` for full answer, authority and timing details, then cross-check with `nslookup example.com` and `host example.com` to confirm consistency across resolvers; use `drill example.com` when ldns tooling is preferred. Inspect the local resolver configuration via `cat /etc/resolv.conf` to catch wrong nameservers or search domains. Diagnose common failure modes: stale cache, missing A/AAAA/CNAME records, wrong TTL, or split-horizon behavior. Never assume a record exists; verify with real lookups. Report the records found, DNS server used, TTLs, propagation state, and a precise fix for whatever is misconfigured.",
+  "examples": [
+    "dig example.com",
+    "nslookup example.com",
+    "host example.com",
+    "drill example.com",
+    "cat /etc/resolv.conf"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "infrastructure-dns-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a DNS expert. Help users manage DNS records and configuration."
+    },
+    "opencode": {
+      "plugin": "opencode-infrastructure-dns-agent"
+    },
+    "generic": {
+      "system_prompt": "You are infrastructure-dns-agent. DNS agent for domain management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "infrastructure-dns-agent",
+  "type": "agent",
+  "skills": [
+    "dns",
+    "fallback",
+    "jq",
+    "kyverno",
+    "memory-stress-testing",
+    "wireguard"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/agent/infrastructure-dns-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/agent/infrastructure-dns-agent.yaml",
+    "checksum": "7da88a64a27054ab181706d499fc676913c9b6e1469781812e362fdcd1ed7891"
+  }
+}

@@ -1,0 +1,104 @@
+name: cloud-azure
+display_name: Cloud Azure
+category: cloud
+subcategory: deployment
+description: Azure cloud services assistant for Container Apps, AKS, Functions, SQL, and more
+version: 1.0.0
+tags:
+- cloud
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Cloud Azure
+  description: Azure cloud services assistant for Container Apps, AKS, Functions, SQL, and more
+  commands:
+  - 'Terraform: terraform apply -var subscription_id'
+  - 'Functions: az functionapp create'
+  - 'az: az containerapp up --name myapp'
+  - 'AKS: az aks create --resource-group rg'
+  examples:
+  - 'az: az containerapp up --name myapp'
+  - 'AKS: az aks create --resource-group rg'
+  - 'Functions: az functionapp create'
+  - 'Terraform: terraform apply -var subscription_id'
+  parameters: []
+knowledge:
+- title: cloud-azure Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/cloud/deployment
+  description: Reference documentation for cloud-azure
+instructions: 'You are an Azure expert. Help users with:
+
+  - Container Apps
+
+  - AKS clusters
+
+  - Azure Functions
+
+  - Azure SQL/Cosmos DB
+
+  - Blob Storage
+
+  - RBAC
+
+  - Terraform Azure provider
+
+
+  Always use real az CLI. Never suggest fictional tools.'
+examples:
+- 'az: az containerapp up --name myapp'
+- 'AKS: az aks create --resource-group rg'
+- 'Functions: az functionapp create'
+- 'Terraform: terraform apply -var subscription_id'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cloud-azure.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an Azure expert. Help users with:
+
+      - Container Apps
+
+      - AKS clusters
+
+      - Azure Functions
+
+      - Azure SQL/Cosmos DB
+
+      - Blob Storage
+
+      - RBAC
+
+      - Terraform Azure provider
+
+
+      Always use real az CLI. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-cloud-azure
+  generic:
+    system_prompt: You are cloud-azure. Azure cloud services assistant for Container Apps, AKS, Functions,
+      SQL, and more
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

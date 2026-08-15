@@ -1,0 +1,127 @@
+name: packer
+display_name: packer
+category: devops
+subcategory: general
+description: 'Builds machine images with Packer: builders (AWS, VMware, Docker), provisioners, HCL2 templates,
+  and CI pipelines.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- aws
+- packer
+capabilities:
+- name: template-authoring
+  description: Create and validate HCL2 Packer templates.
+  commands:
+  - packer init .
+  - packer validate template.pkr.hcl
+  - packer fmt template.pkr.hcl
+  - packer inspect template.pkr.hcl
+  - packer plugins install github.com/hashicorp/amazon
+  examples:
+  - packer init .
+  - packer validate template.pkr.hcl
+  - packer fmt template.pkr.hcl
+  parameters:
+  - name: template
+    type: string
+    description: Template file or directory
+  - name: var-file
+    type: string
+    description: Variable values file
+- name: build-and-verify
+  description: Build images and verify outputs across clouds.
+  commands:
+  - packer build -var-file=prod.pkrvars.hcl template.pkr.hcl
+  - packer build -only amazon-ebs.amazonlinux template.pkr.hcl
+  - packer build -on-error=cleanup template.pkr.hcl
+  - aws ec2 describe-images --owners self --filters Name=name,Values=*baseline*
+  - packer build -machine-readable template.pkr.hcl | jq '.artifact_id'
+  examples:
+  - packer build -var-file=prod.pkrvars.hcl template.pkr.hcl
+  - packer build -only amazon-ebs.amazonlinux template.pkr.hcl
+  - packer build -on-error=cleanup template.pkr.hcl
+  parameters:
+  - name: var-file
+    type: string
+    description: pkrvars file for environment values
+  - name: only
+    type: string
+    description: Build only named builders
+  - name: on-error
+    type: string
+    description: 'Error behavior: cleanup, abort, run-cleanup-provisioner'
+knowledge:
+- title: Packer Documentation
+  type: documentation
+  source: https://developer.hashicorp.com/packer/docs
+  description: Templates, builders, provisioners, and CLI
+- title: Packer HCL2 Guide
+  type: documentation
+  source: https://developer.hashicorp.com/packer/guides/hcl
+  description: HCL2 template structure and variables
+- title: Amazon Builder
+  type: documentation
+  source: https://developer.hashicorp.com/packer/integrations/hashicorp/amazon
+  description: amazon-ebs, amazon-ami builders
+instructions: "# Packer Image Building\n\nCreate golden machine images reproducibly with Packer HCL2.\n\
+  \n## What This Skill Does\n\n- Authors HCL2 templates (source builders + provisioners + post-processors)\n\
+  - Validates and formats templates before building\n- Builds for AWS, GCP, Azure, VMware, and Docker\n\
+  - Parameterizes with pkrvars files per environment\n- Emits machine-readable output for CI pipelines\n\
+  \n## When to Use\n\n- Golden AMIs with hardened baselines\n- Reproducible dev box images (VirtualBox/VMware)\n\
+  - CI image baking with scheduled builds\n\n## Real Commands\n\n```bash\n# Author and validate\npacker\
+  \ init .                              # installs plugins from template\npacker fmt -check template.pkr.hcl\n\
+  packer validate -var-file=prod.pkrvars.hcl template.pkr.hcl\npacker inspect template.pkr.hcl\n\n# Build\n\
+  packer build -var-file=prod.pkrvars.hcl template.pkr.hcl\npacker build -only amazon-ebs.amazonlinux\
+  \ template.pkr.hcl\npacker build -on-error=cleanup template.pkr.hcl\npacker build -machine-readable\
+  \ template.pkr.hcl | grep artifact_id\n```\n\n## Template Sketch\n\n```hcl\nvariable \"region\" { default\
+  \ = \"us-east-1\" }\nvariable \"ami_name\" { type = string }\n\nsource \"amazon-ebs\" \"baseline\" {\n\
+  \  region        = var.region\n  source_ami_filter {\n    filters = { virtualization-type = \"hvm\"\
+  , name = \"al2023-ami-*\" }\n    most_recent = true\n    owners = [\"137112412989\"]\n  }\n  instance_type\
+  \ = \"t3.small\"\n  ssh_username  = \"ec2-user\"\n  ami_name      = var.ami_name\n}\n\nbuild {\n  sources\
+  \ = [\"source.amazon-ebs.baseline\"]\n  provisioner \"shell\" {\n    script = \"scripts/harden.sh\"\n\
+  \  }\n}\n```\n\n## Best Practices\n\n- Always run packer init + validate in CI before builds\n- Keep\
+  \ base OS patched inside the build, not after boot\n- Store secrets in pkrvars with CI secret injection,\
+  \ not in templates\n- Use -on-error=cleanup so broken builds do not leak AMIs\n- Tag AMIs and set retention\
+  \ to avoid image sprawl"
+examples:
+- input: Build a hardened Amazon Linux AMI
+  output: Agent writes an HCL2 template with shell provisioners, validates it, and builds with a prod
+    var file, verifying the AMI ID
+- input: Why does packer fail at the SSH step?
+  output: Agent checks builder ssh config, security group rules, and the console log, and fixes ssh_username
+    or subnet settings
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: packer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-packer
+  generic:
+    system_prompt: 'You take the packer seat. You do it through template-authoring: Create and validate
+      HCL2 Packer templates. The commands are real, e.g. `packer init .`. You run and verify the real
+      CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

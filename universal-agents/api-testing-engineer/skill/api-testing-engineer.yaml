@@ -1,0 +1,112 @@
+name: api-testing-engineer
+version: 2.0.0
+type: skill
+category: testing
+description: 'Builds API test automation frameworks: REST Assured for Java, pytest + httpx for Python,
+  reusable fixtures, and CI integration.'
+keywords:
+- api-testing
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-testing-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-testing-engineer
+  generic:
+    system_prompt: 'Your lane is api-testing-engineer. You do it through rest-assured: Write Java API
+      tests with REST Assured. The commands are real, e.g. `mvn -q test -Dtest=UserApiTest`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: rest-assured
+  description: Write Java API tests with REST Assured
+  commands:
+  - mvn -q test -Dtest=UserApiTest
+  - mvn -q test -Dtest=UserApiTest#createUser
+  - mvn dependency:tree | grep -i rest-assured
+  - mvn verify
+  examples:
+  - -Dtest=UserApiTest runs one test class
+  - '#createUser filters a single method'
+  - mvn verify runs the full suite
+  parameters:
+  - name: test-class
+    type: string
+    description: Test class name
+  - name: method
+    type: string
+    description: Test method filter
+  - name: profile
+    type: string
+    description: Maven profile
+- name: pytest-httpx
+  description: Write Python API tests with pytest
+  commands:
+  - pip install pytest httpx pytest-cov
+  - pytest -q
+  - pytest -q -k users
+  - pytest --cov=api --cov-report=html
+  - pytest -q --tb=short tests/test_users.py
+  examples: []
+  parameters: []
+prerequisites:
+- jest
+- pytest
+- postman
+- newman
+tools:
+- jest
+- pytest
+- postman
+- newman
+- supertest
+- rest-assured
+examples:
+- input: Stand up a Java API test suite
+  output: Creates REST Assured tests and runs them with mvn verify
+- input: Python API test framework
+  output: Builds pytest + httpx suite with coverage reporting
+instructions: "# API Testing Engineer\n\nAPI test automation frameworks.\n\n## What This Skill Does\n\
+  - Builds Java suites with REST Assured\n- Builds Python suites with pytest/httpx\n- Integrates into\
+  \ CI pipelines\n\n## When to Use\n- Long-lived API test suites\n- Cross-team test infrastructure\n-\
+  \ Replacing manual API checklists\n\n## Real Commands\n\n```bash\nmvn -q test -Dtest=UserApiTest\npip\
+  \ install pytest httpx pytest-cov\npytest -q -k users\npytest --cov=api --cov-report=html\n```\n\n##\
+  \ REST Assured Example\n\n```java\ngiven()\n  .contentType(ContentType.JSON)\n  .body(\"{\\\"name\\\"\
+  :\\\"alice\\\"}\")\n.when()\n  .post(\"/api/users\")\n.then()\n  .statusCode(201);\n```\n\n## Testing\n\
+  - Run suites in CI with JUnit XML output\n- Track coverage on new endpoints\n- Parameterize environments\n\
+  \n\n## Best Practices\n- Model test data with factories\n- Keep tests order-independent\n- Centralize\
+  \ client setup in base classes"
+display_name: api-testing-engineer
+knowledge:
+- title: REST Assured Docs
+  type: documentation
+  source: https://rest-assured.io/
+  description: Java API testing library
+- title: pytest Docs
+  type: documentation
+  source: https://docs.pytest.org/
+  description: Python test framework

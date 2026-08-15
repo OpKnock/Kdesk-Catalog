@@ -1,0 +1,85 @@
+name: ml-elasticsearch-vector-deploy
+display_name: Ml Elasticsearch Vector Deploy
+category: ml
+subcategory: vector-db
+description: Elasticsearch Vector deployment agent for ML Elasticsearch vector deployment.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Elasticsearch Vector Deploy
+  description: Elasticsearch Vector deployment agent for ML Elasticsearch vector deployment.
+  commands:
+  - docker build -t elasticsearch:latest .
+  - docker push registry.example.com/elasticsearch:latest
+  - kubectl set image deployment/elasticsearch elasticsearch=registry.example.com/elasticsearch:latest
+  - helm upgrade elasticsearch ./helm-chart --namespace production
+  - kubectl rollout status deployment/elasticsearch --timeout=300s
+  - python identity.py --agent ml-elasticsearch-vector-deploy
+  examples:
+  - 'Index: curl -X PUT http://localhost:9200/my_index -H ''Content-Type: application/json'' -d ''{"mappings":
+    {"properties": {"embedding": {"type": "dense_vector", "dims": 1536}}}}'''
+  - 'Insert: curl -X POST http://localhost:9200/my_index/_doc -H ''Content-Type: application/json'' -d
+    ''{"title": "Hello", "embedding": [0.1, 0.2, 0.3]}'''
+  - 'Search: curl -X GET ''http://localhost:9200/my_index/_search'' -H ''Content-Type: application/json''
+    -d ''{"query": {"knn": {"embedding": {"vector": [0.1, 0.2, 0.3], "k": 10}}}'''
+  parameters: []
+knowledge:
+- title: ml-elasticsearch-vector-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for ml-elasticsearch-vector-deploy
+instructions: 'You are the Elasticsearch vector deployment expert. Call on this agent to deploy vector
+  search over the Elasticsearch REST API. Core workflow: (1) create an index with dense_vector mappings:
+  ''curl -X PUT http://localhost:9200/my_index -H ''"Content-Type: application/json"'' -d ''"{\"mappings\":
+  {\"properties\": {\"embedding\": {\"type\": \"dense_vector\", \"dims\": 1536}}}}"''''; (2) insert documents
+  with ''curl -X POST http://localhost:9200/my_index/_doc -H ''"Content-Type: application/json"'' -d ''"{\"title\":
+  \"Hello\", \"embedding\": [0.1, 0.2, 0.3]}"''''; (3) run kNN search with ''curl -X GET ''"http://localhost:9200/my_index/_search"''
+  -H ''"Content-Type: application/json"'' -d ''"{\"query\": {\"knn\": {\"embedding\": {\"vector\": [0.1,
+  0.2, 0.3], \"k\": 10}}}"''''; (4) validate results. Output: index mappings, insert status, and kNN results.'
+examples:
+- 'Index: curl -X PUT http://localhost:9200/my_index -H ''Content-Type: application/json'' -d ''{"mappings":
+  {"properties": {"embedding": {"type": "dense_vector", "dims": 1536}}}}'''
+- 'Insert: curl -X POST http://localhost:9200/my_index/_doc -H ''Content-Type: application/json'' -d ''{"title":
+  "Hello", "embedding": [0.1, 0.2, 0.3]}'''
+- 'Search: curl -X GET ''http://localhost:9200/my_index/_search'' -H ''Content-Type: application/json''
+  -d ''{"query": {"knn": {"embedding": {"vector": [0.1, 0.2, 0.3], "k": 10}}}'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-elasticsearch-vector-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Elasticsearch Vector deployment expert. Help users deploy vector search with
+      Elasticsearch.
+  opencode:
+    plugin: opencode-ml-elasticsearch-vector-deploy
+  generic:
+    system_prompt: You are ml-elasticsearch-vector-deploy. Elasticsearch Vector deployment agent for ML
+      Elasticsearch vector deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

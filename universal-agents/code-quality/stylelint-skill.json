@@ -1,0 +1,167 @@
+{
+  "name": "stylelint",
+  "display_name": "stylelint",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Lints CSS/SCSS and CSS-in-JS with Stylelint, enforcing order, naming, and browser-compatibility rules.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "stylelint-css",
+      "description": "Check and fix CSS/SCSS with Stylelint and its standard configs",
+      "commands": [
+        "npx stylelint \"src/**/*.css\"",
+        "npx stylelint --fix \"src/**/*.{css,scss}\"",
+        "npx stylelint --config .stylelintrc.json .",
+        "npx stylelint --custom-formatter=node_modules/stylelint-json-formatter .",
+        "npx stylelint \"src/**/*.css\" --stdin-filename app.css --stdin"
+      ],
+      "examples": [
+        "npx stylelint --ignore-path .gitignore \"**/*.css\"",
+        "npx stylelint --fix src/styles/",
+        "echo '.a {color:red}' | npx stylelint --stdin-filename app.css"
+      ],
+      "parameters": [
+        {
+          "name": "fix",
+          "type": "boolean",
+          "description": "Auto-fix fixable violations"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Path to the stylelint config file"
+        },
+        {
+          "name": "stdin-filename",
+          "type": "string",
+          "description": "Filename to associate with piped stdin content"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Stylelint docs",
+      "type": "documentation",
+      "source": "https://stylelint.io/",
+      "description": "User guide, rules list, and CLI reference"
+    },
+    {
+      "title": "Stylelint rules",
+      "type": "documentation",
+      "source": "https://stylelint.io/user-guide/rules/",
+      "description": "Every rule with options and examples"
+    }
+  ],
+  "instructions": "# Stylelint\n\nModern linter for CSS and CSS-like syntax (SCSS, Less, CSS-in-JS) with 200+ rules\ncovering formatting, patterns, and browser quirks.\n\n## When to Use\n\n- Enforcing consistent CSS/SCSS style across a project\n- Catching invalid property values or unknown at-rules\n- Ordering properties and declarations consistently\n\n## Real Commands\n\n```bash\n# Install with standard config\nnpm install --save-dev stylelint stylelint-config-standard\n\n# Check all CSS\nnpx stylelint \"src/**/*.css\"\n\n# Auto-fix\nnpx stylelint --fix \"src/**/*.{css,scss}\"\n\n# Custom config\nnpx stylelint --config .stylelintrc.json .\n\n# Lint stdin (editor integration)\necho '.a { color: red }' | npx stylelint --stdin-filename app.css\n\n# Custom formatter for CI\nnpx stylelint \"src/**/*.css\" --custom-formatter=node_modules/stylelint-json-formatter\n```\n\n## Config (.stylelintrc.json)\n\n```json\n{\n  \"extends\": \"stylelint-config-standard\",\n  \"customSyntax\": \"postcss-scss\",\n  \"rules\": {\n    \"color-hex-length\": \"long\",\n    \"max-nesting-depth\": 3\n  }\n}\n```\n\n## CI\n\n```yaml\n- name: Stylelint\n  run: npx stylelint \"src/**/*.css\"\n```\n\n## Best Practices\n\n- Extend `stylelint-config-standard` and only override what you disagree with\n- Use `postcss-scss` customSyntax for SCSS files\n- Enable the property-order config for team consistency\n- Run `--fix` locally, plain check in CI\n\n## Example Response\n\nReports violations as `file:line:col severity message rule-name`, then applies\n--fix and confirms the remaining list.",
+  "examples": [
+    {
+      "input": "Set up CSS linting",
+      "output": "Installs stylelint and stylelint-config-standard, writes .stylelintrc.json, runs npx stylelint --fix to baseline, and fixes remaining issues"
+    },
+    {
+      "input": "Enforce consistent property order",
+      "output": "Adds stylelint-config-recess-order to the config and runs npx stylelint --fix to reorder declarations"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "stylelint.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-stylelint"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: stylelint. You do it through stylelint-css: Check and fix CSS/SCSS with Stylelint and its standard configs. The commands are real, e.g. `npx stylelint src/**/*.css`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "stylelint",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "stylelint-css",
+        "name": "fix",
+        "type": "boolean",
+        "description": "Auto-fix fixable violations"
+      },
+      {
+        "capability": "stylelint-css",
+        "name": "config",
+        "type": "string",
+        "description": "Path to the stylelint config file"
+      },
+      {
+        "capability": "stylelint-css",
+        "name": "stdin-filename",
+        "type": "string",
+        "description": "Filename to associate with piped stdin content"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/stylelint-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/stylelint-skill.yaml",
+    "checksum": "827de92a91cecd3c8c1ed27e58f4acd09457a39d8ffa8c35871ae5cea6d77a80"
+  }
+}

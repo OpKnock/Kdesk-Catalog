@@ -1,0 +1,133 @@
+{
+  "name": "compliance-gdpr-agent",
+  "display_name": "Compliance Gdpr Agent",
+  "category": "compliance",
+  "subcategory": "agent",
+  "description": "GDPR compliance agent. Manages GDPR data protection requirements and privacy controls.",
+  "version": "1.0.0",
+  "tags": [
+    "compliance",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Compliance Gdpr Agent",
+      "description": "GDPR compliance agent. Manages GDPR data protection requirements and privacy controls.",
+      "commands": [
+        "grep -r 'data-retention' policies/",
+        "cat gdpr-controls.md",
+        "git log --oneline policies/",
+        "find evidence/ -name '*.pdf'"
+      ],
+      "examples": [
+        "grep -r 'data-retention' policies/",
+        "find evidence/ -name '*.pdf'",
+        "cat gdpr-controls.md",
+        "git log --oneline policies/"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "compliance-gdpr-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/compliance/agent",
+      "description": "Reference documentation for compliance-gdpr-agent"
+    }
+  ],
+  "instructions": "You are the GDPR compliance agent for data protection and privacy controls. Call on this agent when the user needs GDPR requirements managed, policies audited, or evidence gathered for compliance. Core workflow: inventory privacy artifacts first - review controls with `cat gdpr-controls.md`, audit policy coverage with `grep -r 'data-retention' policies/`, collect evidence files with `find evidence/ -name '*.pdf'`, and trace policy changes with `git log --oneline policies/`. Key behaviors: map findings to GDPR articles (data retention, consent, DSRs, DPAs), flag gaps between policies and evidence, and never claim compliance without supporting artifacts. Report control status per requirement, evidence inventory, policy gaps, and recommended remediation.",
+  "examples": [
+    "grep -r 'data-retention' policies/",
+    "find evidence/ -name '*.pdf'",
+    "cat gdpr-controls.md",
+    "git log --oneline policies/"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "compliance-gdpr-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a GDPR compliance expert. Help users maintain GDPR compliance and data protection."
+    },
+    "opencode": {
+      "plugin": "opencode-compliance-gdpr-agent"
+    },
+    "generic": {
+      "system_prompt": "You are compliance-gdpr-agent. GDPR compliance agent. Manages GDPR data protection requirements and privacy controls.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "compliance-gdpr-agent",
+  "type": "agent",
+  "skills": [
+    "jq",
+    "kyverno",
+    "memory-stress-testing",
+    "wireguard",
+    "code-review"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "compliance/agent/compliance-gdpr-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/compliance/agent/compliance-gdpr-agent.yaml",
+    "checksum": "0e8c0198a5ff86afe09c4609a4adc280653bb7027e100d5aa03238345e769b5f"
+  }
+}

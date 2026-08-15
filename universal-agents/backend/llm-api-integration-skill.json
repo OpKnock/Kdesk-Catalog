@@ -1,0 +1,227 @@
+{
+  "name": "llm-api-integration",
+  "display_name": "Llm Api Integration",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Integrates LLM APIs (OpenAI, Anthropic, local models) into applications: streaming, tool calling, retries, cost control, and evaluation.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "npx",
+    "ollama",
+    "openai",
+    "pip",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "curl https://api.openai.com/v1/chat/completions -H \"Authorization: Bearer $OPENAI_API_KEY\" -H \"Content-Type: application/json\" -d \"{\\\"model\\\":\\\"gpt-4o-mini\\\",\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"Hello\\\"}]}\"",
+        "pip install openai anthropic",
+        "npm install openai @anthropic-ai/sdk",
+        "ollama run llama3.2",
+        "ollama list"
+      ],
+      "description": "Call LLM providers with the official CLIs and SDKs.",
+      "name": "llm-clients",
+      "examples": [
+        "ollama run qwen2.5:7b \"summarize this\"",
+        "curl -s https://api.anthropic.com/v1/messages -H \"x-api-key: $ANTHROPIC_API_KEY\" -H \"anthropic-version: 2023-06-01\" -d \"{\\\"model\\\":\\\"claude-3-5-haiku\\\",\\\"max_tokens\\\":100,\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"hi\\\"}]}\"",
+        "python -m venv .venv"
+      ],
+      "parameters": [
+        {
+          "description": "Model identifier",
+          "name": "model",
+          "type": "string"
+        },
+        {
+          "description": "Sampling temperature",
+          "name": "temperature",
+          "type": "number"
+        },
+        {
+          "description": "Output token limit",
+          "name": "max-tokens",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "pip install promptfoo",
+        "npx promptfoo eval",
+        "npx promptfoo eval -c promptfooconfig.yaml --share",
+        "openai api keys",
+        "python -c \"from openai import OpenAI; print(len(OpenAI().models.list().data))\""
+      ],
+      "description": "Manage prompts, evals, and cost guardrails.",
+      "name": "llm-ops",
+      "examples": [
+        "npx promptfoo init",
+        "npx promptfoo eval -c promptfooconfig.yaml",
+        "ollama pull mistral"
+      ],
+      "parameters": [
+        {
+          "description": "Eval config path",
+          "name": "config",
+          "type": "string"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "openai, anthropic, or ollama"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OpenAI API Reference",
+      "description": "Chat completions, streaming, and tools",
+      "source": "https://platform.openai.com/docs/api-reference",
+      "type": "documentation"
+    },
+    {
+      "title": "Anthropic API Docs",
+      "description": "Messages API and tool use",
+      "source": "https://docs.anthropic.com/en/docs",
+      "type": "documentation"
+    },
+    {
+      "title": "Ollama Docs",
+      "description": "Local model registry",
+      "source": "https://ollama.com/library",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# LLM API Integration\n\nConnect applications to LLM providers reliably.\n\n## When to Use\n\n- Chat, summarization, extraction, and classification features\n- Tool/function calling to ground models in your systems\n- Local models via Ollama for privacy or offline needs\n- Evaluation-driven prompt development\n\n## Commands\n\n```bash\n# OpenAI\ncurl https://api.openai.com/v1/chat/completions \\\n  -H \"Authorization: Bearer $OPENAI_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'\n\n# Anthropic\ncurl https://api.anthropic.com/v1/messages \\\n  -H \"x-api-key: $ANTHROPIC_API_KEY\" \\\n  -H \"anthropic-version: 2023-06-01\" \\\n  -d '{\"model\":\"claude-3-5-haiku\",\"max_tokens\":100,\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}'\n\n# Local with Ollama\nollama pull llama3.2\nollama run llama3.2 \"summarize this\"\n\n# Evals\nnpx promptfoo eval -c promptfooconfig.yaml\nnpx promptfoo view\n```\n\n## Python Example\n\n```python\nfrom openai import OpenAI\n\nclient = OpenAI()\n\nstream = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[{\"role\": \"user\", \"content\": \"Hi\"}],\n    stream=True,\n)\nfor chunk in stream:\n    print(chunk.choices[0].delta.content or \"\", end=\"\")\n```\n\n## Best Practices\n\n- Always set timeouts and retry on 429/5xx with exponential backoff\n- Stream responses instead of waiting for full completion\n- Validate and cap max_tokens to control cost\n- Store keys in environment variables, never in code or repos\n- Evaluate prompts with promptfoo before promoting them\n- Log prompt and response pairs for debugging, with PII scrubbed",
+  "examples": [
+    {
+      "input": "Add streaming chat to my Node app",
+      "output": "Agent wires the OpenAI SDK with stream: true, handles SSE chunks, and adds timeout/retry middleware."
+    },
+    {
+      "input": "Which model should I use for extraction?",
+      "output": "Agent compares latency/cost tradeoffs between gpt-4o-mini and claude-3-5-haiku, suggests structured JSON output mode, and writes a promptfoo eval."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "llm-api-integration.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-llm-api-integration"
+    },
+    "generic": {
+      "system_prompt": "You are the Llm Api Integration specialist. You do it through llm-clients: Call LLM providers with the official CLIs and SDKs. The commands are real, e.g. `curl https://api.openai.com/v1/chat/completions -H Authorization: Bearer $OPENAI_API_KEY...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "llm-api-integration",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "llm-clients",
+        "name": "model",
+        "type": "string",
+        "description": "Model identifier"
+      },
+      {
+        "capability": "llm-clients",
+        "name": "temperature",
+        "type": "number",
+        "description": "Sampling temperature"
+      },
+      {
+        "capability": "llm-clients",
+        "name": "max-tokens",
+        "type": "integer",
+        "description": "Output token limit"
+      },
+      {
+        "capability": "llm-ops",
+        "name": "config",
+        "type": "string",
+        "description": "Eval config path"
+      },
+      {
+        "capability": "llm-ops",
+        "name": "provider",
+        "type": "string",
+        "description": "openai, anthropic, or ollama"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "npx",
+    "ollama",
+    "openai",
+    "pip",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/llm-api-integration-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/llm-api-integration-skill.yaml",
+    "checksum": "ba8cc769c756d5bafe904bd27a4d0de55ffcd1a064a9eb2b55613ccc1f90b668"
+  }
+}

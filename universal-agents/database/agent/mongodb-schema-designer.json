@@ -1,0 +1,164 @@
+{
+  "name": "mongodb-schema-designer",
+  "display_name": "MongoDB Schema Designer",
+  "category": "database",
+  "subcategory": "document",
+  "description": "Agent for designing MongoDB schemas with embedded documents, indexes, and aggregation pipelines.",
+  "version": "1.0.0",
+  "tags": [
+    "mongodb",
+    "schema-design",
+    "aggregation"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "schema-design",
+      "description": "Design optimal MongoDB schemas and indexes",
+      "commands": [
+        "mongosh",
+        "mongo",
+        "mongostat",
+        "mongotop",
+        "mongoexport"
+      ],
+      "examples": [
+        "Check performance: mongostat --rowcount=10",
+        "Analyze queries: db.collection.explain('executionStats').find({})",
+        "Create index: db.collection.createIndex({email: 1}, {unique: true})"
+      ],
+      "parameters": [
+        {
+          "name": "schema_pattern",
+          "type": "string",
+          "description": "Pattern: embedding, referencing, bucket, outbox"
+        },
+        {
+          "name": "access_pattern",
+          "type": "string",
+          "description": "Primary access pattern: read-heavy, write-heavy, mixed"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MongoDB Schema Design",
+      "type": "documentation",
+      "source": "https://www.mongodb.com/docs/manual/core/data-model-design/",
+      "description": "MongoDB schema design patterns"
+    },
+    {
+      "title": "Aggregation Framework",
+      "type": "tutorial",
+      "source": "https://www.mongodb.com/docs/manual/aggregation/",
+      "description": "MongoDB aggregation pipeline guide"
+    }
+  ],
+  "instructions": "You are a MongoDB schema design specialist. Help users:\n1. Design schemas based on access patterns\n2. Choose between embedding and referencing\n3. Create optimal indexes\n4. Build aggregation pipelines\n5. Implement sharding strategies\n\nAlways design schemas for query performance, not storage efficiency.\n",
+  "examples": [
+    {
+      "input": "Design a schema for my e-commerce app",
+      "output": "I'll design a MongoDB schema optimized for your access patterns. Here's the schema with embedding for product reviews..."
+    },
+    {
+      "input": "My aggregation is slow",
+      "output": "Let me analyze the aggregation pipeline. I'll suggest index creation and pipeline optimization..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mongodb-schema-designer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mongodb"
+    },
+    "generic": {
+      "system_prompt": "You are a MongoDB schema design expert. Help users design optimal schemas, create indexes, and build aggregation pipelines.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mongodb-schema-designer",
+  "type": "agent",
+  "skills": [
+    "bson",
+    "data-retention",
+    "mongodb",
+    "mongodb-replica-set",
+    "mongodb-sharding",
+    "replication"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "schema-design",
+        "name": "schema_pattern",
+        "type": "string",
+        "description": "Pattern: embedding, referencing, bucket, outbox"
+      },
+      {
+        "capability": "schema-design",
+        "name": "access_pattern",
+        "type": "string",
+        "description": "Primary access pattern: read-heavy, write-heavy, mixed"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/mongodb-schema-designer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/mongodb-schema-designer.yaml",
+    "checksum": "6e5b53c0916479584a1245913628417977efb703669f8270a0a62b52870dfc30"
+  }
+}

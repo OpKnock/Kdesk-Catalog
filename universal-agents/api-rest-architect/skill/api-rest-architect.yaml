@@ -1,0 +1,164 @@
+name: api-rest-architect
+version: 2.0.0
+type: skill
+category: backend
+description: 'Architects REST APIs with an OpenAPI-first workflow: spectral linting, Redocly validation,
+  swagger-cli checks, and HTML reference docs generated from one contract.'
+keywords:
+- rest
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-rest-architect.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-rest-architect
+  generic:
+    system_prompt: 'You own api-rest-architect end to end. You do it through openapi-validation: Lint
+      and validate the OpenAPI contract before implementation. The commands are real, e.g. `npx @stoplight/spectral-cli
+      lint openapi.yaml -r .spectral.yml`. You answer with exact commands, not abstractions, and flag
+      anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: openapi-validation
+  description: Lint and validate the OpenAPI contract before implementation
+  commands:
+  - npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml
+  - npx @redocly/cli lint openapi.yaml --extends recommended
+  - npx swagger-cli validate openapi.yaml
+  - npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+  examples:
+  - spectral lint catches naming and schema rule violations
+  - swagger-cli validate confirms syntactically valid OpenAPI
+  - redocly bundle inlines external references
+  parameters:
+  - name: spec
+    type: string
+    description: Path to the OpenAPI document
+  - name: ruleset
+    type: string
+    description: Spectral ruleset file
+  - name: extends
+    type: string
+    description: Redocly config preset
+- name: docs-generation
+  description: Generate interactive reference documentation from the spec
+  commands:
+  - npx @redocly/cli build-docs openapi.yaml -o api-docs.html
+  - npx @redocly/cli preview-docs openapi.yaml
+  - curl -s http://localhost:8080/docs -o /dev/null -w '%{http_code}\n'
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- openapi
+- express
+tools:
+- node.js
+- python
+- openapi
+- express
+- fastify
+- postman
+examples:
+- input: Design a new orders API
+  output: Writes the OpenAPI contract, runs spectral lint, and generates docs before any code
+- input: Enforce API conventions team-wide
+  output: Creates a shared spectral ruleset and runs it in CI
+instructions: '# API REST Architect
+
+
+  Contract-first REST API design.
+
+
+  ## What This Skill Does
+
+  - Designs APIs from the OpenAPI contract first
+
+  - Enforces architectural rules with spectral
+
+  - Generates living docs from the spec
+
+
+  ## When to Use
+
+  - Designing new APIs before implementation
+
+  - Enforcing consistent API conventions across teams
+
+  - Publishing API contracts to consumers
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml
+
+  npx swagger-cli validate openapi.yaml
+
+  npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+
+  ```
+
+
+  ## Architectural Rules
+
+  - Resource naming: plural nouns, kebab-case paths
+
+  - Consistent error schema across operations
+
+  - Explicit response codes for every operation
+
+
+  ## Testing
+
+  - Run lint as a required CI gate
+
+  - Validate the bundled spec after generation
+
+  - Diff spec versions to review breaking changes
+
+
+  ## Best Practices
+
+  - Review the spec before writing code
+
+  - Reuse shared components for common responses
+
+  - Version the API in the URL or media type'
+display_name: api-rest-architect
+knowledge:
+- title: OpenAPI Specification
+  type: documentation
+  source: https://spec.openapis.org/oas/v3.1.0
+  description: The OpenAPI 3.1 specification
+- title: Spectral Documentation
+  type: documentation
+  source: https://docs.stoplight.io/docs/spectral/
+  description: Custom API linting rulesets

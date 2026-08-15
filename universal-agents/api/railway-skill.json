@@ -1,0 +1,171 @@
+{
+  "name": "railway",
+  "display_name": "Railway",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Deploy to Railway: login, init, link, deploy, variables, logs and project management with the railway CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "railway"
+  ],
+  "capabilities": [
+    {
+      "name": "railway-deployments",
+      "description": "Deploy applications to Railway, manage environment variables and inspect deployments.",
+      "commands": [
+        "railway login",
+        "railway init",
+        "railway up",
+        "railway deploy",
+        "railway variables"
+      ],
+      "examples": [
+        "railway up",
+        "railway variables --set FOO=bar",
+        "railway run npm run migrate"
+      ],
+      "parameters": [
+        {
+          "name": "project",
+          "type": "string",
+          "description": "Railway project name"
+        },
+        {
+          "name": "environment",
+          "type": "string",
+          "description": "Deploy environment (production/preview)"
+        },
+        {
+          "name": "variable",
+          "type": "string",
+          "description": "KEY=VALUE to set"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Railway Docs",
+      "type": "documentation",
+      "source": "https://docs.railway.com/",
+      "description": "CLI reference, deployment and environments"
+    },
+    {
+      "title": "Railway CLI GitHub",
+      "type": "documentation",
+      "source": "https://github.com/railwayapp/cli",
+      "description": "railway commands and usage"
+    }
+  ],
+  "instructions": "# Railway\n\nRailway deploys apps with zero config: push code, it runs.\n\n## What this skill does\n\n- Logs in and links projects\n- Deploys from the current directory\n- Manages variables and runs commands in the environment\n\n## When to use\n\n- Heroku-style deploys without the lock-in\n- Preview environments per PR\n\n## Real commands\n\n```bash\n# Auth\nrailway login\nrailway init\nrailway link\n\n# Deploy\nrailway up\nrailway deploy\n\n# Variables\nrailway variables\nrailway variables --set FOO=bar\nrailway variables --delete FOO\n\n# Run in project env\nrailway run npm run migrate\nrailway run python manage.py migrate\n\n# Logs\nrailway logs\nrailway logs --deployment\n```\n\n## Best practices\n\n- Keep secrets in variables, never in git\n- Use railway up for quick deploys, railway deploy for pinned environments\n- Run migrations via railway run before releases",
+  "examples": [
+    {
+      "input": "Deploy my Node app to Railway",
+      "output": "The agent links the project and runs railway up, then checks logs."
+    },
+    {
+      "input": "Add DATABASE_URL to my production environment",
+      "output": "The agent sets the variable with railway variables --set and redeploys."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "railway.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-railway"
+    },
+    "generic": {
+      "system_prompt": "You are the Railway specialist. You do it through railway-deployments: Deploy applications to Railway, manage environment variables and inspect deployments. The commands are real, e.g. `railway login`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "railway",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "railway-deployments",
+        "name": "project",
+        "type": "string",
+        "description": "Railway project name"
+      },
+      {
+        "capability": "railway-deployments",
+        "name": "environment",
+        "type": "string",
+        "description": "Deploy environment (production/preview)"
+      },
+      {
+        "capability": "railway-deployments",
+        "name": "variable",
+        "type": "string",
+        "description": "KEY=VALUE to set"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "railway"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/railway-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/railway-skill.yaml",
+    "checksum": "23c05ba2175716cc20ea9b0b2b3d074a4a324431600f2030c76c7dca4b7f6ec4"
+  }
+}

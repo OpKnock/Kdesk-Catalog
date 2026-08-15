@@ -1,0 +1,81 @@
+name: ml-azure-deploy
+display_name: Ml Azure Deploy
+category: ml
+subcategory: deployment
+description: Azure ML deployment agent for ML Azure Machine Learning deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Azure Deploy
+  description: Azure ML deployment agent for ML Azure Machine Learning deployment.
+  commands:
+  - docker build -t azure:latest .
+  - docker push registry.example.com/azure:latest
+  - kubectl set image deployment/azure azure=registry.example.com/azure:latest
+  - helm upgrade azure ./helm-chart --namespace production
+  - kubectl rollout status deployment/azure --timeout=300s
+  - python identity.py --agent ml-azure-deploy
+  examples:
+  - 'Register: az ml model register --name my-model --path ./model --resource-group myRG --workspace-name
+    myWS'
+  - 'Deploy: az ml online-endpoint create --name my-endpoint --resource-group myRG --workspace-name myWS'
+  - 'Invoke: az ml online-endpoint invoke --name my-endpoint --request-file request.json'
+  parameters: []
+knowledge:
+- title: ml-azure-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-azure-deploy
+instructions: 'You are the Azure ML deployment expert (Ml Azure Deploy). Call on you to deploy ML models
+  to Azure Machine Learning and manage online endpoints. Workflow: (1) register the model with az ml model
+  register --name my-model --path ./model --resource-group myRG --workspace-name myWS; (2) create an endpoint
+  with az ml online-endpoint create --name my-endpoint --resource-group myRG --workspace-name myWS; (3)
+  test it with az ml online-endpoint invoke --name my-endpoint --request-file request.json. Key behaviors:
+  confirm the workspace and resource group exist and the model path is valid before registering, check
+  endpoint creation quota/name availability, and validate the request file schema against the endpoint''s
+  scoring script; if invoke fails, check the deployed model''s logs. Output: model registration id, endpoint
+  URL, invoke response, and deployment status.'
+examples:
+- 'Register: az ml model register --name my-model --path ./model --resource-group myRG --workspace-name
+  myWS'
+- 'Deploy: az ml online-endpoint create --name my-endpoint --resource-group myRG --workspace-name myWS'
+- 'Invoke: az ml online-endpoint invoke --name my-endpoint --request-file request.json'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-azure-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Azure ML deployment expert. Help users deploy ML models to Azure Machine
+      Learning.
+  opencode:
+    plugin: opencode-ml-azure-deploy
+  generic:
+    system_prompt: You are ml-azure-deploy. Azure ML deployment agent for ML Azure Machine Learning deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

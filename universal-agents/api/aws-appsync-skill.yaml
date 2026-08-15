@@ -1,0 +1,207 @@
+name: aws-appsync
+display_name: Aws Appsync
+category: api
+subcategory: general
+description: 'Manages AWS AppSync GraphQL APIs: creating APIs, schema updates, resolvers, API keys, and
+  executing GraphQL queries.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- aws
+capabilities:
+- name: api-lifecycle
+  description: Create and configure AppSync GraphQL APIs.
+  commands:
+  - aws appsync create-graphql-api --name MyApi --authentication-type API_KEY
+  - aws appsync list-graphql-apis
+  - aws appsync get-graphql-api --api-id <api-id>
+  - aws appsync update-graphql-api --api-id <api-id> --authentication-type AMAZON_COGNITO_USER_POOLS --user-pool-config
+    '{...}'
+  - aws appsync delete-graphql-api --api-id <api-id>
+  examples:
+  - aws appsync create-graphql-api --name MyApi --authentication-type API_KEY
+  - aws appsync create-graphql-api --name MyApi --authentication-type AWS_IAM
+  - aws appsync list-graphql-apis --query 'graphqlApis[].{id:apiId,name:name}'
+  parameters:
+  - name: api_name
+    type: string
+    description: GraphQL API name
+  - name: auth_type
+    type: string
+    description: API_KEY, AWS_IAM, AMAZON_COGNITO_USER_POOLS, OPENID_CONNECT
+- name: schema-resolvers
+  description: Update schemas and manage resolvers.
+  commands:
+  - aws appsync start-schema-creation --api-id <api-id> --definition file://schema.graphql
+  - aws appsync get-schema-creation-status --api-id <api-id>
+  - aws appsync create-resolver --api-id <api-id> --type-name Query --field-name listItems --data-source-name
+    items --request-mapping-template file://req.vtl --response-mapping-template file://resp.vtl
+  - aws appsync list-resolvers --api-id <api-id> --type-name Query
+  - aws appsync get-introspection-schema --api-id <api-id> --format JSON introspection.json
+  examples:
+  - aws appsync start-schema-creation --api-id <api-id> --definition file://schema.graphql
+  - aws appsync create-resolver --api-id <api-id> --type-name Query --field-name getItem --data-source-name
+    items --request-mapping-template file://req.vtl --response-mapping-template file://resp.vtl
+  - aws appsync get-introspection-schema --api-id <api-id> --format SDL schema.graphql
+  parameters:
+  - name: type_name
+    type: string
+    description: GraphQL type (Query/Mutation)
+  - name: field_name
+    type: string
+    description: Field the resolver attaches to
+  - name: data_source
+    type: string
+    description: Data source name
+- name: invoke-graphql
+  description: Create API keys and execute GraphQL operations.
+  commands:
+  - aws appsync create-api-key --api-id <api-id>
+  - aws appsync list-api-keys --api-id <api-id>
+  - 'curl -X POST https://<api-id>.appsync-api.us-east-1.amazonaws.com/graphql -H "x-api-key: $API_KEY"
+    -H "Content-Type: application/json" -d ''{"query":"{ listItems { id } }"}'''
+  - 'curl -X POST https://<api-id>.appsync-api.us-east-1.amazonaws.com/graphql -H "x-api-key: $API_KEY"
+    -H "Content-Type: application/json" -d ''{"query":"mutation { createItem(input: {name: \"x\"}) { id
+    } }"}'''
+  examples:
+  - 'curl -X POST https://<api-id>.appsync-api.us-east-1.amazonaws.com/graphql -H "x-api-key: $API_KEY"
+    -H "Content-Type: application/json" -d ''{"query":"{ listItems { id name } }"}'''
+  - aws appsync create-api-key --api-id <api-id> --description "ci-key" --expires 1767225600
+  - 'curl -s -X POST https://<api-id>.appsync-api.us-east-1.amazonaws.com/graphql -H "x-api-key: $API_KEY"
+    -H "Content-Type: application/json" -d ''{"query":"{ __typename }"}'''
+  parameters:
+  - name: api_id
+    type: string
+    description: AppSync API ID
+  - name: api_key
+    type: string
+    description: API key for x-api-key header
+  - name: query
+    type: string
+    description: GraphQL query/mutation document
+knowledge:
+- title: AppSync Developer Guide
+  type: documentation
+  source: https://docs.aws.amazon.com/appsync/latest/devguide/
+  description: APIs, resolvers, VTL templates
+- title: AWS CLI appsync Reference
+  type: documentation
+  source: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/appsync/index.html
+  description: CLI commands
+- title: GraphQL Foundation
+  type: documentation
+  source: https://graphql.org/learn/
+  description: Query language basics
+instructions: '# AWS AppSync
+
+
+  ## What this skill does
+
+
+  Manages AWS AppSync GraphQL APIs: creating APIs with auth types, pushing schemas, wiring resolvers to
+  data sources, issuing API keys, and executing GraphQL operations via curl.
+
+
+  ## When to use
+
+
+  - Building a managed GraphQL API over DynamoDB/Lambda
+
+  - Updating a schema or resolver without redeploying the app
+
+  - Debugging GraphQL errors from the CLI
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create an API
+
+  aws appsync create-graphql-api --name MyApi --authentication-type API_KEY
+
+
+  # Push the schema
+
+  aws appsync start-schema-creation --api-id <api-id> --definition file://schema.graphql
+
+  aws appsync get-schema-creation-status --api-id <api-id>
+
+
+  # Create a resolver
+
+  aws appsync create-resolver --api-id <api-id> --type-name Query --field-name listItems --data-source-name
+  items --request-mapping-template file://req.vtl --response-mapping-template file://resp.vtl
+
+
+  # Get a key and query
+
+  aws appsync create-api-key --api-id <api-id>
+
+  curl -X POST https://<api-id>.appsync-api.us-east-1.amazonaws.com/graphql -H "x-api-key: $API_KEY" -H
+  "Content-Type: application/json" -d ''{"query":"{ listItems { id } }"}''
+
+  ```
+
+
+  ## Testing
+
+
+  - Use { __typename } as a smoke query to confirm auth works
+
+  - Check schema status before creating resolvers
+
+
+  ## Best practices
+
+
+  - Use AWS_IAM or Cognito auth for production; API_KEY for dev
+
+  - Put VTL templates in version control
+
+  - Rotate API keys before expiry via list-api-keys'
+examples:
+- input: Create a GraphQL API over our DynamoDB table
+  output: Creates the API with API_KEY auth, pushes schema.graphql, creates a Query resolver with VTL
+    templates, and tests with a curl query.
+- input: Switch our API to Cognito auth
+  output: Runs update-graphql-api with AMAZON_COGNITO_USER_POOLS and a userPoolConfig, then verifies key-based
+    calls now fail and Cognito tokens work.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: aws-appsync.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-aws-appsync
+  generic:
+    system_prompt: 'You work Aws Appsync hands-on. You do it through api-lifecycle: Create and configure
+      AppSync GraphQL APIs. The commands are real, e.g. `aws appsync create-graphql-api --name MyApi --authentication-type
+      API_KEY`. You answer with exact commands, not abstractions, and flag anything you have not verified
+      yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

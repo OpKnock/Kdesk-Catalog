@@ -1,0 +1,123 @@
+{
+  "name": "ci-jenkins",
+  "display_name": "Ci Jenkins",
+  "category": "devops",
+  "subcategory": "deployment",
+  "description": "Jenkins CI/CD agent. Real Jenkins pipeline syntax.",
+  "version": "1.0.0",
+  "tags": [
+    "devops",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ci Jenkins",
+      "description": "Jenkins CI/CD agent. Real Jenkins pipeline syntax.",
+      "commands": [
+        "Pipeline: pipeline { agent any stages { stage('Build') { steps { sh 'npm ci' } } } }",
+        "Credentials: withCredentials([string(credentialsId: 'token', variable: 'TOKEN')]) { }",
+        "Post: post { always { junit 'test-results/*.xml' } }",
+        "Agent: agent { label 'docker' }"
+      ],
+      "examples": [
+        "Pipeline: pipeline { agent any stages { stage('Build') { steps { sh 'npm ci' } } } }",
+        "Agent: agent { label 'docker' }",
+        "Credentials: withCredentials([string(credentialsId: 'token', variable: 'TOKEN')]) { }",
+        "Post: post { always { junit 'test-results/*.xml' } }"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ci-jenkins Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/devops/deployment",
+      "description": "Reference documentation for ci-jenkins"
+    }
+  ],
+  "instructions": "You are a Jenkins expert. Help users with:\n- Declarative pipelines\n- Scripted pipelines\n- Shared libraries\n- Plugins\n- Credentials\n- Agents\n\nAlways use real Jenkins syntax. Never suggest fictional tools.",
+  "examples": [
+    "Pipeline: pipeline { agent any stages { stage('Build') { steps { sh 'npm ci' } } } }",
+    "Agent: agent { label 'docker' }",
+    "Credentials: withCredentials([string(credentialsId: 'token', variable: 'TOKEN')]) { }",
+    "Post: post { always { junit 'test-results/*.xml' } }"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ci-jenkins.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Jenkins expert. Help users with:\n- Declarative pipelines\n- Scripted pipelines\n- Shared libraries\n- Plugins\n- Credentials\n- Agents\n\nAlways use real Jenkins syntax. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-ci-jenkins"
+    },
+    "generic": {
+      "system_prompt": "You are ci-jenkins. Jenkins CI/CD agent. Real Jenkins pipeline syntax.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ci-jenkins",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/deployment/ci-jenkins.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/deployment/ci-jenkins.yaml",
+    "checksum": "51caaf64a2bd82326b0fd509cfebf6bfd5e713fdcc81955eece52afb2e40b822"
+  }
+}

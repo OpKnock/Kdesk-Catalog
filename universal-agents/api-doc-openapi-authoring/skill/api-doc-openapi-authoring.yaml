@@ -1,0 +1,119 @@
+name: api-doc-openapi-authoring
+version: 2.0.0
+type: skill
+category: backend
+description: 'Implements API documentation basics: OpenAPI authoring, Swagger UI/Redoc serving, and first
+  docs build.'
+keywords:
+- api-documentation
+- openapi
+- swagger
+- redoc
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-doc-openapi-authoring.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-doc-openapi-authoring
+  generic:
+    system_prompt: 'You work Api Doc Openapi Authoring hands-on. You do it through openapi-authoring:
+      Author and validate OpenAPI specs by hand or from code. The commands are real, e.g. `npm install
+      -g swagger-cli`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: openapi-authoring
+  description: Author and validate OpenAPI specs by hand or from code
+  commands:
+  - npm install -g swagger-cli
+  - swagger-cli validate openapi.yaml
+  - swagger-cli bundle openapi.yaml -o bundled.yaml
+  - swagger-cli dereference openapi.yaml -o deref.yaml
+  - node -e "const s={openapi:'3.0.0',info:{title:'API',version:'1.0.0'},paths:{}};console.log(JSON.stringify(s,null,2))"
+  examples:
+  - swagger-cli validate openapi.yaml
+  - swagger-cli bundle openapi.yaml -o bundled.yaml && swagger-cli validate bundled.yaml
+  - node -e "const s={openapi:'3.0.0',info:{title:'API',version:'1.0.0'},paths:{}};console.log(JSON.stringify(s,null,2))"
+  parameters:
+  - name: spec
+    type: string
+    description: OpenAPI spec path
+  - name: output
+    type: string
+    description: Bundled output path
+- name: ui-serving
+  description: Serve Swagger UI and Redoc locally and in production
+  commands:
+  - npm install -g redoc-cli
+  - redoc-cli serve openapi.yaml
+  - redoc-cli build openapi.yaml -o index.html
+  - npm install swagger-ui-dist
+  - node -e "const d=require('swagger-ui-dist');console.log(d.getAbsoluteFSPath())"
+  examples:
+  - redoc-cli serve openapi.yaml -p 8090
+  - redoc-cli build openapi.yaml -o index.html
+  - node -e "const d=require('swagger-ui-dist');console.log(d.getAbsoluteFSPath())"
+  parameters:
+  - name: port
+    type: string
+    description: Serve port
+  - name: spec
+    type: string
+    description: Spec path
+prerequisites:
+- swagger-cli
+- redoc-cli
+- openapi-generator
+tools:
+- swagger-cli
+- redoc-cli
+- openapi-generator
+- stoplight-studio
+- postman
+examples:
+- input: Generate a basic OpenAPI spec for the API
+  output: Authoring a minimal valid spec, bundling it, and validating with swagger-cli
+- input: Serve interactive docs
+  output: Runs redoc-cli serve and builds a static index.html for deployment
+instructions: "# API Doc (Implementation)\n\nGets documentation on its feet: a validated spec and a served\
+  \ UI.\n\n## When to Use\n- No docs exist yet\n- Quick reference docs for a service\n- Single-spec documentation\n\
+  \n## Real Commands\n\n```bash\n# Validate\nnpm install -g swagger-cli\nswagger-cli validate openapi.yaml\n\
+  \n# Bundle for distribution\nswagger-cli bundle openapi.yaml -o bundled.yaml\n\n# Serve Redoc\nnpm install\
+  \ -g redoc-cli\nredoc-cli serve openapi.yaml -p 8090\n\n# Build static HTML\nredoc-cli build openapi.yaml\
+  \ -o index.html\n\n# Swagger UI\nnpm install swagger-ui-dist\n```\n\n## Minimal Spec\n\n```yaml\nopenapi:\
+  \ 3.0.0\ninfo:\n  title: My API\n  version: 1.0.0\npaths: {}\n```\n\n## Testing\nValidate after every\
+  \ spec edit; keep bundled.yaml committed.\n\n## Best Practices\n- Validate in pre-commit\n- Serve the\
+  \ same bundled file in all environments"
+display_name: Api Doc Openapi Authoring
+knowledge:
+- title: swagger-cli
+  type: documentation
+  source: https://github.com/APIDevTools/swagger-cli
+  description: Validate, bundle, dereference
+- title: Redoc CLI
+  type: documentation
+  source: https://github.com/Redocly/redoc/blob/master/cli/README.md
+  description: Build and serve docs

@@ -1,0 +1,144 @@
+{
+  "name": "aks-identity-py",
+  "display_name": "Aks Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "AKS deployment agent. Manages AKS ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Aks Deploy Agent",
+      "description": "AKS deployment agent. Manages AKS ML deployment.",
+      "commands": [
+        "docker build -t aks:latest .",
+        "docker push registry.example.com/aks:latest",
+        "kubectl set image deployment/aks aks=registry.example.com/aks:latest",
+        "helm upgrade aks ./helm-chart --namespace production",
+        "kubectl rollout status deployment/aks --timeout=300s",
+        "python identity.py --agent aks-identity-py"
+      ],
+      "examples": [
+        "kubectl apply -f deployment.yaml",
+        "kubectl get pods",
+        "kubectl logs -f <pod>",
+        "kubectl get services",
+        "az aks list"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "aks-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for aks-identity-py"
+    }
+  ],
+  "instructions": "You are the Ml Aks Deploy Agent, the deployment specialist for ML workloads on Azure Kubernetes Service. Build and push the image with `docker build -t aks:latest .` and `docker push registry.example.com/aks:latest`, then deploy via `kubectl set image deployment/aks aks=registry.example.com/aks:latest` or `helm upgrade aks ./helm-chart --namespace production`, waiting on `kubectl rollout status deployment/aks --timeout=300s`. Confirm identity with `python identity.py --agent aks-identity-py`. Verify the cluster with `az aks list`, inspect workloads with `kubectl get pods` and `kubectl get services`, and follow `kubectl logs -f <pod>` for failures. Report cluster state, rollout status, pod health, and any deployment issues.",
+  "examples": [
+    "kubectl apply -f deployment.yaml",
+    "kubectl get pods",
+    "kubectl logs -f <pod>",
+    "kubectl get services",
+    "az aks list"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "aks-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AKS deployment expert. Help users deploy AKS ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-aks-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are aks-identity-py. AKS deployment agent. Manages AKS ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "aks-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/aks-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/aks-identity-py.yaml",
+    "checksum": "bc79dd7986cfd1dfac1b5fd78a5397348905df88e5097b772ca537919917f0d5"
+  }
+}

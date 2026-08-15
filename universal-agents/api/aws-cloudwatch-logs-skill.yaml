@@ -1,0 +1,202 @@
+name: aws-cloudwatch-logs
+display_name: Aws Cloudwatch Logs
+category: api
+subcategory: general
+description: 'Manages CloudWatch Logs: log groups and streams, putting events, filtering with patterns,
+  and tailing logs.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- aws
+capabilities:
+- name: log-groups
+  description: Create and manage log groups and streams.
+  commands:
+  - aws logs create-log-group --log-group-name /aws/api/prod
+  - aws logs create-log-stream --log-group-name /aws/api/prod --log-stream-name api-001
+  - aws logs describe-log-groups --log-group-name-prefix /aws/api
+  - aws logs describe-log-streams --log-group-name /aws/api/prod
+  - aws logs delete-log-group --log-group-name /aws/api/expired
+  examples:
+  - aws logs create-log-group --log-group-name /aws/api/prod --retention-in-days 30
+  - aws logs describe-log-streams --log-group-name /aws/api/prod --order-by LastEventTime --descending
+    --limit 5
+  - aws logs put-retention-policy --log-group-name /aws/api/prod --retention-in-days 90
+  parameters:
+  - name: log_group
+    type: string
+    description: Log group name
+  - name: retention
+    type: number
+    description: Retention in days
+- name: query-logs
+  description: Filter and search log events.
+  commands:
+  - aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERROR"
+  - aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern '?ERROR ?EXCEPTION'
+  - aws logs tail /aws/api/prod --follow
+  - aws logs tail /aws/api/prod --since 1h
+  - aws logs get-log-events --log-group-name /aws/api/prod --log-stream-name api-001
+  examples:
+  - aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "\"status=500\"" --start-time
+    $(date -d '1 hour ago' +%s000)
+  - aws logs tail /aws/api/prod --follow --format short
+  - aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERROR" | jq '.events[].message'
+  parameters:
+  - name: filter_pattern
+    type: string
+    description: CloudWatch Logs filter pattern
+  - name: start_time
+    type: number
+    description: Start time in ms epoch
+  - name: since
+    type: string
+    description: Relative window for tail (1h, 30m)
+- name: ingest
+  description: Put log events and test ingestion.
+  commands:
+  - aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date
+    +%s)*1000)),message='health ok'
+  - aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date
+    +%s)*1000)),message='ERROR timeout'
+  - aws logs list-tags-log-group --log-group-name /aws/api/prod
+  - aws logs tag-log-group --log-group-name /aws/api/prod --tags Environment=prod
+  examples:
+  - aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date
+    +%s)*1000)),message='{"event":"deploy"}'
+  - aws logs tag-log-group --log-group-name /aws/api/prod --tags team=api
+  - aws logs list-tags-log-group --log-group-name /aws/api/prod
+  parameters:
+  - name: message
+    type: string
+    description: Log event message
+  - name: tags
+    type: string
+    description: Key=value tags
+knowledge:
+- title: CloudWatch Logs Docs
+  type: documentation
+  source: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
+  description: Concepts and operations
+- title: Filter Pattern Syntax
+  type: documentation
+  source: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html
+  description: Pattern matching for filter-log-events
+- title: AWS CLI logs Reference
+  type: documentation
+  source: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/logs/index.html
+  description: CLI commands
+instructions: '# AWS CloudWatch Logs
+
+
+  ## What this skill does
+
+
+  Manages CloudWatch Logs: log groups/streams, ingestion of test events, pattern-based filtering, live
+  tailing, and retention policies.
+
+
+  ## When to use
+
+
+  - Investigating an error across an API''s log group
+
+  - Setting up retention for compliance
+
+  - Watching logs live during a deploy
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create group with retention
+
+  aws logs create-log-group --log-group-name /aws/api/prod
+
+  aws logs put-retention-policy --log-group-name /aws/api/prod --retention-in-days 30
+
+
+  # Filter for errors
+
+  aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERROR"
+
+
+  # OR-match patterns
+
+  aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern ''?ERROR ?EXCEPTION''
+
+
+  # Live tail
+
+  aws logs tail /aws/api/prod --follow
+
+
+  # Ingest a test event
+
+  aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date
+  +%s)*1000)),message=''ERROR timeout''
+
+  ```
+
+
+  ## Testing
+
+
+  - Ingest a test ERROR event, then filter to confirm it appears
+
+  - Use --start-time with ms epoch for time-boxed searches
+
+
+  ## Best practices
+
+
+  - Use structured JSON messages for queryability
+
+  - Set retention on every group to control cost
+
+  - Stream critical groups to a SIEM or S3 for long-term storage'
+examples:
+- input: Find every ERROR in the last hour
+  output: Runs filter-log-events with --filter-pattern "ERROR" and --start-time for 1 hour ago, and formats
+    messages with jq.
+- input: Watch our API logs during the deploy
+  output: Starts `aws logs tail /aws/api/prod --follow` and interprets startup, readiness, and error lines.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: aws-cloudwatch-logs.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-aws-cloudwatch-logs
+  generic:
+    system_prompt: 'You own Aws Cloudwatch Logs end to end. You do it through log-groups: Create and manage
+      log groups and streams. The commands are real, e.g. `aws logs create-log-group --log-group-name
+      /aws/api/prod`. You answer with exact commands, not abstractions, and flag anything you have not
+      verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,198 @@
+{
+  "name": "crictl",
+  "display_name": "crictl",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Debugs containers and pods at the CRI level with crictl: inspect sandboxes, run containers directly, and read container logs and stats.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "crictl"
+  ],
+  "capabilities": [
+    {
+      "name": "cri-inspection",
+      "description": "List, inspect, and describe pods and containers as seen by the container runtime.",
+      "commands": [
+        "crictl ps",
+        "crictl pods",
+        "crictl inspect <container-id>",
+        "crictl inspectp <pod-id>",
+        "crictl images",
+        "crictl info"
+      ],
+      "examples": [
+        "crictl ps -a",
+        "crictl inspect 3e2d1c4a",
+        "crictl pods --state Ready"
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Container or pod sandbox ID prefix"
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "description": "Filter by state: Running, Exited, Ready"
+        }
+      ]
+    },
+    {
+      "name": "debug-and-logs",
+      "description": "Run one-off debug containers, exec into running containers, and stream logs at runtime level.",
+      "commands": [
+        "crictl run --no-pull debug-container.json sandbox.json",
+        "crictl exec -it <container-id> sh",
+        "crictl logs --tail 100 <container-id>",
+        "crictl stats",
+        "crictl rm <container-id>",
+        "crictl rmi --prune"
+      ],
+      "examples": [
+        "crictl exec -it 3e2d1c4a sh",
+        "crictl logs --tail 200 3e2d1c4a",
+        "crictl stats"
+      ],
+      "parameters": [
+        {
+          "name": "container-id",
+          "type": "string",
+          "description": "Container ID prefix"
+        },
+        {
+          "name": "tail",
+          "type": "integer",
+          "description": "Number of log lines to show"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "crictl Reference (Kubernetes)",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/reference/tools/mapcrictl/",
+      "description": "Official mapping of kubectl to crictl commands"
+    },
+    {
+      "title": "crictl GitHub",
+      "type": "documentation",
+      "source": "https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md",
+      "description": "Full crictl command reference and config options"
+    }
+  ],
+  "instructions": "# crictl CRI Debugging\n\nInspect containers and pods at the container-runtime-interface level, below kubectl.\n\n## What This Skill Does\n\n- Lists pods and containers the way containerd sees them\n- Inspects sandbox and container details (images, mounts, labels)\n- Execs and reads logs without relying on the API server\n- Runs one-off debug containers (e.g. busybox) inside the runtime\n- Pulls stats and prunes stale images/containers\n\n## When to Use\n\n- kubectl hangs or the API server is down but nodes run containers\n- Debugging container start failures, OOM kills, or runtime errors\n- Forensics: what is actually running on a node right now\n\n## Real Commands\n\n```bash\n# Inspect\ncrictl pods\ncrictl pods --state Ready\ncrictl ps -a\ncrictl inspect 3e2d1c4a          # container details\ncrictl inspectp a9b8c7d6         # pod sandbox details\ncrictl images\ncrictl info                      # runtime + CRI version\n\n# Debug\ncrictl run --no-pull debug.json sandbox.json\ncrictl exec -it 3e2d1c4a sh\ncrictl logs --tail 200 3e2d1c4a\ncrictl stats\n\n# Cleanup\ncrictl rm -f <id>\ncrictl rmi --prune\ncrictl cleanup\n```\n\n## Debug Container Config\n\n```json\n{\n  \"metadata\": { \"name\": \"debug-container\" },\n  \"image\": { \"image\": \"busybox\" },\n  \"command\": [\"sh\", \"-c\", \"sleep 3600\"],\n  \"stdin\": true\n}\n```\n\n## Best Practices\n\n- Set `--runtime-endpoint unix:///run/containerd/containerd.sock` on containerd nodes\n- Use `crictl inspect` output (JSON) with jq for scripting\n- Prefer `crictl logs --tail` over full logs in production\n- Use `crictl stats` to spot CPU/mem pressure before OOM-kill forensics",
+  "examples": [
+    {
+      "input": "A pod shows Running in kubectl but its container is actually dead",
+      "output": "Agent runs crictl ps -a, inspects the exited container, reads logs with crictl logs, and determines exit reason (OOM, bad image, runtime error)"
+    },
+    {
+      "input": "Check what images are cached on the node",
+      "output": "Agent runs crictl images to list cached images with sizes and IDs"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "crictl.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-crictl"
+    },
+    "generic": {
+      "system_prompt": "You take the crictl seat. You do it through cri-inspection: List, inspect, and describe pods and containers as seen by the container runtime. The commands are real, e.g. `crictl ps`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "crictl",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cri-inspection",
+        "name": "id",
+        "type": "string",
+        "description": "Container or pod sandbox ID prefix"
+      },
+      {
+        "capability": "cri-inspection",
+        "name": "state",
+        "type": "string",
+        "description": "Filter by state: Running, Exited, Ready"
+      },
+      {
+        "capability": "debug-and-logs",
+        "name": "container-id",
+        "type": "string",
+        "description": "Container ID prefix"
+      },
+      {
+        "capability": "debug-and-logs",
+        "name": "tail",
+        "type": "integer",
+        "description": "Number of log lines to show"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "crictl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/crictl-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/crictl-skill.yaml",
+    "checksum": "4d1dc9e6f7355616f4d10bda0bf460eed497d5bbd61c7251df041a281ad8bada"
+  }
+}

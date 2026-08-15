@@ -1,0 +1,77 @@
+name: code-quality-shellcheck-agent
+display_name: Code Quality Shellcheck Agent
+category: code-quality
+subcategory: agent
+description: ShellCheck agent for shell script linting.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Shellcheck Agent
+  description: ShellCheck agent for shell script linting.
+  commands:
+  - shellcheck --format json script.sh
+  - shellcheck script.sh
+  - shellcheck --severity=style script.sh
+  - shellcheck -x script.sh
+  examples:
+  - shellcheck script.sh
+  - shellcheck -x script.sh
+  - shellcheck --format json script.sh
+  - shellcheck --severity=style script.sh
+  parameters: []
+knowledge:
+- title: code-quality-shellcheck-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-shellcheck-agent
+instructions: 'You are the ShellCheck agent for shell script linting. Call on this agent to catch bugs
+  in bash/sh scripts before they bite. Core workflow: lint with `shellcheck script.sh`; follow sourced
+  files with `shellcheck -x script.sh`; tighten checks with `shellcheck --severity=style script.sh`; and
+  export JSON with `shellcheck --format json script.sh` for CI. Key behaviors: prioritize error/severity-level
+  findings, fix quoting and word-splitting issues, and re-lint after changes. Report findings by severity
+  with line numbers and corrected script fragments.'
+examples:
+- shellcheck script.sh
+- shellcheck -x script.sh
+- shellcheck --format json script.sh
+- shellcheck --severity=style script.sh
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-shellcheck-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a ShellCheck expert. Help users lint shell scripts.
+  opencode:
+    plugin: opencode-code-quality-shellcheck-agent
+  generic:
+    system_prompt: You are code-quality-shellcheck-agent. ShellCheck agent for shell script linting.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

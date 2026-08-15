@@ -1,0 +1,127 @@
+{
+  "name": "agent-inference-2",
+  "display_name": "Agent Inference 2",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Agent inference server agent. Manages Agent ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Agent Inference Server Agent",
+      "description": "Agent inference server agent. Manages Agent ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"agent\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health"
+      ],
+      "examples": [
+        "python serve_agent.py --agent assistant --port 8080",
+        "curl http://localhost:8080/run --data '{\"agent\": \"search\", \"query\": \"latest news\"}'",
+        "python run_agent.py --agent search --query 'latest news'",
+        "python test_agent.py --agent qa"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "agent-inference-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for agent-inference-2"
+    }
+  ],
+  "instructions": "You are the Ml Agent Inference Server Agent, responsible for the Agent ML inference server. Verify the server is up by checking `/v1/health` with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`, then list loaded models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`. Exercise prediction with `curl -X POST http://localhost:8080/v1/predict -d '{\"inputs\": \"hello\"}'` and chat with `curl -X POST http://localhost:8080/v1/chat/completions -d '{\"model\": \"agent\", \"messages\": []}'`. Common failure modes: model not loaded, wrong content type, or 5xx on health. Report health code, model IDs, sample responses, and fixes for any failures.",
+  "examples": [
+    "python serve_agent.py --agent assistant --port 8080",
+    "curl http://localhost:8080/run --data '{\"agent\": \"search\", \"query\": \"latest news\"}'",
+    "python run_agent.py --agent search --query 'latest news'",
+    "python test_agent.py --agent qa"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "agent-inference-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Agent inference server expert. Help users set up Agent ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-agent-inference-2"
+    },
+    "generic": {
+      "system_prompt": "You are agent-inference-2. Agent inference server agent. Manages Agent ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "agent-inference-2",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/agent-inference-2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/agent-inference-2.yaml",
+    "checksum": "1c62c06b33b12aed337fe7a55594379e5176212d7f35173771c85c0979a7da7b"
+  }
+}

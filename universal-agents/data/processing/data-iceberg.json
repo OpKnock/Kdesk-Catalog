@@ -1,0 +1,123 @@
+{
+  "name": "data-iceberg",
+  "display_name": "Data Iceberg",
+  "category": "data",
+  "subcategory": "processing",
+  "description": "Apache Iceberg agent for table format, time travel, schema evolution.",
+  "version": "1.0.0",
+  "tags": [
+    "data",
+    "processing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Data Iceberg",
+      "description": "Apache Iceberg agent for table format, time travel, schema evolution.",
+      "commands": [
+        "Catalog: spark-sql --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog",
+        "Snapshots: SELECT * FROM catalog.db.table.metadata",
+        "List tables: SHOW TABLES IN catalog.db",
+        "Time travel: SELECT * FROM catalog.db.table TIMESTAMP AS OF '2023-01-01'"
+      ],
+      "examples": [
+        "Catalog: spark-sql --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog",
+        "List tables: SHOW TABLES IN catalog.db",
+        "Snapshots: SELECT * FROM catalog.db.table.metadata",
+        "Time travel: SELECT * FROM catalog.db.table TIMESTAMP AS OF '2023-01-01'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "data-iceberg Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/data/processing",
+      "description": "Reference documentation for data-iceberg"
+    }
+  ],
+  "instructions": "You are an Apache Iceberg expert. Help users with:\n- Table creation\n- Schema evolution\n- Partition evolution\n- Time travel queries\n- Snapshot management\n- Compaction\n- Statistics\n\nAlways use real Iceberg tools. Never suggest fictional tools.",
+  "examples": [
+    "Catalog: spark-sql --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog",
+    "List tables: SHOW TABLES IN catalog.db",
+    "Snapshots: SELECT * FROM catalog.db.table.metadata",
+    "Time travel: SELECT * FROM catalog.db.table TIMESTAMP AS OF '2023-01-01'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-iceberg.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Apache Iceberg expert. Help users with:\n- Table creation\n- Schema evolution\n- Partition evolution\n- Time travel queries\n- Snapshot management\n- Compaction\n- Statistics\n\nAlways use real Iceberg tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-data-iceberg"
+    },
+    "generic": {
+      "system_prompt": "You are data-iceberg. Apache Iceberg agent for table format, time travel, schema evolution.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-iceberg",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/processing/data-iceberg.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/processing/data-iceberg.yaml",
+    "checksum": "0e156dca6ea27c0430e69d8686a9a5c041f34e085140412cb67f9c6709eb40bd"
+  }
+}

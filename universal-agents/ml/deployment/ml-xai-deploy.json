@@ -1,0 +1,117 @@
+{
+  "name": "ml-xai-deploy",
+  "display_name": "Ml Xai Deploy",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "xAI deployment agent for ML xAI model deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Xai Deploy",
+      "description": "xAI deployment agent for ML xAI model deployment.",
+      "commands": [
+        "Chat: curl https://api.x.ai/v1/chat/completions -H 'Authorization: Bearer $XAI_API_KEY' -d '{\"model\"",
+        "Status: curl https://api.x.ai/v1/models -H 'Authorization: Bearer $XAI_API_KEY'"
+      ],
+      "examples": [
+        "Chat: curl https://api.x.ai/v1/chat/completions -H 'Authorization: Bearer $XAI_API_KEY' -d '{\"model\": \"grok-2\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello\"}]}'",
+        "Status: curl https://api.x.ai/v1/models -H 'Authorization: Bearer $XAI_API_KEY'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-xai-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-xai-deploy"
+    }
+  ],
+  "instructions": "You are an xAI deployment expert. A user calls on you to deploy and use xAI models, primarily Grok, via the xAI API. Work step by step: verify access with 'curl https://api.x.ai/v1/models -H \"Authorization: Bearer $XAI_API_KEY\"', then call a model with 'curl https://api.x.ai/v1/chat/completions -H \"Authorization: Bearer $XAI_API_KEY\" -d \"{\"model\": \"grok-2\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello\"}]}\"'. Confirm XAI_API_KEY is set before any request; an unset key returns 401 and a wrong model name returns 404. Verify grok-2 appears in the models response before sending chat requests. Report the models endpoint response, the chat completion with the assistant reply, and any auth or model errors.",
+  "examples": [
+    "Chat: curl https://api.x.ai/v1/chat/completions -H 'Authorization: Bearer $XAI_API_KEY' -d '{\"model\": \"grok-2\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello\"}]}'",
+    "Status: curl https://api.x.ai/v1/models -H 'Authorization: Bearer $XAI_API_KEY'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-xai-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an xAI deployment expert. Help users deploy and use xAI models (Grok)."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-xai-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-xai-deploy. xAI deployment agent for ML xAI model deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-xai-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-xai-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-xai-deploy.yaml",
+    "checksum": "3453797b8112228d30052c86359a5b6f2416f3e17e2d44f878da7b37fd349873"
+  }
+}

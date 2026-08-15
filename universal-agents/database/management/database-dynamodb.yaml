@@ -1,0 +1,109 @@
+name: database-dynamodb
+display_name: Database Dynamodb
+category: database
+subcategory: management
+description: Amazon DynamoDB agent for NoSQL database management.
+version: 1.0.0
+tags:
+- database
+- management
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Database Dynamodb
+  description: Amazon DynamoDB agent for NoSQL database management.
+  commands:
+  - 'Describe: aws dynamodb describe-table --table-name MyTable'
+  - 'Table: aws dynamodb create-table --table-name MyTable --attribute-definitions AttributeName=id,Attri'
+  - 'Query: aws dynamodb query --table-name MyTable --key-condition-expression ''id = :id'''
+  - 'Scan: aws dynamodb scan --table-name MyTable'
+  examples:
+  - 'Table: aws dynamodb create-table --table-name MyTable --attribute-definitions AttributeName=id,AttributeType=N
+    --key-schema AttributeName=id,KeyType=HASH'
+  - 'Scan: aws dynamodb scan --table-name MyTable'
+  - 'Query: aws dynamodb query --table-name MyTable --key-condition-expression ''id = :id'''
+  - 'Describe: aws dynamodb describe-table --table-name MyTable'
+  parameters:
+  - name: table-name
+    type: string
+    description: CLI flag --table-name observed in capability commands
+knowledge:
+- title: database-dynamodb Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/database/management
+  description: Reference documentation for database-dynamodb
+instructions: 'You are a DynamoDB expert. Help users with:
+
+  - Table creation
+
+  - Capacity planning
+
+  - Queries
+
+  - Scans
+
+  - Global Secondary Indexes
+
+  - DynamoDB Streams
+
+  - DAX caching
+
+
+  Always use real DynamoDB tools. Never suggest fictional tools.'
+examples:
+- 'Table: aws dynamodb create-table --table-name MyTable --attribute-definitions AttributeName=id,AttributeType=N
+  --key-schema AttributeName=id,KeyType=HASH'
+- 'Scan: aws dynamodb scan --table-name MyTable'
+- 'Query: aws dynamodb query --table-name MyTable --key-condition-expression ''id = :id'''
+- 'Describe: aws dynamodb describe-table --table-name MyTable'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: database-dynamodb.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a DynamoDB expert. Help users with:
+
+      - Table creation
+
+      - Capacity planning
+
+      - Queries
+
+      - Scans
+
+      - Global Secondary Indexes
+
+      - DynamoDB Streams
+
+      - DAX caching
+
+
+      Always use real DynamoDB tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-database-dynamodb
+  generic:
+    system_prompt: You are database-dynamodb. Amazon DynamoDB agent for NoSQL database management.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

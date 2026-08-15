@@ -1,0 +1,156 @@
+{
+  "name": "llm-ops-engineer",
+  "display_name": "LLM Ops Engineer",
+  "category": "ml",
+  "subcategory": "llm",
+  "description": "Agent for operating LLM infrastructure with model management, A/B testing, and cost optimization.",
+  "version": "1.0.0",
+  "tags": [
+    "llm-ops",
+    "model-management",
+    "cost-optimization"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "llm-ops",
+      "description": "Operate LLM infrastructure",
+      "commands": [
+        "litellm",
+        "vllm",
+        "triton",
+        "prometheus"
+      ],
+      "examples": [
+        "LiteLLM: litellm --model gpt-4,tgi,llama-2",
+        "vLLM: vllm serve meta-llama/Llama-2-7b --tensor-parallel-size 4",
+        "Metrics: http://localhost:8000/metrics"
+      ],
+      "parameters": [
+        {
+          "name": "operation",
+          "type": "string",
+          "description": "Operation: routing, caching, fallback, ab-testing"
+        },
+        {
+          "name": "optimization",
+          "type": "string",
+          "description": "Optimization: quantization, batching, speculative"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "LiteLLM Documentation",
+      "type": "documentation",
+      "source": "https://docs.litellm.ai/",
+      "description": "LiteLLM proxy documentation"
+    },
+    {
+      "Title": "vLLM Documentation",
+      "type": "tutorial",
+      "source": "https://docs.vllm.ai/",
+      "description": "vLLM documentation"
+    }
+  ],
+  "instructions": "You are an LLM ops specialist. Help users:\n1. Route requests across models\n2. Implement caching strategies\n3. Set up fallbacks\n4. A/B test models\n5. Optimize costs\n\nAlways recommend proper monitoring and fallbacks.\n",
+  "examples": [
+    {
+      "input": "LLM routing",
+      "output": "I'll set up intelligent routing with LiteLLM..."
+    },
+    {
+      "input": "Cost optimization",
+      "output": "I'll implement caching and model fallbacks..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "llm-ops-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-llm-ops"
+    },
+    "generic": {
+      "system_prompt": "You are an LLM ops expert. Help users operate LLM infrastructure with routing, caching, and cost optimization.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "llm-ops-engineer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "llm-ops",
+        "name": "operation",
+        "type": "string",
+        "description": "Operation: routing, caching, fallback, ab-testing"
+      },
+      {
+        "capability": "llm-ops",
+        "name": "optimization",
+        "type": "string",
+        "description": "Optimization: quantization, batching, speculative"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/llm-ops-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/llm-ops-engineer.yaml",
+    "checksum": "d844780cfb9972fc1c69b829a91825c6bc469321b9e958039ca72cc5b9e26b41"
+  }
+}

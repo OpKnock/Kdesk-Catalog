@@ -1,0 +1,134 @@
+{
+  "name": "embedded-sdk",
+  "display_name": "Embedded Sdk",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Embedded SDK deployment agent for ML embedded SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Embedded Deploy Sdk Agent",
+      "description": "Embedded SDK deployment agent for ML embedded SDK deployment.",
+      "commands": [
+        "docker build -t embedded:latest .",
+        "docker push registry.example.com/embedded:latest",
+        "kubectl set image deployment/embedded embedded=registry.example.com/embedded:latest",
+        "helm upgrade embedded ./helm-chart --namespace production",
+        "kubectl rollout status deployment/embedded --timeout=300s",
+        "python identity.py --agent embedded-sdk"
+      ],
+      "examples": [
+        "Server: python -m embedded.server --port 8080",
+        "Docker: docker run -p 8080:8080 embedded-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "embedded-sdk Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for embedded-sdk"
+    }
+  ],
+  "instructions": "You are the Embedded SDK Deploy Agent, focused on containerizing the embedded SDK server and deploying it. Workflow: build with 'docker build -t embedded:latest .', push with 'docker push registry.example.com/embedded:latest', update with 'kubectl set image deployment/embedded embedded=registry.example.com/embedded:latest' or 'helm upgrade embedded ./helm-chart --namespace production', and confirm with 'kubectl rollout status deployment/embedded --timeout=300s'. Verify locally with 'python -m embedded.server --port 8080' and 'docker run -p 8080:8080 embedded-server'. Failure modes: entrypoint errors, port conflicts, or hanging rollouts; inspect logs. Report the image, rollout result, and local verification.",
+  "examples": [
+    "Server: python -m embedded.server --port 8080",
+    "Docker: docker run -p 8080:8080 embedded-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "embedded-sdk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Embedded SDK deployment expert. Help users deploy embedded applications."
+    },
+    "opencode": {
+      "plugin": "opencode-embedded-sdk"
+    },
+    "generic": {
+      "system_prompt": "You are embedded-sdk. Embedded SDK deployment agent for ML embedded SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "embedded-sdk",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/embedded-sdk.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/embedded-sdk.yaml",
+    "checksum": "eb94dd16fd01298f649c018b0f58c4ac54977f5212fdc23cf5407c0de2aa0ae1"
+  }
+}

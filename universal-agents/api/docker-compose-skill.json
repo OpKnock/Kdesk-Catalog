@@ -1,0 +1,173 @@
+{
+  "name": "docker-compose",
+  "display_name": "Docker Compose",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Multi-container local development and orchestration with Docker Compose: lifecycle commands, logs, exec, config validation, and cleanup.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker"
+  ],
+  "capabilities": [
+    {
+      "name": "compose-lifecycle",
+      "description": "Manage Compose projects: start, stop, rebuild, stream logs, exec into services, and validate config.",
+      "commands": [
+        "docker compose up -d",
+        "docker compose up -d --build web",
+        "docker compose ps",
+        "docker compose logs -f web --tail=100",
+        "docker compose exec web sh",
+        "docker compose config --services",
+        "docker compose down -v"
+      ],
+      "examples": [
+        "docker compose up -d --build web && docker compose logs -f web",
+        "docker compose config --quiet && docker compose up -d",
+        "docker compose down -v && docker compose up -d --force-recreate"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Compose service name to target (web, db, redis, ...)"
+        },
+        {
+          "name": "compose-file",
+          "type": "string",
+          "description": "Override compose file, e.g. docker-compose.override.yml"
+        },
+        {
+          "name": "cleanup-volumes",
+          "type": "boolean",
+          "description": "Whether to remove named volumes on down (-v)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Compose CLI Reference",
+      "type": "documentation",
+      "source": "https://docs.docker.com/reference/cli/docker/compose/",
+      "description": "All docker compose subcommands, flags, and behaviors"
+    },
+    {
+      "title": "Compose Specification",
+      "type": "documentation",
+      "source": "https://compose-spec.io/",
+      "description": "The compose.yaml schema: services, networks, volumes, and dependencies"
+    }
+  ],
+  "instructions": "# Docker Compose\n\n## What this skill does\n\nDocker Compose defines multi-container apps declaratively in compose.yaml and provides one-command lifecycle management: up, logs, exec, rebuild, and down.\n\n## When to use\n\n- Local development with several services (web, db, cache, queue)\n- Reproducible test environments in CI\n- One-command startup for new team members\n\n## Real commands\n\n```bash\n# Start everything in detached mode\ncd project && docker compose up -d\n\n# Rebuild and start only the web service\n docker compose up -d --build web\n\n# Inspect state and stream logs\ndocker compose ps\ndocker compose logs -f web --tail=100\n\n# Run a command inside a service\ndocker compose exec web sh\n\n# Validate the config without starting anything\ndocker compose config --quiet\ndocker compose config --services\n\n# Full teardown including named volumes\ndocker compose down -v\n```\n\n## compose.yaml example\n\n```yaml\nservices:\n  web:\n    build: .\n    ports: ['8080:8080']\n    environment:\n      DATABASE_URL: postgres://app:app@db:5432/app\n    depends_on:\n      db:\n        condition: service_healthy\n  db:\n    image: postgres:16\n    environment:\n      POSTGRES_PASSWORD: app\n    healthcheck:\n      test: ['CMD-SHELL', 'pg_isready -U app']\n      interval: 5s\n    volumes:\n      - pgdata:/var/lib/postgresql/data\nvolumes:\n  pgdata:\n```\n\n## Testing\n\n```bash\n# Wait for healthy dependencies and hit the app\nuntil docker compose ps db | grep -q healthy; do sleep 1; done\ncurl -s localhost:8080/health | jq\n```\n\n## Best practices\n\n- Pin image versions (postgres:16 not postgres:latest) for reproducibility.\n- Use healthchecks + `depends_on.condition` instead of sleep hacks.\n- Keep secrets out of compose files; use .env with `env_file:`.\n- Add `--quiet` config validation to CI.\n- Use `docker compose down -v` only in dev; it destroys data volumes.\n",
+  "examples": [
+    {
+      "input": "Restart the stack after changing compose.yaml",
+      "output": "Validate with docker compose config --quiet, recreate with docker compose up -d, then follow logs with docker compose logs -f web."
+    },
+    {
+      "input": "The db container keeps restarting",
+      "output": "Run docker compose logs db --tail=100 to see the crash, verify the volume and POSTGRES_PASSWORD in compose.yaml, then docker compose up -d --force-recreate db."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "docker-compose.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-docker-compose"
+    },
+    "generic": {
+      "system_prompt": "You own Docker Compose end to end. You do it through compose-lifecycle: Manage Compose projects: start, stop, rebuild, stream logs, exec into services, and validate config. The commands are real, e.g. `docker compose up -d`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "docker-compose",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "compose-lifecycle",
+        "name": "service",
+        "type": "string",
+        "description": "Compose service name to target (web, db, redis, ...)"
+      },
+      {
+        "capability": "compose-lifecycle",
+        "name": "compose-file",
+        "type": "string",
+        "description": "Override compose file, e.g. docker-compose.override.yml"
+      },
+      {
+        "capability": "compose-lifecycle",
+        "name": "cleanup-volumes",
+        "type": "boolean",
+        "description": "Whether to remove named volumes on down (-v)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/docker-compose-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/docker-compose-skill.yaml",
+    "checksum": "d1efe89075210c166068ab4fb8372dfd6dd5f8cd51fcd7767ea6554e3768c084"
+  }
+}

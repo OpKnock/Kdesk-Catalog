@@ -1,0 +1,205 @@
+{
+  "name": "api-error-unification",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Migrates fragmented error handling across services onto one standard: unified format, shared codes, and centralized documentation.",
+  "keywords": [
+    "api-errors",
+    "error-format",
+    "problem-details"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-error-unification.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-error-unification"
+    },
+    "generic": {
+      "system_prompt": "You are the Api Error Unification specialist. You do it through error-unification: Map legacy error shapes to a canonical problem-details format across services. The commands are real, e.g. `curl -s http://svc-a.local/error | python -m json.tool`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "error-unification",
+      "description": "Map legacy error shapes to a canonical problem-details format across services",
+      "commands": [
+        "curl -s http://svc-a.local/error | python -m json.tool",
+        "curl -s http://svc-b.local/error | python -m json.tool",
+        "node -e \"const map={404:{code:'NOT_FOUND',status:404}};console.log(map[404])\"",
+        "python -c \"print({404:{'code':'NOT_FOUND','status':404}})\"",
+        "curl -s http://localhost:3000/api/errors/catalog | python -m json.tool"
+      ],
+      "examples": [
+        "curl -s http://svc-a.local/error | python -m json.tool && curl -s http://svc-b.local/error | python -m json.tool",
+        "curl -s http://localhost:3000/api/errors/catalog | python -m json.tool",
+        "node -e \"const c=[{old:'NotFoundError',code:'NOT_FOUND',status:404}];console.log(JSON.stringify(c))\""
+      ],
+      "parameters": [
+        {
+          "name": "serviceUrl",
+          "type": "string",
+          "description": "Service endpoint to inspect"
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "description": "Canonical error code"
+        }
+      ]
+    },
+    {
+      "name": "catalog-management",
+      "description": "Maintain a versioned error catalog that is machine-readable",
+      "commands": [
+        "node -e \"const c=require('./errors.json');console.log(c.length+' codes')\"",
+        "python -m json.tool errors.json > errors.pretty.json",
+        "node -e \"const fs=require('fs');const c=JSON.parse(fs.readFileSync('errors.json'));fs.writeFileSync('errors.json',JSON.stringify(c.concat([{code:'RATE_LIMITED',status:429}]),null,2))\"",
+        "git diff --stat errors.json",
+        "node -e \"const c=require('./errors.json');const dup=c.filter((e,i)=>c.findIndex(x=>x.code===e.code)!==i);console.log('dups:',dup.length)\""
+      ],
+      "examples": [
+        "node -e \"const fs=require('fs');const c=JSON.parse(fs.readFileSync('errors.json'));console.log(c.filter(e=>e.status>=500))\"",
+        "node -e \"const c=require('./errors.json');const dup=c.filter((e,i)=>c.findIndex(x=>x.code===e.code)!==i);console.log('dups:',dup.length)\"",
+        "python -m json.tool errors.json > errors.pretty.json && git diff --stat errors.json"
+      ],
+      "parameters": [
+        {
+          "name": "catalogPath",
+          "type": "string",
+          "description": "Path to the error catalog JSON"
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "description": "Error code to add or query"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "openapi"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "openapi",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Unify error formats across our microservices",
+      "output": "Introduces a canonical problem-details format with per-service translation middleware and CI assertions"
+    },
+    {
+      "input": "Build an error catalog for support teams",
+      "output": "Creates a versioned errors.json with codes, statuses, and remediation notes consumed by docs and dashboards"
+    }
+  ],
+  "instructions": "# API Error (Unification & Catalog)\n\nMoves a fleet of services onto one error format with a shared, versioned error catalog.\n\n## When to Use\n- Different services return different error shapes\n- Clients hand-parse error bodies per service\n- Auditors need a machine-readable error inventory\n\n## Real Commands\n\n```bash\n# Compare current shapes\ncurl -s http://svc-a.local/error | python -m json.tool\ncurl -s http://svc-b.local/error | python -m json.tool\n\n# Validate catalog\nnode -e \"const c=require('./errors.json');console.log(c.length+' codes')\"\n\n# Check for duplicate codes\nnode -e \"const c=require('./errors.json');const dup=c.filter((e,i)=>c.findIndex(x=>x.code===e.code)!==i);console.log('dups:',dup.length)\"\n```\n\n## Migration Order\n1. Publish the canonical catalog\n2. Add translation middleware (legacy shape in, canonical out)\n3. Flip services one at a time\n4. Remove translation layer\n\n## Testing\nEvery service must return the same shape for the same code; assert in CI.\n\n## Best Practices\n- Catalog is the source of truth for codes\n- Version the catalog; never delete codes, deprecate",
+  "display_name": "Api Error Unification",
+  "knowledge": [
+    {
+      "title": "RFC 9457",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc9457",
+      "description": "Problem details for HTTP APIs"
+    },
+    {
+      "title": "JSON Schema",
+      "type": "documentation",
+      "source": "https://json-schema.org/",
+      "description": "Validate error catalog shapes"
+    }
+  ],
+  "id": "api-error-unification",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "error-unification",
+        "name": "serviceUrl",
+        "type": "string",
+        "description": "Service endpoint to inspect"
+      },
+      {
+        "capability": "error-unification",
+        "name": "code",
+        "type": "string",
+        "description": "Canonical error code"
+      },
+      {
+        "capability": "catalog-management",
+        "name": "catalogPath",
+        "type": "string",
+        "description": "Path to the error catalog JSON"
+      },
+      {
+        "capability": "catalog-management",
+        "name": "code",
+        "type": "string",
+        "description": "Error code to add or query"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "openapi"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-error-unification/skill/api-error-unification.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-error-unification/skill/api-error-unification.yaml",
+    "checksum": "1c0e2f6869e68674473aa22255299080e580879811db5cfba9dc446d020a5a01"
+  }
+}

@@ -1,0 +1,99 @@
+name: pre-commit
+display_name: pre-commit
+category: code-quality
+subcategory: general
+description: 'Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook
+  repos.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pre-commit
+capabilities:
+- name: pre-commit-hooks
+  description: Install, run, and manage pre-commit framework git hooks
+  commands:
+  - pre-commit install
+  - pre-commit run --all-files
+  - pre-commit autoupdate
+  - pre-commit run ruff --files src/
+  - pre-commit validate-config
+  examples:
+  - pre-commit run --all-files --show-diff-on-failure
+  - pre-commit run trailing-whitespace --files README.md
+  - pre-commit clean && pre-commit install-hooks
+  parameters:
+  - name: files
+    type: string
+    description: Only run hooks against these files
+  - name: show-diff-on-failure
+    type: boolean
+    description: Print the diff when a hook modifies files
+  - name: all-files
+    type: boolean
+    description: Run against all files instead of staged ones
+knowledge:
+- title: pre-commit docs
+  type: documentation
+  source: https://pre-commit.com/
+  description: Framework docs, hook catalog, and config format
+- title: pre-commit supported hooks
+  type: documentation
+  source: https://pre-commit.com/hooks.html
+  description: Official hook list and how to add community hooks
+instructions: "# Pre-commit\n\nFramework for managing and maintaining multi-language git hooks, so every\
+  \ commit\nruns the same checks as CI.\n\n## When to Use\n\n- Standardizing checks (lint, format, secrets)\
+  \ across a team\n- Running Python and JS linters in one hook pipeline\n- Keeping hooks versioned and\
+  \ shareable\n\n## Real Commands\n\n```bash\n# Install the hooks into the repo\npre-commit install\n\n\
+  # Run all hooks on everything (CI / after config change)\npre-commit run --all-files\n\n# Run a single\
+  \ hook\npre-commit run ruff\n\n# Run only against specific files\npre-commit run --files src/foo.py\n\
+  \n# Update hook revisions\npre-commit autoupdate\n\n# Validate the config file\npre-commit validate-config\n\
+  \n# Clean cache when hooks misbehave\npre-commit clean\n```\n\n## Config (.pre-commit-config.yaml)\n\
+  \n```yaml\nrepos:\n  - repo: https://github.com/pre-commit/pre-commit-hooks\n    rev: v4.6.0\n    hooks:\n\
+  \      - id: trailing-whitespace\n      - id: check-added-large-files\n      - id: end-of-file-fixer\n\
+  \  - repo: https://github.com/astral-sh/ruff-pre-commit\n    rev: v0.6.0\n    hooks:\n      - id: ruff\n\
+  \        args: [--fix]\n      - id: ruff-format\n```\n\n## CI\n\n```yaml\n- name: pre-commit\n  run:\
+  \ |\n    pip install pre-commit\n    pre-commit run --all-files\n```\n\n## Best Practices\n\n- Run `pre-commit\
+  \ autoupdate` monthly and commit the bumps\n- Put the `pre-commit-ci` bot on PRs so hooks update automatically\n\
+  - Use `--show-diff-on-failure` to see what hooks changed\n- Keep fast hooks in pre-commit; move heavy\
+  \ suites to CI\n\n## Example Response\n\nAfter a failing commit, reports which hook failed, what it\
+  \ modified, and the exact\ntail of the diff so the user can re-stage and commit."
+examples:
+- input: Set up git hooks for this repo
+  output: Creates .pre-commit-config.yaml with ruff, ruff-format, and common hooks, then runs pre-commit
+    install and pre-commit run --all-files to baseline
+- input: Our hooks are outdated
+  output: Runs pre-commit autoupdate, then pre-commit run --all-files to verify everything still passes
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pre-commit.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pre-commit
+  generic:
+    system_prompt: 'You take the pre-commit seat. You do it through pre-commit-hooks: Install, run, and
+      manage pre-commit framework git hooks. The commands are real, e.g. `pre-commit install`. You work
+      hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

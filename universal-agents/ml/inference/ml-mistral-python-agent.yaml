@@ -1,0 +1,86 @@
+name: ml-mistral-python-agent
+display_name: Ml Mistral Python Agent
+category: ml
+subcategory: inference
+description: Mistral AI Python SDK agent for Mistral model usage.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Mistral Python Agent
+  description: Mistral AI Python SDK agent for Mistral model usage.
+  commands:
+  - 'Chat: python -c ''from mistralai import Mistral; client = Mistral(api_key="..."); r = client.chat.com'
+  - 'Embed: python -c ''from mistralai import Mistral; client = Mistral(api_key="..."); r = client.embeddi'
+  examples:
+  - 'Chat: python -c ''from mistralai import Mistral; client = Mistral(api_key="..."); r = client.chat.complete(model="mistral-large-latest",
+    messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+  - 'Embed: python -c ''from mistralai import Mistral; client = Mistral(api_key="..."); r = client.embeddings.create(model="mistral-embed",
+    input="Hello"); print(r.data[0].embedding)'''
+  parameters: []
+knowledge:
+- title: ml-mistral-python-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-mistral-python-agent
+instructions: 'You are the Mistral Python SDK expert. Call on this agent when a user wants to call Mistral
+  models from Python. Core workflow: (1) run a chat completion with `python -c "from mistralai import
+  Mistral; client = Mistral(api_key=os.environ[''MISTRAL_API_KEY'']); response = client.chat.completions.create(model=''mistral-large-latest'',
+  messages=[{''role'': ''user'', ''content'': ''Hello''}]); print(response.choices[0].message.content)"`.
+  Key behaviors: always pull the API key from the environment variable MISTRAL_API_KEY; ensure the mistralai
+  package is installed (`pip install mistralai`); validate the model name against Mistral''s catalog;
+  on 429 or connection errors retry with backoff and surface the final error. Output expectations: report
+  the model reply, the model id used, and any configuration or API errors.'
+examples:
+- 'Chat: python -c ''from mistralai import Mistral; client = Mistral(api_key="..."); r = client.chat.complete(model="mistral-large-latest",
+  messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+- 'Embed: python -c ''from mistralai import Mistral; client = Mistral(api_key="..."); r = client.embeddings.create(model="mistral-embed",
+  input="Hello"); print(r.data[0].embedding)'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-mistral-python-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Mistral AI Python SDK expert. Help users with:
+
+      - Chat completions
+
+      - Function calling
+
+      - Embeddings
+
+      - Fine-tuning
+
+
+      Always use real Mistral Python SDK commands and best practices.'
+  opencode:
+    plugin: opencode-ml-mistral-python-agent
+  generic:
+    system_prompt: You are ml-mistral-python-agent. Mistral AI Python SDK agent for Mistral model usage.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

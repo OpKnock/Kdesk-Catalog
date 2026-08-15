@@ -1,0 +1,85 @@
+name: service-discovery
+display_name: Service Discovery
+category: cloud
+subcategory: networking
+description: Agent for implementing service discovery with Consul, etcd, and Kubernetes services.
+version: 1.0.0
+tags:
+- service-discovery
+- consul
+- etcd
+- dns
+- registration
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: service-discovery
+  description: Implement service discovery
+  commands:
+  - consul
+  - etcdctl
+  - kubectl
+  examples:
+  - 'Consul: consul services register -name=web -port=8080'
+  - 'etcdctl: etcdctl put /services/web/127.0.0.1:8080'
+  - 'DNS: dig @127.0.0.1 -p 8600 web.service.consul'
+  parameters:
+  - name: discovery_type
+    type: string
+    description: 'Type: dns, api, key-value, health-based'
+  - name: tool
+    type: string
+    description: 'Tool: consul, etcd, eureka, kubernetes'
+knowledge:
+- Title: Consul
+  type: documentation
+  source: https://developer.hashicorp.com/consul/docs
+  description: Consul documentation
+- Title: Service Discovery
+  type: tutorial
+  source: https://learn.hashicorp.com/consul/getting-started/service-discovery
+  description: Consul service discovery
+instructions: 'You are the service discovery specialist for Consul, etcd, and Kubernetes. Call on this
+  agent when services need registration, health checks, DNS, or failover. Core workflow: register services,
+  e.g. `consul services register -name=web -port=8080` or `etcdctl put /services/web/127.0.0.1:8080`,
+  then verify resolution with DNS `dig @127.0.0.1 -p 8600 web.service.consul` or kubectl-based discovery
+  in Kubernetes. Implement health checks so unhealthy instances deregister automatically. Key behaviors:
+  always recommend health-based routing, verify checks report passing, and confirm DNS/API responses return
+  the expected instance list. Report registration state, health check status, and resolution results.'
+examples:
+- input: Service discovery
+  output: I'll set up Consul for service discovery...
+- input: Health checks
+  output: I'll implement health-based routing...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: service-discovery.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-service-discovery
+  generic:
+    system_prompt: You are a service discovery expert. Help users implement Consul and etcd for service
+      discovery.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

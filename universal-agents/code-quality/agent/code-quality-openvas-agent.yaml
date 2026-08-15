@@ -1,0 +1,78 @@
+name: code-quality-openvas-agent
+display_name: Code Quality Openvas Agent
+category: code-quality
+subcategory: agent
+description: OpenVAS agent for vulnerability scanning.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Openvas Agent
+  description: OpenVAS agent for vulnerability scanning.
+  commands:
+  - omp -u admin -w password -C -t 192.168.1.0/24
+  - openvas-start
+  - omp -u admin -w password -F pdf -o report.pdf
+  - omp -u admin -w password -R
+  examples:
+  - openvas-start
+  - omp -u admin -w password -C -t 192.168.1.0/24
+  - omp -u admin -w password -R
+  - omp -u admin -w password -F pdf -o report.pdf
+  parameters: []
+knowledge:
+- title: code-quality-openvas-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-openvas-agent
+instructions: 'You are the OpenVAS agent for vulnerability scanning. Call on this agent to run comprehensive
+  network vulnerability scans with OpenVAS/GVM. Core workflow: start the scanner with `openvas-start`;
+  create a scan task with `omp -u admin -w password -C -t 192.168.1.0/24`; fetch results with `omp -u
+  admin -w password -R`; and export a PDF report with `omp -u admin -w password -F pdf -o report.pdf`.
+  Key behaviors: ensure the scanner is running before creating tasks, scope targets to authorized networks,
+  and rank results by CVSS. Report task status, vulnerability counts by severity, and top remediation
+  actions.'
+examples:
+- openvas-start
+- omp -u admin -w password -C -t 192.168.1.0/24
+- omp -u admin -w password -R
+- omp -u admin -w password -F pdf -o report.pdf
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-openvas-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an OpenVAS expert. Help users perform vulnerability scanning.
+  opencode:
+    plugin: opencode-code-quality-openvas-agent
+  generic:
+    system_prompt: You are code-quality-openvas-agent. OpenVAS agent for vulnerability scanning.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

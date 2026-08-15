@@ -1,0 +1,206 @@
+{
+  "name": "kafka-compaction",
+  "display_name": "Kafka Compaction",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Operate Kafka log compaction: enable compacted topics, tune min.cleanable.dirty.ratio and segment.ms, and verify tombstones and duplicate-key removal.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-configs.sh",
+    "kafka-console-consumer.sh",
+    "kafka-log-dirs.sh",
+    "kafka-run-class.sh",
+    "kafka-topics.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "enable-compaction",
+      "description": "Enable and tune log compaction per topic with kafka-configs.sh.",
+      "commands": [
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config cleanup.policy=compact",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config \"min.cleanable.dirty.ratio=0.01\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config \"segment.ms=3600000,delete.retention.ms=86400000\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --describe"
+      ],
+      "examples": [
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config cleanup.policy=compact",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config \"min.cleanable.dirty.ratio=0.01\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --describe"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic name to configure."
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Comma-separated configs, e.g. min.cleanable.dirty.ratio=0.01,segment.ms=3600000."
+        }
+      ]
+    },
+    {
+      "name": "verify-compaction",
+      "description": "Verify compaction state, log segments, and tombstoned keys.",
+      "commands": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders",
+        "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list orders",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --property print.key=true --max-messages 10",
+        "kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1"
+      ],
+      "examples": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --property print.key=true --max-messages 10",
+        "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list orders"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic to inspect."
+        },
+        {
+          "name": "max_messages",
+          "type": "integer",
+          "description": "Number of records to read for verification."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka Log Compaction",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#compaction",
+      "description": "Official compaction concept and configuration reference."
+    },
+    {
+      "title": "kafka-configs.sh",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#configuration",
+      "description": "Topic/broker config CLI reference."
+    }
+  ],
+  "instructions": "# Kafka Compaction\n\nConfigure and operate Kafka log compaction for keyed, always-latest-value topics.\n\n## What this skill does\n\n- Enables cleanup.policy=compact on topics.\n- Tunes compaction frequency (min.cleanable.dirty.ratio) and segment rollover (segment.ms).\n- Verifies duplicate keys are removed and tombstones are applied.\n\n## When to use\n\n- Materialized state (user profiles, device registry) stored in Kafka.\n- Reduce storage for keyed topics that keep changing.\n- Enabling the Kafka Streams changelog compaction requirement.\n\n## Real commands\n\n```bash\n# Enable compaction\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name orders --alter \\\n  --add-config cleanup.policy=compact\n\n# Compact aggressively (lower dirty ratio = more frequent compaction)\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name orders --alter \\\n  --add-config \"min.cleanable.dirty.ratio=0.01\"\n\n# Roll segments hourly; keep tombstones 1 day\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name orders --alter \\\n  --add-config \"segment.ms=3600000,delete.retention.ms=86400000\"\n\n# Inspect config\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name orders --describe\n\n# Check log segments on disk\nkafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list orders\n\n# Read keyed records to verify dedup\nkafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n  --topic orders --from-beginning --property print.key=true --max-messages 10\n```\n\n## Config example (create with compaction)\n\n```bash\nkafka-topics.sh --bootstrap-server localhost:9092 --create \\\n  --topic user-profiles --partitions 6 --replication-factor 3 \\\n  --config cleanup.policy=compact --config min.cleanable.dirty.ratio=0.1\n```\n\n## Testing\n\n```bash\n# Produce a key twice, consume from beginning, expect only the newest value\necho '{\"key\":\"u-1\",\"v\":1}' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic user-profiles --property parse.key=true --property key.separator=:\n```\n\n## Best practices\n\n- Compaction works per partition; order is preserved for a key.\n- Keep segment.ms small for keyed streams so dirty data rolls over fast.\n- Tombstones (null value) remove the key entirely after delete.retention.ms.\n- Don't use compacted topics for event logs; use retention-based topics.\n",
+  "examples": [
+    {
+      "input": "Turn on compaction for the user-profiles topic",
+      "output": "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name user-profiles --alter --add-config cleanup.policy=compact"
+    },
+    {
+      "input": "Why is my compacted topic still growing?",
+      "output": "Lower min.cleanable.dirty.ratio (e.g. 0.01) and segment.ms (e.g. 3600000), then check kafka-log-dirs.sh for segment rollover."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-compaction.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-compaction"
+    },
+    "generic": {
+      "system_prompt": "You own Kafka Compaction end to end. You do it through enable-compaction: Enable and tune log compaction per topic with kafka-configs.sh. The commands are real, e.g. `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-compaction",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "enable-compaction",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic name to configure."
+      },
+      {
+        "capability": "enable-compaction",
+        "name": "config",
+        "type": "string",
+        "description": "Comma-separated configs, e.g. min.cleanable.dirty.ratio=0.01,segment.ms=3600000."
+      },
+      {
+        "capability": "verify-compaction",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic to inspect."
+      },
+      {
+        "capability": "verify-compaction",
+        "name": "max_messages",
+        "type": "integer",
+        "description": "Number of records to read for verification."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-configs.sh",
+    "kafka-console-consumer.sh",
+    "kafka-log-dirs.sh",
+    "kafka-run-class.sh",
+    "kafka-topics.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-compaction-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-compaction-skill.yaml",
+    "checksum": "e139d6a463dba6a822c70634c8ac8f6042a653d563a43034580fa182cb0c324d"
+  }
+}

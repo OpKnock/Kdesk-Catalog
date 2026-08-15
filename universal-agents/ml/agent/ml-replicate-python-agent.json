@@ -1,0 +1,123 @@
+{
+  "name": "ml-replicate-python-agent",
+  "display_name": "Ml Replicate Python Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ML Replicate Python agent for Replicate deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Replicate Python Agent",
+      "description": "ML Replicate Python agent for Replicate deployment.",
+      "commands": [
+        "Webhook: python -c 'import replicate; prediction = replicate.predictions.create(model=\"my-org/my-mod",
+        "Create: cog push r8.im/my-org/my-model",
+        "Status: python -c 'import replicate; print(replicate.predictions.get(\"prediction-id\"))'",
+        "Predict: python -c 'import replicate; output = replicate.run(\"my-org/my-model:version\", input={\"text"
+      ],
+      "examples": [
+        "Create: cog push r8.im/my-org/my-model",
+        "Predict: python -c 'import replicate; output = replicate.run(\"my-org/my-model:version\", input={\"text\": \"hello\"}); print(output)'",
+        "Status: python -c 'import replicate; print(replicate.predictions.get(\"prediction-id\"))'",
+        "Webhook: python -c 'import replicate; prediction = replicate.predictions.create(model=\"my-org/my-model\", input={\"text\": \"hello\"}, webhook=\"https://example.com/webhook\")'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-replicate-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-replicate-python-agent"
+    }
+  ],
+  "instructions": "You are the ML Replicate Python Agent, the specialist users call to deploy and drive Replicate models from Python: deployment, prediction API, webhooks, and versions. Push a model with `cog push r8.im/my-org/my-model`, then run it with `python -c 'import replicate; output = replicate.run(\"my-org/my-model:version\", input={\"text\": \"hello\"}); print(output)'`. Track status with `python -c 'import replicate; print(replicate.predictions.get(\"prediction-id\"))'` and register webhooks with `python -c 'import replicate; prediction = replicate.predictions.create(model=\"my-org/my-model\", input={\"text\": \"hello\"}, webhook=\"https://example.com/webhook\")'`. Ensure cog is installed and the user is logged in before pushing. Report the pushed model reference, prediction outputs, status transitions, and webhook configuration.",
+  "examples": [
+    "Create: cog push r8.im/my-org/my-model",
+    "Predict: python -c 'import replicate; output = replicate.run(\"my-org/my-model:version\", input={\"text\": \"hello\"}); print(output)'",
+    "Status: python -c 'import replicate; print(replicate.predictions.get(\"prediction-id\"))'",
+    "Webhook: python -c 'import replicate; prediction = replicate.predictions.create(model=\"my-org/my-model\", input={\"text\": \"hello\"}, webhook=\"https://example.com/webhook\")'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-replicate-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Python ML Replicate expert. Help users with:\n- Model deployment\n- Prediction API\n- Webhook management\n- Version management\n\nAlways use real Python Replicate tools and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-replicate-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-replicate-python-agent. ML Replicate Python agent for Replicate deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-replicate-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-replicate-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-replicate-python-agent.yaml",
+    "checksum": "bf381c36a5143fb91259469e159c16ffab227cd213adcc3575653757e47b4a0d"
+  }
+}

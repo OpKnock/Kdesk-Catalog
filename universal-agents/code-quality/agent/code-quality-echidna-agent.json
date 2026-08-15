@@ -1,0 +1,127 @@
+{
+  "name": "code-quality-echidna-agent",
+  "display_name": "Code Quality Echidna Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "Echidna agent for smart contract fuzzing.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Echidna Agent",
+      "description": "Echidna agent for smart contract fuzzing.",
+      "commands": [
+        "echidna-test contract.sol --config echidna.yaml",
+        "echidna-test contract.sol --corpus-dir corpus",
+        "echidna-test contract.sol --contract ContractName",
+        "echidna-test contract.sol --test-mode assertion"
+      ],
+      "examples": [
+        "echidna-test contract.sol --contract ContractName",
+        "echidna-test contract.sol --config echidna.yaml",
+        "echidna-test contract.sol --test-mode assertion",
+        "echidna-test contract.sol --corpus-dir corpus"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-echidna-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-echidna-agent"
+    }
+  ],
+  "instructions": "You are the Echidna agent for smart contract fuzzing. Call on this agent to property-test Solidity contracts. Core workflow: run fuzzing with `echidna-test contract.sol`; target a specific contract with `echidna-test contract.sol --contract ContractName`; drive assertion-mode testing with `echidna-test contract.sol --test-mode assertion`; and persist interesting inputs with `echidna-test contract.sol --corpus-dir corpus` or a tuned config via `--config echidna.yaml`. Key behaviors: write meaningful invariants, treat any failing property as a security bug, and replay corpus to confirm fixes. Report failing properties with minimized input sequences and contract locations.",
+  "examples": [
+    "echidna-test contract.sol --contract ContractName",
+    "echidna-test contract.sol --config echidna.yaml",
+    "echidna-test contract.sol --test-mode assertion",
+    "echidna-test contract.sol --corpus-dir corpus"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-echidna-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Echidna expert. Help users fuzz test smart contracts."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-echidna-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-echidna-agent. Echidna agent for smart contract fuzzing.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-echidna-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-echidna-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-echidna-agent.yaml",
+    "checksum": "065c81c2a923cad5e5f804aa6126639a49f1b3e200bf1c3d1b622e79514913ab"
+  }
+}

@@ -1,0 +1,225 @@
+name: kubectl
+display_name: Kubectl
+category: devops
+subcategory: general
+description: 'Core kubectl operations: resource CRUD, labels/annotations, explain, apply vs create, JSON
+  output, and kubeconfig management.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+capabilities:
+- name: resource-operations
+  description: Create, get, describe, edit, and delete Kubernetes resources.
+  commands:
+  - kubectl get pods -A -o wide
+  - kubectl apply -f deployment.yaml
+  - kubectl create configmap app-config --from-file=config/
+  - kubectl edit deployment web
+  - kubectl delete pod web-7d9f8c9d4-xk2pq --grace-period=5
+  - kubectl get all -n app
+  examples:
+  - kubectl apply -f deployment.yaml
+  - kubectl create configmap app-config --from-file=config/
+  - kubectl get pods -A -o wide
+  parameters:
+  - name: resource
+    type: string
+    description: Resource type, e.g. pods, deployments
+  - name: namespace
+    type: string
+    description: Namespace scope
+  - name: file
+    type: string
+    description: Manifest file
+- name: label-and-metadata
+  description: Manage labels, annotations, selectors, and explain resource schema.
+  commands:
+  - kubectl label pod web env=prod
+  - kubectl annotate deploy/web kubernetes.io/change-cause="bump image"
+  - kubectl get pods -l app=web,env=prod
+  - kubectl explain deployment.spec.strategy
+  - kubectl get pod web-7d9f8c9d4-xk2pq -o jsonpath='{.status.phase}'
+  examples:
+  - kubectl get pods -l app=web,env=prod
+  - kubectl explain deployment.spec.strategy
+  - kubectl get pod web-7d9f8c9d4-xk2pq -o jsonpath='{.status.phase}'
+  parameters:
+  - name: key
+    type: string
+    description: Label key
+  - name: value
+    type: string
+    description: Label value
+  - name: selector
+    type: string
+    description: Label selector
+- name: kubeconfig-and-context
+  description: Switch clusters, inspect contexts, and verify permissions.
+  commands:
+  - kubectl config get-contexts
+  - kubectl config use-context prod-east
+  - kubectl config current-context
+  - kubectl auth can-i create deployments -n app
+  - kubectl api-resources --namespaced=true
+  examples:
+  - kubectl config use-context prod-east
+  - kubectl auth can-i create deployments
+  - kubectl config get-contexts
+  parameters:
+  - name: context
+    type: string
+    description: Context name
+  - name: namespace
+    type: string
+    description: Namespace for auth checks
+knowledge:
+- title: kubectl Reference
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Full kubectl command and flag reference
+- title: kubectl Cheat Sheet
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+  description: Common commands for daily operations
+- title: JSONPath Support
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/jsonpath/
+  description: kubectl -o jsonpath expressions
+instructions: '# kubectl Core Operations
+
+
+  Daily Kubernetes CLI work: inspect, create, label, and manage resources.
+
+
+  ## What This Skill Does
+
+
+  - Gets resources in wide/JSON/YAML output
+
+  - Applies declarative manifests and creates imperative resources
+
+  - Edits live resources and deletes with graceful termination
+
+  - Manages labels, annotations, and selectors
+
+  - Switches contexts and checks RBAC permissions
+
+
+  ## When to Use
+
+
+  - Any Kubernetes inspection or change
+
+  - Building scripting pipelines over cluster state
+
+  - Teaching the core command surface
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Inspect
+
+  kubectl get pods -A -o wide
+
+  kubectl get all -n app
+
+  kubectl get deployment web -o yaml
+
+  kubectl get pod web-7d9f8c9d4-xk2pq -o jsonpath=''{.status.phase}''
+
+  kubectl get events -n app --sort-by=.lastTimestamp
+
+
+  # Create / apply / delete
+
+  kubectl apply -f deployment.yaml
+
+  kubectl create configmap app-config --from-file=config/
+
+  kubectl create secret generic db-pass --from-literal=password=s3cr3t
+
+  kubectl edit deployment web
+
+  kubectl delete pod web-7d9f8c9d4-xk2pq --grace-period=5
+
+
+  # Labels / metadata
+
+  kubectl label pod web env=prod --overwrite
+
+  kubectl get pods -l app=web,env=prod
+
+  kubectl annotate deploy/web kubernetes.io/change-cause="bump image"
+
+  kubectl explain deployment.spec.strategy
+
+
+  # Contexts and auth
+
+  kubectl config get-contexts
+
+  kubectl config use-context prod-east
+
+  kubectl auth can-i create deployments -n app
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Prefer `kubectl apply -f` (declarative) over `kubectl create` for repeatable work
+
+  - Use `-o wide` for node/IP info, `-o yaml` for full state
+
+  - Namespace-scope everything to avoid accidental cluster-wide damage
+
+  - Verify RBAC with `kubectl auth can-i` before running privileged operations
+
+  - Use `--dry-run=client -o yaml` to preview generated resources'
+examples:
+- input: List all pods across clusters in our env
+  output: Agent lists contexts, switches to each, and gathers kubectl get pods -A -o wide into a summary
+- input: Create a configmap from a directory and mount it
+  output: Agent creates the configmap with --from-file, patches the deployment volumeMounts, and verifies
+    via explain output
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kubectl.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kubectl
+  generic:
+    system_prompt: 'You work Kubectl hands-on. You do it through resource-operations: Create, get, describe,
+      edit, and delete Kubernetes resources. The commands are real, e.g. `kubectl get pods -A -o wide`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

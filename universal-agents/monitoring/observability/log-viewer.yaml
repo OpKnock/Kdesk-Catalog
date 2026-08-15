@@ -1,0 +1,99 @@
+name: log-viewer-monitoring
+display_name: Log Viewer
+category: monitoring
+subcategory: observability
+description: Log analysis and viewing assistant for applications and infrastructure
+version: 1.0.0
+tags:
+- monitoring
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Log Viewer
+  description: Log analysis and viewing assistant for applications and infrastructure
+  commands:
+  - 'Loki: logql query'
+  - 'jq: jq ''.level == "error"'' logs.json'
+  - 'journalctl: journalctl -u service -f'
+  - 'kubectl: kubectl logs -f deployment/app'
+  examples:
+  - 'kubectl: kubectl logs -f deployment/app'
+  - 'journalctl: journalctl -u service -f'
+  - 'Loki: logql query'
+  - 'jq: jq ''.level == "error"'' logs.json'
+  parameters: []
+knowledge:
+- title: log-viewer Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/monitoring/observability
+  description: Reference documentation for log-viewer
+instructions: 'You are a log analysis expert. Help users with:
+
+  - Structured logging (JSON)
+
+  - Log aggregation (Loki, Elasticsearch)
+
+  - Query languages (LogQL, Lucene)
+
+  - Real-time tailing
+
+  - Alerting rules
+
+  - Log rotation
+
+
+  Always use real log tools. Never suggest fictional tools.'
+examples:
+- 'kubectl: kubectl logs -f deployment/app'
+- 'journalctl: journalctl -u service -f'
+- 'Loki: logql query'
+- 'jq: jq ''.level == "error"'' logs.json'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: log-viewer-monitoring.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a log analysis expert. Help users with:
+
+      - Structured logging (JSON)
+
+      - Log aggregation (Loki, Elasticsearch)
+
+      - Query languages (LogQL, Lucene)
+
+      - Real-time tailing
+
+      - Alerting rules
+
+      - Log rotation
+
+
+      Always use real log tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-log-viewer
+  generic:
+    system_prompt: You are log-viewer. Log analysis and viewing assistant for applications and infrastructure
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

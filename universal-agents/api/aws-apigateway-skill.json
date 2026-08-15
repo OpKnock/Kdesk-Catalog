@@ -1,0 +1,227 @@
+{
+  "name": "aws-apigateway",
+  "display_name": "Aws Apigateway",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manages AWS API Gateway REST APIs: creating APIs and resources, deploying to stages, and invoking endpoints via curl.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "aws"
+  ],
+  "capabilities": [
+    {
+      "name": "api-lifecycle",
+      "description": "Create REST APIs, resources, methods, and deployments.",
+      "commands": [
+        "aws apigateway create-rest-api --name my-api",
+        "aws apigateway get-rest-apis",
+        "aws apigateway get-resources --rest-api-id <api-id>",
+        "aws apigateway create-deployment --rest-api-id <api-id> --stage-name prod",
+        "aws apigateway get-stages --rest-api-id <api-id>"
+      ],
+      "examples": [
+        "aws apigateway create-rest-api --name my-api --endpoint-configuration types=REGIONAL",
+        "aws apigateway create-deployment --rest-api-id <api-id> --stage-name prod --stage-description \"v1.2.0\"",
+        "aws apigateway get-rest-apis --query 'items[].{id:id,name:name}' --output table"
+      ],
+      "parameters": [
+        {
+          "name": "api_name",
+          "type": "string",
+          "description": "Name of the REST API"
+        },
+        {
+          "name": "stage_name",
+          "type": "string",
+          "description": "Deployment stage name"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "AWS region"
+        }
+      ]
+    },
+    {
+      "name": "invoke-and-test",
+      "description": "Invoke deployed endpoints and test integration.",
+      "commands": [
+        "curl -X POST https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}'",
+        "curl -s https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users?limit=10",
+        "aws apigateway test-invoke-method --rest-api-id <api-id> --resource-id <res-id> --http-method GET --path-with-query-string '/users'",
+        "curl -s -o /dev/null -w \"%{http_code}\\n\" https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/health"
+      ],
+      "examples": [
+        "curl -X POST https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}'",
+        "aws apigateway test-invoke-method --rest-api-id <api-id> --resource-id <res-id> --http-method GET --path-with-query-string '/users?limit=5'",
+        "curl -i https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users | head -30"
+      ],
+      "parameters": [
+        {
+          "name": "api_id",
+          "type": "string",
+          "description": "REST API ID"
+        },
+        {
+          "name": "resource_id",
+          "type": "string",
+          "description": "Resource ID for the method"
+        },
+        {
+          "name": "http_method",
+          "type": "string",
+          "description": "GET/POST/PUT/DELETE"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "API Gateway Developer Guide",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/apigateway/latest/developerguide/",
+      "description": "REST APIs, stages, integrations"
+    },
+    {
+      "title": "AWS CLI apigateway Reference",
+      "type": "documentation",
+      "source": "https://awscli.amazonaws.com/v2/documentation/api/latest/reference/apigateway/index.html",
+      "description": "CLI commands for API Gateway"
+    },
+    {
+      "title": "API Gateway Best Practices",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/whitepapers/latest/api-gateway-best-practices/",
+      "description": "Design and operations guidance"
+    }
+  ],
+  "instructions": "# AWS API Gateway\n\n## What this skill does\n\nManages AWS API Gateway REST APIs: creating APIs and resources, adding methods, deploying to stages, and invoking endpoints via curl and test-invoke-method.\n\n## When to use\n\n- Exposing Lambda functions or HTTP backends as managed APIs\n- Adding a deployment/stage for a release\n- Debugging a 502/500 from an integration\n\n## Real commands\n\n```bash\n# Create an API\naws apigateway create-rest-api --name my-api\n\n# List resources to find the root id\naws apigateway get-resources --rest-api-id <api-id>\n\n# Deploy to a stage\naws apigateway create-deployment --rest-api-id <api-id> --stage-name prod\n\n# Invoke from the CLI\naws apigateway test-invoke-method --rest-api-id <api-id> --resource-id <res-id> --http-method GET --path-with-query-string '/users'\n\n# Invoke from curl\ncurl -X POST https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/users -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}'\n```\n\n## Testing\n\n- Use test-invoke-method to debug before deploying\n- Check stage variables and logs after deployment\n\n## Best practices\n\n- Deploy to dev/stage/prod stages; never reuse a stage for releases\n- Enable access logging and tracing for production stages\n- Use usage plans + API keys for client throttling\n- Prefer REST API vs HTTP API by feature needs (WAF, custom domains)",
+  "examples": [
+    {
+      "input": "Deploy the new version to production",
+      "output": "Creates a deployment with `aws apigateway create-deployment --stage-name prod`, lists stages, and smoke-tests with curl against the execute-api URL."
+    },
+    {
+      "input": "Debug a 502 from our Lambda integration",
+      "output": "Runs test-invoke-method for the failing route, inspects the integration response/log, and checks the Lambda execution role and function errors."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "aws-apigateway.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-aws-apigateway"
+    },
+    "generic": {
+      "system_prompt": "You are the Aws Apigateway specialist. You do it through api-lifecycle: Create REST APIs, resources, methods, and deployments. The commands are real, e.g. `aws apigateway create-rest-api --name my-api`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "aws-apigateway",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "api-lifecycle",
+        "name": "api_name",
+        "type": "string",
+        "description": "Name of the REST API"
+      },
+      {
+        "capability": "api-lifecycle",
+        "name": "stage_name",
+        "type": "string",
+        "description": "Deployment stage name"
+      },
+      {
+        "capability": "api-lifecycle",
+        "name": "region",
+        "type": "string",
+        "description": "AWS region"
+      },
+      {
+        "capability": "invoke-and-test",
+        "name": "api_id",
+        "type": "string",
+        "description": "REST API ID"
+      },
+      {
+        "capability": "invoke-and-test",
+        "name": "resource_id",
+        "type": "string",
+        "description": "Resource ID for the method"
+      },
+      {
+        "capability": "invoke-and-test",
+        "name": "http_method",
+        "type": "string",
+        "description": "GET/POST/PUT/DELETE"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/aws-apigateway-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/aws-apigateway-skill.yaml",
+    "checksum": "e086c3d0d22503bb1845f8ef41edc252d892db22c52f05d7d7960198372d4001"
+  }
+}

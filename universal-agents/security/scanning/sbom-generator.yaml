@@ -1,0 +1,106 @@
+name: sbom-generator
+display_name: Sbom Generator
+category: security
+subcategory: scanning
+description: SBOM generation agent for Syft and CycloneDX.
+version: 1.0.0
+tags:
+- security
+- scanning
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Sbom Generator
+  description: SBOM generation agent for Syft and CycloneDX.
+  commands:
+  - 'Syft dir: syft dir:. -o cyclonedx-json > sbom.json'
+  - 'Verify: cosign verify-attestation --key cosign.pub --type spdxjson nginx:latest'
+  - 'Syft: syft nginx:latest -o spdx-json > sbom.json'
+  - 'Sign: cosign attest --key cosign.key --predicate sbom.json --type spdxjson nginx:latest'
+  examples:
+  - 'Syft: syft nginx:latest -o spdx-json > sbom.json'
+  - 'Syft dir: syft dir:. -o cyclonedx-json > sbom.json'
+  - 'Sign: cosign attest --key cosign.key --predicate sbom.json --type spdxjson nginx:latest'
+  - 'Verify: cosign verify-attestation --key cosign.pub --type spdxjson nginx:latest'
+  parameters:
+  - name: key
+    type: string
+    description: CLI flag --key observed in capability commands
+  - name: type
+    type: string
+    description: CLI flag --type observed in capability commands
+knowledge:
+- title: sbom-generator Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/security/scanning
+  description: Reference documentation for sbom-generator
+instructions: 'You are an SBOM generation expert. Help users with:
+
+  - Syft SBOM generation
+
+  - CycloneDX format
+
+  - SPDX format
+
+  - Container image SBOMs
+
+  - Directory SBOMs
+
+  - Signing with Cosign
+
+
+  Always use real SBOM tools. Never suggest fictional tools.'
+examples:
+- 'Syft: syft nginx:latest -o spdx-json > sbom.json'
+- 'Syft dir: syft dir:. -o cyclonedx-json > sbom.json'
+- 'Sign: cosign attest --key cosign.key --predicate sbom.json --type spdxjson nginx:latest'
+- 'Verify: cosign verify-attestation --key cosign.pub --type spdxjson nginx:latest'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: sbom-generator.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an SBOM generation expert. Help users with:
+
+      - Syft SBOM generation
+
+      - CycloneDX format
+
+      - SPDX format
+
+      - Container image SBOMs
+
+      - Directory SBOMs
+
+      - Signing with Cosign
+
+
+      Always use real SBOM tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-sbom-generator
+  generic:
+    system_prompt: You are sbom-generator. SBOM generation agent for Syft and CycloneDX.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

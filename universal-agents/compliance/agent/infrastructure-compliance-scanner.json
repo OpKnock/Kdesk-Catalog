@@ -1,0 +1,167 @@
+{
+  "name": "infrastructure-compliance-scanner",
+  "display_name": "Infrastructure Compliance Scanner",
+  "category": "compliance",
+  "subcategory": "infrastructure",
+  "description": "Agent for scanning infrastructure compliance with CIS benchmarks, policy-as-code, and drift detection.",
+  "version": "1.0.0",
+  "tags": [
+    "compliance",
+    "cis-benchmark",
+    "policy-as-code",
+    "drift-detection",
+    "infrastructure"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "compliance-scanning",
+      "description": "Scan infrastructure for compliance",
+      "commands": [
+        "checkov",
+        "tfsec",
+        "prowler",
+        "scout-suite",
+        "kube-bench"
+      ],
+      "examples": [
+        "Scan terraform: checkov -d .",
+        "K8s audit: kube-bench --benchmark cis-1.6",
+        "AWS audit: prowler -r us-east-1"
+      ],
+      "parameters": [
+        {
+          "name": "framework",
+          "type": "string",
+          "description": "Framework: cis, soc2, hipaa, pci, gdpr"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Target: terraform, kubernetes, aws, azure, gcp"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "CIS Benchmarks",
+      "type": "documentation",
+      "source": "https://www.cisecurity.org/cis-benchmarks",
+      "description": "CIS security benchmarks"
+    },
+    {
+      "title": "Checkov Documentation",
+      "type": "tutorial",
+      "source": "https://www.checkov.io/",
+      "description": "Checkov policy-as-code documentation"
+    }
+  ],
+  "instructions": "You are a compliance scanning specialist. Help users:\n1. Scan infrastructure for compliance\n2. Implement policy-as-code\n3. Detect configuration drift\n4. Generate compliance reports\n5. Remediate findings\n\nAlways recommend automated scanning and remediation.\n",
+  "examples": [
+    {
+      "input": "Scan my infrastructure",
+      "output": "I'll run compliance checks. Here's the scan report..."
+    },
+    {
+      "input": "Fix compliance issues",
+      "output": "I'll remediate the findings. Here are the fixes..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "infrastructure-compliance-scanner.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-compliance-scanner"
+    },
+    "generic": {
+      "system_prompt": "You are a compliance scanning expert. Help users scan infrastructure, implement policy-as-code, and remediate findings.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "infrastructure-compliance-scanner",
+  "type": "agent",
+  "skills": [
+    "infrastructure-compliance-scanner-infrastructure-compliance-scanner",
+    "api-compliance-engineer",
+    "api-compliance-scanner",
+    "api-compliance-scanning",
+    "api-compliance-specialist",
+    "kube-bench",
+    "infrastructure-as-code-devops"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "compliance-scanning",
+        "name": "framework",
+        "type": "string",
+        "description": "Framework: cis, soc2, hipaa, pci, gdpr"
+      },
+      {
+        "capability": "compliance-scanning",
+        "name": "target",
+        "type": "string",
+        "description": "Target: terraform, kubernetes, aws, azure, gcp"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "compliance/agent/infrastructure-compliance-scanner.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/compliance/agent/infrastructure-compliance-scanner.yaml",
+    "checksum": "77861bae75507fd3973fac4ddf297b348b2d48e4a782fadd8cb56d5566ed0ef9"
+  }
+}

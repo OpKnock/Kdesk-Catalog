@@ -1,0 +1,95 @@
+name: openresty
+display_name: Openresty
+category: api
+subcategory: general
+description: 'OpenResty: Lua scripting in nginx, resty CLI, lua-resty libraries, and dynamic request handling.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- luarocks
+- openresty
+- resty
+capabilities:
+- name: openresty-lua
+  description: Write and test Lua handlers for OpenResty and manage Lua modules with luarocks.
+  commands:
+  - openresty -t
+  - openresty -s reload
+  - resty -e 'ngx.say(ngx.var.request_uri)'
+  - luarocks install lua-resty-http
+  - openresty -p /usr/local/openresty/nginx/ -c nginx.conf
+  examples:
+  - resty -e 'local cjson = require("cjson"); ngx.say(cjson.encode({a=1}))'
+  - luarocks install lua-resty-redis
+  - openresty -t && openresty -s reload
+  parameters:
+  - name: lua_code
+    type: string
+    description: Inline Lua code to run with resty
+  - name: rock
+    type: string
+    description: lua-resty module name for luarocks
+  - name: config
+    type: string
+    description: nginx config path
+knowledge:
+- title: OpenResty Official Site
+  type: documentation
+  source: https://openresty.org/en/
+  description: Installation, docs and Lua module ecosystem
+- title: OpenResty Lua Guide
+  type: documentation
+  source: https://github.com/openresty/lua-nginx-module
+  description: lua-nginx-module directives and APIs
+instructions: "# OpenResty\n\nOpenResty bundles nginx with LuaJIT so you can script request handling at\
+  \ the edge.\n\n## What this skill does\n\n- Runs and tests nginx-Lua configs\n- Uses the resty CLI for\
+  \ quick Lua experiments\n- Installs lua-resty libraries\n\n## When to use\n\n- Edge logic: auth, rate\
+  \ limits, request transforms\n- Dynamic routing without full services\n\n## Real commands\n\n```bash\n\
+  # Validate and reload\nopenresty -t\nopenresty -s reload\n\n# Quick Lua experiments\nresty -e 'ngx.say(ngx.var.request_uri)'\n\
+  resty -e 'local cjson = require(\"cjson\"); ngx.say(cjson.encode({a=1}))'\n\n# Libraries\nluarocks install\
+  \ lua-resty-http\nluarocks install lua-resty-redis\n```\n\n## In nginx.conf\n\n```nginx\nserver {\n\
+  \    listen 8080;\n    location /hello {\n        content_by_lua_block {\n            ngx.say(\"hello,\
+  \ \", ngx.var.arg_name or \"world\")\n        }\n    }\n}\n```\n\n## Best practices\n\n- Test logic\
+  \ with resty before wiring into nginx\n- Use lua-resty modules instead of raw ngx APIs when possible\n\
+  - Keep Lua code in .lua files loaded with `lua_package_path`"
+examples:
+- input: Add a request header based on the path in OpenResty
+  output: The agent writes a rewrite_by_lua_block snippet and validates with openresty -t and curl.
+- input: Experiment with a Lua snippet quickly
+  output: The agent runs `resty -e` with inline Lua to verify behavior before deploying.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: openresty.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-openresty
+  generic:
+    system_prompt: 'This is your domain: Openresty. You do it through openresty-lua: Write and test Lua
+      handlers for OpenResty and manage Lua modules with luarocks. The commands are real, e.g. `openresty
+      -t`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

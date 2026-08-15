@@ -1,0 +1,225 @@
+name: dns
+display_name: Dns
+category: infrastructure
+subcategory: general
+description: 'Diagnoses and manages DNS: dig lookups, zone transfers, MX/TXT checks, and propagation verification.'
+version: 2.0.0
+tags:
+- infrastructure
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- delv
+- dig
+- host
+- nslookup
+capabilities:
+- name: dig
+  description: Query DNS records with dig for full detail.
+  commands:
+  - dig example.com A
+  - dig example.com MX
+  - dig example.com TXT
+  - dig @8.8.8.8 example.com A +short
+  - dig example.com +trace
+  examples:
+  - dig www.example.com A +short
+  - dig example.com ANY +noall +answer
+  - dig @1.1.1.1 _dmarc.example.com TXT
+  parameters:
+  - name: server
+    type: string
+    description: DNS server to query, e.g. @8.8.8.8
+  - name: type
+    type: string
+    description: 'Record type: A, AAAA, MX, TXT, CNAME, NS, SOA'
+  - name: trace
+    type: string
+    description: Follow the delegation chain from root
+- name: troubleshoot
+  description: Cross-check records and test propagation across resolvers.
+  commands:
+  - dig @8.8.8.8 example.com A +short && dig @1.1.1.1 example.com A +short
+  - host -t CNAME www.example.com
+  - nslookup -type=MX example.com
+  - dig example.com +dnssec
+  - delv @9.9.9.9 example.com A
+  examples:
+  - dig @208.67.222.222 example.com A +short
+  - dig example.com +dnssec +multi | grep -E 'RRSIG|flags'
+  - nslookup -type=SOA example.com
+  parameters:
+  - name: type
+    type: string
+    description: Record type to verify
+  - name: dnssec
+    type: string
+    description: Include DNSSEC records in output
+  - name: server
+    type: string
+    description: Resolver to query directly
+knowledge:
+- title: dig man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man1/dig.1.html
+  description: 'dig options: +short, +trace, +dnssec, +answer'
+- title: BIND 9 Docs
+  type: documentation
+  source: https://bind9.readthedocs.io/
+  description: 'BIND tools: dig, delv, nslookup, host'
+- title: RFC 1034/1035
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc1035
+  description: DNS record types and zone semantics
+instructions: '# DNS
+
+
+  Diagnose DNS configuration with dig and friends.
+
+
+  ## When to Use
+
+
+  - New domain or subdomain not resolving
+
+  - Email delivery failures (MX/SPF/DMARC)
+
+  - Verifying propagation after a cutover
+
+
+  ## Basic lookups
+
+
+  ```bash
+
+  dig example.com A
+
+  dig example.com MX
+
+  dig example.com TXT
+
+  dig @8.8.8.8 example.com A +short
+
+  ```
+
+
+  ## Follow the chain
+
+
+  ```bash
+
+  dig example.com +trace
+
+  ```
+
+
+  Use +trace to find where the chain breaks: root -> TLD -> authoritative.
+
+
+  ## Propagation check
+
+
+  Compare independent resolvers:
+
+
+  ```bash
+
+  dig @8.8.8.8 example.com A +short
+
+  dig @1.1.1.1 example.com A +short
+
+  dig @208.67.222.222 example.com A +short
+
+  ```
+
+
+  Mismatches mean caching - wait out the TTL or bump it for the cutover.
+
+
+  ## Email records
+
+
+  ```bash
+
+  dig example.com MX
+
+  dig example.com TXT   # SPF + DMARC
+
+  ```
+
+
+  ```txt
+
+  dig _dmarc.example.com TXT +short
+
+  ```
+
+
+  ## DNSSEC verification
+
+
+  ```bash
+
+  dig example.com +dnssec +multi | grep RRSIG
+
+  delv @9.9.9.9 example.com A
+
+  ```
+
+
+  ## Best practices
+
+
+  - Set TTL low (300s) before migration, restore after.
+
+  - Keep SPF below the 10-lookup limit.
+
+  - Always query authoritative server directly when debugging propagation.
+
+  - Record DNS changes in the change log with before/after dig output.
+
+
+  ## Testing
+
+
+  Run the lookup matrix (A, MX, TXT, NS, SOA) on every environment after DNS changes.'
+examples:
+- input: www.example.com is not resolving for users.
+  output: Runs dig +trace, finds the broken CNAME or glue record, compares across resolvers, and verifies
+    TTL expiry.
+- input: Email to the domain bounces; check SPF and MX.
+  output: Queries MX and TXT, validates SPF record syntax and the DMARC policy, and confirms the mail
+    server preference order.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: dns.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-dns
+  generic:
+    system_prompt: 'You own Dns end to end. You do it through dig: Query DNS records with dig for full
+      detail. The commands are real, e.g. `dig example.com A`. You prefer the shortest safe path, and
+      you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

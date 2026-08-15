@@ -1,0 +1,104 @@
+name: serverless-deployment
+display_name: Serverless Deployment
+category: api
+subcategory: general
+description: 'Hand-crafted serverless deployment skill: Serverless Framework create/deploy/invoke/logs
+  lifecycle, AWS SAM build and local invocation, and environment staging.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- sam
+- serverless
+capabilities:
+- name: serverless-framework
+  description: Deploy and operate serverless functions with Serverless Framework and SAM
+  commands:
+  - serverless create --template aws-nodejs --path my-service
+  - serverless deploy --stage prod
+  - serverless invoke -f hello --stage prod --data '{"name":"Ada"}'
+  - serverless logs -f hello -t
+  - sam build
+  - sam local invoke HelloWorldFunction
+  examples:
+  - serverless deploy --stage staging
+  - serverless invoke -f hello --stage prod --data '{"name":"Ada"}'
+  - sam local invoke HelloWorldFunction --event event.json
+  parameters:
+  - name: stage
+    type: string
+    description: 'Deployment stage: dev, staging, prod'
+  - name: function
+    type: string
+    description: Function name to invoke or fetch logs for
+  - name: region
+    type: string
+    description: AWS region, e.g. eu-west-1
+knowledge:
+- title: Serverless Framework docs
+  type: documentation
+  source: https://www.serverless.com/framework/docs/
+  description: CLI lifecycle, serverless.yml reference
+- title: AWS SAM CLI
+  type: documentation
+  source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html
+  description: sam build, sam local, sam deploy
+instructions: "# Serverless Deployment\n\nHand-crafted skill for deploying serverless functions safely.\n\
+  \n## What this skill does\n\n- Scaffolds services with the Serverless Framework and SAM templates\n\
+  - Deploys to named stages and invokes functions for verification\n- Streams function logs for debugging\n\
+  \n## When to use\n\n- Shipping a function-based service to production\n- Reproducing an invocation locally\
+  \ before deploy\n- Promoting from staging to prod with one command\n\n## Real commands\n\n```bash\n\
+  # Scaffold\nserverless create --template aws-nodejs --path my-service\ncd my-service && npm install\n\
+  \n# Deploy per stage\nserverless deploy --stage staging\nserverless deploy --stage prod\n\n# Invoke\
+  \ with a payload\nserverless invoke -f hello --stage prod --data '{\"name\":\"Ada\"}'\n\n# Tail logs\n\
+  serverless logs -f hello -t\n\n# AWS SAM equivalents\nsam build\nsam local invoke HelloWorldFunction\
+  \ --event event.json\nsam deploy --guided\n```\n\n## serverless.yml\n\n```yaml\nservice: my-service\n\
+  provider:\n  name: aws\n  runtime: nodejs20.x\n  region: eu-west-1\nfunctions:\n  hello:\n    handler:\
+  \ handler.hello\n    events:\n      - httpApi:\n          path: /hello\n          method: get\n```\n\
+  \n## Testing\n\n```bash\nserverless deploy --stage staging\nserverless invoke -f hello --stage staging\
+  \ --data '{\"name\":\"test\"}'\nserverless logs -f hello --stage staging\n```\n\n## Best practices\n\
+  \n- Deploy to staging, smoke-test, then promote to prod\n- Pin the runtime and region in serverless.yml\n\
+  - Keep functions small; delegate heavy work to queues\n"
+examples:
+- input: Deploy my function to production
+  output: serverless deploy --stage prod, then verify with serverless invoke -f hello --stage prod --data
+    '{"name":"Ada"}'.
+- input: Debug a failed lambda locally
+  output: sam build && sam local invoke HelloWorldFunction --event event.json replays the failing input
+    against local runtime.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: serverless-deployment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-serverless-deployment
+  generic:
+    system_prompt: 'This is your domain: Serverless Deployment. You do it through serverless-framework:
+      Deploy and operate serverless functions with Serverless Framework and SAM. The commands are real,
+      e.g. `serverless create --template aws-nodejs --path my-service`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

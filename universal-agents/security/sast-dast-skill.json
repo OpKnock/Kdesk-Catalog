@@ -1,0 +1,224 @@
+{
+  "name": "sast-dast",
+  "display_name": "Sast Dast",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Combines static analysis (bandit, semgrep, Trivy) with dynamic testing (OWASP ZAP, nikto, nuclei) for full application security coverage.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bandit",
+    "gosec",
+    "nikto",
+    "npx",
+    "nuclei",
+    "semgrep",
+    "trivy",
+    "zap-api-scan.py",
+    "zap-baseline.py",
+    "zap-full-scan.py"
+  ],
+  "capabilities": [
+    {
+      "name": "sast-scanning",
+      "description": "Static scans for Python, JS, Go, and infrastructure code.",
+      "commands": [
+        "bandit -r app/ -f json -o bandit.json",
+        "semgrep scan --config auto .",
+        "trivy fs --scanners vuln,secret,config .",
+        "npx eslint --format sarif .",
+        "gosec ./..."
+      ],
+      "examples": [
+        "bandit -r src/ -ll",
+        "semgrep scan --config p/owasp-top-ten .",
+        "trivy fs --scanners config --severity HIGH ."
+      ],
+      "parameters": [
+        {
+          "name": "language",
+          "type": "string",
+          "description": "Target language for scanner selection"
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "Minimum severity: LOW, MEDIUM, HIGH"
+        }
+      ]
+    },
+    {
+      "name": "dast-scanning",
+      "description": "Dynamic scanning against running applications.",
+      "commands": [
+        "zap-baseline.py -t https://staging.example.com -r report.html",
+        "zap-full-scan.py -t https://staging.example.com -J zap.json",
+        "nikto -h https://staging.example.com -o nikto.html",
+        "nuclei -u https://staging.example.com -severity high,critical",
+        "zap-api-scan.py -t https://staging.example.com/v3/api-docs -f openapi"
+      ],
+      "examples": [
+        "zap-baseline.py -t https://staging.example.com -r report.html",
+        "nikto -h https://staging.example.com",
+        "zap-api-scan.py -t https://staging.example.com/api/swagger.json -f openapi"
+      ],
+      "parameters": [
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Base URL of the running app"
+        },
+        {
+          "name": "report",
+          "type": "string",
+          "description": "Report output path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OWASP ZAP Documentation",
+      "type": "documentation",
+      "source": "https://www.zaproxy.org/docs/",
+      "description": "Baseline and full scan Docker CLIs"
+    },
+    {
+      "title": "Bandit GitHub",
+      "type": "documentation",
+      "source": "https://github.com/PyCQA/bandit",
+      "description": "Python AST-based security linter"
+    },
+    {
+      "title": "Nuclei Documentation",
+      "type": "documentation",
+      "source": "https://docs.projectdiscovery.io/tools/nuclei/overview",
+      "description": "Template-based vulnerability scanner"
+    }
+  ],
+  "instructions": "# SAST + DAST\n\nLayered application security: static analysis in CI, dynamic testing against running apps.\n\n## What This Skill Does\n\n- Runs language-specific SAST scanners (bandit, gosec, eslint)\n- Scans IaC and dependencies in the same pipeline\n- Executes OWASP ZAP baseline and full scans against environments\n- Correlates findings into a single remediation report\n\n## When to Use\n\n- Pre-release security gate for web applications\n- API security review with OpenAPI-driven ZAP scans\n- Investigating a suspected app-level vulnerability\n\n## Real Commands\n\n```bash\n# SAST\nbandit -r src/ -f json -o bandit.json\nsemgrep scan --config p/owasp-top-ten .\ntrivy fs --scanners vuln,secret,config .\ngosec ./...\n\n# DAST against staging\nzap-baseline.py -t https://staging.example.com -r report.html\nzap-full-scan.py -t https://staging.example.com -J zap.json\nnikto -h https://staging.example.com\nnuclei -u https://staging.example.com -severity high,critical\nzap-api-scan.py -t https://staging.example.com/swagger.json -f openapi\n```\n\n## Pipeline Shape\n\n```yaml\nstages:\n  sast:\n    - bandit -r src/ && semgrep scan --config auto .\n  deps:\n    - trivy fs --scanners vuln,secret,config .\n  dast:\n    - zap-baseline.py -t $STAGING_URL -r report.html\n```\n\n## Best Practices\n\n- Run SAST on every PR; DAST on staging after deploy\n- Use ZAP's API scan against the OpenAPI spec to hit every endpoint\n- De-duplicate by CWE across tools\n- Gate deploys on critical SAST; use DAST as release evidence\n- Protect staging environments with auth tokens in ZAP scans",
+  "examples": [
+    {
+      "input": "Security test the new checkout flow",
+      "output": "Agent runs bandit/semgrep on the code, then zap-full-scan against staging, and produces a combined findings list with fix guidance."
+    },
+    {
+      "input": "Scan my API for OWASP Top 10 issues",
+      "output": "Agent runs zap-api-scan with the OpenAPI spec plus semgrep p/owasp-top-ten, then triages results by endpoint."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "sast-dast.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-sast-dast"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Sast Dast. You do it through sast-scanning: Static scans for Python, JS, Go, and infrastructure code. The commands are real, e.g. `bandit -r app/ -f json -o bandit.json`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "sast-dast",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sast-scanning",
+        "name": "language",
+        "type": "string",
+        "description": "Target language for scanner selection"
+      },
+      {
+        "capability": "sast-scanning",
+        "name": "severity",
+        "type": "string",
+        "description": "Minimum severity: LOW, MEDIUM, HIGH"
+      },
+      {
+        "capability": "dast-scanning",
+        "name": "target",
+        "type": "string",
+        "description": "Base URL of the running app"
+      },
+      {
+        "capability": "dast-scanning",
+        "name": "report",
+        "type": "string",
+        "description": "Report output path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bandit",
+    "gosec",
+    "nikto",
+    "npx",
+    "nuclei",
+    "semgrep",
+    "trivy",
+    "zap-api-scan.py",
+    "zap-baseline.py",
+    "zap-full-scan.py"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/sast-dast-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/sast-dast-skill.yaml",
+    "checksum": "af14be596f111b3d88d037c373abab662d46bea599086a3df2f4339facfba6a8"
+  }
+}

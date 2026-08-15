@@ -1,0 +1,184 @@
+name: kafka-data
+display_name: Kafka
+category: data
+subcategory: general
+description: 'Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration
+  via the Kafka CLI.'
+version: 2.0.0
+tags:
+- data
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kafka-configs.sh
+- kafka-console-consumer.sh
+- kafka-console-producer.sh
+- kafka-consumer-groups.sh
+- kafka-topics.sh
+capabilities:
+- name: kafka-cli
+  description: Manage topics, produce/consume messages, and inspect consumer groups
+  commands:
+  - kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 --replication-factor
+    1
+  - kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders
+  - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group payments --describe
+  - kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --describe
+  examples:
+  - kafka-topics.sh --bootstrap-server localhost:9092 --list
+  - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages
+    10
+  - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 6
+  parameters:
+  - name: partitions
+    type: integer
+    description: Number of partitions for a new topic
+  - name: replication-factor
+    type: integer
+    description: Replication factor for a new topic
+  - name: from-beginning
+    type: boolean
+    description: Consume all messages from the topic start
+knowledge:
+- title: Kafka docs
+  type: documentation
+  source: https://kafka.apache.org/documentation/
+  description: Concepts, CLI tools, and configuration
+- title: Kafka operations guide
+  type: documentation
+  source: https://kafka.apache.org/documentation/#operations
+  description: Cluster operations, monitoring, and maintenance
+instructions: '# Kafka
+
+
+  Operates Apache Kafka: topic lifecycle, producing/consuming for testing, consumer
+
+  group health, and broker config inspection.
+
+
+  ## When to Use
+
+
+  - Creating and scaling topics
+
+  - Verifying messages flow end-to-end
+
+  - Debugging consumer group lag
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Topics
+
+  kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+  kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 --replication-factor
+  1
+
+  kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders
+
+  kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 6
+
+
+  # Produce
+
+  kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders --property parse.key=true
+  --property key.separator=:
+
+
+  # Consume
+
+  kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages
+  10
+
+
+  # Consumer groups
+
+  kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+
+  kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group payments --describe
+
+
+  # Config
+
+  kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --describe
+
+  ```
+
+
+  ## Group Lag Debugging
+
+
+  ```bash
+
+  kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group payments --describe
+
+  # Look at LAG: if growing, consumers are too slow - scale or optimize
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Size partitions for throughput; more partitions = more parallelism
+
+  - Set replication.factor >= 3 in production
+
+  - Never consume from-beginning in production apps
+
+  - Monitor consumer lag and alert on growth
+
+  - Use `--timeout-ms` with commands to avoid CLI hangs
+
+
+  ## Example Response
+
+
+  For a lagging consumer group: describes the group, identifies the partition lag,
+
+  and recommends scaling consumers or fixing the slow processing step.'
+examples:
+- input: Create a topic and test message flow
+  output: Creates the topic with 3 partitions, produces sample messages, consumes them back with --from-beginning
+    to verify
+- input: Consumers are falling behind
+  output: Describes the group with kafka-consumer-groups.sh, reports lag per partition, and suggests fixes
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kafka-data.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kafka
+  generic:
+    system_prompt: 'You are the Kafka specialist. You do it through kafka-cli: Manage topics, produce/consume
+      messages, and inspect consumer groups. The commands are real, e.g. `kafka-topics.sh --bootstrap-server
+      localhost:9092 --create --topic orders --partitions 3...`. You work hands-on and only report outcomes
+      you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

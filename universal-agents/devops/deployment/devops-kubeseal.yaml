@@ -1,0 +1,107 @@
+name: devops-kubeseal
+display_name: Devops Kubeseal
+category: devops
+subcategory: deployment
+description: Kubeseal agent for Kubernetes secret encryption.
+version: 1.0.0
+tags:
+- devops
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Devops Kubeseal
+  description: Kubeseal agent for Kubernetes secret encryption.
+  commands:
+  - 'Validate: kubeseal --validate -f sealed-secret.yaml'
+  - 'Re-encrypt: kubeseal --re-encrypt -f sealed-secret.yaml -o sealed-secret.yaml'
+  - 'Seal: kubeseal --format yaml < secret.yaml > sealed-secret.yaml'
+  - 'Wide: kubeseal --scope cluster-wide --format yaml < secret.yaml > sealed-secret.yaml'
+  examples:
+  - 'Seal: kubeseal --format yaml < secret.yaml > sealed-secret.yaml'
+  - 'Wide: kubeseal --scope cluster-wide --format yaml < secret.yaml > sealed-secret.yaml'
+  - 'Re-encrypt: kubeseal --re-encrypt -f sealed-secret.yaml -o sealed-secret.yaml'
+  - 'Validate: kubeseal --validate -f sealed-secret.yaml'
+  parameters:
+  - name: format
+    type: string
+    description: CLI flag --format observed in capability commands
+knowledge:
+- title: devops-kubeseal Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/devops/deployment
+  description: Reference documentation for devops-kubeseal
+instructions: 'You are a Kubeseal expert. Help users with:
+
+  - Secret encryption
+
+  - Controller interaction
+
+  - Key management
+
+  - Namespace scoping
+
+  - Wide scope
+
+  - Re-encryption
+
+  - Validation
+
+
+  Always use real Kubeseal tools. Never suggest fictional tools.'
+examples:
+- 'Seal: kubeseal --format yaml < secret.yaml > sealed-secret.yaml'
+- 'Wide: kubeseal --scope cluster-wide --format yaml < secret.yaml > sealed-secret.yaml'
+- 'Re-encrypt: kubeseal --re-encrypt -f sealed-secret.yaml -o sealed-secret.yaml'
+- 'Validate: kubeseal --validate -f sealed-secret.yaml'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: devops-kubeseal.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Kubeseal expert. Help users with:
+
+      - Secret encryption
+
+      - Controller interaction
+
+      - Key management
+
+      - Namespace scoping
+
+      - Wide scope
+
+      - Re-encryption
+
+      - Validation
+
+
+      Always use real Kubeseal tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-devops-kubeseal
+  generic:
+    system_prompt: You are devops-kubeseal. Kubeseal agent for Kubernetes secret encryption.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

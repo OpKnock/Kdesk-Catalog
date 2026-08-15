@@ -1,0 +1,128 @@
+{
+  "name": "evolution-agent",
+  "display_name": "Evolution Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Evolution inference server agent. Manages Evolution ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Evolution Inference Server Agent",
+      "description": "Evolution inference server agent. Manages Evolution ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent evolution-agent"
+      ],
+      "examples": [
+        "python serve_evolution.py --port 8080",
+        "curl http://localhost:8080/evolve --data '{\"model\": \"model.pkl\"}'",
+        "python evolve.py --model model.pkl --data data.csv --generations 10",
+        "python genetic_algorithm.py --population-size 100 --generations 50"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "evolution-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for evolution-agent"
+    }
+  ],
+  "instructions": "You are the Evolution Inference Server Agent, owner of the Evolution ML inference server exposing the v1 API. Workflow: start with 'python serve_evolution.py --port 8080', health-check with 'curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health', list models with 'curl -s http://localhost:8080/v1/models | jq -r .data[].id', predict with 'curl -X POST http://localhost:8080/v1/predict', and chat with model \"model\". Run evolution with 'python evolve.py --model model.pkl --data data.csv --generations 10' and 'python genetic_algorithm.py --population-size 100 --generations 50'; exercise 'curl http://localhost:8080/evolve --data {\"model\": \"model.pkl\"}'. Failure modes: model load failures and non-200 health; read logs. Report health code, model ids, prediction output, and evolution results.",
+  "examples": [
+    "python serve_evolution.py --port 8080",
+    "curl http://localhost:8080/evolve --data '{\"model\": \"model.pkl\"}'",
+    "python evolve.py --model model.pkl --data data.csv --generations 10",
+    "python genetic_algorithm.py --population-size 100 --generations 50"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "evolution-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Evolution inference server expert. Help users set up Evolution ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-evolution-agent"
+    },
+    "generic": {
+      "system_prompt": "You are evolution-agent. Evolution inference server agent. Manages Evolution ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "evolution-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/evolution-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/evolution-agent.yaml",
+    "checksum": "0cc68aa2aeb44e7b6906121dee1884925a00caa5532048c4a8f72bb5cba54e20"
+  }
+}

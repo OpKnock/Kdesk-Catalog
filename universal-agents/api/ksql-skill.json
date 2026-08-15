@@ -1,0 +1,199 @@
+{
+  "name": "ksql",
+  "display_name": "Ksql",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Stream processing with ksqlDB: create streams/tables from Kafka topics, run push/pull queries, and build materialized views with SQL.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "ksql"
+  ],
+  "capabilities": [
+    {
+      "name": "ksql-shell",
+      "description": "Connect to the ksqlDB server and run SQL statements.",
+      "commands": [
+        "docker exec -it ksqldb-cli ksql http://ksqldb-server:8088",
+        "ksql http://localhost:8088 --file statements.sql",
+        "ksql http://localhost:8088",
+        "curl -X POST http://localhost:8088/ksql -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SHOW STREAMS;\"}'"
+      ],
+      "examples": [
+        "docker exec -it ksqldb-cli ksql http://ksqldb-server:8088",
+        "ksql http://localhost:8088 --file statements.sql",
+        "curl -X POST http://localhost:8088/ksql -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SHOW STREAMS;\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "server",
+          "type": "string",
+          "description": "ksqlDB server endpoint."
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "SQL file to execute."
+        }
+      ]
+    },
+    {
+      "name": "sql-queries",
+      "description": "Run push and pull queries against streams and tables.",
+      "commands": [
+        "curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SELECT * FROM ORDERS EMIT CHANGES;\"}'",
+        "curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SELECT COUNT(*) FROM ORDERS WINDOW TUMBLING (SIZE 1 MINUTE) GROUP BY CURRENCY EMIT CHANGES;\"}'",
+        "curl -X POST http://localhost:8088/ksql -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SHOW TABLES;\"}'",
+        "curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SELECT * FROM HIGH_VALUE_ORDERS WHERE ID=42;\"}'"
+      ],
+      "examples": [
+        "curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SELECT * FROM ORDERS EMIT CHANGES;\"}'",
+        "curl -X POST http://localhost:8088/ksql -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SHOW TABLES;\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "sql",
+          "type": "string",
+          "description": "ksqlDB SQL statement."
+        },
+        {
+          "name": "query_type",
+          "type": "string",
+          "description": "push (EMIT CHANGES) or pull query."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ksqlDB Documentation",
+      "type": "documentation",
+      "source": "https://docs.ksqldb.io/en/latest/",
+      "description": "Official ksqlDB docs: syntax, functions, operators."
+    },
+    {
+      "title": "ksqlDB REST API",
+      "type": "documentation",
+      "source": "https://docs.ksqldb.io/en/latest/developer-guide/api/",
+      "description": "REST endpoints for statements and queries."
+    }
+  ],
+  "instructions": "# ksqlDB\n\nStream-process Kafka data with SQL.\n\n## What this skill does\n\n- Defines STREAMs and TABLEs over Kafka topics.\n- Runs push queries (continuous) and pull queries (point lookups).\n- Builds materialized aggregates with windowing.\n\n## When to use\n\n- Quick analytics on Kafka topics without writing Java/Go code.\n- Materialized views: per-key state backed by Kafka.\n- Prototyping stream pipelines before productionizing.\n\n## Real commands\n\n```bash\n# Interactive shell in the CLI container\ndocker exec -it ksqldb-cli ksql http://ksqldb-server:8088\n\n# Run a file of statements\nksql http://localhost:8088 --file statements.sql\n\n# Declare a stream\nksql> CREATE STREAM ORDERS (ID BIGINT, AMOUNT DOUBLE, CURRENCY STRING) \\\n      WITH (KAFKA_TOPIC='orders', VALUE_FORMAT='JSON', PARTITIONS=6);\n\n# Materialized table of per-currency sums\nksql> CREATE TABLE HIGH_VALUE_ORDERS AS \\\n      SELECT ID, AMOUNT FROM ORDERS \\\n      WHERE AMOUNT > 1000 EMIT CHANGES;\n\n# Push query over REST\ncurl -X POST http://localhost:8088/query \\\n  -H 'Content-Type: application/vnd.ksql.v1+json' \\\n  -d '{\"ksql\":\"SELECT * FROM ORDERS EMIT CHANGES;\"}'\n\n# Tumbling-window aggregate\ncurl -X POST http://localhost:8088/query \\\n  -H 'Content-Type: application/vnd.ksql.v1+json' \\\n  -d '{\"ksql\":\"SELECT CURRENCY, COUNT(*) FROM ORDERS WINDOW TUMBLING (SIZE 1 MINUTE) GROUP BY CURRENCY EMIT CHANGES;\"}'\n\n# Pull query (materialized table)\ncurl -X POST http://localhost:8088/query \\\n  -H 'Content-Type: application/vnd.ksql.v1+json' \\\n  -d '{\"ksql\":\"SELECT * FROM HIGH_VALUE_ORDERS WHERE ID=42;\"}'\n```\n\n## statements.sql example\n\n```sql\nCREATE STREAM ORDERS (ID BIGINT, AMOUNT DOUBLE, CURRENCY STRING)\n  WITH (KAFKA_TOPIC='orders', VALUE_FORMAT='JSON');\n\nCREATE STREAM HIGH_VALUE AS\n  SELECT ID, AMOUNT, CURRENCY\n  FROM ORDERS\n  WHERE AMOUNT > 1000\n  EMIT CHANGES;\n```\n\n## Testing\n\n```bash\n# Feed an order and watch the push query\necho '{\"ID\":7,\"AMOUNT\":2500,\"CURRENCY\":\"USD\"}' | \\\n  kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders\n```\n\n## Best practices\n\n- Streams map 1:1 to topics; tables materialize keys with changelogs.\n- Pull queries only work on materialized (TABLE) data.\n- Prefer EMIT CHANGES for continuous output; specify limits for one-shot reads.\n",
+  "examples": [
+    {
+      "input": "Watch orders in real time",
+      "output": "curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SELECT * FROM ORDERS EMIT CHANGES;\"}'"
+    },
+    {
+      "input": "Aggregate orders per currency each minute",
+      "output": "Run the TUMBLING window query with GROUP BY CURRENCY over the ORDERS stream."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ksql.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ksql"
+    },
+    "generic": {
+      "system_prompt": "You take the Ksql seat. You do it through ksql-shell: Connect to the ksqlDB server and run SQL statements. The commands are real, e.g. `docker exec -it ksqldb-cli ksql http://ksqldb-server:8088`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ksql",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ksql-shell",
+        "name": "server",
+        "type": "string",
+        "description": "ksqlDB server endpoint."
+      },
+      {
+        "capability": "ksql-shell",
+        "name": "file",
+        "type": "string",
+        "description": "SQL file to execute."
+      },
+      {
+        "capability": "sql-queries",
+        "name": "sql",
+        "type": "string",
+        "description": "ksqlDB SQL statement."
+      },
+      {
+        "capability": "sql-queries",
+        "name": "query_type",
+        "type": "string",
+        "description": "push (EMIT CHANGES) or pull query."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "ksql"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/ksql-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/ksql-skill.yaml",
+    "checksum": "8615bdd00743c3f7cc76f603a6b3b3e457176e93c61ae7f8e60202b2e1e89c12"
+  }
+}

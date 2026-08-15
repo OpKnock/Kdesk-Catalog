@@ -1,0 +1,165 @@
+{
+  "name": "echo",
+  "display_name": "Echo",
+  "category": "api",
+  "subcategory": "general",
+  "description": "HTTP echo and request debugging: send requests to public echo services (httpbin, Postman Echo) to verify headers, methods, and payloads during API development.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker"
+  ],
+  "capabilities": [
+    {
+      "name": "http-echo",
+      "description": "Use echo services and local echo containers to verify how requests arrive at a server.",
+      "commands": [
+        "curl https://httpbin.org/get?foo=bar",
+        "curl -X POST https://httpbin.org/post -d '{\"hello\":\"world\"}' -H 'Content-Type: application/json'",
+        "curl -s https://postman-echo.com/get?foo=bar | jq '.args'",
+        "docker run -d -p 8080:80 mccutchen/go-httpbin",
+        "curl -i -X PUT https://httpbin.org/put -H 'X-Custom: value' | head -20"
+      ],
+      "examples": [
+        "curl -X POST https://httpbin.org/post -d '{\"hello\":\"world\"}' -H 'Content-Type: application/json' | jq '.json'",
+        "curl -s https://postman-echo.com/get?foo=bar | jq '.args'",
+        "curl -i -X PUT https://httpbin.org/put -H 'X-Custom: value' | head -20"
+      ],
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method to test: GET, POST, PUT, DELETE"
+        },
+        {
+          "name": "headers",
+          "type": "array",
+          "description": "Custom headers to inspect in the echo response"
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "description": "JSON body echoed back by the service"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "httpbin docs",
+      "type": "documentation",
+      "source": "https://httpbin.org/",
+      "description": "HTTP request and response echo endpoints for every method and content type"
+    }
+  ],
+  "instructions": "# Echo\n\n## What this skill does\n\nEcho services like httpbin and Postman Echo accept a request and return everything about it (headers, query args, body, client IP). They are the fastest way to debug clients, proxies, and webhooks.\n\n## When to use\n\n- Verifying what headers your client actually sends\n- Testing webhook receivers against a known-good sender\n- Debugging proxy rewrites or load balancer header injection\n\n## Real commands\n\n```bash\n# Echo GET with query args\ncurl https://httpbin.org/get?foo=bar | jq '.args'\n\n# Echo POST body and headers\ncurl -X POST https://httpbin.org/post -d '{\"hello\":\"world\"}' -H 'Content-Type: application/json' | jq '.json, .headers'\n\n# See your client IP and origin\ncurl -s https://postman-echo.com/get | jq '.headers'\n\n# Run a local echo server in Docker\n docker run -d -p 8080:80 mccutchen/go-httpbin\ncurl -s localhost:8080/anything | jq\n```\n\n## Common use cases\n\n```bash\n# Webhook debugging: point the sender at httpbin and capture\ncurl -X POST https://httpbin.org/anything/webhook -H 'Content-Type: application/json' -d '{\"event\":\"deploy\",\"status\":\"ok\"}' | jq '.json'\n```\n\n## Testing\n\n```bash\n# Verify the request your SDK sends\ncurl -X PUT https://httpbin.org/put -H 'X-Custom: value' | jq '.headers[\"X-Custom\"]'\n```\n\n## Best practices\n\n- Use `-i` to see both the response headers and body.\n- Prefer local go-httpbin for anything involving real payloads or credentials.\n- Never send production secrets to public echo services.\n- Combine with `--trace-ascii -` in curl for byte-level request dumps.\n",
+  "examples": [
+    {
+      "input": "Why is my webhook missing the Authorization header?",
+      "output": "Send the same request to https://httpbin.org/post with curl -i and inspect .headers to see exactly which headers leave the client, then compare with what the receiver sees."
+    },
+    {
+      "input": "Set up a local echo server for tests",
+      "output": "Run docker run -d -p 8080:80 mccutchen/go-httpbin and hit http://localhost:8080/anything for full request echoes."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "echo.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-echo"
+    },
+    "generic": {
+      "system_prompt": "You work Echo hands-on. You do it through http-echo: Use echo services and local echo containers to verify how requests arrive at a server. The commands are real, e.g. `curl https://httpbin.org/get?foo=bar`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "echo",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "http-echo",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method to test: GET, POST, PUT, DELETE"
+      },
+      {
+        "capability": "http-echo",
+        "name": "headers",
+        "type": "array",
+        "description": "Custom headers to inspect in the echo response"
+      },
+      {
+        "capability": "http-echo",
+        "name": "payload",
+        "type": "string",
+        "description": "JSON body echoed back by the service"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/echo-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/echo-skill.yaml",
+    "checksum": "6e282ebdc9b365e5ccf6a5bdc6af24e80d25f5a83c94db6b4e73993969dd383d"
+  }
+}

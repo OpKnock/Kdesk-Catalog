@@ -1,0 +1,230 @@
+{
+  "name": "api-security-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Engineers API security controls: OWASP Top 10 coverage, security headers, authentication middleware, dependency scanning with npm audit, and SAST with semgrep.",
+  "keywords": [
+    "api-security",
+    "authentication",
+    "security-headers"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-security-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-security-engineer"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: api-security-engineer. You do it through security-headers: Apply and verify security response headers. The commands are real, e.g. `npm install helmet`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "security-headers",
+      "description": "Apply and verify security response headers",
+      "commands": [
+        "npm install helmet",
+        "curl -sI https://api.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-content-type-options|referrer-policy'",
+        "curl -s -D- https://api.example.com/api | grep -i 'x-frame-options'",
+        "node -e \"const helmet=require('helmet'); console.log(helmet()._name)\""
+      ],
+      "examples": [
+        "helmet sets a battery of security headers",
+        "curl -sI greps HSTS and CSP headers",
+        "X-Frame-Options blocks clickjacking"
+      ],
+      "parameters": [
+        {
+          "name": "header",
+          "type": "string",
+          "description": "Header to verify"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Endpoint to check"
+        },
+        {
+          "name": "middleware",
+          "type": "string",
+          "description": "Security middleware name"
+        }
+      ]
+    },
+    {
+      "name": "dependency-sast",
+      "description": "Scan dependencies and source code",
+      "commands": [
+        "npm audit --audit-level=high",
+        "npm audit fix --dry-run",
+        "pip install semgrep",
+        "semgrep --config=p/owasp-top-ten .",
+        "semgrep --config=auto --json -o semgrep.json ."
+      ],
+      "examples": [
+        "npm audit reports vulnerable dependencies",
+        "semgrep with owasp-top-ten rules scans source",
+        "--json output feeds CI dashboards"
+      ],
+      "parameters": [
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "Audit threshold: low, moderate, high, critical"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Semgrep ruleset"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Scan target directory"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "owasp-zap",
+    "helmet"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "owasp-zap",
+    "helmet",
+    "cors",
+    "express-rate-limit"
+  ],
+  "examples": [
+    {
+      "input": "Harden a new API deployment",
+      "output": "Applies helmet headers, runs npm audit and semgrep, and fixes high findings"
+    },
+    {
+      "input": "Set up recurring vuln scanning",
+      "output": "Adds npm audit and semgrep to CI with JSON outputs"
+    }
+  ],
+  "instructions": "# API Security Engineer\n\nEnd-to-end API security controls.\n\n## What This Skill Does\n- Applies security headers at the framework level\n- Scans dependencies and source for vulnerabilities\n- Covers OWASP API Top 10 categories\n\n## When to Use\n- Hardening new API deployments\n- Recurring vulnerability management\n- Compliance evidence gathering\n\n## Real Commands\n\n```bash\nnpm install helmet\nnpm audit --audit-level=high\npip install semgrep\nsemgrep --config=p/owasp-top-ten .\n```\n\n## Header Baseline\n- Strict-Transport-Security: max-age=31536000\n- X-Content-Type-Options: nosniff\n- Referrer-Policy: no-referrer\n- Cache-Control: no-store on auth responses\n\n## Testing\n- Verify headers on every route prefix\n- Re-run audits after dependency updates\n- Keep semgrep findings triaged\n\n\n## Best Practices\n- Default-deny error responses\n- Rate limit auth endpoints\n- Scan in CI on every merge",
+  "display_name": "api-security-engineer",
+  "knowledge": [
+    {
+      "title": "OWASP API Security Top 10",
+      "type": "documentation",
+      "source": "https://owasp.org/API-Security/editions/2023/en/0x11-t10/",
+      "description": "API security risk categories"
+    },
+    {
+      "title": "Semgrep Docs",
+      "type": "documentation",
+      "source": "https://semgrep.dev/docs/",
+      "description": "Static analysis rules and CLI"
+    }
+  ],
+  "id": "api-security-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "security-headers",
+        "name": "header",
+        "type": "string",
+        "description": "Header to verify"
+      },
+      {
+        "capability": "security-headers",
+        "name": "url",
+        "type": "string",
+        "description": "Endpoint to check"
+      },
+      {
+        "capability": "security-headers",
+        "name": "middleware",
+        "type": "string",
+        "description": "Security middleware name"
+      },
+      {
+        "capability": "dependency-sast",
+        "name": "severity",
+        "type": "string",
+        "description": "Audit threshold: low, moderate, high, critical"
+      },
+      {
+        "capability": "dependency-sast",
+        "name": "config",
+        "type": "string",
+        "description": "Semgrep ruleset"
+      },
+      {
+        "capability": "dependency-sast",
+        "name": "path",
+        "type": "string",
+        "description": "Scan target directory"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "owasp-zap",
+    "helmet"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-security-engineer/skill/api-security-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-security-engineer/skill/api-security-engineer.yaml",
+    "checksum": "92017cec772e3c05e1e2f7a779776c5bcc9432448aa52a8fee92f3a70a17e287"
+  }
+}

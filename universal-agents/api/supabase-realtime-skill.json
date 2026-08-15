@@ -1,0 +1,172 @@
+{
+  "name": "supabase-realtime",
+  "display_name": "Supabase Realtime",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Supabase Realtime skill: websocket channel subscription, postgres_changes events, presence, and broadcast via wscat and the client SDKs.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "supabase",
+    "wscat"
+  ],
+  "capabilities": [
+    {
+      "name": "supabase-realtime",
+      "description": "Subscribe to Supabase Realtime channels and postgres changes",
+      "commands": [
+        "wscat -c \"wss://<project-ref>.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0\"",
+        "curl -X POST 'https://<project-ref>.supabase.co/rest/v1/orders' -H \"apikey: $SUPABASE_ANON_KEY\" -H \"Authorization: Bearer $SUPABASE_ANON_KEY\" -H 'Content-Type: application/json' -H 'Prefer: return=representation' -d '{\"qty\":2}'",
+        "supabase db push",
+        "curl -s 'https://<project-ref>.supabase.co/rest/v1/orders?select=*&order=created_at.desc' -H \"apikey: $SUPABASE_ANON_KEY\" | jq '.[0]'"
+      ],
+      "examples": [
+        "wscat -c \"wss://<project-ref>.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0\"",
+        "curl -X POST 'https://<project-ref>.supabase.co/rest/v1/orders' -H \"apikey: $KEY\" -H 'Prefer: return=representation' -d '{\"qty\":2}'",
+        "supabase db push"
+      ],
+      "parameters": [
+        {
+          "name": "channel",
+          "type": "string",
+          "description": "Realtime channel name, e.g. postgres_changes"
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table to subscribe to, e.g. orders"
+        },
+        {
+          "name": "event",
+          "type": "string",
+          "description": "INSERT, UPDATE, DELETE, or *"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Supabase Realtime docs",
+      "type": "documentation",
+      "source": "https://supabase.com/docs/guides/realtime",
+      "description": "Channels, postgres_changes, presence, broadcast"
+    },
+    {
+      "title": "Realtime protocol",
+      "type": "documentation",
+      "source": "https://supabase.com/docs/guides/realtime/protocol",
+      "description": "WebSocket message shapes"
+    }
+  ],
+  "instructions": "# Supabase Realtime\n\nHand-crafted skill for live data with Supabase Realtime.\n\n## What this skill does\n\n- Connects to the Realtime websocket with wscat for manual inspection\n- Subscribes to postgres_changes events on tables\n- Triggers and verifies INSERT events end to end\n\n## When to use\n\n- Live feeds: orders, chat, presence, leaderboards\n- Debugging why a client does not receive row changes\n- Prototyping before writing client SDK code\n\n## Real commands\n\n```bash\n# Raw websocket connection (then send subscribe JSON)\nwscat -c \"wss://<project-ref>.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0\"\n\n# Trigger an INSERT through PostgREST (fires postgres_changes)\ncurl -X POST 'https://<project-ref>.supabase.co/rest/v1/orders' -H \"apikey: $SUPABASE_ANON_KEY\" -H 'Content-Type: application/json' -H 'Prefer: return=representation' -d '{\"qty\":2}'\n\n# Migrate schema changes that define the tables\nsupabase db push\n\n# Read back rows\ncurl -s 'https://<project-ref>.supabase.co/rest/v1/orders?select=*&order=created_at.desc' -H \"apikey: $SUPABASE_ANON_KEY\" | jq '.[0]'\n```\n\n## Subscribe message\n\n```json\n{\n  \"topic\": \"realtime:orders\",\n  \"event\": \"phx_join\",\n  \"payload\": {\n    \"config\": {\n      \"postgres_changes\": [{ \"event\": \"INSERT\", \"schema\": \"public\", \"table\": \"orders\" }]\n    }\n  }\n}\n```\n\n## Testing\n\n```bash\n# Terminal A: wscat to the websocket, send the subscribe message\n# Terminal B: POST an INSERT; watch Terminal A print the change event\ncurl -X POST 'https://<project-ref>.supabase.co/rest/v1/orders' -H \"apikey: $KEY\" -H 'Prefer: return=representation' -d '{\"qty\":3}'\n```\n\n## Best practices\n\n- Subscribe only to events you need: INSERT vs * changes payload size\n- Use RLS-aware replication so users only see allowed rows\n- Prefer the SDK's onPostgresChanges over raw websockets in apps\n",
+  "examples": [
+    {
+      "input": "Watch new orders appear live",
+      "output": "Connect with wscat, subscribe with postgres_changes on the orders table, then POST a row via PostgREST and see the change event."
+    },
+    {
+      "input": "Why does my client get no realtime events?",
+      "output": "Verify the table is in the publication (supabase db push), RLS allows the user's token, and the subscribe JSON names the right schema/table."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "supabase-realtime.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-supabase-realtime"
+    },
+    "generic": {
+      "system_prompt": "You take the Supabase Realtime seat. You do it through supabase-realtime: Subscribe to Supabase Realtime channels and postgres changes. The commands are real, e.g. `wscat -c wss://<project-ref>.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&v...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "supabase-realtime",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "supabase-realtime",
+        "name": "channel",
+        "type": "string",
+        "description": "Realtime channel name, e.g. postgres_changes"
+      },
+      {
+        "capability": "supabase-realtime",
+        "name": "table",
+        "type": "string",
+        "description": "Table to subscribe to, e.g. orders"
+      },
+      {
+        "capability": "supabase-realtime",
+        "name": "event",
+        "type": "string",
+        "description": "INSERT, UPDATE, DELETE, or *"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "supabase",
+    "wscat"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/supabase-realtime-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/supabase-realtime-skill.yaml",
+    "checksum": "d624eeb349ce44f2e0b88004daa5de835deabbe7f19823adbaf467390d693ebd"
+  }
+}

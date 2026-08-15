@@ -1,0 +1,207 @@
+{
+  "name": "api-governance-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Implements automated API governance: Spectral rulesets, PR review bots, and CI gates for OpenAPI quality.",
+  "keywords": [
+    "api-governance"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-governance-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-governance-engineer"
+    },
+    "generic": {
+      "system_prompt": "You are the api-governance-engineer specialist. You do it through ci-linting: Run Spectral in CI with custom rulesets and JSON reports. The commands are real, e.g. `npx @stoplight/spectral-cli lint --ruleset .spectral.yaml openapi.yaml`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "ci-linting",
+      "description": "Run Spectral in CI with custom rulesets and JSON reports",
+      "commands": [
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml openapi.yaml",
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml > report.json",
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --fail-severity error openapi.yaml",
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --verbose openapi.yaml",
+        "node -e \"const r=require('./report.json');console.log(r.filter(x=>x.severity===0).length+' errors')\""
+      ],
+      "examples": [
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --fail-severity error openapi.yaml",
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml > report.json && node -e \"const r=require('./report.json');console.log(r.length+' violations')\"",
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --verbose openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "ruleset",
+          "type": "string",
+          "description": "Spectral ruleset path"
+        },
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "OpenAPI spec path"
+        }
+      ]
+    },
+    {
+      "name": "pr-checks",
+      "description": "Wire governance checks into pull requests with GitHub Actions",
+      "commands": [
+        "mkdir -p .github/workflows",
+        "node -e \"const fs=require('fs');fs.writeFileSync('.github/workflows/api-lint.yml','name: api-lint\\non: [pull_request]\\njobs:\\n  lint:\\n    runs-on: ubuntu-latest\\n    steps:\\n      - uses: actions/checkout@v4\\n      - run: npx @stoplight/spectral-cli lint -r .spectral.yaml openapi.yaml\\n')\"",
+        "git add .github/workflows/api-lint.yml && git commit -m 'add API lint gate'",
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format github-actions openapi.yaml",
+        "git diff --name-only origin/main HEAD | grep openapi | xargs npx @stoplight/spectral-cli lint"
+      ],
+      "examples": [
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format github-actions openapi.yaml",
+        "git diff --name-only origin/main HEAD | grep openapi | xargs npx @stoplight/spectral-cli lint",
+        "git add .github/workflows/api-lint.yml && git commit -m 'add API lint gate'"
+      ],
+      "parameters": [
+        {
+          "name": "baseRef",
+          "type": "string",
+          "description": "Base branch for diffs"
+        },
+        {
+          "name": "workflow",
+          "type": "string",
+          "description": "Workflow file path"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "spectral",
+    "openapi",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "spectral",
+    "openapi",
+    "node.js",
+    "python",
+    "stoplight-studio",
+    "swagger-cli"
+  ],
+  "examples": [
+    {
+      "input": "Implement API style guide enforcement",
+      "output": "Authors Spectral rules covering naming and error conventions and runs them in CI"
+    },
+    {
+      "input": "Add automated API review to PRs",
+      "output": "Creates a GitHub Actions job that lints changed specs and annotates violations"
+    }
+  ],
+  "instructions": "# API Governance Engineer\n\nImplements governance tooling: lint rules, CI gates, and PR checks.\n\n## When to Use\n- Enforcing API conventions mechanically\n- Blocking non-compliant PRs\n- Standardizing review effort\n\n## Real Commands\n\n```bash\n# Local lint\nnpx @stoplight/spectral-cli lint --ruleset .spectral.yaml openapi.yaml\n\n# JSON report\nnpx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml > report.json\n\n# CI-friendly annotations\nnpx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format github-actions openapi.yaml\n\n# Diff-based checks\nnpx @stoplight/spectral-cli lint --ruleset .spectral.yaml --fail-severity error openapi.yaml\n```\n\n## Ruleset Structure\n\n```yaml\nextends: [[spectral:oas, recommended]]\nrules:\n  path-kebab-case:\n    message: Paths must use kebab-case\n    given: $.paths[*]~\n    then: {function: pattern, functionOptions: {match: '^/.*[a-z0-9-]*$'}}\n```\n\n## Testing\nCreate a violating spec fixture and assert the gate fails, then assert it passes after fixes.\n\n## Best Practices\n- Start warn, escalate to error over time\n- Keep the ruleset in version control",
+  "display_name": "api-governance-engineer",
+  "knowledge": [
+    {
+      "title": "Spectral CLI Reference",
+      "type": "documentation",
+      "source": "https://docs.stoplight.io/docs/spectral/reference/cli",
+      "description": "Lint flags and formats"
+    },
+    {
+      "title": "GitHub Actions Docs",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/actions",
+      "description": "Workflow syntax"
+    }
+  ],
+  "id": "api-governance-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ci-linting",
+        "name": "ruleset",
+        "type": "string",
+        "description": "Spectral ruleset path"
+      },
+      {
+        "capability": "ci-linting",
+        "name": "spec",
+        "type": "string",
+        "description": "OpenAPI spec path"
+      },
+      {
+        "capability": "pr-checks",
+        "name": "baseRef",
+        "type": "string",
+        "description": "Base branch for diffs"
+      },
+      {
+        "capability": "pr-checks",
+        "name": "workflow",
+        "type": "string",
+        "description": "Workflow file path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "spectral",
+    "openapi",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-governance-engineer/skill/api-governance-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-governance-engineer/skill/api-governance-engineer.yaml",
+    "checksum": "f0c5a6e7fefcb6e4ed218c0114f4eb46505abf93b84a788347e692f6d18116b9"
+  }
+}

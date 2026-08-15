@@ -1,0 +1,196 @@
+{
+  "name": "rq",
+  "display_name": "rq",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Runs Redis Queue (RQ) workers and jobs in Python: enqueue, retries, scheduling, dashboards, and worker management.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "python"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "rq worker",
+        "rq worker --url redis://localhost:6379/1",
+        "rq worker --with-scheduler",
+        "rq worker high default low",
+        "rq worker --name web-worker"
+      ],
+      "description": "Start and manage RQ worker processes.",
+      "name": "rq-workers",
+      "examples": [
+        "rq worker --burst",
+        "rq worker --max-jobs 500",
+        "rq worker -c rq_settings"
+      ],
+      "parameters": [
+        {
+          "description": "Queue names (space separated)",
+          "name": "queues",
+          "type": "string"
+        },
+        {
+          "description": "Process until queues are empty",
+          "name": "burst",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "rq info",
+        "rq info --only-queues",
+        "rq requeue --queue failed",
+        "python -c \"from rq import Queue; from redis import Redis; q=Queue(\\\"default\\\", connection=Redis()); print(q.count)\"",
+        "rq empty --all"
+      ],
+      "description": "Inspect queues and manage jobs from the CLI.",
+      "name": "rq-ops",
+      "examples": [
+        "rq info --interval 5",
+        "rq requeue --all",
+        "python -c \"from rq.job import Job; from redis import Redis; print(Job.fetch(\\\"job-id\\\", connection=Redis()).get_status())\""
+      ],
+      "parameters": [
+        {
+          "description": "Queue name",
+          "name": "queue",
+          "type": "string"
+        },
+        {
+          "description": "Job identifier",
+          "name": "job-id",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RQ Docs",
+      "description": "Workers, queues, jobs, and CLI reference",
+      "source": "https://python-rq.org",
+      "type": "documentation"
+    },
+    {
+      "title": "RQ on GitHub",
+      "description": "Source and examples",
+      "source": "https://github.com/rq/rq",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# RQ (Redis Queue)\n\nSimple Python task queue backed by Redis.\n\n## When to Use\n\n- Background jobs for Python services already using Redis\n- Lightweight alternative to Celery\n- Burst processing where worker lifetime is short\n\n## Setup\n\n```bash\npip install rq\n```\n\n## Commands\n\n```bash\n# Start a worker\nrq worker\n\n# Specific queues in priority order\nrq worker high default low\n\n# With built-in scheduler\nrq worker --with-scheduler\n\n# Burst mode: drain queues and exit\nrq worker --burst\n\n# Inspect state\nrq info\nrq info --only-queues\n\n# Requeue failed jobs\nrq requeue --queue failed\n```\n\n## Job Example\n\n```python\n# tasks.py\nimport time\n\ndef send_email(to, subject):\n    time.sleep(1)\n    return f\"sent to {to}\"\n```\n\n```python\n# enqueue\nfrom redis import Redis\nfrom rq import Queue\nfrom tasks import send_email\n\nq = Queue(connection=Redis())\njob = q.enqueue(send_email, \"a@b.c\", \"Hello\", retry=Retry(max=3, interval=[10, 60, 300]))\nprint(job.id)\n```\n\n## Best Practices\n\n- Use retry with exponential intervals for flaky work\n- Keep one worker per queue group; prioritize with queue lists\n- Use --with-scheduler for periodic jobs\n- Monitor with rq info and the RQ dashboard\n- Set job timeouts explicitly to avoid stuck executions",
+  "examples": [
+    {
+      "input": "My RQ job failed; how do I retry it?",
+      "output": "Agent checks status with rq info, requeues with rq requeue --queue failed, and adds a Retry policy to the enqueue call."
+    },
+    {
+      "input": "Run a background email job with RQ",
+      "output": "Agent writes the task, enqueues it with retries, and starts rq worker --with-scheduler."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rq.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rq"
+    },
+    "generic": {
+      "system_prompt": "You take the rq seat. You do it through rq-workers: Start and manage RQ worker processes. The commands are real, e.g. `rq worker`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rq",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rq-workers",
+        "name": "queues",
+        "type": "string",
+        "description": "Queue names (space separated)"
+      },
+      {
+        "capability": "rq-workers",
+        "name": "burst",
+        "type": "boolean",
+        "description": "Process until queues are empty"
+      },
+      {
+        "capability": "rq-ops",
+        "name": "queue",
+        "type": "string",
+        "description": "Queue name"
+      },
+      {
+        "capability": "rq-ops",
+        "name": "job-id",
+        "type": "string",
+        "description": "Job identifier"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/rq-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/rq-skill.yaml",
+    "checksum": "67cf64d719edf0423b405b776d78f9ce14f83480d34af1bdcad1966da7eb577b"
+  }
+}

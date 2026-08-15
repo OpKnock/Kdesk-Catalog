@@ -1,0 +1,120 @@
+name: code-formatting
+display_name: code-formatting
+category: code-quality
+subcategory: general
+description: Applies consistent code formatting across languages with prettier, black, gofmt, rustfmt,
+  and formatter configurations.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- black
+- cargo
+- gofmt
+- npx
+- rustfmt
+capabilities:
+- commands:
+  - npx prettier --write src/
+  - npx prettier --check src/
+  - npx prettier --write "src/**/*.{ts,tsx}"
+  - npx prettier --config .prettierrc --write .
+  - npx prettier --write --single-quote src/
+  description: Format JS/TS/HTML/CSS/MD with Prettier.
+  name: prettier-format
+  examples:
+  - npx prettier --check .
+  - npx prettier --write . --tab-width 2
+  - npx prettier --write --prose-wrap always README.md
+  parameters:
+  - description: Files or globs
+    name: paths
+    type: string
+  - description: Verify without writing
+    name: check
+    type: boolean
+  - description: Indent width
+    name: tab-width
+    type: integer
+- commands:
+  - black src/
+  - gofmt -w ./
+  - go fmt ./...
+  - rustfmt --check src/
+  - cargo fmt --all
+  description: Format Python, Go, and Rust.
+  name: language-formatters
+  examples:
+  - gofmt -l .
+  - rustfmt --edition 2021 src/main.rs
+  - cargo fmt --all -- --check
+  parameters:
+  - description: python, go, rust
+    name: language
+    type: string
+  - name: config
+    type: string
+    description: Formatter config path
+knowledge:
+- title: Prettier Docs
+  description: Options and CLI reference
+  source: https://prettier.io/docs/
+  type: documentation
+- title: gofmt Docs
+  description: Go formatter
+  source: https://pkg.go.dev/cmd/gofmt
+  type: documentation
+- title: Rustfmt Docs
+  description: Rust formatter
+  source: https://rust-lang.github.io/rustfmt/
+  type: documentation
+instructions: "# Code Formatting\n\nEnforce one formatting style across the repo.\n\n## When to Use\n\n\
+  - Every codebase with more than one contributor\n- Ending style arguments with config, not discussion\n\
+  - Pre-commit and CI formatting gates\n- Language-agnostic consistency (configs, markdown, YAML)\n\n\
+  ## Commands\n\n```bash\n# Prettier (JS/TS/CSS/HTML/MD/JSON)\nnpx prettier --write src/\nnpx prettier\
+  \ --check src/\nnpx prettier --write \"src/**/*.{ts,tsx}\"\n\n# Python\nblack src/\nblack --check src/\n\
+  \n# Go\ngofmt -w ./\ngofmt -l .\n\n# Rust\ncargo fmt --all\nrustfmt --check src/\n```\n\n## Prettier\
+  \ Config\n\n```json\n{\n  \"semi\": true,\n  \"singleQuote\": true,\n  \"tabWidth\": 2,\n  \"printWidth\"\
+  : 100,\n  \"trailingComma\": \"all\"\n}\n```\n\n## Best Practices\n\n- Commit the formatter config at\
+  \ the repo root\n- Use --check in CI, --write in pre-commit\n- Let formatters handle style; reviewers\
+  \ handle logic\n- Format generated files with ignore directives\n- Keep formatter versions pinned to\
+  \ avoid churn\n- Run formatting before linting for stable error lines"
+examples:
+- input: Set up repo-wide formatting
+  output: Agent adds prettier config + black config, runs both --write across the repo, and adds pre-commit
+    hooks.
+- input: CI fails on formatting but locally it passes
+  output: Agent checks formatter version mismatch and line endings (CRLF) and aligns configs.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-formatting.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-code-formatting
+  generic:
+    system_prompt: 'You own code-formatting end to end. You do it through prettier-format: Format JS/TS/HTML/CSS/MD
+      with Prettier. The commands are real, e.g. `npx prettier --write src/`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

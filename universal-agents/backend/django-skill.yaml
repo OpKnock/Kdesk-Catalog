@@ -1,0 +1,133 @@
+name: django
+display_name: Django
+category: backend
+subcategory: general
+description: 'Builds full-stack web applications with Django: projects, apps, ORM, admin, auth, migrations,
+  and production deployment.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- django-admin
+- python
+capabilities:
+- commands:
+  - django-admin startproject mysite .
+  - python manage.py startapp polls
+  - python manage.py runserver
+  - python manage.py check
+  - python manage.py collectstatic
+  description: Scaffold projects and apps, run the dev server.
+  name: django-project
+  examples:
+  - django-admin startproject config .
+  - python manage.py runserver 0.0.0.0:8000
+  - python manage.py check --deploy
+  parameters:
+  - description: Project or app name
+    name: name
+    type: string
+  - name: settings
+    type: string
+    description: Django settings module
+- commands:
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - python manage.py sqlmigrate polls 0001
+  - python manage.py shell
+  - python manage.py createsuperuser
+  description: Create and apply migrations, use the ORM shell.
+  name: django-orm
+  examples:
+  - python manage.py makemigrations polls
+  - python manage.py migrate --plan
+  - python manage.py sqlmigrate polls 0001_initial
+  parameters:
+  - description: App label to make migrations for
+    name: app
+    type: string
+  - description: Migration name to show SQL for
+    name: migration
+    type: string
+- commands:
+  - python manage.py test
+  - python manage.py test polls.tests.TestQuestion
+  - python manage.py test --keepdb
+  - python manage.py test --parallel
+  description: Run the Django test suite.
+  name: django-testing
+  examples:
+  - python manage.py test polls --verbosity 2
+  - python manage.py test --tag=slow
+  parameters:
+  - description: Module, class, or method path
+    name: test-spec
+    type: string
+  - description: Reuse the test database
+    name: keepdb
+    type: boolean
+knowledge:
+- title: Django Docs
+  description: Tutorials, ORM, admin, auth, and deployment reference
+  source: https://docs.djangoproject.com/en/stable/
+  type: documentation
+- title: Django Deployment Checklist
+  description: Production security settings
+  source: https://docs.djangoproject.com/en/stable/howto/deployment/checklist/
+  type: documentation
+instructions: "# Django\n\nHigh-level Python web framework.\n\n## When to Use\n\n- CRUD applications with\
+  \ admin interfaces\n- ORM-heavy data models backed by PostgreSQL/MySQL\n- Built-in auth, sessions, and\
+  \ class-based views\n- Projects needing mature ecosystem (DRF, Celery, channels)\n\n## Commands\n\n\
+  ```bash\n# New project and app\ndjango-admin startproject mysite .\npython manage.py startapp polls\n\
+  \n# Dev server\npython manage.py runserver\n\n# Migrations\npython manage.py makemigrations\npython\
+  \ manage.py migrate\npython manage.py sqlmigrate polls 0001\npython manage.py showmigrations\n\n# Shell\
+  \ and superuser\npython manage.py shell\npython manage.py createsuperuser\n\n# Tests\npython manage.py\
+  \ test\npython manage.py test --keepdb\n\n# Static files and checks\npython manage.py collectstatic\n\
+  python manage.py check --deploy\n```\n\n## Model Example\n\n```python\n# polls/models.py\nfrom django.db\
+  \ import models\n\nclass Question(models.Model):\n    question_text = models.CharField(max_length=200)\n\
+  \    pub_date = models.DateTimeField(auto_now_add=True)\n\n    def __str__(self):\n        return self.question_text\n\
+  ```\n\n## Best Practices\n\n- Put business logic in models/services, keep views thin\n- Use get_object_or_404\
+  \ and querysets for safety\n- Run check --deploy before shipping to catch insecure settings\n- Set DEBUG=False,\
+  \ SECURE_SSL_REDIRECT, and proper ALLOWED_HOSTS in prod\n- Use collectstatic with a CDN or S3-backed\
+  \ static storage\n- Prefer select_related/prefetch_related to avoid N+1 queries"
+examples:
+- input: Scaffold a new Django project
+  output: Agent runs django-admin startproject, creates the app with startapp, wires settings.INSTALLED_APPS,
+    and runs migrate to bootstrap.
+- input: Add a new field to a model
+  output: Agent edits the model, runs makemigrations and migrate, then shows sqlmigrate output for review.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: django.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-django
+  generic:
+    system_prompt: 'Your lane is Django. You do it through django-project: Scaffold projects and apps,
+      run the dev server. The commands are real, e.g. `django-admin startproject mysite .`. You run and
+      verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

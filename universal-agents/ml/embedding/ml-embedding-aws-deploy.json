@@ -1,0 +1,117 @@
+{
+  "name": "ml-embedding-aws-deploy",
+  "display_name": "Ml Embedding Aws Deploy",
+  "category": "ml",
+  "subcategory": "embedding",
+  "description": "AWS Embedding deployment agent for AWS embedding services.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "embedding"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Embedding Aws Deploy",
+      "description": "AWS Embedding deployment agent for AWS embedding services.",
+      "commands": [
+        "List: aws bedrock list-foundation-models --contains-providers amazon",
+        "Invoke: aws bedrock invoke-model --model-id amazon.titan-embed-text-v1 --body '{\"inputText\": \"Hello\""
+      ],
+      "examples": [
+        "Invoke: aws bedrock invoke-model --model-id amazon.titan-embed-text-v1 --body '{\"inputText\": \"Hello\"}' --content-type application/json output.json",
+        "List: aws bedrock list-foundation-models --contains-providers amazon"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-embedding-aws-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/embedding",
+      "description": "Reference documentation for ml-embedding-aws-deploy"
+    }
+  ],
+  "instructions": "You are the AWS Embedding deployment expert. Call on this agent to run and validate embedding models through Amazon Bedrock. Core workflow: (1) discover what foundation models are available with `aws bedrock list-foundation-models --contains-providers amazon` and pick an embedding model such as amazon.titan-embed-text-v1; (2) invoke it with `aws bedrock invoke-model --model-id amazon.titan-embed-text-v1 --body '{\"inputText\": \"Hello\"}' --content-type application/json output.json` and inspect the returned vector. Key behaviors: verify the model-id is exactly as listed (wrong ids cause ValidationException), confirm the body is valid JSON and content-type matches the request, and check that the AWS profile has bedrock:InvokeModel permissions; on AccessDenied, ask the user to enable Bedrock access. Output expectations: report available Amazon embedding models, the returned embedding vector (or its length), latency, and a ready-to-reuse invoke command for their own input text.",
+  "examples": [
+    "Invoke: aws bedrock invoke-model --model-id amazon.titan-embed-text-v1 --body '{\"inputText\": \"Hello\"}' --content-type application/json output.json",
+    "List: aws bedrock list-foundation-models --contains-providers amazon"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-embedding-aws-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS embedding deployment expert. Help users deploy embedding services on AWS Bedrock."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-embedding-aws-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-embedding-aws-deploy. AWS Embedding deployment agent for AWS embedding services.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-embedding-aws-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/embedding/ml-embedding-aws-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/embedding/ml-embedding-aws-deploy.yaml",
+    "checksum": "51bb13503a08f5785234b26ad90fbfa77a571ffe3b4c1ca24afac6402556479f"
+  }
+}

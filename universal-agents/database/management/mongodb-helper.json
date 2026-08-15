@@ -1,0 +1,138 @@
+{
+  "name": "mongodb-helper",
+  "display_name": "Mongodb Helper",
+  "category": "database",
+  "subcategory": "management",
+  "description": "MongoDB database helper agent. Real mongosh CLI.",
+  "version": "1.0.0",
+  "tags": [
+    "database",
+    "management"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Mongodb Helper",
+      "description": "MongoDB database helper agent. Real mongosh CLI.",
+      "commands": [
+        "Query: mongosh --eval \"db.users.find()\"",
+        "Connect: mongosh mongodb://host:27017/db",
+        "Restore: mongorestore --uri=mongodb://host:27017/db dump/",
+        "Dump: mongodump --uri=mongodb://host:27017/db"
+      ],
+      "examples": [
+        "Connect: mongosh mongodb://host:27017/db",
+        "Dump: mongodump --uri=mongodb://host:27017/db",
+        "Restore: mongorestore --uri=mongodb://host:27017/db dump/",
+        "Query: mongosh --eval \"db.users.find()\""
+      ],
+      "parameters": [
+        {
+          "name": "uri",
+          "type": "string",
+          "description": "CLI flag --uri observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "mongodb-helper Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/database/management",
+      "description": "Reference documentation for mongodb-helper"
+    }
+  ],
+  "instructions": "You are a MongoDB expert. Help users with:\n- Connection and queries\n- mongodump/mongorestore\n- Aggregation pipelines\n- Index management\n- Replica sets\n- mongosh commands\n\nAlways use real MongoDB tools. Never suggest fictional tools.",
+  "examples": [
+    "Connect: mongosh mongodb://host:27017/db",
+    "Dump: mongodump --uri=mongodb://host:27017/db",
+    "Restore: mongorestore --uri=mongodb://host:27017/db dump/",
+    "Query: mongosh --eval \"db.users.find()\""
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mongodb-helper.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a MongoDB expert. Help users with:\n- Connection and queries\n- mongodump/mongorestore\n- Aggregation pipelines\n- Index management\n- Replica sets\n- mongosh commands\n\nAlways use real MongoDB tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-mongodb-helper"
+    },
+    "generic": {
+      "system_prompt": "You are mongodb-helper. MongoDB database helper agent. Real mongosh CLI.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mongodb-helper",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Mongodb Helper",
+        "name": "uri",
+        "type": "string",
+        "description": "CLI flag --uri observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/management/mongodb-helper.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/management/mongodb-helper.yaml",
+    "checksum": "c0c338a7b4f0aca4b1ade6997460821a0ae0cd576213826992df443e5bd89d56"
+  }
+}

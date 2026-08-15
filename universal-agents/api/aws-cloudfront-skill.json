@@ -1,0 +1,200 @@
+{
+  "name": "aws-cloudfront",
+  "display_name": "Aws Cloudfront",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manages AWS CloudFront distributions: creation, cache invalidation, origin configuration, and edge behavior testing.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "aws"
+  ],
+  "capabilities": [
+    {
+      "name": "distribution-lifecycle",
+      "description": "Create and manage CloudFront distributions.",
+      "commands": [
+        "aws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.com",
+        "aws cloudfront get-distribution --id <distribution-id>",
+        "aws cloudfront list-distributions --query 'DistributionList.Items[].{Id:Id,DomainName:DomainName}'",
+        "aws cloudfront update-distribution --id <distribution-id> --distribution-config file://config.json",
+        "aws cloudfront delete-distribution --id <distribution-id> --if-match <etag>"
+      ],
+      "examples": [
+        "aws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.com --default-root-object index.html",
+        "aws cloudfront list-distributions --query 'DistributionList.Items[].{Id:Id,DomainName:DomainName,Status:Status}' --output table",
+        "aws cloudfront get-distribution --id <id> | jq '.Distribution.DistributionConfig.DefaultCacheBehavior'"
+      ],
+      "parameters": [
+        {
+          "name": "origin_domain",
+          "type": "string",
+          "description": "Origin domain name"
+        },
+        {
+          "name": "distribution_id",
+          "type": "string",
+          "description": "CloudFront distribution ID"
+        }
+      ]
+    },
+    {
+      "name": "invalidation",
+      "description": "Invalidate cached objects at edge locations.",
+      "commands": [
+        "aws cloudfront create-invalidation --distribution-id <id> --paths \"/*\"",
+        "aws cloudfront create-invalidation --distribution-id <id> --paths \"/index.html\" \"/assets/*\"",
+        "aws cloudfront list-invalidations --distribution-id <id>",
+        "aws cloudfront get-invalidation --distribution-id <id> --id <invalidation-id>",
+        "curl -sI https://d111111abcdef8.cloudfront.net/index.html | grep -iE 'x-cache|age|via'"
+      ],
+      "examples": [
+        "aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths \"/css/*\" \"/js/*\"",
+        "aws cloudfront list-invalidations --distribution-id E2EXAMPLE --max-items 5",
+        "curl -sI https://d111111abcdef8.cloudfront.net/app.js | grep -i x-cache"
+      ],
+      "parameters": [
+        {
+          "name": "paths",
+          "type": "string",
+          "description": "Object paths to invalidate"
+        },
+        {
+          "name": "distribution_id",
+          "type": "string",
+          "description": "Distribution ID"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "CloudFront Developer Guide",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/",
+      "description": "Distributions, caching, invalidations"
+    },
+    {
+      "title": "AWS CLI cloudfront Reference",
+      "type": "documentation",
+      "source": "https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudfront/index.html",
+      "description": "CLI commands"
+    }
+  ],
+  "instructions": "# AWS CloudFront\n\n## What this skill does\n\nManages AWS CloudFront CDN distributions: creating distributions from S3/HTTP origins, updating cache behavior, invalidating edge caches, and verifying responses at the edge.\n\n## When to use\n\n- Serving a static site or API through a CDN\n- Pushing a new deploy when TTLs are long (invalidation)\n- Debugging stale content served from the edge\n\n## Real commands\n\n```bash\n# Create a distribution\naws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.com\n\n# List distributions\naws cloudfront list-distributions --query 'DistributionList.Items[].{Id:Id,DomainName:DomainName,Status:Status}' --output table\n\n# Invalidate everything after a deploy\naws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths \"/*\"\n\n# Targeted invalidation\naws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths \"/index.html\" \"/assets/*\"\n\n# Verify edge response\ncurl -sI https://d111111abcdef8.cloudfront.net/index.html | grep -iE 'x-cache|age'\n```\n\n## Testing\n\n- Check x-cache header: Hit-from-cloudfront vs RefreshHit/Miss\n- Poll list-invalidations until status becomes Completed\n\n## Best practices\n\n- Invalidate narrow paths (/* only for emergencies)\n- Version assets by filename to avoid invalidations entirely\n- Use Origin Shield + default TTLs tuned to content type\n- Get the ETag from get-distribution before update/delete",
+  "examples": [
+    {
+      "input": "Push the new frontend but users see the old version",
+      "output": "Runs targeted invalidation for /index.html and /assets/*, polls list-invalidations, and confirms via curl x-cache headers."
+    },
+    {
+      "input": "Create a CDN in front of our S3 bucket",
+      "output": "Runs create-distribution with the bucket origin, notes the Distribution.DomainName, and tests with curl -sI."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "aws-cloudfront.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-aws-cloudfront"
+    },
+    "generic": {
+      "system_prompt": "You are the Aws Cloudfront specialist. You do it through distribution-lifecycle: Create and manage CloudFront distributions. The commands are real, e.g. `aws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.com`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "aws-cloudfront",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "distribution-lifecycle",
+        "name": "origin_domain",
+        "type": "string",
+        "description": "Origin domain name"
+      },
+      {
+        "capability": "distribution-lifecycle",
+        "name": "distribution_id",
+        "type": "string",
+        "description": "CloudFront distribution ID"
+      },
+      {
+        "capability": "invalidation",
+        "name": "paths",
+        "type": "string",
+        "description": "Object paths to invalidate"
+      },
+      {
+        "capability": "invalidation",
+        "name": "distribution_id",
+        "type": "string",
+        "description": "Distribution ID"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/aws-cloudfront-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/aws-cloudfront-skill.yaml",
+    "checksum": "e0532a8d2b4f02d0298e8f6a6ca3977ee65accdd4d6d8e1ae4c02736bf5931a8"
+  }
+}

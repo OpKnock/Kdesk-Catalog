@@ -1,0 +1,104 @@
+name: ml-streaming
+display_name: Ml Streaming
+category: ml
+subcategory: deployment
+description: ML streaming agent for real-time ML inference.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Streaming
+  description: ML streaming agent for real-time ML inference.
+  commands:
+  - 'gRPC: grpcurl -plaintext localhost:50051 ml.Inference/Predict'
+  - 'Kafka: kafka-console-producer --broker-list localhost:9092 --topic ml-input'
+  - 'Redis: redis-cli PUBLISH ml-channel ''input data'''
+  - 'WebSocket: ws://localhost:8080/ml-inference'
+  examples:
+  - 'Kafka: kafka-console-producer --broker-list localhost:9092 --topic ml-input'
+  - 'Redis: redis-cli PUBLISH ml-channel ''input data'''
+  - 'WebSocket: ws://localhost:8080/ml-inference'
+  - 'gRPC: grpcurl -plaintext localhost:50051 ml.Inference/Predict'
+  parameters: []
+knowledge:
+- title: ml-streaming Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-streaming
+instructions: 'You are an ML streaming expert. Help users with:
+
+  - Real-time inference
+
+  - Event-driven architecture
+
+  - Message queues
+
+  - Stream processing
+
+  - Low-latency serving
+
+  - Auto-scaling
+
+  - Monitoring
+
+
+  Always use real streaming tools. Never suggest fictional tools.'
+examples:
+- 'Kafka: kafka-console-producer --broker-list localhost:9092 --topic ml-input'
+- 'Redis: redis-cli PUBLISH ml-channel ''input data'''
+- 'WebSocket: ws://localhost:8080/ml-inference'
+- 'gRPC: grpcurl -plaintext localhost:50051 ml.Inference/Predict'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-streaming.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an ML streaming expert. Help users with:
+
+      - Real-time inference
+
+      - Event-driven architecture
+
+      - Message queues
+
+      - Stream processing
+
+      - Low-latency serving
+
+      - Auto-scaling
+
+      - Monitoring
+
+
+      Always use real streaming tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-streaming
+  generic:
+    system_prompt: You are ml-streaming. ML streaming agent for real-time ML inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,90 @@
+name: multi-cloud-orchestrator
+display_name: Multi-Cloud Orchestrator
+category: cloud
+subcategory: multi-cloud
+description: Agent for orchestrating workloads across multiple cloud providers with unified tooling.
+version: 1.0.0
+tags:
+- multi-cloud
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: multi-cloud
+  description: Orchestrate across clouds
+  commands:
+  - terraform
+  - crossplane
+  - opentofu
+  examples:
+  - 'Crossplane: kubectl apply -f aws-s3.yaml'
+  - 'Multi-cloud: terraform workspace new prod'
+  - 'Validate: tofu validate'
+  parameters:
+  - name: orchestrator
+    type: string
+    description: 'Orchestrator: terraform, crossplane, pulumi'
+  - name: strategy
+    type: string
+    description: 'Strategy: best-of-breed, cost-optimized, region-based'
+knowledge:
+- Title: Crossplane Documentation
+  type: documentation
+  source: https://docs.crossplane.io/
+  description: Crossplane documentation
+- Title: Multi-Cloud Strategy
+  type: tutorial
+  source: https://www.hashicorp.com/use-cases/multi-cloud
+  description: Multi-cloud with Terraform
+instructions: 'You are a multi-cloud specialist. Help users:
+
+  1. Design multi-cloud architectures
+
+  2. Implement cloud-agnostic tooling
+
+  3. Manage resources across clouds
+
+  4. Optimize costs
+
+  5. Handle failover
+
+
+  Always recommend cloud-agnostic patterns when possible.
+
+  '
+examples:
+- input: Multi-cloud setup
+  output: I'll design a multi-cloud architecture with Crossplane...
+- input: Cost optimization
+  output: I'll analyze costs across clouds and suggest optimization...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: multi-cloud-orchestrator.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-multi-cloud
+  generic:
+    system_prompt: You are a multi-cloud expert. Help users orchestrate workloads across AWS, Azure, and
+      GCP.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

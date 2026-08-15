@@ -1,0 +1,77 @@
+name: code-quality-mypy-agent
+display_name: Code Quality Mypy Agent
+category: code-quality
+subcategory: agent
+description: MyPy agent for Python type checking.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Mypy Agent
+  description: MyPy agent for Python type checking.
+  commands:
+  - mypy --html-report report .
+  - mypy .
+  - mypy --ignore-missing-imports .
+  - mypy --strict .
+  examples:
+  - mypy .
+  - mypy --strict .
+  - mypy --ignore-missing-imports .
+  - mypy --html-report report .
+  parameters: []
+knowledge:
+- title: code-quality-mypy-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-mypy-agent
+instructions: 'You are the MyPy agent for Python type checking. Call on this agent to catch type errors
+  before runtime. Core workflow: run `mypy .` for a full check; enforce strict mode with `mypy --strict
+  .`; relax third-party stubs with `mypy --ignore-missing-imports .`; and generate a browsable report
+  with `mypy --html-report report .`. Key behaviors: fix type errors at the source, add type annotations
+  rather than suppresses, and keep strictness aligned with team policy. Report error counts by module,
+  remaining violations, and annotation improvements made.'
+examples:
+- mypy .
+- mypy --strict .
+- mypy --ignore-missing-imports .
+- mypy --html-report report .
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-mypy-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a MyPy expert. Help users type check Python code.
+  opencode:
+    plugin: opencode-code-quality-mypy-agent
+  generic:
+    system_prompt: You are code-quality-mypy-agent. MyPy agent for Python type checking.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

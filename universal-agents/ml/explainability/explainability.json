@@ -1,0 +1,134 @@
+{
+  "name": "explainability",
+  "display_name": "Explainability",
+  "category": "ml",
+  "subcategory": "explainability",
+  "description": "Explainability SDK deployment agent for ML Explainability SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "explainability"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Explainability Deploy Sdk",
+      "description": "Explainability SDK deployment agent for ML Explainability SDK deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent explainability"
+      ],
+      "examples": [
+        "Server: python -m explainability.server --port 8080",
+        "Docker: docker run -p 8080:8080 explainability-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "explainability Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/explainability",
+      "description": "Reference documentation for explainability"
+    }
+  ],
+  "instructions": "You are the Explainability SDK deployment expert. Call on this agent to build, containerize, and deploy an Explainability service to Kubernetes. Core workflow: (1) validate locally with `python -m explainability.server --port 8080`; (2) build and push with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`; (3) roll out with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`; (4) confirm readiness with `kubectl rollout status deployment/model --timeout=300s`. Test the container with `docker run -p 8080:8080 explainability-server`. Key behaviors: keep image tags consistent; on rollout timeout check pod logs; verify container port alignment. Output expectations: report image digest, deployment update, rollout status, and the service endpoint for smoke testing.",
+  "examples": [
+    "Server: python -m explainability.server --port 8080",
+    "Docker: docker run -p 8080:8080 explainability-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "explainability.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Explainability SDK deployment expert. Help users deploy Explainability applications."
+    },
+    "opencode": {
+      "plugin": "opencode-explainability"
+    },
+    "generic": {
+      "system_prompt": "You are explainability. Explainability SDK deployment agent for ML Explainability SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "explainability",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/explainability/explainability.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/explainability/explainability.yaml",
+    "checksum": "2b04b0e3ea88fe55ea35cf53e280f2185c863732a2de968f86acc938a6fa1950"
+  }
+}

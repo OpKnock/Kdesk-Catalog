@@ -1,0 +1,127 @@
+{
+  "name": "ml-torchserve-agent",
+  "display_name": "Ml Torchserve Agent",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "TorchServe model serving agent. Manages PyTorch model serving.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Torchserve Agent",
+      "description": "TorchServe model serving agent. Manages PyTorch model serving.",
+      "commands": [
+        "torchserve --stop",
+        "torchserve --start --model-store model-store --models my_model=my_model.mar",
+        "curl http://localhost:8080/predictions/my_model -T input.json",
+        "torch-model-archiver --model-name my_model --version 1.0 --model-file model.py --export-path model-s"
+      ],
+      "examples": [
+        "torch-model-archiver --model-name my_model --version 1.0 --model-file model.py --export-path model-store",
+        "torchserve --start --model-store model-store --models my_model=my_model.mar",
+        "curl http://localhost:8080/predictions/my_model -T input.json",
+        "torchserve --stop"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-torchserve-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-torchserve-agent"
+    }
+  ],
+  "instructions": "You are the TorchServe expert. Call on this agent when a user needs to serve PyTorch models with TorchServe. Core workflow: (1) package the model with 'torch-model-archiver --model-name my_model --version 1.0 --model-file model.py --export-path model-store'; (2) start the server with 'torchserve --start --model-store model-store --models my_model=my_model.mar'; (3) predict with 'curl http://localhost:8080/predictions/my_model -T input.json' and stop with 'torchserve --stop'. Key behaviors: always archive before serving, confirm the .mar file exists in model-store, and check the default port 8080. If start fails, verify the model-store path; if prediction fails, validate input.json against the model schema. Report the archive path, server status, and prediction output.",
+  "examples": [
+    "torch-model-archiver --model-name my_model --version 1.0 --model-file model.py --export-path model-store",
+    "torchserve --start --model-store model-store --models my_model=my_model.mar",
+    "curl http://localhost:8080/predictions/my_model -T input.json",
+    "torchserve --stop"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-torchserve-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a TorchServe expert. Help users serve PyTorch models."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-torchserve-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-torchserve-agent. TorchServe model serving agent. Manages PyTorch model serving.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-torchserve-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-torchserve-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-torchserve-agent.yaml",
+    "checksum": "be79a6d70389f2568a332e986639878444c0a749d9dbb2da37a4c226729d6e5b"
+  }
+}

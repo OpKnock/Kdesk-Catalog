@@ -1,0 +1,110 @@
+name: api-schema-buf-project
+version: 2.0.0
+type: skill
+category: data
+description: 'Manages protobuf schemas with buf: project setup, linting, formatting, code generation,
+  and breaking-change detection for gRPC APIs.'
+keywords:
+- api-schema
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-schema-buf-project.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-schema-buf-project
+  generic:
+    system_prompt: 'You take the Api Schema Buf Project seat. You do it through buf-project: Set up and
+      maintain buf protobuf projects. The commands are real, e.g. `go install github.com/bufbuild/buf/cmd/buf@latest`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: buf-project
+  description: Set up and maintain buf protobuf projects
+  commands:
+  - go install github.com/bufbuild/buf/cmd/buf@latest
+  - buf --version
+  - buf mod init
+  - buf lint
+  - buf format -w
+  examples:
+  - buf mod init creates buf.yaml
+  - buf lint checks proto style rules
+  - buf format -w normalizes formatting
+  parameters:
+  - name: module
+    type: string
+    description: Buf module path
+  - name: input
+    type: string
+    description: Input directory or file
+  - name: against
+    type: string
+    description: Baseline for breaking checks
+- name: generation-breaking
+  description: Generate code and detect breaking changes
+  commands:
+  - buf generate
+  - buf generate --template buf.gen.yaml
+  - buf breaking --against .git#branch=main
+  - buf build -o schema.binpb
+  examples: []
+  parameters: []
+prerequisites:
+- openapi
+- json-schema
+- node.js
+- python
+tools:
+- openapi
+- json-schema
+- node.js
+- python
+- stoplight-studio
+examples:
+- input: Add a protobuf schema for users
+  output: Inits a buf module, writes user.proto, lints and generates stubs
+- input: Check schema compatibility
+  output: Runs buf breaking against main before merging
+instructions: "# API Schema v3 - Protobuf/buf\n\nProtobuf schema management with buf.\n\n## What This\
+  \ Skill Does\n- Manages proto schemas as buf modules\n- Lints and formats proto files\n- Generates stubs\
+  \ and checks compatibility\n\n## When to Use\n- gRPC API schema management\n- Multi-language stub generation\n\
+  - Safe schema evolution\n\n## Real Commands\n\n```bash\ngo install github.com/bufbuild/buf/cmd/buf@latest\n\
+  buf mod init\nbuf lint\nbuf format -w\nbuf generate\nbuf breaking --against .git#branch=main\n```\n\n\
+  ## Example proto\n\n```proto\nsyntax = \"proto3\";\npackage api.v1;\n\nmessage User {\n  int64 id =\
+  \ 1;\n  string email = 2;\n}\n```\n\n## Testing\n- Run buf lint and breaking checks in CI\n- Generate\
+  \ stubs into a scratch dir\n- Test wire compatibility after changes\n\n## Best Practices\n- Never reuse\
+  \ field numbers\n- Add fields at the end of messages\n- Commit generated code for release tags"
+display_name: Api Schema Buf Project
+knowledge:
+- title: buf Docs
+  type: documentation
+  source: https://buf.build/docs/
+  description: buf CLI reference
+- title: Protobuf Language Guide
+  type: documentation
+  source: https://protobuf.dev/programming-guides/proto3/
+  description: proto3 syntax reference

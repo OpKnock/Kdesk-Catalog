@@ -1,0 +1,220 @@
+name: feature-flag-engineer
+version: 2.0.0
+type: skill
+category: devops
+description: Designs, ships, and retires feature flags across LaunchDarkly, Flipt, and Flagsmith, including
+  kill switches, gradual rollouts, and flag lifecycle automation.
+keywords:
+- feature-flags
+- launchdarkly
+- gradual-rollout
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: feature-flag-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-feature-flag-engineer
+  generic:
+    system_prompt: 'This is your domain: feature-flag-engineer. You do it through launchdarkly: Manage
+      LaunchDarkly feature flags, environments, and segments via ldcli. The commands are real, e.g. `ldcli
+      config --access-token $LD_ACCESS_TOKEN`. You run and verify the real CLI commands before you claim
+      anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: launchdarkly
+  description: Manage LaunchDarkly feature flags, environments, and segments via ldcli.
+  commands:
+  - ldcli config --access-token $LD_ACCESS_TOKEN
+  - ldcli feature-flags list --project-key my-project --environment-key production
+  - ldcli feature-flags create --project-key my-project --key dark-mode --name 'Dark Mode' --description
+    'Toggle dark theme'
+  - ldcli feature-flags update --project-key my-project --key dark-mode --env-key production --on true
+  - ldcli feature-flags delete --project-key my-project --key dark-mode
+  examples:
+  - ldcli feature-flags list --project-key webapp --environment-key production | jq -r '.[].key'
+  - ldcli feature-flags update --project-key webapp --key checkout-v2 --env-key staging --on false
+  - ldcli feature-flags create --project-key webapp --key kill-flag --name 'Kill switch' --variations
+    true false
+  parameters:
+  - name: project-key
+    type: string
+    description: LaunchDarkly project key, e.g. webapp
+  - name: environment-key
+    type: string
+    description: Target environment, e.g. production or staging
+  - name: key
+    type: string
+    description: Unique flag key, lowercase kebab-case
+- name: flipt
+  description: Manage self-hosted Flipt feature flags and experiments.
+  commands:
+  - flipt config --output /etc/flipt/config.yml
+  - flipt import --input features.json
+  - flipt export --output features.yaml
+  - flipt eval --flag-key dark-mode --entity-key user-123 --context '{"plan":"premium"}'
+  - flipt serve --config /etc/flipt/config.yml
+  examples:
+  - flipt eval --flag-key checkout-v2 --entity-key user-1 --context '{"beta":true}'
+  - flipt import --input flags.yaml --namespace production
+  - flipt export --namespace production > backup-flags.json
+  parameters:
+  - name: flag-key
+    type: string
+    description: Flag key to evaluate
+  - name: entity-key
+    type: string
+    description: Identifier of the evaluation entity (user, device, org)
+  - name: namespace
+    type: string
+    description: Flipt namespace for organization
+prerequisites:
+- unleash
+- node.js
+- python
+- redis
+tools:
+- unleash
+- launchdarkly-cli
+- node.js
+- python
+- redis
+- split-io
+examples:
+- input: Roll out a new checkout UI to 10% of users, then to 100% tomorrow if stable.
+  output: Creates flag checkout-v2, enables percentage rollout at 10% in production, sets a rollout completion
+    alert, and prepares the removal checklist.
+- input: Add a global kill switch for the payment provider integration.
+  output: Creates a boolean kill flag defaulting to true, wires it into the provider client with a typed
+    accessor, and documents the incident runbook.
+instructions: '# Feature Flag Engineering
+
+
+  Manage feature flags across major vendors with real CLIs and safe rollouts.
+
+
+  ## When to Use
+
+
+  - Adding a kill switch or dark launch
+
+  - Gradual percentage rollouts of new features
+
+  - Trunk-based development with short-lived flags
+
+  - Removing a flag after the rollout completes
+
+
+  ## LaunchDarkly (ldcli)
+
+
+  ```bash
+
+  ldcli config --access-token $LD_ACCESS_TOKEN
+
+  ldcli feature-flags list --project-key webapp --environment-key production
+
+  ldcli feature-flags create --project-key webapp --key dark-mode --name ''Dark Mode''
+
+  ldcli feature-flags update --project-key webapp --key dark-mode --env-key staging --on true
+
+  ldcli feature-flags delete --project-key webapp --key dark-mode
+
+  ```
+
+
+  Always scope access tokens with least-privilege roles and rotate them via CI secrets.
+
+
+  ## Flipt (self-hosted)
+
+
+  ```bash
+
+  flipt serve --config /etc/flipt/config.yml
+
+  flipt eval --flag-key checkout-v2 --entity-key user-1 --context ''{"beta":true}''
+
+  flipt import --input features.json
+
+  flipt export --namespace production > backup-flags.json
+
+  ```
+
+
+  Flipt is a good choice when flags must run inside your own VPC with audit logging.
+
+
+  ## Rollout strategy
+
+
+  1. Release with flag OFF for 24h to observe baseline telemetry.
+
+  2. Ramp 5% -> 25% -> 100% using percentage rollouts, watching error budgets.
+
+  3. Before removing a flag, confirm the dead code path is unreachable for 2 weeks.
+
+  4. Delete the flag and remove SDK references in the same release.
+
+
+  ## Best practices
+
+
+  - Prefix flag keys with the team: `checkout/v2-cart`.
+
+  - Every flag gets an owner and an expiry date.
+
+  - Wire flags through typed accessors, never raw string lookups.
+
+  - Include flag evaluations in your metrics dashboard for every release.
+
+
+  ## Testing
+
+
+  ```bash
+
+  curl -s "https://app.launchdarkly.com/api/v2/flags/webapp" -H "Authorization: $LD_TOKEN" | jq ''.items[]
+  | {key, variations}''
+
+  ```
+
+
+  Verify kill-switch behavior under production-like traffic before every launch window.'
+display_name: feature-flag-engineer
+knowledge:
+- title: LaunchDarkly Docs
+  type: documentation
+  source: https://docs.launchdarkly.com/
+  description: Flag management, targeting rules, and the ldcli reference
+- title: Flipt Docs
+  type: documentation
+  source: https://www.flipt.io/docs/
+  description: 'Self-hosted feature flag server: evaluation, namespaces, audit'
+- title: Flagsmith Docs
+  type: documentation
+  source: https://docs.flagsmith.com/
+  description: Feature flags, remote config, and SDK integration guides

@@ -1,0 +1,155 @@
+{
+  "name": "api-version-negotiation",
+  "display_name": "API Version Negotiation",
+  "category": "backend",
+  "subcategory": "api",
+  "description": "Agent for implementing API version negotiation with header-based and URL-based versioning.",
+  "version": "1.0.0",
+  "tags": [
+    "api-versioning",
+    "negotiation",
+    "header",
+    "backward-compatibility"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "versioning",
+      "description": "Implement API versioning",
+      "commands": [
+        "curl",
+        "httpie"
+      ],
+      "examples": [
+        "Header: curl -H 'Accept: application/vnd.api.v2+json' /api/resource",
+        "URL: curl /api/v2/resource",
+        "Query: curl /api/resource?version=2"
+      ],
+      "parameters": [
+        {
+          "name": "strategy",
+          "type": "string",
+          "description": "Strategy: header, url, query, content-type"
+        },
+        {
+          "name": "compatibility",
+          "type": "string",
+          "description": "Compatibility: backward, forward, breaking-only"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "API Versioning",
+      "type": "documentation",
+      "source": "https://restfulapi.net/versioning/",
+      "description": "REST API versioning"
+    },
+    {
+      "Title": "API Evolution",
+      "type": "tutorial",
+      "source": "https://www.postman.com/api-platform/api-versioning/",
+      "description": "API evolution strategies"
+    }
+  ],
+  "instructions": "You are an API versioning specialist. Help users:\n1. Choose versioning strategy\n2. Implement version routing\n3. Handle deprecation\n4. Maintain backward compatibility\n5. Document version differences\n\nAlways recommend header-based versioning.\n",
+  "examples": [
+    {
+      "input": "Version API",
+      "output": "I'll implement header-based versioning with negotiation..."
+    },
+    {
+      "input": "Deprecate version",
+      "output": "I'll add deprecation headers and sunset dates..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-version-negotiation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-versioning"
+    },
+    "generic": {
+      "system_prompt": "You are an API versioning expert. Help users implement version negotiation and manage API evolution.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-version-negotiation",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "versioning",
+        "name": "strategy",
+        "type": "string",
+        "description": "Strategy: header, url, query, content-type"
+      },
+      {
+        "capability": "versioning",
+        "name": "compatibility",
+        "type": "string",
+        "description": "Compatibility: backward, forward, breaking-only"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/api-version-negotiation.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/api-version-negotiation.yaml",
+    "checksum": "690ee173176c5e3519d7d96d98497b8892159647acc46cd4e079e831a8215c43"
+  }
+}

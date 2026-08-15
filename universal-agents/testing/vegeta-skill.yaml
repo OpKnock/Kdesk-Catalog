@@ -1,0 +1,205 @@
+name: vegeta-testing
+display_name: vegeta-testing
+category: testing
+subcategory: general
+description: Load-tests HTTP endpoints with Vegeta attack/plot/report pipelines and encoded result files.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- echo
+- vegeta
+capabilities:
+- name: vegeta-attacks
+  description: Generate load with targets and rate controls.
+  commands:
+  - echo 'GET http://localhost:8080' | vegeta attack -duration=30s -rate=100 > results.bin
+  - 'echo ''POST http://localhost:8080/api'' | vegeta attack -duration=1m -rate=50 -body post.json -header
+    ''Content-Type: application/json'' > results.bin'
+  - vegeta attack -targets=targets.txt -rate=200 -duration=2m > results.bin
+  - echo 'GET http://localhost:8080/health' | vegeta attack -rate=0 -max-workers=20 -duration=30s > results.bin
+  examples:
+  - echo 'GET http://localhost:8080' | vegeta attack -duration=30s -rate=100 > results.bin
+  - vegeta attack -targets=targets.txt -rate=200 -duration=2m > results.bin
+  - echo 'POST http://localhost:8080/api' | vegeta attack -duration=1m -rate=50 -body post.json > results.bin
+  parameters:
+  - name: rate
+    type: number
+    description: Requests per second
+  - name: duration
+    type: string
+    description: Attack duration
+  - name: targets
+    type: string
+    description: Targets file path
+- name: vegeta-reports
+  description: Report metrics and histograms from results.
+  commands:
+  - vegeta report results.bin
+  - vegeta report -type=hist[0,100ms,200ms,300ms] results.bin
+  - vegeta report -type=json results.bin
+  - vegeta report -every=10s results.bin
+  examples:
+  - vegeta report results.bin
+  - vegeta report -type=hist[0,100ms,200ms,300ms] results.bin
+  - vegeta report -type=json results.bin
+  parameters:
+  - name: type
+    type: string
+    description: 'Report type: text, json, hist'
+  - name: every
+    type: string
+    description: Periodic report interval
+- name: vegeta-plots
+  description: Generate latency plots and encode results.
+  commands:
+  - vegeta plot results.bin > plot.html
+  - vegeta encode -format=json < results.bin | jq .
+  - vegeta encode -format=gob < results.bin > results.gob
+  - vegeta plot -title="Release 1.2" results.bin > release.html
+  examples:
+  - vegeta plot results.bin > plot.html
+  - vegeta encode -format=json < results.bin | jq .
+  - vegeta plot -title="Release 1.2" results.bin > release.html
+  parameters:
+  - name: format
+    type: string
+    description: 'Encode format: json, gob, csv'
+  - name: title
+    type: string
+    description: Plot title
+knowledge:
+- title: Vegeta GitHub
+  type: documentation
+  source: https://github.com/tsenart/vegeta
+  description: Attack, report, plot, and encode usage
+- title: Vegeta Docs
+  type: documentation
+  source: https://github.com/tsenart/vegeta/tree/master/docs
+  description: Guides and benchmarks
+instructions: '# Vegeta
+
+
+  HTTP load testing with a composable pipeline.
+
+
+  ## What This Skill Does
+
+
+  - Generates fixed-rate load with attack
+
+  - Reports percentiles and histograms
+
+  - Plots latency over time to HTML
+
+  - Encodes results for further analysis
+
+
+  ## When to Use
+
+
+  - Throughput and latency benchmarking
+
+  - Comparing releases under identical load
+
+  - Capacity checks with exact rates
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Attack
+
+  echo ''GET http://localhost:8080'' | vegeta attack -duration=30s -rate=100 > results.bin
+
+  vegeta attack -targets=targets.txt -rate=200 -duration=2m > results.bin
+
+
+  # Report
+
+  vegeta report results.bin
+
+  vegeta report -type=hist[0,100ms,200ms,300ms] results.bin
+
+  vegeta report -type=json results.bin
+
+
+  # Plot and encode
+
+  vegeta plot results.bin > plot.html
+
+  vegeta encode -format=json < results.bin | jq .
+
+  ```
+
+
+  ## Targets File
+
+
+  ```text
+
+  GET http://localhost:8080/products
+
+  POST http://localhost:8080/api/orders
+
+  Content-Type: application/json
+
+
+  {"sku": "A-1", "qty": 2}
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Keep results.bin as the single source of truth
+
+  - Use histogram reports for latency distribution
+
+  - Attack with -rate=0 for unconstrained throughput tests
+
+  - Compare plots across releases for regressions
+
+  - Script the full pipeline into CI on staging'
+examples:
+- input: Load test the health endpoint at 100 rps
+  output: Agent runs the attack pipeline, reports percentiles, and plots latency to HTML.
+- input: Compare latency between two releases
+  output: Agent runs identical attacks per release, encodes JSON, and diffs the p95 metrics.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: vegeta-testing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-vegeta
+  generic:
+    system_prompt: 'You own vegeta-testing end to end. You do it through vegeta-attacks: Generate load
+      with targets and rate controls. The commands are real, e.g. `echo GET http://localhost:8080 | vegeta
+      attack -duration=30s -rate=100 > results.bin`. You prefer the shortest safe path, and you reproduce
+      failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

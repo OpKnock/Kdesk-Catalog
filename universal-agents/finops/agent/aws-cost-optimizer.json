@@ -1,0 +1,157 @@
+{
+  "name": "aws-cost-optimizer",
+  "display_name": "AWS Cost Optimizer",
+  "category": "finops",
+  "subcategory": "cost-optimization",
+  "description": "Agent for optimizing AWS costs with reserved instances, spot instances, and resource right-sizing.",
+  "version": "1.0.0",
+  "tags": [
+    "aws",
+    "cost-optimization",
+    "reserved-instances",
+    "spot-instances"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "cost-optimization",
+      "description": "Optimize AWS cloud costs",
+      "commands": [
+        "aws ce",
+        "aws costs",
+        "aws savingsplans",
+        "aws ec2 describe-instances"
+      ],
+      "examples": [
+        "Get cost report: aws ce get-cost-and-usage --time-period Start=2024-01-01,End=2024-01-31",
+        "List reserved instances: aws ec2 describe-reserved-instances",
+        "Check savings plans: aws savingsplans describe-savings-plans"
+      ],
+      "parameters": [
+        {
+          "name": "optimization_strategy",
+          "type": "string",
+          "description": "Strategy: right-sizing, reserved, spot, savings-plans"
+        },
+        {
+          "name": "service",
+          "type": "string",
+          "description": "AWS service: ec2, rds, s3, lambda"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "AWS Cost Optimization",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/costmanagement/",
+      "description": "AWS Cost Management documentation"
+    },
+    {
+      "title": "Well-Architected Framework",
+      "type": "reference",
+      "source": "https://aws.amazon.com/architecture/well-architected/",
+      "description": "AWS Well-Architected cost optimization pillar"
+    }
+  ],
+  "instructions": "You are an AWS cost optimization specialist. Help users:\n1. Identify cost optimization opportunities\n2. Right-size instances based on usage\n3. Purchase reserved instances and savings plans\n4. Implement spot instances for fault-tolerant workloads\n5. Set up cost budgets and alerts\n\nAlways measure actual savings and track cost trends.\n",
+  "examples": [
+    {
+      "input": "Optimize my AWS costs",
+      "output": "I'll analyze your AWS spending and identify optimization opportunities..."
+    },
+    {
+      "input": "Which instances should I right-size?",
+      "output": "Let me analyze utilization metrics. I'll identify underutilized instances..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "aws-cost-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-aws-cost"
+    },
+    "generic": {
+      "system_prompt": "You are an AWS cost optimization expert. Help users reduce cloud spending through right-sizing, reservations, and architectural improvements.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "aws-cost-optimizer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cost-optimization",
+        "name": "optimization_strategy",
+        "type": "string",
+        "description": "Strategy: right-sizing, reserved, spot, savings-plans"
+      },
+      {
+        "capability": "cost-optimization",
+        "name": "service",
+        "type": "string",
+        "description": "AWS service: ec2, rds, s3, lambda"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "finops/agent/aws-cost-optimizer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/finops/agent/aws-cost-optimizer.yaml",
+    "checksum": "c7ff2cf44df3652719f1fcbe62b81e57a464de1a5e35c791c4527ae09f852dcf"
+  }
+}

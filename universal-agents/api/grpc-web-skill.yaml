@@ -1,0 +1,125 @@
+name: grpc-web
+display_name: Grpc Web
+category: api
+subcategory: general
+description: 'gRPC-Web for browser clients: protoc-gen-grpc-web codegen, grpc-web npm client, and Envoy
+  proxy configuration to bridge HTTP/1.1 browsers to HTTP/2 gRPC.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- chmod
+- envoy
+- npm
+- protoc
+capabilities:
+- name: grpc-web-bridge
+  description: Generate grpc-web JS stubs and proxy browser traffic to gRPC backends with Envoy.
+  commands:
+  - curl -L -o protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/download/1.5.0/protoc-gen-grpc-web-1.5.0-linux-x86_64
+  - chmod +x protoc-gen-grpc-web
+  - protoc --plugin=protoc-gen-grpc-web=$(pwd)/protoc-gen-grpc-web --js_out=import_style=commonjs:. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.
+    helloworld.proto
+  - npm install grpc-web
+  - envoy -c envoy.yaml
+  examples:
+  - protoc --plugin=protoc-gen-grpc-web=$(pwd)/protoc-gen-grpc-web --js_out=import_style=commonjs:. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.
+    helloworld.proto
+  - npm install google-protobuf grpc-web
+  - curl -I http://localhost:8080/helloworld.Greeter/SayHello
+  parameters:
+  - name: import_style
+    type: string
+    description: 'JS import style: commonjs, commonjs+dts, typescript.'
+  - name: mode
+    type: string
+    description: 'Wire format: grpcwebtext (default) or grpcweb (binary).'
+  - name: envoy_config
+    type: string
+    description: Path to the Envoy config bridging the browser port to the gRPC upstream.
+knowledge:
+- title: gRPC-Web Basics
+  type: documentation
+  source: https://grpc.io/docs/platforms/web/basics/
+  description: 'Official gRPC-Web tutorial: codegen and browser client usage.'
+- title: grpc-web GitHub
+  type: documentation
+  source: https://github.com/grpc/grpc-web
+  description: 'grpc-web repository: protoc plugin releases and Envoy proxy examples.'
+instructions: "# gRPC-Web\n\nExpose gRPC services to browser clients over gRPC-Web.\n\n## What this skill\
+  \ does\n\n- Generates JS/TS gRPC-Web stubs from proto files.\n- Bridges browser HTTP/1.1 calls to gRPC\
+  \ backends with Envoy.\n- Explains grpcwebtext vs grpcweb wire modes.\n- Debugs the proxy path with\
+  \ curl.\n\n## When to use\n\n- A web frontend must call a gRPC backend directly.\n- You want to drop\
+  \ a REST layer between browser and backend.\n- Evaluating gRPC-Web vs REST for a new SPA.\n\n## Real\
+  \ commands\n\n```bash\n# Install the protoc plugin (pick platform release)\ncurl -L -o protoc-gen-grpc-web\
+  \ https://github.com/grpc/grpc-web/releases/download/1.5.0/protoc-gen-grpc-web-1.5.0-linux-x86_64\n\
+  chmod +x protoc-gen-grpc-web\n\n# Generate JS stubs\nprotoc --plugin=protoc-gen-grpc-web=$(pwd)/protoc-gen-grpc-web\
+  \ \\\n  --js_out=import_style=commonjs:. \\\n  --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.\
+  \ helloworld.proto\n\n# Client deps\nnpm install google-protobuf grpc-web\n\n# Run the Envoy proxy\n\
+  envoy -c envoy.yaml\n```\n\n## Envoy config (minimal)\n\n```yaml\nstatic_resources:\n  listeners:\n\
+  \    - name: browser_listener\n      address: { socket_address: { address: 0.0.0.0, port_value: 8080\
+  \ } }\n      filter_chains:\n        - filters:\n            - name: envoy.filters.network.http_connection_manager\n\
+  \              typed_config:\n                \"@type\": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager\n\
+  \                codec_type: AUTO\n                stat_prefix: grpc_web\n                route_config:\n\
+  \                  virtual_hosts:\n                    - name: grpc\n                      domains:\
+  \ [\"*\"]\n                      routes:\n                        - match: { prefix: \"/\" }\n     \
+  \                     route:\n                            cluster: grpc_backend\n                  \
+  \          timeout: 5s\n                http_filters:\n                  - name: envoy.filters.http.grpc_web\n\
+  \                  - name: envoy.filters.http.router\n  clusters:\n    - name: grpc_backend\n      type:\
+  \ STRICT_DNS\n      typed_extension_protocol_options:\n        envoy.extensions.upstreams.http.v3.HttpProtocolOptions:\n\
+  \          \"@type\": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions\n \
+  \         explicit_http_config:\n            http2_protocol_options: {}\n      load_assignment:\n  \
+  \      cluster_name: grpc_backend\n        endpoints:\n          - lb_endpoints:\n              - endpoint:\n\
+  \                  address: { socket_address: { address: localhost, port_value: 50051 } }\n```\n\n##\
+  \ Browser client\n\n```js\nconst client = new GreeterClient('http://localhost:8080', null, null);\n\
+  client.sayHello({ name: 'Web' }, (err, resp) => console.log(resp.message));\n```\n\n## Testing\n\n```bash\n\
+  # The proxy should answer on the browser port (may return 415 for bare GET - that is expected without\
+  \ grpc-accept)\ncurl -s -X POST -H \"Content-Type: application/grpc-web-text\" \\\n  -H \"X-Grpc-Web:\
+  \ 1\" http://localhost:8080/helloworld.Greeter/SayHello --data-binary @payload\n```\n\n## Best practices\n\
+  \n- Use mode=grpcwebtext for debuggable base64 traffic; grpcweb binary is smaller.\n- Always place the\
+  \ grpc_web filter before the router filter in Envoy.\n- Envoy must talk HTTP/2 upstream; gRPC-Web to\
+  \ gRPC needs the grpc-web filter only on the browser side.\n- Keep protoc plugin and npm grpc-web versions\
+  \ compatible.\n\n## Example exchange\n\n```\nUser: Browser requests fail with 405 from the proxy.\n\
+  Agent: Verify Envoy's grpc_web filter is configured before router and upstream is HTTP/2.\n```"
+examples:
+- input: Generate grpc-web stubs from helloworld.proto
+  output: protoc --plugin=protoc-gen-grpc-web=$(pwd)/protoc-gen-grpc-web --js_out=import_style=commonjs:.
+    --grpc-web_out=import_style=commonjs,mode=grpcwebtext:. helloworld.proto
+- input: Proxy browser traffic to a gRPC backend
+  output: 'envoy -c envoy.yaml  # browser port 8080 -> localhost:50051'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grpc-web.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grpc-web
+  generic:
+    system_prompt: 'You own Grpc Web end to end. You do it through grpc-web-bridge: Generate grpc-web
+      JS stubs and proxy browser traffic to gRPC backends with Envoy. The commands are real, e.g. `curl
+      -L -o protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/download/1.5.0/pr...`. You prefer
+      the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

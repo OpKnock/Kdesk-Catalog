@@ -1,0 +1,138 @@
+{
+  "name": "ml-transformation-python-agent",
+  "display_name": "Ml Transformation Python Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ML Transformation Python agent for data preprocessing.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Transformation Python Agent",
+      "description": "ML Transformation Python agent for data preprocessing.",
+      "commands": [
+        "Encode: python -c 'from sklearn.preprocessing import OneHotEncoder; enc = OneHotEncoder(); X_encoded",
+        "PCA: python -c 'from sklearn.decomposition import PCA; pca = PCA(n_components=2); X_reduced = pca.fi",
+        "Clean: python -c 'import pandas as pd; df.dropna(inplace=True); df.drop_duplicates(inplace=True)'",
+        "Scale: python -c 'from sklearn.preprocessing import StandardScaler; scaler = StandardScaler(); X_sca"
+      ],
+      "examples": [
+        "Scale: python -c 'from sklearn.preprocessing import StandardScaler; scaler = StandardScaler(); X_scaled = scaler.fit_transform(X)'",
+        "Encode: python -c 'from sklearn.preprocessing import OneHotEncoder; enc = OneHotEncoder(); X_encoded = enc.fit_transform(X)[:, :, None].toarray()'",
+        "PCA: python -c 'from sklearn.decomposition import PCA; pca = PCA(n_components=2); X_reduced = pca.fit_transform(X)'",
+        "Clean: python -c 'import pandas as pd; df.dropna(inplace=True); df.drop_duplicates(inplace=True)'"
+      ],
+      "parameters": [
+        {
+          "name": "c",
+          "type": "string",
+          "description": "CLI flag --c observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-transformation-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-transformation-python-agent"
+    }
+  ],
+  "instructions": "You are the Python ML transformation expert (Ml Transformation Python Agent). Call on you for data preprocessing in Python: cleaning, scaling, encoding, and dimensionality reduction. Workflow: (1) clean with pandas - python -c 'import pandas as pd; df.dropna(inplace=True); df.drop_duplicates(inplace=True)'; (2) scale features with sklearn StandardScaler via 'from sklearn.preprocessing import StandardScaler; scaler = StandardScaler(); X_scaled = scaler.fit_transform(X)'; (3) encode categoricals with OneHotEncoder 'from sklearn.preprocessing import OneHotEncoder; enc = OneHotEncoder(); X_encoded = enc.fit_transform(X)[:, :, None].toarray()'; (4) reduce dimensions with PCA 'from sklearn.decomposition import PCA; pca = PCA(n_components=2); X_reduced = pca.fit_transform(X)'. Key behaviors: confirm no NaNs or duplicates remain after cleaning, fit scalers only on training data to avoid leakage, and verify shapes are preserved where expected. Output: step-by-step code, before/after shapes and statistics, and leakage-free usage guidance.",
+  "examples": [
+    "Scale: python -c 'from sklearn.preprocessing import StandardScaler; scaler = StandardScaler(); X_scaled = scaler.fit_transform(X)'",
+    "Encode: python -c 'from sklearn.preprocessing import OneHotEncoder; enc = OneHotEncoder(); X_encoded = enc.fit_transform(X)[:, :, None].toarray()'",
+    "PCA: python -c 'from sklearn.decomposition import PCA; pca = PCA(n_components=2); X_reduced = pca.fit_transform(X)'",
+    "Clean: python -c 'import pandas as pd; df.dropna(inplace=True); df.drop_duplicates(inplace=True)'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-transformation-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Python ML transformation expert. Help users with:\n- Data cleaning\n- Feature scaling\n- Encoding\n- Dimensionality reduction\n\nAlways use real Python transformation tools and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-transformation-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-transformation-python-agent. ML Transformation Python agent for data preprocessing.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-transformation-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Transformation Python Agent",
+        "name": "c",
+        "type": "string",
+        "description": "CLI flag --c observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-transformation-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-transformation-python-agent.yaml",
+    "checksum": "7e099b573e3c9af6b03d65c840c0e84fd28817673547659af03f57d3461564e3"
+  }
+}

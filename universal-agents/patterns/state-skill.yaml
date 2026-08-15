@@ -1,0 +1,101 @@
+name: state
+display_name: State
+category: patterns
+subcategory: general
+description: 'Implements the State pattern in TypeScript with Vitest: state machines that swap behavior
+  as state changes.'
+version: 2.0.0
+tags:
+- state
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- name: ts-vitest
+  description: Implement and test state machine examples.
+  commands:
+  - npm init -y && npm install -D typescript vitest
+  - npx tsc --noEmit --strict state.ts
+  - npx vitest run tests/state.test.ts
+  - npx vitest run --coverage
+  - npx vitest run tests/state.test.ts -t 'draft'
+  examples:
+  - npx vitest run tests/state.test.ts
+  - npx tsc --noEmit --strict state.ts machine.ts
+  - npx vitest run -t 'publish'
+  parameters:
+  - name: t
+    type: string
+    description: Test name filter
+  - name: coverage
+    type: string
+    description: Coverage collection
+  - name: strict
+    type: string
+    description: Strict TypeScript check
+knowledge:
+- title: 'Refactoring Guru: State'
+  type: documentation
+  source: https://refactoring.guru/design-patterns/state
+  description: State intent, structure, and usage
+- title: Vitest
+  type: documentation
+  source: https://vitest.dev/guide/
+  description: Test runner and matchers
+instructions: "# State Pattern\n\nLet an object change behavior when its state changes.\n\n## When to\
+  \ Use\n\n- Objects with many conditional state branches\n- Workflows: draft -> review -> published\n\
+  - Replacing huge switch/if chains\n\n## Example (TypeScript)\n\n```typescript\ninterface DocumentState\
+  \ {\n  publish(doc: Document): void;\n  label(): string;\n}\n\nclass DraftState implements DocumentState\
+  \ {\n  label() { return 'draft'; }\n  publish(doc: Document) { doc.setState(new ReviewState()); }\n\
+  }\n\nclass ReviewState implements DocumentState {\n  label() { return 'review'; }\n  publish(doc: Document)\
+  \ { throw new Error('Needs approval'); }\n}\n\nclass Document {\n  private state: DocumentState = new\
+  \ DraftState();\n  setState(s: DocumentState) { this.state = s; }\n  publish() { this.state.publish(this);\
+  \ }\n  status() { return this.state.label(); }\n}\n```\n\n## Test\n\n```typescript\nimport { describe,\
+  \ it, expect } from 'vitest';\n\ndescribe('Document workflow', () => {\n  it('draft publishes to review',\
+  \ () => {\n    const doc = new Document();\n    doc.publish();\n    expect(doc.status()).toBe('review');\n\
+  \  });\n\n  it('review refuses direct publish', () => {\n    const doc = new Document();\n    doc.publish();\n\
+  \    expect(() => doc.publish()).toThrow('Needs approval');\n  });\n});\n```\n\n```bash\nnpx tsc --noEmit\
+  \ --strict state.ts\nnpx vitest run tests/state.test.ts\n```\n\n## Best practices\n\n- States hold transitions;\
+  \ the context holds data.\n- Encode illegal transitions as explicit errors.\n- Consider a state machine\
+  \ library for complex flows.\n- Test every transition and every illegal transition.\n\n## Testing\n\n\
+  Cover all legal transitions plus each invalid one."
+examples:
+- input: Model the document approval workflow.
+  output: Implements Draft/Review/Published states with guarded transitions and tests the full path.
+- input: Refactor a switch-driven order status logic.
+  output: Maps order statuses to state classes, moving transition logic out of the entity.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: state.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-state
+  generic:
+    system_prompt: 'This is your domain: State. You do it through ts-vitest: Implement and test state
+      machine examples. The commands are real, e.g. `npm init -y && npm install -D typescript vitest`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

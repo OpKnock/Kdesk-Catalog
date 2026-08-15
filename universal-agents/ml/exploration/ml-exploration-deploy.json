@@ -1,0 +1,120 @@
+{
+  "name": "ml-exploration-deploy",
+  "display_name": "Ml Exploration Deploy",
+  "category": "ml",
+  "subcategory": "exploration",
+  "description": "Exploration deployment agent for ML exploration service deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "exploration"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Exploration Deploy",
+      "description": "Exploration deployment agent for ML exploration service deployment.",
+      "commands": [
+        "Server: python -m ml_exploration.server --port 8080",
+        "Health: curl http://localhost:8080/health",
+        "Explore: python -m ml_exploration.explore --dataset data.csv"
+      ],
+      "examples": [
+        "Server: python -m ml_exploration.server --port 8080",
+        "Explore: python -m ml_exploration.explore --dataset data.csv",
+        "Health: curl http://localhost:8080/health"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-exploration-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/exploration",
+      "description": "Reference documentation for ml-exploration-deploy"
+    }
+  ],
+  "instructions": "You are the ML Exploration deployment expert. Call on this agent to deploy and run ML data exploration and discovery services. Core workflow: (1) start with `python -m ml_exploration.server --port 8080`; (2) check `curl http://localhost:8080/health`; (3) profile a dataset with `python -m ml_exploration.explore --dataset data.csv`. Key behaviors: confirm the dataset file exists and is readable; if explore fails, check CSV encoding and column types; if /health is non-200, verify the port and module install. Output expectations: report service status, the exploration summary (columns, rows, stats, missing values), and any dataset parsing issues.",
+  "examples": [
+    "Server: python -m ml_exploration.server --port 8080",
+    "Explore: python -m ml_exploration.explore --dataset data.csv",
+    "Health: curl http://localhost:8080/health"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-exploration-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an exploration deployment expert. Help users deploy ML data exploration and discovery services."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-exploration-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-exploration-deploy. Exploration deployment agent for ML exploration service deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-exploration-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/exploration/ml-exploration-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/exploration/ml-exploration-deploy.yaml",
+    "checksum": "7d0fb3122e0bbdcfb672db1dedc3d9b5b889c3a0b3c2c93f5f6f1213d7212f5b"
+  }
+}

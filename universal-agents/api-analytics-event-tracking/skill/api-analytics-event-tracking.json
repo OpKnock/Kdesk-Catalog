@@ -1,0 +1,175 @@
+{
+  "name": "api-analytics-event-tracking",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "sre",
+  "description": "API analytics event tracking and funnels - capture custom events via Segment HTTP API, analyze conversion, and build retention views.",
+  "keywords": [
+    "api-analytics"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-analytics-event-tracking.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-analytics-event-tracking"
+    },
+    "generic": {
+      "system_prompt": "You are the Api Analytics Event Tracking specialist. You do it through event-tracking: Track API events and analyze funnels. The commands are real, e.g. `curl -s -X POST https://api.segment.io/v1/track -u WRITE_KEY: -H Content-Type:...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "event-tracking",
+      "description": "Track API events and analyze funnels",
+      "commands": [
+        "curl -s -X POST https://api.segment.io/v1/track -u 'WRITE_KEY:' -H 'Content-Type: application/json' -d '{\"userId\":\"u_123\",\"event\":\"API Call\",\"properties\":{\"endpoint\":\"/v1/orders\"}}'",
+        "curl -s -X POST https://api.segment.io/v1/identify -u 'WRITE_KEY:' -H 'Content-Type: application/json' -d '{\"userId\":\"u_123\",\"traits\":{\"plan\":\"enterprise\"}}'",
+        "curl -s 'http://localhost:8080/api/analytics/funnel?steps=visit,create_order,pay' | jq '.steps[].conversion'",
+        "curl -s 'http://localhost:8080/api/analytics/retention?cohort=day' | jq '.cohorts[-1]'",
+        "curl -s http://localhost:8080/api/analytics/events -H 'X-API-Key: key' | jq '.events | group_by(.name) | map({name: .[0].name, count: length})'"
+      ],
+      "examples": [
+        "curl -s -X POST https://api.segment.io/v1/track -u 'WRITE_KEY:' -d '{\"userId\":\"u_123\",\"event\":\"Checkout Started\",\"properties\":{\"cart\":{\"total\":99.9}}}'",
+        "curl -s 'http://localhost:8080/api/analytics/funnel?steps=signup,activate,invite' | jq '.steps'",
+        "curl -s 'http://localhost:8080/api/analytics/events?event=API%20Call&from=2024-06-01' | jq '.total'"
+      ],
+      "parameters": [
+        {
+          "name": "event",
+          "type": "string",
+          "description": "Event name, e.g. API Call"
+        },
+        {
+          "name": "steps",
+          "type": "string",
+          "description": "Comma-separated funnel steps"
+        },
+        {
+          "name": "cohort",
+          "type": "string",
+          "description": "Cohort granularity: day, week, month"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "prometheus",
+    "grafana",
+    "elasticsearch"
+  ],
+  "tools": [
+    "prometheus",
+    "grafana",
+    "elasticsearch",
+    "node.js",
+    "python"
+  ],
+  "examples": [
+    {
+      "input": "Track signup -> first API call funnel",
+      "output": "Sets up two events with properties, verifies the funnel endpoint shows conversion between steps."
+    },
+    {
+      "input": "How many users come back weekly?",
+      "output": "Runs the retention query and interprets the cohort table."
+    }
+  ],
+  "instructions": "# API Analytics (Event Tracking)\n\n## What this skill does\nTrack custom product events around your API - signups, orders, feature use - via the Segment HTTP API, then analyze funnels and retention to understand conversion.\n\n## When to use\n- Measuring feature adoption\n- Building conversion funnels\n- Cohort retention analysis\n\n## Real commands\n```bash\n# Track an event\ncurl -s -X POST https://api.segment.io/v1/track \\\n  -u 'WRITE_KEY:' -H 'Content-Type: application/json' \\\n  -d '{\"userId\":\"u_123\",\"event\":\"API Call\",\"properties\":{\"endpoint\":\"/v1/orders\"}}'\n\n# Identify a user\ncurl -s -X POST https://api.segment.io/v1/identify \\\n  -u 'WRITE_KEY:' -H 'Content-Type: application/json' \\\n  -d '{\"userId\":\"u_123\",\"traits\":{\"plan\":\"enterprise\"}}'\n\n# Funnel analysis\ncurl -s 'http://localhost:8080/api/analytics/funnel?steps=visit,create_order,pay' | jq '.steps[].conversion'\n\n# Retention\ncurl -s 'http://localhost:8080/api/analytics/retention?cohort=day' | jq '.cohorts[-1]'\n\n# Event volume by name\ncurl -s http://localhost:8080/api/analytics/events -H 'X-API-Key: key' | jq '.events | group_by(.name) | map({name: .[0].name, count: length})'\n```\n\n## Event schema discipline\n```json\n{\n  \"userId\": \"u_123\",\n  \"event\": \"Checkout Started\",\n  \"properties\": { \"endpoint\": \"/v1/orders\", \"status\": 201 }\n}\n```\n\n## Best practices\n- Use verb-past-tense event names (Order Completed)\n- Keep a properties dictionary per event\n- Send events from server-side, not the browser, for APIs\n- Batch events and retry with backoff\n\n## Testing\n```bash\ncurl -s -X POST http://localhost:8080/api/analytics/test-event -H 'Content-Type: application/json' -d '{\"name\":\"Test\"}'\ncurl -s 'http://localhost:8080/api/analytics/events?event=Test' | jq '.total'\n```",
+  "display_name": "Api Analytics Event Tracking",
+  "knowledge": [
+    {
+      "title": "Segment HTTP Tracking API",
+      "type": "documentation",
+      "source": "https://segment.com/docs/connections/sources/catalog/libraries/server/http/",
+      "description": "Track, identify, and page calls over HTTP"
+    },
+    {
+      "title": "Amplitude HTTP API",
+      "type": "documentation",
+      "source": "https://developers.amplitude.com/docs/http-api-v2",
+      "description": "Ingesting events into Amplitude"
+    }
+  ],
+  "id": "api-analytics-event-tracking",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "event-tracking",
+        "name": "event",
+        "type": "string",
+        "description": "Event name, e.g. API Call"
+      },
+      {
+        "capability": "event-tracking",
+        "name": "steps",
+        "type": "string",
+        "description": "Comma-separated funnel steps"
+      },
+      {
+        "capability": "event-tracking",
+        "name": "cohort",
+        "type": "string",
+        "description": "Cohort granularity: day, week, month"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "prometheus",
+    "grafana",
+    "elasticsearch"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-analytics-event-tracking/skill/api-analytics-event-tracking.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-analytics-event-tracking/skill/api-analytics-event-tracking.yaml",
+    "checksum": "dde50a312a7e9ba5c91db2d21be1cc00b2ffe21d5ada908ad55d137c498fb3a9"
+  }
+}

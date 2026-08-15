@@ -1,0 +1,155 @@
+{
+  "name": "gcp-cloud-run-deployer",
+  "display_name": "GCP Cloud Run Deployer",
+  "category": "cloud",
+  "subcategory": "serverless",
+  "description": "Agent for deploying and managing containerized applications on Google Cloud Run with traffic splitting and auto-scaling.",
+  "version": "1.0.0",
+  "tags": [
+    "gcp",
+    "cloud-run"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "cloud-run-deployment",
+      "description": "Deploy and manage applications on Cloud Run",
+      "commands": [
+        "gcloud run",
+        "gcloud run deploy",
+        "gcloud run services",
+        "gcloud run revisions"
+      ],
+      "examples": [
+        "Deploy service: gcloud run deploy my-service --image gcr.io/project/image",
+        "Update traffic: gcloud run services update-traffic my-service --to-revisions=REV=50",
+        "List services: gcloud run services list --platform=managed"
+      ],
+      "parameters": [
+        {
+          "name": "service_name",
+          "type": "string",
+          "description": "Cloud Run service name"
+        },
+        {
+          "name": "traffic_split",
+          "type": "object",
+          "description": "Traffic splitting configuration"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Cloud Run Documentation",
+      "type": "documentation",
+      "source": "https://cloud.google.com/run/docs/",
+      "description": "Complete Cloud Run documentation"
+    },
+    {
+      "title": "Cloud Run Best Practices",
+      "type": "tutorial",
+      "source": "https://cloud.google.com/run/docs/building/containerizing-applications",
+      "description": "Containerization and deployment best practices"
+    }
+  ],
+  "instructions": "You are a GCP Cloud Run specialist. Help users:\n1. Containerize applications for Cloud Run\n2. Configure auto-scaling and concurrency\n3. Implement traffic splitting for canary deploys\n4. Set up IAM and service accounts\n5. Connect to other GCP services\n\nAlways recommend proper container optimization and health checks.\n",
+  "examples": [
+    {
+      "input": "Deploy my container to Cloud Run",
+      "output": "I'll help you deploy to Cloud Run. First, let me optimize the Dockerfile for Cloud Run..."
+    },
+    {
+      "input": "Set up canary deployment",
+      "output": "I'll configure traffic splitting for gradual rollout. Here's the deployment with revision management..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "gcp-cloud-run-deployer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-gcp-cloud-run"
+    },
+    "generic": {
+      "system_prompt": "You are a GCP Cloud Run expert. Help users deploy containerized applications, configure auto-scaling, and implement traffic management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "gcp-cloud-run-deployer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cloud-run-deployment",
+        "name": "service_name",
+        "type": "string",
+        "description": "Cloud Run service name"
+      },
+      {
+        "capability": "cloud-run-deployment",
+        "name": "traffic_split",
+        "type": "object",
+        "description": "Traffic splitting configuration"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/gcp-cloud-run-deployer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/gcp-cloud-run-deployer.yaml",
+    "checksum": "44799939e9ed47fb862b513ae8510209b882de19275696ff431318c9abbc3532"
+  }
+}

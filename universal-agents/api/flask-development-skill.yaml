@@ -1,0 +1,105 @@
+name: flask-development
+display_name: Flask Development
+category: api
+subcategory: general
+description: 'Build Python APIs with Flask: run the dev server, use the Flask CLI, register blueprints
+  and error handlers, and test with pytest.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- flask
+- python
+capabilities:
+- name: flask-development
+  description: Run, debug, and test Flask applications with the flask CLI.
+  commands:
+  - flask --app app run --debug
+  - flask --app app run --host 0.0.0.0 --port 5001
+  - flask --app app routes
+  - python -m pytest -v
+  - flask --app app shell
+  examples:
+  - flask --app app run --debug
+  - flask --app app routes
+  - python -m pytest -v
+  parameters:
+  - name: app-module
+    type: string
+    description: Flask app module like app or myapp:create_app
+  - name: port
+    type: integer
+    description: Server port
+  - name: debug
+    type: boolean
+    description: Enable reloader/debugger
+knowledge:
+- title: Flask CLI docs
+  type: documentation
+  source: https://flask.palletsprojects.com/en/stable/cli/
+  description: flask run, routes, shell, and application discovery
+- title: Flask testing
+  type: documentation
+  source: https://flask.palletsprojects.com/en/stable/testing/
+  description: Testing Flask apps with pytest and the test client
+instructions: "# Flask v2\n\n## What this skill does\n\nFlask is a lightweight Python WSGI framework.\
+  \ Modern Flask (2.x+) has a rich CLI: `flask run`, `flask routes`, `flask shell`, and application factories\
+  \ for testability.\n\n## When to use\n\n- Building small to medium Python APIs and dashboards\n- Prototyping\
+  \ services quickly\n- Teaching or internal tooling with minimal framework\n\n## Real commands\n\n```bash\n\
+  # Run with debug reloader\nflask --app app run --debug\n\n# Bind to all interfaces on another port\n\
+  flask --app app run --host 0.0.0.0 --port 5001\n\n# List registered routes\nflask --app app routes\n\
+  \n# Interactive shell with app context\nflask --app app shell\n\n# Tests\npython -m pytest -v\n```\n\
+  \n## App factory example\n\n```python\nfrom flask import Flask, jsonify\n\ndef create_app():\n    app\
+  \ = Flask(__name__)\n\n    @app.get(\"/api/orders/<order_id>\")\n    def get_order(order_id):\n    \
+  \    if order_id not in (“1”, “2”):\n            return jsonify({\"error\": \"not found\"}), 404\n \
+  \       return jsonify({\"id\": order_id})\n\n    @app.errorhandler(404)\n    def not_found(e):\n  \
+  \      return jsonify({\"error\": \"not found\"}), 404\n\n    return app\n```\n\n## Testing with the\
+  \ test client\n\n```python\nimport pytest\nfrom app import create_app\n\n@pytest.fixture\ndef client():\n\
+  \    return create_app().test_client()\n\ndef test_missing_order(client):\n    assert client.get(\"\
+  /api/orders/99\").status_code == 404\n```\n\n## Best practices\n\n- Use the app factory pattern for\
+  \ testability.\n- Configure via env vars and app.config.from_prefixed_env.\n- Register blueprints for\
+  \ larger apps.\n- Run with a WSGI server (gunicorn) in production, not flask run.\n- Use `flask routes`\
+  \ in CI to catch route typos.\n"
+examples:
+- input: Start the Flask API for local dev
+  output: Run flask --app app run --debug, verify with curl localhost:5000, and use flask --app app routes
+    to list endpoints.
+- input: Add a JSON 404 handler
+  output: Register an errorhandler(404) returning jsonify, and test with the test client asserting status_code
+    == 404.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: flask-development.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-flask-development
+  generic:
+    system_prompt: 'You are the Flask Development specialist. You do it through flask-development: Run,
+      debug, and test Flask applications with the flask CLI. The commands are real, e.g. `flask --app
+      app run --debug`. You answer with exact commands, not abstractions, and flag anything you have not
+      verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

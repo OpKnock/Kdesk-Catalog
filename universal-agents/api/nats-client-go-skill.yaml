@@ -1,0 +1,95 @@
+name: nats-client-go
+display_name: Nats Client Go
+category: api
+subcategory: general
+description: 'NATS clients in Go with nats.go: connect options, publish/subscribe, request-reply, and
+  connection events.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: nats-go-client
+  description: 'Write Go NATS clients: connect, pub/sub, request/reply with the nats.go library.'
+  commands:
+  - go get github.com/nats-io/nats.go
+  - go mod tidy
+  - go run main.go
+  - go vet ./...
+  - go test ./...
+  examples:
+  - go run main.go
+  - go test -run TestRequestReply -v ./...
+  - go get github.com/nats-io/nats.go@latest
+  parameters:
+  - name: url
+    type: string
+    description: NATS server URL, e.g. nats://localhost:4222
+  - name: subject
+    type: string
+    description: Subject or wildcard subscription
+  - name: queue
+    type: string
+    description: Queue group name for load balancing
+knowledge:
+- title: nats.go GitHub
+  type: documentation
+  source: https://github.com/nats-io/nats.go
+  description: Client API docs, examples and releases
+- title: nats.go pkg docs
+  type: documentation
+  source: https://pkg.go.dev/github.com/nats-io/nats.go
+  description: Package documentation for Connect, JetStream and KeyValue
+instructions: "# NATS Go Client\n\nnats.go is the official Go client for NATS, covering core pub/sub,\
+  \ JetStream and KV.\n\n## What this skill does\n\n- Connects to NATS with options (reconnect, credentials)\n\
+  - Publishes/subscribes and does request-reply\n- Uses queue groups for worker distribution\n\n## When\
+  \ to use\n\n- Go microservices with NATS messaging\n- Replacing HTTP polling with NATS request-reply\n\
+  \n## Real commands\n\n```bash\n# Dependency\n go get github.com/nats-io/nats.go\ngo mod tidy\n\n# Run\
+  \ and verify\n go run main.go\ngo vet ./...\ngo test ./...\n```\n\n## Publish / subscribe\n\n```go\n\
+  nc, _ := nats.Connect(\"nats://localhost:4222\")\nnc.Publish(\"orders.created\", []byte(`{\"id\":1}`))\n\
+  sub, _ := nc.Subscribe(\"orders.*\", func(m *nats.Msg) {\n    fmt.Printf(\"received: %s\\n\", m.Data)\n\
+  })\nsub.Unsubscribe()\n```\n\n## Request-reply\n\n```go\nresp, err := nc.Request(\"service.echo\", []byte(\"\
+  ping\"), 2*time.Second)\nnc.Subscribe(\"service.echo\", func(m *nats.Msg) { m.Respond([]byte(\"pong\"\
+  )) })\n```\n\n## Queue group\n\n```go\nnc.QueueSubscribe(\"tasks\", \"workers\", handler)\n```\n\n##\
+  \ Best practices\n\n- Always check errors from Publish/Subscribe\n- Set `nats.MaxReconnects(-1)` for\
+  \ resilient services\n- Use request-reply timeouts matching SLA"
+examples:
+- input: Publish an event from my Go API when an order is created
+  output: The agent adds nats.go, publishes to orders.created, and verifies with `nats sub orders.>` in
+    a terminal.
+- input: Load-balance messages across my Go workers
+  output: The agent uses QueueSubscribe with the workers group name and shows how to scale workers horizontally.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nats-client-go.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nats-client-go
+  generic:
+    system_prompt: 'You take the Nats Client Go seat. You do it through nats-go-client: Write Go NATS
+      clients: connect, pub/sub, request/reply with the nats.go library. The commands are real, e.g. `go
+      get github.com/nats-io/nats.go`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

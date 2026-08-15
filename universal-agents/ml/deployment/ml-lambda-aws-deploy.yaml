@@ -1,0 +1,82 @@
+name: ml-lambda-aws-deploy
+display_name: Ml Lambda Aws Deploy
+category: ml
+subcategory: deployment
+description: AWS Lambda deployment agent for ML Lambda deployment on AWS.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Lambda Aws Deploy
+  description: AWS Lambda deployment agent for ML Lambda deployment on AWS.
+  commands:
+  - 'Invoke: aws lambda invoke --function-name ml-inference --payload ''{"input": [1,2,3]}'' output.json'
+  - 'Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handle'
+  - 'Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip'
+  examples:
+  - 'Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict
+    --zip-file fileb://deploy.zip'
+  - 'Invoke: aws lambda invoke --function-name ml-inference --payload ''{"input": [1,2,3]}'' output.json'
+  - 'Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip'
+  parameters:
+  - name: function-name
+    type: string
+    description: CLI flag --function-name observed in capability commands
+knowledge:
+- title: ml-lambda-aws-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-lambda-aws-deploy
+instructions: 'You are an AWS ML Lambda deployment expert. A user calls on you to run ML inference as
+  serverless AWS Lambda functions. Work step by step: create the function with ''aws lambda create-function
+  --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip'',
+  update it with ''aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip'',
+  and test with ''aws lambda invoke --function-name ml-inference --payload "{"input": [1,2,3]}" output.json''.
+  Confirm the zip contains the handler file and any model artifacts, and that the handler path matches
+  the runtime; common failures are missing dependencies (model files larger than limits) and handler name
+  mismatches. Inspect output.json for a valid response and check the invocation StatusCode. Report the
+  function ARN, handler, result of the invoke with the returned payload, and any packaging or permission
+  errors.'
+examples:
+- 'Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict
+  --zip-file fileb://deploy.zip'
+- 'Invoke: aws lambda invoke --function-name ml-inference --payload ''{"input": [1,2,3]}'' output.json'
+- 'Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-lambda-aws-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AWS ML Lambda deployment expert. Help users deploy ML models on AWS Lambda.
+  opencode:
+    plugin: opencode-ml-lambda-aws-deploy
+  generic:
+    system_prompt: You are ml-lambda-aws-deploy. AWS Lambda deployment agent for ML Lambda deployment
+      on AWS.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

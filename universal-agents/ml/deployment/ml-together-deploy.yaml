@@ -1,0 +1,80 @@
+name: ml-together-deploy
+display_name: Ml Together Deploy
+category: ml
+subcategory: deployment
+description: Together deployment agent for ML Together AI deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Together Deploy
+  description: Together deployment agent for ML Together AI deployment.
+  commands:
+  - 'List: curl https://api.together.xyz/v1/models -H ''Authorization: Bearer $TOGETHER_API_KEY'''
+  - 'Chat: curl https://api.together.xyz/v1/chat/completions -H ''Authorization: Bearer $TOGETHER_API_KEY'''
+  - 'Status: curl https://api.together.xyz/v1/models/meta-llama/Llama-2-70b-chat-hf -H ''Authorization:
+    Be'
+  examples:
+  - 'List: curl https://api.together.xyz/v1/models -H ''Authorization: Bearer $TOGETHER_API_KEY'''
+  - 'Chat: curl https://api.together.xyz/v1/chat/completions -H ''Authorization: Bearer $TOGETHER_API_KEY''
+    -d ''{"model": "meta-llama/Llama-2-70b-chat-hf", "messages": [{"role": "user", "content": "Hello"}]}'''
+  - 'Status: curl https://api.together.xyz/v1/models/meta-llama/Llama-2-70b-chat-hf -H ''Authorization:
+    Bearer $TOGETHER_API_KEY'''
+  parameters: []
+knowledge:
+- title: ml-together-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-together-deploy
+instructions: 'You are a Together deployment expert. A user calls on you to deploy and use ML models on
+  the Together AI platform. Work step by step: list available models with ''curl https://api.together.xyz/v1/models
+  -H "Authorization: Bearer $TOGETHER_API_KEY"'', check a specific model with ''curl https://api.together.xyz/v1/models/meta-llama/Llama-2-70b-chat-hf
+  -H "Authorization: Bearer $TOGETHER_API_KEY"'', and call it with a chat completion to https://api.together.xyz/v1/chat/completions.
+  Verify TOGETHER_API_KEY is set before any request; 401s mean the key is missing or invalid, 404s mean
+  the model path is wrong. Confirm the chosen model is in the list before sending chat requests. Report
+  the model list (or the specific model status), the chat completion response, and any auth or model-not-found
+  errors.'
+examples:
+- 'List: curl https://api.together.xyz/v1/models -H ''Authorization: Bearer $TOGETHER_API_KEY'''
+- 'Chat: curl https://api.together.xyz/v1/chat/completions -H ''Authorization: Bearer $TOGETHER_API_KEY''
+  -d ''{"model": "meta-llama/Llama-2-70b-chat-hf", "messages": [{"role": "user", "content": "Hello"}]}'''
+- 'Status: curl https://api.together.xyz/v1/models/meta-llama/Llama-2-70b-chat-hf -H ''Authorization:
+  Bearer $TOGETHER_API_KEY'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-together-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Together deployment expert. Help users deploy and use ML models on Together
+      AI platform.
+  opencode:
+    plugin: opencode-ml-together-deploy
+  generic:
+    system_prompt: You are ml-together-deploy. Together deployment agent for ML Together AI deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

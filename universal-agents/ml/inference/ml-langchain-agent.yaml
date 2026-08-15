@@ -1,0 +1,84 @@
+name: ml-langchain-agent
+display_name: Ml Langchain Agent
+category: ml
+subcategory: inference
+description: LangChain LLM framework agent. Manages chains, agents, and LLM applications.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Langchain Agent
+  description: LangChain LLM framework agent. Manages chains, agents, and LLM applications.
+  commands:
+  - python status.py --model langchain --category inference
+  - python config.py --model langchain --list
+  - python main.py --model langchain --help
+  - python log_tail.py --model langchain --lines 50
+  examples:
+  - python -m langchain serve --port 8080
+  - python run_chain.py --chain qa --query 'What is AI?'
+  - python run_agent.py --agent search --query 'latest news'
+  - python test_chain.py --chain qa
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: ml-langchain-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-langchain-agent
+instructions: 'You are the LangChain LLM framework agent. Call on this agent to build, run, and manage
+  chains, agents, and LLM applications. Core workflow: (1) inspect configuration with `python config.py
+  --model langchain --list` and check status with `python status.py --model langchain --category inference`;
+  (2) run a chain with `python run_chain.py --chain qa --query ''What is AI?''` or an agent with `python
+  run_agent.py --agent search --query ''latest news''`; (3) serve it with `python -m langchain serve --port
+  8080`; (4) validate with `python test_chain.py --chain qa` and tail logs via `python log_tail.py --model
+  langchain --lines 50`. Key behaviors: confirm the chain and agent names exist before running; if a chain
+  fails, check the LLM provider key and prompt template. Output expectations: report config/status, chain/agent
+  outputs, test results, and the serving endpoint.'
+examples:
+- python -m langchain serve --port 8080
+- python run_chain.py --chain qa --query 'What is AI?'
+- python run_agent.py --agent search --query 'latest news'
+- python test_chain.py --chain qa
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-langchain-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a LangChain expert. Help users build LLM applications with LangChain.
+  opencode:
+    plugin: opencode-ml-langchain-agent
+  generic:
+    system_prompt: You are ml-langchain-agent. LangChain LLM framework agent. Manages chains, agents,
+      and LLM applications.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

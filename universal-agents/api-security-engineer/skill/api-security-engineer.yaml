@@ -1,0 +1,184 @@
+name: api-security-engineer
+version: 2.0.0
+type: skill
+category: security
+description: 'Engineers API security controls: OWASP Top 10 coverage, security headers, authentication
+  middleware, dependency scanning with npm audit, and SAST with semgrep.'
+keywords:
+- api-security
+- authentication
+- security-headers
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-security-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-security-engineer
+  generic:
+    system_prompt: 'This is your domain: api-security-engineer. You do it through security-headers: Apply
+      and verify security response headers. The commands are real, e.g. `npm install helmet`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: security-headers
+  description: Apply and verify security response headers
+  commands:
+  - npm install helmet
+  - curl -sI https://api.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-content-type-options|referrer-policy'
+  - curl -s -D- https://api.example.com/api | grep -i 'x-frame-options'
+  - node -e "const helmet=require('helmet'); console.log(helmet()._name)"
+  examples:
+  - helmet sets a battery of security headers
+  - curl -sI greps HSTS and CSP headers
+  - X-Frame-Options blocks clickjacking
+  parameters:
+  - name: header
+    type: string
+    description: Header to verify
+  - name: url
+    type: string
+    description: Endpoint to check
+  - name: middleware
+    type: string
+    description: Security middleware name
+- name: dependency-sast
+  description: Scan dependencies and source code
+  commands:
+  - npm audit --audit-level=high
+  - npm audit fix --dry-run
+  - pip install semgrep
+  - semgrep --config=p/owasp-top-ten .
+  - semgrep --config=auto --json -o semgrep.json .
+  examples:
+  - npm audit reports vulnerable dependencies
+  - semgrep with owasp-top-ten rules scans source
+  - --json output feeds CI dashboards
+  parameters:
+  - name: severity
+    type: string
+    description: 'Audit threshold: low, moderate, high, critical'
+  - name: config
+    type: string
+    description: Semgrep ruleset
+  - name: path
+    type: string
+    description: Scan target directory
+prerequisites:
+- node.js
+- python
+- owasp-zap
+- helmet
+tools:
+- node.js
+- python
+- owasp-zap
+- helmet
+- cors
+- express-rate-limit
+examples:
+- input: Harden a new API deployment
+  output: Applies helmet headers, runs npm audit and semgrep, and fixes high findings
+- input: Set up recurring vuln scanning
+  output: Adds npm audit and semgrep to CI with JSON outputs
+instructions: '# API Security Engineer
+
+
+  End-to-end API security controls.
+
+
+  ## What This Skill Does
+
+  - Applies security headers at the framework level
+
+  - Scans dependencies and source for vulnerabilities
+
+  - Covers OWASP API Top 10 categories
+
+
+  ## When to Use
+
+  - Hardening new API deployments
+
+  - Recurring vulnerability management
+
+  - Compliance evidence gathering
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npm install helmet
+
+  npm audit --audit-level=high
+
+  pip install semgrep
+
+  semgrep --config=p/owasp-top-ten .
+
+  ```
+
+
+  ## Header Baseline
+
+  - Strict-Transport-Security: max-age=31536000
+
+  - X-Content-Type-Options: nosniff
+
+  - Referrer-Policy: no-referrer
+
+  - Cache-Control: no-store on auth responses
+
+
+  ## Testing
+
+  - Verify headers on every route prefix
+
+  - Re-run audits after dependency updates
+
+  - Keep semgrep findings triaged
+
+
+
+  ## Best Practices
+
+  - Default-deny error responses
+
+  - Rate limit auth endpoints
+
+  - Scan in CI on every merge'
+display_name: api-security-engineer
+knowledge:
+- title: OWASP API Security Top 10
+  type: documentation
+  source: https://owasp.org/API-Security/editions/2023/en/0x11-t10/
+  description: API security risk categories
+- title: Semgrep Docs
+  type: documentation
+  source: https://semgrep.dev/docs/
+  description: Static analysis rules and CLI

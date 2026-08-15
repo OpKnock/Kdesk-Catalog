@@ -1,0 +1,171 @@
+{
+  "name": "nats-client-java",
+  "display_name": "Nats Client Java",
+  "category": "api",
+  "subcategory": "general",
+  "description": "NATS clients in Java with jnats: Nats.connect, async message handlers, request-reply, and Maven setup.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mvn"
+  ],
+  "capabilities": [
+    {
+      "name": "nats-java-client",
+      "description": "Use the jnats library in Maven projects for connect, pub/sub and request-reply patterns.",
+      "commands": [
+        "mvn dependency:tree",
+        "mvn compile",
+        "mvn package",
+        "mvn exec:java -Dexec.mainClass=com.example.Publisher",
+        "curl -s https://repo1.maven.org/maven2/io/nats/jnats/maven-metadata.xml"
+      ],
+      "examples": [
+        "mvn exec:java -Dexec.mainClass=com.example.Subscriber",
+        "mvn dependency:tree -Dincludes=io.nats",
+        "mvn test"
+      ],
+      "parameters": [
+        {
+          "name": "main_class",
+          "type": "string",
+          "description": "Java class with the main() to run"
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "description": "NATS subject"
+        },
+        {
+          "name": "timeout_ms",
+          "type": "integer",
+          "description": "Request timeout in milliseconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "nats.java GitHub",
+      "type": "documentation",
+      "source": "https://github.com/nats-io/nats.java",
+      "description": "jnats examples, docs and releases"
+    },
+    {
+      "title": "NATS Java docs",
+      "type": "documentation",
+      "source": "https://docs.nats.io/using-nats/developer/reference/client-libraries/java/",
+      "description": "Connecting, publishing, subscribing in Java"
+    }
+  ],
+  "instructions": "# NATS Java Client\n\njnats (io.nats:jnats) is the official NATS client for the JVM.\n\n## What this skill does\n\n- Connects with options and connection listeners\n- Publishes/subscribes with async message handlers\n- Implements request-reply and inbox patterns\n\n## When to use\n\n- Java/Spring services exchanging events over NATS\n- High-throughput pub/sub in JVM backends\n\n## Real commands\n\n```bash\nmvn compile\nmvn exec:java -Dexec.mainClass=com.example.Publisher\nmvn package\n```\n\n## Publish / subscribe\n\n```java\nConnection nc = Nats.connect(\"nats://localhost:4222\");\nnc.publish(\"orders.created\", \"{\\\"id\\\":1}\".getBytes(StandardCharsets.UTF_8));\nDisposable sub = nc.subscribe(\"orders.*\", msg ->\n    System.out.println(new String(msg.getData())));\nThread.sleep(1000);\nsub.dispose();\nnc.close();\n```\n\n## Request-reply\n\n```java\nCompletableFuture<Message> reply = nc.request(\"service.echo\", \"ping\".getBytes());\nMessage msg = reply.get(2, TimeUnit.SECONDS);\n```\n\n## pom.xml\n\n```xml\n<dependency>\n  <groupId>io.nats</groupId>\n  <artifactId>jnats</artifactId>\n  <version>2.20.4</version>\n</dependency>\n```\n\n## Best practices\n\n- Close connections in finally blocks\n- Use dispatch listeners for long-lived subscriptions\n- Prefer `Nats.connect(Options)` with `maxReconnects` for HA",
+  "examples": [
+    {
+      "input": "Subscribe to order events in my Spring service",
+      "output": "The agent wires jnats, creates a @Component subscribing to orders.*, and validates with mvn test."
+    },
+    {
+      "input": "Call a NATS service from Java and wait for the reply",
+      "output": "The agent uses nc.request with a CompletableFuture and timeout, showing the responder side too."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nats-client-java.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nats-client-java"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Nats Client Java. You do it through nats-java-client: Use the jnats library in Maven projects for connect, pub/sub and request-reply patterns. The commands are real, e.g. `mvn dependency:tree`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nats-client-java",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nats-java-client",
+        "name": "main_class",
+        "type": "string",
+        "description": "Java class with the main() to run"
+      },
+      {
+        "capability": "nats-java-client",
+        "name": "subject",
+        "type": "string",
+        "description": "NATS subject"
+      },
+      {
+        "capability": "nats-java-client",
+        "name": "timeout_ms",
+        "type": "integer",
+        "description": "Request timeout in milliseconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mvn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/nats-client-java-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/nats-client-java-skill.yaml",
+    "checksum": "449f459841394c092a0cf3b1352318161a7178ac3d1f4e115a4052b57b1ddf2f"
+  }
+}

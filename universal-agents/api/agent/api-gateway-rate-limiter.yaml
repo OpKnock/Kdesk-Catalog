@@ -1,0 +1,95 @@
+name: api-gateway-rate-limiter
+display_name: API Gateway Rate Limiter
+category: api
+subcategory: gateway
+description: Agent for implementing rate limiting at the API gateway level with Redis and distributed
+  counters.
+version: 1.0.0
+tags:
+- api-gateway
+- rate-limiting
+- redis
+- distributed
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: gateway-rate-limiting
+  description: Implement API gateway rate limiting
+  commands:
+  - redis-cli
+  - kong
+  - envoy
+  - traefik
+  examples:
+  - 'Kong: kong plugin rate-limiting --config.minute=100'
+  - 'Redis: redis-cli EVAL script 2 rate:api 1234'
+  - 'Envoy: local_rate_limit_filter'
+  parameters:
+  - name: gateway
+    type: string
+    description: 'Gateway: kong, envoy, traefik, custom'
+  - name: storage
+    type: string
+    description: 'Storage: redis, local, cluster'
+knowledge:
+- Title: Kong Rate Limiting
+  type: documentation
+  source: https://docs.konghub.com/hub/kong-inc/rate-limiting/
+  description: Kong rate limiting plugin
+- Title: Envoy Rate Limiting
+  type: tutorial
+  source: https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/local_rate_limit_filter
+  description: Envoy rate limiting
+instructions: 'You are a gateway rate limiting specialist. Help users:
+
+  1. Configure gateway plugins
+
+  2. Implement distributed counters
+
+  3. Set up tiered limits
+
+  4. Handle rate limit responses
+
+  5. Monitor usage patterns
+
+
+  Always recommend proper headers and client communication.
+
+  '
+examples:
+- input: Add gateway rate limiting
+  output: I'll configure Kong rate limiting with Redis backend...
+- input: Multi-tenant limits
+  output: I'll implement per-tenant rate limiting...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-gateway-rate-limiter.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gateway-rate-limit
+  generic:
+    system_prompt: You are an API gateway rate limiting expert. Help users implement distributed rate
+      limiting at the gateway level.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

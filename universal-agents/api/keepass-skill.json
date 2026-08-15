@@ -1,0 +1,233 @@
+{
+  "name": "keepass",
+  "display_name": "Keepass",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manage password databases with keepassxc-cli: create databases, add and search entries, export CSV, and handle attachments from the terminal.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "keepassxc-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "db-lifecycle",
+      "description": "Create, unlock, and inspect KeePassXC databases.",
+      "commands": [
+        "keepassxc-cli create db.kdbx",
+        "keepassxc-cli ls -p db.kdbx",
+        "keepassxc-cli show -p db.kdbx Web/example.com",
+        "keepassxc-cli show -p db.kdbx -s Web/example.com",
+        "keepassxc-cli export -p db.kdbx -f csv backup.csv"
+      ],
+      "examples": [
+        "keepassxc-cli create db.kdbx",
+        "keepassxc-cli ls -p db.kdbx",
+        "keepassxc-cli show -p db.kdbx -s Web/example.com"
+      ],
+      "parameters": [
+        {
+          "name": "db",
+          "type": "string",
+          "description": "Database file path."
+        },
+        {
+          "name": "entry",
+          "type": "string",
+          "description": "Entry path, e.g. Web/example.com."
+        },
+        {
+          "name": "show_secret",
+          "type": "boolean",
+          "description": "-s prints the password."
+        }
+      ]
+    },
+    {
+      "name": "entry-ops",
+      "description": "Add, edit, generate, and remove entries with attachments.",
+      "commands": [
+        "keepassxc-cli add -p db.kdbx Web/example.com --username alice --password s3cret",
+        "keepassxc-cli generate -p db.kdbx Web/example.com --length 24 --lowercase --uppercase --numbers --special",
+        "keepassxc-cli edit -p db.kdbx Web/example.com --username alice2",
+        "keepassxc-cli rm -p db.kdbx Web/example.com",
+        "keepassxc-cli attachment-export -p db.kdbx Web/example.com key.pem keyfile.pem"
+      ],
+      "examples": [
+        "keepassxc-cli add -p db.kdbx Web/example.com --username alice --password s3cret",
+        "keepassxc-cli generate -p db.kdbx Web/example.com --length 24",
+        "keepassxc-cli attachment-export -p db.kdbx Web/example.com key.pem keyfile.pem"
+      ],
+      "parameters": [
+        {
+          "name": "entry",
+          "type": "string",
+          "description": "Entry path."
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "description": "Username for the entry."
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "description": "Password for the entry."
+        },
+        {
+          "name": "length",
+          "type": "integer",
+          "description": "Generated password length."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "KeePassXC CLI",
+      "type": "documentation",
+      "source": "https://keepassxc.org/docs/KeePassXC_UserGuide.html#_cli_usage",
+      "description": "Official keepassxc-cli usage guide."
+    },
+    {
+      "title": "keepassxc-cli man page",
+      "type": "documentation",
+      "source": "https://github.com/keepassxreboot/keepassxc/blob/develop/docs/man/keepassxc-cli.1",
+      "description": "Command reference for keepassxc-cli."
+    }
+  ],
+  "instructions": "# KeePassXC (keepassxc-cli)\n\nManage KeePassXC password databases from the command line.\n\n## What this skill does\n\n- Creates and unlocks .kdbx databases.\n- Adds, edits, generates, and deletes entries.\n- Exports CSV backups and handles attachments.\n\n## When to use\n\n- Scripting credential rotation across services.\n- Migrating secrets into a shared database.\n- Automation that needs to fetch a credential at runtime.\n\n## Real commands\n\n```bash\n# Create a database (prompts for master password)\nkeepassxc-cli create db.kdbx\n\n# List groups and entries\nkeepassxc-cli ls -p db.kdbx\n\n# Show an entry (masked)\nkeepassxc-cli show -p db.kdbx Web/example.com\n\n# Show the password\nkeepassxc-cli show -p db.kdbx -s Web/example.com\n\n# Add an entry\nkeepassxc-cli add -p db.kdbx Web/example.com \\\n  --username alice --password s3cret\n\n# Generate a strong password into an entry\nkeepassxc-cli generate -p db.kdbx Web/example.com \\\n  --length 24 --lowercase --uppercase --numbers --special\n\n# Edit username\nkeepassxc-cli edit -p db.kdbx Web/example.com --username alice2\n\n# Export CSV backup\nkeepassxc-cli export -p db.kdbx -f csv backup.csv\n\n# Attach a file\nkeepassxc-cli attachment-export -p db.kdbx Web/example.com key.pem keyfile.pem\n\n# Delete an entry\nkeepassxc-cli rm -p db.kdbx Web/example.com\n```\n\n## Testing\n\n```bash\n# Verify the backup parses\nhead -5 backup.csv\n```\n\n## Best practices\n\n- Never pass the master password on the command line; use the prompt.\n- Keep exports encrypted; CSV backups contain plaintext secrets.\n- Store TOTP seeds as extra fields; pair with oathtool for OTP.\n",
+  "examples": [
+    {
+      "input": "Find the password for example.com",
+      "output": "keepassxc-cli show -p db.kdbx -s Web/example.com"
+    },
+    {
+      "input": "Rotate a credential with a generated password",
+      "output": "keepassxc-cli generate -p db.kdbx Web/example.com --length 24"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "keepass.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-keepass"
+    },
+    "generic": {
+      "system_prompt": "You are the Keepass specialist. You do it through db-lifecycle: Create, unlock, and inspect KeePassXC databases. The commands are real, e.g. `keepassxc-cli create db.kdbx`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "keepass",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "db-lifecycle",
+        "name": "db",
+        "type": "string",
+        "description": "Database file path."
+      },
+      {
+        "capability": "db-lifecycle",
+        "name": "entry",
+        "type": "string",
+        "description": "Entry path, e.g. Web/example.com."
+      },
+      {
+        "capability": "db-lifecycle",
+        "name": "show_secret",
+        "type": "boolean",
+        "description": "-s prints the password."
+      },
+      {
+        "capability": "entry-ops",
+        "name": "entry",
+        "type": "string",
+        "description": "Entry path."
+      },
+      {
+        "capability": "entry-ops",
+        "name": "username",
+        "type": "string",
+        "description": "Username for the entry."
+      },
+      {
+        "capability": "entry-ops",
+        "name": "password",
+        "type": "string",
+        "description": "Password for the entry."
+      },
+      {
+        "capability": "entry-ops",
+        "name": "length",
+        "type": "integer",
+        "description": "Generated password length."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "keepassxc-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/keepass-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/keepass-skill.yaml",
+    "checksum": "5652ac444ed52fbc76d80e2febb8d2617f8b23ec5a63c68c9b77af89c7bbeb8b"
+  }
+}

@@ -1,0 +1,166 @@
+name: api-sec-specialist
+version: 2.0.0
+type: skill
+category: security
+description: 'Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI, baseline scans, active
+  scan rules, and HTML/JSON vulnerability reports.'
+keywords:
+- api-security
+- authentication
+- vulnerability
+- owasp
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-sec-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-sec-specialist
+  generic:
+    system_prompt: 'You work api-sec-specialist hands-on. You do it through zap-api-scan: Run ZAP automated
+      scans against APIs. The commands are real, e.g. `docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py
+      -t...`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: zap-api-scan
+  description: Run ZAP automated scans against APIs
+  commands:
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t https://api.example.com/v3/api-docs -f openapi
+    -O -r zap_api_report.html
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://api.example.com -r zap_baseline.html
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi -j -l WARN -r report.html
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-cli.py --help
+  examples:
+  - zap-api-scan.py -f openapi scans from the OpenAPI spec
+  - zap-baseline.py runs a passive baseline scan
+  - -l WARN sets the minimum alert level reported
+  parameters:
+  - name: target
+    type: string
+    description: API URL or spec file
+  - name: format
+    type: string
+    description: openapi, soap, graphql
+  - name: level
+    type: string
+    description: 'Alert threshold: WARN, FAIL, PASS'
+- name: zap-automation
+  description: Automate ZAP scans in CI pipelines
+  commands:
+  - curl -s https://api.example.com/v3/api-docs -o openapi.json
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.json -f openapi -J -j -l FAIL -r
+    report.html
+  - curl -s https://api.example.com/health -o /dev/null -w '%{http_code}\n'
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- owasp-zap
+tools:
+- node.js
+- python
+- owasp-zap
+- helmet
+- cors
+examples:
+- input: Scan the API before release
+  output: Runs zap-api-scan against the OpenAPI spec and fails CI on critical alerts
+- input: Weekly security baseline
+  output: Schedules zap-baseline.py and publishes the HTML report
+instructions: '# API Security Specialist
+
+
+  Automated API security testing with ZAP.
+
+
+  ## What This Skill Does
+
+  - Scans APIs for OWASP top-ten vulnerabilities
+
+  - Uses OpenAPI specs to discover endpoints
+
+  - Produces actionable reports
+
+
+  ## When to Use
+
+  - Pre-release security gates
+
+  - Continuous security monitoring
+
+  - PCI/SOC2 audit evidence
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi -j -l WARN -r report.html
+
+  docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://api.example.com -r zap_baseline.html
+
+  ```
+
+
+  ## Scan Workflow
+
+  1. Export the OpenAPI spec
+
+  2. Run the API scan with the spec
+
+  3. Triage alerts by confidence
+
+  4. Track findings in the bug tracker
+
+
+  ## Testing
+
+  - Verify the scanner reaches authenticated endpoints
+
+  - Set up authentication headers for deep scans
+
+  - Fail CI on HIGH/CRITICAL alerts
+
+
+  ## Best Practices
+
+  - Scan staging, never production
+
+  - Keep the spec in sync with routes
+
+  - Tune scan rules to reduce false positives'
+display_name: api-sec-specialist
+knowledge:
+- title: ZAP API Scan Docs
+  type: documentation
+  source: https://www.zaproxy.org/docs/docker/api-scan/
+  description: ZAP API scan docker images
+- title: ZAP User Guide
+  type: documentation
+  source: https://www.zaproxy.org/docs/desktop/start/
+  description: Getting started with ZAP

@@ -1,0 +1,84 @@
+name: documentation-inference
+display_name: Documentation Inference
+category: ml
+subcategory: agent
+description: Documentation inference server agent Manages Documentation inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Documentation Inference Server Agent V2
+  description: Documentation inference server agent. Manages Documentation inference server.
+  commands:
+  - python document.py --model model.pkl --output documentation.md
+  - python generate_docs.py --model model.pkl --format html
+  - 'curl http://localhost:8080/document --data ''{"model": "model.pkl"}'''
+  - python inference_server.py --port 8080
+  examples:
+  - python inference_server.py --port 8080
+  - 'curl http://localhost:8080/document --data ''{"model": "model.pkl"}'''
+  - python document.py --model model.pkl --output documentation.md
+  - python generate_docs.py --model model.pkl --format html
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: documentation-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for documentation-inference
+instructions: 'You are the Documentation Inference Server Agent V2, operator of the Documentation inference
+  server. Workflow: generate docs with ''python document.py --model model.pkl --output documentation.md''
+  and ''python generate_docs.py --model model.pkl --format html'', start the server with ''python inference_server.py
+  --port 8080'', and exercise it with ''curl http://localhost:8080/document --data {"model": "model.pkl"}''.
+  Confirm the endpoint returns the document payload for the requested model and that generated files are
+  current. Failure modes: server not binding port 8080, model file paths that do not exist, and stale
+  docs; regenerate docs and check server logs. Report server status, the /document response, and the regenerated
+  artifact paths.'
+examples:
+- python inference_server.py --port 8080
+- 'curl http://localhost:8080/document --data ''{"model": "model.pkl"}'''
+- python document.py --model model.pkl --output documentation.md
+- python generate_docs.py --model model.pkl --format html
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: documentation-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Documentation inference server expert. Help users set up Documentation inference
+      server.
+  opencode:
+    plugin: opencode-documentation-inference
+  generic:
+    system_prompt: You are documentation-inference. Documentation inference server agent. Manages Documentation
+      inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

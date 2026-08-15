@@ -1,0 +1,124 @@
+name: in-toto
+display_name: in-toto
+category: security
+subcategory: general
+description: 'Creates and verifies supply-chain integrity layouts with in-toto: step signatures, product
+  attestation, and full-chain verification.'
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- in-toto-keygen
+- in-toto-record
+- in-toto-run
+- in-toto-sign
+- in-toto-verify
+capabilities:
+- name: step-execution
+  description: Record supply chain steps with in-toto-run and in-toto-record wrappers.
+  commands:
+  - in-toto-run --step-name build --key build.key --products artifacts/ -- make build
+  - in-toto-record start --step-name test --key test.key
+  - in-toto-record stop --step-name test --key test.key --products report.xml
+  - in-toto-run --step-name lint --key lint.key --exclude coverage/ -- golangci-lint run
+  examples:
+  - in-toto-run --step-name build --key build.key --products dist/ -- npm run build
+  - in-toto-record start --step-name test --key test.key
+  - in-toto-record stop --step-name test --key test.key --products junit.xml
+  parameters:
+  - name: stepName
+    type: string
+    description: Identifier of the step in the layout
+  - name: key
+    type: string
+    description: Signing key for the step
+  - name: products
+    type: array
+    description: Glob patterns of files produced by the step
+- name: layout-verification
+  description: Sign layouts and verify the whole chain against keys and rules.
+  commands:
+  - in-toto-keygen alice
+  - in-toto-sign --file root.layout --key root.key
+  - in-toto-verify --layout root.layout --layout-keys root.pub
+  - in-toto-verify --layout root.layout --layout-keys root.pub --verbose
+  - in-toto-sign --file root.layout --key alice --update
+  examples:
+  - in-toto-keygen alice
+  - in-toto-sign --file root.layout --key root.key
+  - in-toto-verify --layout root.layout --layout-keys root.pub
+  parameters:
+  - name: layout
+    type: string
+    description: Path to the signed layout file
+  - name: layoutKeys
+    type: array
+    description: Public keys authorized to sign the layout
+knowledge:
+- title: in-toto Documentation
+  type: documentation
+  source: https://in-toto.io/in-toto/
+  description: Concepts, layouts, and CLI reference
+- title: in-toto GitHub
+  type: documentation
+  source: https://github.com/in-toto/in-toto
+  description: Installation and CLI usage guide
+instructions: "# in-toto\n\nSupply chain integrity with cryptographically linked build steps.\n\n## What\
+  \ This Skill Does\n\n- Defines a layout of supply chain steps (clone, build, test, release)\n- Records\
+  \ per-step product metadata signed by step owners\n- Verifies the full chain: signatures, artifact hashes,\
+  \ and material rules\n- Generates keys with in-toto-keygen and signs layouts\n\n## When to Use\n\n-\
+  \ Provenance requirements for regulated software deliveries\n- Verifying that build/test/release steps\
+  \ ran in the intended order\n- Multi-party supply chain audits\n\n## Real Commands\n\n```bash\n# Key\
+  \ generation\nin-toto-keygen alice\n\n# Record steps\nin-toto-run --step-name build --key build.key\
+  \ --products dist/ -- make build\nin-toto-run --step-name test --key test.key --materials dist/ -- pytest\n\
+  \n# Split-step recording for long steps\nin-toto-record start --step-name deploy --key deploy.key\n\
+  in-toto-record stop --step-name deploy --key deploy.key --products release.tgz\n\n# Sign and verify\n\
+  in-toto-sign --file root.layout --key root.key\nin-toto-verify --layout root.layout --layout-keys root.pub\n\
+  ```\n\n## Sample Layout (excerpt)\n\n```python\nlayout = Layout(\n    steps=[\n        Step(name=\"\
+  build\",\n             materials=[ArtifactRule(\"ALLOW\", \"**\")],\n             products=[ArtifactRule(\"\
+  CREATE\", \"dist/*\")],\n             pubkeys=[build_pubkey])\n    ],\n    keys={\"build\": build_pubkey}\n\
+  )\n```\n\n## Best Practices\n\n- Keep step keys separate from layout root keys\n- Verify in the production\
+  \ environment, not just in CI\n- Store in-toto metadata alongside release artifacts\n- Combine with\
+  \ SLSA provenance and cosign attestations for full coverage\n- Rotate step keys and re-sign layouts\
+  \ on personnel changes"
+examples:
+- input: Prove my release pipeline steps ran in order
+  output: Agent defines a layout with build/test/release steps, records each with in-toto-run, signs the
+    layout, and runs in-toto-verify to demonstrate chain integrity.
+- input: Why did verification fail for the build step?
+  output: Agent runs in-toto-verify --verbose, compares the recorded product hashes against the layout
+    rules, and identifies which artifact or rule mismatched.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: in-toto.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-in-toto
+  generic:
+    system_prompt: 'Your lane is in-toto. You do it through step-execution: Record supply chain steps
+      with in-toto-run and in-toto-record wrappers. The commands are real, e.g. `in-toto-run --step-name
+      build --key build.key --products artifacts/ -- make build`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,98 @@
+name: wrk
+display_name: Wrk
+category: api
+subcategory: general
+description: 'Benchmark HTTP APIs with wrk: thread/connection tuning, Lua scripting for custom requests,
+  latency distributions, and repeatable CI benchmarks.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- wrk
+capabilities:
+- name: wrk-benchmark
+  description: Run and interpret wrk HTTP benchmarks
+  commands:
+  - wrk -t12 -c400 -d30s http://localhost:8080/api/users
+  - wrk -t4 -c100 -d60s --latency http://localhost:8080/api/users
+  - wrk -t2 -c50 -d10s -s post.lua http://localhost:8080/api/orders
+  - 'wrk -H ''Authorization: Bearer token123'' -d30s --latency https://api.example.com/v1/users'
+  - wrk -t8 -c200 -d120s -R 1000 http://localhost:8080/api/search
+  examples:
+  - wrk -t4 -c200 -d30s --latency http://localhost:8080/api/health | grep -E 'Requests/sec|p99'
+  - wrk -t2 -c20 -d15s -s upload.lua http://localhost:8080/api/files
+  - wrk -t12 -c400 -d60s -R 2000 --latency https://api.example.com/v2/widgets
+  parameters:
+  - name: threads
+    type: integer
+    description: Number of threads (-t)
+  - name: connections
+    type: integer
+    description: Number of open connections (-c)
+  - name: duration
+    type: string
+    description: Benchmark duration, e.g. 30s
+knowledge:
+- title: wrk GitHub
+  type: documentation
+  source: https://github.com/wg/wrk
+  description: Usage, flags, and Lua scripting docs
+- title: wrk SCRIPTING.md
+  type: documentation
+  source: https://github.com/wg/wrk/blob/master/SCRIPTING
+  description: Lua API for request/response hooks
+instructions: "# wrk\n\n## What this skill does\nBenchmark HTTP APIs with wrk, a lightweight multi-threaded\
+  \ HTTP load generator. Tune threads and connections, script requests with Lua, read latency distributions,\
+  \ and run repeatable benchmarks in CI.\n\n## When to use\n- Measuring throughput and latency\n- Comparing\
+  \ config changes A/B\n- Capacity planning\n\n## Real commands\n```bash\n# Default benchmark\nwrk -t12\
+  \ -c400 -d30s http://localhost:8080/api/users\n\n# Latency distribution\nwrk -t4 -c100 -d60s --latency\
+  \ http://localhost:8080/api/users\n\n# Lua-scripted POSTs\nwrk -t2 -c50 -d10s -s post.lua http://localhost:8080/api/orders\n\
+  \n# With auth header\nwrk -H 'Authorization: Bearer token123' -d30s --latency https://api.example.com/v1/users\n\
+  \n# Fixed request rate (throughput mode)\nwrk -t8 -c200 -d120s -R 1000 http://localhost:8080/api/search\n\
+  ```\n\n## post.lua\n```lua\nwrk.method = \"POST\"\nwrk.headers[\"Content-Type\"] = \"application/json\"\
+  \nwrk.body = '{\"customer\": 1}'\n```\n\n## Interpreting output\n```\nThread Stats   Avg      Stdev\
+  \     Max   +/- Stdev\n  Latency     12.5ms    8.0ms   200ms   90.00%\n  Req/Sec      4.5k    300.0\
+  \     5.5k    75.00%\nLatency Distribution\n  50%  10.0ms\n  99%  90.0ms\n```\n\n## Best practices\n\
+  - Match thread count to CPU cores (2-4x)\n- Keep connections below fd limits (check `ulimit -n`)\n-\
+  \ Warm up before timed runs\n- Use `-R` for fixed-rate tests, default for max-rate\n\n## Testing\n```bash\n\
+  wrk -t4 -c100 -d10s --latency http://localhost:8080/api/health | grep -E 'Requests/sec|99%'\n```"
+examples:
+- input: Benchmark /api/users with realistic load
+  output: Runs wrk with threads/connections tuned to the machine and shows latency distribution.
+- input: Compare before/after caching
+  output: Runs the same wrk command twice and diffs Requests/sec and p99.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: wrk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-wrk
+  generic:
+    system_prompt: 'You are the Wrk specialist. You do it through wrk-benchmark: Run and interpret wrk
+      HTTP benchmarks. The commands are real, e.g. `wrk -t12 -c400 -d30s http://localhost:8080/api/users`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

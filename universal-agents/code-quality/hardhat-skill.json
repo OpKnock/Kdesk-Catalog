@@ -1,0 +1,211 @@
+{
+  "name": "hardhat",
+  "display_name": "Hardhat",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Develops and tests Solidity with Hardhat: compile, test, deploy scripts, network management, and Etherscan verification.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx hardhat init",
+        "npx hardhat compile",
+        "npx hardhat test",
+        "npx hardhat node",
+        "npx hardhat clean"
+      ],
+      "description": "Compile, test, and run local nodes.",
+      "name": "hardhat-dev",
+      "examples": [
+        "npx hardhat test test/token.test.js",
+        "npx hardhat node --port 8545",
+        "npx hardhat compile --force"
+      ],
+      "parameters": [
+        {
+          "description": "Test file filter",
+          "name": "test-file",
+          "type": "string"
+        },
+        {
+          "name": "network",
+          "type": "string",
+          "description": "Network name for tests"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "npx hardhat run scripts/deploy.js",
+        "npx hardhat run scripts/deploy.js --network sepolia",
+        "npx hardhat verify --network sepolia 0x1234",
+        "npx hardhat console",
+        "npx hardhat run scripts/deploy.js --network localhost"
+      ],
+      "description": "Deploy and verify contracts.",
+      "name": "hardhat-deploy",
+      "examples": [
+        "npx hardhat verify --network sepolia 0x1234 --constructor-args args.js",
+        "npx hardhat console --network mainnet",
+        "npx hardhat run scripts/deploy.ts --network hardhat"
+      ],
+      "parameters": [
+        {
+          "description": "Script path",
+          "name": "script",
+          "type": "string"
+        },
+        {
+          "description": "Target network",
+          "name": "network",
+          "type": "string"
+        },
+        {
+          "description": "Contract address to verify",
+          "name": "address",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Hardhat Docs",
+      "description": "Tutorial, config, and plugins",
+      "source": "https://hardhat.org/docs",
+      "type": "documentation"
+    },
+    {
+      "title": "Hardhat Network",
+      "description": "Local network and forking",
+      "source": "https://hardhat.org/hardhat-network/docs/overview",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Hardhat\n\nEVM development environment.\n\n## When to Use\n\n- Solidity development with JS/TS tests\n- Local blockchain with hardhat network\n- Deployments to testnets/mainnet with scripts\n- Etherscan verification\n\n## Commands\n\n```bash\n# Setup\nnpx hardhat init\n\n# Build\nnpx hardhat compile\nnpx hardhat clean\n\n# Test\nnpx hardhat test\nnpx hardhat test test/token.test.js\n\n# Local node\nnpx hardhat node\n\n# Deploy\nnpx hardhat run scripts/deploy.js --network sepolia\n\n# Verify\nnpx hardhat verify --network sepolia 0x1234\n\n# Console\nnpx hardhat console --network mainnet\n```\n\n## Config Example\n\n```javascript\n// hardhat.config.js\nrequire(\"@nomicfoundation/hardhat-toolbox\");\n\nmodule.exports = {\n  solidity: \"0.8.24\",\n  networks: {\n    sepolia: {\n      url: process.env.SEPOLIA_RPC_URL,\n      accounts: [process.env.PRIVATE_KEY],\n    },\n  },\n};\n```\n\n## Best Practices\n\n- Test on the local hardhat network before testnets\n- Use env vars for private keys and RPC URLs\n- Pin the Solidity version in config\n- Verify contracts immediately after deploy\n- Use console.log in tests with hardhat-toolbox\n- Add gas reporting and coverage in CI",
+  "examples": [
+    {
+      "input": "Deploy my contract to Sepolia and verify",
+      "output": "Agent configures the sepolia network, runs the deploy script, and verifies the address with npx hardhat verify."
+    },
+    {
+      "input": "Write tests for my token contract",
+      "output": "Agent adds a test file with ethers, runs npx hardhat test, and checks coverage."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "hardhat.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-hardhat"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Hardhat. You do it through hardhat-dev: Compile, test, and run local nodes. The commands are real, e.g. `npx hardhat init`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "hardhat",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "hardhat-dev",
+        "name": "test-file",
+        "type": "string",
+        "description": "Test file filter"
+      },
+      {
+        "capability": "hardhat-dev",
+        "name": "network",
+        "type": "string",
+        "description": "Network name for tests"
+      },
+      {
+        "capability": "hardhat-deploy",
+        "name": "script",
+        "type": "string",
+        "description": "Script path"
+      },
+      {
+        "capability": "hardhat-deploy",
+        "name": "network",
+        "type": "string",
+        "description": "Target network"
+      },
+      {
+        "capability": "hardhat-deploy",
+        "name": "address",
+        "type": "string",
+        "description": "Contract address to verify"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/hardhat-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/hardhat-skill.yaml",
+    "checksum": "8ed5085e18e45f72bb4980c12169a0784e62eecd9c2de790af9a0fff24c791a6"
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "name": "streaming-pipeline",
+  "display_name": "Streaming Pipeline",
+  "category": "data",
+  "subcategory": "streaming",
+  "description": "Agent for building real-time streaming pipelines with Kafka, Flink, and stream processing.",
+  "version": "1.0.0",
+  "tags": [
+    "streaming",
+    "kafka",
+    "flink",
+    "real-time",
+    "stream-processing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "streaming-pipeline",
+      "description": "Build streaming pipelines",
+      "commands": [
+        "kafka",
+        "flink",
+        "ksql"
+      ],
+      "examples": [
+        "Kafka: kafka-console-producer --topic events --broker-list localhost:9092",
+        "Flink: flink run -c com.example.Job target.jar",
+        "ksqlDB: CREATE STREAM events (id STRING, ts TIMESTAMP) WITH (kafka_topic='events')"
+      ],
+      "parameters": [
+        {
+          "name": "engine",
+          "type": "string",
+          "description": "Engine: kafka-streams, flink, spark-streaming"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Pattern: windowing, aggregation, join, state"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Kafka Streams",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/streams/",
+      "description": "Kafka Streams documentation"
+    },
+    {
+      "Title": "Apache Flink",
+      "type": "tutorial",
+      "source": "https://nightlies.apache.org/flink/flink-docs-stable/",
+      "description": "Flink documentation"
+    }
+  ],
+  "instructions": "You are a streaming specialist. Help users:\n1. Design streaming architectures\n2. Implement windowing strategies\n3. Handle backpressure\n4. Manage state\n5. Monitor pipelines\n\nAlways recommend exactly-once semantics.\n",
+  "examples": [
+    {
+      "input": "Build streaming pipeline",
+      "output": "I'll design a streaming pipeline with Kafka and Flink..."
+    },
+    {
+      "input": "Windowing",
+      "output": "I'll implement tumbling and session windows..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "streaming-pipeline.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-streaming-pipeline"
+    },
+    "generic": {
+      "system_prompt": "You are a streaming pipeline expert. Help users build real-time data pipelines with Kafka and Flink.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "streaming-pipeline",
+  "type": "agent",
+  "skills": [
+    "ksql",
+    "flink",
+    "flink-sql"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "streaming-pipeline",
+        "name": "engine",
+        "type": "string",
+        "description": "Engine: kafka-streams, flink, spark-streaming"
+      },
+      {
+        "capability": "streaming-pipeline",
+        "name": "pattern",
+        "type": "string",
+        "description": "Pattern: windowing, aggregation, join, state"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/streaming-pipeline.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/streaming-pipeline.yaml",
+    "checksum": "8d609a7cd14fe667dfdf55bf5c735eb707af70e4badf4d5b1b70174847a2354a"
+  }
+}

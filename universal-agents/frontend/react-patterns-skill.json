@@ -1,0 +1,226 @@
+{
+  "name": "react-patterns",
+  "display_name": "react-patterns",
+  "category": "frontend",
+  "subcategory": "general",
+  "description": "Applies production React architecture patterns: composition, state management, Storybook, and code quality gates for component libraries.",
+  "version": "2.0.0",
+  "tags": [
+    "frontend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "storybook",
+      "description": "Build and maintain a component library with Storybook.",
+      "commands": [
+        "npx storybook@latest init --type react-vite",
+        "npx storybook@latest add @storybook/addon-a11y",
+        "npm run storybook",
+        "npm run build-storybook",
+        "npx chromatic --project-token $CHROMATIC_TOKEN --auto-accept-changes"
+      ],
+      "examples": [
+        "npx storybook@latest init --type react-vite --no-dev",
+        "npm run build-storybook -- --quiet",
+        "npx chromatic --exit-zero-on-changes"
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "type": "string",
+          "description": "react-vite, react-webpack5, or framework preset"
+        },
+        {
+          "name": "project-token",
+          "type": "string",
+          "description": "Chromatic visual regression token"
+        },
+        {
+          "name": "addon",
+          "type": "string",
+          "description": "Storybook addon package to install"
+        }
+      ]
+    },
+    {
+      "name": "code-quality",
+      "description": "Enforce React patterns with ESLint and dependency hygiene.",
+      "commands": [
+        "npx eslint src --ext .ts,.tsx --max-warnings 0",
+        "npx eslint src --fix",
+        "npm install -D eslint-plugin-react-hooks eslint-plugin-react-refresh",
+        "npx npm-check-updates -u",
+        "npm outdated"
+      ],
+      "examples": [
+        "npx eslint src --max-warnings 0 --rule 'react-hooks/rules-of-hooks:error'",
+        "npx npm-check-updates -u && npm install",
+        "npx eslint src/components --fix"
+      ],
+      "parameters": [
+        {
+          "name": "max-warnings",
+          "type": "number",
+          "description": "CI gate on warnings"
+        },
+        {
+          "name": "rule",
+          "type": "string",
+          "description": "Inline rule override"
+        },
+        {
+          "name": "ext",
+          "type": "string",
+          "description": "File extensions to lint"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "React Docs",
+      "type": "documentation",
+      "source": "https://react.dev/learn",
+      "description": "Thinking in React, composition, and state patterns"
+    },
+    {
+      "title": "Storybook",
+      "type": "documentation",
+      "source": "https://storybook.js.org/docs",
+      "description": "Component development, testing, and visual review"
+    },
+    {
+      "title": "React Hooks rules",
+      "type": "documentation",
+      "source": "https://react.dev/reference/rules",
+      "description": "Rules of Hooks and component patterns"
+    }
+  ],
+  "instructions": "# React Patterns\n\nArchitect maintainable React codebases with proven patterns and gates.\n\n## When to Use\n\n- Growing component libraries used by multiple teams\n- Refactors of tangled prop drilling and effects\n- Introducing testing and visual review into a React codebase\n\n## Composition over props drilling\n\n```tsx\ntype CardProps = { title: string; children: React.ReactNode };\n\nexport function Card({ title, children }: CardProps) {\n  return <section className=\"card\">{title && <h2>{title}</h2>}{children}</section>;\n}\n```\n\n## State management tiers\n\n- Local UI state: `useState`/`useReducer`\n- Server state: TanStack Query\n- Cross-cutting global state: Zustand or Context + reducer\n\n```bash\nnpm install @tanstack/react-query zustand\n```\n\n## Storybook as the component contract\n\n```bash\nnpx storybook@latest init --type react-vite\nnpm run build-storybook\n```\n\nAdd a11y addon and Chromatic for visual regression on every PR.\n\n## Code quality gates\n\n```bash\nnpx eslint src --ext .ts,.tsx --max-warnings 0\n```\n\n```json\n{\n  \"extends\": [\"eslint:recommended\", \"plugin:react-hooks/recommended\"],\n  \"rules\": { \"react-hooks/rules-of-hooks\": \"error\" }\n}\n```\n\n## Best practices\n\n- Keep effects minimal; derive state during render where possible.\n- Export memoized callbacks only when profiling shows a need.\n- Every shared component gets a Storybook story and a unit test.\n- Review dependency upgrades quarterly with npm outdated.\n\n## Testing\n\n```bash\nnpx vitest run --coverage\n```\n\nRun unit + storybook interaction tests before visual review.",
+  "examples": [
+    {
+      "input": "Set up a design system with Storybook and visual regression.",
+      "output": "Inits Storybook react-vite, adds a11y addon, links Chromatic, and documents the PR workflow for visual changes."
+    },
+    {
+      "input": "Enforce React Hooks rules across the repo.",
+      "output": "Installs eslint-plugin-react-hooks, adds the recommended config, and gates CI on eslint --max-warnings 0."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "react-patterns.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-react-patterns"
+    },
+    "generic": {
+      "system_prompt": "You take the react-patterns seat. You do it through storybook: Build and maintain a component library with Storybook. The commands are real, e.g. `npx storybook@latest init --type react-vite`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "react-patterns",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "storybook",
+        "name": "type",
+        "type": "string",
+        "description": "react-vite, react-webpack5, or framework preset"
+      },
+      {
+        "capability": "storybook",
+        "name": "project-token",
+        "type": "string",
+        "description": "Chromatic visual regression token"
+      },
+      {
+        "capability": "storybook",
+        "name": "addon",
+        "type": "string",
+        "description": "Storybook addon package to install"
+      },
+      {
+        "capability": "code-quality",
+        "name": "max-warnings",
+        "type": "number",
+        "description": "CI gate on warnings"
+      },
+      {
+        "capability": "code-quality",
+        "name": "rule",
+        "type": "string",
+        "description": "Inline rule override"
+      },
+      {
+        "capability": "code-quality",
+        "name": "ext",
+        "type": "string",
+        "description": "File extensions to lint"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "frontend/react-patterns-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/frontend/react-patterns-skill.yaml",
+    "checksum": "ddbd3af5ad4196c00af2ccc3769ffb798af9bb947c0e9e8f308d25bee5ac9f20"
+  }
+}

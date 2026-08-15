@@ -1,0 +1,184 @@
+name: retry
+display_name: Retry
+category: api
+subcategory: general
+description: 'Hand-crafted shell/job retry skill: GNU timeout, curl retry flags, wait-for-service loops,
+  and systemd/supervisor restart policies for long-running jobs.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- systemctl
+- timeout
+- until
+capabilities:
+- name: shell-job-retry
+  description: 'Retry and restart shell jobs: timeout guards, readiness waits, service restarts'
+  commands:
+  - timeout 30s curl -sf https://api.example.com/health || echo 'timed out'
+  - curl --retry 3 --retry-max-time 60 --fail https://api.example.com/data -o data.json
+  - until nc -z db 5432; do sleep 2; done
+  - gh run rerun 1234567890 --failed
+  - systemctl edit myservice
+  examples:
+  - timeout 30s curl -sf https://api.example.com/health && echo up || echo down
+  - for i in $(seq 1 10); do curl -sf http://localhost:8080/ready && break; sleep 3; done
+  - systemctl restart myservice && systemctl status myservice --no-pager
+  parameters:
+  - name: timeout_seconds
+    type: integer
+    description: Hard deadline for the guarded command
+  - name: retries
+    type: integer
+    description: Number of retry attempts
+  - name: retry_max_time
+    type: integer
+    description: Total seconds the curl retry is allowed to spend
+knowledge:
+- title: GNU coreutils timeout
+  type: documentation
+  source: https://www.gnu.org/software/coreutils/manual/html_node/timeout-invocation.html
+  description: timeout command flags and exit codes
+- title: curl retry options
+  type: documentation
+  source: https://curl.se/docs/manpage.html#--retry
+  description: --retry, --retry-delay, --retry-max-time, --retry-connrefused
+instructions: '# Retry (shell & process level)
+
+
+  Hand-crafted skill for retrying shell commands, jobs, and services.
+
+
+  ## What this skill does
+
+
+  - Wraps flaky commands in GNU timeout so they cannot hang forever
+
+  - Retries failed curl downloads with total-time budgets
+
+  - Waits for dependencies and restarts services with systemd/supervisor
+
+
+  ## When to use
+
+
+  - Init scripts and cron jobs hitting briefly-unavailable services
+
+  - CI steps that flake on network timeouts
+
+  - Container start scripts waiting for databases
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Hard deadline: kill after 30s
+
+  timeout 30s curl -sf https://api.example.com/health || echo ''timed out''
+
+
+  # Retry 3x within 60s total
+
+  curl --retry 3 --retry-max-time 60 --fail https://api.example.com/data -o data.json
+
+
+  # Wait until a port accepts connections
+
+  until nc -z db 5432; do sleep 2; done
+
+
+  # Rerun only failed CI jobs
+
+  gh run rerun 1234567890 --failed
+
+
+  # systemd restart policy (edit then set Restart=on-failure, RestartSec=5)
+
+  systemctl edit myservice
+
+  ```
+
+
+  ## systemd unit fragment
+
+
+  ```ini
+
+  [Service]
+
+  Restart=on-failure
+
+  RestartSec=5
+
+  StartLimitBurst=10
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  # Simulate a slow start, then prove the readiness loop works
+
+  for i in $(seq 1 10); do curl -sf http://localhost:8080/ready && break; sleep 3; done
+
+  ```
+
+
+  ## Best practices
+
+
+  - Always pair retries with an overall timeout, or a hung job never dies
+
+  - Prefer --retry-connrefused so refused connections are retried too
+
+  - For services, use the platform restart policy instead of shell loops
+
+  '
+examples:
+- input: Download a file that sometimes fails
+  output: curl --retry 3 --retry-max-time 60 --fail https://api.example.com/data -o data.json, or wrap
+    in timeout 60s if the endpoint can hang.
+- input: My container starts before the DB is ready
+  output: 'Add a readiness loop: until nc -z db 5432; do sleep 2; done, or configure a healthcheck in
+    your orchestrator.'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: retry.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-retry
+  generic:
+    system_prompt: 'You own Retry end to end. You do it through shell-job-retry: Retry and restart shell
+      jobs: timeout guards, readiness waits, service restarts. The commands are real, e.g. `timeout 30s
+      curl -sf https://api.example.com/health || echo timed out`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,172 @@
+{
+  "name": "tcpdump",
+  "display_name": "Tcpdump",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted tcpdump skill: capture filters, pcap file workflows, header inspection with -A/-X, and targeted port/host filtering for API debugging.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "tcpdump"
+  ],
+  "capabilities": [
+    {
+      "name": "tcpdump-capture",
+      "description": "Capture and analyze packets with tcpdump filters",
+      "commands": [
+        "tcpdump -i eth0 -nn port 443",
+        "tcpdump -i any -nnv -c 100",
+        "tcpdump -i eth0 -w capture.pcap -s 0",
+        "tcpdump -r capture.pcap -nn 'tcp port 8080'",
+        "tcpdump -i eth0 -A -c 20 'tcp port 80'",
+        "tcpdump -X -r capture.pcap | head -50"
+      ],
+      "examples": [
+        "tcpdump -i eth0 -nn host 10.0.0.5 and port 5432",
+        "tcpdump -r capture.pcap -nn 'tcp[13] & 2 != 0'",
+        "tcpdump -i any -nn -c 50 port 53"
+      ],
+      "parameters": [
+        {
+          "name": "interface",
+          "type": "string",
+          "description": "Capture interface, e.g. eth0 or any"
+        },
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "BPF filter expression"
+        },
+        {
+          "name": "pcap_file",
+          "type": "string",
+          "description": "Capture or read file name"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "tcpdump man page",
+      "type": "documentation",
+      "source": "https://www.tcpdump.org/manpages/tcpdump.1.html",
+      "description": "Flags and output formats"
+    },
+    {
+      "title": "pcap-filter man page",
+      "type": "documentation",
+      "source": "https://www.tcpdump.org/manpages/pcap-filter.7.html",
+      "description": "BPF filter syntax"
+    }
+  ],
+  "instructions": "# tcpdump\n\nHand-crafted skill for capturing and reading network traffic.\n\n## What this skill does\n\n- Captures live packets with BPF filters on ports and hosts\n- Writes pcap files for later analysis\n- Inspects payloads with -A (ASCII) and -X (hex) dumps\n\n## When to use\n\n- Is an API request even leaving the host?\n- What payload did the client send to port 5432?\n- Reproducing a network bug from a captured pcap\n\n## Real commands\n\n```bash\n# Live capture on 443 with numeric output\ntcpdump -i eth0 -nn port 443\n\n# Any interface, verbose, stop after 100 packets\ntcpdump -i any -nnv -c 100\n\n# Capture to a file (full payloads)\ntcpdump -i eth0 -w capture.pcap -s 0\n\n# Read and filter the file\ntcpdump -r capture.pcap -nn 'tcp port 8080'\n\n# Payload as ASCII\ntcpdump -i eth0 -A -c 20 'tcp port 80'\n\n# Hex + ASCII dump\ntcpdump -X -r capture.pcap | head -50\n\n# Host and port combo\ntcpdump -i eth0 -nn host 10.0.0.5 and port 5432\n\n# SYN packets only (TCP flags bit 2)\ntcpdump -r capture.pcap -nn 'tcp[13] & 2 != 0'\n```\n\n## Capture workflow\n\n1. tcpdump -i eth0 -w file.pcap -s 0 'port 443'\n2. Reproduce the issue\n3. Ctrl+C, then tcpdump -r file.pcap -nn\n\n## Testing\n\n```bash\ntcpdump -i lo -nn port 8080 &\ncurl -s localhost:8080/health\nkill %1\n```\n\n## Best practices\n\n- Always use -nn to skip slow DNS/service lookups\n- Use -c N to bound live captures\n- Prefer pcap files over live output for anything longer than a minute\n",
+  "examples": [
+    {
+      "input": "See if my app talks to the DB at all",
+      "output": "tcpdump -i eth0 -nn host <db-host> and port 5432 -c 20; empty output means the app never connects."
+    },
+    {
+      "input": "What request body went out on 8080?",
+      "output": "tcpdump -i lo -A -c 20 'tcp port 8080' prints payloads as ASCII lines."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "tcpdump.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-tcpdump"
+    },
+    "generic": {
+      "system_prompt": "You own Tcpdump end to end. You do it through tcpdump-capture: Capture and analyze packets with tcpdump filters. The commands are real, e.g. `tcpdump -i eth0 -nn port 443`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "tcpdump",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "tcpdump-capture",
+        "name": "interface",
+        "type": "string",
+        "description": "Capture interface, e.g. eth0 or any"
+      },
+      {
+        "capability": "tcpdump-capture",
+        "name": "filter",
+        "type": "string",
+        "description": "BPF filter expression"
+      },
+      {
+        "capability": "tcpdump-capture",
+        "name": "pcap_file",
+        "type": "string",
+        "description": "Capture or read file name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "tcpdump"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/tcpdump-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/tcpdump-skill.yaml",
+    "checksum": "ac699c83854303e6b49a4722b5d4574370ebc4f9da74a349261acafc03f5b058"
+  }
+}

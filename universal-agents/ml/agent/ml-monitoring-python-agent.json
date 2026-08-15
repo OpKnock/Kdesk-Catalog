@@ -1,0 +1,120 @@
+{
+  "name": "ml-monitoring-python-agent",
+  "display_name": "Ml Monitoring Python Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ML Monitoring Python agent for model monitoring.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Monitoring Python Agent",
+      "description": "ML Monitoring Python agent for model monitoring.",
+      "commands": [
+        "Evidently: python -c 'from evidently.report import Report; from evidently.metric_preset import DataD",
+        "Alibi Detect: python -c 'from alibi_detect.cd import KSDrift; cd = KSDrift(X_ref); print(cd.predict(",
+        "Whylabs: python -c 'import whylogs as why; profile = why.log(df); profile.to_parquet(\"output\")'"
+      ],
+      "examples": [
+        "Evidently: python -c 'from evidently.report import Report; from evidently.metric_preset import DataDriftPreset; report = Report(metrics=[DataDriftPreset()]); report.run(reference_data=df_ref, current_data=df_cur)'",
+        "Whylabs: python -c 'import whylogs as why; profile = why.log(df); profile.to_parquet(\"output\")'",
+        "Alibi Detect: python -c 'from alibi_detect.cd import KSDrift; cd = KSDrift(X_ref); print(cd.predict(X_test))'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-monitoring-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-monitoring-python-agent"
+    }
+  ],
+  "instructions": "Python ML monitoring specialist. Call on this agent to detect drift and monitor model performance using the Python ecosystem: Evidently, Alibi Detect, and WhyLogs. Workflow: run a data-drift report with `python -c 'from evidently.report import Report; from evidently.metric_preset import DataDriftPreset; report = Report(metrics=[DataDriftPreset()]); report.run(reference_data=df_ref, current_data=df_cur)'`, statistical drift tests with `python -c 'from alibi_detect.cd import KSDrift; cd = KSDrift(X_ref); print(cd.predict(X_test))'`, and profile data with `python -c 'import whylogs as why; profile = why.log(df); profile.to_parquet(\"output\")'`. Key behaviors: reference and current data must share column/schema (schema mismatch is the top failure), and large datasets should be sampled for the KS test. Report drift verdicts, profiling output path, and recommended alert thresholds.",
+  "examples": [
+    "Evidently: python -c 'from evidently.report import Report; from evidently.metric_preset import DataDriftPreset; report = Report(metrics=[DataDriftPreset()]); report.run(reference_data=df_ref, current_data=df_cur)'",
+    "Whylabs: python -c 'import whylogs as why; profile = why.log(df); profile.to_parquet(\"output\")'",
+    "Alibi Detect: python -c 'from alibi_detect.cd import KSDrift; cd = KSDrift(X_ref); print(cd.predict(X_test))'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-monitoring-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Python ML monitoring expert. Help users with:\n- Drift detection\n- Performance monitoring\n- Alert setup\n- Dashboard creation\n\nAlways use real Python monitoring commands and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-monitoring-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-monitoring-python-agent. ML Monitoring Python agent for model monitoring.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-monitoring-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-monitoring-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-monitoring-python-agent.yaml",
+    "checksum": "593b16f8842ffae7b50a1841b46d288f1502c21ecc3f5b311f95365439de9242"
+  }
+}

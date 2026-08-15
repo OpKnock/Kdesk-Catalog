@@ -1,0 +1,167 @@
+name: mqtt-emqx
+display_name: Mqtt Emqx
+category: api
+subcategory: general
+description: 'Operate EMQX MQTT brokers: start/stop, cluster status, publish/subscribe via emqx ctl, and
+  dashboard access.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- emqx
+capabilities:
+- name: emqx-broker-operations
+  description: Control the EMQX broker daemon and inspect clusters, subscriptions and message traffic
+    with emqx ctl.
+  commands:
+  - emqx start
+  - emqx ctl status
+  - emqx ctl broker pub test/topic "hello"
+  - emqx ctl broker sub test/topic
+  - emqx ctl cluster status
+  examples:
+  - emqx ctl broker pub demo/temp "21.5" --qos 1
+  - emqx ctl broker sub demo/temp --qos 1
+  - emqx ctl listener list
+  parameters:
+  - name: topic
+    type: string
+    description: MQTT topic to publish or subscribe to
+  - name: qos
+    type: integer
+    description: Quality of service level 0, 1 or 2
+  - name: payload
+    type: string
+    description: Message payload to publish
+knowledge:
+- title: EMQX Documentation
+  type: documentation
+  source: https://docs.emqx.com/en/emqx/latest/
+  description: Installation, clustering, emqx ctl commands and dashboard
+- title: EMQX Dashboard
+  type: documentation
+  source: https://docs.emqx.com/en/emqx/latest/admin/observability/dashboard.html
+  description: Web UI at http://localhost:18083
+instructions: '# EMQX
+
+
+  EMQX is a scalable open-source MQTT broker for IoT and edge workloads.
+
+
+  ## What this skill does
+
+
+  - Starts/stops the broker and checks status
+
+  - Publishes and subscribes from the CLI for testing
+
+  - Inspects clusters and listeners
+
+
+  ## When to use
+
+
+  - Deploying a production MQTT broker
+
+  - Verifying connectivity and message flow end-to-end
+
+  - Scaling to a multi-node EMQX cluster
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Start and check
+
+  emqx start
+
+  emqx ctl status
+
+
+  # Publish from CLI
+
+  emqx ctl broker pub test/topic "hello"
+
+  emqx ctl broker pub demo/temp "21.5" --qos 1
+
+
+  # Subscribe from CLI
+
+  emqx ctl broker sub test/topic --qos 1
+
+
+  # Cluster and listeners
+
+  emqx ctl cluster status
+
+  emqx ctl listener list
+
+  ```
+
+
+  ## Dashboard
+
+
+  - Web UI: `http://localhost:18083` (default admin/public)
+
+
+  ## Config files
+
+
+  - `/etc/emqx/emqx.conf` - node name, listeners, auth
+
+  - Authentication: `emqx ctl authn ...`? Use built-in MQTT auth users or HTTP auth
+
+
+  ## Best practices
+
+
+  - Pin EMQX version and test upgrades on staging
+
+  - Configure TLS listeners for production (`listener.ssl.external`)
+
+  - Monitor `emqx ctl broker metrics` for dropped messages'
+examples:
+- input: Install and start EMQX on this server
+  output: The agent installs via the official repo, runs `emqx start` and verifies with `emqx ctl status`
+    and the dashboard URL.
+- input: Test that my topic flow works without writing code
+  output: The agent runs `emqx ctl broker sub sensors/#` in one terminal and `emqx ctl broker pub sensors/temp
+    "22.1"` in another.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mqtt-emqx.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-mqtt-emqx
+  generic:
+    system_prompt: 'You work Mqtt Emqx hands-on. You do it through emqx-broker-operations: Control the
+      EMQX broker daemon and inspect clusters, subscriptions and message traffic with emqx ctl. The commands
+      are real, e.g. `emqx start`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

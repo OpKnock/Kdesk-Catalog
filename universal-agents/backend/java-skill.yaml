@@ -1,0 +1,118 @@
+name: java
+display_name: Java
+category: backend
+subcategory: general
+description: Develops Java backend services with Maven/Gradle, Spring Boot, and the JVM toolchain including
+  build, test, and packaging.
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- gradle
+- mvn
+capabilities:
+- commands:
+  - mvn clean package
+  - mvn test
+  - mvn spring-boot:run
+  - mvn dependency:tree
+  - mvn install -DskipTests
+  description: Build and test Maven projects.
+  name: maven-build
+  examples:
+  - mvn clean package -DskipTests
+  - mvn test -Dtest=OrderServiceTest
+  - mvn versions:display-dependency-updates
+  parameters:
+  - description: Maven goal to run
+    name: goal
+    type: string
+  - description: Test filter
+    name: test
+    type: string
+- commands:
+  - gradle build
+  - gradle test
+  - gradle bootRun
+  - gradle dependencies
+  - gradle clean build
+  description: Build and test Gradle projects.
+  name: gradle-build
+  examples:
+  - gradle test --tests "com.example.OrderTest"
+  - gradle build -x test
+  - gradle bootJar
+  parameters:
+  - description: Gradle task to run
+    name: task
+    type: string
+  - description: Test class filter
+    name: test
+    type: string
+knowledge:
+- title: Java SE Docs
+  description: JDK reference and language guides
+  source: https://docs.oracle.com/en/java/javase/
+  type: documentation
+- title: Spring Boot Docs
+  description: Spring Boot features and deployment
+  source: https://docs.spring.io/spring-boot/
+  type: documentation
+- title: Maven Docs
+  description: Build lifecycle and plugin reference
+  source: https://maven.apache.org/guides/
+  type: documentation
+instructions: "# Java\n\nBackend services on the JVM with Maven or Gradle.\n\n## When to Use\n\n- Enterprise\
+  \ services with Spring Boot or Micronaut\n- Long-lived services needing strong typing and tooling\n\
+  - High-throughput apps where JVM GC tuning matters\n- Teams already standardized on JVM tooling\n\n\
+  ## Maven Commands\n\n```bash\nmvn clean package\nmvn test\nmvn spring-boot:run\nmvn dependency:tree\n\
+  mvn install -DskipTests\nmvn test -Dtest=OrderServiceTest\n```\n\n## Gradle Commands\n\n```bash\ngradle\
+  \ build\ngradle test --tests \"com.example.OrderTest\"\ngradle bootRun\ngradle dependencies\ngradle\
+  \ bootJar\n```\n\n## Spring Boot Example\n\n```java\n@RestController\npublic class HealthController\
+  \ {\n\n    @GetMapping(\"/health\")\n    public Map<String, String> health() {\n        return Map.of(\"\
+  status\", \"ok\");\n    }\n}\n```\n\n## Best Practices\n\n- Pin JDK and build tool versions for reproducible\
+  \ builds\n- Keep builds fast with -T (Gradle) or parallel modules\n- Use dependency:tree / gradle dependencies\
+  \ to audit transitive deps\n- Prefer records and sealed types for immutable DTOs\n- Containerize with\
+  \ a multi-stage build; JRE base image is enough\n- Enable failfast testing in CI with specific test\
+  \ filters"
+examples:
+- input: Build and run my Spring Boot app
+  output: Agent runs mvn spring-boot:run or gradle bootRun and verifies the health endpoint with curl.
+- input: Why does my Maven build fail offline?
+  output: Agent checks dependencies with dependency:tree, confirms local repo state, and fixes missing
+    plugins or mirrors.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: java.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-java
+  generic:
+    system_prompt: 'This is your domain: Java. You do it through maven-build: Build and test Maven projects.
+      The commands are real, e.g. `mvn clean package`. You run and verify the real CLI commands before
+      you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,238 @@
+{
+  "name": "pagination-designer-pagination-designer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Designs pagination for APIs and databases: offset vs cursor keysets, EXPLAIN verification, and link-format pagination contracts.",
+  "keywords": [
+    "pagination",
+    "cursor",
+    "offset",
+    "keyset",
+    "api"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pagination-designer-pagination-designer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pagination-designer"
+    },
+    "generic": {
+      "system_prompt": "You are the pagination-designer-pagination-designer specialist. You do it through sql: Prototype and verify pagination queries in SQL. The commands are real, e.g. `psql -c EXPLAIN ANALYZE SELECT * FROM items ORDER BY id LIMIT 50 OFFSET 50000;`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "sql",
+      "description": "Prototype and verify pagination queries in SQL.",
+      "commands": [
+        "psql -c 'EXPLAIN ANALYZE SELECT * FROM items ORDER BY id LIMIT 50 OFFSET 50000;'",
+        "psql -c 'EXPLAIN ANALYZE SELECT * FROM items WHERE id > 50000 ORDER BY id LIMIT 50;'",
+        "mysql -u app -e 'SELECT COUNT(*) FROM items;'",
+        "mysql -u app -e 'SELECT id, name FROM items ORDER BY id LIMIT 50 OFFSET 1000;'",
+        "sqlite3 app.db \"SELECT id FROM items ORDER BY id DESC LIMIT 1;\""
+      ],
+      "examples": [
+        "psql -c 'EXPLAIN ANALYZE SELECT * FROM orders WHERE created_at < %s ORDER BY created_at DESC, id DESC LIMIT 50;'",
+        "mysql -u app -e 'EXPLAIN SELECT * FROM items WHERE id > 50000 ORDER BY id LIMIT 50;'",
+        "sqlite3 app.db 'CREATE INDEX idx_items_id ON items(id);'"
+      ],
+      "parameters": [
+        {
+          "name": "db",
+          "type": "string",
+          "description": "Database name"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "description": "Page size"
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "description": "Offset value"
+        }
+      ]
+    },
+    {
+      "name": "api",
+      "description": "Verify paginated API responses.",
+      "commands": [
+        "curl -s 'https://api.example.com/items?limit=100&page=3' | jq '.items | length'",
+        "curl -s 'https://api.example.com/items?limit=100&cursor=abc123' | jq '.next_page'",
+        "curl -s 'https://api.example.com/items?limit=100&page=3' | jq '{count: (.items|length), next: .links.next}'",
+        "curl -s 'https://api.example.com/items?limit=1000000' -o /dev/null -w '%{http_code}\\n'",
+        "curl -s 'https://api.example.com/items?limit=50&cursor=abc' | jq '.items[0].id'"
+      ],
+      "examples": [
+        "curl -s 'https://api.example.com/items?limit=100&page=3' | jq '.links'",
+        "curl -s 'https://api.example.com/items?limit=50&cursor=abc' | jq '.items | length'",
+        "curl -s 'https://api.example.com/items?limit=-1' -o /dev/null -w '%{http_code}\\n'"
+      ],
+      "parameters": [
+        {
+          "name": "limit",
+          "type": "number",
+          "description": "Page size parameter"
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "description": "Opaque cursor token"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "description": "Offset-based page number"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "postgresql",
+    "redis"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "postgresql",
+    "redis",
+    "graphql"
+  ],
+  "examples": [
+    {
+      "input": "The admin grid is slow at page 5000.",
+      "output": "Runs EXPLAIN ANALYZE on the offset query, switches to keyset pagination with an opaque cursor, and re-verifies the plan."
+    },
+    {
+      "input": "Design a pagination contract for the items API.",
+      "output": "Defines limit/cursor params with has_more + next_cursor in responses and caps limits at 100."
+    }
+  ],
+  "instructions": "# Pagination Design\n\nPage data without surprise performance cliffs.\n\n## When to Use\n\n- API list endpoints\n- Admin grids and log viewers\n- Any ordered data access at scale\n\n## Offset vs cursor\n\n- Offset (`LIMIT/OFFSET`): simple, but O(n) skip and unstable on inserts.\n- Keyset/cursor (`WHERE id > x ORDER BY id LIMIT n`): stable, index-friendly.\n\n## Verify with EXPLAIN\n\n```bash\npsql -c 'EXPLAIN ANALYZE SELECT * FROM items ORDER BY id LIMIT 50 OFFSET 50000;'\npsql -c 'EXPLAIN ANALYZE SELECT * FROM items WHERE id > 50000 ORDER BY id LIMIT 50;'\n```\n\nAt deep pages, keyset stays index-scan fast while offset grows linearly.\n\n## API contract\n\n```json\n{\n  \"data\": [...],\n  \"pagination\": {\n    \"next_cursor\": \"abc123\",\n    \"has_more\": true\n  }\n}\n```\n\nUse opaque cursors (base64 of the composite key), never raw ids.\n\n## Edge cases\n\n- Duplicate values on the sort column: add id as tiebreaker.\n- Inserts during pagination: keyset returns consistent windows.\n- Huge limits: cap at 100 and return 400 beyond that.\n\n## Best practices\n\n- Always order by a unique key combination.\n- Enforce max page size server-side.\n- Return has_more/next to let clients iterate.\n- Test deep pagination in load tests.\n\n## Testing\n\n```bash\ncurl -s 'https://api.example.com/items?limit=100&page=3' | jq '.items | length'\ncurl -s 'https://api.example.com/items?limit=-1' -o /dev/null -w '%{http_code}\\n'\n```\n\nVerify page stability and input validation.",
+  "display_name": "pagination-designer-pagination-designer",
+  "knowledge": [
+    {
+      "title": "PostgreSQL LIMIT/OFFSET",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/queries-limit.html",
+      "description": "LIMIT and OFFSET semantics"
+    },
+    {
+      "title": "JSON:API pagination",
+      "type": "documentation",
+      "source": "https://jsonapi.org/format/#fetching-pagination",
+      "description": "Link-based pagination conventions"
+    },
+    {
+      "title": "Use the Index, Luke",
+      "type": "documentation",
+      "source": "https://use-the-index-luke.com/sql/partial-results/fetch-next-page",
+      "description": "Keyset pagination performance guide"
+    }
+  ],
+  "id": "pagination-designer-pagination-designer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sql",
+        "name": "db",
+        "type": "string",
+        "description": "Database name"
+      },
+      {
+        "capability": "sql",
+        "name": "limit",
+        "type": "number",
+        "description": "Page size"
+      },
+      {
+        "capability": "sql",
+        "name": "offset",
+        "type": "number",
+        "description": "Offset value"
+      },
+      {
+        "capability": "api",
+        "name": "limit",
+        "type": "number",
+        "description": "Page size parameter"
+      },
+      {
+        "capability": "api",
+        "name": "cursor",
+        "type": "string",
+        "description": "Opaque cursor token"
+      },
+      {
+        "capability": "api",
+        "name": "page",
+        "type": "number",
+        "description": "Offset-based page number"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "postgresql",
+    "redis"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "pagination-designer/skill/pagination-designer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/pagination-designer/skill/pagination-designer.yaml",
+    "checksum": "2dbed2e7e8b494e5b376b1a03d48c1e74bc622c09c6559c2150da18249668c8d"
+  }
+}

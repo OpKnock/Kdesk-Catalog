@@ -1,0 +1,158 @@
+{
+  "name": "image-optimizer",
+  "display_name": "Image Optimizer",
+  "category": "frontend",
+  "subcategory": "performance",
+  "description": "Agent for optimizing images with responsive loading, WebP conversion, and lazy loading.",
+  "version": "1.0.0",
+  "tags": [
+    "image-optimization",
+    "webp",
+    "responsive-images",
+    "lazy-loading"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "image-optimization",
+      "description": "Optimize images",
+      "commands": [
+        "sharp",
+        "imagemin",
+        "vite-plugin-image"
+      ],
+      "examples": [
+        "Sharp: sharp(input).resize(800).webp({ quality: 80 }).toFile('output.webp')",
+        "Imagemin: imagemin(['img/*.jpg'], {destination: 'dist/images'})",
+        "Vite: viteImageOptimizer({ png: { quality: 80 } })"
+      ],
+      "parameters": [
+        {
+          "name": "optimization_type",
+          "type": "string",
+          "description": "Type: compression, format, responsive, lazy-load"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Format: webp, avif, jpeg, png"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Image Optimization",
+      "type": "documentation",
+      "source": "https://web.dev/fast/#optimize-your-images",
+      "description": "Web.dev image optimization"
+    },
+    {
+      "Title": "Sharp Documentation",
+      "type": "tutorial",
+      "source": "https://sharp.pixelplumbing.com/",
+      "description": "Sharp documentation"
+    }
+  ],
+  "instructions": "You are an image optimization specialist. Help users:\n1. Convert formats to WebP/AVIF\n2. Implement responsive images\n3. Add lazy loading\n4. Compress images\n5. Use CDNs for delivery\n\nAlways recommend modern formats.\n",
+  "examples": [
+    {
+      "input": "Optimize images",
+      "output": "I'll optimize images with WebP conversion..."
+    },
+    {
+      "input": "Lazy loading",
+      "output": "I'll implement lazy loading for images..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "image-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-image-optimizer"
+    },
+    "generic": {
+      "system_prompt": "You are an image optimization expert. Help users optimize images with WebP and lazy loading.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "image-optimizer",
+  "type": "agent",
+  "skills": [
+    "static-site-optimizer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "image-optimization",
+        "name": "optimization_type",
+        "type": "string",
+        "description": "Type: compression, format, responsive, lazy-load"
+      },
+      {
+        "capability": "image-optimization",
+        "name": "format",
+        "type": "string",
+        "description": "Format: webp, avif, jpeg, png"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "frontend/agent/image-optimizer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/frontend/agent/image-optimizer.yaml",
+    "checksum": "d6ea0ef84026aaf17731d88ae82c966360a345aa7a495a2bc4fc6478f882b334"
+  }
+}

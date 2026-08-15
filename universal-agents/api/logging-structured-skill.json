@@ -1,0 +1,193 @@
+{
+  "name": "logging-structured",
+  "display_name": "Logging Structured",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Work with structured (JSON) logs: validate lines, filter by level/service with jq, and aggregate counts for dashboards.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "awk",
+    "grep",
+    "python3",
+    "tail"
+  ],
+  "capabilities": [
+    {
+      "name": "jq-filter",
+      "description": "Filter and project structured log fields with jq.",
+      "commands": [
+        "jq -r 'select(.level==\"error\") | .ts + \" \" + .msg' app.log",
+        "jq '. | {service, level, duration_ms}' app.log | head -20",
+        "jq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' app.log",
+        "jq -s 'group_by(.service) | map({service: .[0].service, count: length})' app.log"
+      ],
+      "examples": [
+        "jq -r 'select(.level==\"error\") | .ts + \" \" + .msg' app.log",
+        "jq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' app.log",
+        "jq -s 'group_by(.service) | map({service: .[0].service, count: length})' app.log"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "JSON log file."
+        },
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "jq filter expression."
+        }
+      ]
+    },
+    {
+      "name": "validate-produce",
+      "description": "Validate log lines parse and produce well-formed JSON logs.",
+      "commands": [
+        "grep '\"level\":\"error\"' app.log | jq -r '.msg'",
+        "python3 -m json.tool <(tail -1 app.log)",
+        "tail -f app.log | jq -r '[.ts, .level, .msg] | @tsv'",
+        "awk '!/^{/ {print \"MALFORMED: \" $0}' app.log | head"
+      ],
+      "examples": [
+        "grep '\"level\":\"error\"' app.log | jq -r '.msg'",
+        "python3 -m json.tool <(tail -1 app.log)",
+        "tail -f app.log | jq -r '[.ts, .level, .msg] | @tsv'"
+      ],
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Regex to pre-filter lines."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "jq manual",
+      "type": "documentation",
+      "source": "https://jqlang.github.io/jq/manual/",
+      "description": "jq language reference."
+    },
+    {
+      "title": "Structured Logging Best Practices",
+      "type": "documentation",
+      "source": "https://pkg.go.dev/log/slog#hdr-Levels",
+      "description": "Structured log levels and field conventions."
+    }
+  ],
+  "instructions": "# Structured Logging\n\nAnalyze and produce JSON-formatted logs with jq and Python.\n\n## What this skill does\n\n- Filters structured logs by level, service, and latency fields.\n- Projects only the fields you need for analysis.\n- Detects malformed (non-JSON) log lines.\n\n## When to use\n\n- Debugging slow requests from latency fields.\n- Building dashboards from log aggregates.\n- Enforcing structured logging in app output.\n\n## Real commands\n\n```bash\n# Error lines with timestamp + message\njq -r 'select(.level==\"error\") | .ts + \" \" + .msg' app.log\n\n# Project key fields\njq '. | {service, level, duration_ms}' app.log | head -20\n\n# Slow requests as TSV\njq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' app.log\n\n# Count by service\njq -s 'group_by(.service) | map({service: .[0].service, count: length})' app.log\n\n# Error messages via grep + jq\ngrep '\"level\":\"error\"' app.log | jq -r '.msg'\n\n# Validate the last line parses\npython3 -m json.tool <(tail -1 app.log)\n\n# Live streaming as TSV\ntail -f app.log | jq -r '[.ts, .level, .msg] | @tsv'\n\n# Find malformed lines\nawk '!/^{/ {print \"MALFORMED: \" $0}' app.log | head\n```\n\n## Log line example\n\n```json\n{\"ts\":\"2026-08-10T09:12:33Z\",\"level\":\"error\",\"service\":\"checkout\",\"msg\":\"payment declined\",\"duration_ms\":450,\"code\":\"CARD_DECLINED\"}\n```\n\n## Testing\n\n```bash\necho '{\"level\":\"info\",\"msg\":\"boot\"}' | jq -e '.level==\"info\"' && echo valid\n```\n\n## Best practices\n\n- Emit one JSON object per line; multiline JSON breaks pipelines.\n- Always include ts, level, msg, and a correlation id field.\n- Keep the schema stable; add fields, never rename existing ones.\n",
+  "examples": [
+    {
+      "input": "List all errors with timestamps",
+      "output": "jq -r 'select(.level==\"error\") | .ts + \" \" + .msg' app.log"
+    },
+    {
+      "input": "Which service logs the most?",
+      "output": "jq -s 'group_by(.service) | map({service: .[0].service, count: length})' app.log"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "logging-structured.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-logging-structured"
+    },
+    "generic": {
+      "system_prompt": "You work Logging Structured hands-on. You do it through jq-filter: Filter and project structured log fields with jq. The commands are real, e.g. `jq -r select(.level==error) | .ts + + .msg app.log`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "logging-structured",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jq-filter",
+        "name": "file",
+        "type": "string",
+        "description": "JSON log file."
+      },
+      {
+        "capability": "jq-filter",
+        "name": "filter",
+        "type": "string",
+        "description": "jq filter expression."
+      },
+      {
+        "capability": "validate-produce",
+        "name": "pattern",
+        "type": "string",
+        "description": "Regex to pre-filter lines."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "awk",
+    "grep",
+    "python3",
+    "tail"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/logging-structured-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/logging-structured-skill.yaml",
+    "checksum": "6f07ade7ff557bf6142e987bcd454048bb425ffe2aafba43755123cf53d00f15"
+  }
+}

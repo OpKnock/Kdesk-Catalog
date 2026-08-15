@@ -1,0 +1,98 @@
+name: prometheus-monitoring
+display_name: Prometheus Monitoring
+category: api
+subcategory: general
+description: 'Prometheus server operations: config, relabeling, recording rules, queries via promtool,
+  and API access.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- prometheus
+- promtool
+capabilities:
+- name: prometheus-operations
+  description: Run Prometheus, validate config and rules, run instant/range queries and manage targets.
+  commands:
+  - prometheus --config.file=prometheus.yml --storage.tsdb.path=/data/prom
+  - promtool check config prometheus.yml
+  - promtool check rules rules.yml
+  - promtool query instant 'http_requests_total' --url http://localhost:9090
+  - curl -X POST http://localhost:9090/-/reload
+  examples:
+  - promtool query instant 'sum(rate(http_requests_total[5m]))' --url http://localhost:9090
+  - promtool check config prometheus.yml && promtool check rules rules.yml
+  - curl -s 'http://localhost:9090/api/v1/targets' | jq '.data.activeTargets[].health' | sort | uniq -c
+  parameters:
+  - name: config_file
+    type: string
+    description: Path to prometheus.yml
+  - name: query
+    type: string
+    description: PromQL query string
+  - name: url
+    type: string
+    description: Prometheus API base URL
+knowledge:
+- title: Prometheus Docs
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/
+  description: Configuration, querying, rules and HTTP API
+- title: promtool reference
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/command-line/promtool/
+  description: check, query, tsdb commands
+instructions: "# Prometheus Monitoring\n\nRun and operate the Prometheus server itself: configs, targets,\
+  \ rules and queries.\n\n## What this skill does\n\n- Starts Prometheus with validated config\n- Checks\
+  \ rules and runs queries with promtool\n- Reloads config and inspects targets\n\n## When to use\n\n\
+  - Setting up scraping for a new environment\n- Debugging missing or duplicated targets\n\n## Real commands\n\
+  \n```bash\n# Run\nprometheus --config.file=prometheus.yml --storage.tsdb.path=/data/prom\n\n# Validate\
+  \ before reload\npromtool check config prometheus.yml\npromtool check rules rules.yml\n\n# Reload without\
+  \ restart\ncurl -X POST http://localhost:9090/-/reload\n\n# Queries\npromtool query instant 'sum(rate(http_requests_total[5m]))'\
+  \ --url http://localhost:9090\npromtool query range 'http_requests_total' --start=... --end=... --step=30s\
+  \ --url http://localhost:9090\n\n# Targets\ncurl -s 'http://localhost:9090/api/v1/targets' | jq '.data.activeTargets[].health'\n\
+  ```\n\n## prometheus.yml essentials\n\n```yaml\nglobal:\n  scrape_interval: 15s\nscrape_configs:\n-\
+  \ job_name: app\n  static_configs:\n  - targets: ['localhost:8080']\n```\n\n## Best practices\n\n- Run\
+  \ promtool check config in CI\n- Use -/reload instead of restarts\n- Alert on up == 0 for every job"
+examples:
+- input: Scrape a new service on port 8080
+  output: The agent adds a scrape_config, validates with promtool, reloads via -/reload and checks the
+    targets API.
+- input: My query returns no data
+  output: The agent checks target health, label matching and time range issues.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: prometheus-monitoring.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-prometheus-monitoring
+  generic:
+    system_prompt: 'You take the Prometheus Monitoring seat. You do it through prometheus-operations:
+      Run Prometheus, validate config and rules, run instant/range queries and manage targets. The commands
+      are real, e.g. `prometheus --config.file=prometheus.yml --storage.tsdb.path=/data/prom`. You run
+      and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

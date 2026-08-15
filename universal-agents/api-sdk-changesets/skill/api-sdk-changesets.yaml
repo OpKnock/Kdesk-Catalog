@@ -1,0 +1,166 @@
+name: api-sdk-changesets
+version: 2.0.0
+type: skill
+category: backend
+description: 'Manages SDK versioning and releases with changesets: change tracking, version bumps, changelogs,
+  and semantic-release automation.'
+keywords:
+- api-sdk
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-sdk-changesets.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-sdk-changesets
+  generic:
+    system_prompt: 'This is your domain: Api Sdk Changesets. You do it through changesets: Track SDK changes
+      with changesets. The commands are real, e.g. `npx @changesets/cli init`. You run and verify the
+      real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: changesets
+  description: Track SDK changes with changesets
+  commands:
+  - npx @changesets/cli init
+  - npx changeset
+  - npx changeset version
+  - npx changeset status
+  - npx changeset publish
+  examples:
+  - npx changeset adds a changeset file
+  - changeset version bumps versions and changelogs
+  - changeset publish releases to npm
+  parameters:
+  - name: semver
+    type: string
+    description: major, minor, or patch bump
+  - name: package
+    type: string
+    description: Package to release
+  - name: tag
+    type: string
+    description: npm dist-tag
+- name: semantic-release
+  description: Automate releases from commit messages
+  commands:
+  - npx semantic-release --dry-run
+  - npx semantic-release
+  - npm version major
+  - git tag -a v2.0.0 -m 'SDK v2.0.0'
+  examples: []
+  parameters: []
+prerequisites:
+- openapi-generator
+- node.js
+- python
+tools:
+- openapi-generator
+- node.js
+- python
+- typescript
+examples:
+- input: Release SDK v1.1.0
+  output: Adds a patch changeset, runs version and publish
+- input: Preview a release
+  output: Runs semantic-release --dry-run to verify the next version
+instructions: '# API SDK v5 - Releases
+
+
+  SDK versioning and release automation.
+
+
+  ## What This Skill Does
+
+  - Tracks changes with changesets
+
+  - Bumps versions and writes changelogs
+
+  - Automates publishing with semantic-release
+
+
+  ## When to Use
+
+  - Multi-package SDK releases
+
+  - Enforcing semver discipline
+
+  - Automating npm publishing
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npx @changesets/cli init
+
+  npx changeset
+
+  npx changeset version
+
+  npx changeset publish
+
+  npx semantic-release --dry-run
+
+  ```
+
+
+  ## Changeset Flow
+
+  1. Author changes: npx changeset
+
+  2. Version: npx changeset version
+
+  3. Publish: npx changeset publish
+
+
+  ## Testing
+
+  - Run version bumps in a dry run
+
+  - Verify changelog entries per release
+
+  - Test publish on a canary tag
+
+
+  ## Best Practices
+
+  - Require changesets for all PRs
+
+  - Use semver ranges intentionally
+
+  - Automate release notes from changelogs'
+display_name: Api Sdk Changesets
+knowledge:
+- title: Changesets
+  type: documentation
+  source: https://github.com/changesets/changesets
+  description: Versioning and changelog tooling
+- title: Semantic Release
+  type: documentation
+  source: https://semantic-release.gitbook.io/
+  description: Automated release tool

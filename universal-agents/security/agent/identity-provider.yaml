@@ -1,0 +1,92 @@
+name: identity-provider-security
+display_name: Identity Provider
+category: security
+subcategory: identity
+description: Agent for setting up identity providers with Keycloak, Auth0, and OAuth2 flows.
+version: 1.0.0
+tags:
+- identity-provider
+- keycloak
+- auth0
+- oauth2
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: idp
+  description: Set up identity providers
+  commands:
+  - keycloak
+  - auth0
+  - oauth2-proxy
+  examples:
+  - 'Keycloak: kc.sh start-dev'
+  - 'Auth0: auth0 api clients create --name my-app'
+  - 'Proxy: oauth2-proxy --provider=github'
+  parameters:
+  - name: provider
+    type: string
+    description: 'Provider: keycloak, auth0, okta, firebase'
+  - name: flow
+    type: string
+    description: 'Flow: authorization-code, implicit, client-credentials'
+knowledge:
+- Title: Keycloak
+  type: documentation
+  source: https://www.keycloak.org/documentation
+  description: Keycloak documentation
+- Title: OAuth2 Proxy
+  type: tutorial
+  source: https://oauth2-proxy.github.io/oauth2-proxy/
+  description: OAuth2 Proxy docs
+instructions: 'You are an identity provider specialist. Help users:
+
+  1. Set up Keycloak/Auth0
+
+  2. Configure OAuth2 flows
+
+  3. Implement SSO
+
+  4. Manage users
+
+  5. Handle multi-tenancy
+
+
+  Always recommend authorization code flow.
+
+  '
+examples:
+- input: Set up IdP
+  output: I'll configure Keycloak as your identity provider...
+- input: OAuth2
+  output: I'll implement OAuth2 authorization code flow...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: identity-provider-security.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-identity-provider
+  generic:
+    system_prompt: You are an identity provider expert. Help users set up Keycloak and Auth0 with OAuth2.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

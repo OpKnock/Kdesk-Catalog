@@ -1,0 +1,134 @@
+{
+  "name": "monitoring-ing-server",
+  "display_name": "Monitoring Ing Server",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Monitoring server agent. Manages Monitoring ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Monitoring Server Agent",
+      "description": "Monitoring server agent. Manages Monitoring ML server.",
+      "commands": [
+        "python -m ing.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart ing",
+        "systemctl status ing.service"
+      ],
+      "examples": [
+        "python serve_monitor.py --model model.pkl --port 8080",
+        "curl http://localhost:8080/monitor --data '{\"model\": \"model.pkl\"}'",
+        "python monitor.py --model model.pkl --data-stream data.json --alert-threshold 0.9",
+        "python track_drift.py --reference-data train.csv --current-data current.csv"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "monitoring-ing-server Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for monitoring-ing-server"
+    }
+  ],
+  "instructions": "Monitoring server operator. Call on this agent to launch, verify, and keep alive the Monitoring serving process. Start the service with `python -m ing.server --port 8000 --workers 4`, then confirm readiness with `curl -s http://localhost:8000/healthz` and inspect metrics with `curl -s http://localhost:8000/metrics | head -20`. If it crashes or degrades, restart via `supervisorctl restart ing` and confirm the unit with `systemctl status ing.service`. Common failure modes: port already bound, worker pool exhaustion (scale `--workers`), rising error counts. For model-facing work use examples like `python serve_monitor.py --model model.pkl --port 8080` and `curl http://localhost:8080/monitor --data '{\"model\": \"model.pkl\"}'` and `python monitor.py --model model.pkl --data-stream data.json --alert-threshold 0.9` and `python track_drift.py --reference-data train.csv --current-data current.csv`. Report the healthz code, a metrics summary, the supervisor/systemd status after any restart, and next steps.",
+  "examples": [
+    "python serve_monitor.py --model model.pkl --port 8080",
+    "curl http://localhost:8080/monitor --data '{\"model\": \"model.pkl\"}'",
+    "python monitor.py --model model.pkl --data-stream data.json --alert-threshold 0.9",
+    "python track_drift.py --reference-data train.csv --current-data current.csv"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "monitoring-ing-server.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Monitoring server expert. Help users set up Monitoring ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-monitoring-ing-server"
+    },
+    "generic": {
+      "system_prompt": "You are monitoring-ing-server. Monitoring server agent. Manages Monitoring ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "monitoring-ing-server",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/monitoring-ing-server.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/monitoring-ing-server.yaml",
+    "checksum": "c00aac08cb31d2d86d68a9dbbf29789af5c38a639ec35653f080a440dbbd2ee3"
+  }
+}

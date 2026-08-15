@@ -1,0 +1,210 @@
+{
+  "name": "polaris",
+  "display_name": "polaris",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Audits Kubernetes workloads against best-practice checks and runs an in-cluster dashboard with Fairwinds Polaris.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "helm",
+    "kubectl",
+    "polaris"
+  ],
+  "capabilities": [
+    {
+      "name": "polaris-audit",
+      "description": "Audit manifests or live clusters with exit-code gating.",
+      "commands": [
+        "polaris audit --audit-path .",
+        "polaris audit --audit-path manifests/ --set-exit-code-below-score 80",
+        "polaris audit --audit-path . --config polaris.yaml",
+        "polaris audit --audit-path . --only-checks resources",
+        "polaris audit --audit-path . --output sarif"
+      ],
+      "examples": [
+        "polaris audit --audit-path . --set-exit-code-below-score 75",
+        "polaris audit --audit-path . --only-checks healthchecks",
+        "polaris audit --audit-path manifests/ --output report.html"
+      ],
+      "parameters": [
+        {
+          "name": "auditPath",
+          "type": "string",
+          "description": "Path to manifests or kubeconfig for live audit"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Custom configuration YAML path"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Report format: json, html, sarif, score"
+        }
+      ]
+    },
+    {
+      "name": "dashboard",
+      "description": "Run the Polaris web dashboard in-cluster.",
+      "commands": [
+        "polaris dashboard --port 8080",
+        "kubectl port-forward svc/polaris-dashboard 8080:80 -n polaris",
+        "helm install polaris fairwinds-stable/polaris",
+        "polaris dashboard --audit-path . --port 8080"
+      ],
+      "examples": [
+        "polaris dashboard --port 8080",
+        "helm install polaris fairwinds-stable/polaris",
+        "kubectl port-forward svc/polaris 8080:80 -n polaris"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "string",
+          "description": "Dashboard listen port"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace of the dashboard service"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Polaris Documentation",
+      "type": "documentation",
+      "source": "https://polaris.docs.fairwinds.com/",
+      "description": "Checks, configuration, and CLI usage"
+    },
+    {
+      "title": "Fairwinds Polaris GitHub",
+      "type": "documentation",
+      "source": "https://github.com/FairwindsOps/polaris",
+      "description": "Check catalog and dashboard setup"
+    }
+  ],
+  "instructions": "# Polaris\n\nAudit Kubernetes workloads against security and best-practice checks.\n\n## What This Skill Does\n\n- Audits manifests or live clusters against built-in checks\n- Returns scores per workload and category\n- Gates CI with --set-exit-code-below-score\n- Runs a visual dashboard for remediation tracking\n\n## When to Use\n\n- Workload hardening before rollout\n- Enforcing minimum scores on manifests in CI\n- Reviewing cluster-wide workload hygiene\n\n## Real Commands\n\n```bash\n# Audit manifests\npolaris audit --audit-path .\n\n# Score gate in CI\npolaris audit --audit-path . --set-exit-code-below-score 80\n\n# Custom config\npolaris audit --audit-path . --config polaris.yaml\n\n# Targeted checks\npolaris audit --audit-path . --only-checks resources,healthchecks\n\n# Reports\npolaris audit --audit-path . --output report.html\npolaris audit --audit-path . --output sarif\n\n# Dashboard\npolaris dashboard --port 8080\n```\n\n## Sample Config\n\n```yaml\nchecks:\n  resources:\n    cpuRequestsMissing:\n      successMessage: CPU requests set\n      severity: warning\n  security:\n    runAsRootAllowed:\n      severity: error\n```\n\n## Best Practices\n\n- Start with audit-only, then enforce score gates\n- Customize severities in config; don't delete checks silently\n- Run per-chart manifests to catch Helm template output issues\n- Pair with resource limit admission policies for hard enforcement\n- Track scores over time in CI artifacts",
+  "examples": [
+    {
+      "input": "Score my deployment manifests",
+      "output": "Agent runs polaris audit --audit-path . --output json and breaks down scores by workload and check category with remediation."
+    },
+    {
+      "input": "Fail CI when workloads drop below 80",
+      "output": "Agent adds polaris audit --audit-path . --set-exit-code-below-score 80 to the pipeline and shows sample failing checks."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "polaris.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-polaris"
+    },
+    "generic": {
+      "system_prompt": "Your lane is polaris. You do it through polaris-audit: Audit manifests or live clusters with exit-code gating. The commands are real, e.g. `polaris audit --audit-path .`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "polaris",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "polaris-audit",
+        "name": "auditPath",
+        "type": "string",
+        "description": "Path to manifests or kubeconfig for live audit"
+      },
+      {
+        "capability": "polaris-audit",
+        "name": "config",
+        "type": "string",
+        "description": "Custom configuration YAML path"
+      },
+      {
+        "capability": "polaris-audit",
+        "name": "output",
+        "type": "string",
+        "description": "Report format: json, html, sarif, score"
+      },
+      {
+        "capability": "dashboard",
+        "name": "port",
+        "type": "string",
+        "description": "Dashboard listen port"
+      },
+      {
+        "capability": "dashboard",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace of the dashboard service"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "helm",
+    "kubectl",
+    "polaris"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/polaris-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/polaris-skill.yaml",
+    "checksum": "6aa8ebf10253ec51ef63ce0aa0a9ab286c273893adaa76716fee6647c1c73a12"
+  }
+}

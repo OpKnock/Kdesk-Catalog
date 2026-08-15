@@ -1,0 +1,206 @@
+{
+  "name": "api-cache-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Implements API caching layers: Redis cache-aside with TTLs, HTTP conditional caching, and cache monitoring basics.",
+  "keywords": [
+    "api-caching",
+    "redis",
+    "etag"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-cache-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-cache-engineer"
+    },
+    "generic": {
+      "system_prompt": "You take the api-cache-engineer seat. You do it through redis-ops: Operate Redis caches: keys, TTLs, eviction, and hit-ratio checks. The commands are real, e.g. `redis-cli SET api:users:42 {id:42} EX 300`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "redis-ops",
+      "description": "Operate Redis caches: keys, TTLs, eviction, and hit-ratio checks",
+      "commands": [
+        "redis-cli SET api:users:42 '{\"id\":42}' EX 300",
+        "redis-cli GET api:users:42",
+        "redis-cli TTL api:users:42",
+        "redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'",
+        "redis-cli --scan --pattern 'api:*' | head -20"
+      ],
+      "examples": [
+        "redis-cli SET api:users:42 '{\"id\":42}' EX 300 && redis-cli TTL api:users:42",
+        "redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'",
+        "redis-cli --scan --pattern 'api:*' | head -20"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Cache key"
+        },
+        {
+          "name": "ttl",
+          "type": "string",
+          "description": "TTL seconds"
+        }
+      ]
+    },
+    {
+      "name": "conditional-requests",
+      "description": "Implement ETag and If-None-Match conditional responses",
+      "commands": [
+        "curl -s -D - http://localhost:3000/api/users/42 | grep -i etag",
+        "curl -s -H 'If-None-Match: \"etag123\"' -o /dev/null -w '%{http_code}' http://localhost:3000/api/users/42",
+        "node -e \"const c=require('crypto');const h=c.createHash('sha1').update(JSON.stringify({id:42})).digest('hex');console.log('ETag: \\\"'+h+'\\\"')\"",
+        "curl -s -H 'If-None-Match: *' -o /dev/null -w '%{http_code}' -X PUT http://localhost:3000/api/users/42 -d '{}'",
+        "curl -s -D - http://localhost:3000/api/users/42 | grep -i -E 'etag|cache-control'"
+      ],
+      "examples": [
+        "curl -s -H 'If-None-Match: \"etag123\"' -o /dev/null -w '%{http_code}' http://localhost:3000/api/users/42",
+        "node -e \"const c=require('crypto');const h=c.createHash('sha1').update(JSON.stringify({id:42})).digest('hex');console.log('ETag: \\\"'+h+'\\\"')\"",
+        "curl -s -D - http://localhost:3000/api/users/42 | grep -i -E 'etag|cache-control'"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Endpoint URL"
+        },
+        {
+          "name": "etag",
+          "type": "string",
+          "description": "ETag value"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "redis",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "redis",
+    "node.js",
+    "python",
+    "varnish",
+    "express"
+  ],
+  "examples": [
+    {
+      "input": "Add HTTP caching to user endpoints",
+      "output": "Adds ETag generation and conditional request handling with 304 responses"
+    },
+    {
+      "input": "Implement Redis caching for profile lookups",
+      "output": "Cache-aside for profiles with 5-minute TTLs and invalidation on profile updates"
+    }
+  ],
+  "instructions": "# API Cache Engineer\n\nImplements practical caching: Redis stores plus HTTP conditional requests.\n\n## When to Use\n- Reducing database pressure\n- Speeding up hot endpoints\n- Adding cache to a new service\n\n## Real Commands\n\n```bash\n# Redis basics\nredis-cli SET api:users:42 '{\"id\":42}' EX 300\nredis-cli TTL api:users:42\nredis-cli GET api:users:42\n\n# Hit ratio\nredis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'\n\n# Conditional requests\ncurl -s -D - http://localhost:3000/api/users/42 | grep -i etag\ncurl -s -H 'If-None-Match: \"etag123\"' -o /dev/null -w '%{http_code}' http://localhost:3000/api/users/42\n```\n\n## Cache-aside Recipe\n1. Read key\n2. Miss: load from DB, SET with TTL\n3. Hit: return cached\n4. Write: DEL key\n\n## Testing\nVerify 304 responses for unchanged resources and key expiry with TTL.\n\n## Best Practices\n- Namespace keys by resource and version\n- Monitor keyspace hits/misses weekly",
+  "display_name": "api-cache-engineer",
+  "knowledge": [
+    {
+      "title": "Redis Commands",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/",
+      "description": "SET, GET, TTL, INFO"
+    },
+    {
+      "title": "ETag Conditional Requests",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag",
+      "description": "ETag semantics"
+    }
+  ],
+  "id": "api-cache-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-ops",
+        "name": "key",
+        "type": "string",
+        "description": "Cache key"
+      },
+      {
+        "capability": "redis-ops",
+        "name": "ttl",
+        "type": "string",
+        "description": "TTL seconds"
+      },
+      {
+        "capability": "conditional-requests",
+        "name": "url",
+        "type": "string",
+        "description": "Endpoint URL"
+      },
+      {
+        "capability": "conditional-requests",
+        "name": "etag",
+        "type": "string",
+        "description": "ETag value"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-cache-engineer/skill/api-cache-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-cache-engineer/skill/api-cache-engineer.yaml",
+    "checksum": "ba4cff301aa98839e6247e5a979453dc83396e0723172805eb2cdb2a36a2d822"
+  }
+}

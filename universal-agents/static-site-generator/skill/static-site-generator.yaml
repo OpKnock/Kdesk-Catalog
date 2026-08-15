@@ -1,0 +1,152 @@
+name: static-site-generator
+version: 2.0.0
+type: skill
+category: frontend
+description: Builds and serves static sites with Hugo and Eleventy, managing content, themes, and production
+  builds.
+keywords:
+- static-site
+- hugo
+- eleventy
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: static-site-generator.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-static-site-generator
+  generic:
+    system_prompt: 'You are the static-site-generator specialist. You do it through hugo-build: Scaffold,
+      develop, and build Hugo sites. The commands are real, e.g. `hugo new site mysite`. You verify each
+      step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: hugo-build
+  description: Scaffold, develop, and build Hugo sites.
+  commands:
+  - hugo new site mysite
+  - hugo new posts/first-post.md
+  - hugo server -D
+  - hugo -D
+  - hugo list all
+  examples:
+  - hugo new site mysite && cd mysite && hugo server -D
+  - hugo new posts/hello-world.md
+  - hugo -D --minify
+  parameters:
+  - name: draft
+    type: boolean
+    description: Include draft content (-D)
+  - name: minify
+    type: boolean
+    description: Minify output HTML/CSS/JS
+  - name: baseURL
+    type: string
+    description: Site base URL for the build
+- name: eleventy-build
+  description: Scaffold, serve, and build Eleventy sites.
+  commands:
+  - npx @11ty/eleventy --input=src --output=dist
+  - npx @11ty/eleventy --serve
+  - npx @11ty/eleventy --watch
+  - npx @11ty/eleventy --quiet
+  - npx @11ty/eleventy --config=.eleventy.cjs --pathprefix=/docs
+  examples:
+  - npx @11ty/eleventy --input=src --output=dist
+  - npx @11ty/eleventy --serve
+  - npx @11ty/eleventy --pathprefix=/blog
+  parameters:
+  - name: input
+    type: string
+    description: Source content directory
+  - name: output
+    type: string
+    description: Output directory
+  - name: pathprefix
+    type: string
+    description: Sub-path prefix for the site
+- name: content-publishing
+  description: Manage content, taxonomies, and deployment output.
+  commands:
+  - hugo new docs/guide/_index.md
+  - hugo --gc --minify --enableGitInfo
+  - hugo list drafts
+  - hugo config
+  - hugo env
+  examples:
+  - hugo --gc --minify --enableGitInfo
+  - hugo list drafts
+  - hugo config
+  parameters:
+  - name: gc
+    type: boolean
+    description: Clean up generated cache
+  - default: public
+    description: Destination directory for the generated site.
+    name: outputDir
+    type: string
+prerequisites:
+- hugo
+- node.js
+- netlify
+- vercel
+tools:
+- hugo
+- next.js
+- astro
+- eleventy
+- netlify-cli
+- vercel-cli
+examples:
+- input: Start a documentation site
+  output: Agent scaffolds with hugo new site, adds a theme and content, and serves it with hugo server
+    -D for preview.
+- input: Build the site for production
+  output: Agent runs hugo --gc --minify --enableGitInfo and explains the dist output and CDN deployment
+    options.
+instructions: "# Static Site Generation\n\nBuild fast static sites with Hugo and Eleventy.\n\n## What\
+  \ This Skill Does\n\n- Scaffolds sites and content with Hugo/Eleventy CLIs\n- Serves live-preview dev\
+  \ servers with drafts\n- Produces minified production builds\n- Manages taxonomies, drafts, and git-based\
+  \ deploy info\n\n## When to Use\n\n- Creating documentation or marketing sites\n- Migrating a slow dynamic\
+  \ site to static\n- Building a blog with markdown content\n\n## Real Commands\n\n```bash\n# Hugo\nhugo\
+  \ new site mysite\nhugo new posts/first-post.md\nhugo server -D\nhugo -D --minify\nhugo --gc --minify\
+  \ --enableGitInfo\nhugo list drafts\n\n# Eleventy\nnpx @11ty/eleventy --input=src --output=dist\nnpx\
+  \ @11ty/eleventy --serve\nnpx @11ty/eleventy --config=.eleventy.cjs --pathprefix=/blog\n```\n\n## Hugo\
+  \ Config (hugo.toml)\n\n```toml\nbaseURL = \"https://example.com/\"\ntitle = \"Docs\"\nenableGitInfo\
+  \ = true\n[minify]\n  minifyOutput = true\n[params]\n  description = \"Product documentation\"\n```\n\
+  \n## Best Practices\n\n- Keep content in markdown with front matter for metadata\n- Build with --minify\
+  \ and --gc for production\n- Set --enableGitInfo so pages show last-modified dates\n- Use a single content\
+  \ directory convention per team\n- Deploy the static output via any CDN or object storage"
+display_name: static-site-generator
+knowledge:
+- title: Hugo Documentation
+  type: documentation
+  source: https://gohugo.io/documentation/
+  description: Site creation, content organization, and deployment
+- title: Eleventy Documentation
+  type: documentation
+  source: https://www.11ty.dev/docs/
+  description: Configuration, templates, and data files

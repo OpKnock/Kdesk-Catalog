@@ -1,0 +1,179 @@
+name: api-integration-specialist
+version: 2.0.0
+type: skill
+category: backend
+description: 'Deep expertise in API integrations: webhook signature verification, rate-limit handling,
+  provider contracts, and integration testing.'
+keywords:
+- api-integration
+- webhooks
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-integration-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-integration-specialist
+  generic:
+    system_prompt: 'You own api-integration-specialist end to end. You do it through webhook-security:
+      Verify webhook signatures and secure secret rotation. The commands are real, e.g. `node -e const
+      c=require(crypto);const sig=c.createHmac(sha256,whsec_test).update(payload)....`. You verify each
+      step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: webhook-security
+  description: Verify webhook signatures and secure secret rotation
+  commands:
+  - node -e "const c=require('crypto');const sig=c.createHmac('sha256','whsec_test').update('payload').digest('hex');console.log('sig:',sig)"
+  - node -e "const c=require('crypto');const secret='whsec_test';const sig=c.createHmac('sha256',secret).update('{\"id\":1}').digest('hex');console.log(sig)"
+  - 'curl -s -X POST http://localhost:3000/webhooks/stripe -H ''Content-Type: application/json'' -H ''Stripe-Signature:
+    t=123,v1=abc'' -d ''{"id":"evt_1"}'' -w ''\n%{http_code}'''
+  - stripe listen --forward-to localhost:3000/webhooks/stripe
+  - 'node -e "console.log(''rotate: whsec_old -> whsec_new with dual-accept window'')"'
+  examples:
+  - node -e "const c=require('crypto');const sig=c.createHmac('sha256','whsec_test').update('payload').digest('hex');console.log('sig:',sig)"
+  - 'curl -s -X POST http://localhost:3000/webhooks/stripe -H ''Content-Type: application/json'' -H ''Stripe-Signature:
+    t=123,v1=abc'' -d ''{"id":"evt_1"}'' -w ''\n%{http_code}'''
+  - stripe listen --forward-to localhost:3000/webhooks/stripe
+  parameters:
+  - name: secret
+    type: string
+    description: Webhook signing secret
+  - name: header
+    type: string
+    description: Signature header name
+- name: provider-testing
+  description: Test integrations against provider sandboxes and simulated failures
+  commands:
+  - stripe trigger payment_intent.failed
+  - stripe trigger invoice.finalized
+  - 'curl -s -X POST http://localhost:3000/api/integrations/simulate -H ''Content-Type: application/json''
+    -d ''{"failure":"timeout"}'''
+  - node -e "const p=require('p-retry');p(()=>{if(Math.random()<0.5)throw new Error('sim');return 'ok'},{retries:3}).then(console.log).catch(console.error)"
+  - npm install chaos-monkey
+  examples:
+  - stripe trigger payment_intent.failed
+  - stripe trigger invoice.finalized
+  - node -e "const p=require('p-retry');p(()=>{if(Math.random()<0.5)throw new Error('sim');return 'ok'},{retries:3}).then(console.log).catch(console.error)"
+  parameters:
+  - name: event
+    type: string
+    description: Failure event to simulate
+  - name: failure
+    type: string
+    description: Failure type
+prerequisites:
+- node.js
+- python
+- ngrok
+- redis
+tools:
+- node.js
+- python
+- ngrok
+- redis
+- stripe-cli
+- twilio-cli
+examples:
+- input: Verify Stripe webhook signatures
+  output: Implements HMAC verification with timestamp tolerance and rejects tampered payloads
+- input: Test integration failure modes
+  output: Simulates timeouts, 5xx, and duplicate events to prove retry and idempotency behavior
+instructions: '# API Integration Specialist
+
+
+  Masters the hard parts of integrations: security, testing, and failure handling.
+
+
+  ## When to Use
+
+  - Webhook tampering is a risk
+
+  - Provider failures must be simulated
+
+  - Rate limits and quotas bite
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Verify signatures
+
+  node -e "const c=require(''crypto'');const sig=c.createHmac(''sha256'',''whsec_test'').update(''payload'').digest(''hex'');console.log(''sig:'',sig)"
+
+
+  # Simulate provider events
+
+  stripe trigger payment_intent.failed
+
+  stripe trigger invoice.finalized
+
+
+  # Simulate failures
+
+  node -e "const p=require(''p-retry'');p(()=>{if(Math.random()<0.5)throw new Error(''sim'');return ''ok''},{retries:3}).then(console.log).catch(console.error)"
+
+
+  # Live forwarding
+
+  stripe listen --forward-to localhost:3000/webhooks/stripe
+
+  ```
+
+
+  ## Signature Flow
+
+  1. Extract header `t=timestamp,v1=hex`
+
+  2. Recompute HMAC over `t.payload`
+
+  3. Timing-safe compare
+
+  4. Reject stale timestamps
+
+
+  ## Testing
+
+  Simulate duplicates, reorders, and tampered payloads in a test suite.
+
+
+  ## Best Practices
+
+  - Dual-accept old and new secrets during rotation
+
+  - Idempotent processing for every event'
+display_name: api-integration-specialist
+knowledge:
+- title: Stripe Webhook Signatures
+  type: documentation
+  source: https://docs.stripe.com/webhooks/signatures
+  description: Signature verification details
+- title: Webhooks Best Practices
+  type: documentation
+  source: https://webhooks.fyi/
+  description: Delivery and verification guidance

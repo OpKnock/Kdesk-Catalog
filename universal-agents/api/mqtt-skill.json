@@ -1,0 +1,173 @@
+{
+  "name": "mqtt",
+  "display_name": "Mqtt",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Core MQTT protocol expertise: pub/sub semantics, QoS levels, retained messages, wildcards, and client tooling.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mosquitto_pub",
+    "mosquitto_sub"
+  ],
+  "capabilities": [
+    {
+      "name": "mqtt-protocol",
+      "description": "Work with MQTT fundamentals using mosquitto clients: QoS, retained messages, wildcard subscriptions and will messages.",
+      "commands": [
+        "mosquitto_pub -t sensors/temp -m \"21.5\"",
+        "mosquitto_sub -t 'sensors/#' -v",
+        "mosquitto_pub -t alarms/device1 -m \"on\" -q 2 -r",
+        "mosquitto_sub -t 'orders/+/status' -v",
+        "mosquitto_pub -t gate/lastwill -m \"offline\" --will-topic gate/status --will-payload \"dead\""
+      ],
+      "examples": [
+        "mosquitto_pub -t 'sensors/+/temp' -m 21.5 -q 1",
+        "mosquitto_sub -t '#' -v",
+        "mosquitto_pub -t status -m online -r"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic with optional + or # wildcards"
+        },
+        {
+          "name": "qos",
+          "type": "integer",
+          "description": "QoS level 0, 1, or 2"
+        },
+        {
+          "name": "retain",
+          "type": "boolean",
+          "description": "Keep the last message on the topic for new subscribers"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MQTT.org",
+      "type": "documentation",
+      "source": "https://mqtt.org/",
+      "description": "MQTT specification and ecosystem overview"
+    },
+    {
+      "title": "MQTT Essentials",
+      "type": "documentation",
+      "source": "https://www.hivemq.com/blog/mqtt-essentials-part-1-introducing-mqtt/",
+      "description": "QoS, topics, retained messages, will messages explained"
+    }
+  ],
+  "instructions": "# MQTT\n\nMQTT is a lightweight pub/sub messaging protocol for constrained networks and IoT.\n\n## What this skill does\n\n- Explains and exercises core protocol features\n- Publishes and subscribes with the reference clients\n- Demonstrates QoS, retained, wildcards and will messages\n\n## When to use\n\n- Designing topic hierarchies for a system\n- Choosing QoS for delivery guarantees\n- Debugging message flows on a broker\n\n## Real commands\n\n```bash\n# Basic pub/sub\nmosquitto_pub -t sensors/temp -m \"21.5\"\nmosquitto_sub -t 'sensors/#' -v\n\n# QoS 2 with retain\nmosquitto_pub -t alarms/device1 -m \"on\" -q 2 -r\n\n# Single-level wildcard +\nmosquitto_sub -t 'orders/+/status' -v\n\n# Retained status and will message\nmosquitto_pub -t status -m online -r\nmosquitto_pub -t gate/lastwill -m \"x\" --will-topic gate/status --will-payload \"dead\"\n\n# Everything\nmosquitto_sub -t '#' -v\n```\n\n## Topic design\n\n- Hierarchy: `domain/device/sensor` (e.g. `factory/line1/robot3/temp`)\n- `#` multi-level wildcard, `+` single level\n- `$SYS` topics are broker-internal\n\n## QoS cheat sheet\n\n- 0: at most once (fire and forget)\n- 1: at least once (duplicates possible)\n- 2: exactly once (2-way handshake)\n\n## Best practices\n\n- Design topics before writing clients\n- Use retain only for state that must survive restarts\n- Prefer QoS 1 unless exactly-once is contractually required",
+  "examples": [
+    {
+      "input": "Which QoS should I use for door-lock commands?",
+      "output": "The agent explains QoS 1/2 trade-offs and recommends QoS 1 with retained state plus idempotent command handling."
+    },
+    {
+      "input": "Verify all messages on my broker for debugging",
+      "output": "The agent runs `mosquitto_sub -t '#' -v` and shows how to correlate publishes."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mqtt.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mqtt"
+    },
+    "generic": {
+      "system_prompt": "You take the Mqtt seat. You do it through mqtt-protocol: Work with MQTT fundamentals using mosquitto clients: QoS, retained messages, wildcard subscriptions and will messages. The commands are real, e.g. `mosquitto_pub -t sensors/temp -m 21.5`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mqtt",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "mqtt-protocol",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic with optional + or # wildcards"
+      },
+      {
+        "capability": "mqtt-protocol",
+        "name": "qos",
+        "type": "integer",
+        "description": "QoS level 0, 1, or 2"
+      },
+      {
+        "capability": "mqtt-protocol",
+        "name": "retain",
+        "type": "boolean",
+        "description": "Keep the last message on the topic for new subscribers"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mosquitto_pub",
+    "mosquitto_sub"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/mqtt-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/mqtt-skill.yaml",
+    "checksum": "eb39a4a74da186ee41bb83ead9d4b49e34b8ac3b2e7fac4060cbd0f726d81c0a"
+  }
+}

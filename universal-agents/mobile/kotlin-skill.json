@@ -1,0 +1,236 @@
+{
+  "name": "kotlin",
+  "display_name": "Kotlin",
+  "category": "mobile",
+  "subcategory": "general",
+  "description": "Develops Android apps with Kotlin and Gradle: builds, tests, linting, and ktlint formatting checks.",
+  "version": "2.0.0",
+  "tags": [
+    "kotlin"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./gradlew",
+    "gradle",
+    "java",
+    "kotlinc",
+    "ktlint"
+  ],
+  "capabilities": [
+    {
+      "name": "gradle",
+      "description": "Build and test Android/Kotlin projects with Gradle.",
+      "commands": [
+        "gradle wrapper --gradle-version 8.10",
+        "./gradlew build",
+        "./gradlew testDebugUnitTest",
+        "./gradlew assembleDebug",
+        "./gradlew --status"
+      ],
+      "examples": [
+        "./gradlew build --daemon --offline",
+        "./gradlew testReleaseUnitTest --tests 'com.example.api.*'",
+        "./gradlew assembleRelease --stacktrace"
+      ],
+      "parameters": [
+        {
+          "name": "task",
+          "type": "string",
+          "description": "Gradle task like assembleDebug, test, lint"
+        },
+        {
+          "name": "tests",
+          "type": "string",
+          "description": "Test class filter with --tests"
+        },
+        {
+          "name": "stacktrace",
+          "type": "string",
+          "description": "Full stack traces on failure"
+        }
+      ]
+    },
+    {
+      "name": "kotlin-tools",
+      "description": "Format, lint, and run Kotlin scripts.",
+      "commands": [
+        "ktlint 'src/**/*.kt'",
+        "ktlint -F 'src/**/*.kt'",
+        "kotlinc -script build-data.kts",
+        "kotlinc -version",
+        "java -jar ktlint.jar --reporter=json,output=ktlint-report.json"
+      ],
+      "examples": [
+        "ktlint --code-style=official 'src/**/*.kt'",
+        "kotlinc -script stats.kts -- data.csv",
+        "ktlint -F --editorconfig=.editorconfig 'src/**/*.kt'"
+      ],
+      "parameters": [
+        {
+          "name": "glob",
+          "type": "string",
+          "description": "Kotlin file glob"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Auto-fix with -F"
+        },
+        {
+          "name": "code-style",
+          "type": "string",
+          "description": "official or android code style"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kotlin Docs",
+      "type": "documentation",
+      "source": "https://kotlinlang.org/docs/home.html",
+      "description": "Language reference and command-line tools"
+    },
+    {
+      "title": "Gradle User Manual",
+      "type": "documentation",
+      "source": "https://docs.gradle.org/current/userguide/userguide.html",
+      "description": "Build lifecycle and Android plugin"
+    },
+    {
+      "title": "ktlint",
+      "type": "documentation",
+      "source": "https://github.com/pinterest/ktlint",
+      "description": "Kotlin linter and formatter"
+    }
+  ],
+  "instructions": "# Kotlin (Android)\n\nBuild Android apps with Kotlin and the Gradle toolchain.\n\n## When to Use\n\n- Android application development\n- Kotlin multiplatform and JVM libraries\n- Enforcing code style across Kotlin sources\n\n## Wrapper first\n\n```bash\ngradle wrapper --gradle-version 8.10\n```\n\nCommit the wrapper; teams should never rely on a local Gradle install.\n\n## Core tasks\n\n```bash\n./gradlew assembleDebug\n./gradlew testDebugUnitTest\n./gradlew lint\n```\n\n`lint` runs Android Lint - treat warnings as errors in CI with `warningsAsErrors`.\n\n## Testing\n\n```bash\n./gradlew testDebugUnitTest --tests 'com.example.orders.*'\n```\n\nUse Robolectric for JVM unit tests and instrumented tests for UI flows.\n\n## ktlint gates\n\n```bash\nktlint 'src/**/*.kt'\nktlint -F 'src/**/*.kt'\n```\n\nRun `ktlint -F` locally, plain `ktlint` in CI.\n\n## Kotlin scripts\n\n```bash\nkotlinc -script build-data.kts\n```\n\n## Best practices\n\n- Pin Gradle and Kotlin plugin versions in the wrapper.\n- Keep unit tests JVM-fast; only critical flows instrumented.\n- Use the Android Kotlin style guide consistently.\n- Cache Gradle deps in CI to cut build time.\n\n## Testing\n\n```bash\n./gradlew build && ktlint 'src/**/*.kt'\n```\n\nBoth must pass before merge.",
+  "examples": [
+    {
+      "input": "Set up a new Android module with tests.",
+      "output": "Generates the wrapper, adds the module, writes unit tests, and verifies with ./gradlew testDebugUnitTest."
+    },
+    {
+      "input": "Enforce Kotlin style on a team repo.",
+      "output": "Adds ktlint with official code style to CI, auto-fixes the codebase once, and gates on unformatted files."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kotlin.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kotlin"
+    },
+    "generic": {
+      "system_prompt": "You own Kotlin end to end. You do it through gradle: Build and test Android/Kotlin projects with Gradle. The commands are real, e.g. `gradle wrapper --gradle-version 8.10`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kotlin",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "gradle",
+        "name": "task",
+        "type": "string",
+        "description": "Gradle task like assembleDebug, test, lint"
+      },
+      {
+        "capability": "gradle",
+        "name": "tests",
+        "type": "string",
+        "description": "Test class filter with --tests"
+      },
+      {
+        "capability": "gradle",
+        "name": "stacktrace",
+        "type": "string",
+        "description": "Full stack traces on failure"
+      },
+      {
+        "capability": "kotlin-tools",
+        "name": "glob",
+        "type": "string",
+        "description": "Kotlin file glob"
+      },
+      {
+        "capability": "kotlin-tools",
+        "name": "format",
+        "type": "string",
+        "description": "Auto-fix with -F"
+      },
+      {
+        "capability": "kotlin-tools",
+        "name": "code-style",
+        "type": "string",
+        "description": "official or android code style"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./gradlew",
+    "gradle",
+    "java",
+    "kotlinc",
+    "ktlint"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "mobile/kotlin-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/mobile/kotlin-skill.yaml",
+    "checksum": "5fae3df44078a7efa3b25dd6cca0a22b65c7ff0d29229b77880fb26e9eb78272"
+  }
+}

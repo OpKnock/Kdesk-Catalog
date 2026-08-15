@@ -1,0 +1,169 @@
+{
+  "name": "api-rate-limiter",
+  "display_name": "API Rate Limiter",
+  "category": "api",
+  "subcategory": "security",
+  "description": "Agent for implementing API rate limiting with token buckets, sliding windows, and distributed counters.",
+  "version": "1.0.0",
+  "tags": [
+    "rate-limiting",
+    "api",
+    "token-bucket",
+    "sliding-window",
+    "distributed"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "rate-limiting",
+      "description": "Implement API rate limiting strategies",
+      "commands": [
+        "redis-cli",
+        "nginx",
+        "express-rate-limit",
+        "gorilla/mux"
+      ],
+      "examples": [
+        "Set limit: redis-cli SET 'rate:user123' 0 EX 60 NX",
+        "Check limit: redis-cli INCR 'rate:user123'",
+        "Nginx limit: limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s"
+      ],
+      "parameters": [
+        {
+          "name": "algorithm",
+          "type": "string",
+          "description": "Algorithm: token-bucket, sliding-window, fixed-window, leaky-bucket"
+        },
+        {
+          "name": "storage",
+          "type": "string",
+          "description": "Storage: redis, memcached, in-memory, database"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Rate Limiting Patterns",
+      "type": "documentation",
+      "source": "https://www.figma.com/blog/rate-limiting/",
+      "description": "Rate limiting patterns and strategies"
+    },
+    {
+      "title": "Redis Rate Limiting",
+      "type": "tutorial",
+      "source": "https://redis.io/docs/manual/eviction/",
+      "description": "Redis rate limiting implementation"
+    }
+  ],
+  "instructions": "You are a rate limiting specialist. Help users:\n1. Design rate limiting strategies\n2. Implement distributed counters\n3. Configure per-user limits\n4. Handle rate limit responses\n5. Monitor and adjust limits\n\nAlways recommend proper headers and client communication.\n",
+  "examples": [
+    {
+      "input": "Add rate limiting to my API",
+      "output": "I'll implement sliding window rate limiting with Redis. Here's the configuration..."
+    },
+    {
+      "input": "My API is being abused",
+      "output": "Let me add aggressive rate limiting. I'll configure per-IP and per-user limits..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-rate-limiter.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rate-limiting"
+    },
+    "generic": {
+      "system_prompt": "You are a rate limiting expert. Help users implement rate limiting strategies, configure distributed counters, and handle throttling.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-rate-limiter",
+  "type": "agent",
+  "skills": [
+    "api-rate-aws-waf",
+    "api-rate-engineer",
+    "api-rate-limit-verification",
+    "api-rate-limiting-engineer",
+    "api-rate-redis",
+    "api-rate-specialist",
+    "adaptive-rate-limiting",
+    "api-rate-limiting-designer",
+    "rate-limiting-algorithms",
+    "rate-limiting-backend"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rate-limiting",
+        "name": "algorithm",
+        "type": "string",
+        "description": "Algorithm: token-bucket, sliding-window, fixed-window, leaky-bucket"
+      },
+      {
+        "capability": "rate-limiting",
+        "name": "storage",
+        "type": "string",
+        "description": "Storage: redis, memcached, in-memory, database"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/agent/api-rate-limiter.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/agent/api-rate-limiter.yaml",
+    "checksum": "905bc89f4ffe1725e9850ace738c3676c80383feb2d009ea66db6b599caebe60"
+  }
+}

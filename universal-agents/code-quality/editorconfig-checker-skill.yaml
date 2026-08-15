@@ -1,0 +1,197 @@
+name: editorconfig-checker
+display_name: editorconfig-checker
+category: code-quality
+subcategory: general
+description: Verifies files comply with .editorconfig rules using editorconfig-checker in local and CI
+  workflows.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- editorconfig-checker
+- npx
+capabilities:
+- commands:
+  - editorconfig-checker
+  - editorconfig-checker -exclude "**/vendor/**"
+  - editorconfig-checker -config .eccrc
+  - editorconfig-checker file.txt
+  - editorconfig-checker -version
+  description: Check files against .editorconfig.
+  name: ecc-check
+  examples:
+  - editorconfig-checker -exclude "dist/**"
+  - editorconfig-checker -no-color
+  - editorconfig-checker -verbose
+  parameters:
+  - description: Glob patterns to exclude
+    name: exclude
+    type: string
+  - description: Config file path
+    name: config
+    type: string
+  - description: Verbose output
+    name: verbose
+    type: boolean
+- commands:
+  - editorconfig-checker -help
+  - editorconfig-checker -debug
+  - npx editorconfig-checker
+  - editorconfig-checker -disable-indent-size
+  description: Manage .editorconfig and checker config.
+  name: ecc-config
+  examples:
+  - npx editorconfig-checker -exclude "**/node_modules/**"
+  - editorconfig-checker -disable-max-line-length
+  parameters:
+  - description: Checks to disable
+    name: disable
+    type: string
+  - name: debug
+    type: boolean
+    description: Show debug output
+knowledge:
+- title: editorconfig-checker on GitHub
+  description: Usage and config reference
+  source: https://github.com/editorconfig-checker/editorconfig-checker
+  type: documentation
+- title: EditorConfig Spec
+  description: File format specification
+  source: https://editorconfig.org
+  type: documentation
+instructions: '# editorconfig-checker
+
+
+  Enforce editor conventions across the repo.
+
+
+  ## When to Use
+
+
+  - Ensuring consistent indentation and line endings
+
+  - Enforcing charset and end-of-line rules repo-wide
+
+  - CI gates on .editorconfig compliance
+
+  - Catching files created by Windows/macOS editors
+
+
+  ## .editorconfig Example
+
+
+  ```ini
+
+  root = true
+
+
+  [*]
+
+  charset = utf-8
+
+  end_of_line = lf
+
+  indent_style = space
+
+  indent_size = 2
+
+  trim_trailing_whitespace = true
+
+  insert_final_newline = true
+
+
+  [*.py]
+
+  indent_size = 4
+
+  ```
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Install
+
+  go install github.com/editorconfig-checker/editorconfig-checker/cmd/editorconfig-checker@latest
+
+  # or
+
+  npx editorconfig-checker
+
+
+  # Check the repo
+
+  editorconfig-checker
+
+
+  # Exclude paths
+
+  editorconfig-checker -exclude "**/vendor/**,dist/**"
+
+
+  # Custom config
+
+  editorconfig-checker -config .eccrc
+
+
+  # Verbose/debug
+
+  editorconfig-checker -verbose
+
+  editorconfig-checker -debug
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Define root = true and per-extension rules
+
+  - Run editorconfig-checker in pre-commit and CI
+
+  - Exclude generated and vendored directories
+
+  - Pair with a formatter for the actual file writes
+
+  - Commit .editorconfig so editors adopt it automatically'
+examples:
+- input: Check my repo for editorconfig violations
+  output: Agent runs editorconfig-checker, lists violating files, and fixes indentation/line endings.
+- input: Add editorconfig checking to CI
+  output: Agent adds an editorconfig-checker job with the repo config and excludes for generated files.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: editorconfig-checker.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-editorconfig-checker
+  generic:
+    system_prompt: 'You take the editorconfig-checker seat. You do it through ecc-check: Check files against
+      .editorconfig. The commands are real, e.g. `editorconfig-checker`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

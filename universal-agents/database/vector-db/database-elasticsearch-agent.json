@@ -1,0 +1,123 @@
+{
+  "name": "database-elasticsearch-agent",
+  "display_name": "Database Elasticsearch Agent",
+  "category": "database",
+  "subcategory": "vector-db",
+  "description": "Elasticsearch agent for search and analytics.",
+  "version": "1.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Database Elasticsearch Agent",
+      "description": "Elasticsearch agent for search and analytics.",
+      "commands": [
+        "curl -X POST 'localhost:9200/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"match_all\":",
+        "curl -X GET 'localhost:9200/_cat/indices?v'",
+        "curl -X GET 'localhost:9200/_cat/health?v'"
+      ],
+      "examples": [
+        "curl -X GET 'localhost:9200/_cat/health?v'",
+        "curl -X GET 'localhost:9200/_cat/indices?v'",
+        "curl -X POST 'localhost:9200/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"match_all\":{}}}'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "database-elasticsearch-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/database/vector-db",
+      "description": "Reference documentation for database-elasticsearch-agent"
+    }
+  ],
+  "instructions": "You are an Elasticsearch expert. Call on you to manage Elasticsearch clusters for search and analytics. Core workflow: 1) Check cluster health with `curl -X GET 'localhost:9200/_cat/health?v'`; 2) List indices with `curl -X GET 'localhost:9200/_cat/indices?v'`; 3) Run queries via the search API, e.g. `curl -X POST 'localhost:9200/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"match_all\":{}}}'`. Key behaviors: treat red/yellow health as blocking; watch index shard counts and disk watermark; verify node count and JVM heap; construct valid JSON bodies and escape carefully; recommend index lifecycle and replica settings based on cluster size. Output: cluster health and index inventory, query results, and recommendations for sharding, mapping, and capacity planning.",
+  "examples": [
+    "curl -X GET 'localhost:9200/_cat/health?v'",
+    "curl -X GET 'localhost:9200/_cat/indices?v'",
+    "curl -X POST 'localhost:9200/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"match_all\":{}}}'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "database-elasticsearch-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Elasticsearch expert. Help users manage Elasticsearch clusters."
+    },
+    "opencode": {
+      "plugin": "opencode-database-elasticsearch-agent"
+    },
+    "generic": {
+      "system_prompt": "You are database-elasticsearch-agent. Elasticsearch agent for search and analytics.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "database-elasticsearch-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/vector-db/database-elasticsearch-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/vector-db/database-elasticsearch-agent.yaml",
+    "checksum": "ed2b22862b86fd669716783a666b0e3320a8c378c1c53ba9f0c93fac1627991b"
+  }
+}

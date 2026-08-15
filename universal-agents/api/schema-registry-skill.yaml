@@ -1,0 +1,185 @@
+name: schema-registry
+display_name: Schema Registry
+category: api
+subcategory: general
+description: 'Hand-crafted Confluent Schema Registry skill: register Avro schemas, check compatibility
+  before promotion, and list subjects/versions via REST.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kafka-avro-console-producer
+capabilities:
+- name: schema-registry-api
+  description: Register and validate schemas against the Confluent Schema Registry
+  commands:
+  - curl -s http://localhost:8081/subjects
+  - curl -s http://localhost:8081/subjects/orders-value/versions/latest | jq .version
+  - 'curl -X POST http://localhost:8081/subjects/orders-value/versions -H ''Content-Type: application/vnd.schemaregistry.v1+json''
+    -d @new-schema.json'
+  - 'curl -s -H ''Content-Type: application/vnd.schemaregistry.v1+json'' ''http://localhost:8081/compat/subjects/orders-value/versions/latest''
+    -d @candidate.json'
+  - kafka-avro-console-producer --broker-list localhost:9092 --topic orders --property schema.registry.url=http://localhost:8081
+    --property value.schema="$(cat order.avsc)"
+  examples:
+  - curl -s http://localhost:8081/subjects/orders-value/versions | jq
+  - 'curl -X POST http://localhost:8081/subjects/orders-value/versions -H ''Content-Type: application/vnd.schemaregistry.v1+json''
+    -d @new-schema.json'
+  - curl -s http://localhost:8081/config | jq
+  parameters:
+  - name: subject
+    type: string
+    description: Subject name, e.g. orders-value
+  - name: schema_file
+    type: string
+    description: 'JSON file with {"schema": "..."} payload'
+  - name: registry_url
+    type: string
+    description: Schema Registry base URL
+knowledge:
+- title: Schema Registry API reference
+  type: documentation
+  source: https://docs.confluent.io/platform/current/schema-registry/develop/api.html
+  description: Subjects, versions, compatibility endpoints
+- title: Schema Registry docs
+  type: documentation
+  source: https://docs.confluent.io/platform/current/schema-registry/index.html
+  description: 'Concepts: subjects, versions, compatibility modes'
+instructions: '# Schema Registry
+
+
+  Hand-crafted skill for managing Avro schemas with Confluent Schema Registry.
+
+
+  ## What this skill does
+
+
+  - Lists subjects and versions registered in the registry
+
+  - Registers new schema versions over the REST API
+
+  - Pre-checks compatibility before a schema can break consumers
+
+
+  ## When to use
+
+
+  - Releasing a new Kafka message format
+
+  - Enforcing backward compatibility on shared topics
+
+  - Investigating schema-not-found producer errors
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # List subjects
+
+  curl -s http://localhost:8081/subjects
+
+
+  # Latest version of one subject
+
+  curl -s http://localhost:8081/subjects/orders-value/versions/latest | jq .version
+
+
+  # Register a new version (payload: {"schema": "..."})
+
+  curl -X POST http://localhost:8081/subjects/orders-value/versions -H ''Content-Type: application/vnd.schemaregistry.v1+json''
+  -d @new-schema.json
+
+
+  # Compatibility check against latest (BACKWARD by default)
+
+  curl -s -H ''Content-Type: application/vnd.schemaregistry.v1+json'' ''http://localhost:8081/compat/subjects/orders-value/versions/latest''
+  -d @candidate.json
+
+
+  # Produce with the registry
+
+  kafka-avro-console-producer --broker-list localhost:9092 --topic orders --property schema.registry.url=http://localhost:8081
+  --property value.schema="$(cat order.avsc)"
+
+  ```
+
+
+  ## Config
+
+
+  ```json
+
+  // candidate.json
+
+  { "schema": "{"type":"record","name":"Order","fields":[{"name":"id","type":"long"},{"name":"email","type":"string","default":""}]}"
+  }
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  curl -s http://localhost:8081/subjects/orders-value/versions | jq
+
+  curl -s http://localhost:8081/config | jq   # current compatibility mode
+
+  ```
+
+
+  ## Best practices
+
+
+  - Set compatibility per subject before the first breaking need: BACKWARD
+
+  - Check /compat before registering, not after producers fail
+
+  - Version consumers with the same tag as the schema version
+
+  '
+examples:
+- input: Register the initial orders schema
+  output: 'curl -X POST http://localhost:8081/subjects/orders-value/versions -H ''Content-Type: application/vnd.schemaregistry.v1+json''
+    -d @new-schema.json returns the assigned version 1.'
+- input: Will my new schema break existing consumers?
+  output: 'curl -s -H ''Content-Type: application/vnd.schemaregistry.v1+json'' ''http://localhost:8081/compat/subjects/orders-value/versions/latest''
+    -d @candidate.json returns is_compatible: true or the failure reason.'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: schema-registry.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-schema-registry
+  generic:
+    system_prompt: 'You take the Schema Registry seat. You do it through schema-registry-api: Register
+      and validate schemas against the Confluent Schema Registry. The commands are real, e.g. `curl -s
+      http://localhost:8081/subjects`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

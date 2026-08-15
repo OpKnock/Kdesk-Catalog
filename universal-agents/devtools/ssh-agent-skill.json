@@ -1,0 +1,204 @@
+{
+  "name": "ssh-agent",
+  "display_name": "ssh-agent",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Manages SSH keys in the agent: add/remove keys, list fingerprints, lifetimes, and agent forwarding for multi-hop connections.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "eval",
+    "ssh",
+    "ssh-add",
+    "ssh-agent"
+  ],
+  "capabilities": [
+    {
+      "name": "agent-lifecycle",
+      "description": "Start the agent and manage loaded keys.",
+      "commands": [
+        "eval \"$(ssh-agent -s)\"",
+        "ssh-add ~/.ssh/id_ed25519",
+        "ssh-add -l",
+        "ssh-add -L",
+        "ssh-add -D",
+        "ssh-agent -k"
+      ],
+      "examples": [
+        "eval \"$(ssh-agent -s)\"",
+        "ssh-add ~/.ssh/id_ed25519",
+        "ssh-add -l"
+      ],
+      "parameters": [
+        {
+          "name": "keyfile",
+          "type": "string",
+          "description": "Private key path"
+        },
+        {
+          "name": "agent-sock",
+          "type": "string",
+          "description": "Agent socket path (SSH_AUTH_SOCK)"
+        }
+      ]
+    },
+    {
+      "name": "key-security",
+      "description": "Set lifetimes, require confirmation, and inspect agent state.",
+      "commands": [
+        "ssh-add -t 1h ~/.ssh/id_ed25519",
+        "ssh-add -c ~/.ssh/id_ed25519",
+        "ssh-add -t 3600",
+        "ssh-add -x && ssh-add -X",
+        "ssh -A user@jumphost",
+        "ssh-add -E sha256 -l"
+      ],
+      "examples": [
+        "ssh-add -t 1h ~/.ssh/id_ed25519",
+        "ssh-add -c ~/.ssh/id_ed25519",
+        "ssh-add -E sha256 -l"
+      ],
+      "parameters": [
+        {
+          "name": "lifetime",
+          "type": "integer",
+          "description": "Key lifetime in seconds (-t)"
+        },
+        {
+          "name": "confirm",
+          "type": "boolean",
+          "description": "Require confirmation before use (-c)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ssh-agent Manual",
+      "type": "documentation",
+      "source": "https://man.openbsd.org/ssh-agent",
+      "description": "Agent options and behavior"
+    },
+    {
+      "title": "ssh-add Manual",
+      "type": "documentation",
+      "source": "https://man.openbsd.org/ssh-add",
+      "description": "Key management options"
+    }
+  ],
+  "instructions": "# SSH Agent Management\n\nHold SSH keys in memory so you authenticate without passphrases on every use.\n\n## What This Skill Does\n\n- Starts the agent and loads private keys\n- Lists loaded keys and fingerprints\n- Removes keys (individual or all)\n- Sets lifetimes and confirmation prompts\n- Enables agent forwarding for jump hosts\n\n## When to Use\n\n- Passphrase-protected keys without re-entry\n- Multiple keys needing selection per host\n- Jump-host chains (bastion -> target)\n\n## Real Commands\n\n```bash\n# Start and add\neval \"$(ssh-agent -s)\"\nssh-add ~/.ssh/id_ed25519\nssh-add ~/.ssh/id_rsa\n\n# Inspect\nssh-add -l                    # fingerprints\nssh-add -L                    # public keys\nssh-add -E sha256 -l          # sha256 fingerprints\n\n# Remove\nssh-add -d ~/.ssh/id_ed25519\nssh-add -D                    # all keys\nssh-agent -k                  # kill agent\n\n# Security options\nssh-add -t 1h ~/.ssh/id_ed25519\nssh-add -c ~/.ssh/id_ed25519  # confirm each use\nssh-add -x                    # lock agent\nssh-add -X                    # unlock\n\n# Forwarding\nssh -A user@jumphost\n```\n\n## Best Practices\n\n- Use ed25519 keys with short lifetimes in the agent\n- Set -t lifetimes on shared machines\n- Use -A only on trusted jump hosts (forwarding leaks key use)\n- Add `AddKeysToAgent yes` in ~/.ssh/config for convenience\n- Lock the agent (-x) when stepping away from shared sessions",
+  "examples": [
+    {
+      "input": "Stop typing my passphrase every git push",
+      "output": "Agent starts the agent, adds the key, and verifies with ssh-add -l"
+    },
+    {
+      "input": "Securely use keys via a bastion",
+      "output": "Agent configures agent forwarding with -A and scoped lifetimes"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ssh-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ssh-agent"
+    },
+    "generic": {
+      "system_prompt": "You are the ssh-agent specialist. You do it through agent-lifecycle: Start the agent and manage loaded keys. The commands are real, e.g. `eval $(ssh-agent -s)`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ssh-agent",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "agent-lifecycle",
+        "name": "keyfile",
+        "type": "string",
+        "description": "Private key path"
+      },
+      {
+        "capability": "agent-lifecycle",
+        "name": "agent-sock",
+        "type": "string",
+        "description": "Agent socket path (SSH_AUTH_SOCK)"
+      },
+      {
+        "capability": "key-security",
+        "name": "lifetime",
+        "type": "integer",
+        "description": "Key lifetime in seconds (-t)"
+      },
+      {
+        "capability": "key-security",
+        "name": "confirm",
+        "type": "boolean",
+        "description": "Require confirmation before use (-c)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "eval",
+    "ssh",
+    "ssh-add",
+    "ssh-agent"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/ssh-agent-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/ssh-agent-skill.yaml",
+    "checksum": "d38e84e1ba10705066f1500b3e41c9e44917429d660b816ad637fc2e573bd7df"
+  }
+}

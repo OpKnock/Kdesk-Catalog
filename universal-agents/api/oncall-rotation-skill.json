@@ -1,0 +1,165 @@
+{
+  "name": "oncall-rotation",
+  "display_name": "Oncall Rotation",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manage on-call schedules and rotations: PagerDuty schedules/overrides/oncalls via the REST API and CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "oncall-schedule-management",
+      "description": "Query on-call schedules, add overrides, and list who is on call with the PagerDuty API.",
+      "commands": [
+        "curl -H \"Authorization: Token token=$PD_TOKEN\" \"https://api.pagerduty.com/oncalls\"",
+        "curl -H \"Authorization: Token token=$PD_TOKEN\" \"https://api.pagerduty.com/schedules\"",
+        "curl -X POST -H \"Authorization: Token token=$PD_TOKEN\" -H \"Content-Type: application/json\" -d @override.json \"https://api.pagerduty.com/schedules/SCHEDULE_ID/overrides\"",
+        "curl -H \"Authorization: Token token=$PD_TOKEN\" \"https://api.pagerduty.com/oncalls?since=2026-08-01&until=2026-08-31\"",
+        "curl -H \"Authorization: Token token=$PD_TOKEN\" \"https://api.pagerduty.com/users\""
+      ],
+      "examples": [
+        "curl -H \"Authorization: Token token=$PD_TOKEN\" \"https://api.pagerduty.com/oncalls?user_ids[]=PXXXXX\" | jq '.oncalls[].escalation_policy.summary'",
+        "curl -X POST -H \"Authorization: Token token=$PD_TOKEN\" -H \"Content-Type: application/json\" -d '{\"override\":{\"start\":\"2026-08-15T09:00:00Z\",\"end\":\"2026-08-15T17:00:00Z\",\"user\":{\"id\":\"PXXXXX\"}}}' \"https://api.pagerduty.com/schedules/PSCHED/overrides\""
+      ],
+      "parameters": [
+        {
+          "name": "token",
+          "type": "string",
+          "description": "PagerDuty API token"
+        },
+        {
+          "name": "schedule_id",
+          "type": "string",
+          "description": "Schedule identifier"
+        },
+        {
+          "name": "window",
+          "type": "string",
+          "description": "since/until date range for oncalls"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "PagerDuty REST API",
+      "type": "documentation",
+      "source": "https://developer.pagerduty.com/api-reference/",
+      "description": "Schedules, oncalls, overrides and users endpoints"
+    },
+    {
+      "title": "PagerDuty On-Call Docs",
+      "type": "documentation",
+      "source": "https://support.pagerduty.com/docs/schedules",
+      "description": "Schedule and rotation concepts"
+    }
+  ],
+  "instructions": "# On-Call Rotation\n\nManage schedules so exactly the right person gets paged, and swap shifts cleanly with overrides.\n\n## What this skill does\n\n- Lists current on-call people and schedules\n- Creates overrides for shift swaps\n- Verifies rotation coverage over a window\n\n## When to use\n\n- Setting up rotations for a new team\n- Checking who is on call right now\n- Handling someone going on PTO\n\n## Real commands\n\n```bash\n# Who is on call now\ncurl -H \"Authorization: Token token=$PD_TOKEN\" \"https://api.pagerduty.com/oncalls\"\n\n# List schedules\ncurl -H \"Authorization: Token token=$PD_TOKEN\" \"https://api.pagerduty.com/schedules\"\n\n# On-call for a window\ncurl -H \"Authorization: Token token=$PD_TOKEN\" \"https://api.pagerduty.com/oncalls?since=2026-08-01&until=2026-08-31\"\n\n# Add an override\ncurl -X POST -H \"Authorization: Token token=$PD_TOKEN\" -H \"Content-Type: application/json\" \\\n  -d @override.json \"https://api.pagerduty.com/schedules/SCHEDULE_ID/overrides\"\n```\n\n## override.json\n\n```json\n{\n  \"override\": {\n    \"start\": \"2026-08-15T09:00:00Z\",\n    \"end\": \"2026-08-15T17:00:00Z\",\n    \"user\": { \"id\": \"PXXXXX\" }\n  }\n}\n```\n\n## Best practices\n\n- Use UTC timestamps for windows and overrides\n- Check coverage gaps with `escalation_policies` queries\n- Rotate primary/secondary roles to avoid solo on-call",
+  "examples": [
+    {
+      "input": "Who is on call for the payments team this week?",
+      "output": "The agent queries /oncalls with a date range and filters by escalation policy, returning the person's name."
+    },
+    {
+      "input": "Swap Alice's Friday shift to Bob",
+      "output": "The agent creates an override for Friday 9-17 UTC with Bob's user ID."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "oncall-rotation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-oncall-rotation"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Oncall Rotation. You do it through oncall-schedule-management: Query on-call schedules, add overrides, and list who is on call with the PagerDuty API. The commands are real, e.g. `curl -H Authorization: Token token=$PD_TOKEN https://api.pagerduty.com/oncalls`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "oncall-rotation",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "oncall-schedule-management",
+        "name": "token",
+        "type": "string",
+        "description": "PagerDuty API token"
+      },
+      {
+        "capability": "oncall-schedule-management",
+        "name": "schedule_id",
+        "type": "string",
+        "description": "Schedule identifier"
+      },
+      {
+        "capability": "oncall-schedule-management",
+        "name": "window",
+        "type": "string",
+        "description": "since/until date range for oncalls"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/oncall-rotation-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/oncall-rotation-skill.yaml",
+    "checksum": "8ee6c04360613ec76de1a4c70e9a634f5486d00beff04092d52c529df1628973"
+  }
+}

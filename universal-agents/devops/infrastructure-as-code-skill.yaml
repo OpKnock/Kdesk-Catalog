@@ -1,0 +1,212 @@
+name: infrastructure-as-code-devops
+display_name: Infrastructure As Code
+category: devops
+subcategory: general
+description: Reviews and secures Infrastructure-as-Code (Terraform/OpenTofu, Ansible, CloudFormation)
+  with static analysis, linting, and drift detection.
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ansible-lint
+- ansible-playbook
+- checkov
+- terraform
+- terrascan
+- tfsec
+- tofu
+capabilities:
+- name: terraform-review
+  description: Validate, format, and plan Terraform or OpenTofu configurations.
+  commands:
+  - terraform fmt -recursive -check
+  - terraform validate
+  - tofu plan -out plan.tfplan
+  - terraform plan -lock=false -detailed-exitcode
+  - terraform providers lock -platform=linux_amd64 -platform=darwin_arm64
+  examples:
+  - terraform fmt -recursive -check
+  - tofu plan -out plan.tfplan
+  - terraform validate
+  parameters:
+  - name: dir
+    type: string
+    description: Module directory
+  - name: plan-file
+    type: string
+    description: Plan output path
+- name: iac-scanning
+  description: Scan IaC for misconfigurations with checkov, tfsec, and terrascan.
+  commands:
+  - checkov -d . --framework terraform,ansible
+  - checkov -d . --skip-check CKV_AWS_123
+  - tfsec . --severity CRITICAL,HIGH
+  - terrascan scan -d .
+  - ansible-lint playbooks/
+  - ansible-playbook playbooks/deploy.yml --syntax-check
+  examples:
+  - checkov -d .
+  - tfsec . --severity CRITICAL,HIGH
+  - ansible-lint playbooks/
+  parameters:
+  - name: path
+    type: string
+    description: Directory to scan
+  - name: severity
+    type: string
+    description: Minimum severity to report
+knowledge:
+- title: Terraform Docs
+  type: documentation
+  source: https://developer.hashicorp.com/terraform/docs
+  description: Terraform language, providers, and CLI
+- title: Checkov
+  type: documentation
+  source: https://www.checkov.io/
+  description: IaC and secrets static analysis tool
+- title: tfsec
+  type: documentation
+  source: https://github.com/aquasecurity/tfsec
+  description: Terraform security scanner (now Trivy IaC)
+- title: Ansible Lint
+  type: documentation
+  source: https://ansible.readthedocs.io/projects/lint/
+  description: Ansible playbook linting rules
+instructions: '# Infrastructure-as-Code Quality
+
+
+  Keep Terraform, OpenTofu, Ansible, and CloudFormation code correct, formatted, and secure.
+
+
+  ## What This Skill Does
+
+
+  - Formats and validates Terraform/OpenTofu modules
+
+  - Runs plan-time checks for drift and unintended changes
+
+  - Scans IaC for security misconfigurations (checkov/tfsec/terrascan)
+
+  - Lints Ansible playbooks and validates syntax
+
+  - Locks provider platforms for reproducible installs
+
+
+  ## When to Use
+
+
+  - PR review gates for infrastructure changes
+
+  - Onboarding a repo onto proper IaC hygiene
+
+  - Investigating why a plan does things you did not expect
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Terraform hygiene
+
+  terraform fmt -recursive -check
+
+  terraform validate
+
+  tofu plan -out plan.tfplan
+
+  terraform plan -detailed-exitcode   # 0=no diff 1=diff 2=error
+
+  terraform providers lock -platform=linux_amd64 -platform=darwin_arm64
+
+
+  # Scanning
+
+  checkov -d . --framework terraform,ansible --download-external-modules false
+
+  tfsec . --severity CRITICAL,HIGH
+
+  terrascan scan -d .
+
+  checkov -d . --skip-check CKV_AWS_123,CKV_AWS_126
+
+
+  # Ansible
+
+  ansible-lint playbooks/
+
+  ansible-playbook playbooks/deploy.yml --syntax-check
+
+  ansible-playbook playbooks/deploy.yml --check --diff
+
+  ```
+
+
+  ## Gate Sequence
+
+
+  1. terraform fmt -check
+
+  2. terraform validate
+
+  3. checkov/tfsec scan (fail on CRITICAL/HIGH)
+
+  4. ansible-lint
+
+  5. plan review with -detailed-exitcode
+
+
+  ## Best Practices
+
+
+  - Enforce `terraform fmt -check` in CI; reject unformatted PRs
+
+  - Use `terraform plan -lock=false` carefully — prefer locking
+
+  - Scan IaC before apply, not after: misconfigs ship fast
+
+  - Keep modules small; test with `terraform plan` per module
+
+  - Treat provider/version pinning as part of review'
+examples:
+- input: Add IaC scanning to our CI
+  output: Agent adds fmt/validate gates plus checkov and tfsec steps with fail thresholds and posts the
+    badge config
+- input: The plan is much bigger than expected
+  output: Agent runs plan with -detailed-exitcode, diffs against state, checks for provider version skew
+    and count changes, reports the root cause
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: infrastructure-as-code-devops.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-infrastructure-as-code
+  generic:
+    system_prompt: 'You work Infrastructure As Code hands-on. You do it through terraform-review: Validate,
+      format, and plan Terraform or OpenTofu configurations. The commands are real, e.g. `terraform fmt
+      -recursive -check`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

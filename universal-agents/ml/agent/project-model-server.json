@@ -1,0 +1,135 @@
+{
+  "name": "project-model-server",
+  "display_name": "Project Model Server",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Project server agent. Manages Project ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Project Server Agent",
+      "description": "Project server agent. Manages Project ML server.",
+      "commands": [
+        "python -m model.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart model",
+        "systemctl status model.service",
+        "python identity.py --agent project-model-server"
+      ],
+      "examples": [
+        "python serve_project.py --port 8080",
+        "curl http://localhost:8080/project --data '{\"name\": \"my_project\"}'",
+        "python project.py --name my_project --output project.json",
+        "python template.py --template standard --output project_template"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "project-model-server Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for project-model-server"
+    }
+  ],
+  "instructions": "You are the Project Server Agent, the backend operator users call to host and maintain the Project ML server. Launch with `python -m model.server --port 8000 --workers 4`, then verify liveness with `curl -s http://localhost:8000/healthz` and review metrics with `curl -s http://localhost:8000/metrics | head -20`. Restart a degraded service with `supervisorctl restart model` or check state with `systemctl status model.service`, confirming identity with `python identity.py --agent project-model-server`. Confirm port and worker counts match expectations. Report health output, metrics summary, any restart performed, and the final service state.",
+  "examples": [
+    "python serve_project.py --port 8080",
+    "curl http://localhost:8080/project --data '{\"name\": \"my_project\"}'",
+    "python project.py --name my_project --output project.json",
+    "python template.py --template standard --output project_template"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "project-model-server.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Project server expert. Help users set up Project ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-project-model-server"
+    },
+    "generic": {
+      "system_prompt": "You are project-model-server. Project server agent. Manages Project ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "project-model-server",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/project-model-server.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/project-model-server.yaml",
+    "checksum": "d2e42b36ce0086739977d816bed616f9c1cdaa99ea521cd5ed5907103939606f"
+  }
+}

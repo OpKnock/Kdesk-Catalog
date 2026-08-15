@@ -1,0 +1,171 @@
+{
+  "name": "grpc-rust",
+  "display_name": "Grpc Rust",
+  "category": "api",
+  "subcategory": "general",
+  "description": "gRPC services and clients in Rust with tonic: tonic-build codegen from protos, Prost message types, and tower-based interceptors.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cargo"
+  ],
+  "capabilities": [
+    {
+      "name": "rust-grpc-tonic",
+      "description": "Generate tonic stubs from protos at build time and run async gRPC servers.",
+      "commands": [
+        "cargo add tonic tonic-prost prost",
+        "cargo add --build tonic-build",
+        "cargo build",
+        "cargo run --bin server",
+        "cargo test"
+      ],
+      "examples": [
+        "cargo add tokio --features macros,rt-multi-thread",
+        "cargo run --bin server & grpcurl -plaintext localhost:50051 list",
+        "cargo clippy -- -D warnings"
+      ],
+      "parameters": [
+        {
+          "name": "proto_dir",
+          "type": "string",
+          "description": "Directory containing .proto files for tonic-build."
+        },
+        {
+          "name": "grpc_port",
+          "type": "integer",
+          "description": "Server listen port, default 50051."
+        },
+        {
+          "name": "crate_type",
+          "type": "string",
+          "description": "bin or lib crate layout for generated code."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "tonic docs.rs",
+      "type": "documentation",
+      "source": "https://docs.rs/tonic",
+      "description": "tonic API reference: server, client, transport, and codegen."
+    },
+    {
+      "title": "tonic GitHub",
+      "type": "documentation",
+      "source": "https://github.com/hyperium/tonic",
+      "description": "tonic repository with examples for codegen, TLS, and streaming."
+    }
+  ],
+  "instructions": "# gRPC Rust\n\ngRPC services and clients in Rust with the tonic framework.\n\n## What this skill does\n\n- Compiles .proto files to Rust at build time with tonic-build.\n- Runs async servers with tokio and tower service layers.\n- Generates typed clients with tonic::client::Grpc.\n- Supports TLS via rustls and interceptors via tower.\n\n## When to use\n\n- A high-throughput Rust service needs typed RPC contracts.\n- Adding streaming RPCs to an async Rust codebase.\n- Integrating with gRPC services from other languages.\n\n## Real commands\n\n```bash\n# Add dependencies\ncargo add tonic tonic-prost prost\ncargo add --build tonic-build\ncargo add tokio --features macros,rt-multi-thread\n\n# Generate and build (build.rs runs protoc via tonic-build)\ncargo build\n\n# Run server binary and probe\ncargo run --bin server &\ngrpcurl -plaintext localhost:50051 list\n\n# Lint and test\ncargo clippy -- -D warnings\ncargo test\n```\n\n## build.rs\n\n```rust\nfn main() -> Result<(), Box<dyn std::error::Error>> {\n    tonic_build::compile_protos(\"proto/helloworld.proto\")?;\n    Ok(())\n}\n```\n\n## Server skeleton\n\n```rust\nuse tonic::{transport::Server, Request, Response, Status};\nuse helloworld::{greeter_server::{Greeter, GreeterServer}, HelloReply, HelloRequest};\n\n#[derive(Default)]\npub struct MyGreeter;\n\n#[tonic::async_trait]\nimpl Greeter for MyGreeter {\n    async fn say_hello(&self, request: Request<HelloRequest>) -> Result<Response<HelloReply>, Status> {\n        Ok(Response::new(HelloReply { message: format!(\"Hello {}\", request.into_inner().name) }))\n    }\n}\n\n#[tokio::main]\nasync fn main() -> Result<(), Box<dyn std::error::Error>> {\n    let addr = \"[::1]:50051\".parse()?;\n    Server::builder().add_service(GreeterServer::new(MyGreeter)).serve(addr).await?;\n    Ok(())\n}\n```\n\n## Testing\n\n```bash\ncargo test\ncargo run --bin server &\ngrpcurl -plaintext -d '{\"name\":\"Rust\"}' localhost:50051 helloworld.Greeter/SayHello\n```\n\n## Best practices\n\n- Commit generated code or regenerate deterministically; tonic-build output lives in OUT_DIR.\n- Keep proto_paths minimal in build.rs to reduce rebuild churn.\n- Use tonic's tower layers for auth/logging instead of hand-rolled middleware.\n- Match tonic/prost versions to avoid codegen incompatibilities.\n\n## Example exchange\n\n```\nUser: The build fails with \"protoc not found\".\nAgent: Install protoc (apt install protobuf-compiler) or set PROTOC env var to the binary.\n```",
+  "examples": [
+    {
+      "input": "Compile protos and build the tonic service",
+      "output": "cargo add --build tonic-build && cargo build"
+    },
+    {
+      "input": "Run the tonic server and list its services",
+      "output": "cargo run --bin server & grpcurl -plaintext localhost:50051 list"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "grpc-rust.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-grpc-rust"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Grpc Rust. You do it through rust-grpc-tonic: Generate tonic stubs from protos at build time and run async gRPC servers. The commands are real, e.g. `cargo add tonic tonic-prost prost`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "grpc-rust",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rust-grpc-tonic",
+        "name": "proto_dir",
+        "type": "string",
+        "description": "Directory containing .proto files for tonic-build."
+      },
+      {
+        "capability": "rust-grpc-tonic",
+        "name": "grpc_port",
+        "type": "integer",
+        "description": "Server listen port, default 50051."
+      },
+      {
+        "capability": "rust-grpc-tonic",
+        "name": "crate_type",
+        "type": "string",
+        "description": "bin or lib crate layout for generated code."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cargo"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/grpc-rust-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/grpc-rust-skill.yaml",
+    "checksum": "d3f731c3df22fce2f13df0e419445d9517b58a6427e36ed4f7c1a7b1ce79831f"
+  }
+}

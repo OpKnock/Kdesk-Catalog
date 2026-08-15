@@ -1,0 +1,253 @@
+{
+  "name": "grpcurl",
+  "display_name": "grpcurl",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Interacts with gRPC servers from the CLI with grpcurl, including reflection, protobuf imports, and metadata headers.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "grpcurl"
+  ],
+  "capabilities": [
+    {
+      "name": "grpc-reflection",
+      "description": "List and describe services via server reflection.",
+      "commands": [
+        "grpcurl -plaintext localhost:50051 list",
+        "grpcurl -plaintext localhost:50051 list my.package",
+        "grpcurl -plaintext localhost:50051 describe my.package.Greeter",
+        "grpcurl -plaintext localhost:50051 describe my.package.HelloRequest"
+      ],
+      "examples": [
+        "grpcurl -plaintext localhost:50051 list",
+        "grpcurl -plaintext localhost:50051 describe my.package.Greeter",
+        "grpcurl -plaintext localhost:50051 list my.package"
+      ],
+      "parameters": [
+        {
+          "name": "addr",
+          "type": "string",
+          "description": "Server address host:port"
+        },
+        {
+          "name": "plaintext",
+          "type": "boolean",
+          "description": "Use plaintext instead of TLS"
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "description": "Service or message to describe"
+        }
+      ]
+    },
+    {
+      "name": "grpc-calls",
+      "description": "Invoke unary and streaming RPCs with JSON payloads.",
+      "commands": [
+        "grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051 my.package.Greeter/SayHello",
+        "grpcurl -plaintext -d @ localhost:50051 my.package.Chat/Send <<< '{\"msg\": \"hi\"}'",
+        "grpcurl -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN' localhost:50051 my.package.Users/Get",
+        "grpcurl -plaintext -d '{}' -max-time 30 localhost:50051 my.package.Orders/List"
+      ],
+      "examples": [
+        "grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051 my.package.Greeter/SayHello",
+        "grpcurl -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN' localhost:50051 my.package.Users/Get",
+        "grpcurl -plaintext -d '{}' -max-time 30 localhost:50051 my.package.Orders/List"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "object",
+          "description": "JSON request body"
+        },
+        {
+          "name": "header",
+          "type": "string",
+          "description": "Metadata header, e.g. authorization: Bearer X"
+        },
+        {
+          "name": "maxTime",
+          "type": "number",
+          "description": "Request timeout in seconds"
+        }
+      ]
+    },
+    {
+      "name": "protobuf-imports",
+      "description": "Call servers without reflection using proto files.",
+      "commands": [
+        "grpcurl -import-path ./proto -proto hello.proto -plaintext -d '{\"name\":\"x\"}' localhost:50051 hello.Greeter/SayHello",
+        "grpcurl -import-path ./proto -proto hello.proto -plaintext -d '{}' localhost:50051 hello.Greeter/SayHello -format json",
+        "grpcurl -import-path . -proto api/v1/orders.proto -plaintext localhost:50051 list"
+      ],
+      "examples": [
+        "grpcurl -import-path ./proto -proto hello.proto -plaintext -d '{\"name\":\"x\"}' localhost:50051 hello.Greeter/SayHello",
+        "grpcurl -import-path . -proto api/v1/orders.proto -plaintext localhost:50051 list"
+      ],
+      "parameters": [
+        {
+          "name": "importPath",
+          "type": "string",
+          "description": "Proto import root"
+        },
+        {
+          "name": "proto",
+          "type": "string",
+          "description": "Proto file path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "grpcurl GitHub",
+      "type": "documentation",
+      "source": "https://github.com/fullstorydev/grpcurl",
+      "description": "CLI reference, flags, and usage examples"
+    },
+    {
+      "title": "gRPC Documentation",
+      "type": "documentation",
+      "source": "https://grpc.io/docs/",
+      "description": "Protocol concepts and server reflection"
+    }
+  ],
+  "instructions": "# grpcurl\n\nTest and debug gRPC services from the command line.\n\n## What This Skill Does\n\n- Lists and describes services via server reflection\n- Invokes unary and streaming RPCs with JSON input\n- Sends metadata headers (auth, tracing)\n- Works with proto files when reflection is off\n\n## When to Use\n\n- Smoke-testing a gRPC endpoint\n- Exploring an unknown service's API\n- Debugging auth or deadline issues\n\n## Real Commands\n\n```bash\n# Reflection\n grpcurl -plaintext localhost:50051 list\ngrpcurl -plaintext localhost:50051 describe my.package.Greeter\n\n# Calls\n grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051 my.package.Greeter/SayHello\ngrpcurl -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN' localhost:50051 my.package.Users/Get\n\n# Streaming (stdin)\n grpcurl -plaintext -d @ localhost:50051 my.package.Chat/Send <<< '{\"msg\": \"hi\"}'\n\n# Proto imports without reflection\n grpcurl -import-path ./proto -proto hello.proto -plaintext -d '{\"name\":\"x\"}' localhost:50051 hello.Greeter/SayHello\n```\n\n## Best Practices\n\n- Enable server reflection in dev environments\n- Always set -max-time to avoid hangs\n- Verify error details in the grpc-status trailer\n- Test with real auth headers against staging\n- Pair with protoc for offline schema inspection",
+  "examples": [
+    {
+      "input": "What services are running on the gRPC server?",
+      "output": "Agent runs grpcurl -plaintext localhost:50051 list and describes the interesting service."
+    },
+    {
+      "input": "Call SayHello with a name",
+      "output": "Agent invokes grpcurl -plaintext -d '{\"name\":\"world\"}' and shows the JSON response."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "grpcurl.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-grpcurl"
+    },
+    "generic": {
+      "system_prompt": "You take the grpcurl seat. You do it through grpc-reflection: List and describe services via server reflection. The commands are real, e.g. `grpcurl -plaintext localhost:50051 list`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "grpcurl",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "grpc-reflection",
+        "name": "addr",
+        "type": "string",
+        "description": "Server address host:port"
+      },
+      {
+        "capability": "grpc-reflection",
+        "name": "plaintext",
+        "type": "boolean",
+        "description": "Use plaintext instead of TLS"
+      },
+      {
+        "capability": "grpc-reflection",
+        "name": "symbol",
+        "type": "string",
+        "description": "Service or message to describe"
+      },
+      {
+        "capability": "grpc-calls",
+        "name": "data",
+        "type": "object",
+        "description": "JSON request body"
+      },
+      {
+        "capability": "grpc-calls",
+        "name": "header",
+        "type": "string",
+        "description": "Metadata header, e.g. authorization: Bearer X"
+      },
+      {
+        "capability": "grpc-calls",
+        "name": "maxTime",
+        "type": "number",
+        "description": "Request timeout in seconds"
+      },
+      {
+        "capability": "protobuf-imports",
+        "name": "importPath",
+        "type": "string",
+        "description": "Proto import root"
+      },
+      {
+        "capability": "protobuf-imports",
+        "name": "proto",
+        "type": "string",
+        "description": "Proto file path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "grpcurl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/grpcurl-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/grpcurl-skill.yaml",
+    "checksum": "5bb89869e84610baa284e63b7622ccec4ea8ae8c28e26e08ec91bd9c947c6ba6"
+  }
+}

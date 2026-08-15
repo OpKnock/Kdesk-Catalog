@@ -1,0 +1,207 @@
+{
+  "name": "rsync",
+  "display_name": "rsync",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Synchronizes files and directories with rsync: incremental sync, archive mode, deletion, exclusions, and remote transfers over SSH.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "rsync"
+  ],
+  "capabilities": [
+    {
+      "name": "sync-operations",
+      "description": "Copy and synchronize directories with archive semantics.",
+      "commands": [
+        "rsync -avz src/ user@host:/srv/app/",
+        "rsync -av --delete src/ dest/",
+        "rsync -n -av --delete src/ dest/",
+        "rsync -av --exclude 'node_modules' --exclude '.git' src/ dest/",
+        "rsync --partial --progress -avz bigfile.iso user@host:/tmp/"
+      ],
+      "examples": [
+        "rsync -avz src/ user@host:/srv/app/",
+        "rsync -n -av --delete src/ dest/",
+        "rsync -av --exclude 'node_modules' src/ dest/"
+      ],
+      "parameters": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Source path"
+        },
+        {
+          "name": "dest",
+          "type": "string",
+          "description": "Destination path"
+        },
+        {
+          "name": "exclude",
+          "type": "string",
+          "description": "Pattern to exclude"
+        }
+      ]
+    },
+    {
+      "name": "backup-and-advanced",
+      "description": "Incremental backups with hard links and remote shell options.",
+      "commands": [
+        "rsync -av --link-dest ../backup-2026-08-09 data/ backup-2026-08-10/",
+        "rsync -az -e 'ssh -p 2222 -i key.pem' src/ user@host:/dest/",
+        "rsync -av --bwlimit=2000 bigdir/ user@host:/backup/",
+        "rsync -avz --delete-after src/ dest/",
+        "rsync -ai source/ dest/"
+      ],
+      "examples": [
+        "rsync -av --link-dest ../backup-2026-08-09 data/ backup-2026-08-10/",
+        "rsync -az -e 'ssh -p 2222 -i key.pem' src/ user@host:/dest/",
+        "rsync -av --bwlimit=2000 bigdir/ user@host:/backup/"
+      ],
+      "parameters": [
+        {
+          "name": "link-dest",
+          "type": "string",
+          "description": "Previous backup dir for hard-link dedup"
+        },
+        {
+          "name": "bwlimit",
+          "type": "integer",
+          "description": "Bandwidth limit in KB/s"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "rsync Manual",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man1/rsync.1.html",
+      "description": "Full rsync option reference"
+    },
+    {
+      "title": "rsync Archive",
+      "type": "documentation",
+      "source": "https://rsync.samba.org/documentation.html",
+      "description": "Official rsync documentation"
+    }
+  ],
+  "instructions": "# rsync Synchronization\n\nCopy and sync files efficiently — local or remote, incremental.\n\n## What This Skill Does\n\n- Syncs directories with archive mode (perms, times, links)\n- Removes extraneous files with --delete\n- Excludes patterns (node_modules, .git)\n- Creates hard-link incremental backups\n- Transfers over custom SSH ports/keys\n- Dry-runs to preview changes\n\n## When to Use\n\n- Deploying code to servers\n- Backing up data with dedup (link-dest)\n- Mirroring directories across machines\n\n## Real Commands\n\n```bash\n# Basic sync\nrsync -avz src/ user@host:/srv/app/\nrsync -av src/ dest/\n\n# Mirror (delete extras) with dry run\nrsync -n -av --delete src/ dest/\nrsync -av --delete src/ dest/\n\n# Exclusions\nrsync -av --exclude 'node_modules' --exclude '.git' src/ dest/\n\n# Remote with custom SSH\nrsync -az -e 'ssh -p 2222 -i key.pem' src/ user@host:/dest/\n\n# Incremental backups\nrsync -av --link-dest ../backup-2026-08-09 data/ backup-2026-08-10/\n\n# Limits and progress\nrsync --partial --progress -avz bigfile.iso user@host:/tmp/\nrsync -av --bwlimit=2000 bigdir/ user@host:/backup/\n```\n\n## Best Practices\n\n- Always dry-run (-n) before --delete on production\n- Trailing slash matters: src/ copies contents, src copies the dir\n- Use --link-dest for space-efficient daily backups\n- Compress (-z) only for slow links\n- Pair with --checksum when timestamps lie (e.g. build artifacts)",
+  "examples": [
+    {
+      "input": "Deploy the build folder to prod",
+      "output": "Agent dry-runs rsync, then syncs with delete + excludes, verifying file counts"
+    },
+    {
+      "input": "Set up daily deduplicated backups",
+      "output": "Agent configures --link-dest against the previous day's backup and schedules it"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rsync.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rsync"
+    },
+    "generic": {
+      "system_prompt": "You own rsync end to end. You do it through sync-operations: Copy and synchronize directories with archive semantics. The commands are real, e.g. `rsync -avz src/ user@host:/srv/app/`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rsync",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sync-operations",
+        "name": "src",
+        "type": "string",
+        "description": "Source path"
+      },
+      {
+        "capability": "sync-operations",
+        "name": "dest",
+        "type": "string",
+        "description": "Destination path"
+      },
+      {
+        "capability": "sync-operations",
+        "name": "exclude",
+        "type": "string",
+        "description": "Pattern to exclude"
+      },
+      {
+        "capability": "backup-and-advanced",
+        "name": "link-dest",
+        "type": "string",
+        "description": "Previous backup dir for hard-link dedup"
+      },
+      {
+        "capability": "backup-and-advanced",
+        "name": "bwlimit",
+        "type": "integer",
+        "description": "Bandwidth limit in KB/s"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "rsync"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/rsync-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/rsync-skill.yaml",
+    "checksum": "5882e40bd241c84973a50b2b46c421dbd2b99b9976e533d1e584e7e6bc234c01"
+  }
+}

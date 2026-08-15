@@ -1,0 +1,206 @@
+{
+  "name": "api-gateway-routing-design",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Designs gateway routing and policies: route matching, rate limit tiers, JWT validation, and failover before implementation.",
+  "keywords": [
+    "api-gateway",
+    "kong",
+    "routing"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-gateway-routing-design.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-gateway-routing-design"
+    },
+    "generic": {
+      "system_prompt": "You take the Api Gateway Routing Design seat. You do it through routing-design: Design route matching rules: paths, hosts, headers, and methods. The commands are real, e.g. `node -e const r={paths:[/api/v1/orders],hosts:[api.example.com],methods:[GET,POST]};consol...`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "routing-design",
+      "description": "Design route matching rules: paths, hosts, headers, and methods",
+      "commands": [
+        "node -e \"const r={paths:['/api/v1/orders'],hosts:['api.example.com'],methods:['GET','POST']};console.log(JSON.stringify(r,null,2))\"",
+        "node -e \"console.log('priority: method > header > path > host')\"",
+        "curl -s -H 'Host: api.example.com' http://localhost:8000/api/v1/orders -o /dev/null -w '%{http_code}'",
+        "node -e \"const routes=['/api/v1/*','/internal/*','/healthz'];console.log(routes.join('\\n'))\"",
+        "curl -s http://localhost:8000/healthz -o /dev/null -w '%{http_code}'"
+      ],
+      "examples": [
+        "node -e \"const r={paths:['/api/v1/orders'],hosts:['api.example.com'],methods:['GET','POST']};console.log(JSON.stringify(r,null,2))\"",
+        "curl -s -H 'Host: api.example.com' http://localhost:8000/api/v1/orders -o /dev/null -w '%{http_code}'",
+        "curl -s http://localhost:8000/healthz -o /dev/null -w '%{http_code}'"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Route path"
+        },
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Route host"
+        }
+      ]
+    },
+    {
+      "name": "policy-design",
+      "description": "Design rate limit tiers, quotas, and auth policies",
+      "commands": [
+        "node -e \"const tiers={free:{minute:10},pro:{minute:120},enterprise:{minute:1000}};console.log(JSON.stringify(tiers,null,2))\"",
+        "node -e \"console.log('burst: 2x rate, keyed by consumer id')\"",
+        "curl -s -X POST http://localhost:8001/consumers -H 'Content-Type: application/json' -d '{\"username\":\"acme\"}'",
+        "curl -s -X POST http://localhost:8001/consumers/acme/plugins -H 'Content-Type: application/json' -d '{\"name\":\"rate-limiting\",\"config\":{\"minute\":120}}'",
+        "curl -s -X POST http://localhost:8001/consumers/acme/key-auth -H 'Content-Type: application/json' -d '{}'"
+      ],
+      "examples": [
+        "node -e \"const tiers={free:{minute:10},pro:{minute:120},enterprise:{minute:1000}};console.log(JSON.stringify(tiers,null,2))\"",
+        "curl -s -X POST http://localhost:8001/consumers/acme/plugins -H 'Content-Type: application/json' -d '{\"name\":\"rate-limiting\",\"config\":{\"minute\":120}}'",
+        "curl -s -X POST http://localhost:8001/consumers/acme/key-auth -H 'Content-Type: application/json' -d '{}'"
+      ],
+      "parameters": [
+        {
+          "name": "consumer",
+          "type": "string",
+          "description": "Consumer name"
+        },
+        {
+          "name": "tier",
+          "type": "string",
+          "description": "Rate limit tier"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "kong",
+    "traefik",
+    "aws-cli"
+  ],
+  "tools": [
+    "kong",
+    "traefik",
+    "aws-cli",
+    "docker",
+    "kubernetes"
+  ],
+  "examples": [
+    {
+      "input": "Design routing for the gateway rollout",
+      "output": "Models path/host/method routes and versioning policy across public and internal APIs"
+    },
+    {
+      "input": "Define rate-limit tiers per customer plan",
+      "output": "Designs free/pro/enterprise quotas and consumer-based enforcement with bursts"
+    }
+  ],
+  "instructions": "# API Gateway (Design)\n\nDesigns gateway routes and policies before wiring them up.\n\n## When to Use\n- Planning gateway rollout\n- Defining rate-limit tiers\n- Deciding route ownership\n\n## Real Commands\n\n```bash\n# Route model\nnode -e \"const r={paths:['/api/v1/orders'],hosts:['api.example.com'],methods:['GET','POST']};console.log(JSON.stringify(r,null,2))\"\n\n# Tiers\nnode -e \"const tiers={free:{minute:10},pro:{minute:120},enterprise:{minute:1000}};console.log(JSON.stringify(tiers,null,2))\"\n\n# Consumers\ncurl -s -X POST http://localhost:8001/consumers -H 'Content-Type: application/json' -d '{\"username\":\"acme\"}'\ncurl -s -X POST http://localhost:8001/consumers/acme/plugins -H 'Content-Type: application/json' -d '{\"name\":\"rate-limiting\",\"config\":{\"minute\":120}}'\n```\n\n## Design Checklist\n- Versioned path prefixes\n- Internal vs public route split\n- Per-tier quotas and burst allowances\n\n## Testing\nProbe each tier's limit and verify 429 responses carry retry headers.\n\n## Best Practices\n- Design routes before plugins\n- Key limits by consumer, not IP",
+  "display_name": "Api Gateway Routing Design",
+  "knowledge": [
+    {
+      "title": "Kong Routing",
+      "type": "documentation",
+      "source": "https://docs.konghq.com/gateway/latest/key-concepts/routes/",
+      "description": "Route matching expressions"
+    },
+    {
+      "title": "Rate Limiting Design",
+      "type": "documentation",
+      "source": "https://docs.konghq.com/hub/kong-inc/rate-limiting/",
+      "description": "Plugin config and tiers"
+    }
+  ],
+  "id": "api-gateway-routing-design",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "routing-design",
+        "name": "path",
+        "type": "string",
+        "description": "Route path"
+      },
+      {
+        "capability": "routing-design",
+        "name": "host",
+        "type": "string",
+        "description": "Route host"
+      },
+      {
+        "capability": "policy-design",
+        "name": "consumer",
+        "type": "string",
+        "description": "Consumer name"
+      },
+      {
+        "capability": "policy-design",
+        "name": "tier",
+        "type": "string",
+        "description": "Rate limit tier"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kong",
+    "traefik",
+    "aws-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-gateway-routing-design/skill/api-gateway-routing-design.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-gateway-routing-design/skill/api-gateway-routing-design.yaml",
+    "checksum": "3de16bb619afa6f75093456159aa7a00c6a3113eea7fe444dff0db3e3ac140f8"
+  }
+}

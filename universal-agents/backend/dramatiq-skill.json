@@ -1,0 +1,209 @@
+{
+  "name": "dramatiq",
+  "display_name": "dramatiq",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Builds and operates Dramatiq task queues with Redis/RabbitMQ brokers, worker CLI, delays, and actor middleware.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "dramatiq",
+    "python",
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "dramatiq worker tasks:broker",
+        "dramatiq worker --processes 4 --threads 8 tasks:broker",
+        "dramatiq worker tasks --queues email,default",
+        "dramatiq worker --watch . tasks",
+        "python -m dramatiq tasks:broker"
+      ],
+      "description": "Run and manage Dramatiq worker processes.",
+      "name": "dramatiq-workers",
+      "examples": [
+        "dramatiq worker --processes 2 tasks:broker",
+        "dramatiq worker tasks --queues high",
+        "dramatiq worker --watch tasks -v"
+      ],
+      "parameters": [
+        {
+          "description": "Worker process count",
+          "name": "processes",
+          "type": "integer"
+        },
+        {
+          "description": "Threads per process",
+          "name": "threads",
+          "type": "integer"
+        },
+        {
+          "description": "Queues to consume",
+          "name": "queues",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "redis-cli llen dramatiq:default",
+        "redis-cli zrange dramatiq:delayed 0 -1",
+        "redis-cli lrange dramatiq:default 0 10",
+        "redis-cli flushdb"
+      ],
+      "description": "Inspect broker queues and message state directly.",
+      "name": "dramatiq-broker",
+      "examples": [
+        "redis-cli llen dramatiq:email",
+        "redis-cli hgetall dramatiq:message-state"
+      ],
+      "parameters": [
+        {
+          "description": "Queue name to inspect",
+          "name": "queue",
+          "type": "string"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Redis key pattern to scan"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Dramatiq Docs",
+      "description": "Task queue reference: actors, brokers, middleware, CLI",
+      "source": "https://dramatiq.io/",
+      "type": "documentation"
+    },
+    {
+      "title": "Dramatiq Examples",
+      "description": "Real-world task patterns",
+      "source": "https://dramatiq.io/examples.html",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Dramatiq\n\nBackground task processing for Python using Redis or RabbitMQ.\n\n## When to Use\n\n- Simple, reliable task queues with minimal ceremony\n- At-least-once delivery with retries built in\n- Parallel CPU and I/O work spread across worker processes\n- Where Celery feels heavy; Dramatiq is lighter weight\n\n## Setup\n\n```bash\npip install dramatiq[redis]\n```\n\n## Commands\n\n```bash\n# Run workers\ndramatiq worker tasks:broker\n\n# Scale processes and threads\ndramatiq worker --processes 4 --threads 8 tasks:broker\n\n# Consume specific queues\ndramatiq worker tasks --queues email,default\n\n# Auto-reload on file changes\ndramatiq worker --watch . tasks\n\n# Inspect queues in Redis\nredis-cli llen dramatiq:default\nredis-cli lrange dramatiq:default 0 10\nredis-cli zrange dramatiq:delayed 0 -1\n```\n\n## Actor Example\n\n```python\n# tasks.py\nimport dramatiq\nfrom dramatiq.brokers.redis import RedisBroker\n\nbroker = RedisBroker(host=\"localhost\")\ndramatiq.set_broker(broker)\n\n@dramatiq.actor(max_retries=5, time_limit=60000)\ndef send_welcome(user_id):\n    email = fetch_user(user_id).email\n    send_mail(email, \"Welcome!\")\n```\n\n## Enqueue\n\n```python\nfrom tasks import send_welcome\nsend_welcome.send(42)\nsend_welcome.send_with_options(args=(42,), delay=3600000)\n```\n\n## Best Practices\n\n- Set max_retries and time_limit on every actor\n- Keep messages small; pass IDs rather than objects\n- Use separate queues for latency-sensitive work\n- Run workers under a process manager with at least 2 processes\n- Use --watch in dev for fast iteration",
+  "examples": [
+    {
+      "input": "Queue a task for later in Dramatiq",
+      "output": "Agent shows send_with_options with delay in ms and an example of an email actor with retries."
+    },
+    {
+      "input": "How many workers do I need?",
+      "output": "Agent estimates based on queue backlog (redis-cli llen dramatiq:default) and explains --processes/--threads tradeoffs."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "dramatiq.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-dramatiq"
+    },
+    "generic": {
+      "system_prompt": "You work dramatiq hands-on. You do it through dramatiq-workers: Run and manage Dramatiq worker processes. The commands are real, e.g. `dramatiq worker tasks:broker`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "dramatiq",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "dramatiq-workers",
+        "name": "processes",
+        "type": "integer",
+        "description": "Worker process count"
+      },
+      {
+        "capability": "dramatiq-workers",
+        "name": "threads",
+        "type": "integer",
+        "description": "Threads per process"
+      },
+      {
+        "capability": "dramatiq-workers",
+        "name": "queues",
+        "type": "string",
+        "description": "Queues to consume"
+      },
+      {
+        "capability": "dramatiq-broker",
+        "name": "queue",
+        "type": "string",
+        "description": "Queue name to inspect"
+      },
+      {
+        "capability": "dramatiq-broker",
+        "name": "pattern",
+        "type": "string",
+        "description": "Redis key pattern to scan"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "dramatiq",
+    "python",
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/dramatiq-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/dramatiq-skill.yaml",
+    "checksum": "420468658d65abd4ade74c5f876f87314ba4311c6424ff6182907c67da5d8698"
+  }
+}

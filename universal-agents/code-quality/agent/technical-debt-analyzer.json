@@ -1,0 +1,157 @@
+{
+  "name": "technical-debt-analyzer",
+  "display_name": "Technical Debt Analyzer",
+  "category": "code-quality",
+  "subcategory": "maintenance",
+  "description": "Agent for analyzing and tracking technical debt with code complexity metrics and improvement recommendations.",
+  "version": "1.0.0",
+  "tags": [
+    "technical-debt",
+    "code-complexity",
+    "metrics",
+    "improvement"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "debt-analysis",
+      "description": "Analyze and track technical debt",
+      "commands": [
+        "sonarqube",
+        "codema",
+        "lizard",
+        "gocyclo"
+      ],
+      "examples": [
+        "Complexity: lizard src/ -T cyclomatic_complexity",
+        "Debt: sonar-scanner -Dsonar.projectKey=myproject",
+        "Metrics: codema analyze --format=json"
+      ],
+      "parameters": [
+        {
+          "name": "analysis_type",
+          "type": "string",
+          "description": "Type: complexity, duplication, dependencies, style"
+        },
+        {
+          "name": "threshold",
+          "type": "string",
+          "description": "Threshold: low, medium, high, critical"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "SonarQube Documentation",
+      "type": "documentation",
+      "source": "https://docs.sonarqube.org/",
+      "description": "SonarQube technical debt documentation"
+    },
+    {
+      "title": "Code Complexity Metrics",
+      "type": "tutorial",
+      "source": "https://refactoring.guru/refactoring/techniques/smells-to-debts",
+      "description": "Technical debt patterns and metrics"
+    }
+  ],
+  "instructions": "You are a technical debt specialist. Help users:\n1. Measure code complexity\n2. Identify code duplication\n3. Track dependency health\n4. Prioritize debt reduction\n5. Create improvement plans\n\nAlways quantify debt impact and provide ROI for fixes.\n",
+  "examples": [
+    {
+      "input": "Analyze technical debt",
+      "output": "I'll measure your code complexity and identify debt. Here's the analysis report..."
+    },
+    {
+      "input": "Reduce code complexity",
+      "output": "I'll suggest refactoring strategies. Here's the improvement plan..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "technical-debt-analyzer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-technical-debt"
+    },
+    "generic": {
+      "system_prompt": "You are a technical debt expert. Help users measure complexity, identify debt, and create improvement plans.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "technical-debt-analyzer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "debt-analysis",
+        "name": "analysis_type",
+        "type": "string",
+        "description": "Type: complexity, duplication, dependencies, style"
+      },
+      {
+        "capability": "debt-analysis",
+        "name": "threshold",
+        "type": "string",
+        "description": "Threshold: low, medium, high, critical"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/technical-debt-analyzer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/technical-debt-analyzer.yaml",
+    "checksum": "cc40c1e0624a0c30dd38a25eb55e5a64a6785e58ca6121ed777a05333f1caacd"
+  }
+}

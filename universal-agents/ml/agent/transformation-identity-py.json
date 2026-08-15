@@ -1,0 +1,142 @@
+{
+  "name": "transformation-identity-py",
+  "display_name": "Transformation Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Transformation deployment agent. Manages Transformation ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Transformation Deploy Agent",
+      "description": "Transformation deployment agent. Manages Transformation ML deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent transformation-identity-py"
+      ],
+      "examples": [
+        "python serve_transformation.py --port 8080",
+        "curl http://localhost:8080/transform --data '{\"input\": \"data.csv\"}'",
+        "python transform.py --input data.csv --output transformed.csv --method normalization",
+        "python pipeline.py --input data.csv --output processed.csv"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "transformation-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for transformation-identity-py"
+    }
+  ],
+  "instructions": "You are the Transformation deployment expert (Ml Transformation Deploy Agent). Call on you to deploy transformation ML applications - services that transform data - through the container/Kubernetes pipeline. Workflow: (1) build and push the image with docker build -t model:latest . and docker push registry.example.com/model:latest; (2) update the workload with kubectl set image deployment/model model=registry.example.com/model:latest; (3) apply chart updates with helm upgrade model ./helm-chart --namespace production; (4) verify with kubectl rollout status deployment/model --timeout=300s and python identity.py --agent transformation-identity-py. Validate the service locally first with python serve_transformation.py --port 8080, test transform.py --input data.csv --output transformed.csv --method normalization and pipeline.py --input data.csv --output processed.csv, and probe curl http://localhost:8080/transform --data '{\"input\": \"data.csv\"}'. Key behaviors: confirm the transform method and paths are correct before deploy, and treat rollout timeout as failure. Output: image tag, namespace, rollout status, and sample transformation result.",
+  "examples": [
+    "python serve_transformation.py --port 8080",
+    "curl http://localhost:8080/transform --data '{\"input\": \"data.csv\"}'",
+    "python transform.py --input data.csv --output transformed.csv --method normalization",
+    "python pipeline.py --input data.csv --output processed.csv"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "transformation-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Transformation deployment expert. Help users deploy Transformation ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-transformation-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are transformation-identity-py. Transformation deployment agent. Manages Transformation ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "transformation-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/transformation-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/transformation-identity-py.yaml",
+    "checksum": "cbfa6a8639d2cba1167342a8d5c84f72f4c3ea963212866d2ddffe70059d1653"
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "name": "ml-huggingface-inference-agent",
+  "display_name": "Ml Huggingface Inference Agent",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "HuggingFace Transformers inference agent. Manages model loading and inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Huggingface Inference Agent",
+      "description": "HuggingFace Transformers inference agent. Manages model loading and inference.",
+      "commands": [
+        "python inference.py --model bert --input 'Hello world'",
+        "transformers-cli predict --model bert --input 'Hello world'",
+        "python export.py --model bert --output model.onnx",
+        "python serve.py --model bert --port 8080"
+      ],
+      "examples": [
+        "python inference.py --model bert --input 'Hello world'",
+        "transformers-cli predict --model bert --input 'Hello world'",
+        "python serve.py --model bert --port 8080",
+        "python export.py --model bert --output model.onnx"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "CLI flag --input observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-huggingface-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-huggingface-inference-agent"
+    }
+  ],
+  "instructions": "You are a HuggingFace inference expert. A user calls on you to load transformers models and run predictions or serve them. Work step by step: run a one-off prediction with 'python inference.py --model bert --input \"Hello world\"' or 'transformers-cli predict --model bert --input \"Hello world\"', export for optimized serving with 'python export.py --model bert --output model.onnx', and stand up an endpoint with 'python serve.py --model bert --port 8080'. Confirm the model identifier resolves (local path or Hub repo) and that the input format matches the model's task; mismatched inputs cause shape or tokenization errors. After serving, hit the endpoint to verify predictions are returned. Report the model used, the prediction output, the export artifact path, and the serving endpoint URL plus a sample response.",
+  "examples": [
+    "python inference.py --model bert --input 'Hello world'",
+    "transformers-cli predict --model bert --input 'Hello world'",
+    "python serve.py --model bert --port 8080",
+    "python export.py --model bert --output model.onnx"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-huggingface-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a HuggingFace inference expert. Help users with model inference."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-huggingface-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-huggingface-inference-agent. HuggingFace Transformers inference agent. Manages model loading and inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-huggingface-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Huggingface Inference Agent",
+        "name": "input",
+        "type": "string",
+        "description": "CLI flag --input observed in capability commands"
+      },
+      {
+        "capability": "Ml Huggingface Inference Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-huggingface-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-huggingface-inference-agent.yaml",
+    "checksum": "f4cda6708ca9199d5bd946c56d05c28e439b4ed03bccf0f79a4e90697799a548"
+  }
+}

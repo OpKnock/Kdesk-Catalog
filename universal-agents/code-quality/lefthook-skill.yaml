@@ -1,0 +1,113 @@
+name: lefthook
+display_name: lefthook
+category: code-quality
+subcategory: general
+description: 'Manages Git hooks with Lefthook: parallel fast hooks, commands per glob, and CI-friendly
+  behavior.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- lefthook
+capabilities:
+- commands:
+  - lefthook install
+  - lefthook add pre-commit
+  - lefthook uninstall
+  - lefthook version
+  - lefthook install -f
+  description: Install and configure Lefthook.
+  name: lefthook-setup
+  examples:
+  - lefthook install -f
+  - lefthook add commit-msg
+  - lefthook run pre-commit
+  parameters:
+  - description: Hook name
+    name: hook
+    type: string
+  - name: force
+    type: boolean
+    description: Force reinstall of hooks
+- commands:
+  - lefthook run pre-commit
+  - lefthook run pre-commit --all-files
+  - lefthook run commit-msg --file .git/COMMIT_EDITMSG
+  - lefthook run --debug pre-commit
+  - lefthook run pre-push --force
+  description: Run hooks manually and debug.
+  name: lefthook-run
+  examples:
+  - lefthook run pre-commit --skip-output
+  - lefthook run lint --only-files
+  - lefthook run --dry-run pre-commit
+  parameters:
+  - description: Hook to run
+    name: hook
+    type: string
+  - description: Run against all files
+    name: all-files
+    type: boolean
+  - description: Verbose debug output
+    name: debug
+    type: boolean
+knowledge:
+- title: Lefthook Docs
+  description: Config, commands, and install
+  source: https://github.com/evilmartians/lefthook
+  type: documentation
+- title: Lefthook Configuration
+  description: Full config reference
+  source: https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+  type: documentation
+instructions: "# Lefthook\n\nFast, parallel Git hooks.\n\n## When to Use\n\n- Running many lint checks\
+  \ quickly before commits\n- Language-agnostic hook config (JS, Python, Go, Ruby)\n- CI-friendly hooks\
+  \ with force mode\n- Replacing husky/pre-commit setups\n\n## Commands\n\n```bash\n# Setup\nlefthook\
+  \ install\nlefthook add pre-commit\nlefthook uninstall\n\n# Run manually\nlefthook run pre-commit\n\
+  lefthook run pre-commit --all-files\nlefthook run commit-msg --file .git/COMMIT_EDITMSG\n\n# Debug\n\
+  lefthook run --debug pre-commit\nlefthook run --dry-run pre-commit\n```\n\n## Config Example\n\n```yaml\n\
+  # lefthook.yml\npre-commit:\n  parallel: true\n  commands:\n    eslint:\n      glob: \"*.{js,ts}\"\n\
+  \      run: npx eslint {staged_files} --fix\n    prettier:\n      glob: \"*.{js,ts,json,md}\"\n    \
+  \  run: npx prettier --write {staged_files}\n    pytest:\n      glob: \"*.py\"\n      run: pytest -q\
+  \ {staged_files}\n```\n\n## Best Practices\n\n- Use parallel: true with independent commands\n- Scope\
+  \ commands with glob so checks run on the right files\n- Use {staged_files} and {all_files} variables\
+  \ precisely\n- Add a pre-push hook for slow full test runs\n- Use lefthook run --debug to fix hook issues\n\
+  - Commit lefthook.yml so all devs share the config"
+examples:
+- input: Set up fast parallel pre-commit checks
+  output: Agent writes lefthook.yml with parallel eslint/prettier/pytest commands and runs lefthook install.
+- input: Hook is failing; how do I debug it?
+  output: Agent runs lefthook run --debug pre-commit and checks the command templates and glob matching.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: lefthook.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-lefthook
+  generic:
+    system_prompt: 'You work lefthook hands-on. You do it through lefthook-setup: Install and configure
+      Lefthook. The commands are real, e.g. `lefthook install`. You verify each step you report and stay
+      honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

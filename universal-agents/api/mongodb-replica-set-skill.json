@@ -1,0 +1,173 @@
+{
+  "name": "mongodb-replica-set",
+  "display_name": "Mongodb Replica Set",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Deploy and manage MongoDB replica sets: init, membership, failover, elections, and oplog inspection.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mongod",
+    "mongosh"
+  ],
+  "capabilities": [
+    {
+      "name": "replica-set-operations",
+      "description": "Initialize and manage a MongoDB replica set through mongod flags and mongosh replica set commands.",
+      "commands": [
+        "mongod --replSet rs0 --dbpath /data/db --bind_ip 0.0.0.0 --port 27017",
+        "mongosh --eval \"rs.initiate()\"",
+        "mongosh --eval \"rs.add('mongo2:27017')\"",
+        "mongosh --eval \"rs.status()\"",
+        "mongosh --eval \"rs.conf()\""
+      ],
+      "examples": [
+        "mongosh --eval \"rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo1:27017'},{_id:1,host:'mongo2:27017'},{_id:2,host:'mongo3:27017'}]})\"",
+        "mongosh --eval \"rs.stepDown(60)\"",
+        "mongosh --eval \"rs.status()\" | grep -E 'stateStr|name'"
+      ],
+      "parameters": [
+        {
+          "name": "replSet",
+          "type": "string",
+          "description": "Replica set name, must match across members"
+        },
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Hostname:port of the member to add or remove"
+        },
+        {
+          "name": "force",
+          "type": "boolean",
+          "description": "Force reconfiguration when out of quorum"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MongoDB Replication Docs",
+      "type": "documentation",
+      "source": "https://www.mongodb.com/docs/manual/replication/",
+      "description": "Replica set concepts, elections, oplog and failover"
+    },
+    {
+      "title": "rs helper methods",
+      "type": "documentation",
+      "source": "https://www.mongodb.com/docs/manual/reference/method/js-replica-set-administration/",
+      "description": "rs.initiate, rs.add, rs.status, rs.conf reference"
+    }
+  ],
+  "instructions": "# MongoDB Replica Set\n\nA replica set is a group of mongod instances that maintain the same data set, providing redundancy and automatic failover.\n\n## What this skill does\n\n- Starts mongod nodes with a replica set name\n- Initializes the set and manages membership\n- Diagnoses elections, failover and oplog issues\n\n## When to use\n\n- Setting up HA MongoDB for the first time\n- Adding or removing members\n- Investigating primary/secondary state or stale members\n\n## Real commands\n\n```bash\n# Start each node with the same replSet name\nmongod --replSet rs0 --dbpath /data/db --bind_ip 0.0.0.0 --port 27017\n\n# Initiate with explicit member list\nmongosh --eval \"rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo1:27017'},{_id:1,host:'mongo2:27017'},{_id:2,host:'mongo3:27017'}]})\"\n\n# Add/remove members\nmongosh --eval \"rs.add('mongo2:27017')\"\nmongosh --eval \"rs.remove('mongo3:27017')\"\n\n# Force a step-down (maintenance)\nmongosh --eval \"rs.stepDown(60)\"\n\n# Inspect state\nmongosh --eval \"rs.status()\"\nmongosh --eval \"rs.conf()\"\n```\n\n## Oplog inspection\n\n```js\nuse local\ndb.oplog.rs.find().sort({$natural:-1}).limit(1)\n```\n\n## Best practices\n\n- Always use odd member counts or an arbiter\n- Monitor `replSetSecondary` state and oplog lag\n- Reconfigure with `rs.reconfig()` only with majority reachable",
+  "examples": [
+    {
+      "input": "Set up a 3-node replica set on my servers",
+      "output": "The agent gives the mongod startup flags for all three nodes, the rs.initiate command with the member list, and verification via rs.status()."
+    },
+    {
+      "input": "My secondary is showing stateStr RECOVERING",
+      "output": "The agent checks oplog lag, run-away-replication and re-sync options, and shows how to force resync by wiping the secondary dbpath."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mongodb-replica-set.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mongodb-replica-set"
+    },
+    "generic": {
+      "system_prompt": "You take the Mongodb Replica Set seat. You do it through replica-set-operations: Initialize and manage a MongoDB replica set through mongod flags and mongosh replica set commands. The commands are real, e.g. `mongod --replSet rs0 --dbpath /data/db --bind_ip 0.0.0.0 --port 27017`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mongodb-replica-set",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "replica-set-operations",
+        "name": "replSet",
+        "type": "string",
+        "description": "Replica set name, must match across members"
+      },
+      {
+        "capability": "replica-set-operations",
+        "name": "host",
+        "type": "string",
+        "description": "Hostname:port of the member to add or remove"
+      },
+      {
+        "capability": "replica-set-operations",
+        "name": "force",
+        "type": "boolean",
+        "description": "Force reconfiguration when out of quorum"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mongod",
+    "mongosh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/mongodb-replica-set-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/mongodb-replica-set-skill.yaml",
+    "checksum": "98e4f64de1c413fe679bd6dc8e0ed772089fc83e78531f681a854d0df945eb3a"
+  }
+}

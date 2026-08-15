@@ -1,0 +1,108 @@
+name: api-version-schema-diffing
+version: 2.0.0
+type: skill
+category: backend
+description: 'Evolves GraphQL schemas safely: schema diffing with graphql-inspector, deprecation directives,
+  coverage checks, and breaking-change detection.'
+keywords:
+- deprecation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-version-schema-diffing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-version-schema-diffing
+  generic:
+    system_prompt: 'This is your domain: Api Version Schema Diffing. You do it through schema-diffing:
+      Diff GraphQL schemas for breaking changes. The commands are real, e.g. `npm install -g @graphql-inspector/cli`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: schema-diffing
+  description: Diff GraphQL schemas for breaking changes
+  commands:
+  - npm install -g @graphql-inspector/cli
+  - npx @graphql-inspector/cli diff schema-old.graphql schema-new.graphql
+  - npx @graphql-inspector/cli diff --rule breaking schema-old.graphql schema-new.graphql
+  - npx @graphql-inspector/cli validate schema.graphql
+  - npx @graphql-inspector/cli coverage --schema schema.graphql --queries "src/**/*.graphql"
+  examples:
+  - diff reports breaking vs non-breaking changes
+  - --rule breaking filters to breaking-only
+  - coverage shows unused schema fields
+  parameters:
+  - name: old-schema
+    type: string
+    description: Baseline schema file
+  - name: new-schema
+    type: string
+    description: Changed schema file
+  - name: rule
+    type: string
+    description: breaking, safe, or dangerous rules
+- name: deprecations
+  description: Mark fields deprecated in the schema
+  commands:
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -d ''{"query":"{
+    __type(name: \"User\") { fields { name isDeprecated deprecationReason } } }"}'' | jq ''.data.__type.fields[0]'''
+  - npx @graphql-inspector/cli diff schema.graphql schema-next.graphql --rule dangerous
+  - grep -c 'deprecated' schema.graphql
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- openapi
+tools:
+- node.js
+- python
+- openapi
+- postman
+examples:
+- input: Check if a schema change breaks clients
+  output: Runs graphql-inspector diff against the previous schema
+- input: Deprecate a field
+  output: Adds the @deprecated directive and verifies with introspection
+instructions: "# API Version v2 - GraphQL\n\nGraphQL schema evolution.\n\n## What This Skill Does\n- Detects\
+  \ breaking schema changes\n- Manages deprecation directives\n- Tracks field coverage\n\n## When to Use\n\
+  - Evolving GraphQL schemas safely\n- Releasing schema changes\n- Auditing unused fields\n\n## Real Commands\n\
+  \n```bash\nnpx @graphql-inspector/cli diff schema-old.graphql schema-new.graphql\nnpx @graphql-inspector/cli\
+  \ coverage --schema schema.graphql --queries \"src/**/*.graphql\"\n```\n\n## Deprecation Pattern\n\n\
+  ```graphql\ntype User {\n  id: ID!\n  legacyName: String @deprecated(reason: \"Use displayName\")\n\
+  }\n```\n\n## Testing\n- Diff every PR against the last release\n- Fail CI on breaking diffs\n- Remove\
+  \ deprecated fields after coverage drops\n\n\n## Best Practices\n- Prefer additive changes over breaks\n\
+  - Use @deprecated before removal\n- Track usage before deletion"
+display_name: Api Version Schema Diffing
+knowledge:
+- title: GraphQL Inspector
+  type: documentation
+  source: https://the-guild.dev/graphql/inspector/docs
+  description: Schema diffing and validation
+- title: GraphQL Best Practices
+  type: documentation
+  source: https://graphql.org/learn/best-practices/
+  description: GraphQL evolution best practices

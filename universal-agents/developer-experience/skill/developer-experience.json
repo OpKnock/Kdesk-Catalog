@@ -1,0 +1,186 @@
+{
+  "name": "developer-experience",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "platform",
+  "description": "Improves DX: unified dev commands, parallel task runners, instant feedback loops, and consistent tooling.",
+  "keywords": [
+    "developer-experience",
+    "dx",
+    "tooling",
+    "feedback-loops"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "developer-experience.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-developer-experience"
+    },
+    "generic": {
+      "system_prompt": "You take the developer-experience seat. You do it through dx-tooling: Standardize scripts and run tasks in parallel for faster feedback. The commands are real, e.g. `npm pkg set scripts.dev=vite scripts.lint=eslint . --max-warnings 0`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "dx-tooling",
+      "description": "Standardize scripts and run tasks in parallel for faster feedback",
+      "commands": [
+        "npm pkg set scripts.dev=\"vite\" scripts.lint=\"eslint . --max-warnings 0\"",
+        "npx concurrently -k -n web,api -c blue,green \"npm run dev:web\" \"npm run dev:api\"",
+        "npm-run-all --parallel lint typecheck test",
+        "npx nx affected -t test --base=origin/main",
+        "npx playwright install --with-deps"
+      ],
+      "examples": [
+        "npx concurrently \"npm run dev\" \"npm run storybook\"",
+        "npm run check && npm run dev",
+        "npx nx run-many -t build --skip-nx-cache"
+      ],
+      "parameters": [
+        {
+          "name": "parallel",
+          "type": "boolean",
+          "description": "Run tasks in parallel (npm-run-all)"
+        },
+        {
+          "name": "names",
+          "type": "string",
+          "description": "concurrently -n: task names for prefixes"
+        },
+        {
+          "name": "with-deps",
+          "type": "boolean",
+          "description": "Install browser dependencies for Playwright"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "storybook",
+    "docusaurus",
+    "github-actions"
+  ],
+  "tools": [
+    "node.js",
+    "storybook",
+    "docusaurus",
+    "github-actions",
+    "figma"
+  ],
+  "examples": [
+    {
+      "input": "Set up a smooth dev workflow",
+      "output": "Adds unified npm scripts, configures concurrently for web+api, and verifies the check/test flow"
+    },
+    {
+      "input": "Dev loop is too slow",
+      "output": "Introduces watch mode, parallel checks, and affected-only commands; measures the speedup"
+    }
+  ],
+  "instructions": "# Developer Experience\n\nMakes local development fast and consistent: unified scripts, parallel runners,\ninstant checks, and low-friction setup.\n\n## When to Use\n\n- A repo where devs run 5 different command sequences\n- Slow feedback loops blocking iteration\n- New-hire onboarding friction\n\n## Real Commands\n\n```bash\n# One command to rule them all\nsudo npm pkg set scripts.dev=\"vite\" scripts.check=\"npm-run-all --parallel lint typecheck\"\nsudo npm pkg set scripts.test=\"vitest run\" scripts.dx=\"npm run check && npm run dev\"\n\n# Run web + api together\nsudo npx concurrently -k -n web,api -c blue,green \"npm run dev:web\" \"npm run dev:api\"\n\n# Parallel checks\nsudo npm-run-all --parallel lint typecheck test\n\n# Affected-only in monorepos\nsudo npx nx affected -t test --base=origin/main\n\n# One-time env setup\nsudo npx playwright install --with-deps\n```\n\n## Recommended Scripts\n\n```json\n{\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"check\": \"npm-run-all --parallel lint typecheck\",\n    \"test\": \"vitest run\",\n    \"test:watch\": \"vitest\"\n  }\n}\n```\n\n## Best Practices\n\n- Provide `dev`, `build`, `check`, `test` in every package\n- Prefer `--parallel` for independent checks\n- Add a CONTRIBUTING quick-start with one command\n- Automate dependency setup (playwright install, husky init)\n- Keep cold-start dev time under 10 seconds if possible\n\n## Example Response\n\nStandardizes the repo scripts, wires parallel runners, and verifies the whole\ndev loop works from a fresh clone.",
+  "display_name": "developer-experience",
+  "knowledge": [
+    {
+      "title": "npm-run-all docs",
+      "type": "documentation",
+      "source": "https://github.com/mysticatea/npm-run-all",
+      "description": "Run npm scripts serially or in parallel"
+    },
+    {
+      "title": "concurrently docs",
+      "type": "documentation",
+      "source": "https://github.com/open-cli-tools/concurrently",
+      "description": "Parallel process runner with prefixes"
+    },
+    {
+      "title": "Nx developer experience",
+      "type": "documentation",
+      "source": "https://nx.dev/features/explore-graph",
+      "description": "Task graphs and affected commands"
+    }
+  ],
+  "id": "developer-experience",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "dx-tooling",
+        "name": "parallel",
+        "type": "boolean",
+        "description": "Run tasks in parallel (npm-run-all)"
+      },
+      {
+        "capability": "dx-tooling",
+        "name": "names",
+        "type": "string",
+        "description": "concurrently -n: task names for prefixes"
+      },
+      {
+        "capability": "dx-tooling",
+        "name": "with-deps",
+        "type": "boolean",
+        "description": "Install browser dependencies for Playwright"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "storybook",
+    "docusaurus",
+    "github-actions"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "developer-experience/skill/developer-experience.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/developer-experience/skill/developer-experience.yaml",
+    "checksum": "76b9af2216b4d1769693467fce7058d984051773c9b592f4ef79fe1041ed0570"
+  }
+}

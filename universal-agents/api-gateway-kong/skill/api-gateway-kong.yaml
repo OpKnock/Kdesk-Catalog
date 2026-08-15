@@ -1,0 +1,178 @@
+name: api-gateway-kong
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Implements API gateways hands-on: deploy Kong with deck, configure routes/services, and
+  enable auth and rate-limit plugins.'
+keywords:
+- api-gateway
+- kong
+- routing
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-gateway-kong.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-gateway-kong
+  generic:
+    system_prompt: 'You are the Api Gateway Kong specialist. You do it through kong-operations: Deploy
+      and configure Kong gateway with declarative configuration. The commands are real, e.g. `docker run
+      -d --name kong-gateway -p 8000:8000 -p 8001:8001 kong/kong-gateway`. You verify each step you report
+      and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: kong-operations
+  description: Deploy and configure Kong gateway with declarative configuration
+  commands:
+  - docker run -d --name kong-gateway -p 8000:8000 -p 8001:8001 kong/kong-gateway
+  - deck ping
+  - deck dump --output-file kong.yaml
+  - deck sync --state kong.yaml
+  - curl -s http://localhost:8001/status
+  examples:
+  - deck ping && deck dump --output-file kong.yaml
+  - deck sync --state kong.yaml
+  - curl -s http://localhost:8001/services | python -m json.tool
+  parameters:
+  - name: service
+    type: string
+    description: Upstream service name
+  - name: route
+    type: string
+    description: Route path or host
+- name: plugin-configuration
+  description: Enable auth, rate limiting, and logging plugins on routes
+  commands:
+  - 'curl -s -X POST http://localhost:8001/services/orders/routes -H ''Content-Type: application/json''
+    -d ''{"paths":["/orders"]}'''
+  - 'curl -s -X POST http://localhost:8001/services/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"rate-limiting","config":{"minute":60}}'''
+  - 'curl -s -X POST http://localhost:8001/services/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"jwt"}'''
+  - 'curl -s -X POST http://localhost:8001/services/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"http-log","config":{"http_endpoint":"http://logs:8080"}}'''
+  - curl -s http://localhost:8001/services/orders/plugins | python -m json.tool
+  examples:
+  - 'curl -s -X POST http://localhost:8001/services/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"rate-limiting","config":{"minute":60}}'''
+  - 'curl -s -X POST http://localhost:8001/services/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"jwt"}'''
+  - curl -s http://localhost:8001/services/orders/plugins | python -m json.tool
+  parameters:
+  - name: plugin
+    type: string
+    description: Plugin name
+  - name: config
+    type: string
+    description: Plugin configuration JSON
+prerequisites:
+- kong
+- traefik
+- aws-cli
+tools:
+- kong
+- traefik
+- aws-cli
+- docker
+- kubernetes
+examples:
+- input: Set up a Kong gateway for our services
+  output: Deploys Kong, adds routes for orders and payments, and enables JWT auth plus rate limiting
+- input: Add rate limiting per consumer
+  output: Creates consumers, issues API keys, and applies rate-limiting plugins per consumer
+instructions: '# API Gateway (Implementation)
+
+
+  Deploys and operates Kong API gateways with declarative config.
+
+
+  ## When to Use
+
+  - Centralizing API entry points
+
+  - Adding auth and rate limits without app changes
+
+  - Multi-service routing
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Run Kong
+
+  kong migrations bootstrap
+
+  kong start
+
+  docker run -d --name kong-gateway -p 8000:8000 -p 8001:8001 kong/kong-gateway
+
+
+  # Declarative config
+
+  deck ping
+
+  kong config -c kong.yaml
+
+
+  # Add a route
+
+  curl -s -X POST http://localhost:8001/services/orders/routes -H ''Content-Type: application/json'' -d
+  ''{"paths":["/orders"]}''
+
+
+  # Plugins
+
+  curl -s -X POST http://localhost:8001/services/orders/plugins -H ''Content-Type: application/json''
+  -d ''{"name":"rate-limiting","config":{"minute":60}}''
+
+  ```
+
+
+  ## Testing
+
+  Send requests through the gateway and verify 401/429 behavior after enabling plugins.
+
+
+  ## Best Practices
+
+  - Keep config in Git via deck sync
+
+  - Enable rate limiting before going public
+
+  - Use health checks on upstreams'
+display_name: Api Gateway Kong
+knowledge:
+- title: Kong Gateway Docs
+  type: documentation
+  source: https://docs.konghq.com/gateway/
+  description: Routes, services, plugins
+- title: deck CLI
+  type: documentation
+  source: https://docs.konghq.com/deck/
+  description: Declarative Kong configuration

@@ -1,0 +1,95 @@
+name: nx-lint
+display_name: nx-lint
+category: code-quality
+subcategory: general
+description: 'Linting in Nx monorepos: running lints per project, on affected sets, and with parallel
+  execution.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: nx-lint
+  description: Run lint targets across Nx projects and affected graph
+  commands:
+  - npx nx lint web
+  - npx nx run-many -t lint
+  - npx nx affected -t lint
+  - npx nx lint web --fix
+  - npx nx run-many -t lint --parallel=5 --maxParallel=5
+  examples:
+  - npx nx affected -t lint --base=main~1
+  - npx nx run-many -t lint --projects=web,api
+  - npx nx lint api --skip-nx-cache
+  parameters:
+  - name: affected
+    type: boolean
+    description: Run lint only on projects affected by the changed files
+  - name: base
+    type: string
+    description: Base commit for the affected graph, e.g. main~1
+  - name: parallel
+    type: integer
+    description: Maximum number of projects linted in parallel
+knowledge:
+- title: Nx linting guide
+  type: documentation
+  source: https://nx.dev/features/lint-project
+  description: ESLint integration, per-project lint targets, and affected linting
+- title: nx run-many reference
+  type: documentation
+  source: https://nx.dev/nx-api/nx/documents/run-many
+  description: CLI options for running targets across multiple projects
+instructions: "# Nx Lint\n\nRun ESLint (or other linters) across Nx monorepo projects with caching and\n\
+  affected-graph awareness.\n\n## When to Use\n\n- Linting all projects in a monorepo\n- Linting only\
+  \ projects affected by a PR\n- Fixing lint errors with caching for fast iteration\n\n## Real Commands\n\
+  \n```bash\n# Lint one project\nnpx nx lint web\n\n# Lint every project that has a lint target\nnpx nx\
+  \ run-many -t lint\n\n# Lint only projects touched by the current branch\nnpx nx affected -t lint\n\n\
+  # With explicit base for CI\nnpx nx affected -t lint --base=origin/main\n\n# Auto-fix + parallel\nnpx\
+  \ nx run-many -t lint --fix --parallel=5\n\n# Bypass cache when you changed config files\nnpx nx lint\
+  \ web --skip-nx-cache\n```\n\n## CI Example\n\n```yaml\n- name: Lint affected\n  run: npx nx affected\
+  \ -t lint --base=origin/main --parallel=3\n```\n\n## Best Practices\n\n- Always use `--base` explicitly\
+  \ in CI; don't rely on the git merge-base default\n- Invalidate cache deliberately with `--skip-nx-cache`\
+  \ after changing eslint config\n- Lint+test+build in one run: `npx nx affected -t lint test build`\n\
+  - Keep `lint` target present in every project.json for `run-many` to pick it up\n\n## Example Response\n\
+  \nReturns per-project lint results with the number of errors, and shows which projects\nwere skipped\
+  \ because they were unaffected and cached."
+examples:
+- input: Lint everything in the monorepo
+  output: Runs npx nx run-many -t lint --parallel=5 and summarizes results per project
+- input: Lint only the code changed in this PR
+  output: Runs npx nx affected -t lint --base=origin/main and reports only affected project results
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nx-lint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nx-lint
+  generic:
+    system_prompt: 'You own nx-lint end to end. You do it through nx-lint: Run lint targets across Nx
+      projects and affected graph. The commands are real, e.g. `npx nx lint web`. You work hands-on and
+      only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

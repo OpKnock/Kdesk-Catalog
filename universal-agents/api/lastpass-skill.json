@@ -1,0 +1,211 @@
+{
+  "name": "lastpass",
+  "display_name": "Lastpass",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manage credentials with the LastPass CLI (lpass): login, search entries, retrieve passwords, and generate new ones from the terminal.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "lpass"
+  ],
+  "capabilities": [
+    {
+      "name": "lpass-session",
+      "description": "Login, logout, and status of the LastPass CLI.",
+      "commands": [
+        "lpass login alice@example.com",
+        "lpass login --trust alice@example.com",
+        "lpass status",
+        "lpass logout"
+      ],
+      "examples": [
+        "lpass login alice@example.com",
+        "lpass status",
+        "lpass logout"
+      ],
+      "parameters": [
+        {
+          "name": "email",
+          "type": "string",
+          "description": "LastPass account email."
+        },
+        {
+          "name": "trust",
+          "type": "boolean",
+          "description": "Trust the device for this session."
+        }
+      ]
+    },
+    {
+      "name": "lpass-entries",
+      "description": "Search, show, and manage credential entries.",
+      "commands": [
+        "lpass ls",
+        "lpass ls -l",
+        "lpass show --password example.com",
+        "lpass show --username --password --url example.com",
+        "lpass generate --no-symbols 24 example.com/root",
+        "lpass add --non-interactive --username=bob example.com"
+      ],
+      "examples": [
+        "lpass ls -l",
+        "lpass show --password example.com",
+        "lpass generate --no-symbols 24 example.com/root"
+      ],
+      "parameters": [
+        {
+          "name": "search",
+          "type": "string",
+          "description": "Entry search term or full path."
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "description": "Username for new entries."
+        },
+        {
+          "name": "length",
+          "type": "integer",
+          "description": "Generated password length."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "LastPass CLI",
+      "type": "documentation",
+      "source": "https://github.com/lastpass/lastpass-cli",
+      "description": "Official lastpass-cli repository and usage."
+    },
+    {
+      "title": "lpass man page",
+      "type": "documentation",
+      "source": "https://lastpass.github.io/lastpass-cli/lpass.1.html",
+      "description": "lpass command reference."
+    }
+  ],
+  "instructions": "# LastPass CLI (lpass)\n\nManage credentials from the terminal with lastpass-cli.\n\n## What this skill does\n\n- Logs into LastPass and manages the local session.\n- Searches entries and retrieves passwords non-interactively.\n- Generates strong passwords and adds entries.\n\n## When to use\n\n- Scripted credential retrieval in CI or dev tooling.\n- Auditing which sites/accounts exist for a vault.\n- Generating and storing random credentials.\n\n## Real commands\n\n```bash\n# Login (prompts for master password)\nlpass login alice@example.com\n\n# Trusted device (fewer OTP prompts)\nlpass login --trust alice@example.com\n\n# Status\nlpass status\n\n# List entries\nlpass ls\nlpass ls -l    # include usernames and URLs\n\n# Show password only\nlpass show --password example.com\n\n# Show multiple fields\nlpass show --username --password --url example.com\n\n# Generate a password into an entry\nlpass generate --no-symbols 24 example.com/root\n\n# Add an entry\nlpass add --non-interactive --username=bob example.com\n\n# Logout\nlpass logout\n```\n\n## Testing\n\n```bash\nlpass status && lpass ls -l | head -20\n```\n\n## Best practices\n\n- Never pipe the master password on the command line; use the prompt.\n- Keep the session scoped: logout at the end of scripts.\n- Use --no-symbols if target systems reject special characters.\n",
+  "examples": [
+    {
+      "input": "Get the password for example.com",
+      "output": "lpass show --password example.com"
+    },
+    {
+      "input": "Rotate a stored password",
+      "output": "lpass generate --no-symbols 24 example.com/root"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "lastpass.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-lastpass"
+    },
+    "generic": {
+      "system_prompt": "You own Lastpass end to end. You do it through lpass-session: Login, logout, and status of the LastPass CLI. The commands are real, e.g. `lpass login alice@example.com`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "lastpass",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "lpass-session",
+        "name": "email",
+        "type": "string",
+        "description": "LastPass account email."
+      },
+      {
+        "capability": "lpass-session",
+        "name": "trust",
+        "type": "boolean",
+        "description": "Trust the device for this session."
+      },
+      {
+        "capability": "lpass-entries",
+        "name": "search",
+        "type": "string",
+        "description": "Entry search term or full path."
+      },
+      {
+        "capability": "lpass-entries",
+        "name": "username",
+        "type": "string",
+        "description": "Username for new entries."
+      },
+      {
+        "capability": "lpass-entries",
+        "name": "length",
+        "type": "integer",
+        "description": "Generated password length."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "lpass"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/lastpass-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/lastpass-skill.yaml",
+    "checksum": "e941c8c468b37b1757206b080ea55aa7bf67987df00649853d1fb45f21f45e82"
+  }
+}

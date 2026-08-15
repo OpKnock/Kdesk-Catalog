@@ -1,0 +1,170 @@
+{
+  "name": "security-headers",
+  "display_name": "Security Headers",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted security headers skill: CSP, HSTS, X-Frame-Options and friends — verify with curl, configure in nginx, and score with Mozilla Observatory.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "http-header-hardening",
+      "description": "Configure and verify HTTP security headers",
+      "commands": [
+        "curl -sI https://app.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options'",
+        "curl -sI -H 'Origin: https://evil.example.com' https://app.example.com/ | grep -i 'access-control-allow-origin'",
+        "npx @mozilla/observatory-cli --host app.example.com --rescan",
+        "curl -s -o /dev/null -w '%{ssl_protocol}\\n' https://app.example.com/"
+      ],
+      "examples": [
+        "curl -sI https://app.example.com/ | grep -i x-frame-options",
+        "curl -sI https://app.example.com/ | grep -i content-security-policy",
+        "npx @mozilla/observatory-cli --host app.example.com"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Target hostname for header checks"
+        },
+        {
+          "name": "csp_directive",
+          "type": "string",
+          "description": "CSP directive set, e.g. default-src 'self'"
+        },
+        {
+          "name": "hsts_max_age",
+          "type": "integer",
+          "description": "HSTS max-age in seconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OWASP Secure Headers Project",
+      "type": "documentation",
+      "source": "https://owasp.org/www-project-secure-headers/",
+      "description": "Header inventory and recommended values"
+    },
+    {
+      "title": "Mozilla Observatory CLI",
+      "type": "documentation",
+      "source": "https://github.com/mozilla/observatory-cli",
+      "description": "Automated header and TLS scoring"
+    }
+  ],
+  "instructions": "# Security Headers\n\nHand-crafted skill for hardening HTTP responses with security headers.\n\n## What this skill does\n\n- Verifies which security headers a site sends with curl\n- Configures headers in nginx and application layers\n- Scores the site with Mozilla Observatory to track progress\n\n## When to use\n\n- Adding headers after a pentest finding\n- Pre-launch checklist for a public site\n- Proving header coverage to compliance\n\n## Real commands\n\n```bash\n# What headers does the site send?\ncurl -sI https://app.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options'\n\n# CORS on a cross-origin request\ncurl -sI -H 'Origin: https://evil.example.com' https://app.example.com/ | grep -i 'access-control-allow-origin'\n\n# Automated score\nnpx @mozilla/observatory-cli --host app.example.com --rescan\n\n# TLS version in use\ncurl -s -o /dev/null -w '%{ssl_protocol}\\n' https://app.example.com/\n```\n\n## nginx config\n\n```nginx\nadd_header Strict-Transport-Security \"max-age=63072000; includeSubDomains\" always;\nadd_header Content-Security-Policy \"default-src 'self'; img-src 'self' data:\" always;\nadd_header X-Frame-Options \"SAMEORIGIN\" always;\nadd_header Referrer-Policy \"strict-origin-when-cross-origin\" always;\nadd_header X-Content-Type-Options \"nosniff\" always;\n```\n\n## Testing\n\n```bash\ncurl -sI https://app.example.com/ | grep -i x-frame-options\ncurl -sI https://app.example.com/ | grep -i content-security-policy\n```\n\n## Best practices\n\n- Deploy HSTS only after HTTPS is stable; it is sticky\n- Use the always keyword in nginx so error pages get headers too\n- Re-run the Observatory scan after each header change\n",
+  "examples": [
+    {
+      "input": "Is my site sending security headers?",
+      "output": "curl -sI https://app.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-frame-options' and compare with the OWASP list."
+    },
+    {
+      "input": "Get a baseline security score",
+      "output": "npx @mozilla/observatory-cli --host app.example.com --rescan returns letter grades plus the missing headers to add."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "security-headers.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-security-headers"
+    },
+    "generic": {
+      "system_prompt": "You take the Security Headers seat. You do it through http-header-hardening: Configure and verify HTTP security headers. The commands are real, e.g. `curl -sI https://app.example.com/ | grep -iE...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "security-headers",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "http-header-hardening",
+        "name": "host",
+        "type": "string",
+        "description": "Target hostname for header checks"
+      },
+      {
+        "capability": "http-header-hardening",
+        "name": "csp_directive",
+        "type": "string",
+        "description": "CSP directive set, e.g. default-src 'self'"
+      },
+      {
+        "capability": "http-header-hardening",
+        "name": "hsts_max_age",
+        "type": "integer",
+        "description": "HSTS max-age in seconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/security-headers-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/security-headers-skill.yaml",
+    "checksum": "89444704b57899d8d2681c240fcdd77be7df51597e0486b58b366b45d6d9e4d8"
+  }
+}

@@ -1,0 +1,165 @@
+name: api-version-management
+version: 2.0.0
+type: skill
+category: backend
+description: 'Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement
+  processes with RFC 8594 Deprecation header conventions.'
+keywords:
+- deprecation
+- lifecycle
+- version-management
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-version-management.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-version-management
+  generic:
+    system_prompt: 'You own api-version-management end to end. You do it through deprecation-headers:
+      Signal deprecation with standard headers. The commands are real, e.g. `curl -sI https://api.example.com/v1/users
+      | grep -iE ^(deprecation|sunset|link):`. You run and verify the real CLI commands before you claim
+      anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: deprecation-headers
+  description: Signal deprecation with standard headers
+  commands:
+  - curl -sI https://api.example.com/v1/users | grep -iE '^(deprecation|sunset|link):'
+  - curl -s -D- https://api.example.com/v1/users | grep -i '^link:'
+  - node -e "const d=new Date(); d.setMonth(d.getMonth()+6); console.log('Sunset:', d.toUTCString())"
+  - curl -s -o /dev/null -w '%{http_code}\n' https://api.example.com/v1/users
+  examples:
+  - 'Deprecation: true warns clients of planned removal'
+  - 'Sunset: <date> communicates removal time'
+  - 'Link: <.../changelog>; rel="sunset" points to details'
+  parameters:
+  - name: header
+    type: string
+    description: deprecation, sunset, or link
+  - name: version
+    type: string
+    description: Affected version
+  - name: date
+    type: string
+    description: Sunset date in RFC 1123 format
+- name: lifecycle-track
+  description: Track versions through the lifecycle
+  commands:
+  - git tag -a v1.0.0 -m 'v1 initial release'
+  - git tag -a v2.0.0 -m 'v2 GA'
+  - git tag -l 'v*' --sort=-v:refname | head -5
+  - curl -s https://api.example.com/changelog | jq '.versions[0]'
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- openapi
+- postman
+tools:
+- node.js
+- python
+- openapi
+- postman
+- stoplight-studio
+- github
+examples:
+- input: Deprecate v1
+  output: Adds Deprecation/Sunset headers and publishes the changelog entry
+- input: Retire an old version
+  output: Returns 410 Gone after the sunset date and archives the changelog
+instructions: '# API Version Management
+
+
+  Version lifecycle management.
+
+
+  ## What This Skill Does
+
+  - Signals deprecation with standard headers
+
+  - Schedules sunset dates per version
+
+  - Maintains changelogs and retirement flows
+
+
+  ## When to Use
+
+  - Deprecating an API version
+
+  - Communicating removals to consumers
+
+  - Auditing version lifecycle
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  curl -sI https://api.example.com/v1/users | grep -iE ''^(deprecation|sunset|link):''
+
+  ```
+
+
+  ## Deprecation Flow
+
+  1. Announce deprecation with headers
+
+  2. Publish the changelog entry
+
+  3. Warn clients with metrics
+
+  4. Retire after the sunset date
+
+
+  ## Testing
+
+  - Verify headers on every deprecated route
+
+  - Check sunset dates are RFC 1123 valid
+
+  - Test the retired version returns 410 Gone
+
+
+  ## Best Practices
+
+  - Give 6-12 months deprecation windows
+
+  - Count traffic per version before removal
+
+  - Keep retirement logs for compliance'
+display_name: api-version-management
+knowledge:
+- title: RFC 8594 - Sunset Header
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc8594
+  description: Sunset header for deprecation signaling
+- title: GitHub Deprecation Policy
+  type: documentation
+  source: https://docs.github.com/en/rest/about-the-rest-api/breaking-changes
+  description: Example deprecation and sunset policy

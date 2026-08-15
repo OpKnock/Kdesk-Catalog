@@ -1,0 +1,158 @@
+{
+  "name": "chaos-engineer",
+  "display_name": "Chaos Engineer",
+  "category": "infra",
+  "subcategory": "resilience",
+  "description": "Agent for implementing chaos engineering with Litmus and Chaos Mesh to improve system resilience.",
+  "version": "1.0.0",
+  "tags": [
+    "chaos-engineering",
+    "litmus",
+    "chaos-mesh",
+    "resilience"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "chaos-engineering",
+      "description": "Inject faults and test resilience",
+      "commands": [
+        "litmus",
+        "chaos-mesh",
+        "chaosctl"
+      ],
+      "examples": [
+        "Litmus: litmusctl experiment run pod-delete --chaos-center-ns litmus",
+        "Chaos Mesh: kubectl apply -f network-delay.yaml",
+        "Status: kubectl get chaosengine -n litmus"
+      ],
+      "parameters": [
+        {
+          "name": "chaos_type",
+          "type": "string",
+          "description": "Type: pod-delete, network-delay, cpu-stress, io-stress"
+        },
+        {
+          "name": "scope",
+          "type": "string",
+          "description": "Scope: pod, namespace, cluster"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Litmus Documentation",
+      "type": "documentation",
+      "source": "https://litmuschaos.io/docs/",
+      "description": "Litmus chaos engineering"
+    },
+    {
+      "Title": "Chaos Mesh",
+      "type": "tutorial",
+      "source": "https://chaos-mesh.org/docs/",
+      "description": "Chaos Mesh documentation"
+    }
+  ],
+  "instructions": "You are a chaos engineering specialist. Help users:\n1. Design chaos experiments\n2. Inject controlled faults\n3. Measure system resilience\n4. Identify failure modes\n5. Improve fault tolerance\n\nAlways start small and in non-production.\n",
+  "examples": [
+    {
+      "input": "Chaos testing",
+      "output": "I'll design a chaos experiment to test resilience..."
+    },
+    {
+      "input": "Pod failure",
+      "output": "I'll inject a pod-delete experiment..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "chaos-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-chaos-engineering"
+    },
+    "generic": {
+      "system_prompt": "You are a chaos engineering expert. Help users inject faults and improve system resilience.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "chaos-engineer",
+  "type": "agent",
+  "skills": [
+    "chaos-engineering-chaos-engineering"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "chaos-engineering",
+        "name": "chaos_type",
+        "type": "string",
+        "description": "Type: pod-delete, network-delay, cpu-stress, io-stress"
+      },
+      {
+        "capability": "chaos-engineering",
+        "name": "scope",
+        "type": "string",
+        "description": "Scope: pod, namespace, cluster"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infra/agent/chaos-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infra/agent/chaos-engineer.yaml",
+    "checksum": "029392570d7c33c976bfe6df3ca2603280e969f08871b46a43a449b415a8fd2b"
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "name": "disk-stress-testing",
+  "display_name": "Disk Stress Testing",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Disk subsystem stress testing and performance validation with fio, dd, hdparm, and iostat to measure IOPS, throughput, and latency under load.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "fio",
+    "hdparm",
+    "iostat"
+  ],
+  "capabilities": [
+    {
+      "name": "io-benchmark",
+      "description": "Run fio jobs, raw dd writes, and live IO statistics to characterize disk performance and detect degradation.",
+      "commands": [
+        "fio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite --bs=4k --size=4G --numjobs=1 --runtime=60 --time_based --direct=1",
+        "fio --name=seqread --ioengine=libaio --iodepth=32 --rw=read --bs=1M --size=8G --runtime=60 --time_based --direct=1",
+        "dd if=/dev/zero of=/tmp/testfile bs=1M count=4096 oflag=direct conv=fdatasync",
+        "hdparm -tT /dev/sda",
+        "iostat -x 2 5"
+      ],
+      "examples": [
+        "fio --name=randread --ioengine=libaio --iodepth=16 --rw=randread --bs=4k --size=4G --runtime=60 --time_based --direct=1",
+        "dd if=/dev/zero of=/tmp/testfile bs=1M count=4096 oflag=direct conv=fdatasync && rm -f /tmp/testfile",
+        "iostat -x 2 5 | grep sda"
+      ],
+      "parameters": [
+        {
+          "name": "rw",
+          "type": "string",
+          "description": "fio workload pattern: randwrite, randread, read, write, rw, or randrw"
+        },
+        {
+          "name": "blocksize",
+          "type": "string",
+          "description": "IO block size such as 4k or 1M"
+        },
+        {
+          "name": "runtime",
+          "type": "integer",
+          "description": "Benchmark duration in seconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "fio HOWTO",
+      "type": "documentation",
+      "source": "https://fio.readthedocs.io/en/latest/fio_doc.html",
+      "description": "Complete fio job file format and benchmark option reference"
+    }
+  ],
+  "instructions": "# Disk Stress Testing\n\n## What this skill does\n\nDisk stress testing quantifies how a storage subsystem behaves under sustained IO. fio generates controlled workloads (IOPS, throughput, latency), dd does quick raw writes, and iostat/hdparm give live device-level statistics.\n\n## When to use\n\n- Validating new VMs or bare-metal nodes before production cutover\n- Comparing IO performance between storage classes (SSD, NVMe, network storage)\n- Reproducing latency complaints from a busy database\n\n## Real commands\n\n```bash\n# 4k random write IOPS test with O_DIRECT\nfio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite \\\n  --bs=4k --size=4G --numjobs=1 --runtime=60 --time_based --direct=1\n\n# 1M sequential read throughput\nfio --name=seqread --ioengine=libaio --iodepth=32 --rw=read --bs=1M \\\n  --size=8G --runtime=60 --time_based --direct=1\n\n# Quick raw write + flush\nsudo dd if=/dev/zero of=/tmp/testfile bs=1M count=4096 oflag=direct conv=fdatasync\n\n# Device-level cache/throughput\nsudo hdparm -tT /dev/sda\n\n# Live stats: tps, await, util%\niostat -x 2 5\n```\n\n## Interpreting fio output\n\nLook for the `bw` (MiB/s), `iops`, and `clat` (percentile latencies) lines. For databases, p99 clat below 10 ms for 4k random IO is typical on NVMe; above 50 ms signals a problem.\n\n## Testing checklist\n\n```bash\n# Run before and after any storage change for comparison\nfio --name=bw --ioengine=libaio --direct=1 --rw=read --bs=1M --size=4G --numjobs=4 --runtime=30 --time_based\n```\n\n## Best practices\n\n- Always use `--direct=1` to bypass the page cache and measure real device IO.\n- Run each benchmark 3 times and take the median.\n- Check `iostat -x` `%util` and `await` during the run, not just fio totals.\n- Never benchmark a disk that hosts the OS while it is under production load.\n- Clean up test files (`rm -f /tmp/testfile`) after dd runs.\n",
+  "examples": [
+    {
+      "input": "Compare IOPS of two node types before purchase",
+      "output": "Run the same fio 4k randwrite/randread jobs on both nodes with direct=1, and compare iops and clat p99 from the output."
+    },
+    {
+      "input": "DB is slow, suspect the disk",
+      "output": "Run iostat -x 2 10 while reproducing load, then a 4k random read fio job; high await or clat points to disk or SAN saturation."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "disk-stress-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-disk-stress-testing"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Disk Stress Testing. You do it through io-benchmark: Run fio jobs, raw dd writes, and live IO statistics to characterize disk performance and detect degradation. The commands are real, e.g. `fio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite --bs=4k --size=4G...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "disk-stress-testing",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "io-benchmark",
+        "name": "rw",
+        "type": "string",
+        "description": "fio workload pattern: randwrite, randread, read, write, rw, or randrw"
+      },
+      {
+        "capability": "io-benchmark",
+        "name": "blocksize",
+        "type": "string",
+        "description": "IO block size such as 4k or 1M"
+      },
+      {
+        "capability": "io-benchmark",
+        "name": "runtime",
+        "type": "integer",
+        "description": "Benchmark duration in seconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "fio",
+    "hdparm",
+    "iostat"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/disk-stress-testing-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/disk-stress-testing-skill.yaml",
+    "checksum": "49a313df5163466435057ad0a182a203193558fa0fff0e9c38f2f505e4b00e90"
+  }
+}

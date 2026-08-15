@@ -1,0 +1,104 @@
+name: pact
+display_name: pact
+category: testing
+subcategory: general
+description: Pact contract testing. Real pact CLI.
+version: 1.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- brew
+- npm
+- pact-broker
+- pact-verifier
+capabilities:
+- name: pact
+  description: Pact contract testing. Real pact CLI.
+  commands:
+  - npm install -D @pact-foundation/pact
+  - brew install pact-foundation/pact/pact-cli
+  - pact-verifier --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json
+  - pact-broker publish ./pacts --broker-base-url=http://localhost:9292
+  - pact-broker can-i-deploy --pacticipant=consumer --version=1.0.0 --broker-base-url=http://localhost:9292
+  - pact-verifier --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json
+  - pact-broker publish ./pacts --broker-base-url=http://localhost:9292
+  examples:
+  - npm install -D @pact-foundation/pact
+  - brew install pact-foundation/pact/pact-cli
+  - pact-verifier --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json
+  parameters:
+  - name: broker-base-url
+    type: boolean
+    description: CLI flag --broker-base-url observed in capability commands
+  - name: pact-url
+    type: boolean
+    description: CLI flag --pact-url observed in capability commands
+  - name: provider-base-url
+    type: boolean
+    description: CLI flag --provider-base-url observed in capability commands
+knowledge:
+- title: pact Skill Documentation
+  type: documentation
+  source: skills/testing/pact.md
+  description: Complete guide for pact
+instructions: "# Pact\n\nPact contract testing using real CLI.\n\n## When to Use\n\n- Consumer-driven\
+  \ contracts\n- Provider verification\n- Contract testing\n- Microservice testing\n\n## Commands\n\n\
+  ```bash\n# Install (Node)\nnpm install -D @pact-foundation/pact\n\n# Install (CLI)\nbrew install pact-foundation/pact/pact-cli\n\
+  \n# Verify\npact-verifier --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json\n\
+  \n# Publish\npact-broker publish ./pacts --broker-base-url=http://localhost:9292\n\n# Can I deploy\n\
+  pact-broker can-i-deploy --pacticipant=consumer --version=1.0.0 --broker-base-url=http://localhost:9292\n\
+  ```\n\n## Consumer Test (JavaScript)\n\n```javascript\n// consumer.test.js\nconst { Pact } = require('@pact-foundation/pact');\n\
+  const path = require('path');\n\nconst provider = new Pact({\n  consumer: 'MyConsumer',\n  provider:\
+  \ 'MyProvider',\n  port: 1234,\n  log: path.resolve(process.cwd(), 'logs', 'pact.log'),\n  dir: path.resolve(process.cwd(),\
+  \ 'pacts'),\n  spec: 2,\n});\n\ndescribe('User API Consumer', () => {\n  beforeAll(() => provider.setup());\n\
+  \  afterAll(() => provider.finalize());\n  \n  it('returns user', async () => {\n    await provider.addInteraction({\n\
+  \      state: 'user with id 123 exists',\n      uponReceiving: 'a request for user 123',\n      withRequest:\
+  \ {\n        method: 'GET',\n        path: '/users/123',\n        headers: { Accept: 'application/json'\
+  \ },\n      },\n      willRespondWith: {\n        status: 200,\n        headers: { 'Content-Type': 'application/json'\
+  \ },\n        body: {\n          id: '123',\n          name: 'John',\n          email: 'john@example.com',\n\
+  \        },\n      },\n    });\n    \n    // Make request to mock server\n    const response = await\
+  \ fetch('http://localhost:1234/users/123');\n    expect(response.status).toBe(200);\n  });\n});\n```\n\
+  \n## Provider Verification (JavaScript)\n\n```javascript\n// provider.test.js\nconst { Verifier } =\
+  \ require('@pact-foundation/pact');\nconst path = require('path');\n\ndescribe('User API Provider',\
+  \ () => {\n  it('verifies contracts', async () => {\n    const verifier = new Verifier({\n      providerBaseUrl:\
+  \ 'http://localhost:8080',\n      pactUrls: [path.resolve(process.cwd(), 'pacts', 'myconsumer-myprovider.json')],\n\
+  \      provider: 'MyProvider',\n    });\n    \n    await verifier.verifyProvider();\n  });\n});\n```\n\
+  \n## Examples\n\n```bash\n# Verify\npact-verifier --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json\n\
+  \n# Publish\npact-broker publish ./pacts --broker-base-url=http://localhost:9292\n```\n\n## CI/CD\n\n\
+  ```yaml\n# GitHub Actions\n- name: Verify Pact\n  run: |\n    pact-verifier --provider-base-url=http://localhost:8080\
+  \ --pact-url=./pacts/consumer-provider.json\n\n# GitLab CI\npact:\n  stage: test\n  script:\n    - pact-verifier\
+  \ --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json\n```"
+examples: []
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pact.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pact
+  generic:
+    system_prompt: 'You are the pact specialist. You do it through pact: Pact contract testing. Real pact
+      CLI. The commands are real, e.g. `npm install -D @pact-foundation/pact`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

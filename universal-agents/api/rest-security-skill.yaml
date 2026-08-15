@@ -1,0 +1,184 @@
+name: rest-security
+display_name: Rest Security
+category: api
+subcategory: general
+description: 'Hand-crafted REST API security skill: authenticated curl flows, TLS certificate verification,
+  OWASP ZAP baseline scans, and rate-limit/authorization probing.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- openssl
+- zap-baseline.py
+capabilities:
+- name: rest-api-hardening
+  description: 'Probe and harden REST APIs: auth, TLS, scanning, rate limits'
+  commands:
+  - 'curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/users'
+  - curl -skI https://api.example.com/ -o /dev/null -w '%{http_code} %{ssl_verify_result}\n'
+  - openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null |
+    openssl x509 -noout -dates
+  - zap-baseline.py -t https://staging.example.com -r zap-report.html
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -X DELETE https://api.example.com/v1/orders/1 -H "Authorization:
+    Bearer $TOKEN"'
+  examples:
+  - curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' -X POST https://api.example.com/v1/login -d
+    '{"user":"admin","pass":"wrong"}'
+  - curl -s -o /dev/null -w '%{http_code}\n' https://api.example.com/v1/users
+  - zap-baseline.py -t https://staging.example.com -r zap-report.html
+  parameters:
+  - name: token
+    type: string
+    description: Bearer token for authenticated requests
+  - name: target
+    type: string
+    description: Base URL to scan or probe
+  - name: report
+    type: string
+    description: Output file for the ZAP scan report
+knowledge:
+- title: OWASP REST Security Cheat Sheet
+  type: documentation
+  source: https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html
+  description: AuthN/Z, headers, input validation for REST APIs
+- title: ZAP Baseline Scan
+  type: documentation
+  source: https://www.zaproxy.org/docs/docker/baseline-scan/
+  description: Automated passive scanning with zap-baseline.py
+instructions: '# REST API Security
+
+
+  Hand-crafted skill for securing and auditing REST APIs.
+
+
+  ## What this skill does
+
+
+  - Verifies auth enforcement: unauthenticated requests must be rejected
+
+  - Checks TLS configuration and certificate expiry
+
+  - Runs automated baseline scans with OWASP ZAP
+
+
+  ## When to use
+
+
+  - Before exposing a new endpoint to production traffic
+
+  - After an incident involving leaked credentials
+
+  - Periodic compliance checks of API posture
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Does the endpoint require auth? (expect 401/403)
+
+  curl -s -o /dev/null -w ''%{http_code}\n'' https://api.example.com/v1/users
+
+
+  # Authenticated call
+
+  curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/users
+
+
+  # TLS: protocol, cipher, certificate dates
+
+  curl -skI https://api.example.com/ -o /dev/null -w ''%{ssl_protocol} %{ssl_verify_result}\n''
+
+  openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null | openssl
+  x509 -noout -dates
+
+
+  # Automated passive scan
+
+  zap-baseline.py -t https://staging.example.com -r zap-report.html
+
+
+  # Verify authorization: low-privilege token must not delete resources
+
+  curl -s -o /dev/null -w ''%{http_code}\n'' -X DELETE https://api.example.com/v1/orders/1 -H "Authorization:
+  Bearer $LOW_PRIV_TOKEN"
+
+  ```
+
+
+  ## Rate limit check
+
+
+  ```bash
+
+  for i in $(seq 1 60); do curl -s -o /dev/null -w ''%{http_code} '' http://localhost:8080/api; done
+
+  # Expect 429s after the configured burst
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  curl -s -o /dev/null -w ''%{http_code}\n'' https://staging.example.com/healthz
+
+  ```
+
+
+  ## Best practices
+
+
+  - Never ship endpoints that succeed without auth; test it explicitly
+
+  - Require TLS 1.2+ and rotate certs before expiry
+
+  - Run the ZAP baseline in CI on every staging deploy
+
+  '
+examples:
+- input: Check if an endpoint leaks data without a token
+  output: curl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users must return 401/403;
+    if 200, the auth filter is broken.
+- input: Verify my TLS certificate is current
+  output: openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null
+    | openssl x509 -noout -dates shows notBefore/notAfter.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rest-security.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rest-security
+  generic:
+    system_prompt: 'You own Rest Security end to end. You do it through rest-api-hardening: Probe and
+      harden REST APIs: auth, TLS, scanning, rate limits. The commands are real, e.g. `curl -s -H Authorization:
+      Bearer $TOKEN https://api.example.com/v1/users`. You run and verify the real CLI commands before
+      you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

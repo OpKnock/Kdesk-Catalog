@@ -1,0 +1,111 @@
+name: api-test-data-factorybot
+version: 2.0.0
+type: skill
+category: testing
+description: 'Builds test data factories with FactoryBot: trait definitions, sequences, associations,
+  and on-the-fly attribute overrides for Rails APIs.'
+keywords:
+- test-data
+- faker
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-test-data-factorybot.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-test-data-factorybot
+  generic:
+    system_prompt: 'Your lane is Api Test Data Factorybot. You do it through factorybot: Define and use
+      model factories. The commands are real, e.g. `bundle add factory_bot_rails`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: factorybot
+  description: Define and use model factories
+  commands:
+  - bundle add factory_bot_rails
+  - bundle exec rails generate model User name:string email:string role:string
+  - bundle exec rails runner "puts FactoryBot.create(:user).id"
+  - bundle exec rails runner "FactoryBot.create_list(:user, 50)"
+  - 'bundle exec rails runner "puts FactoryBot.create(:user, :admin, name: ''root'').role"'
+  examples:
+  - FactoryBot.create(:user) builds and saves a record
+  - create_list(:user, 50) seeds bulk data
+  - traits like :admin plus overrides compose fixtures
+  parameters:
+  - name: factory
+    type: string
+    description: Factory name
+  - name: trait
+    type: string
+    description: Trait to apply
+  - name: attributes
+    type: object
+    description: Attribute overrides
+- name: factory-testing
+  description: Lint and verify factories
+  commands:
+  - bundle exec rails runner "FactoryBot.lint"
+  - bundle exec rspec spec/factories_spec.rb
+  - bundle exec rails db:seed
+  - bundle exec rails runner "puts FactoryBot.build(:user).email"
+  examples: []
+  parameters: []
+prerequisites:
+- faker
+- node.js
+- python
+tools:
+- faker
+- node.js
+- python
+- factory-boy
+- json-schema-faker
+examples:
+- input: Create 50 admin users for a test
+  output: Runs FactoryBot.create_list(:user, 50, :admin) and asserts counts
+- input: Replace hardcoded fixtures
+  output: Migrates specs to factory traits with Faker data
+instructions: "# API Test Data v3 - Factories\n\nTest data factories with FactoryBot.\n\n## What This\
+  \ Skill Does\n- Defines reusable model factories\n- Composes fixtures with traits\n- Seeds large datasets\
+  \ for tests\n\n## When to Use\n- Rails API test suites\n- Replacing brittle hardcoded fixtures\n- Building\
+  \ association graphs\n\n## Real Commands\n\n```bash\nbundle add factory_bot_rails\nbundle exec rails\
+  \ runner \"FactoryBot.create_list(:user, 50)\"\nbundle exec rails runner \"FactoryBot.lint\"\n```\n\n\
+  ## Factory Example\n\n```ruby\nfactory :user do\n  sequence(:email) { |n| \"user#{n}@example.com\" }\n\
+  \  name { Faker::Name.name }\n  role { :member }\n\n  trait :admin do\n    role { :admin }\n  end\n\
+  end\n```\n\n## Testing\n- Run FactoryBot.lint to validate factories\n- Test every trait with a build\
+  \ call\n- Verify associations resolve\n\n\n## Best Practices\n- Use sequences for uniqueness\n- Override\
+  \ attributes explicitly in tests\n- Avoid factory hierarchies deeper than needed"
+display_name: Api Test Data Factorybot
+knowledge:
+- title: FactoryBot Docs
+  type: documentation
+  source: https://github.com/thoughtbot/factory_bot/blob/main/GETTING_STARTED.md
+  description: FactoryBot getting started guide
+- title: FactoryBot Rails
+  type: documentation
+  source: https://github.com/thoughtbot/factory_bot_rails
+  description: Rails integration for FactoryBot

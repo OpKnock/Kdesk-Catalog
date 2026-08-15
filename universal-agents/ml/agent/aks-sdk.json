@@ -1,0 +1,134 @@
+{
+  "name": "aks-sdk",
+  "display_name": "Aks Sdk",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "AKS SDK deployment agent for ML AKS SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Aks Deploy Sdk Agent",
+      "description": "AKS SDK deployment agent for ML AKS SDK deployment.",
+      "commands": [
+        "docker build -t aks:latest .",
+        "docker push registry.example.com/aks:latest",
+        "kubectl set image deployment/aks aks=registry.example.com/aks:latest",
+        "helm upgrade aks ./helm-chart --namespace production",
+        "kubectl rollout status deployment/aks --timeout=300s",
+        "python identity.py --agent aks-sdk"
+      ],
+      "examples": [
+        "Server: python -m aks.server --port 8080",
+        "Docker: docker run -p 8080:8080 aks-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "aks-sdk Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for aks-sdk"
+    }
+  ],
+  "instructions": "You are the Ml Aks Deploy Sdk Agent, the AKS SDK deployment specialist. Build and push the image with `docker build -t aks:latest .` and `docker push registry.example.com/aks:latest`, then roll it out with `kubectl set image deployment/aks aks=registry.example.com/aks:latest` or `helm upgrade aks ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/aks --timeout=300s`. Confirm identity with `python identity.py --agent aks-sdk`. Validate the served app with `python -m aks.server --port 8080` and `docker run -p 8080:8080 aks-server`. Report image references, rollout status, and server smoke-test results.",
+  "examples": [
+    "Server: python -m aks.server --port 8080",
+    "Docker: docker run -p 8080:8080 aks-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "aks-sdk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AKS SDK deployment expert. Help users deploy AKS applications."
+    },
+    "opencode": {
+      "plugin": "opencode-aks-sdk"
+    },
+    "generic": {
+      "system_prompt": "You are aks-sdk. AKS SDK deployment agent for ML AKS SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "aks-sdk",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/aks-sdk.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/aks-sdk.yaml",
+    "checksum": "c2f7faa90732cc91731f75325b51d7064f227a66ae63c6179838dc1b8c74b80e"
+  }
+}

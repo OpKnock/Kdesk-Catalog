@@ -1,0 +1,127 @@
+name: helm
+display_name: helm
+category: devops
+subcategory: general
+description: 'Packages, installs, and manages Kubernetes applications with Helm: charts, repos, releases,
+  values, linting, and rollbacks.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- helm
+capabilities:
+- name: releases
+  description: Install, upgrade, rollback, and uninstall chart releases.
+  commands:
+  - helm install myapp ./chart
+  - helm upgrade --install myapp ./chart --values prod.yaml --namespace app
+  - helm list -A
+  - helm status myapp
+  - helm rollback myapp 2
+  - helm uninstall myapp
+  examples:
+  - helm upgrade --install myapp ./chart --values prod.yaml
+  - helm rollback myapp 2
+  - helm status myapp
+  parameters:
+  - name: release
+    type: string
+    description: Release name
+  - name: chart
+    type: string
+    description: Chart path, repo/chart, or URL
+  - name: values
+    type: string
+    description: Values file path
+- name: chart-development
+  description: Create, lint, template, and package charts, plus manage repos.
+  commands:
+  - helm create mychart
+  - helm lint ./mychart
+  - helm template myapp ./mychart --debug
+  - helm package ./mychart --version 1.2.0
+  - helm repo add bitnami https://charts.bitnami.com/bitnami
+  - helm search repo bitnami/nginx
+  - helm dependency update ./mychart
+  examples:
+  - helm create mychart
+  - helm template myapp ./mychart --debug
+  - helm package ./mychart --version 1.2.0
+  parameters:
+  - name: version
+    type: string
+    description: Chart or app version
+  - name: repo
+    type: string
+    description: Repository name for search/add
+knowledge:
+- title: Helm Documentation
+  type: documentation
+  source: https://helm.sh/docs/
+  description: Chart guides, best practices, and CLI reference
+- title: Helm Charts Best Practices
+  type: documentation
+  source: https://helm.sh/docs/chart_best_practices/
+  description: Values schema, dependencies, naming conventions
+- title: Artifact Hub
+  type: documentation
+  source: https://artifacthub.io/
+  description: Public chart repository search
+instructions: "# Helm Package Management\n\nPackage and deploy Kubernetes apps with Helm charts and releases.\n\
+  \n## What This Skill Does\n\n- Creates, lints, and packages charts\n- Installs and upgrades releases\
+  \ with values files\n- Manages chart repositories and dependencies\n- Rolls back failed releases\n-\
+  \ Renders manifests with helm template for review\n\n## When to Use\n\n- Deploying a third-party app\
+  \ from a public chart (nginx, postgres, kafka)\n- Releasing your own application as a chart\n- Debugging\
+  \ why a rendered manifest differs from expectations\n\n## Real Commands\n\n```bash\n# Repos and search\n\
+  helm repo add bitnami https://charts.bitnami.com/bitnami\nhelm repo update\nhelm search repo bitnami/nginx\
+  \ --versions\n\n# Install / upgrade\nhelm install myapp bitnami/nginx --namespace app --create-namespace\n\
+  helm upgrade --install myapp ./chart --values prod.yaml --set image.tag=1.2.0\nhelm list -A\nhelm status\
+  \ myapp\n\n# Safety\nhelm template myapp ./chart --debug | less\nhelm lint ./chart\nhelm diff upgrade\
+  \ myapp ./chart --values prod.yaml    # with helm-diff plugin\nhelm rollback myapp 2\nhelm uninstall\
+  \ myapp\n```\n\n## Chart Structure\n\n```\nmychart/\n  Chart.yaml          # apiVersion, name, version,\
+  \ dependencies\n  values.yaml         # defaults\n  templates/\n    deployment.yaml\n    service.yaml\n\
+  \    _helpers.tpl      # named templates\n  charts/             # vendored dependencies\n```\n\n## Best\
+  \ Practices\n\n- Always run `helm lint` and `helm template` before install\n- Store values per environment\
+  \ (dev.yaml, prod.yaml), never edit defaults inline\n- Use `--atomic` on upgrades so failures auto-rollback\n\
+  - Pin chart versions with `--version`; use OCI registries when possible\n- Verify with `helm list` and\
+  \ `helm status` after any operation"
+examples:
+- input: Deploy postgres with our own credentials and storage class
+  output: Agent adds bitnami repo, renders values override file, installs with --values and --atomic,
+    verifies with helm status
+- input: My chart upgrade broke the release
+  output: Agent checks helm status, identifies failed revision, and rolls back with helm rollback while
+    preserving the broken manifest for review
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: helm.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-helm
+  generic:
+    system_prompt: 'This is your domain: helm. You do it through releases: Install, upgrade, rollback,
+      and uninstall chart releases. The commands are real, e.g. `helm install myapp ./chart`. You run
+      and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

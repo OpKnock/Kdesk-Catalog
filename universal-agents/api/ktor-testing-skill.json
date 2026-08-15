@@ -1,0 +1,185 @@
+{
+  "name": "ktor-testing",
+  "display_name": "Ktor Testing",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Test Ktor applications: testApplication-based integration tests, client requests against routes, and assertions on status/JSON responses.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./gradlew"
+  ],
+  "capabilities": [
+    {
+      "name": "integration-tests",
+      "description": "Write and run testApplication integration tests for routes.",
+      "commands": [
+        "./gradlew test",
+        "./gradlew test --tests 'com.example.ApplicationTest'",
+        "./gradlew test --info",
+        "./gradlew test --tests '*Auth*' --stacktrace"
+      ],
+      "examples": [
+        "./gradlew test",
+        "./gradlew test --tests 'com.example.ApplicationTest'",
+        "./gradlew test --tests '*Auth*' --stacktrace"
+      ],
+      "parameters": [
+        {
+          "name": "test_class",
+          "type": "string",
+          "description": "Test class filter pattern."
+        },
+        {
+          "name": "stacktrace",
+          "type": "boolean",
+          "description": "Print full stack traces on failure."
+        }
+      ]
+    },
+    {
+      "name": "route-assertions",
+      "description": "Drive routes with test client and assert status and bodies.",
+      "commands": [
+        "curl -s http://localhost:8080/hello",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/hello",
+        "./gradlew test --tests 'com.example.RoutesTest'"
+      ],
+      "examples": [
+        "curl -s http://localhost:8080/hello",
+        "./gradlew test --tests 'com.example.RoutesTest'"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Route under test."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Ktor Testing",
+      "type": "documentation",
+      "source": "https://ktor.io/docs/server-testing.html",
+      "description": "Official testing docs: testApplication and test client."
+    },
+    {
+      "title": "Ktor TestClient",
+      "type": "documentation",
+      "source": "https://ktor.io/docs/server-testing-kotest.html",
+      "description": "Kotest integration for Ktor."
+    }
+  ],
+  "instructions": "# Ktor Testing\n\nIntegration-test Ktor applications with testApplication.\n\n## What this skill does\n\n- Boots the app in-process with testApplication.\n- Sends real requests through the routing via the test client.\n- Asserts status codes, headers, and JSON bodies.\n\n## When to use\n\n- Verifying routes and plugins before release.\n- Testing auth, content negotiation, and error pages.\n- Keeping test feedback loops fast (no external server).\n\n## Real commands\n\n```bash\n# Run all tests\n./gradlew test\n\n# Single class\n./gradlew test --tests 'com.example.ApplicationTest'\n\n# Pattern with stacktrace\n./gradlew test --tests '*Auth*' --stacktrace\n\n# Manual smoke against a running app\n./gradlew run &\ncurl -s http://localhost:8080/hello\n```\n\n## Test example\n\n```kotlin\nclass ApplicationTest {\n    @Test\n    fun `GET hello returns 200`() = testApplication {\n        application { module() }\n        client.get(\"/hello\").apply {\n            assertEquals(HttpStatusCode.OK, status)\n            assertEquals(\"Hello, world!\", bodyAsText())\n        }\n    }\n\n    @Test\n    fun `unknown route returns 404`() = testApplication {\n        application { module() }\n        assertEquals(HttpStatusCode.NotFound, client.get(\"/nope\").status)\n    }\n}\n```\n\n## Testing\n\n```bash\n./gradlew test --tests 'com.example.ApplicationTest'\n```\n\n## Best practices\n\n- Use testApplication per suite; share setup in @BeforeTest.\n- Assert status AND body; status alone hides content regressions.\n- Test auth routes with both valid and invalid credentials.\n",
+  "examples": [
+    {
+      "input": "Test that /hello returns 200",
+      "output": "Write a testApplication block calling client.get('/hello') and assert status; run ./gradlew test."
+    },
+    {
+      "input": "Run only auth tests",
+      "output": "./gradlew test --tests '*Auth*' --stacktrace"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ktor-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ktor-testing"
+    },
+    "generic": {
+      "system_prompt": "You own Ktor Testing end to end. You do it through integration-tests: Write and run testApplication integration tests for routes. The commands are real, e.g. `./gradlew test`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ktor-testing",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "integration-tests",
+        "name": "test_class",
+        "type": "string",
+        "description": "Test class filter pattern."
+      },
+      {
+        "capability": "integration-tests",
+        "name": "stacktrace",
+        "type": "boolean",
+        "description": "Print full stack traces on failure."
+      },
+      {
+        "capability": "route-assertions",
+        "name": "path",
+        "type": "string",
+        "description": "Route under test."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./gradlew"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/ktor-testing-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/ktor-testing-skill.yaml",
+    "checksum": "0a085e54f588fd0404ae1c75605c685ddbe69a4a282c8011fffb7adf808e758d"
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "name": "api-security-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Manages API secrets and identity: HashiCorp Vault secret storage and rotation, AWS Secrets Manager CLI, and secrets hygiene for API keys.",
+  "keywords": [
+    "api-security"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-security-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-security-specialist"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: api-security-specialist. You do it through vault-secrets: Store and retrieve API secrets in Vault. The commands are real, e.g. `vault server -dev`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "vault-secrets",
+      "description": "Store and retrieve API secrets in Vault",
+      "commands": [
+        "vault server -dev",
+        "vault kv put secret/api DB_PASSWORD=\"s3cr3t\" API_KEY=\"key-123\"",
+        "vault kv get secret/api",
+        "vault kv get -format=json secret/api | jq '.data.data.API_KEY'",
+        "vault kv delete secret/api"
+      ],
+      "examples": [
+        "vault kv put stores key-value secrets",
+        "vault kv get retrieves with -format=json",
+        "vault kv delete removes rotated secrets"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Secret path in the KV store"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output format: table, json, yaml"
+        },
+        {
+          "name": "fields",
+          "type": "object",
+          "description": "Key-value secret fields"
+        }
+      ]
+    },
+    {
+      "name": "aws-secrets",
+      "description": "Manage secrets with AWS Secrets Manager",
+      "commands": [
+        "aws secretsmanager create-secret --name prod/api-key --secret-string \"{\\\"key\\\":\\\"abc123\\\"}\"",
+        "aws secretsmanager get-secret-value --secret-id prod/api-key --query SecretString --output text",
+        "aws secretsmanager rotate-secret --secret-id prod/api-key",
+        "aws secretsmanager list-secrets --query 'SecretList[].Name' --output text"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "owasp-zap"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "owasp-zap",
+    "helmet",
+    "cors",
+    "express-rate-limit"
+  ],
+  "examples": [
+    {
+      "input": "Move API keys to Vault",
+      "output": "Stores keys in KV v2 and updates the service to read them"
+    },
+    {
+      "input": "Rotate a leaked key",
+      "output": "Updates the secret in Secrets Manager and verifies the new value"
+    }
+  ],
+  "instructions": "# API Security Specialist\n\nSecret and identity management.\n\n## What This Skill Does\n- Centralizes API secrets in Vault\n- Automates rotation with cloud tools\n- Enforces secrets hygiene\n\n## When to Use\n- Centralizing scattered secrets\n- Rotation compliance\n- Onboarding API consumers\n\n## Real Commands\n\n```bash\nvault server -dev\nvault kv put secret/api DB_PASSWORD=\"s3cr3t\" API_KEY=\"key-123\"\nvault kv get secret/api\naws secretsmanager create-secret --name prod/api-key --secret-string \"{\\\"key\\\":\\\"abc123\\\"}\"\n```\n\n## Secret Hygiene\n- Never commit keys; use env vars\n- Rotate quarterly or on exposure\n- Grant least-privilege access\n- Audit reads with Vault audit logs\n\n## Testing\n- Verify secrets resolve in each environment\n- Test rotation breaks old credentials\n- Confirm audit trails capture access\n\n\n## Best Practices\n- Use short-lived tokens where possible\n- Separate staging and prod namespaces\n- Automate rotation schedules",
+  "display_name": "api-security-specialist",
+  "knowledge": [
+    {
+      "title": "Vault KV Secrets",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2",
+      "description": "Vault KV v2 secret engine"
+    },
+    {
+      "title": "AWS Secrets Manager",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/",
+      "description": "AWS Secrets Manager user guide"
+    }
+  ],
+  "id": "api-security-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "vault-secrets",
+        "name": "path",
+        "type": "string",
+        "description": "Secret path in the KV store"
+      },
+      {
+        "capability": "vault-secrets",
+        "name": "format",
+        "type": "string",
+        "description": "Output format: table, json, yaml"
+      },
+      {
+        "capability": "vault-secrets",
+        "name": "fields",
+        "type": "object",
+        "description": "Key-value secret fields"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "owasp-zap"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-security-specialist/skill/api-security-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-security-specialist/skill/api-security-specialist.yaml",
+    "checksum": "599b280e33d31cbbac85d73be80ad62d3a702268bc1f8b832559cb7f8fdc5d36"
+  }
+}

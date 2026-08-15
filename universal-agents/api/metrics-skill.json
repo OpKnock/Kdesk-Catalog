@@ -1,0 +1,173 @@
+{
+  "name": "metrics",
+  "display_name": "Metrics",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Instrument services with metrics: design metric names/labels, expose /metrics endpoints, and verify scrapes with promtool.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "node_exporter",
+    "promtool"
+  ],
+  "capabilities": [
+    {
+      "name": "metrics-instrumentation",
+      "description": "Instrument applications with Prometheus metric types, expose an endpoint, and validate the output.",
+      "commands": [
+        "promtool check metrics --extended /dev/stdin",
+        "curl -s http://localhost:9100/metrics",
+        "curl -s 'http://localhost:9090/api/v1/query?query=up'",
+        "node_exporter --collector.textfile.directory=/var/lib/node_exporter/textfile",
+        "promtool check config /etc/prometheus/prometheus.yml"
+      ],
+      "examples": [
+        "curl -s http://localhost:9100/metrics | grep node_cpu_seconds_total",
+        "curl -s http://localhost:9090/api/v1/query?query=up",
+        "promtool check metrics < my_metrics.txt"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Port the metrics endpoint listens on"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Metric namespace prefix, e.g. app_name"
+        },
+        {
+          "name": "labels",
+          "type": "array",
+          "description": "Consistent label set applied to every metric"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Prometheus Metric Types",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/concepts/metric_types/",
+      "description": "Counter, gauge, histogram and summary semantics"
+    },
+    {
+      "title": "Node Exporter",
+      "type": "documentation",
+      "source": "https://github.com/prometheus/node_exporter",
+      "description": "System metrics collector and textfile collector"
+    }
+  ],
+  "instructions": "# Metrics\n\nInstrumenting services with Prometheus-style metrics gives you counters, gauges, histograms and summaries.\n\n## What this skill does\n\n- Designs metric names and label sets for new services\n- Exposes a `/metrics` endpoint and validates its output with promtool\n- Verifies the Prometheus server is scraping successfully (`up`)\n\n## When to use\n\n- Adding observability to a new microservice\n- Validating that scrapes and metrics are well-formed before wiring dashboards\n- Fixing duplicate metric names or bad label usage\n\n## Real commands\n\n```bash\n# Validate metric text format before shipping it\npromtool check metrics --extended /dev/stdin\n\n# Verify scrape target is up\ncurl -s http://localhost:9090/api/v1/query?query=up\n\n# Inspect a node_exporter textfile metric\ncurl -s http://localhost:9100/metrics | grep node_cpu_seconds_total\n\n# Expose textfile metrics for cron jobs\nnode_exporter --collector.textfile.directory=/var/lib/node_exporter/textfile\n\n# Validate scrape config\npromtool check config /etc/prometheus/prometheus.yml\n```\n\n## Naming conventions\n\n- Counters end in `_total`; rates use `rate(metric[5m])`\n- Units in name: `_seconds`, `_bytes`, `_requests`\n- Keep labels consistent across all metrics of a service\n\n## Textfile collector example\n\n```bash\nprintf 'my_batch_job_duration_seconds 42.5\\n' > /var/lib/node_exporter/textfile/job.prom\n```\n\n## Best practices\n\n- Prefix metric names with the app namespace\n- Expose on a dedicated port when possible\n- Never add high-cardinality labels (see metrics-cardinality-skill)",
+  "examples": [
+    {
+      "input": "Add request metrics to my Go service",
+      "output": "The agent adds a counter/histogram pair, exposes them on /metrics with the promhttp handler, and validates with `promtool check metrics`."
+    },
+    {
+      "input": "My scrape target shows as DOWN",
+      "output": "The agent checks `curl http://localhost:9090/api/v1/query?query=up`, verifies the exporter is listening on the expected port, and validates prometheus.yml with promtool."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "metrics.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-metrics"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Metrics. You do it through metrics-instrumentation: Instrument applications with Prometheus metric types, expose an endpoint, and validate the output. The commands are real, e.g. `promtool check metrics --extended /dev/stdin`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "metrics",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "metrics-instrumentation",
+        "name": "port",
+        "type": "integer",
+        "description": "Port the metrics endpoint listens on"
+      },
+      {
+        "capability": "metrics-instrumentation",
+        "name": "namespace",
+        "type": "string",
+        "description": "Metric namespace prefix, e.g. app_name"
+      },
+      {
+        "capability": "metrics-instrumentation",
+        "name": "labels",
+        "type": "array",
+        "description": "Consistent label set applied to every metric"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node_exporter",
+    "promtool"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/metrics-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/metrics-skill.yaml",
+    "checksum": "acb6205e9c698575b7abf8d4842ab9a49cae7931259c3358f20dfeda2f5ebeff"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "name": "template",
+  "display_name": "Template",
+  "category": "patterns",
+  "subcategory": "general",
+  "description": "Implements the Template Method pattern in Java with Maven: fixed algorithm skeletons with overridable steps.",
+  "version": "2.0.0",
+  "tags": [
+    "template"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mvn"
+  ],
+  "capabilities": [
+    {
+      "name": "java-maven",
+      "description": "Implement and test template method examples.",
+      "commands": [
+        "mvn archetype:generate -DgroupId=com.example -DartifactId=template -DarchetypeArtifactId=maven-archetype-quickstart",
+        "mvn -q compile",
+        "mvn -q test",
+        "mvn -q test -Dtest=OrderProcessorTest",
+        "mvn -q exec:java"
+      ],
+      "examples": [
+        "mvn -q test -Dtest='OrderProcessorTest#processOrder'",
+        "mvn -q compile && mvn -q exec:java -Dexec.mainClass=com.example.Main",
+        "mvn -q test -DfailIfNoTests=false"
+      ],
+      "parameters": [
+        {
+          "name": "test",
+          "type": "string",
+          "description": "Test class or method filter"
+        },
+        {
+          "name": "archetype",
+          "type": "string",
+          "description": "Maven archetype id"
+        },
+        {
+          "name": "q",
+          "type": "string",
+          "description": "Quiet output"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Refactoring Guru: Template Method",
+      "type": "documentation",
+      "source": "https://refactoring.guru/design-patterns/template-method",
+      "description": "Template intent, structure, and usage"
+    },
+    {
+      "title": "Maven Surefire",
+      "type": "documentation",
+      "source": "https://maven.apache.org/surefire/maven-surefire-plugin/",
+      "description": "Maven test execution"
+    }
+  ],
+  "instructions": "# Template Method Pattern\n\nDefine an algorithm skeleton; let subclasses fill the steps.\n\n## When to Use\n\n- Recurring multi-step processes with variant steps\n- Pipelines where ordering must be fixed\n- Reusing flow while allowing step overrides\n\n## Example (Java)\n\n```java\npublic abstract class OrderProcessor {\n    public final void process() {\n        validate();\n        charge();\n        notifyCustomer();\n    }\n\n    protected abstract void validate();\n    protected abstract void charge();\n    protected void notifyCustomer() { /* default no-op */ }\n}\n\npublic class CardOrderProcessor extends OrderProcessor {\n    protected void validate() { System.out.println(\"validating card\"); }\n    protected void charge() { System.out.println(\"charging card\"); }\n    protected void notifyCustomer() { System.out.println(\"emailed receipt\"); }\n}\n```\n\n## Test\n\n```java\n@Test\nvoid processesInOrder() {\n    new CardOrderProcessor().process();\n    // verify order via a recorder\n}\n```\n\n```bash\nmvn -q test\n```\n\n## Best practices\n\n- Mark the skeleton `final` to lock step order.\n- Provide sensible defaults for optional steps.\n- Keep steps cohesive; extract overridable points deliberately.\n- Use the pattern sparingly - composition beats inheritance often.\n\n## Testing\n\nTest the skeleton order and each subclass's step overrides.",
+  "examples": [
+    {
+      "input": "Standardize order processing with variant payments.",
+      "output": "Defines the OrderProcessor skeleton with abstract steps and concrete processors per payment type."
+    },
+    {
+      "input": "Add a hook for warehouse notification.",
+      "output": "Adds an overridable notifyWarehouse step with a default no-op in the skeleton."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "template.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-template"
+    },
+    "generic": {
+      "system_prompt": "You are the Template specialist. You do it through java-maven: Implement and test template method examples. The commands are real, e.g. `mvn archetype:generate -DgroupId=com.example -DartifactId=template...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "template",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "java-maven",
+        "name": "test",
+        "type": "string",
+        "description": "Test class or method filter"
+      },
+      {
+        "capability": "java-maven",
+        "name": "archetype",
+        "type": "string",
+        "description": "Maven archetype id"
+      },
+      {
+        "capability": "java-maven",
+        "name": "q",
+        "type": "string",
+        "description": "Quiet output"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mvn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/template-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/template-skill.yaml",
+    "checksum": "c5aec56e538eea3ae65302c3e8d5145760842bb3937687f6af02272395463dd8"
+  }
+}

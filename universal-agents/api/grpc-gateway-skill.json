@@ -1,0 +1,171 @@
+{
+  "name": "grpc-gateway",
+  "display_name": "Grpc Gateway",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Expose gRPC services as RESTful JSON APIs using grpc-gateway v2: google.api.http annotations, protoc plugins, and OpenAPI generation.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "protoc"
+  ],
+  "capabilities": [
+    {
+      "name": "gateway-generation",
+      "description": "Generate REST gateway stubs and OpenAPI specs from protos annotated with google.api.http.",
+      "commands": [
+        "go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest",
+        "go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest",
+        "protoc -I . --grpc-gateway_out=logtostderr=true:./gen ./proto/helloworld.proto",
+        "protoc -I . --openapiv2_out=logtostderr=true:./swagger ./proto/helloworld.proto",
+        "go run ./gateway"
+      ],
+      "examples": [
+        "protoc -I . --grpc-gateway_out=logtostderr=true:./gen --go_out=./gen --go-grpc_out=./gen ./proto/helloworld.proto",
+        "curl http://localhost:8080/v1/hello/John",
+        "curl -X POST http://localhost:8080/v1/greet -d '{\"name\":\"John\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "proto_file",
+          "type": "string",
+          "description": "Proto file containing google.api.http annotations."
+        },
+        {
+          "name": "out_dir",
+          "type": "string",
+          "description": "Output directory for gateway code."
+        },
+        {
+          "name": "swagger_dir",
+          "type": "string",
+          "description": "Output directory for generated OpenAPI specs."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "grpc-gateway Docs",
+      "type": "documentation",
+      "source": "https://grpc-ecosystem.github.io/grpc-gateway/",
+      "description": "Official grpc-gateway v2 documentation: annotations, plugins, and examples."
+    },
+    {
+      "title": "google.api.http annotations",
+      "type": "documentation",
+      "source": "https://github.com/googleapis/googleapis/blob/master/google/api/http.proto",
+      "description": "HTTP annotation rules for mapping REST paths to gRPC methods."
+    }
+  ],
+  "instructions": "# grpc-gateway\n\nExpose gRPC backends as REST/JSON APIs with grpc-gateway v2.\n\n## What this skill does\n\n- Maps REST paths and verbs to gRPC methods via `google.api.http` annotations.\n- Generates a standalone gateway binary that reverse-proxies JSON to gRPC.\n- Produces OpenAPI (swagger) specs for downstream API consumers.\n- Supports query params, request body binding, and custom route patterns.\n\n## When to use\n\n- The same service must serve mobile/web REST clients and internal gRPC clients.\n- You want a single source of truth (the proto) for both protocols.\n- Generating OpenAPI docs for the API portal without hand-writing them.\n\n## Real commands\n\n```bash\n# Install plugins\ngo install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest\ngo install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest\n\n# Generate gateway code + OpenAPI spec\nprotoc -I . --grpc-gateway_out=logtostderr=true:./gen \\\n  --openapiv2_out=logtostderr=true:./swagger ./proto/helloworld.proto\n\n# Run the gateway\ngo run ./gateway\n\n# Call the REST endpoint\ncurl http://localhost:8080/v1/hello/John\n```\n\n## Annotation example\n\n```proto\nimport \"google/api/annotations.proto\";\n\nservice Greeter {\n  rpc SayHello(HelloRequest) returns (HelloReply) {\n    option (google.api.http) = {\n      get: \"/v1/hello/{name}\"\n      additional_bindings { post: \"/v1/greet\" body: \"*\" }\n    };\n  }\n}\n```\n\n## Gateway main\n\n```go\nmux := runtime.NewServeMux()\nopts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}\nerr := pb.RegisterGreeterHandlerFromEndpoint(ctx, mux, \"localhost:50051\", opts)\nhttp.ListenAndServe(\":8080\", mux)\n```\n\n## Testing\n\n```bash\ngo run ./gateway &\ncurl -s http://localhost:8080/v1/hello/World | jq .message\ncurl -s -X POST http://localhost:8080/v1/greet -d '{\"name\":\"World\"}' | jq .message\n```\n\n## Best practices\n\n- Use `additional_bindings` when the same RPC deserves GET and POST shapes.\n- Return canonical gRPC status codes; the gateway maps them to HTTP codes automatically.\n- Regenerate the OpenAPI spec on every contract change and diff it in CI.\n- Keep the gateway in a separate binary so gRPC service and gateway scale independently.\n\n## Example exchange\n\n```\nUser: Add a REST POST /v1/greet to the Greeter service and regenerate.\nAgent: Annotate SayHello with additional_bindings, then run protoc --grpc-gateway_out and restart the gateway.\n```",
+  "examples": [
+    {
+      "input": "Expose SayHello as GET /v1/hello/{name}",
+      "output": "Annotate with google.api.http, run protoc --grpc-gateway_out=logtostderr=true:./gen ./proto/helloworld.proto, then curl http://localhost:8080/v1/hello/John"
+    },
+    {
+      "input": "Generate an OpenAPI spec for the gateway",
+      "output": "protoc -I . --openapiv2_out=logtostderr=true:./swagger ./proto/helloworld.proto"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "grpc-gateway.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-grpc-gateway"
+    },
+    "generic": {
+      "system_prompt": "You take the Grpc Gateway seat. You do it through gateway-generation: Generate REST gateway stubs and OpenAPI specs from protos annotated with google.api.http. The commands are real, e.g. `go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "grpc-gateway",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "gateway-generation",
+        "name": "proto_file",
+        "type": "string",
+        "description": "Proto file containing google.api.http annotations."
+      },
+      {
+        "capability": "gateway-generation",
+        "name": "out_dir",
+        "type": "string",
+        "description": "Output directory for gateway code."
+      },
+      {
+        "capability": "gateway-generation",
+        "name": "swagger_dir",
+        "type": "string",
+        "description": "Output directory for generated OpenAPI specs."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "protoc"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/grpc-gateway-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/grpc-gateway-skill.yaml",
+    "checksum": "5a3a269775c9cbb0f6d420fd4b1c93ed0ba65e100972ec29eeb44d27f673e835"
+  }
+}

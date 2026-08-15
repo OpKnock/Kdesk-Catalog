@@ -1,0 +1,220 @@
+{
+  "name": "memory-stress-testing",
+  "display_name": "Memory Stress Testing",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Stress test memory on Linux hosts: stress-ng and memtester workloads, OOM behavior checks, and system memory monitoring.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cat",
+    "free",
+    "memtester",
+    "stress",
+    "stress-ng",
+    "vmstat"
+  ],
+  "capabilities": [
+    {
+      "name": "stress-ng",
+      "description": "Run memory stress workloads with stress-ng.",
+      "commands": [
+        "stress-ng --vm 4 --vm-bytes 2G --timeout 60s",
+        "stress-ng --vm 2 --vm-bytes 75% --vm-method all --timeout 30s",
+        "stress-ng --vm 1 --vm-bytes 1G --vm-hang 10 --timeout 60s",
+        "stress-ng --vm 4 --vm-bytes 2G --metrics-brief --timeout 60s"
+      ],
+      "examples": [
+        "stress-ng --vm 4 --vm-bytes 2G --timeout 60s",
+        "stress-ng --vm 2 --vm-bytes 75% --vm-method all --timeout 30s",
+        "stress-ng --vm 4 --vm-bytes 2G --metrics-brief --timeout 60s"
+      ],
+      "parameters": [
+        {
+          "name": "vm",
+          "type": "integer",
+          "description": "Number of memory stressors."
+        },
+        {
+          "name": "vm_bytes",
+          "type": "string",
+          "description": "Bytes per stressor: 2G or 75%."
+        },
+        {
+          "name": "timeout",
+          "type": "string",
+          "description": "Run duration, e.g. 60s."
+        }
+      ]
+    },
+    {
+      "name": "memtester-monitor",
+      "description": "Run memtester and monitor memory pressure.",
+      "commands": [
+        "memtester 512M 5",
+        "free -h",
+        "vmstat 1 10",
+        "cat /proc/meminfo | head -8",
+        "stress --vm 2 --vm-bytes 1G --vm-hang 0 --timeout 120"
+      ],
+      "examples": [
+        "memtester 512M 5",
+        "free -h",
+        "vmstat 1 10"
+      ],
+      "parameters": [
+        {
+          "name": "size",
+          "type": "string",
+          "description": "Memory size to test, e.g. 512M."
+        },
+        {
+          "name": "iterations",
+          "type": "integer",
+          "description": "memtester iterations."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "stress-ng",
+      "type": "documentation",
+      "source": "https://github.com/ColinIanKing/stress-ng",
+      "description": "stress-ng repository with all stressor options."
+    },
+    {
+      "title": "memtester",
+      "type": "documentation",
+      "source": "https://pyropus.ca/software/memtester/",
+      "description": "memtester documentation."
+    }
+  ],
+  "instructions": "# Memory Stress Testing\n\nStress and validate memory subsystems on Linux hosts.\n\n## What this skill does\n\n- Runs memory stressors with stress-ng (allocation, dirtying, hang).\n- Tests RAM correctness with memtester.\n- Monitors pressure with free, vmstat, and /proc/meminfo.\n\n## When to use\n\n- Validating VM sizing before production load.\n- Hunting OOM-killer surprises under high allocation.\n- Verifying memory cgroup limits behave.\n\n## Real commands\n\n```bash\n# 4 stressors, 2G each, 60s\nstress-ng --vm 4 --vm-bytes 2G --timeout 60s\n\n# 75% of available RAM, all methods\nstress-ng --vm 2 --vm-bytes 75% --vm-method all --timeout 30s\n\n# Allocate and hold (swap-test)\nstress-ng --vm 1 --vm-bytes 1G --vm-hang 10 --timeout 60s\n\n# With metrics summary\nstress-ng --vm 4 --vm-bytes 2G --metrics-brief --timeout 60s\n\n# RAM correctness test (512 MiB, 5 passes)\nmemtester 512M 5\n\n# Classic stress\nstress --vm 2 --vm-bytes 1G --vm-hang 0 --timeout 120\n\n# Monitor\nfree -h\nvmstat 1 10\ncat /proc/meminfo | head -8\n```\n\n## Testing\n\n```bash\n# Watch swap and OOM behavior while stressing\nstress-ng --vm 4 --vm-bytes 2G --timeout 60s &\nvmstat 1 10\ndmesg --level=err | grep -i 'out of memory' || echo 'no OOM'\n```\n\n## Best practices\n\n- Never stress memory on production boxes without change control.\n- Use --vm-method all for thorough fault coverage in staging.\n- Combine with swap limits (ulimit -v) to test graceful degradation.\n",
+  "examples": [
+    {
+      "input": "Verify the box survives 8G of allocation",
+      "output": "stress-ng --vm 4 --vm-bytes 2G --timeout 60s and watch free -h plus dmesg for OOM."
+    },
+    {
+      "input": "Check RAM for bad sectors",
+      "output": "memtester 512M 5"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "memory-stress-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-memory-stress-testing"
+    },
+    "generic": {
+      "system_prompt": "You own Memory Stress Testing end to end. You do it through stress-ng: Run memory stress workloads with stress-ng. The commands are real, e.g. `stress-ng --vm 4 --vm-bytes 2G --timeout 60s`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "memory-stress-testing",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "stress-ng",
+        "name": "vm",
+        "type": "integer",
+        "description": "Number of memory stressors."
+      },
+      {
+        "capability": "stress-ng",
+        "name": "vm_bytes",
+        "type": "string",
+        "description": "Bytes per stressor: 2G or 75%."
+      },
+      {
+        "capability": "stress-ng",
+        "name": "timeout",
+        "type": "string",
+        "description": "Run duration, e.g. 60s."
+      },
+      {
+        "capability": "memtester-monitor",
+        "name": "size",
+        "type": "string",
+        "description": "Memory size to test, e.g. 512M."
+      },
+      {
+        "capability": "memtester-monitor",
+        "name": "iterations",
+        "type": "integer",
+        "description": "memtester iterations."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cat",
+    "free",
+    "memtester",
+    "stress",
+    "stress-ng",
+    "vmstat"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/memory-stress-testing-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/memory-stress-testing-skill.yaml",
+    "checksum": "3e8f414f7b1e32b6f4dd14ae5094ac0e98c3cbaa2eccfa8bb55a897c8702bae6"
+  }
+}

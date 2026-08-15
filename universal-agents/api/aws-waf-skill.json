@@ -1,0 +1,250 @@
+{
+  "name": "aws-waf",
+  "display_name": "Aws Waf",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manages AWS WAF web ACLs, rule groups, IP sets, and associations for API Gateway, CloudFront, and ALB protection.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "aws"
+  ],
+  "capabilities": [
+    {
+      "name": "web-acl",
+      "description": "Create and inspect WAF web ACLs.",
+      "commands": [
+        "aws wafv2 list-web-acls --scope REGIONAL",
+        "aws wafv2 create-web-acl --name my-acl --scope REGIONAL --default-action Allow={} --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl",
+        "aws wafv2 get-web-acl --name my-acl --scope REGIONAL --id <acl-id>",
+        "aws wafv2 delete-web-acl --name my-acl --scope REGIONAL --id <acl-id> --lock-token <token>",
+        "aws wafv2 list-web-acls --scope CLOUDFRONT"
+      ],
+      "examples": [
+        "aws wafv2 list-web-acls --scope REGIONAL --query 'WebACLs[].{name:Name,id:Id}'",
+        "aws wafv2 create-web-acl --name my-acl --scope REGIONAL --default-action Allow={} --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl --rules file://rules.json",
+        "aws wafv2 get-web-acl --name my-acl --scope REGIONAL --id <acl-id> | jq '.WebACL.Rules[].Name'"
+      ],
+      "parameters": [
+        {
+          "name": "scope",
+          "type": "string",
+          "description": "REGIONAL or CLOUDFRONT"
+        },
+        {
+          "name": "acl_name",
+          "type": "string",
+          "description": "Web ACL name"
+        }
+      ]
+    },
+    {
+      "name": "rules-ipset",
+      "description": "Add rules and IP sets to web ACLs.",
+      "commands": [
+        "aws wafv2 create-ip-set --name blocked-ips --scope REGIONAL --ip-address-version IPV4 --addresses 203.0.113.0/24",
+        "aws wafv2 get-ip-set --name blocked-ips --scope REGIONAL --id <ipset-id>",
+        "aws wafv2 update-web-acl --name my-acl --scope REGIONAL --id <acl-id> --default-action Allow={} --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl --rules file://rules.json",
+        "aws wafv2 list-ip-sets --scope REGIONAL",
+        "aws wafv2 get-rate-based-statement-managed-keys --scope REGIONAL --web-acl-name my-acl --web-acl-id <acl-id>"
+      ],
+      "examples": [
+        "aws wafv2 create-ip-set --name blocked-ips --scope REGIONAL --ip-address-version IPV4 --addresses 203.0.113.0/24 198.51.100.0/24",
+        "aws wafv2 update-ip-set --name blocked-ips --scope REGIONAL --id <id> --addresses 203.0.113.0/24 --lock-token <token>",
+        "aws wafv2 get-rate-based-statement-managed-keys --scope REGIONAL --web-acl-name my-acl --web-acl-id <acl-id> | jq '.ManagedKeysIPV4'"
+      ],
+      "parameters": [
+        {
+          "name": "ip_set_name",
+          "type": "string",
+          "description": "IP set name"
+        },
+        {
+          "name": "addresses",
+          "type": "string",
+          "description": "CIDR addresses"
+        },
+        {
+          "name": "rules_file",
+          "type": "string",
+          "description": "JSON rules file"
+        }
+      ]
+    },
+    {
+      "name": "associate",
+      "description": "Associate web ACLs with protected resources.",
+      "commands": [
+        "aws wafv2 associate-web-acl --web-acl-arn <acl-arn> --resource-arn <alb-or-apigateway-arn>",
+        "aws wafv2 disassociate-web-acl --resource-arn <resource-arn>",
+        "aws wafv2 get-web-acl-for-resource --resource-arn <resource-arn>",
+        "aws wafv2 list-resources-for-web-acl --web-acl-arn <acl-arn>"
+      ],
+      "examples": [
+        "aws wafv2 associate-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:123456789012:regional/webacl/my-acl/<id> --resource-arn arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/api/abc",
+        "aws wafv2 get-web-acl-for-resource --resource-arn arn:aws:apigateway:us-east-1::/restapis/<api-id>/stages/prod",
+        "aws wafv2 list-resources-for-web-acl --web-acl-arn <acl-arn>"
+      ],
+      "parameters": [
+        {
+          "name": "resource_arn",
+          "type": "string",
+          "description": "ARN of the protected resource"
+        },
+        {
+          "name": "web_acl_arn",
+          "type": "string",
+          "description": "Web ACL ARN"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "WAF Developer Guide",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/waf/latest/developerguide/",
+      "description": "Web ACLs, rules, managed rules"
+    },
+    {
+      "title": "AWS CLI wafv2 Reference",
+      "type": "documentation",
+      "source": "https://awscli.amazonaws.com/v2/documentation/api/latest/reference/wafv2/index.html",
+      "description": "CLI commands"
+    }
+  ],
+  "instructions": "# AWS WAF\n\n## What this skill does\n\nManages AWS WAF web ACLs: creating ACLs and rule groups, blocking IP sets, rate-based rules, associating with ALB/API Gateway/CloudFront, and inspecting sampled requests.\n\n## When to use\n\n- Blocking abusive IPs or bot traffic\n- Rate-limiting an API at the edge\n- Meeting compliance with managed rules (OWASP CRS)\n\n## Real commands\n\n```bash\n# Create a web ACL\naws wafv2 create-web-acl --name my-acl --scope REGIONAL --default-action Allow={} --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl\n\n# Create and update an IP set\naws wafv2 create-ip-set --name blocked-ips --scope REGIONAL --ip-address-version IPV4 --addresses 203.0.113.0/24\naws wafv2 update-ip-set --name blocked-ips --scope REGIONAL --id <id> --addresses 203.0.113.0/24 198.51.100.0/24 --lock-token <token>\n\n# Attach rules from a JSON file\naws wafv2 update-web-acl --name my-acl --scope REGIONAL --id <acl-id> --default-action Allow={} --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl --rules file://rules.json\n\n# Associate with an ALB\naws wafv2 associate-web-acl --web-acl-arn <acl-arn> --resource-arn <alb-arn>\n\n# See blocked IPs under a rate rule\naws wafv2 get-rate-based-statement-managed-keys --scope REGIONAL --web-acl-name my-acl --web-acl-id <acl-id>\n```\n\n## Rules JSON fragment\n\n```json\n{\"Name\": \"block-abuse\", \"Priority\": 1, \"Statement\": {\"IPSetReferenceStatement\": {\"ARN\": \"arn:aws:wafv2:...:ipset/blocked-ips/<id>\"}}, \"Action\": {\"Block\": {}}, \"VisibilityConfig\": {\"SampledRequestsEnabled\": true, \"CloudWatchMetricsEnabled\": true, \"MetricName\": \"block-abuse\"}}\n```\n\n## Testing\n\n- Curl the endpoint from an IP in the blocked set and expect 403\n- Use sampled requests via CloudWatch Logs to verify decisions\n\n## Best practices\n\n- Start in Count mode, review logs, then switch to Block\n- Use managed rule groups (AWSManagedRulesCommonRuleSet) first\n- Scope ACLs to specific resources, not everything",
+  "examples": [
+    {
+      "input": "Block a botnet CIDR at the edge",
+      "output": "Creates an IP set with the CIDR, adds a Block rule referencing it, updates the ACL, and verifies a 403 from curl."
+    },
+    {
+      "input": "Rate-limit our login endpoint",
+      "output": "Adds a rate-based rule on the /login URI at 2000 requests/5min, associates the ACL with the API Gateway stage, and checks managed keys."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "aws-waf.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-aws-waf"
+    },
+    "generic": {
+      "system_prompt": "You own Aws Waf end to end. You do it through web-acl: Create and inspect WAF web ACLs. The commands are real, e.g. `aws wafv2 list-web-acls --scope REGIONAL`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "aws-waf",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "web-acl",
+        "name": "scope",
+        "type": "string",
+        "description": "REGIONAL or CLOUDFRONT"
+      },
+      {
+        "capability": "web-acl",
+        "name": "acl_name",
+        "type": "string",
+        "description": "Web ACL name"
+      },
+      {
+        "capability": "rules-ipset",
+        "name": "ip_set_name",
+        "type": "string",
+        "description": "IP set name"
+      },
+      {
+        "capability": "rules-ipset",
+        "name": "addresses",
+        "type": "string",
+        "description": "CIDR addresses"
+      },
+      {
+        "capability": "rules-ipset",
+        "name": "rules_file",
+        "type": "string",
+        "description": "JSON rules file"
+      },
+      {
+        "capability": "associate",
+        "name": "resource_arn",
+        "type": "string",
+        "description": "ARN of the protected resource"
+      },
+      {
+        "capability": "associate",
+        "name": "web_acl_arn",
+        "type": "string",
+        "description": "Web ACL ARN"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/aws-waf-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/aws-waf-skill.yaml",
+    "checksum": "27a2726329124c6ff44094a0aee5b84a7365cfcda2ce53e8c433097b76b1680e"
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "name": "data-kafka-agent",
+  "display_name": "Data Kafka Agent",
+  "category": "data",
+  "subcategory": "agent",
+  "description": "Kafka data pipeline agent for event streaming.",
+  "version": "1.0.0",
+  "tags": [
+    "data",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Data Kafka Agent",
+      "description": "Kafka data pipeline agent for event streaming.",
+      "commands": [
+        "Describe: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic my-topic",
+        "Topics: kafka-topics.sh --bootstrap-server localhost:9092 --list",
+        "Produce: kafka-console-producer.sh --bootstrap-server localhost:9092 --topic my-topic",
+        "Consume: kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-topic --from-beginni"
+      ],
+      "examples": [
+        "Topics: kafka-topics.sh --bootstrap-server localhost:9092 --list",
+        "Describe: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic my-topic",
+        "Consume: kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-topic --from-beginning",
+        "Produce: kafka-console-producer.sh --bootstrap-server localhost:9092 --topic my-topic"
+      ],
+      "parameters": [
+        {
+          "name": "bootstrap-server",
+          "type": "string",
+          "description": "CLI flag --bootstrap-server observed in capability commands"
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "CLI flag --topic observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "data-kafka-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/data/agent",
+      "description": "Reference documentation for data-kafka-agent"
+    }
+  ],
+  "instructions": "You are a Kafka data pipeline expert. Help users with:\n- Topic configuration\n- Producer/Consumer setup\n- Schema registry integration\n- Stream processing\n\nAlways use real Kafka CLI commands and best practices.",
+  "examples": [
+    "Topics: kafka-topics.sh --bootstrap-server localhost:9092 --list",
+    "Describe: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic my-topic",
+    "Consume: kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-topic --from-beginning",
+    "Produce: kafka-console-producer.sh --bootstrap-server localhost:9092 --topic my-topic"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-kafka-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Kafka data pipeline expert. Help users with:\n- Topic configuration\n- Producer/Consumer setup\n- Schema registry integration\n- Stream processing\n\nAlways use real Kafka CLI commands and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-data-kafka-agent"
+    },
+    "generic": {
+      "system_prompt": "You are data-kafka-agent. Kafka data pipeline agent for event streaming.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-kafka-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Data Kafka Agent",
+        "name": "bootstrap-server",
+        "type": "string",
+        "description": "CLI flag --bootstrap-server observed in capability commands"
+      },
+      {
+        "capability": "Data Kafka Agent",
+        "name": "topic",
+        "type": "string",
+        "description": "CLI flag --topic observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/data-kafka-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/data-kafka-agent.yaml",
+    "checksum": "1fde707f9177ad6e7df3ba4a56bd333a7138c5b1875e6395b0501f48cf8475cf"
+  }
+}

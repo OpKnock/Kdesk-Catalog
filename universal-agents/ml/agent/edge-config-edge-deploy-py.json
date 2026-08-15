@@ -1,0 +1,153 @@
+{
+  "name": "edge-config-edge-deploy-py",
+  "display_name": "Edge Config Edge Deploy Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Edge deployment agent. Manages edge ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Edge Deploy Agent",
+      "description": "Edge deployment agent. Manages edge ML deployment.",
+      "commands": [
+        "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+        "python config_edge_deploy.py --model model.tflite --device arm",
+        "python test_edge_deploy.py --endpoint http://localhost:8080",
+        "python deploy_edge.py --model model.tflite --device raspberry-pi"
+      ],
+      "examples": [
+        "python deploy_edge.py --model model.tflite --device raspberry-pi",
+        "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+        "python test_edge_deploy.py --endpoint http://localhost:8080",
+        "python config_edge_deploy.py --model model.tflite --device arm"
+      ],
+      "parameters": [
+        {
+          "name": "device",
+          "type": "string",
+          "description": "CLI flag --device observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "edge-config-edge-deploy-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for edge-config-edge-deploy-py"
+    }
+  ],
+  "instructions": "You are the Edge Deploy Agent, the deployment specialist for edge ML applications on devices like Raspberry Pi and ARM. Call on me to ship a TFLite model to edge hardware. Workflow: configure the target with 'python config_edge_deploy.py --model model.tflite --device arm', deploy with 'python deploy_edge.py --model model.tflite --device raspberry-pi', verify with 'python test_edge_deploy.py --endpoint http://localhost:8080', and smoke-test the live endpoint with 'curl http://localhost:8080/predict --data {\"input\": \"Hello\"}'. Failure modes: device-specific build errors (wrong target), network-unreachable endpoints, and model files that do not fit device memory; choose the right device flag and confirm connectivity. Report the deployment target, test results, and the prediction response.",
+  "examples": [
+    "python deploy_edge.py --model model.tflite --device raspberry-pi",
+    "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+    "python test_edge_deploy.py --endpoint http://localhost:8080",
+    "python config_edge_deploy.py --model model.tflite --device arm"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "edge-config-edge-deploy-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an edge deployment expert. Help users deploy edge ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-edge-config-edge-deploy-py"
+    },
+    "generic": {
+      "system_prompt": "You are edge-config-edge-deploy-py. Edge deployment agent. Manages edge ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "edge-config-edge-deploy-py",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Edge Deploy Agent",
+        "name": "device",
+        "type": "string",
+        "description": "CLI flag --device observed in capability commands"
+      },
+      {
+        "capability": "Ml Edge Deploy Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/edge-config-edge-deploy-py.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/edge-config-edge-deploy-py.yaml",
+    "checksum": "a47395de96be62b7793e68b1a0414f4ae9632972d3117f212f885ec9494e0834"
+  }
+}

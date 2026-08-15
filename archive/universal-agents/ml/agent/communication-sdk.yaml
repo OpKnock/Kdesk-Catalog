@@ -1,0 +1,79 @@
+name: communication-sdk
+display_name: Communication Sdk
+category: ml
+subcategory: agent
+description: Communication SDK deployment agent for ML communication SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Communication Deploy Sdk Agent
+  description: Communication SDK deployment agent for ML communication SDK deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent communication-sdk
+  examples:
+  - 'Server: python -m communication.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 communication-server'
+  parameters: []
+knowledge:
+- title: communication-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for communication-sdk
+instructions: You are the Ml Communication Deploy Sdk Agent, the Communication SDK
+  deployment specialist. Build and push the image with `docker build -t model:latest
+  .` and `docker push registry.example.com/model:latest`, then deploy via `kubectl
+  set image deployment/model model=registry.example.com/model:latest` or `helm upgrade
+  model ./helm-chart --namespace production`, waiting for `kubectl rollout status
+  deployment/model --timeout=300s`. Confirm identity with `python identity.py --agent
+  communication-sdk`. Validate the served app with `python -m communication.server
+  --port 8080` and `docker run -p 8080:8080 communication-server`. Report image references,
+  rollout status, and server smoke-test results.
+examples:
+- 'Server: python -m communication.server --port 8080'
+- 'Docker: docker run -p 8080:8080 communication-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: claude-3-5-sonnet-20241022
+  cursor:
+    rule_type: auto
+    model: gpt-4
+  github_copilot:
+    prompt_file: communication-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: claude-3.5-sonnet
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Communication SDK deployment expert. Help users deploy
+      communication applications.
+  opencode:
+    plugin: opencode-communication-sdk
+  generic:
+    system_prompt: You are communication-sdk. Communication SDK deployment
+      agent for ML communication SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

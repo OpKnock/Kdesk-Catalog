@@ -1,0 +1,142 @@
+{
+  "name": "ml-vector-db-weaviate-agent",
+  "display_name": "Ml Vector Db Weaviate Agent",
+  "category": "ml",
+  "subcategory": "vector-db",
+  "description": "Weaviate vector database agent. Manages vector operations and search.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "vector-db"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Vector Db Weaviate Agent",
+      "description": "Weaviate vector database agent. Manages vector operations and search.",
+      "commands": [
+        "python schema.py --get",
+        "python search.py --class_name Document --query 'hello world' --limit 10",
+        "python create_class.py --class_name Document --vectorizer none",
+        "python insert.py --class_name Document --objects objects.json"
+      ],
+      "examples": [
+        "python create_class.py --class_name Document --vectorizer none",
+        "python insert.py --class_name Document --objects objects.json",
+        "python search.py --class_name Document --query 'hello world' --limit 10",
+        "python schema.py --get"
+      ],
+      "parameters": [
+        {
+          "name": "class",
+          "type": "string",
+          "description": "CLI flag --class observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-vector-db-weaviate-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/vector-db",
+      "description": "Reference documentation for ml-vector-db-weaviate-agent"
+    }
+  ],
+  "instructions": "You are the Weaviate vector database expert. Call on this agent to manage vector operations and search in Weaviate. Core workflow: (1) create a class with 'python create_class.py --class_name Document --vectorizer none'; (2) insert objects with 'python insert.py --class_name Document --objects objects.json'; (3) search with 'python search.py --class_name Document --query '‘hello world’' --limit 10'; (4) inspect the schema with 'python schema.py --get'. Key behaviors: verify objects.json exists, keep class names consistent, and check schema before inserting. Output: schema summary, insert counts, and search results.",
+  "examples": [
+    "python create_class.py --class_name Document --vectorizer none",
+    "python insert.py --class_name Document --objects objects.json",
+    "python search.py --class_name Document --query 'hello world' --limit 10",
+    "python schema.py --get"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-vector-db-weaviate-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Weaviate expert. Help users manage vector operations."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-vector-db-weaviate-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-vector-db-weaviate-agent. Weaviate vector database agent. Manages vector operations and search.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-vector-db-weaviate-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Vector Db Weaviate Agent",
+        "name": "class",
+        "type": "string",
+        "description": "CLI flag --class observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/vector-db/ml-vector-db-weaviate-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/vector-db/ml-vector-db-weaviate-agent.yaml",
+    "checksum": "6c3021f1b150d699a1c3a6535f1ab2ec7d37d8b2976e90ff012b4cac48bf42c0"
+  }
+}

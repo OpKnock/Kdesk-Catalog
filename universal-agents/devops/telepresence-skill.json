@@ -1,0 +1,209 @@
+{
+  "name": "telepresence",
+  "display_name": "telepresence",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Develops Kubernetes services locally with Telepresence: connect to clusters, intercept traffic, and preview services without redeploys.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "telepresence"
+  ],
+  "capabilities": [
+    {
+      "name": "cluster-connect",
+      "description": "Connect local dev environment to a cluster.",
+      "commands": [
+        "telepresence connect",
+        "telepresence status",
+        "telepresence list",
+        "telepresence quit",
+        "telepresence connect --namespace app",
+        "telepresence version"
+      ],
+      "examples": [
+        "telepresence connect",
+        "telepresence status",
+        "telepresence quit"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace to connect into"
+        },
+        {
+          "name": "context",
+          "type": "string",
+          "description": "Kube context to connect into"
+        }
+      ]
+    },
+    {
+      "name": "traffic-interception",
+      "description": "Intercept service traffic and route it to the local process.",
+      "commands": [
+        "telepresence intercept web --port 8080:80",
+        "telepresence intercept api --port 8080 --env-json env.json",
+        "telepresence list --intercepts",
+        "telepresence leave web",
+        "telepresence intercept api --port 8080 --mechanism tcp",
+        "telepresence intercept --preview-url api web"
+      ],
+      "examples": [
+        "telepresence intercept web --port 8080:80",
+        "telepresence leave web",
+        "telepresence intercept api --port 8080 --env-json env.json"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Service to intercept"
+        },
+        {
+          "name": "port",
+          "type": "string",
+          "description": "Local:remote port mapping"
+        },
+        {
+          "name": "env-json",
+          "type": "string",
+          "description": "File to dump intercepted env vars"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Telepresence Documentation",
+      "type": "documentation",
+      "source": "https://www.telepresence.io/docs",
+      "description": "Connect, intercept, preview URLs, and installation"
+    },
+    {
+      "title": "Telepresence GitHub",
+      "type": "documentation",
+      "source": "https://github.com/telepresenceio/telepresence",
+      "description": "CLI reference and intercept mechanics"
+    }
+  ],
+  "instructions": "# Telepresence Local Development\n\nDevelop against a live cluster from your laptop: intercept service traffic to local processes.\n\n## What This Skill Does\n\n- Connects your machine into cluster networking (DNS + routing)\n- Intercepts requests to a service and sends them to your local process\n- Replaces deployment code without redeploying\n- Dumps intercepted env vars for local parity\n- Shares preview URLs for review traffic\n\n## When to Use\n\n- Developing microservices that depend on cluster services\n- Testing changes against staging data without deploying\n- Debugging with local breakpoints on live traffic\n\n## Real Commands\n\n```bash\n# Connect\ntelepresence connect\ntelepresence connect --namespace app\ntelepresence status\ntelepresence version\n\n# Intercept\ntelepresence intercept web --port 8080:80\ntelepresence intercept api --port 8080 --env-json env.json\ntelepresence intercept web --port 8080 --mechanism tcp\ntelepresence intercept web --preview-url      # shareable preview\n\n# Manage\ntelepresence list --intercepts\ntelepresence leave web\ntelepresence quit\n```\n\n## Workflow\n\n1. `telepresence connect`\n2. Run your local server on port 8080\n3. `telepresence intercept web --port 8080:80`\n4. Cluster traffic to `web` now hits your laptop process\n5. `telepresence leave web` when done\n\n## Best Practices\n\n- Use intercepts, not connect alone, when possible (precise routing)\n- Verify intercepted env parity with --env-json\n- Never intercept production without explicit approval and time limits\n- Quit cleanly: telepresence quit removes all routes\n- Prefer namespace-scoped connects in multi-team clusters",
+  "examples": [
+    {
+      "input": "Test my local API changes against staging data",
+      "output": "Agent connects, starts the local server, intercepts the api service, and validates traffic routes locally"
+    },
+    {
+      "input": "Stop intercepting and clean up",
+      "output": "Agent lists active intercepts, leaves them, and quits the connection"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "telepresence.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-telepresence"
+    },
+    "generic": {
+      "system_prompt": "Your lane is telepresence. You do it through cluster-connect: Connect local dev environment to a cluster. The commands are real, e.g. `telepresence connect`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "telepresence",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cluster-connect",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace to connect into"
+      },
+      {
+        "capability": "cluster-connect",
+        "name": "context",
+        "type": "string",
+        "description": "Kube context to connect into"
+      },
+      {
+        "capability": "traffic-interception",
+        "name": "service",
+        "type": "string",
+        "description": "Service to intercept"
+      },
+      {
+        "capability": "traffic-interception",
+        "name": "port",
+        "type": "string",
+        "description": "Local:remote port mapping"
+      },
+      {
+        "capability": "traffic-interception",
+        "name": "env-json",
+        "type": "string",
+        "description": "File to dump intercepted env vars"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "telepresence"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/telepresence-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/telepresence-skill.yaml",
+    "checksum": "2c8265b6a425f954ca69ca1237a165ed379fe182ca1d036c810626fc930ccb5d"
+  }
+}

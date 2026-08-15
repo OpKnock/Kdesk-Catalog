@@ -1,0 +1,212 @@
+name: ethical-ai
+version: 2.0.0
+type: skill
+category: ai
+description: 'Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain
+  checks, PII detection, and bias assessment.'
+keywords:
+- ethical-ai
+- fairness
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ethical-ai.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ethical-ai
+  generic:
+    system_prompt: 'You take the ethical-ai seat. You do it through llm-security-scanning: Probe LLMs
+      for prompt injection, jailbreaks, and harmful output with garak. The commands are real, e.g. `garak
+      --model_type openai-chat --model_name gpt-4o-mini`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: llm-security-scanning
+  description: Probe LLMs for prompt injection, jailbreaks, and harmful output with garak.
+  commands:
+  - garak --model_type openai-chat --model_name gpt-4o-mini
+  - garak --model_type huggingface --model_name org/model --probes dan,encoding
+  - garak --report_type html -G /tmp/garak-report
+  - garak --probes dan --model_type openai-chat --model_name gpt-4o-mini
+  - python -m garak.scan --model_type claude --model_name claude-3-5-sonnet
+  examples:
+  - garak --model_type openai-chat --model_name gpt-4o-mini
+  - garak --probes dan --model_type openai-chat --model_name gpt-4o-mini
+  - garak --report_type html -G /tmp/garak-report
+  parameters:
+  - name: model_type
+    type: string
+    description: 'Model interface: openai-chat, huggingface, claude'
+  - name: model_name
+    type: string
+    description: Model identifier
+  - name: probes
+    type: string
+    description: Probe groups, e.g. dan, encoding
+- name: data-and-supply-chain
+  description: Scan repos for secrets, PII, and supply-chain risks.
+  commands:
+  - gitleaks detect --source . --report-format json --report-path leak.json
+  - detect-secrets scan --baseline .secrets.baseline
+  - scorecard --repo=github.com/org/app
+  - presidio-analyzer --analyzer text 'Call me at 555-0100'
+  - gitleaks detect --redact
+  - pip-audit -r requirements.txt
+  examples:
+  - gitleaks detect --source . --report-format json
+  - scorecard --repo=github.com/org/app
+  - presidio-analyzer --analyzer text 'Call me at 555-0100'
+  parameters:
+  - name: source
+    type: string
+    description: Path or repo to scan
+  - name: report
+    type: string
+    description: Report output path
+prerequisites:
+- fairlearn
+- ai-fairness
+- shap
+- lime
+tools:
+- fairlearn
+- ai-fairness
+- shap
+- lime
+- tensorflow-model-analysis
+examples:
+- input: Our chat feature keeps leaking instructions
+  output: Agent runs garak injection probes, reports failing categories, and suggests system-prompt hardening
+- input: Audit the AI project before launch
+  output: 'Agent runs the guardrail checklist: garak, gitleaks, scorecard, PII scan'
+instructions: '# Ethical AI Engineering
+
+
+  Build and ship AI systems with guardrails: security, privacy, and fairness.
+
+
+  ## What This Skill Does
+
+
+  - Probes LLMs for injection/jailbreak vulnerabilities with garak
+
+  - Scans repos for secrets and PII
+
+  - Assesses supply-chain security with Scorecard
+
+  - Detects PII in text with Presidio
+
+  - Advises on bias testing and model documentation
+
+
+  ## When to Use
+
+
+  - Releasing a new LLM-powered feature
+
+  - Auditing an AI system before deployment
+
+  - Responding to red-team findings
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # LLM scanning (garak)
+
+  garak --model_type openai-chat --model_name gpt-4o-mini
+
+  garak --probes dan,encoding --model_type openai-chat --model_name gpt-4o-mini
+
+  garak --report_type html -G /tmp/garak-report
+
+  python -m garak.scan --model_type claude --model_name claude-3-5-sonnet
+
+
+  # Secrets and PII
+
+  gitleaks detect --source . --report-format json --report-path leak.json
+
+  detect-secrets scan --baseline .secrets.baseline
+
+  presidio-analyzer --analyzer text ''Call me at 555-0100''
+
+
+  # Supply chain
+
+  scorecard --repo=github.com/org/app
+
+  pip-audit -r requirements.txt
+
+  ```
+
+
+  ## Guardrail Checklist
+
+
+  1. Prompt injection probes pass with mitigations in place
+
+  2. No secrets in training data or prompts (gitleaks baseline)
+
+  3. PII redaction before model input/output
+
+  4. Supply-chain scorecard >= 7
+
+  5. Bias evaluation documented for sensitive use cases
+
+
+  ## Best Practices
+
+
+  - Run garak in CI on model updates, not just releases
+
+  - Establish a secrets baseline, then fail on new leaks
+
+  - Log model decisions for audit (human-in-the-loop where risky)
+
+  - Write model cards: data, limitations, mitigations
+
+  - Publish an AI ethics review checklist with the product'
+display_name: ethical-ai
+knowledge:
+- title: garak LLM Vulnerability Scanner
+  type: documentation
+  source: https://docs.garak.ai/garak/
+  description: Probe catalog and scanning configuration
+- title: OpenSSF Scorecard
+  type: documentation
+  source: https://scorecard.dev/
+  description: Repository supply-chain security scoring
+- title: Microsoft Presidio
+  type: documentation
+  source: https://microsoft.github.io/presidio/
+  description: PII detection and anonymization
+- title: NIST AI RMF
+  type: documentation
+  source: https://www.nist.gov/itl/ai-risk-management-framework
+  description: AI risk management framework

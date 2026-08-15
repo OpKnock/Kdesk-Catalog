@@ -1,0 +1,175 @@
+{
+  "name": "etl-pipeline",
+  "display_name": "Etl Pipeline",
+  "category": "data",
+  "subcategory": "general",
+  "description": "Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling.",
+  "version": "2.0.0",
+  "tags": [
+    "data"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "psql",
+    "python",
+    "spark-submit"
+  ],
+  "capabilities": [
+    {
+      "name": "etl-pipeline",
+      "description": "Implement and run ETL jobs with Python, Spark, and CLI tools",
+      "commands": [
+        "python -m etl_pkg run --env prod --date 2024-01-15",
+        "spark-submit --master yarn --deploy-mode cluster jobs/extract.py --input s3://raw/ --output s3://curated/",
+        "jq '.items[] | {id: .id, value: .value}' raw.json > clean.json",
+        "psql -d warehouse -c \"\\\\copy staging.events FROM 'clean.csv' CSV HEADER\"",
+        "python -m pytest tests/ -q"
+      ],
+      "examples": [
+        "python -m etl_pkg run --env staging --date 2024-01-15 --incremental",
+        "spark-submit --master local[4] jobs/transform.py",
+        "airflow dags trigger etl_pipeline --conf '{\"date\": \"2024-01-15\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "env",
+          "type": "string",
+          "description": "Environment: dev, staging, prod"
+        },
+        {
+          "name": "date",
+          "type": "string",
+          "description": "Logical execution date for the pipeline"
+        },
+        {
+          "name": "incremental",
+          "type": "boolean",
+          "description": "Process only the delta since the last run"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Apache Spark SQL guide",
+      "type": "documentation",
+      "source": "https://spark.apache.org/docs/latest/sql-programming-guide.html",
+      "description": "DataFrames, SQL, and partitioning for transforms"
+    },
+    {
+      "title": "Airflow ETL best practices",
+      "type": "documentation",
+      "source": "https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html",
+      "description": "Idempotency and dependency management for pipelines"
+    }
+  ],
+  "instructions": "# ETL Pipeline\n\nDesigns and implements extract-transform-load pipelines that are idempotent,\nvalidated, and monitored.\n\n## When to Use\n\n- Moving data from sources into a warehouse\n- Building repeatable, dated batch jobs\n- Adding validation and observability to existing flows\n\n## Real Commands\n\n```bash\n# Run the pipeline for a date\npython -m etl_pkg run --env prod --date 2024-01-15 --incremental\n\n# Spark-based transforms\nspark-submit --master yarn --deploy-mode cluster jobs/extract.py --input s3://raw/events/ --output s3://curated/events/\n\n# Lightweight transform with jq\njq '.items[] | select(.status == \"ok\") | {id, value}' raw.json > clean.json\n\n# Load into Postgres\npsql -d warehouse -c \"\\copy staging.events FROM 'clean.csv' CSV HEADER\"\n\n# Validate\npython -m pytest tests/ -q\npython -m etl_pkg validate --env prod --date 2024-01-15\n```\n\n## Pipeline Contract\n\n1. Extract writes raw data untouched to a landing zone\n2. Transform is pure SQL/DataFrame logic, versioned\n3. Load uses upsert or partitioned overwrite (idempotent)\n4. Validate row counts and nulls before promoting\n5. Log metrics: rows in, rows out, duration\n\n## Best Practices\n\n- Partition by date; delete+reload for reprocessing\n- Test with fixtures, not production data\n- Make every step idempotent so backfills are safe\n- Alert on row-count anomalies\n- Keep credentials out of code (env vars / secret manager)\n\n## Example Response\n\nRuns the pipeline, reports rows extracted/transformed/loaded, validation results,\nand duration; if a step fails, isolates the step and error from logs.",
+  "examples": [
+    {
+      "input": "Build an ETL for our events data",
+      "output": "Scaffolds extract/transform/load modules with CLI flags, adds pytest fixtures, and runs a dated test execution"
+    },
+    {
+      "input": "Backfill last month's data",
+      "output": "Runs python -m etl_pkg run --env prod for each date, verifying idempotency on a re-run of one day"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "etl-pipeline.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-etl-pipeline"
+    },
+    "generic": {
+      "system_prompt": "You own Etl Pipeline end to end. You do it through etl-pipeline: Implement and run ETL jobs with Python, Spark, and CLI tools. The commands are real, e.g. `python -m etl_pkg run --env prod --date 2024-01-15`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "etl-pipeline",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "etl-pipeline",
+        "name": "env",
+        "type": "string",
+        "description": "Environment: dev, staging, prod"
+      },
+      {
+        "capability": "etl-pipeline",
+        "name": "date",
+        "type": "string",
+        "description": "Logical execution date for the pipeline"
+      },
+      {
+        "capability": "etl-pipeline",
+        "name": "incremental",
+        "type": "boolean",
+        "description": "Process only the delta since the last run"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "psql",
+    "python",
+    "spark-submit"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/etl-pipeline-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/etl-pipeline-skill.yaml",
+    "checksum": "4c4c5287eb12bdafa1f33109c5e741e416b588ca9df7b19cc2d93fe26701a821"
+  }
+}

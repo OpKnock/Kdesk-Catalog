@@ -1,0 +1,185 @@
+{
+  "name": "api-monitor-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "sre",
+  "description": "Builds scheduled API monitoring with Postman collections and Newman: environment-driven runs, HTML/JSON reporters, iteration data, and CI-friendly exit codes.",
+  "keywords": [
+    "api-monitoring",
+    "health-checks"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-monitor-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-monitor-specialist"
+    },
+    "generic": {
+      "system_prompt": "You take the api-monitor-specialist seat. You do it through newman-runs: Run Postman collections as monitoring checks. The commands are real, e.g. `npm install -g newman newman-reporter-htmlextra`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "newman-runs",
+      "description": "Run Postman collections as monitoring checks",
+      "commands": [
+        "npm install -g newman newman-reporter-htmlextra",
+        "newman run postman_collection.json -e production.postman_environment.json -r cli,json --reporter-json-export results.json",
+        "newman run collection.json -n 5 --timeout-request 10000",
+        "newman run collection.json --folder auth --iteration-data data.csv",
+        "curl -s https://postman-echo.com/get -o /dev/null -w '%{http_code} %{time_total}s\\n'"
+      ],
+      "examples": [
+        "newman run collection.json -e prod.json --reporters cli,htmlextra generates an HTML dashboard",
+        "newman run collection.json -n 5 polls an endpoint five times for flakiness",
+        "echo $? after newman reflects pass/fail for CI gates"
+      ],
+      "parameters": [
+        {
+          "name": "environment",
+          "type": "string",
+          "description": "JSON environment file with variables"
+        },
+        {
+          "name": "iterations",
+          "type": "integer",
+          "description": "Number of times to run the collection"
+        },
+        {
+          "name": "timeout-request",
+          "type": "integer",
+          "description": "Per-request timeout in ms"
+        }
+      ]
+    },
+    {
+      "name": "collection-export",
+      "description": "Convert collections to OpenAPI for contract drift checks",
+      "commands": [
+        "npx postman-to-openapi postman_collection.json -o openapi.yaml",
+        "newman run openapi.yaml --reporters cli",
+        "node -e \"const c = require('./collection.json'); console.log(c.item.length)\""
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "prometheus",
+    "grafana"
+  ],
+  "tools": [
+    "prometheus",
+    "grafana",
+    "node.js",
+    "python",
+    "new-relic"
+  ],
+  "examples": [
+    {
+      "input": "Monitor /health after every deploy",
+      "output": "Runs a health-check collection with newman and fails the pipeline on non-200"
+    },
+    {
+      "input": "Weekly availability report",
+      "output": "Schedules newman with htmlextra reporter and publishes the HTML dashboard"
+    }
+  ],
+  "instructions": "# API Monitor Specialist\n\nScheduled API monitoring with Newman.\n\n## What This Skill Does\n- Executes Postman collections as health checks\n- Reports results as JSON/HTML artifacts\n- Fails CI builds when API checks fail\n\n## When to Use\n- Smoke-testing a deploy before traffic is cut over\n- Continuous monitoring of critical endpoints\n- Turning ad-hoc Postman collections into checks\n\n## Real Commands\n\n```bash\nnpm install -g newman newman-reporter-htmlextra\nnewman run postman_collection.json -e production.postman_environment.json -r cli,json \\\n  --reporter-json-export results.json\nnewman run collection.json -n 5 --timeout-request 10000\n```\n\n## Monitoring Structure\n- Environments hold baseUrl and API keys per stage\n- Assertions inside requests check status and body\n- Folders group checks by domain (auth, billing, health)\n\n## Testing\n- Run with --iteration-data to simulate multiple tenants\n- Use --timeout-request to catch hangs\n- Parse results.json in CI to annotate pull requests\n\n## Best Practices\n- Keep collections in version control\n- Store secrets in environments, never in collections\n- Schedule via cron in CI for round-the-clock coverage",
+  "display_name": "api-monitor-specialist",
+  "knowledge": [
+    {
+      "title": "Newman CLI Docs",
+      "type": "documentation",
+      "source": "https://learning.postman.com/docs/collections/running-collections/using-newman-cli/",
+      "description": "Running Postman collections from the command line"
+    },
+    {
+      "title": "newman-reporter-htmlextra",
+      "type": "documentation",
+      "source": "https://github.com/DannyDainton/newman-reporter-htmlextra",
+      "description": "HTML reporter with charts for newman runs"
+    }
+  ],
+  "id": "api-monitor-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "newman-runs",
+        "name": "environment",
+        "type": "string",
+        "description": "JSON environment file with variables"
+      },
+      {
+        "capability": "newman-runs",
+        "name": "iterations",
+        "type": "integer",
+        "description": "Number of times to run the collection"
+      },
+      {
+        "capability": "newman-runs",
+        "name": "timeout-request",
+        "type": "integer",
+        "description": "Per-request timeout in ms"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "prometheus",
+    "grafana"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-monitor-specialist/skill/api-monitor-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-monitor-specialist/skill/api-monitor-specialist.yaml",
+    "checksum": "34b8c9393fadedac755007f232c04b4d246538f25da010317f31fbb7134331db"
+  }
+}

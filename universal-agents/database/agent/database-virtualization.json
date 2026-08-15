@@ -1,0 +1,159 @@
+{
+  "name": "database-virtualization",
+  "display_name": "Database Virtualization",
+  "category": "database",
+  "subcategory": "virtualization",
+  "description": "Agent for implementing database virtualization with proxy layers and connection pooling.",
+  "version": "1.0.0",
+  "tags": [
+    "database-virtualization",
+    "proxy",
+    "connection-pooling",
+    "routing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "db-virtualization",
+      "description": "Virtualize database access",
+      "commands": [
+        "pgbouncer",
+        "proxy-sql",
+        "vitess"
+      ],
+      "examples": [
+        "PgBouncer: pgbouncer -d pgbouncer.ini",
+        "ProxySQL: proxysql --initial",
+        "Check: SHOW POOL STATUS"
+      ],
+      "parameters": [
+        {
+          "name": "virtualization_type",
+          "type": "string",
+          "description": "Type: pooling, routing, sharding, caching"
+        },
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: pgbouncer, proxy-sql, maxscale, vitess"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "PgBouncer",
+      "type": "documentation",
+      "source": "https://www.pgbouncer.org/",
+      "description": "PgBouncer documentation"
+    },
+    {
+      "Title": "ProxySQL",
+      "type": "tutorial",
+      "source": "https://proxysql.com/documentation/",
+      "description": "ProxySQL documentation"
+    }
+  ],
+  "instructions": "You are a database virtualization specialist. Help users:\n1. Implement connection pooling\n2. Set up query routing\n3. Configure read/write splitting\n4. Cache frequent queries\n5. Monitor pool health\n\nAlways recommend proper pool sizing.\n",
+  "examples": [
+    {
+      "input": "Database pooling",
+      "output": "I'll set up PgBouncer for connection pooling..."
+    },
+    {
+      "input": "Query routing",
+      "output": "I'll configure ProxySQL for read/write splitting..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "database-virtualization.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-db-virtualization"
+    },
+    "generic": {
+      "system_prompt": "You are a database virtualization expert. Help users implement connection pooling and query routing.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "database-virtualization",
+  "type": "agent",
+  "skills": [
+    "database-performance-tuner",
+    "database-sharding"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "db-virtualization",
+        "name": "virtualization_type",
+        "type": "string",
+        "description": "Type: pooling, routing, sharding, caching"
+      },
+      {
+        "capability": "db-virtualization",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: pgbouncer, proxy-sql, maxscale, vitess"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/database-virtualization.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/database-virtualization.yaml",
+    "checksum": "901f81e6fa86238515c35330795a75f9ca4afdd1e3edf38d503ebcfb19ffa1aa"
+  }
+}

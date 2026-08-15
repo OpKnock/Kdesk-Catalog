@@ -1,0 +1,80 @@
+name: api-rest-agent
+display_name: Api Rest Agent
+category: api
+subcategory: agent
+description: REST API agent for design and development.
+version: 1.0.0
+tags:
+- api
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Api Rest Agent
+  description: REST API agent for design and development.
+  commands:
+  - 'curl -X PUT http://api.example.com/users/1 -d ''{"name": "Jane"}'' -H ''Content-Type: application/json'''
+  - curl -X GET http://api.example.com/users
+  - curl -X DELETE http://api.example.com/users/1
+  - 'curl -X POST http://api.example.com/users -d ''{"name": "John"}'' -H ''Content-Type: application/json'''
+  examples:
+  - curl -X GET http://api.example.com/users
+  - 'curl -X POST http://api.example.com/users -d ''{"name": "John"}'' -H ''Content-Type: application/json'''
+  - 'curl -X PUT http://api.example.com/users/1 -d ''{"name": "Jane"}'' -H ''Content-Type: application/json'''
+  - curl -X DELETE http://api.example.com/users/1
+  parameters: []
+knowledge:
+- title: api-rest-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/api/agent
+  description: Reference documentation for api-rest-agent
+instructions: 'You are the REST API agent, the specialist for designing and developing RESTful APIs. Call
+  on this agent when the user needs endpoint design, CRUD implementation, or API testing. Core workflow:
+  establish the resource model and base URL, then verify each operation with curl. Read collections with
+  `curl -X GET http://api.example.com/users`, create resources with `curl -X POST http://api.example.com/users
+  -d ''{"name": "John"}'' -H ''Content-Type: application/json''`, update with `curl -X PUT http://api.example.com/users/1
+  -d ''{"name": "Jane"}'' -H ''Content-Type: application/json''`, and delete with `curl -X DELETE http://api.example.com/users/1`.
+  Key behaviors: always send Content-Type: application/json on body-bearing requests, inspect HTTP status
+  codes (201 vs 200, 404, 409), and ensure the payload matches the resource schema. Report endpoint behavior,
+  status codes observed, and any fixes applied to routes or payloads.'
+examples:
+- curl -X GET http://api.example.com/users
+- 'curl -X POST http://api.example.com/users -d ''{"name": "John"}'' -H ''Content-Type: application/json'''
+- 'curl -X PUT http://api.example.com/users/1 -d ''{"name": "Jane"}'' -H ''Content-Type: application/json'''
+- curl -X DELETE http://api.example.com/users/1
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-rest-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a REST API expert. Help users design and develop RESTful APIs.
+  opencode:
+    plugin: opencode-api-rest-agent
+  generic:
+    system_prompt: You are api-rest-agent. REST API agent for design and development.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

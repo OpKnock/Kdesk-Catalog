@@ -1,0 +1,216 @@
+{
+  "name": "service-mesh-devops",
+  "display_name": "Service Mesh",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Evaluates and operates service meshes (Istio, Linkerd, Consul): proxies, sidecar injection, mTLS, mesh observability, and L7 policies.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "consul",
+    "helm",
+    "istioctl",
+    "kubectl",
+    "linkerd"
+  ],
+  "capabilities": [
+    {
+      "name": "mesh-selection-and-install",
+      "description": "Choose and install a mesh (Istio/Linkerd/Consul) for a workload profile.",
+      "commands": [
+        "istioctl install --set profile=default -y",
+        "linkerd check --pre",
+        "linkerd install | kubectl apply -f -",
+        "helm install consul hashicorp/consul --set global.name=consul -n consul",
+        "consul members",
+        "istioctl verify-install"
+      ],
+      "examples": [
+        "istioctl install --set profile=default -y",
+        "linkerd install | kubectl apply -f -",
+        "helm install consul hashicorp/consul -n consul"
+      ],
+      "parameters": [
+        {
+          "name": "mesh",
+          "type": "string",
+          "description": "Mesh to install: istio, linkerd, consul"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Mesh namespace"
+        }
+      ]
+    },
+    {
+      "name": "traffic-and-security-policies",
+      "description": "Enforce mTLS, AuthorizationPolicies, and L7 routing rules.",
+      "commands": [
+        "kubectl apply -f peerauthentication.yaml",
+        "kubectl apply -f authorizationpolicy.yaml",
+        "kubectl apply -f virtualservice.yaml",
+        "linkerd tap deploy/web -n app",
+        "istioctl proxy-config secret <pod>",
+        "consul intention create web api --allow"
+      ],
+      "examples": [
+        "kubectl apply -f peerauthentication.yaml",
+        "linkerd tap deploy/web -n app",
+        "consul intention create web api --allow"
+      ],
+      "parameters": [
+        {
+          "name": "pod",
+          "type": "string",
+          "description": "Pod for proxy inspection"
+        },
+        {
+          "name": "manifest",
+          "type": "string",
+          "description": "Policy CR file"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Istio Concepts",
+      "type": "documentation",
+      "source": "https://istio.io/latest/docs/concepts/",
+      "description": "Sidecars, gateways, traffic management, security"
+    },
+    {
+      "title": "Linkerd Overview",
+      "type": "documentation",
+      "source": "https://linkerd.io/2.15/overview/",
+      "description": "Linkerd architecture and features"
+    },
+    {
+      "title": "Consul Service Mesh",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/consul/docs/connect",
+      "description": "Consul Connect and intentions"
+    }
+  ],
+  "instructions": "# Service Mesh Operations\n\nSelect, install, and operate service meshes for mTLS, routing, and observability.\n\n## What This Skill Does\n\n- Compares Istio vs Linkerd vs Consul for workload profiles\n- Installs control planes and injects sidecar proxies\n- Enforces mTLS and authorization policies\n- Configures L7 traffic rules (canaries, timeouts, retries)\n- Observes proxy-level traffic (tap, proxy-config)\n\n## When to Use\n\n- Adding mTLS across a fleet without app changes\n- Fine-grained east-west traffic policies\n- Mesh observability: per-service success/latency\n\n## Real Commands\n\n```bash\n# Istio\nistioctl install --set profile=default -y\nistioctl verify-install\nkubectl label ns app istio-injection=enabled\nkubectl apply -f peerauthentication.yaml\nistioctl proxy-status\nistioctl proxy-config secret web-xyz-abc\n\n# Linkerd\nlinkerd check --pre\nlinkerd install | kubectl apply -f -\nlinkerd check\nlinkerd inject deploy.yaml | kubectl apply -f -\nlinkerd tap deploy/web -n app\nlinkerd stat deploy -n app\n\n# Consul\nhelm install consul hashicorp/consul -n consul --create-namespace\nconsul members\nconsul intention create web api --allow\nconsul catalog services\n```\n\n## Selection Guide\n\n- Linkerd: minimal overhead, simple, great default for mTLS + metrics\n- Istio: richest L7 policy and traffic management (canary, fault injection)\n- Consul: mesh + service discovery + multi-datacenter\n\n## Best Practices\n\n- Start with mTLS STRICT after verifying all workloads have proxies\n- Test policies in a canary namespace first\n- Watch control plane health (proxy-status, linkerd check)\n- Size control planes for node/proxy count; avoid oversubscription\n- Keep mesh version upgrades on the same cadence as clusters",
+  "examples": [
+    {
+      "input": "Which mesh for simple mTLS + metrics?",
+      "output": "Agent compares options, recommends Linkerd, installs it, injects sidecars, and demonstrates linkerd stat/tap"
+    },
+    {
+      "input": "Block a service from calling another",
+      "output": "Agent applies an Istio AuthorizationPolicy or Consul intention deny, then verifies with tap/flow inspection"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "service-mesh-devops.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-service-mesh"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Service Mesh. You do it through mesh-selection-and-install: Choose and install a mesh (Istio/Linkerd/Consul) for a workload profile. The commands are real, e.g. `istioctl install --set profile=default -y`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "service-mesh-devops",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "mesh-selection-and-install",
+        "name": "mesh",
+        "type": "string",
+        "description": "Mesh to install: istio, linkerd, consul"
+      },
+      {
+        "capability": "mesh-selection-and-install",
+        "name": "namespace",
+        "type": "string",
+        "description": "Mesh namespace"
+      },
+      {
+        "capability": "traffic-and-security-policies",
+        "name": "pod",
+        "type": "string",
+        "description": "Pod for proxy inspection"
+      },
+      {
+        "capability": "traffic-and-security-policies",
+        "name": "manifest",
+        "type": "string",
+        "description": "Policy CR file"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "consul",
+    "helm",
+    "istioctl",
+    "kubectl",
+    "linkerd"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/service-mesh-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/service-mesh-skill.yaml",
+    "checksum": "2fda77ad5b89ee161629123c892926b1510428462821f1928b0b44efc87adfce"
+  }
+}

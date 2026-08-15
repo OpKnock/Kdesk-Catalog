@@ -1,0 +1,179 @@
+{
+  "name": "kafka-data",
+  "display_name": "Kafka",
+  "category": "data",
+  "subcategory": "general",
+  "description": "Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration via the Kafka CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "data"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-configs.sh",
+    "kafka-console-consumer.sh",
+    "kafka-console-producer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-topics.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "kafka-cli",
+      "description": "Manage topics, produce/consume messages, and inspect consumer groups",
+      "commands": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 --replication-factor 1",
+        "kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group payments --describe",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --describe"
+      ],
+      "examples": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --list",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 10",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 6"
+      ],
+      "parameters": [
+        {
+          "name": "partitions",
+          "type": "integer",
+          "description": "Number of partitions for a new topic"
+        },
+        {
+          "name": "replication-factor",
+          "type": "integer",
+          "description": "Replication factor for a new topic"
+        },
+        {
+          "name": "from-beginning",
+          "type": "boolean",
+          "description": "Consume all messages from the topic start"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka docs",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/",
+      "description": "Concepts, CLI tools, and configuration"
+    },
+    {
+      "title": "Kafka operations guide",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#operations",
+      "description": "Cluster operations, monitoring, and maintenance"
+    }
+  ],
+  "instructions": "# Kafka\n\nOperates Apache Kafka: topic lifecycle, producing/consuming for testing, consumer\ngroup health, and broker config inspection.\n\n## When to Use\n\n- Creating and scaling topics\n- Verifying messages flow end-to-end\n- Debugging consumer group lag\n\n## Real Commands\n\n```bash\n# Topics\nkafka-topics.sh --bootstrap-server localhost:9092 --list\nkafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 --replication-factor 1\nkafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders\nkafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 6\n\n# Produce\nkafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders --property parse.key=true --property key.separator=:\n\n# Consume\nkafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 10\n\n# Consumer groups\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 --list\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 --group payments --describe\n\n# Config\nkafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --describe\n```\n\n## Group Lag Debugging\n\n```bash\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 --group payments --describe\n# Look at LAG: if growing, consumers are too slow - scale or optimize\n```\n\n## Best Practices\n\n- Size partitions for throughput; more partitions = more parallelism\n- Set replication.factor >= 3 in production\n- Never consume from-beginning in production apps\n- Monitor consumer lag and alert on growth\n- Use `--timeout-ms` with commands to avoid CLI hangs\n\n## Example Response\n\nFor a lagging consumer group: describes the group, identifies the partition lag,\nand recommends scaling consumers or fixing the slow processing step.",
+  "examples": [
+    {
+      "input": "Create a topic and test message flow",
+      "output": "Creates the topic with 3 partitions, produces sample messages, consumes them back with --from-beginning to verify"
+    },
+    {
+      "input": "Consumers are falling behind",
+      "output": "Describes the group with kafka-consumer-groups.sh, reports lag per partition, and suggests fixes"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-data.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka"
+    },
+    "generic": {
+      "system_prompt": "You are the Kafka specialist. You do it through kafka-cli: Manage topics, produce/consume messages, and inspect consumer groups. The commands are real, e.g. `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3...`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-data",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "kafka-cli",
+        "name": "partitions",
+        "type": "integer",
+        "description": "Number of partitions for a new topic"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "replication-factor",
+        "type": "integer",
+        "description": "Replication factor for a new topic"
+      },
+      {
+        "capability": "kafka-cli",
+        "name": "from-beginning",
+        "type": "boolean",
+        "description": "Consume all messages from the topic start"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-configs.sh",
+    "kafka-console-consumer.sh",
+    "kafka-console-producer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-topics.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/kafka-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/kafka-skill.yaml",
+    "checksum": "f2171497aac6a5f21b840388d8beac6d3e075c42d33271fa9dbb4895a230947c"
+  }
+}

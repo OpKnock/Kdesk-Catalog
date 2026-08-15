@@ -1,0 +1,102 @@
+name: spring-webflux
+display_name: Spring Webflux
+category: api
+subcategory: general
+description: 'Hand-crafted Spring WebFlux skill: reactive endpoints, streaming responses with curl -N,
+  SSE text/event-stream, and WebClient-based async consumers.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ./mvnw
+capabilities:
+- name: webflux-reactive
+  description: Build and test reactive endpoints with Spring WebFlux
+  commands:
+  - curl -N localhost:8080/flux
+  - curl -s localhost:8080/api/prices | jq 'length'
+  - 'curl -H ''Accept: text/event-stream'' -N localhost:8080/events'
+  - curl -s -X POST localhost:8080/upload -F 'file=@data.csv'
+  - ./mvnw spring-boot:run
+  examples:
+  - curl -N localhost:8080/flux
+  - 'curl -H ''Accept: text/event-stream'' -N localhost:8080/events'
+  - curl -s localhost:8080/api/prices | jq 'length'
+  parameters:
+  - name: port
+    type: integer
+    description: Server port (default 8080)
+  - name: content_type
+    type: string
+    description: text/event-stream or application/json
+  - name: endpoint
+    type: string
+    description: Reactive endpoint path
+knowledge:
+- title: WebFlux reference
+  type: documentation
+  source: https://docs.spring.io/spring-framework/reference/web/webflux.html
+  description: Reactive controllers, SSE, WebClient
+- title: Project Reactor docs
+  type: documentation
+  source: https://projectreactor.io/docs/core/release/reference/
+  description: Flux/Mono operators and backpressure
+instructions: "# Spring WebFlux\n\nHand-crafted skill for reactive Spring WebFlux APIs.\n\n## What this\
+  \ skill does\n\n- Builds non-blocking endpoints returning Flux and Mono\n- Streams data with curl -N\
+  \ and SSE via text/event-stream\n- Consumes services reactively with WebClient\n\n## When to use\n\n\
+  - High-concurrency APIs that outgrow thread-per-request\n- Streaming responses to clients as data arrives\n\
+  - Chaining async calls without blocking threads\n\n## Real commands\n\n```bash\n# Run the app\n./mvnw\
+  \ spring-boot:run\n\n# Stream a Flux response as it is emitted\ncurl -N localhost:8080/flux\n\n# SSE\
+  \ events\ncurl -H 'Accept: text/event-stream' -N localhost:8080/events\n\n# JSON list\ncurl -s localhost:8080/api/prices\
+  \ | jq 'length'\n\n# Multipart upload via WebFlux\ncurl -s -X POST localhost:8080/upload -F 'file=@data.csv'\n\
+  ```\n\n## Controller example\n\n```java\n@RestController\npublic class ReactiveController {\n\n    @GetMapping(value\
+  \ = \"/events\", produces = MediaType.TEXT_EVENT_STREAM_VALUE)\n    public Flux<String> events() {\n\
+  \        return Flux.interval(Duration.ofSeconds(1)).map(i -> \"tick \" + i);\n    }\n\n    @GetMapping(\"\
+  /api/prices\")\n    public Mono<List<BigDecimal>> prices() {\n        return webClient.get().uri(\"\
+  /prices\").retrieve().bodyToFlux(BigDecimal.class).collectList();\n    }\n}\n```\n\n## Testing\n\n```bash\n\
+  curl -N localhost:8080/flux | head -5\ncurl -H 'Accept: text/event-stream' -N localhost:8080/events\
+  \ | head -3\n```\n\n## Best practices\n\n- Never block inside reactive chains: no Thread.sleep or blocking\
+  \ JDBC\n- Add backpressure-aware limits on unbounded streams\n- Use WebClient with timeouts for every\
+  \ downstream call\n"
+examples:
+- input: Stream live ticks to a client
+  output: 'Return Flux.interval(...) with TEXT_EVENT_STREAM_VALUE; test with curl -H ''Accept: text/event-stream''
+    -N localhost:8080/events.'
+- input: Why is my reactive endpoint blocking?
+  output: Scan for blocking calls (Thread.sleep, blocking JDBC); replace with non-blocking operators and
+    reactive drivers (R2DBC).
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: spring-webflux.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-spring-webflux
+  generic:
+    system_prompt: 'Your lane is Spring Webflux. You do it through webflux-reactive: Build and test reactive
+      endpoints with Spring WebFlux. The commands are real, e.g. `curl -N localhost:8080/flux`. You work
+      hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

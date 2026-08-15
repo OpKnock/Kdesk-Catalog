@@ -1,0 +1,189 @@
+name: api-cache-migration
+version: 2.0.0
+type: skill
+category: infrastructure
+description: Migrates and evolves API caching layers — moving between cache stores, adding CDN edge caching,
+  and consolidating invalidation.
+keywords:
+- api-caching
+- redis
+- cdn
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-cache-migration.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-cache-migration
+  generic:
+    system_prompt: 'You take the Api Cache Migration seat. You do it through cache-migration: Migrate
+      cache stores (e.g. in-memory to Redis) with data export/import and key renames. The commands are
+      real, e.g. `redis-cli --scan --pattern legacy:* > keys.txt`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: cache-migration
+  description: Migrate cache stores (e.g. in-memory to Redis) with data export/import and key renames
+  commands:
+  - redis-cli --scan --pattern 'legacy:*' > keys.txt
+  - redis-cli --pipe < dump.txt
+  - redis-cli RENAME legacy:users:42 api:users:42
+  - redis-cli --scan --pattern 'legacy:*' | xargs -I{} redis-cli RENAME {} api:{}
+  - redis-cli DBSIZE
+  examples:
+  - redis-cli --scan --pattern 'legacy:*' | while read k; do redis-cli RENAME $k api:$k; done
+  - redis-cli --pipe < dump.txt && redis-cli DBSIZE
+  - redis-cli --scan --pattern 'api:*' | xargs redis-cli DEL
+  parameters:
+  - name: srcPattern
+    type: string
+    description: Key pattern for the old cache namespace
+  - name: dstPrefix
+    type: string
+    description: Prefix for the new namespace
+- name: cdn-integration
+  description: Wire a CDN (CloudFront or edge cache) in front of the API with purge operations
+  commands:
+  - aws cloudfront create-invalidation --distribution-id E12345 --paths '/api/*'
+  - aws cloudfront get-cache-policy --id 658327ea-f89d-4fab-a63d-7e88639e58f6
+  - aws cloudfront list-distributions --query 'DistributionList.Items[?DefaultCacheBehaviour.TargetOriginId==`api`].Id'
+  - varnishadm ban 'req.url ~ ^/api/products'
+  - curl -s -X PURGE http://edge/api/products -o /dev/null -w '%{http_code}'
+  examples:
+  - aws cloudfront create-invalidation --distribution-id E12345 --paths '/api/products/*'
+  - varnishadm ban 'req.url ~ ^/api/orders'
+  - curl -s -X PURGE http://edge/api/products -o /dev/null -w '%{http_code}'
+  parameters:
+  - name: distributionId
+    type: string
+    description: CloudFront distribution ID
+  - name: paths
+    type: string
+    description: Paths to purge
+prerequisites:
+- redis
+- node.js
+- python
+tools:
+- redis
+- node.js
+- python
+- varnish
+- express
+examples:
+- input: Migrate our in-memory cache to Redis
+  output: Scripts key export/import, renames the namespace, and verifies DBSIZE parity before cutover
+- input: Add a CDN layer to cache static API responses
+  output: Configures CloudFront cache policies, sets API Cache-Control headers, and documents purge-on-deploy
+    steps
+instructions: '# API Cache (Migration & Edge)
+
+
+  Evolves existing caching setups: migrating stores, adding edge layers, and consolidating invalidation.
+
+
+  ## When to Use
+
+  - Moving from in-memory to distributed cache
+
+  - Adding a CDN in front of the API
+
+  - Consolidating fragmented cache namespaces
+
+  - Replacing TTL-only invalidation with event-driven
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # List keys before migration
+
+  redis-cli --scan --pattern ''legacy:*'' > keys.txt
+
+
+  # Rename namespace
+
+  redis-cli --scan --pattern ''legacy:*'' | while read k; do redis-cli RENAME $k api:$k; done
+
+
+  # Pipe-import a dump
+
+  redis-cli --pipe < dump.txt
+
+
+  # CDN purge
+
+  aws cloudfront create-invalidation --distribution-id E12345 --paths ''/api/*''
+
+
+  # Varnish ban
+
+  varnishadm ban ''req.url ~ ^/api/products''
+
+  ```
+
+
+  ## Migration Checklist
+
+  1. Export current keys with TTLs (`redis-cli --scan` + `redis-cli TTL`)
+
+  2. Stand up the new store in parallel
+
+  3. Flip readers, keep writers dual-write
+
+  4. Verify `redis-cli DBSIZE` matches
+
+  5. Purge CDN paths on cutover
+
+
+  ## Testing
+
+  Compare hit ratios and p95 latency before and after each migration step.
+
+
+  ## Best Practices
+
+  - One invalidation path per resource
+
+  - Version cache keys on schema changes
+
+  - Run migrations during low-traffic windows'
+display_name: Api Cache Migration
+knowledge:
+- title: Redis Migration Guide
+  type: documentation
+  source: https://redis.io/docs/latest/operate/oss_and_stack/management/
+  description: Data migration, RDB/AOF, replication
+- title: AWS CloudFront Docs
+  type: documentation
+  source: https://docs.aws.amazon.com/cloudfront/
+  description: Distributions, cache policies, invalidations
+- title: Varnish Bans
+  type: documentation
+  source: https://varnish-cache.org/docs/trunk/users-guide/purging.html
+  description: Purge and ban operations

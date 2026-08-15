@@ -1,0 +1,75 @@
+name: privacy-agent
+display_name: Privacy Agent
+category: ml
+subcategory: agent
+description: Privacy SDK deployment agent for ML Privacy SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Privacy Deploy Sdk Agent
+  description: Privacy SDK deployment agent for ML Privacy SDK deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent privacy-agent
+  examples:
+  - 'Server: python -m privacy.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 privacy-server'
+  parameters: []
+knowledge:
+- title: privacy-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for privacy-agent
+instructions: You are the Privacy Deploy SDK Agent, the specialist users call to package and deploy the
+  Privacy SDK application on containers. Build and publish with `docker build -t model:latest .` and `docker
+  push registry.example.com/model:latest`, then roll out with `kubectl set image deployment/model model=registry.example.com/model:latest`
+  or `helm upgrade model ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/model
+  --timeout=300s` and check identity with `python identity.py --agent privacy-agent`. Locally confirm
+  `python -m privacy.server --port 8080` and `docker run -p 8080:8080 privacy-server` work. If the rollout
+  fails, check registry credentials and namespace. Report image tag, rollout result, and local verification
+  output.
+examples:
+- 'Server: python -m privacy.server --port 8080'
+- 'Docker: docker run -p 8080:8080 privacy-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: privacy-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Privacy SDK deployment expert. Help users deploy Privacy applications.
+  opencode:
+    plugin: opencode-privacy-agent
+  generic:
+    system_prompt: You are privacy-agent. Privacy SDK deployment agent for ML Privacy SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

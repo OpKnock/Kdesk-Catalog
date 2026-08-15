@@ -1,0 +1,217 @@
+{
+  "name": "popeye-security",
+  "display_name": "popeye-security",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Diagnoses cluster health and configuration hygiene with Popeye, scanning live clusters for best-practice violations and dead resources.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "popeye"
+  ],
+  "capabilities": [
+    {
+      "name": "cluster-sanitize",
+      "description": "Sanitize live clusters and export reports.",
+      "commands": [
+        "popeye",
+        "popeye -n kube-system",
+        "popeye --context prod",
+        "popeye -s pod",
+        "popeye --out txt"
+      ],
+      "examples": [
+        "popeye",
+        "popeye -n kube-system",
+        "popeye --out json"
+      ],
+      "parameters": [
+        {
+          "name": "context",
+          "type": "string",
+          "description": "Kubeconfig context to scan"
+        },
+        {
+          "name": "sections",
+          "type": "string",
+          "description": "Comma-separated resource types to scan (pod, svc, deploy...)"
+        },
+        {
+          "name": "out",
+          "type": "string",
+          "description": "Output format: standard, json, yaml, junit"
+        }
+      ]
+    },
+    {
+      "name": "reporting",
+      "description": "Save scan reports to files and enforce score gates.",
+      "commands": [
+        "popeye --save",
+        "popeye --out json --output-file report.json",
+        "popeye --exit-code 3 --score 80",
+        "popeye --pull"
+      ],
+      "examples": [
+        "popeye --save",
+        "popeye --out json --output-file popeye.json",
+        "popeye --exit-code 3 --score 75"
+      ],
+      "parameters": [
+        {
+          "name": "outputFile",
+          "type": "string",
+          "description": "Report destination path"
+        },
+        {
+          "name": "score",
+          "type": "number",
+          "description": "Minimum acceptable score before exit-code triggers"
+        },
+        {
+          "name": "exitCode",
+          "type": "number",
+          "description": "Exit code to emit when the gate fails"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Popeye Documentation",
+      "type": "documentation",
+      "source": "https://popeyecli.io/",
+      "description": "CLI usage, checks, and configuration"
+    },
+    {
+      "title": "Popeye GitHub",
+      "type": "documentation",
+      "source": "https://github.com/derailed/popeye",
+      "description": "Sanitizer checks and report formats"
+    }
+  ],
+  "instructions": "# Popeye\n\nCluster sanitizer: find misconfigurations and dead weight in live clusters.\n\n## What This Skill Does\n\n- Scans live clusters for best-practice violations\n- Detects unused resources, duplicate config, and risky settings\n- Produces scores and reports per resource type\n- Gated CI runs with exit codes and score thresholds\n\n## When to Use\n\n- Regular cluster hygiene reviews\n- Pre-upgrade cleanup of dead resources\n- Auditing workload configuration consistency\n\n## Real Commands\n\n```bash\n# Scan the current cluster\npopeye\n\n# Scope the scan\npopeye -n kube-system\npopeye --context prod\npopeye -s pod,svc,deploy\n\n# Reports\npopeye --out json --output-file report.json\npopeye --out txt\npopeye --save\n\n# CI gate\npopeye --exit-code 3 --score 80\n```\n\n## Best Practices\n\n- Run against a staging cluster copy first to avoid API churn\n- Set score gates in CI; investigate every ERROR-level finding\n- Use --context explicitly to avoid scanning the wrong cluster\n- Pair with Popeye's fix suggestions before manual remediation\n- Archive reports per release for trend analysis",
+  "examples": [
+    {
+      "input": "Anything wrong with my cluster config?",
+      "output": "Agent runs popeye --out json and summarizes ERROR/WARN findings by resource type with concrete fixes."
+    },
+    {
+      "input": "Clean up before an upgrade",
+      "output": "Agent runs popeye -s pod,svc,deploy, lists dead or misconfigured resources, and proposes deletion or correction."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "popeye-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-popeye"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: popeye-security. You do it through cluster-sanitize: Sanitize live clusters and export reports. The commands are real, e.g. `popeye`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "popeye-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cluster-sanitize",
+        "name": "context",
+        "type": "string",
+        "description": "Kubeconfig context to scan"
+      },
+      {
+        "capability": "cluster-sanitize",
+        "name": "sections",
+        "type": "string",
+        "description": "Comma-separated resource types to scan (pod, svc, deploy...)"
+      },
+      {
+        "capability": "cluster-sanitize",
+        "name": "out",
+        "type": "string",
+        "description": "Output format: standard, json, yaml, junit"
+      },
+      {
+        "capability": "reporting",
+        "name": "outputFile",
+        "type": "string",
+        "description": "Report destination path"
+      },
+      {
+        "capability": "reporting",
+        "name": "score",
+        "type": "number",
+        "description": "Minimum acceptable score before exit-code triggers"
+      },
+      {
+        "capability": "reporting",
+        "name": "exitCode",
+        "type": "number",
+        "description": "Exit code to emit when the gate fails"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "popeye"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/popeye-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/popeye-skill.yaml",
+    "checksum": "dacd2f1c0b4caed1154025026ce7891fdcab010c915d76a068cae468b28eede5"
+  }
+}

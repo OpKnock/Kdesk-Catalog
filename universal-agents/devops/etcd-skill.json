@@ -1,0 +1,209 @@
+{
+  "name": "etcd",
+  "display_name": "etcd",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Operates etcd key-value stores: read/write keys, watch changes, manage members, snapshots, backups, and cluster health.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "etcdctl"
+  ],
+  "capabilities": [
+    {
+      "name": "kv-operations",
+      "description": "Put, get, delete, and watch keys in the etcd database.",
+      "commands": [
+        "etcdctl put /config/app version 1.2.3",
+        "etcdctl get /config/app --prefix",
+        "etcdctl get / --prefix --keys-only",
+        "etcdctl del /temp/old --prefix",
+        "etcdctl watch /config/app",
+        "etcdctl get / --prefix --count-only"
+      ],
+      "examples": [
+        "etcdctl put /config/app version 1.2.3",
+        "etcdctl get /config/app --prefix",
+        "etcdctl watch /config/app"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Key path, e.g. /config/app"
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Value to set"
+        },
+        {
+          "name": "prefix",
+          "type": "boolean",
+          "description": "Operate on key prefix"
+        }
+      ]
+    },
+    {
+      "name": "cluster-and-backup",
+      "description": "Manage members, check health, defrag, and take snapshots for backup.",
+      "commands": [
+        "etcdctl member list",
+        "etcdctl endpoint health --cluster",
+        "etcdctl endpoint status --cluster -w table",
+        "etcdctl snapshot save /backups/etcd-$(date +%F).db",
+        "etcdctl snapshot restore /backups/etcd-2026-08-10.db --data-dir /var/lib/etcd-restore",
+        "etcdctl defrag --cluster"
+      ],
+      "examples": [
+        "etcdctl endpoint health --cluster",
+        "etcdctl snapshot save /backups/etcd-2026-08-10.db",
+        "etcdctl member list -w table"
+      ],
+      "parameters": [
+        {
+          "name": "endpoints",
+          "type": "string",
+          "description": "Comma-separated etcd endpoints, e.g. 10.0.0.1:2379"
+        },
+        {
+          "name": "snapshot-file",
+          "type": "string",
+          "description": "Path to snapshot db file"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "etcd Documentation",
+      "type": "documentation",
+      "source": "https://etcd.io/docs/",
+      "description": "etcd architecture, operations, and tuning"
+    },
+    {
+      "title": "etcdctl Manual",
+      "type": "documentation",
+      "source": "https://etcd.io/docs/latest/op-guide/maintenance/",
+      "description": "etcdctl usage: snapshot, defrag, alarm, endpoint"
+    }
+  ],
+  "instructions": "# etcd Operations\n\nAdminister the etcd distributed key-value store backing Kubernetes and other systems.\n\n## What This Skill Does\n\n- Reads and writes keys with TTLs and prefixes\n- Watches keys for change streams\n- Manages cluster membership and health\n- Takes and restores snapshots for DR\n- Handles maintenance: defrag, compaction, alarms\n\n## When to Use\n\n- Debugging a control-plane outage (etcd quorum loss)\n- Backing up Kubernetes cluster state\n- Directly inspecting stored config or service discovery keys\n\n## Real Commands\n\n```bash\n# Set env for TLS cluster\nexport ETCDCTL_API=3\nexport ETCDCTL_ENDPOINTS=https://10.0.0.1:2379,https://10.0.0.2:2379\nexport ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt\nexport ETCDCTL_CERT=/etc/kubernetes/pki/etcd/server.crt\nexport ETCDCTL_KEY=/etc/kubernetes/pki/etcd/server.key\n\n# KV\netcdctl put /config/app version 1.2.3\netcdctl get /config/app --prefix\netcdctl del /temp --prefix\netcdctl watch /config/app\n\n# Health and membership\netcdctl endpoint health --cluster\netcdctl endpoint status --cluster -w table\netcdctl member list -w table\netcdctl alarm list\n\n# Backup / restore / defrag\netcdctl snapshot save /backups/etcd-$(date +%F).db\netcdctl snapshot restore /backups/etcd-2026-08-10.db --data-dir /var/lib/etcd-restore\netcdctl defrag --cluster\n```\n\n## Best Practices\n\n- Always snapshot before upgrades: kubeadm/etcd version bumps\n- Verify snapshots: `etcdctl snapshot status /backups/etcd-2026-08-10.db`\n- Defrag periodically to reclaim space after compaction\n- Keep 3 or 5 members; do not run even member counts\n- Use `--prefix` carefully with `del` — double check the key space",
+  "examples": [
+    {
+      "input": "etcd is out of disk space",
+      "output": "Agent checks endpoint status, runs compaction on old revisions, then defrag --cluster, verifying space is reclaimed"
+    },
+    {
+      "input": "Back up etcd before a Kubernetes upgrade",
+      "output": "Agent runs etcdctl snapshot save with timestamped name, verifies with snapshot status, and records restore instructions"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "etcd.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-etcd"
+    },
+    "generic": {
+      "system_prompt": "You own etcd end to end. You do it through kv-operations: Put, get, delete, and watch keys in the etcd database. The commands are real, e.g. `etcdctl put /config/app version 1.2.3`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "etcd",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "kv-operations",
+        "name": "key",
+        "type": "string",
+        "description": "Key path, e.g. /config/app"
+      },
+      {
+        "capability": "kv-operations",
+        "name": "value",
+        "type": "string",
+        "description": "Value to set"
+      },
+      {
+        "capability": "kv-operations",
+        "name": "prefix",
+        "type": "boolean",
+        "description": "Operate on key prefix"
+      },
+      {
+        "capability": "cluster-and-backup",
+        "name": "endpoints",
+        "type": "string",
+        "description": "Comma-separated etcd endpoints, e.g. 10.0.0.1:2379"
+      },
+      {
+        "capability": "cluster-and-backup",
+        "name": "snapshot-file",
+        "type": "string",
+        "description": "Path to snapshot db file"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "etcdctl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/etcd-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/etcd-skill.yaml",
+    "checksum": "8359801998eba112c52d00438ab86976779e4a0d1241ef06a5a2085a52df9d5a"
+  }
+}

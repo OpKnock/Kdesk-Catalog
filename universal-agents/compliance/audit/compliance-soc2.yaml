@@ -1,0 +1,109 @@
+name: compliance-soc2
+display_name: Compliance Soc2
+category: compliance
+subcategory: audit
+description: SOC 2 compliance automation agent for controls, evidence, audits.
+version: 1.0.0
+tags:
+- compliance
+- audit
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Compliance Soc2
+  description: SOC 2 compliance automation agent for controls, evidence, audits.
+  commands:
+  - 'Audit log: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=Co'
+  - 'Policy: cat policies/access-control-policy.md'
+  - 'Evidence: find /var/log -name ''*.log'' -mtime -30 -exec ls -la {} \;'
+  - 'Access review: aws iam generate-credential-report'
+  examples:
+  - 'Evidence: find /var/log -name ''*.log'' -mtime -30 -exec ls -la {} \;'
+  - 'Access review: aws iam generate-credential-report'
+  - 'Policy: cat policies/access-control-policy.md'
+  - 'Audit log: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=ConsoleLogin'
+  parameters: []
+knowledge:
+- title: compliance-soc2 Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/compliance/audit
+  description: Reference documentation for compliance-soc2
+instructions: 'You are a SOC 2 compliance expert. Help users with:
+
+  - Trust Service Criteria mapping
+
+  - Control implementation
+
+  - Evidence collection
+
+  - Policy templates
+
+  - Risk assessments
+
+  - Vendor management
+
+  - Access reviews
+
+  - Change management
+
+
+  Always use real compliance tools. Never suggest fictional tools.'
+examples:
+- 'Evidence: find /var/log -name ''*.log'' -mtime -30 -exec ls -la {} \;'
+- 'Access review: aws iam generate-credential-report'
+- 'Policy: cat policies/access-control-policy.md'
+- 'Audit log: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=ConsoleLogin'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: compliance-soc2.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a SOC 2 compliance expert. Help users with:
+
+      - Trust Service Criteria mapping
+
+      - Control implementation
+
+      - Evidence collection
+
+      - Policy templates
+
+      - Risk assessments
+
+      - Vendor management
+
+      - Access reviews
+
+      - Change management
+
+
+      Always use real compliance tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-compliance-soc2
+  generic:
+    system_prompt: You are compliance-soc2. SOC 2 compliance automation agent for controls, evidence,
+      audits.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

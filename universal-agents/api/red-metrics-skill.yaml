@@ -1,0 +1,97 @@
+name: red-metrics
+display_name: Red Metrics
+category: api
+subcategory: general
+description: 'RED metrics (Rate, Errors, Duration): PromQL queries, dashboards and alerting for request
+  health.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- promtool
+capabilities:
+- name: red-metrics-promql
+  description: 'Build RED metric queries: request rate, error rate, and latency percentiles via PromQL.'
+  commands:
+  - curl -g 'http://localhost:9090/api/v1/query?query=sum%20by%20(service)(rate(http_requests_total%5B5m%5D))'
+  - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total%7Bstatus%3D~%225..%22%7D%5B5m%5D))%20%2F%20sum(rate(http_requests_total%5B5m%5D))'
+  - curl -g 'http://localhost:9090/api/v1/query?query=histogram_quantile(0.99%2C%20sum%20by%20(le)(rate(http_request_duration_seconds_bucket%5B5m%5D)))'
+  - promtool query instant 'sum(rate(http_requests_total[5m]))' --url http://localhost:9090
+  - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total%7Bstatus%3D~%222..%22%7D%5B5m%5D))'
+  examples:
+  - curl -g 'http://localhost:9090/api/v1/query?query=histogram_quantile(0.99,sum%20by%20(le)(rate(http_request_duration_seconds_bucket[5m])))'
+    | jq '.data.result[0].value'
+  - promtool query instant 'sum by (service) (rate(http_requests_total[5m]))' --url http://localhost:9090
+  - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total[5m]))'
+  parameters:
+  - name: metric
+    type: string
+    description: Metric name like http_requests_total
+  - name: window
+    type: string
+    description: Rate window e.g. 5m
+  - name: percentile
+    type: float
+    description: Latency percentile like 0.99
+knowledge:
+- title: The RED Method
+  type: documentation
+  source: https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/
+  description: Rate, Errors, Duration methodology from Grafana Labs
+- title: PromQL basics
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/querying/basics/
+  description: rate, histogram_quantile and aggregation functions
+instructions: "# RED Metrics\n\nRED (Rate, Errors, Duration) is the standard health model for request-driven\
+  \ services.\n\n## What this skill does\n\n- Queries request rate, error rate and latency percentiles\n\
+  - Builds dashboards and alerts from RED queries\n\n## When to use\n\n- Service health dashboards\n-\
+  \ SLO alerting on request health\n\n## Real commands\n\n```bash\n# Rate: requests per second\ncurl -g\
+  \ 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total%5B5m%5D))'\npromtool query\
+  \ instant 'sum by (service) (rate(http_requests_total[5m]))' --url http://localhost:9090\n\n# Errors:\
+  \ 5xx share\ncurl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total%7Bstatus%3D~%225..%22%7D%5B5m%5D))%20%2F%20sum(rate(http_requests_total%5B5m%5D))'\n\
+  \n# Duration: p99 latency\ncurl -g 'http://localhost:9090/api/v1/query?query=histogram_quantile(0.99%2C%20sum%20by%20(le)(rate(http_request_duration_seconds_bucket%5B5m%5D)))'\n\
+  ```\n\n## Alert rule\n\n```yaml\n- record: service:error_ratio:rate5m\n  expr: sum(rate(http_requests_total{status=~\"\
+  5..\"}[5m])) / sum(rate(http_requests_total[5m]))\n- alert: HighErrorRatio\n  expr: service:error_ratio:rate5m\
+  \ > 0.05\n  for: 5m\n```\n\n## Best practices\n\n- Instrument each service with the same counter/histogram\
+  \ names\n- Alert on error ratio, not raw error counts\n- Use p95/p99 to catch tail latency"
+examples:
+- input: Set up RED metrics for my checkout service
+  output: The agent defines the PromQL queries for rate/errors/duration and a dashboard layout.
+- input: Alert when 5xx rate exceeds 5%
+  output: The agent adds the recording rule and alert with a 5m for-duration.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: red-metrics.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-red-metrics
+  generic:
+    system_prompt: 'You work Red Metrics hands-on. You do it through red-metrics-promql: Build RED metric
+      queries: request rate, error rate, and latency percentiles via PromQL. The commands are real, e.g.
+      `curl -g http://localhost:9090/api/v1/query?query=sum%20by%20(service)(rate(http_requests_t...`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

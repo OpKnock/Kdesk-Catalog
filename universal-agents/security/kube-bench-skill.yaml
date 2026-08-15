@@ -1,0 +1,119 @@
+name: kube-bench
+display_name: kube-bench
+category: security
+subcategory: general
+description: Runs CIS Kubernetes Benchmark checks against master, worker, etcd, and control-plane components
+  with the kube-bench auditor.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kube-bench
+capabilities:
+- name: benchmark-runs
+  description: Run CIS checks against node roles and Kubernetes versions.
+  commands:
+  - kube-bench
+  - kube-bench run --targets master
+  - kube-bench run --targets etcd
+  - kube-bench run --version 1.28
+  - kube-bench run --check 1.2.7,1.4.1
+  examples:
+  - kube-bench run --targets master,worker
+  - kube-bench run --version 1.28 --targets etcd
+  - kube-bench --json
+  parameters:
+  - name: targets
+    type: string
+    description: 'Comma-separated node roles: master, worker, etcd, policypki'
+  - name: version
+    type: string
+    description: Kubernetes version for the benchmark
+  - name: check
+    type: string
+    description: Specific check IDs to run, e.g. 1.2.7,1.4.1
+- name: reporting
+  description: Produce JSON and JUnit reports for compliance evidence.
+  commands:
+  - kube-bench run --json
+  - kube-bench run --json --outputfile kube-bench-report.json
+  - kube-bench run --junit --junitfile junit.xml
+  - kube-bench install
+  - kube-bench run --verbose
+  examples:
+  - kube-bench run --json --outputfile report.json
+  - kube-bench run --junit --junitfile junit.xml
+  - kube-bench install && kube-bench
+  parameters:
+  - name: outputfile
+    type: string
+    description: File path for JSON results
+  - name: junitfile
+    type: string
+    description: File path for JUnit XML results
+knowledge:
+- title: kube-bench GitHub
+  type: documentation
+  source: https://github.com/aquasecurity/kube-bench
+  description: CIS benchmark configuration and runner usage
+- title: CIS Kubernetes Benchmark
+  type: documentation
+  source: https://www.cisecurity.org/benchmark/kubernetes
+  description: Official CIS benchmark for Kubernetes
+instructions: "# kube-bench\n\nAudit Kubernetes clusters against the CIS Kubernetes Benchmark.\n\n## What\
+  \ This Skill Does\n\n- Runs CIS checks against master, worker, and etcd components\n- Matches benchmark\
+  \ checks to the cluster's Kubernetes version\n- Outputs JSON/JUnit reports for compliance and CI\n-\
+  \ Identifies the exact control-plane flags to harden\n\n## When to Use\n\n- Pre-deployment security\
+  \ audit of a cluster\n- Compliance evidence for CIS or SOC2 controls\n- Periodic hardening reviews of\
+  \ node configuration\n\n## Real Commands\n\n```bash\n# Run against all node roles\nkube-bench\n\n# Scope\
+  \ by role\nkube-bench run --targets master\nkube-bench run --targets worker\nkube-bench run --targets\
+  \ etcd\n\n# Version-specific benchmark\nkube-bench run --version 1.28\n\n# Targeted checks and reporting\n\
+  kube-bench run --check 1.2.7,1.4.1\nkube-bench run --json --outputfile report.json\nkube-bench run --junit\
+  \ --junitfile junit.xml\n```\n\n## In-Cluster Run\n\n```yaml\napiVersion: batch/v1\nkind: Job\nmetadata:\n\
+  \  name: kube-bench\nspec:\n  template:\n    spec:\n      hostPID: true\n      containers:\n       \
+  \ - name: kube-bench\n          image: aquasec/kube-bench:latest\n          command: [\"/bin/sh\", \"\
+  -c\", \"kube-bench run --json --outputfile /reports/report.json\"]\n      restartPolicy: Never\n```\n\
+  \n## Best Practices\n\n- Run per node role and store JSON artifacts per node\n- Re-run after every Kubernetes\
+  \ upgrade; checks change with versions\n- Automate remediation for repeated failures (e.g. flag-level\
+  \ config)\n- Pair with kube-hunter or kubescape for active and posture testing\n- Track failures as\
+  \ tracked exemptions, not silence"
+examples:
+- input: Audit this cluster against CIS
+  output: Agent runs kube-bench --json --outputfile report.json, groups failures by role, and lists the
+    top control-plane flags to fix.
+- input: Which checks fail on my etcd?
+  output: Agent runs kube-bench run --targets etcd and summarizes FAIL/WARN items with remediation text
+    from the benchmark.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kube-bench.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kube-bench
+  generic:
+    system_prompt: 'You work kube-bench hands-on. You do it through benchmark-runs: Run CIS checks against
+      node roles and Kubernetes versions. The commands are real, e.g. `kube-bench`. You answer with exact
+      commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

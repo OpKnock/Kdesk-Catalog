@@ -1,0 +1,157 @@
+{
+  "name": "idempotency-designer",
+  "display_name": "Idempotency Designer",
+  "category": "backend",
+  "subcategory": "reliability",
+  "description": "Agent for implementing idempotent operations with deduplication, exactly-once semantics, and retry safety.",
+  "version": "1.0.0",
+  "tags": [
+    "idempotency",
+    "exactly-once",
+    "deduplication",
+    "retry-safety"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "idempotency",
+      "description": "Design idempotent operations",
+      "commands": [
+        "redis-cli",
+        "postgres",
+        "kafka",
+        "idempotency-key"
+      ],
+      "examples": [
+        "Generate idempotency key: uuidgen",
+        "Store key: redis-cli SET 'idempotency:abc123' 'processing' EX 3600",
+        "Check key: redis-cli EXISTS 'idempotency:abc123'"
+      ],
+      "parameters": [
+        {
+          "name": "idempotency_type",
+          "type": "string",
+          "description": "Type: request-id, operation-hash, natural-idempotency"
+        },
+        {
+          "name": "storage",
+          "type": "string",
+          "description": "Storage: redis, database, memory"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Idempotency in REST APIs",
+      "type": "documentation",
+      "source": "https://restfulapi.net/idempotent-put-requests/",
+      "description": "Idempotency in REST APIs"
+    },
+    {
+      "Title": "Exactly-Once Semantics",
+      "type": "tutorial",
+      "source": "https://kafka.apache.org/documentation/#semantics",
+      "description": "Exactly-once semantics documentation"
+    }
+  ],
+  "instructions": "You are an idempotency specialist. Help users:\n1. Design idempotent APIs\n2. Implement deduplication\n3. Handle retries safely\n4. Configure idempotency keys\n5. Monitor duplicate requests\n\nAlways recommend idempotency for critical operations.\n",
+  "examples": [
+    {
+      "input": "Make my API idempotent",
+      "output": "I'll implement idempotency keys. Here's the deduplication logic..."
+    },
+    {
+      "input": "Handle duplicate requests",
+      "output": "I'll add request deduplication. Here's the idempotency check..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "idempotency-designer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-idempotency"
+    },
+    "generic": {
+      "system_prompt": "You are an idempotency expert. Help users design idempotent operations, implement deduplication, and handle retries safely.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "idempotency-designer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "idempotency",
+        "name": "idempotency_type",
+        "type": "string",
+        "description": "Type: request-id, operation-hash, natural-idempotency"
+      },
+      {
+        "capability": "idempotency",
+        "name": "storage",
+        "type": "string",
+        "description": "Storage: redis, database, memory"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/idempotency-designer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/idempotency-designer.yaml",
+    "checksum": "a7430914f3d5ba75d7b66f860202633101a5d5208e32e298a38f0dfb275d0311"
+  }
+}

@@ -1,0 +1,181 @@
+name: aria2
+display_name: aria2
+category: devtools
+subcategory: general
+description: 'Downloads files at high speed with aria2c: multi-connection, segmented downloads, batch
+  URL lists, and BitTorrent/Metalink support.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- aria2c
+capabilities:
+- name: fast-downloads
+  description: Download files with multiple connections and segments.
+  commands:
+  - aria2c -x 16 -s 16 https://example.com/file.iso
+  - aria2c -d /downloads -o app.tar.gz https://example.com/app.tar.gz
+  - aria2c -c https://example.com/big-file.zip
+  - aria2c --max-download-limit=5M https://example.com/file.iso
+  - aria2c -Z https://a.com/1.zip https://b.com/2.zip
+  - aria2c -i urls.txt
+  examples:
+  - aria2c -x 16 -s 16 https://example.com/file.iso
+  - aria2c -c https://example.com/big-file.zip
+  - aria2c -i urls.txt
+  parameters:
+  - name: url
+    type: string
+    description: File URL
+  - name: connections
+    type: integer
+    description: Connections per server (-x)
+  - name: out
+    type: string
+    description: Output file name
+  - name: dir
+    type: string
+    description: Download directory
+- name: torrent-and-metalink
+  description: Download BitTorrent and Metalink files with checksums.
+  commands:
+  - aria2c --seed-time=0 ubuntu-24.04.iso.torrent
+  - aria2c --check-integrity --metalink-file=files.meta4
+  - aria2c --torrent-file=file.torrent -d /data
+  - aria2c --bt-max-peers=200 file.torrent
+  - aria2c --summary-interval=10 https://example.com/file.bin
+  examples:
+  - aria2c --seed-time=0 ubuntu-24.04.iso.torrent
+  - aria2c --check-integrity --metalink-file=files.meta4
+  - aria2c --bt-max-peers=200 file.torrent
+  parameters:
+  - name: torrent
+    type: string
+    description: Torrent file path
+  - name: seed-time
+    type: integer
+    description: Seed time in minutes (0 = no seeding)
+knowledge:
+- title: aria2c Manual
+  type: documentation
+  source: https://aria2.github.io/manual/en/html/aria2c.html
+  description: Complete aria2c option and usage reference
+- title: aria2 GitHub
+  type: documentation
+  source: https://github.com/aria2/aria2
+  description: Source, install, and examples
+instructions: '# aria2 Downloads
+
+
+  Download large files fast with multi-connection aria2c.
+
+
+  ## What This Skill Does
+
+
+  - Segments downloads across connections for higher throughput
+
+  - Resumes interrupted downloads (-c)
+
+  - Handles batch URL lists and Metalink/Torrent formats
+
+  - Limits bandwidth and summaries progress
+
+  - Verifies checksums with --check-integrity
+
+
+  ## When to Use
+
+
+  - Large artifacts (ISOs, model weights, datasets)
+
+  - Flaky network downloads needing resume
+
+  - Batch mirror downloads from a URL list
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Fast single download
+
+  aria2c -x 16 -s 16 https://example.com/file.iso
+
+  aria2c -d /downloads -o app.tar.gz https://example.com/app.tar.gz
+
+
+  # Resume and limits
+
+  aria2c -c https://example.com/big-file.zip
+
+  aria2c --max-download-limit=5M https://example.com/file.iso
+
+
+  # Batch
+
+  aria2c -i urls.txt
+
+  aria2c -Z https://a.com/1.zip https://b.com/2.zip
+
+
+  # Torrent / Metalink
+
+  aria2c --seed-time=0 ubuntu-24.04.iso.torrent
+
+  aria2c --check-integrity --metalink-file=files.meta4
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use -x 16 -s 16 for HTTP(S) CDNs that allow range requests
+
+  - Always -c for large downloads to survive disconnects
+
+  - Use --seed-time=0 for torrents when you only want the file
+
+  - Add --file-allocation=none on flash storage
+
+  - Use -i urls.txt with one URL per line for batch mirrors'
+examples:
+- input: Download a 4GB dataset efficiently
+  output: Agent runs aria2c with 16 connections and resume enabled, monitoring summary output
+- input: Batch download a list of files
+  output: Agent writes urls.txt and runs aria2c -i urls.txt -d downloads/ -j 4 for parallel batch
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: aria2.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-aria2
+  generic:
+    system_prompt: 'This is your domain: aria2. You do it through fast-downloads: Download files with
+      multiple connections and segments. The commands are real, e.g. `aria2c -x 16 -s 16 https://example.com/file.iso`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

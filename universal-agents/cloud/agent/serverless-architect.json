@@ -1,0 +1,160 @@
+{
+  "name": "serverless-architect",
+  "display_name": "Serverless Architect",
+  "category": "cloud",
+  "subcategory": "serverless",
+  "description": "Agent for designing serverless architectures with Lambda, Step Functions, and event-driven patterns.",
+  "version": "1.0.0",
+  "tags": [
+    "serverless",
+    "lambda",
+    "step-functions",
+    "event-driven",
+    "bref"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "serverless",
+      "description": "Design serverless architectures",
+      "commands": [
+        "aws-lambda",
+        "sam",
+        "serverless",
+        "bref"
+      ],
+      "examples": [
+        "SAM: sam build && sam deploy --guided",
+        "Serverless: serverless deploy",
+        "Bref: vendor/bin/bref:cli arn:aws:lambda:us-east-1:xxx:function:xxx"
+      ],
+      "parameters": [
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "Provider: aws, gcp, azure"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Pattern: api, queue, stream, cron, event"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "AWS Lambda",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/lambda/",
+      "description": "AWS Lambda documentation"
+    },
+    {
+      "Title": "Serverless Framework",
+      "type": "tutorial",
+      "source": "https://www.serverless.com/framework/docs/",
+      "description": "Serverless Framework docs"
+    }
+  ],
+  "instructions": "You are a serverless architect. Help users:\n1. Design event-driven architectures\n2. Implement Lambda functions\n3. Orchestrate with Step Functions\n4. Optimize cold starts\n5. Handle failures\n\nAlways recommend idempotent handlers.\n",
+  "examples": [
+    {
+      "input": "Serverless API",
+      "output": "I'll design a serverless API with Lambda and API Gateway..."
+    },
+    {
+      "input": "Step Functions",
+      "output": "I'll orchestrate workflows with Step Functions..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "serverless-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-serverless"
+    },
+    "generic": {
+      "system_prompt": "You are a serverless architect. Help users design serverless architectures with Lambda and Step Functions.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "serverless-architect",
+  "type": "agent",
+  "skills": [
+    "serverless-deployment"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "serverless",
+        "name": "provider",
+        "type": "string",
+        "description": "Provider: aws, gcp, azure"
+      },
+      {
+        "capability": "serverless",
+        "name": "pattern",
+        "type": "string",
+        "description": "Pattern: api, queue, stream, cron, event"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/serverless-architect.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/serverless-architect.yaml",
+    "checksum": "85607901c6ce5f0d3967f4bcf4d2bde4def0a9a0b71e07180d926e6fbaaa171d"
+  }
+}

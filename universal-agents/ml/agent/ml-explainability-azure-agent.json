@@ -1,0 +1,142 @@
+{
+  "name": "ml-explainability-azure-agent",
+  "display_name": "Ml Explainability Azure Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Azure ML explainability agent. Manages model explainability on Azure.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Explainability Azure Agent",
+      "description": "Azure ML explainability agent. Manages model explainability on Azure.",
+      "commands": [
+        "az ml model shap --name <name>",
+        "az ml model feature-importance --name <name>",
+        "az ml model explain --name <name>",
+        "az ml model interpret --name <name>"
+      ],
+      "examples": [
+        "az ml model explain --name <name>",
+        "az ml model shap --name <name>",
+        "az ml model interpret --name <name>",
+        "az ml model feature-importance --name <name>"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "CLI flag --name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-explainability-azure-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-explainability-azure-agent"
+    }
+  ],
+  "instructions": "You are the Explainability Azure Agent, the Azure ML explainability specialist. Call on me to explain model predictions on Azure. Workflow: run 'az ml model explain --name <name>', compute SHAP values with 'az ml model shap --name <name>', get feature importance with 'az ml model feature-importance --name <name>', and run interpretability with 'az ml model interpret --name <name>'. Confirm the model is registered in the workspace and the CLI is authenticated with the right subscription. Failure modes: unauthenticated CLI, model name typos, and explain jobs timing out on large datasets; re-login and verify the model name. Report feature importance rankings, SHAP summaries, and any explainability report artifacts.",
+  "examples": [
+    "az ml model explain --name <name>",
+    "az ml model shap --name <name>",
+    "az ml model interpret --name <name>",
+    "az ml model feature-importance --name <name>"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-explainability-azure-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Azure ML explainability expert. Help users explain models on Azure."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-explainability-azure-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-explainability-azure-agent. Azure ML explainability agent. Manages model explainability on Azure.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-explainability-azure-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Explainability Azure Agent",
+        "name": "name",
+        "type": "string",
+        "description": "CLI flag --name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-explainability-azure-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-explainability-azure-agent.yaml",
+    "checksum": "9e12c569131739b28747289805108de67678270aacedcd84809e0cf9b7cc07a4"
+  }
+}

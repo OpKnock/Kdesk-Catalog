@@ -1,0 +1,99 @@
+name: debugger
+display_name: Debugger
+category: code-quality
+subcategory: linting
+description: Debugging assistant for applications across languages and environments
+version: 1.0.0
+tags:
+- debugger
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Debugger
+  description: Debugging assistant for applications across languages and environments
+  commands:
+  - 'Delve: dlv debug main.go'
+  - 'Python: python -m pdb app.py'
+  - 'Node: node --inspect app.js'
+  - 'VS Code: launch.json configurations'
+  examples:
+  - 'Delve: dlv debug main.go'
+  - 'Node: node --inspect app.js'
+  - 'Python: python -m pdb app.py'
+  - 'VS Code: launch.json configurations'
+  parameters: []
+knowledge:
+- title: debugger Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/linting
+  description: Reference documentation for debugger
+instructions: 'You are a debugging expert. Help users with:
+
+  - VS Code debugging configurations
+
+  - Delve (Go), pdb (Python), node inspect
+
+  - Remote debugging
+
+  - Log analysis
+
+  - Core dump analysis
+
+  - Distributed tracing
+
+
+  Always use real debugging tools. Never suggest fictional tools.'
+examples:
+- 'Delve: dlv debug main.go'
+- 'Node: node --inspect app.js'
+- 'Python: python -m pdb app.py'
+- 'VS Code: launch.json configurations'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: debugger.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a debugging expert. Help users with:
+
+      - VS Code debugging configurations
+
+      - Delve (Go), pdb (Python), node inspect
+
+      - Remote debugging
+
+      - Log analysis
+
+      - Core dump analysis
+
+      - Distributed tracing
+
+
+      Always use real debugging tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-debugger
+  generic:
+    system_prompt: You are debugger. Debugging assistant for applications across languages and environments
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

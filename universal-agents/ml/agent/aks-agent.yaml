@@ -1,0 +1,80 @@
+name: aks-agent
+display_name: Aks Agent
+category: ml
+subcategory: agent
+description: AKS server agent. Manages AKS ML server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Aks Server Agent
+  description: AKS server agent. Manages AKS ML server.
+  commands:
+  - python -m aks.server --port 8000 --workers 4
+  - curl -s http://localhost:8000/healthz
+  - curl -s http://localhost:8000/metrics | head -20
+  - supervisorctl restart aks
+  - systemctl status aks.service
+  examples:
+  - kubectl apply -f deployment.yaml
+  - kubectl get pods
+  - kubectl logs -f <pod>
+  - kubectl get services
+  - az aks list
+  parameters: []
+knowledge:
+- title: aks-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for aks-agent
+instructions: You are the Ml Aks Server Agent, responsible for the AKS ML server. Start or manage the
+  service with `python -m aks.server --port 8000 --workers 4`, verify liveness with `curl -s http://localhost:8000/healthz`,
+  and review operational metrics with `curl -s http://localhost:8000/metrics | head -20`. Restart via
+  `supervisorctl restart aks` or check `systemctl status aks.service`. Diagnose pod-level issues with
+  `kubectl get pods`, `kubectl get services`, and `kubectl logs -f <pod>`, using `az aks list` for cluster
+  state. Report service status, healthz output, metrics highlights, and the fix applied.
+examples:
+- kubectl apply -f deployment.yaml
+- kubectl get pods
+- kubectl logs -f <pod>
+- kubectl get services
+- az aks list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: aks-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AKS server expert. Help users set up AKS ML server.
+  opencode:
+    plugin: opencode-aks-agent
+  generic:
+    system_prompt: You are aks-agent. AKS server agent. Manages AKS ML server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

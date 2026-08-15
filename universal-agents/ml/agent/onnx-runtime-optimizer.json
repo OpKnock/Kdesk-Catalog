@@ -1,0 +1,154 @@
+{
+  "name": "onnx-runtime-optimizer",
+  "display_name": "ONNX Runtime Optimization Agent",
+  "category": "ml",
+  "subcategory": "runtime",
+  "description": "Agent specialized in optimizing ONNX models, applying graph transformations, and deploying across multiple runtime backends.",
+  "version": "1.0.0",
+  "tags": [
+    "onnx",
+    "optimization"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "onnx-optimization",
+      "description": "Optimize ONNX graphs, apply execution providers, and benchmark across runtimes",
+      "commands": [
+        "python -m onnxruntime.tools.optimize_model",
+        "onnxruntime_test_runner",
+        "python -m onnxruntime.quantization.preprocess",
+        "python -m onnxruntime.quantization.quantize"
+      ],
+      "examples": [
+        "Optimize for TensorRT: session_options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL",
+        "Quantize ONNX: python -m onnxruntime.quantization.quantize --input model.onnx --output model_quant.onnx"
+      ],
+      "parameters": [
+        {
+          "name": "execution_provider",
+          "type": "string",
+          "description": "Execution provider: CPUExecutionProvider, CUDAExecutionProvider, TensorrtExecutionProvider, OpenVINOExecutionProvider"
+        },
+        {
+          "name": "optimization_level",
+          "type": "string",
+          "description": "ORT_DISABLE_ALL, ORT_ENABLE_BASIC, ORT_ENABLE_EXTENDED, ORT_ENABLE_ALL"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ONNX Runtime Documentation",
+      "type": "documentation",
+      "source": "https://onnxruntime.ai/docs/",
+      "description": "Complete guide to ONNX Runtime optimization and deployment"
+    },
+    {
+      "title": "ONNX Optimization Techniques",
+      "type": "tutorial",
+      "source": "https://onnxruntime.ai/docs/performance/optimizations.html",
+      "description": "Graph optimizations and execution provider configuration"
+    }
+  ],
+  "instructions": "You are an ONNX Runtime optimization specialist. Help users:\n1. Convert models from PyTorch/TF to ONNX format\n2. Apply graph optimizations (node fusion, constant folding)\n3. Configure execution providers for target hardware\n4. Quantize ONNX models (dynamic, static, QAT)\n5. Benchmark across different execution providers\n\nAlways validate optimized model outputs match the original within tolerance.\n",
+  "examples": [
+    {
+      "input": "Optimize my ONNX model for GPU inference",
+      "output": "I'll optimize your ONNX model with CUDAExecutionProvider. Let me apply graph optimizations and benchmark the performance improvement..."
+    },
+    {
+      "input": "My ONNX model doesn't support some ops",
+      "output": "Let me check which ops aren't supported and suggest alternatives. I can help you replace unsupported ops with ONNX-compatible versions."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "onnx-runtime-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-onnx"
+    },
+    "generic": {
+      "system_prompt": "You are an ONNX Runtime optimization expert. Help users optimize ONNX models, configure execution providers, and deploy across multiple backends.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "onnx-runtime-optimizer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "onnx-optimization",
+        "name": "execution_provider",
+        "type": "string",
+        "description": "Execution provider: CPUExecutionProvider, CUDAExecutionProvider, TensorrtExecutionProvider, OpenVINOExecutionProvider"
+      },
+      {
+        "capability": "onnx-optimization",
+        "name": "optimization_level",
+        "type": "string",
+        "description": "ORT_DISABLE_ALL, ORT_ENABLE_BASIC, ORT_ENABLE_EXTENDED, ORT_ENABLE_ALL"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/onnx-runtime-optimizer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/onnx-runtime-optimizer.yaml",
+    "checksum": "0cf7c099761793ed01c94675364883af60733107b5de4d021c6415af53b8c10e"
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "name": "ml-documentation-inference-agent",
+  "display_name": "Ml Documentation Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Documentation inference agent. Manages ML documentation inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Documentation Inference Agent",
+      "description": "Documentation inference agent. Manages ML documentation inference.",
+      "commands": [
+        "python test_documentation.py",
+        "python document.py --model model.pkl --output documentation.md",
+        "python serve_documentation.py --port 8080",
+        "python generate_docs.py --model model.pkl --format html"
+      ],
+      "examples": [
+        "python document.py --model model.pkl --output documentation.md",
+        "python generate_docs.py --model model.pkl --format html",
+        "python serve_documentation.py --port 8080",
+        "python test_documentation.py"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-documentation-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-documentation-inference-agent"
+    }
+  ],
+  "instructions": "You are the Documentation Inference Agent, the expert for generating documentation for ML models. Call on me when a trained model needs markdown or HTML docs. Workflow: generate markdown with 'python document.py --model model.pkl --output documentation.md', produce HTML with 'python generate_docs.py --model model.pkl --format html', serve the docs with 'python serve_documentation.py --port 8080', and validate everything with 'python test_documentation.py'. Verify the generated files exist and the served endpoint returns the document content; exercise it with 'curl http://localhost:8080/document --data {\"model\": \"model.pkl\"}'. Failure modes: a missing model.pkl, unsupported format flags, or tests failing after doc changes; regenerate and retest. Report generated file paths, format, serving status, and test results.",
+  "examples": [
+    "python document.py --model model.pkl --output documentation.md",
+    "python generate_docs.py --model model.pkl --format html",
+    "python serve_documentation.py --port 8080",
+    "python test_documentation.py"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-documentation-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a documentation inference expert. Help users document ML models."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-documentation-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-documentation-inference-agent. Documentation inference agent. Manages ML documentation inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-documentation-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Documentation Inference Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-documentation-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-documentation-inference-agent.yaml",
+    "checksum": "f8c6d1b16049c077d742776e3ec9b564e895c60cfe594daee34990d4ae26f039"
+  }
+}

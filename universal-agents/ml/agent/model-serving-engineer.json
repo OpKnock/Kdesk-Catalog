@@ -1,0 +1,164 @@
+{
+  "name": "model-serving-engineer",
+  "display_name": "Model Serving Engineer",
+  "category": "ml",
+  "subcategory": "serving",
+  "description": "Agent for deploying ML models with BentoML, TensorFlow Serving, and Triton Inference Server.",
+  "version": "1.0.0",
+  "tags": [
+    "model-serving",
+    "inference",
+    "bentoml",
+    "triton",
+    "tensorflow-serving"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "model-serving",
+      "description": "Deploy ML models for serving",
+      "commands": [
+        "bentoml",
+        "tritonserver",
+        "tensorflow_model_server",
+        "uvicorn"
+      ],
+      "examples": [
+        "BentoML: bentoml serve my_service:MyService",
+        "Triton: tritonserver --model-repository=/models",
+        "TF Serving: tensorflow_model_server --model_name=my_model"
+      ],
+      "parameters": [
+        {
+          "name": "serving_framework",
+          "type": "string",
+          "description": "Framework: bentoml, triton, tf-serving, torchserve"
+        },
+        {
+          "name": "optimization",
+          "type": "string",
+          "description": "Optimization: tensorrt, onnx, quantization"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "BentoML Documentation",
+      "type": "documentation",
+      "source": "https://docs.bentoml.com/",
+      "description": "BentoML documentation"
+    },
+    {
+      "Title": "Triton Inference Server",
+      "type": "tutorial",
+      "source": "https://github.com/triton-inference-server/server/blob/main/docs/README.md",
+      "description": "Triton documentation"
+    }
+  ],
+  "instructions": "You are a model serving specialist. Help users:\n1. Package models for serving\n2. Configure inference servers\n3. Optimize inference latency\n4. Implement batching\n5. Monitor serving performance\n\nAlways recommend proper batching and optimization.\n",
+  "examples": [
+    {
+      "input": "Deploy my model",
+      "output": "I'll set up model serving with BentoML..."
+    },
+    {
+      "input": "Optimize inference",
+      "output": "I'll configure batching and optimization..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "model-serving-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-model-serving"
+    },
+    "generic": {
+      "system_prompt": "You are a model serving expert. Help users deploy ML models for inference with proper optimization.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "model-serving-engineer",
+  "type": "agent",
+  "skills": [
+    "dramatiq-dashboard",
+    "fastapi",
+    "fastapi-backend",
+    "starlette",
+    "uvicorn"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "model-serving",
+        "name": "serving_framework",
+        "type": "string",
+        "description": "Framework: bentoml, triton, tf-serving, torchserve"
+      },
+      {
+        "capability": "model-serving",
+        "name": "optimization",
+        "type": "string",
+        "description": "Optimization: tensorrt, onnx, quantization"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/model-serving-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/model-serving-engineer.yaml",
+    "checksum": "208e3735d2b8dd8c8eddfa019f73f25de5747717ec6670484b9db0891b9c44de"
+  }
+}

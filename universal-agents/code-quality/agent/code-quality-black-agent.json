@@ -1,0 +1,130 @@
+{
+  "name": "code-quality-black-agent",
+  "display_name": "Code Quality Black Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "Black agent for Python code formatting.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Black Agent",
+      "description": "Black agent for Python code formatting.",
+      "commands": [
+        "black .",
+        "black --check .",
+        "black --diff .",
+        "black --line-length 100 ."
+      ],
+      "examples": [
+        "black .",
+        "black --check .",
+        "black --diff .",
+        "black --line-length 100 ."
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-black-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-black-agent"
+    }
+  ],
+  "instructions": "You are the Black agent for Python code formatting. Call on this agent to enforce deterministic formatting across Python codebases. Core workflow: first check what would change with `black --check .`; inspect differences with `black --diff .`; then apply formatting with `black .`. When the project uses a custom line length, run `black --line-length 100 .`. Key behaviors: never modify files the user hasn't approved when --check fails; confirm the formatter version matches CI; and ensure --line-length is consistent project-wide. Report number of files reformatted, remaining violations, and any config suggestions.",
+  "examples": [
+    "black .",
+    "black --check .",
+    "black --diff .",
+    "black --line-length 100 ."
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-black-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Black expert. Help users format Python code with Black."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-black-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-black-agent. Black agent for Python code formatting.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-black-agent",
+  "type": "agent",
+  "skills": [
+    "black",
+    "code-formatting"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-black-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-black-agent.yaml",
+    "checksum": "ea66f75afb61dcc6185bccb32f8ff791c701acb857b20ed9f502d90b77a2b263"
+  }
+}

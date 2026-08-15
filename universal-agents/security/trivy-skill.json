@@ -1,0 +1,246 @@
+{
+  "name": "trivy",
+  "display_name": "trivy",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Scans container images, filesystems, repos, and Kubernetes for vulnerabilities, secrets, IaC misconfigs, and licenses with Trivy.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "trivy"
+  ],
+  "capabilities": [
+    {
+      "name": "image-and-fs-scan",
+      "description": "Scan images, directories, and repos for vulnerabilities and secrets.",
+      "commands": [
+        "trivy image nginx:latest",
+        "trivy image --severity HIGH,CRITICAL --ignore-unfixed nginx:latest",
+        "trivy fs --scanners vuln,secret,config .",
+        "trivy repo https://github.com/org/repo",
+        "trivy image --format sarif -o scan.sarif nginx:latest"
+      ],
+      "examples": [
+        "trivy image --severity HIGH,CRITICAL --ignore-unfixed myapp:latest",
+        "trivy fs --scanners secret .",
+        "trivy repo https://github.com/org/repo --scanners vuln"
+      ],
+      "parameters": [
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Image, directory, or repo URL to scan"
+        },
+        {
+          "name": "scanners",
+          "type": "array",
+          "description": "Scan types: vuln, secret, config, license"
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "Minimum severity: LOW, MEDIUM, HIGH, CRITICAL"
+        }
+      ]
+    },
+    {
+      "name": "config-and-sbom",
+      "description": "Scan IaC configs and manage SBOMs.",
+      "commands": [
+        "trivy config .",
+        "trivy config --severity CRITICAL terraform/",
+        "trivy sbom --sbom-format cyclonedx sbom.cdx.json",
+        "trivy image --format cyclonedx -o sbom.cdx.json nginx:latest",
+        "trivy image --ignore-unfixed --list-all-pkgs nginx:latest"
+      ],
+      "examples": [
+        "trivy config terraform/",
+        "trivy image --format cyclonedx -o sbom.cdx.json nginx:latest",
+        "trivy sbom sbom.cdx.json"
+      ],
+      "parameters": [
+        {
+          "name": "sbomFormat",
+          "type": "string",
+          "description": "SBOM format: cyclonedx, spdx"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output file path"
+        }
+      ]
+    },
+    {
+      "name": "cluster-scan",
+      "description": "Scan Kubernetes clusters for vulnerabilities and misconfigs.",
+      "commands": [
+        "trivy kubernetes --report summary cluster",
+        "trivy kubernetes cluster --severity HIGH,CRITICAL",
+        "trivy kubernetes --report all --format sarif -o k8s.sarif",
+        "trivy k8s --skip-images deployment/myapp"
+      ],
+      "examples": [
+        "trivy kubernetes --report summary cluster",
+        "trivy kubernetes cluster --severity HIGH,CRITICAL",
+        "trivy k8s --skip-images deployment/myapp"
+      ],
+      "parameters": [
+        {
+          "name": "report",
+          "type": "string",
+          "description": "Report scope: summary, all"
+        },
+        {
+          "name": "skipImages",
+          "type": "boolean",
+          "description": "Skip image scanning in cluster scans"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Trivy Documentation",
+      "type": "documentation",
+      "source": "https://trivy.dev/",
+      "description": "Scan types, severity gating, and formats"
+    },
+    {
+      "title": "Trivy GitHub",
+      "type": "documentation",
+      "source": "https://github.com/aquasecurity/trivy",
+      "description": "Installation and full CLI reference"
+    }
+  ],
+  "instructions": "# Trivy\n\nComprehensive scanner: images, filesystems, repos, configs, and clusters.\n\n## What This Skill Does\n\n- Scans container images for CVEs with SBOM awareness\n- Scans filesystems for secrets, licenses, and misconfigs\n- Scans Kubernetes clusters for posture issues\n- Generates SBOMs and SARIF reports\n\n## When to Use\n\n- Image gate before deploy\n- Repo-wide secret and dependency scan\n- Cluster security posture reviews\n\n## Real Commands\n\n```bash\n# Images\n trivy image nginx:latest\ntrivy image --severity HIGH,CRITICAL --ignore-unfixed myapp:latest\ntrivy image --format sarif -o scan.sarif myapp:latest\n\n# Filesystems and repos\ntrivy fs --scanners vuln,secret,config .\ntrivy repo https://github.com/org/repo\n\n# Configs (IaC)\ntrivy config terraform/\n\n# SBOM\n trivy image --format cyclonedx -o sbom.cdx.json myapp:latest\n trivy sbom sbom.cdx.json\n\n# Kubernetes\n trivy kubernetes --report summary cluster\ntrivy kubernetes cluster --severity HIGH,CRITICAL\n```\n\n## CI Gate\n\n```yaml\n- name: Trivy image scan\n  run: |\n    trivy image --exit-code 1 --severity CRITICAL --ignore-unfixed myapp:latest\n```\n\n## Best Practices\n\n- Use --ignore-unfixed to focus on actionable findings\n- Set --exit-code 1 with severity gates in CI\n- Run secret scans on every commit; image scans on every tag\n- Schedule DB updates and pin trivy versions for stable results\n- Generate SBOMs at build time for later re-scanning",
+  "examples": [
+    {
+      "input": "Block deploys on critical CVEs",
+      "output": "Agent adds trivy image --exit-code 1 --severity CRITICAL --ignore-unfixed to the pipeline and shows sample output."
+    },
+    {
+      "input": "Scan this repo for secrets and misconfigs",
+      "output": "Agent runs trivy fs --scanners vuln,secret,config . and summarizes findings by type with fix hints."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "trivy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-trivy"
+    },
+    "generic": {
+      "system_prompt": "You are the trivy specialist. You do it through image-and-fs-scan: Scan images, directories, and repos for vulnerabilities and secrets. The commands are real, e.g. `trivy image nginx:latest`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "trivy",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "image-and-fs-scan",
+        "name": "target",
+        "type": "string",
+        "description": "Image, directory, or repo URL to scan"
+      },
+      {
+        "capability": "image-and-fs-scan",
+        "name": "scanners",
+        "type": "array",
+        "description": "Scan types: vuln, secret, config, license"
+      },
+      {
+        "capability": "image-and-fs-scan",
+        "name": "severity",
+        "type": "string",
+        "description": "Minimum severity: LOW, MEDIUM, HIGH, CRITICAL"
+      },
+      {
+        "capability": "config-and-sbom",
+        "name": "sbomFormat",
+        "type": "string",
+        "description": "SBOM format: cyclonedx, spdx"
+      },
+      {
+        "capability": "config-and-sbom",
+        "name": "output",
+        "type": "string",
+        "description": "Output file path"
+      },
+      {
+        "capability": "cluster-scan",
+        "name": "report",
+        "type": "string",
+        "description": "Report scope: summary, all"
+      },
+      {
+        "capability": "cluster-scan",
+        "name": "skipImages",
+        "type": "boolean",
+        "description": "Skip image scanning in cluster scans"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "trivy"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/trivy-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/trivy-skill.yaml",
+    "checksum": "6562e9403706dc8066f2988e6b05967d032930c7a7057d8a750568e52708ee60"
+  }
+}

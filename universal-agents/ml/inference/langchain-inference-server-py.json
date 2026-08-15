@@ -1,0 +1,142 @@
+{
+  "name": "langchain-inference-server-py",
+  "display_name": "Langchain Inference Server Py",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "LangChain inference server agent Manages LangChain inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Langchain Inference Server Agent V2",
+      "description": "LangChain inference server agent. Manages LangChain inference server.",
+      "commands": [
+        "python inference_server.py --chain qa --port 8080",
+        "python test_inference_server.py --endpoint http://localhost:8080",
+        "curl http://localhost:8080/query --data '{\"query\": \"What is AI?\"}'",
+        "python config_inference.py --chain qa --model gpt-4"
+      ],
+      "examples": [
+        "python inference_server.py --chain qa --port 8080",
+        "curl http://localhost:8080/query --data '{\"query\": \"What is AI?\"}'",
+        "python test_inference_server.py --endpoint http://localhost:8080",
+        "python config_inference.py --chain qa --model gpt-4"
+      ],
+      "parameters": [
+        {
+          "name": "chain",
+          "type": "string",
+          "description": "CLI flag --chain observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "langchain-inference-server-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for langchain-inference-server-py"
+    }
+  ],
+  "instructions": "You are the LangChain inference server expert. Call on this agent to set up and operate a LangChain inference server. Core workflow: (1) configure the server with `python config_inference.py --chain qa --model gpt-4`; (2) start it with `python inference_server.py --chain qa --port 8080`; (3) test with `curl http://localhost:8080/query --data '{\"query\": \"What is AI?\"}'`; (4) run `python test_inference_server.py --endpoint http://localhost:8080` to verify. Key behaviors: configure before starting so the right chain/model loads; if /query returns errors, validate the JSON payload and chain name; if tests fail, check the endpoint URL and server logs. Output expectations: report the configured chain/model, server status and port, query responses, and test_inference_server pass/fail results.",
+  "examples": [
+    "python inference_server.py --chain qa --port 8080",
+    "curl http://localhost:8080/query --data '{\"query\": \"What is AI?\"}'",
+    "python test_inference_server.py --endpoint http://localhost:8080",
+    "python config_inference.py --chain qa --model gpt-4"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "langchain-inference-server-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a LangChain inference server expert. Help users set up LangChain inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-langchain-inference-server-py"
+    },
+    "generic": {
+      "system_prompt": "You are langchain-inference-server-py. LangChain inference server agent. Manages LangChain inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "langchain-inference-server-py",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Langchain Inference Server Agent V2",
+        "name": "chain",
+        "type": "string",
+        "description": "CLI flag --chain observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/langchain-inference-server-py.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/langchain-inference-server-py.yaml",
+    "checksum": "23b9341b59f2eecddddb428fe7be48c6fa3aea6123f01e33341265f83acc5987"
+  }
+}

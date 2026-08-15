@@ -1,0 +1,198 @@
+{
+  "name": "tilt",
+  "display_name": "tilt",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Develops Kubernetes apps with Tilt: resource definitions, live reload, Tiltfiles, CI mode, and dashboard workflows.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "tilt"
+  ],
+  "capabilities": [
+    {
+      "name": "dev-session",
+      "description": "Start dev sessions, watch logs, and manage running resources.",
+      "commands": [
+        "tilt up",
+        "tilt up --port 10350",
+        "tilt down",
+        "tilt args",
+        "tilt alpha tiltfile-result",
+        "tilt --watch=false up"
+      ],
+      "examples": [
+        "tilt up",
+        "tilt down",
+        "tilt args"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Dashboard port"
+        },
+        {
+          "name": "watch",
+          "type": "boolean",
+          "description": "Watch file changes"
+        }
+      ]
+    },
+    {
+      "name": "tiltfile-and-ci",
+      "description": "Author Tiltfiles and run sessions headlessly for CI.",
+      "commands": [
+        "tilt ci",
+        "tilt dump",
+        "tilt dump image",
+        "tilt version",
+        "tilt alpha trigger <resource>",
+        "tilt doctor"
+      ],
+      "examples": [
+        "tilt ci",
+        "tilt dump",
+        "tilt doctor"
+      ],
+      "parameters": [
+        {
+          "name": "tiltfile",
+          "type": "string",
+          "description": "Tiltfile path"
+        },
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "Resource name for triggers"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Tilt Documentation",
+      "type": "documentation",
+      "source": "https://docs.tilt.dev/",
+      "description": "Tiltfile language, resources, and workflows"
+    },
+    {
+      "title": "Tiltfile Reference",
+      "type": "documentation",
+      "source": "https://docs.tilt.dev/api.html",
+      "description": "Tiltfile functions: docker_build, k8s_yaml, resource"
+    }
+  ],
+  "instructions": "# Tilt Development Sessions\n\nSpin up Kubernetes dev environments with live reload and a shared dashboard.\n\n## What This Skill Does\n\n- Defines resources in a Tiltfile (build, deploy, probes)\n- Runs tilt up with live update (file change -> container update)\n- Streams logs and alerts in the dashboard\n- Runs headless sessions in CI with tilt ci\n- Manages resource triggers and arguments\n\n## When to Use\n\n- Multi-service dev environments on Kubernetes\n- Teams wanting a shared dev dashboard\n- Live reload workflows (no rebuild for code-only changes)\n\n## Real Commands\n\n```bash\n# Dev session\ntilt up\ntilt up --port 10350\ntilt down\ntilt args\ntilt --watch=false up\n\n# Tiltfile\ntilt dump                      # view generated config\ntilt dump image                # image build graph\ntilt alpha tiltfile-result\n\n# CI and diagnostics\ntilt ci                        # run once, fail on errors\ntilt doctor\ntilt version\ntilt alpha trigger api\n```\n\n## Tiltfile Sketch\n\n```python\nload('ext://restart_process', 'docker_build_with_restart')\n\ndocker_build_with_restart('myapp', '.', entrypoint=['node', 'server.js'])\nk8s_yaml('k8s/deployment.yaml')\nk8s_yaml('k8s/service.yaml')\nresource('myapp', port_forwards=['8080:8080'], probes=[http_probe('/health')])\n```\n\n## Best Practices\n\n- Use live_update for interpreted languages to skip rebuilds\n- Add resource probes so tilt blocks on health, not just container start\n- Use tilt ci in PR pipelines for smoke tests\n- Keep Tiltfile reviewed like code; it is build config\n- Use `tilt args` for environment-specific overrides",
+  "examples": [
+    {
+      "input": "Set up live-reload dev for the api service",
+      "output": "Agent writes a Tiltfile with docker_build, k8s_yaml, and port-forward, then starts tilt up"
+    },
+    {
+      "input": "Run the dev environment in CI",
+      "output": "Agent runs tilt ci headlessly and wires the exit code into the pipeline"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "tilt.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-tilt"
+    },
+    "generic": {
+      "system_prompt": "You take the tilt seat. You do it through dev-session: Start dev sessions, watch logs, and manage running resources. The commands are real, e.g. `tilt up`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "tilt",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "dev-session",
+        "name": "port",
+        "type": "integer",
+        "description": "Dashboard port"
+      },
+      {
+        "capability": "dev-session",
+        "name": "watch",
+        "type": "boolean",
+        "description": "Watch file changes"
+      },
+      {
+        "capability": "tiltfile-and-ci",
+        "name": "tiltfile",
+        "type": "string",
+        "description": "Tiltfile path"
+      },
+      {
+        "capability": "tiltfile-and-ci",
+        "name": "resource",
+        "type": "string",
+        "description": "Resource name for triggers"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "tilt"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/tilt-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/tilt-skill.yaml",
+    "checksum": "c7057bde662ae413bcc5f44183b37d588f093c34cbf1d6899c2794265fa45f4b"
+  }
+}

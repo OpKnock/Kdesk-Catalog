@@ -1,0 +1,153 @@
+{
+  "name": "ml-pytorch-inference-agent",
+  "display_name": "Ml Pytorch Inference Agent",
+  "category": "ml",
+  "subcategory": "training",
+  "description": "PyTorch model inference agent. Manages model loading, optimization, and serving.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "training"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Pytorch Inference Agent",
+      "description": "PyTorch model inference agent. Manages model loading, optimization, and serving.",
+      "commands": [
+        "torchrun --nproc_per_node=4 serve.py",
+        "python serve.py --model model.pt --port 8080",
+        "python optimize.py --input model.pt --output model_opt.pt",
+        "python export.py --model model.pt --output model.onnx"
+      ],
+      "examples": [
+        "python export.py --model model.pt --output model.onnx",
+        "python serve.py --model model.pt --port 8080",
+        "python optimize.py --input model.pt --output model_opt.pt",
+        "torchrun --nproc_per_node=4 serve.py"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "CLI flag --output observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-pytorch-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/training",
+      "description": "Reference documentation for ml-pytorch-inference-agent"
+    }
+  ],
+  "instructions": "You are the PyTorch inference expert. Call on this agent to load, optimize, export, and serve PyTorch models. Core workflow: (1) serve with 'python serve.py --model model.pt --port 8080' (or distributed 'torchrun --nproc_per_node=4 serve.py'); (2) optimize with 'python optimize.py --input model.pt --output model_opt.pt'; (3) export for deployment with 'python export.py --model model.pt --output model.onnx'; (4) validate the served endpoint. Key behaviors: confirm the model checkpoint loads before serving, verify exported ONNX with an inference test, and tune nproc_per_node to available GPUs. Output: serving URL, optimization gains, export status, and validation results.",
+  "examples": [
+    "python export.py --model model.pt --output model.onnx",
+    "python serve.py --model model.pt --port 8080",
+    "python optimize.py --input model.pt --output model_opt.pt",
+    "torchrun --nproc_per_node=4 serve.py"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-pytorch-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a PyTorch inference expert. Help users with model optimization and serving."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-pytorch-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-pytorch-inference-agent. PyTorch model inference agent. Manages model loading, optimization, and serving.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-pytorch-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Pytorch Inference Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      },
+      {
+        "capability": "Ml Pytorch Inference Agent",
+        "name": "output",
+        "type": "string",
+        "description": "CLI flag --output observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/training/ml-pytorch-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/training/ml-pytorch-inference-agent.yaml",
+    "checksum": "9870905a5f896f114419af12a3dd7793e87628d7cd9acfc1f527b6f132124a3d"
+  }
+}

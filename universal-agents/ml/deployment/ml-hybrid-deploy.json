@@ -1,0 +1,120 @@
+{
+  "name": "ml-hybrid-deploy",
+  "display_name": "Ml Hybrid Deploy",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Hybrid deployment agent for ML hybrid cloud deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Hybrid Deploy",
+      "description": "Hybrid deployment agent for ML hybrid cloud deployment.",
+      "commands": [
+        "Sync: python -m ml_hybrid.sync --source cloud --target onprem",
+        "Deploy: python -m ml_hybrid.deploy --model my_model --cloud aws --onprem datacenter-1",
+        "Health: curl http://localhost:8080/health"
+      ],
+      "examples": [
+        "Deploy: python -m ml_hybrid.deploy --model my_model --cloud aws --onprem datacenter-1",
+        "Sync: python -m ml_hybrid.sync --source cloud --target onprem",
+        "Health: curl http://localhost:8080/health"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-hybrid-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-hybrid-deploy"
+    }
+  ],
+  "instructions": "You are a hybrid deployment expert. A user calls on you to deploy ML models across hybrid cloud environments spanning cloud and on-premise. Work step by step: deploy the model to both sides with 'python -m ml_hybrid.deploy --model my_model --cloud aws --onprem datacenter-1', synchronize state with 'python -m ml_hybrid.sync --source cloud --target onprem', and verify with 'curl http://localhost:8080/health'. Confirm both the cloud provider and the on-prem endpoint are specified and reachable; partial deployments happen when one side is missing. Run the health check on both sides and compare model versions after sync to ensure they match. Report the model name, cloud/on-prem targets, sync direction and result, and the health status of both deployments.",
+  "examples": [
+    "Deploy: python -m ml_hybrid.deploy --model my_model --cloud aws --onprem datacenter-1",
+    "Sync: python -m ml_hybrid.sync --source cloud --target onprem",
+    "Health: curl http://localhost:8080/health"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-hybrid-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a hybrid deployment expert. Help users deploy ML models across hybrid cloud environments."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-hybrid-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-hybrid-deploy. Hybrid deployment agent for ML hybrid cloud deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-hybrid-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-hybrid-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-hybrid-deploy.yaml",
+    "checksum": "bc0ffc66af32dfba4c636465f47c23ef6012a62ff543cf38228d4ee847cd42ca"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "name": "hono",
+  "display_name": "Hono",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hono web framework for edge runtimes: scaffolding apps, middleware chains, routing, and running dev servers on Node.js, Bun, or Cloudflare Workers.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bun",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "name": "hono-app-lifecycle",
+      "description": "Scaffold, develop, and run Hono applications with the hono CLI and runtime dev servers.",
+      "commands": [
+        "npm create hono@latest my-app",
+        "cd my-app && npm install",
+        "npm run dev",
+        "npm run deploy",
+        "bun run src/index.ts"
+      ],
+      "examples": [
+        "npm create hono@latest my-app -- --template cloudflare-workers",
+        "npm run dev -- --port 3001",
+        "npm test"
+      ],
+      "parameters": [
+        {
+          "name": "template",
+          "type": "string",
+          "description": "Project template: nodejs, bun, cloudflare-workers, deno, vercel, etc."
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Dev server port."
+        },
+        {
+          "name": "app_name",
+          "type": "string",
+          "description": "Project/app name."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Hono Docs",
+      "type": "documentation",
+      "source": "https://hono.dev/docs/",
+      "description": "Official Hono documentation: getting started, middleware, and deployment guides."
+    },
+    {
+      "title": "Hono API Reference",
+      "type": "documentation",
+      "source": "https://hono.dev/api/hono",
+      "description": "Hono app API: routing, middleware, and context."
+    }
+  ],
+  "instructions": "# Hono\n\nBuild web applications for edge runtimes with Hono.\n\n## What this skill does\n\n- Scaffolds Hono apps for Node, Bun, Deno, and Workers.\n- Structures routing and middleware chains.\n- Runs local dev servers with hot reload.\n- Deploys to edge platforms.\n\n## When to use\n\n- A small, fast API that must run on edge runtimes.\n- Prototyping API endpoints quickly.\n- Adding middleware (auth, logging, validation) in a typed framework.\n\n## Real commands\n\n```bash\n# Scaffold\nnpm create hono@latest my-app\ncd my-app\nnpm install\n\n# Pick a template explicitly\nnpm create hono@latest my-app -- --template cloudflare-workers\n\n# Dev server\nnpm run dev\n\n# Deploy (template-dependent: workers, vercel, netlify...)\nnpm run deploy\n\n# Bun runtime\nbun run src/index.ts\n```\n\n## Basic app\n\n```ts\nimport { Hono } from 'hono'\n\nconst app = new Hono()\n\napp.get('/', (c) => c.text('Hello Hono!'))\napp.get('/users/:id', (c) => c.json({ id: c.req.param('id') }))\napp.post('/items', async (c) => {\n  const body = await c.req.json()\n  return c.json({ created: body }, 201)\n})\n\nexport default app\n```\n\n## Middleware\n\n```ts\nimport { logger } from 'hono/logger'\nimport { bearerAuth } from 'hono/bearer-auth'\n\napp.use('*', logger())\napp.use('/admin/*', bearerAuth({ token: 'secret' }))\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:3000/ | grep -q \"Hello Hono!\" && echo OK\n```\n\n## Best practices\n\n- Use the built-in logger and bearer auth middleware instead of hand-rolled code.\n- Keep handlers small; compose with app.use chains.\n- Validate request bodies with a schema library before use.\n- Match the runtime (node vs workers) when choosing adapters.\n\n## Example exchange\n\n```\nUser: Create a Hono app with a /health route.\nAgent: npm create hono@latest my-app && cd my-app && add\n       app.get('/health', (c) => c.json({ status: 'ok' }))\n```",
+  "examples": [
+    {
+      "input": "Scaffold a Hono app for Cloudflare Workers",
+      "output": "npm create hono@latest my-app -- --template cloudflare-workers && cd my-app && npm install"
+    },
+    {
+      "input": "Run the Hono dev server",
+      "output": "npm run dev  # defaults to localhost:3000"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "hono.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-hono"
+    },
+    "generic": {
+      "system_prompt": "You are the Hono specialist. You do it through hono-app-lifecycle: Scaffold, develop, and run Hono applications with the hono CLI and runtime dev servers. The commands are real, e.g. `npm create hono@latest my-app`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "hono",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "hono-app-lifecycle",
+        "name": "template",
+        "type": "string",
+        "description": "Project template: nodejs, bun, cloudflare-workers, deno, vercel, etc."
+      },
+      {
+        "capability": "hono-app-lifecycle",
+        "name": "port",
+        "type": "integer",
+        "description": "Dev server port."
+      },
+      {
+        "capability": "hono-app-lifecycle",
+        "name": "app_name",
+        "type": "string",
+        "description": "Project/app name."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bun",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/hono-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/hono-skill.yaml",
+    "checksum": "ad51a7043ed04c9a6ed41c513c14c43b76649ebad6b2e44709ac766c9fb72dda"
+  }
+}

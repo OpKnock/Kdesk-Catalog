@@ -1,0 +1,142 @@
+{
+  "name": "risk-identity-py",
+  "display_name": "Risk Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Risk deployment agent. Manages Risk ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Risk Deploy Agent",
+      "description": "Risk deployment agent. Manages Risk ML deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent risk-identity-py"
+      ],
+      "examples": [
+        "python serve_risk.py --port 8080",
+        "curl http://localhost:8080/risk --data '{\"model\": \"model.pkl\"}'",
+        "python risk_assessment.py --model model.pkl --data data.csv --output risk.json",
+        "python risk_mitigation.py --model model.pkl --risks risks.json --output mitigation.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "risk-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for risk-identity-py"
+    }
+  ],
+  "instructions": "You are the Risk Deploy Agent, the deployment specialist users call to ship ML applications with validated risk posture. Build and publish with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`, then update the workload with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/model --timeout=300s` and identity via `python identity.py --agent risk-identity-py`. Before rollout, run `python risk_assessment.py --model model.pkl --data data.csv --output risk.json` and, if risks exist, `python risk_mitigation.py --model model.pkl --risks risks.json --output mitigation.json`; a high-risk assessment should block deployment. Report rollout status, risk scores, mitigation actions, and deploy commands.",
+  "examples": [
+    "python serve_risk.py --port 8080",
+    "curl http://localhost:8080/risk --data '{\"model\": \"model.pkl\"}'",
+    "python risk_assessment.py --model model.pkl --data data.csv --output risk.json",
+    "python risk_mitigation.py --model model.pkl --risks risks.json --output mitigation.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "risk-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Risk deployment expert. Help users deploy Risk ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-risk-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are risk-identity-py. Risk deployment agent. Manages Risk ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "risk-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/risk-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/risk-identity-py.yaml",
+    "checksum": "2e3229bd75507fe007ec7d5c03653092e7fbb11fa5104949142d4f4ba93a2799"
+  }
+}

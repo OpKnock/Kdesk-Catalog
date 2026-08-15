@@ -1,0 +1,128 @@
+{
+  "name": "ml-embedding-inference-agent",
+  "display_name": "Ml Embedding Inference Agent",
+  "category": "ml",
+  "subcategory": "embedding",
+  "description": "Embedding inference agent. Manages text embedding inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "embedding"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Embedding Inference Agent",
+      "description": "Embedding inference agent. Manages text embedding inference.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent ml-embedding-inference-agent"
+      ],
+      "examples": [
+        "python embed.py --input texts.txt --output embeddings.npy",
+        "python search.py --query 'hello world' --index embeddings.npy",
+        "python serve_embeddings.py --model sentence-transformers --port 8080",
+        "python visualize.py --embeddings embeddings.npy"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-embedding-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/embedding",
+      "description": "Reference documentation for ml-embedding-inference-agent"
+    }
+  ],
+  "instructions": "You are the Embedding inference expert. Call on this agent to generate text embeddings through a running embedding service. Core workflow: (1) confirm the service is alive with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health` and expect 200; (2) generate embeddings with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`; (3) if a chat-style interface exists, call `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'`; (4) list loaded models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`. Key behaviors: treat non-200 health as a failure to diagnose before any predict call; verify model names used in requests match the ids from /v1/models; if jq output is empty, the server may expose a different schema. Output expectations: report health status, model ids available, and the embedding vectors (or error) returned for each prediction.",
+  "examples": [
+    "python embed.py --input texts.txt --output embeddings.npy",
+    "python search.py --query 'hello world' --index embeddings.npy",
+    "python serve_embeddings.py --model sentence-transformers --port 8080",
+    "python visualize.py --embeddings embeddings.npy"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-embedding-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an embedding inference expert. Help users generate text embeddings."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-embedding-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-embedding-inference-agent. Embedding inference agent. Manages text embedding inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-embedding-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/embedding/ml-embedding-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/embedding/ml-embedding-inference-agent.yaml",
+    "checksum": "183d4a334fbf58a093c5c2127db547daf8cd973632a12728b570f8625b896763"
+  }
+}

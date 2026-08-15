@@ -1,0 +1,166 @@
+{
+  "name": "websocket-fallback",
+  "display_name": "Websocket Fallback",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Fallback strategies when WebSockets fail: Server-Sent Events (SSE), long polling, and short polling with automatic negotiation for constrained clients.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "fallback-protocols",
+      "description": "Implement SSE, long polling, and polling fallbacks",
+      "commands": [
+        "curl -N -H 'Accept: text/event-stream' http://localhost:8080/events",
+        "curl -s --max-time 30 'http://localhost:8080/poll?timeout=25' | jq '.events'",
+        "curl -s 'http://localhost:8080/poll?timeout=0' | jq '.events | length'",
+        "curl -s -X POST http://localhost:8080/negotiate -H 'Content-Type: application/json' -d '{\"supportsWs\":false,\"supportsSse\":true}' | jq '.transport'",
+        "curl -sN http://localhost:8080/sse -H 'Accept: text/event-stream' -o /dev/null -w '%{time_total}'"
+      ],
+      "examples": [
+        "curl -N http://localhost:8080/events | head -5",
+        "curl -s 'http://localhost:8080/poll?timeout=25' -w '\\n%{time_total}s'",
+        "curl -s -X POST http://localhost:8080/negotiate -d '{}' | jq '.transports'"
+      ],
+      "parameters": [
+        {
+          "name": "timeout",
+          "type": "integer",
+          "description": "Long-poll hold time in seconds"
+        },
+        {
+          "name": "transport",
+          "type": "string",
+          "description": "ws, sse, longpoll, or poll"
+        },
+        {
+          "name": "interval",
+          "type": "integer",
+          "description": "Polling interval in seconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MDN Server-Sent Events",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events",
+      "description": "EventSource API and stream format"
+    },
+    {
+      "title": "Socket.IO Fallback Docs",
+      "type": "documentation",
+      "source": "https://socket.io/docs/v4/how-it-works/",
+      "description": "Automatic transport negotiation and downgrade"
+    }
+  ],
+  "instructions": "# WebSocket Fallback\n\n## What this skill does\nKeep realtime features working when WebSockets are blocked (proxies, firewalls, old clients) by falling back to Server-Sent Events, long polling, or short polling. Covers negotiation order and testing each transport.\n\n## When to use\n- Corporate networks block ws:// upgrade\n- Building realtime features for broad client support\n- Testing transport negotiation logic\n\n## Fallback ladder\n1. WebSocket (bidirectional)\n2. SSE (server push only)\n3. Long polling (hold connection)\n4. Short polling (interval)\n\n## Real commands\n```bash\n# SSE stream\ncurl -N -H 'Accept: text/event-stream' http://localhost:8080/events\n\n# Long polling: server holds up to 25s\ncurl -s --max-time 30 'http://localhost:8080/poll?timeout=25' | jq '.events'\n\n# Immediate poll\ncurl -s 'http://localhost:8080/poll?timeout=0' | jq '.events | length'\n\n# Transport negotiation\ncurl -s -X POST http://localhost:8080/negotiate \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"supportsWs\":false,\"supportsSse\":true}' | jq '.transport'\n\n# Measure SSE hold time\ncurl -sN http://localhost:8080/sse -H 'Accept: text/event-stream' -o /dev/null -w '%{time_total}\\n'\n```\n\n## SSE format\n```\nevent: order.created\ndata: {\"id\":42}\n\n```\n`id:` lines enable Last-Event-ID resume.\n\n## Best practices\n- Negotiate transport explicitly from client capabilities\n- Long polls must return immediately when events arrive\n- Set conservative timeouts slightly below LB idle time\n- Add `retry:` directives to SSE streams\n\n## Testing\n```bash\ncurl -N http://localhost:8080/events | head -3\ncurl -s 'http://localhost:8080/poll?timeout=1' -w '\\n%{time_total}s\\n'\n```",
+  "examples": [
+    {
+      "input": "Client can't use WebSockets, keep push working",
+      "output": "Negotiates SSE, tests the stream with curl -N, and confirms Last-Event-ID resume."
+    },
+    {
+      "input": "Measure long-poll hold time",
+      "output": "Times a 25s poll request and verifies the server holds the connection."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "websocket-fallback.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-websocket-fallback"
+    },
+    "generic": {
+      "system_prompt": "You own Websocket Fallback end to end. You do it through fallback-protocols: Implement SSE, long polling, and polling fallbacks. The commands are real, e.g. `curl -N -H Accept: text/event-stream http://localhost:8080/events`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "websocket-fallback",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "fallback-protocols",
+        "name": "timeout",
+        "type": "integer",
+        "description": "Long-poll hold time in seconds"
+      },
+      {
+        "capability": "fallback-protocols",
+        "name": "transport",
+        "type": "string",
+        "description": "ws, sse, longpoll, or poll"
+      },
+      {
+        "capability": "fallback-protocols",
+        "name": "interval",
+        "type": "integer",
+        "description": "Polling interval in seconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/websocket-fallback-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/websocket-fallback-skill.yaml",
+    "checksum": "e56d5c09b8d4ca26e8995bc6adc747935c8d9e6ce454cf0f3fa6d5eaca005dde"
+  }
+}

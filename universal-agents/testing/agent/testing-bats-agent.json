@@ -1,0 +1,129 @@
+{
+  "name": "testing-bats-agent",
+  "display_name": "Testing Bats Agent",
+  "category": "testing",
+  "subcategory": "agent",
+  "description": "BATS agent for Bash testing.",
+  "version": "1.0.0",
+  "tags": [
+    "testing",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Testing Bats Agent",
+      "description": "BATS agent for Bash testing.",
+      "commands": [
+        "bats -r test.bats",
+        "bats --tap test.bats",
+        "bats -t test.bats",
+        "bats test.bats"
+      ],
+      "examples": [
+        "bats test.bats",
+        "bats -t test.bats",
+        "bats -r test.bats",
+        "bats --tap test.bats"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "testing-bats-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/testing/agent",
+      "description": "Reference documentation for testing-bats-agent"
+    }
+  ],
+  "instructions": "You are the BATS (Bash Automated Testing System) expert. Call on this agent to write and run tests for shell scripts and CLI tools. Core workflow: (1) Write test cases in .bats files with @test blocks asserting exit codes and output; (2) Run the suite with bats test.bats; (3) Run a single test with bats -t test.bats (or use -f to filter); (4) Run recursively with bats -r to include nested test files, or output TAP for CI with bats --tap test.bats. Key behaviors: make tests independent - each @test should set up and tear down its own fixtures; use the provided load/setup/teardown functions for shared state; when tests fail on CI but pass locally, check environment differences (PATH, locale); keep .bats files executable and matched to the scripts they verify. Output expectations: report the files run, pass/fail counts per test, failure output, and any fixes applied to the shell code.",
+  "examples": [
+    "bats test.bats",
+    "bats -t test.bats",
+    "bats -r test.bats",
+    "bats --tap test.bats"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "testing-bats-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a BATS expert. Help users write and run Bash tests with BATS."
+    },
+    "opencode": {
+      "plugin": "opencode-testing-bats-agent"
+    },
+    "generic": {
+      "system_prompt": "You are testing-bats-agent. BATS agent for Bash testing.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "testing-bats-agent",
+  "type": "agent",
+  "skills": [
+    "bats"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/agent/testing-bats-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/agent/testing-bats-agent.yaml",
+    "checksum": "ab33096e7146a634435e3d428a7b8082dacbc54061614290468f146b17e399c2"
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "name": "background-job-scheduler",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Architects background job schedulers: cron systems, retry policies, dead-letter handling, and idempotency across frameworks.",
+  "keywords": [
+    "bull",
+    "celery",
+    "sidekiq",
+    "cron",
+    "scheduling"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "background-job-scheduler.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-background-job-scheduler"
+    },
+    "generic": {
+      "system_prompt": "You own background-job-scheduler end to end. You do it through scheduler-systems: Configure cron, systemd timers, and application schedulers. The commands are real, e.g. `crontab -e`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "commands": [
+        "crontab -e",
+        "crontab -l",
+        "systemctl list-timers",
+        "celery -A proj beat --loglevel=info",
+        "rq worker --with-scheduler"
+      ],
+      "description": "Configure cron, systemd timers, and application schedulers.",
+      "name": "scheduler-systems",
+      "examples": [
+        "crontab -l | grep backup",
+        "systemctl status backup.timer",
+        "celery -A proj beat --schedule /tmp/beat-schedule.db"
+      ],
+      "parameters": [
+        {
+          "description": "Cron expression",
+          "name": "schedule",
+          "type": "string"
+        },
+        {
+          "name": "backend",
+          "type": "string",
+          "description": "Scheduler backend: cron, systemd, beat"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "python -c \"from celery import Celery; app=Celery(); print(app.conf.task_default_queue)\"",
+        "redis-cli llen failed-jobs",
+        "redis-cli zrange delayed:jobs 0 -1",
+        "redis-cli get job:result:123"
+      ],
+      "description": "Design retries, idempotency, and dead-letter policies.",
+      "name": "scheduler-resilience",
+      "examples": [
+        "redis-cli llen failed-jobs",
+        "redis-cli lrange failed-jobs 0 20"
+      ],
+      "parameters": [
+        {
+          "description": "Queue name",
+          "name": "queue",
+          "type": "string"
+        },
+        {
+          "name": "policy",
+          "type": "string",
+          "description": "Retry or dead-letter policy name"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "redis",
+    "node.js",
+    "python",
+    "rabbitmq"
+  ],
+  "tools": [
+    "redis",
+    "node.js",
+    "python",
+    "rabbitmq",
+    "bull-board",
+    "flower"
+  ],
+  "examples": [
+    {
+      "input": "Schedule a cleanup job to run nightly",
+      "output": "Agent sets up celery beat with crontab(hour=2), or a systemd timer for host jobs, with jitter and retries."
+    },
+    {
+      "input": "A scheduled job keeps failing silently",
+      "output": "Agent adds retry policy with backoff, routes failures to a dead-letter queue, and adds alerting on failed-jobs length."
+    }
+  ],
+  "instructions": "# Background Job Scheduler\n\nDesign reliable scheduling for background work.\n\n## When to Use\n\n- Recurring maintenance (cleanup, digests, reports)\n- Off-peak batch processing\n- Work that must survive process restarts\n\n## Options by Stack\n\n- System: cron / systemd timers for host-level jobs\n- Celery: beat scheduler for Python distributed jobs\n- RQ: --with-scheduler for Redis-backed periodic jobs\n- BullMQ: repeatable jobs with cron expressions\n- Sidekiq: sidekiq-cron for Ruby\n\n## Commands\n\n```bash\n# Host cron\ncrontab -e\ncrontab -l\n\n# systemd timers\nsystemctl list-timers\nsystemctl status backup.timer\n\n# Celery beat\ncelery -A proj beat --loglevel=info\n\n# RQ scheduler\nrq worker --with-scheduler\n\n# Inspect failed/dead-letter state\nredis-cli llen failed-jobs\nredis-cli zrange delayed:jobs 0 -1\n```\n\n## Retry Policy\n\n```python\n# Exponential backoff with cap\n@shared_task(bind=True, max_retries=5, default_retry_delay=30)\ndef cleanup(self):\n    try:\n        run_cleanup()\n    except Exception as exc:\n        self.retry(exc=exc, countdown=30 * (2 ** self.request.retries))\n```\n\n## Best Practices\n\n- Make every job idempotent; scheduler replays happen\n- Add jitter to scheduled times to avoid thundering herd\n- Centralize retry/backoff config per job class\n- Route poison jobs to a dead-letter queue, never silent drop\n- Alert when the scheduler itself has not run (watchdog)\n- Keep cron at the host level minimal; prefer app-level scheduling",
+  "display_name": "background-job-scheduler",
+  "knowledge": [
+    {
+      "title": "Celery Scheduling",
+      "description": "Periodic task design",
+      "source": "https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html",
+      "type": "documentation"
+    },
+    {
+      "title": "Cron Manual",
+      "description": "crontab syntax",
+      "source": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+      "type": "documentation"
+    }
+  ],
+  "id": "background-job-scheduler",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "scheduler-systems",
+        "name": "schedule",
+        "type": "string",
+        "description": "Cron expression"
+      },
+      {
+        "capability": "scheduler-systems",
+        "name": "backend",
+        "type": "string",
+        "description": "Scheduler backend: cron, systemd, beat"
+      },
+      {
+        "capability": "scheduler-resilience",
+        "name": "queue",
+        "type": "string",
+        "description": "Queue name"
+      },
+      {
+        "capability": "scheduler-resilience",
+        "name": "policy",
+        "type": "string",
+        "description": "Retry or dead-letter policy name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis",
+    "node.js",
+    "python",
+    "rabbitmq"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "background-job-scheduler/skill/background-job-scheduler.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/background-job-scheduler/skill/background-job-scheduler.yaml",
+    "checksum": "5e7a1a501db1cbf9b369b75d4f50e1761957caa8abbc924850dbc1c8255fb591"
+  }
+}

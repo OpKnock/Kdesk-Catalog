@@ -1,0 +1,172 @@
+{
+  "name": "django-rest-framework",
+  "display_name": "Django Rest Framework",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Build and maintain Django REST Framework APIs: run the dev server, manage migrations, generate OpenAPI schemas, and test endpoints.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "drf-project",
+      "description": "Day-to-day DRF project operations: server, migrations, schema generation, and tests.",
+      "commands": [
+        "python manage.py runserver 0.0.0.0:8000",
+        "python manage.py makemigrations api",
+        "python manage.py migrate",
+        "python manage.py spectacular --file schema.yml",
+        "python manage.py test api",
+        "python manage.py shell -c \"from api.models import Order; print(Order.objects.count())\""
+      ],
+      "examples": [
+        "python manage.py makemigrations api && python manage.py migrate",
+        "python manage.py spectacular --file schema.yml && npx @redocly/cli lint schema.yml",
+        "python manage.py test api --keepdb"
+      ],
+      "parameters": [
+        {
+          "name": "app-name",
+          "type": "string",
+          "description": "Django app containing the models/serializers to manage"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Port for the development server"
+        },
+        {
+          "name": "schema-file",
+          "type": "string",
+          "description": "Output path for the generated OpenAPI schema"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "DRF Official Docs",
+      "type": "documentation",
+      "source": "https://www.django-rest-framework.org/",
+      "description": "Serializers, viewsets, routers, permissions, and throttling in Django REST Framework"
+    },
+    {
+      "title": "drf-spectacular",
+      "type": "documentation",
+      "source": "https://drf-spectacular.readthedocs.io/",
+      "description": "OpenAPI 3 schema generation for DRF"
+    }
+  ],
+  "instructions": "# Django REST Framework\n\n## What this skill does\n\nDjango REST Framework (DRF) turns Django models into JSON APIs with serializers, viewsets, routers, authentication, and throttling. This skill covers project workflow: migrations, servers, schema export, and test runs.\n\n## When to use\n\n- Building a JSON API on top of Django models\n- Adding or changing API endpoints, serializers, or permissions\n- Generating and validating the OpenAPI schema for the API\n\n## Real commands\n\n```bash\n# Run the development server\npython manage.py runserver 0.0.0.0:8000\n\n# Schema/model changes\npython manage.py makemigrations api\npython manage.py migrate\n\n# Generate OpenAPI schema and lint it\npython manage.py spectacular --file schema.yml\nnpx @redocly/cli lint schema.yml\n\n# Run tests\npython manage.py test api --keepdb\n\n# Quick data inspection\npython manage.py shell -c \"from api.models import Order; print(Order.objects.count())\"\n```\n\n## Example viewset\n\n```python\nfrom rest_framework import viewsets\nfrom rest_framework.permissions import IsAuthenticated\nfrom .models import Order\nfrom .serializers import OrderSerializer\n\nclass OrderViewSet(viewsets.ModelViewSet):\n    queryset = Order.objects.all()\n    serializer_class = OrderSerializer\n    permission_classes = [IsAuthenticated]\n    filterset_fields = ['status', 'customer']\n```\n\n## Testing endpoints\n\n```bash\ncurl -s http://localhost:8000/api/orders/ -H 'Authorization: Bearer $TOKEN' | jq\ncurl -s http://localhost:8000/api/schema/ | jq '.paths | keys'\n```\n\n## Best practices\n\n- Use viewsets + routers instead of hand-written CRUD functions.\n- Set `DEFAULT_PAGINATION_CLASS` with a page size in settings.py.\n- Keep business logic in services or models, not in serializers.\n- Use drf-spectacular for schema generation; annotate with `@extend_schema` for docstrings.\n- Use `--keepdb` in CI to speed up test runs.\n",
+  "examples": [
+    {
+      "input": "Add a new endpoint to list orders by status",
+      "output": "Add a filter in the OrderViewSet (filterset_fields or a custom queryset), register it on the router, then verify with curl against /api/orders/?status=paid."
+    },
+    {
+      "input": "The API schema is missing a field",
+      "output": "Regenerate with python manage.py spectacular --file schema.yml after decorating the serializer field, then re-lint and diff the schema."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "django-rest-framework.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-django-rest-framework"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Django Rest Framework. You do it through drf-project: Day-to-day DRF project operations: server, migrations, schema generation, and tests. The commands are real, e.g. `python manage.py runserver 0.0.0.0:8000`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "django-rest-framework",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "drf-project",
+        "name": "app-name",
+        "type": "string",
+        "description": "Django app containing the models/serializers to manage"
+      },
+      {
+        "capability": "drf-project",
+        "name": "port",
+        "type": "integer",
+        "description": "Port for the development server"
+      },
+      {
+        "capability": "drf-project",
+        "name": "schema-file",
+        "type": "string",
+        "description": "Output path for the generated OpenAPI schema"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/django-rest-framework-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/django-rest-framework-skill.yaml",
+    "checksum": "694cf289f03df55c66b422f1ce58862fbbbf17aff8092792f7e1a8199baead1c"
+  }
+}

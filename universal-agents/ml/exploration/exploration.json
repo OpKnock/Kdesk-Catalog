@@ -1,0 +1,134 @@
+{
+  "name": "exploration",
+  "display_name": "Exploration",
+  "category": "ml",
+  "subcategory": "exploration",
+  "description": "Exploration SDK deployment agent for ML Exploration SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "exploration"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Exploration Deploy Sdk",
+      "description": "Exploration SDK deployment agent for ML Exploration SDK deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent exploration"
+      ],
+      "examples": [
+        "Server: python -m exploration.server --port 8080",
+        "Docker: docker run -p 8080:8080 exploration-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "exploration Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/exploration",
+      "description": "Reference documentation for exploration"
+    }
+  ],
+  "instructions": "You are the Exploration SDK deployment expert. Call on this agent to build, containerize, and deploy an ML Exploration service to Kubernetes. Core workflow: (1) run locally with `python -m exploration.server --port 8080`; (2) build and push the image with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`; (3) update with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`; (4) confirm with `kubectl rollout status deployment/model --timeout=300s`. Test the container via `docker run -p 8080:8080 exploration-server`. Key behaviors: maintain tag consistency; if rollout fails, inspect pod logs; verify port mapping. Output expectations: report image digest, deployment update, rollout status, and the endpoint to verify the exploration service.",
+  "examples": [
+    "Server: python -m exploration.server --port 8080",
+    "Docker: docker run -p 8080:8080 exploration-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "exploration.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Exploration SDK deployment expert. Help users deploy Exploration applications."
+    },
+    "opencode": {
+      "plugin": "opencode-exploration"
+    },
+    "generic": {
+      "system_prompt": "You are exploration. Exploration SDK deployment agent for ML Exploration SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "exploration",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/exploration/exploration.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/exploration/exploration.yaml",
+    "checksum": "756491fa0f2e6cc070458167fa774b6e33b367fb9f44d2bb4a452bc14c26eaa7"
+  }
+}

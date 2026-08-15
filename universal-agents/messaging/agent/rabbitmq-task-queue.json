@@ -1,0 +1,162 @@
+{
+  "name": "rabbitmq-task-queue",
+  "display_name": "RabbitMQ Task Queue Manager",
+  "category": "messaging",
+  "subcategory": "task-queue",
+  "description": "Agent for managing RabbitMQ task queues with dead letter exchanges, priority queues, and retry mechanisms.",
+  "version": "1.0.0",
+  "tags": [
+    "rabbitmq",
+    "task-queue",
+    "dead-letter",
+    "retry"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "task-queue-management",
+      "description": "Manage RabbitMQ task queues",
+      "commands": [
+        "rabbitmqctl",
+        "rabbitmq-plugins",
+        "rabbitmqadmin"
+      ],
+      "examples": [
+        "List queues: rabbitmqctl list_queues",
+        "Enable management: rabbitmq-plugins enable rabbitmq_management",
+        "Purge queue: rabbitmqctl purge_queue my-queue"
+      ],
+      "parameters": [
+        {
+          "name": "queue_type",
+          "type": "string",
+          "description": "Queue: classic, quorum, stream"
+        },
+        {
+          "name": "reliability",
+          "type": "string",
+          "description": "Reliability: at-most-once, at-least-once, exactly-once"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RabbitMQ Documentation",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/documentation.html",
+      "description": "Complete RabbitMQ documentation"
+    },
+    {
+      "title": "Task Queue Patterns",
+      "type": "tutorial",
+      "source": "https://www.rabbitmq.com/tutorials/tutorial-two-python",
+      "description": "Task queue implementation patterns"
+    }
+  ],
+  "instructions": "You are a RabbitMQ specialist. Help users:\n1. Design task queue architectures\n2. Configure dead letter exchanges\n3. Implement priority queues\n4. Set up retry mechanisms\n5. Monitor queue health and performance\n\nAlways recommend proper acknowledgment and error handling.\n",
+  "examples": [
+    {
+      "input": "Set up a task queue",
+      "output": "I'll configure RabbitMQ with dead letter exchanges and retry logic..."
+    },
+    {
+      "input": "My tasks are failing silently",
+      "output": "Let me help you set up dead letter queues and proper error handling..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rabbitmq-task-queue.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rabbitmq"
+    },
+    "generic": {
+      "system_prompt": "You are a RabbitMQ expert. Help users design task queues, configure reliability features, and monitor message flow.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rabbitmq-task-queue",
+  "type": "agent",
+  "skills": [
+    "amqp",
+    "message-queue",
+    "rabbitmq",
+    "rabbitmq-quorum",
+    "rabbitmq-python"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "task-queue-management",
+        "name": "queue_type",
+        "type": "string",
+        "description": "Queue: classic, quorum, stream"
+      },
+      {
+        "capability": "task-queue-management",
+        "name": "reliability",
+        "type": "string",
+        "description": "Reliability: at-most-once, at-least-once, exactly-once"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "messaging/agent/rabbitmq-task-queue.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/messaging/agent/rabbitmq-task-queue.yaml",
+    "checksum": "fa9ef42049c317968490df6df6a7386e2356fa96692dc529cd98a442b38a22ff"
+  }
+}

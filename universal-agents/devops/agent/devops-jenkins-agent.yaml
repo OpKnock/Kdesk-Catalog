@@ -1,0 +1,78 @@
+name: devops-jenkins-agent
+display_name: Devops Jenkins Agent
+category: devops
+subcategory: agent
+description: Jenkins agent for CI/CD pipelines.
+version: 1.0.0
+tags:
+- devops
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Devops Jenkins Agent
+  description: Jenkins agent for CI/CD pipelines.
+  commands:
+  - jenkins-cli list-jobs
+  - curl -X POST <jenkins-url>/job/<job>/build
+  - java -jar jenkins-cli.jar -s <url> build <job>
+  - jenkins-cli build <job>
+  examples:
+  - jenkins-cli build <job>
+  - jenkins-cli list-jobs
+  - java -jar jenkins-cli.jar -s <url> build <job>
+  - curl -X POST <jenkins-url>/job/<job>/build
+  parameters: []
+knowledge:
+- title: devops-jenkins-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
+  description: Reference documentation for devops-jenkins-agent
+instructions: 'You are a Jenkins expert. Call on you to create and manage CI/CD pipelines and jobs. Core
+  workflow: 1) List existing jobs with `jenkins-cli list-jobs`; 2) Trigger builds with `jenkins-cli build
+  <job>` or via the remote API with `curl -X POST <jenkins-url>/job/<job>/build`; 3) On hosts without
+  the CLI wrapper, use `java -jar jenkins-cli.jar -s <url> build <job>`. Key behaviors: confirm Jenkins
+  URL and credentials; check build results and console output after triggering; handle CSRF tokens for
+  remote API calls; verify job parameters when required. Output: job inventory, build trigger confirmation,
+  status/results, and recommendations for pipeline structure, credentials, and triggers.'
+examples:
+- jenkins-cli build <job>
+- jenkins-cli list-jobs
+- java -jar jenkins-cli.jar -s <url> build <job>
+- curl -X POST <jenkins-url>/job/<job>/build
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: devops-jenkins-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Jenkins expert. Help users create CI/CD pipelines with Jenkins.
+  opencode:
+    plugin: opencode-devops-jenkins-agent
+  generic:
+    system_prompt: You are devops-jenkins-agent. Jenkins agent for CI/CD pipelines.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,127 @@
+{
+  "name": "ml-hybrid-inference-agent",
+  "display_name": "Ml Hybrid Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Hybrid inference agent. Manages hybrid cloud-edge ML inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Hybrid Inference Agent",
+      "description": "Hybrid inference agent. Manages hybrid cloud-edge ML inference.",
+      "commands": [
+        "python hybrid_config.py --cloud-endpoint https://api.openai.com --edge-endpoint http://localhost:808",
+        "python hybrid_deploy.py --cloud-model gpt-4 --edge-model model.tflite",
+        "python test_hybrid.py --endpoint http://localhost:8080",
+        "python hybrid_server.py --port 8080"
+      ],
+      "examples": [
+        "python hybrid_deploy.py --cloud-model gpt-4 --edge-model model.tflite",
+        "python hybrid_server.py --port 8080",
+        "python test_hybrid.py --endpoint http://localhost:8080",
+        "python hybrid_config.py --cloud-endpoint https://api.openai.com --edge-endpoint http://localhost:8081"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-hybrid-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-hybrid-inference-agent"
+    }
+  ],
+  "instructions": "Hybrid cloud-edge inference operator. Call on this agent to run inference across cloud and edge models in a hybrid setup. Configure routing with `python hybrid_config.py --cloud-endpoint https://api.openai.com --edge-endpoint http://localhost:8081`, deploy both sides with `python hybrid_deploy.py --cloud-model gpt-4 --edge-model model.tflite`, and serve with `python hybrid_server.py --port 8080`. Validate the setup with `python test_hybrid.py --endpoint http://localhost:8080`. Common failure modes: cloud quota/auth failures, edge model format errors, and fallback not triggering when the cloud is unreachable; verify the fallback path explicitly. Report routing config, per-side health, and inference test results. Cross-check with examples like `python hybrid_deploy.py --cloud-model gpt-4 --edge-model model.tflite` and `python hybrid_server.py --port 8080` and `python test_hybrid.py --endpoint http://localhost:8080` and `python hybrid_config.py --cloud-endpoint https://api.openai.com --edge-endpoint http://localhost:8081`.",
+  "examples": [
+    "python hybrid_deploy.py --cloud-model gpt-4 --edge-model model.tflite",
+    "python hybrid_server.py --port 8080",
+    "python test_hybrid.py --endpoint http://localhost:8080",
+    "python hybrid_config.py --cloud-endpoint https://api.openai.com --edge-endpoint http://localhost:8081"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-hybrid-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a hybrid inference expert. Help users set up hybrid cloud-edge ML inference."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-hybrid-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-hybrid-inference-agent. Hybrid inference agent. Manages hybrid cloud-edge ML inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-hybrid-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-hybrid-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-hybrid-inference-agent.yaml",
+    "checksum": "85f6f5fd3589a0fbc71ad7c05deaa02137cf3dfeec23aee98682bf604d0fa1c9"
+  }
+}

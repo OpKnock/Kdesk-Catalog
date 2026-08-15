@@ -1,0 +1,187 @@
+{
+  "name": "api-version-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Applies Semantic Versioning to API releases: semver range evaluation, npm versioning, git tags, and breaking-change classification.",
+  "keywords": [
+    "semver"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-version-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-version-specialist"
+    },
+    "generic": {
+      "system_prompt": "You take the api-version-specialist seat. You do it through semver-tools: Evaluate and apply semver versions. The commands are real, e.g. `npx semver 1.2.3 major`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "semver-tools",
+      "description": "Evaluate and apply semver versions",
+      "commands": [
+        "npx semver 1.2.3 major",
+        "npx semver \"1.2.3\" -r \">=1.0.0 <2.0.0\"",
+        "npm version patch",
+        "npm version minor -m \"chore: release %s\"",
+        "git tag -l 'v*' --sort=-v:refname | head"
+      ],
+      "examples": [
+        "npx semver 1.2.3 major returns 2.0.0",
+        "-r evaluates range membership",
+        "npm version patch tags and bumps"
+      ],
+      "parameters": [
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Current version"
+        },
+        {
+          "name": "bump",
+          "type": "string",
+          "description": "major, minor, or patch"
+        },
+        {
+          "name": "range",
+          "type": "string",
+          "description": "Semver range expression"
+        }
+      ]
+    },
+    {
+      "name": "breaking-classification",
+      "description": "Classify changes as breaking or non-breaking",
+      "commands": [
+        "npm version major -m \"chore: release v%s\"",
+        "git tag -a v2.0.0 -m 'Breaking: remove legacy fields'",
+        "npm view my-api versions --json",
+        "git log --oneline v1.0.0..HEAD"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "openapi"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "openapi",
+    "postman",
+    "stoplight-studio"
+  ],
+  "examples": [
+    {
+      "input": "Bump for a breaking release",
+      "output": "Runs npm version major and creates the release tag"
+    },
+    {
+      "input": "Check a client's version range",
+      "output": "Evaluates the range with npx semver -r"
+    }
+  ],
+  "instructions": "# API Version Specialist\n\nSemVer discipline for API releases.\n\n## What This Skill Does\n- Applies semver rules to version numbers\n- Automates version bumps and tags\n- Classifies breaking changes correctly\n\n## When to Use\n- Planning major version releases\n- Automating release versioning\n- Auditing version histories\n\n## Real Commands\n\n```bash\nnpx semver 1.2.3 major\nnpm version minor -m \"chore: release %s\"\ngit tag -l 'v*' --sort=-v:refname | head\n```\n\n## SemVer Rules\n- MAJOR: breaking changes\n- MINOR: backward-compatible features\n- PATCH: backward-compatible fixes\n\n## Testing\n- Verify range evaluations with npx semver\n- Check tags match npm versions\n- Review changelogs against bump type\n\n\n## Best Practices\n- Never break compatibility in minor releases\n- Document breaking changes prominently\n- Automate tagging in release pipelines",
+  "display_name": "api-version-specialist",
+  "knowledge": [
+    {
+      "title": "Semantic Versioning Spec",
+      "type": "documentation",
+      "source": "https://semver.org/",
+      "description": "SemVer specification"
+    },
+    {
+      "title": "npm version Command",
+      "type": "documentation",
+      "source": "https://docs.npmjs.com/cli/v10/commands/npm-version",
+      "description": "npm version and tagging"
+    }
+  ],
+  "id": "api-version-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "semver-tools",
+        "name": "version",
+        "type": "string",
+        "description": "Current version"
+      },
+      {
+        "capability": "semver-tools",
+        "name": "bump",
+        "type": "string",
+        "description": "major, minor, or patch"
+      },
+      {
+        "capability": "semver-tools",
+        "name": "range",
+        "type": "string",
+        "description": "Semver range expression"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "openapi"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-version-specialist/skill/api-version-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-version-specialist/skill/api-version-specialist.yaml",
+    "checksum": "ad3facea90475e53fd85147e3b8d90d4bab2ab8625c4c8290a433db9144acc1b"
+  }
+}

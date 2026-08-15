@@ -1,0 +1,171 @@
+{
+  "name": "request-deduplication",
+  "display_name": "Request Deduplication",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted request deduplication skill: idempotency keys for unsafe methods, ETag/If-None-Match caching for GETs, and Redis SETNX guard patterns.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "idempotency-etag",
+      "description": "Deduplicate requests with idempotency keys and conditional GETs",
+      "commands": [
+        "curl -i -X POST http://localhost:8080/payments -H \"Idempotency-Key: 9f8c-4a2b\" -d '{\"amount\":100}'",
+        "curl -i -X POST http://localhost:8080/payments -H \"Idempotency-Key: 9f8c-4a2b\" -d '{\"amount\":100}'",
+        "curl -i -H 'If-None-Match: \"a1b2c3\"' http://localhost:8080/orders/42",
+        "redis-cli SETNX idem:9f8c-4a2b processing",
+        "redis-cli EXPIRE idem:9f8c-4a2b 3600"
+      ],
+      "examples": [
+        "curl -i -H 'If-None-Match: \"a1b2c3\"' http://localhost:8080/orders/42",
+        "curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:8080/payments -H \"Idempotency-Key: 9f8c-4a2b\" -d '{\"amount\":100}'",
+        "redis-cli SETNX idem:9f8c-4a2b processing"
+      ],
+      "parameters": [
+        {
+          "name": "idempotency_key",
+          "type": "string",
+          "description": "Client-generated key identifying a logical operation"
+        },
+        {
+          "name": "etag",
+          "type": "string",
+          "description": "Response fingerprint used with If-None-Match"
+        },
+        {
+          "name": "ttl_seconds",
+          "type": "integer",
+          "description": "How long dedup records live in Redis"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "HTTP ETag spec (RFC 7232)",
+      "type": "documentation",
+      "source": "https://datatracker.ietf.org/doc/html/rfc7232",
+      "description": "If-None-Match, If-Match, ETag semantics"
+    },
+    {
+      "title": "Stripe idempotency guide",
+      "type": "documentation",
+      "source": "https://docs.stripe.com/api/idempotent_requests",
+      "description": "Production idempotency key design pattern"
+    }
+  ],
+  "instructions": "# Request Deduplication\n\nHand-crafted skill for making API requests idempotent and deduplicated.\n\n## What this skill does\n\n- Uses Idempotency-Key headers so retried POSTs return the stored response\n- Caches GETs with ETag/If-None-Match to avoid duplicate work\n- Guards concurrent duplicates with a Redis SETNX lock\n\n## When to use\n\n- Payment or order endpoints where retries must not double-charge\n- Expensive report endpoints hit repeatedly by clients\n- Designing APIs where the same request may arrive twice in a short window\n\n## Real commands\n\n```bash\n# Send the same mutation twice with one key: second call short-circuits\ncurl -i -X POST http://localhost:8080/payments -H \"Idempotency-Key: 9f8c-4a2b\" -d '{\"amount\":100}'\ncurl -i -X POST http://localhost:8080/payments -H \"Idempotency-Key: 9f8c-4a2b\" -d '{\"amount\":100}'\n\n# Conditional GET: 304 if the ETag still matches\ncurl -i -H 'If-None-Match: \"a1b2c3\"' http://localhost:8080/orders/42\n\n# Atomic dedup guard in Redis\nredis-cli SETNX idem:9f8c-4a2b processing\nredis-cli EXPIRE idem:9f8c-4a2b 3600\n```\n\n## Server behavior\n\n- On first POST with a key: execute, store response, return it\n- On repeat POST with the same key: return the stored response unchanged\n- GET responses carry ETag headers; clients echo them with If-None-Match\n\n## Testing\n\n```bash\n# Twice, expect identical bodies and no double side effects\ncurl -s -X POST http://localhost:8080/payments -H \"Idempotency-Key: k1\" -d '{\"amount\":100}'\ncurl -s -X POST http://localhost:8080/payments -H \"Idempotency-Key: k1\" -d '{\"amount\":100}'\n\n# Expect 304 on cached GET\ncurl -i -H 'If-None-Match: \"a1b2c3\"' http://localhost:8080/orders/42\n```\n\n## Best practices\n\n- Never generate idempotency keys server-side for client mutations\n- Store keys with a TTL aligned to your retry window (1-24h)\n- Make the dedup record atomic with SETNX so concurrent calls cannot double-run\n",
+  "examples": [
+    {
+      "input": "Prevent double charges when clients retry POST /payments",
+      "output": "Require an Idempotency-Key header, store first-response per key in Redis with SETNX plus EXPIRE, and replay the stored response on duplicates."
+    },
+    {
+      "input": "Cut traffic on a hot GET endpoint",
+      "output": "Emit ETag headers and support If-None-Match; verify with curl -i -H 'If-None-Match: \"a1b2c3\"' expecting 304."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "request-deduplication.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-request-deduplication"
+    },
+    "generic": {
+      "system_prompt": "You work Request Deduplication hands-on. You do it through idempotency-etag: Deduplicate requests with idempotency keys and conditional GETs. The commands are real, e.g. `curl -i -X POST http://localhost:8080/payments -H Idempotency-Key: 9f8c-4a2b -d {amount:100}`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "request-deduplication",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "idempotency-etag",
+        "name": "idempotency_key",
+        "type": "string",
+        "description": "Client-generated key identifying a logical operation"
+      },
+      {
+        "capability": "idempotency-etag",
+        "name": "etag",
+        "type": "string",
+        "description": "Response fingerprint used with If-None-Match"
+      },
+      {
+        "capability": "idempotency-etag",
+        "name": "ttl_seconds",
+        "type": "integer",
+        "description": "How long dedup records live in Redis"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/request-deduplication-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/request-deduplication-skill.yaml",
+    "checksum": "5bcf8a285677bc7975dd81dce09d2f94caec2740fdfadad7e1d59120fb2b56dd"
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "name": "sustainability-practices",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "environment",
+  "description": "Measures and reduces software carbon footprint with Cloud Carbon Footprint, InfraCost, and workload efficiency analysis.",
+  "keywords": [
+    "sustainability",
+    "carbon-footprint"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "sustainability-practices.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-sustainability-practices"
+    },
+    "generic": {
+      "system_prompt": "You are the sustainability-practices specialist. You do it through carbon-measurement: Estimate cloud carbon emissions and energy usage. The commands are real, e.g. `ccf estimate --configfile ccf.config.json --period 2024-01-01 2024-01-31`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "carbon-measurement",
+      "description": "Estimate cloud carbon emissions and energy usage.",
+      "commands": [
+        "ccf estimate --configfile ccf.config.json --period 2024-01-01 2024-01-31",
+        "ccf report --configfile ccf.config.json",
+        "ccf footprint --configfile ccf.config.json",
+        "ccf recommendations --configfile ccf.config.json"
+      ],
+      "examples": [
+        "ccf estimate --configfile ccf.config.json --period 2024-01-01 2024-01-31",
+        "ccf report --configfile ccf.config.json",
+        "ccf recommendations --configfile ccf.config.json"
+      ],
+      "parameters": [
+        {
+          "name": "configfile",
+          "type": "string",
+          "description": "Cloud Carbon Footprint config file"
+        },
+        {
+          "name": "period",
+          "type": "string",
+          "description": "Date range for estimation"
+        }
+      ]
+    },
+    {
+      "name": "cost-efficiency",
+      "description": "Align efficiency with cost using InfraCost and cloud queries.",
+      "commands": [
+        "infracost breakdown --path .",
+        "infracost diff --path . --compare-to=infracost-base.json",
+        "infracost output --format html --path infracost-base.json",
+        "infracost breakdown --path . --usage-file infracost-usage.yml"
+      ],
+      "examples": [
+        "infracost breakdown --path .",
+        "infracost diff --path . --compare-to=infracost-base.json",
+        "infracost output --format html --path infracost-base.json"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Terraform path to analyze"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output format: html, json, table"
+        }
+      ]
+    },
+    {
+      "name": "workload-efficiency",
+      "description": "Analyze cluster utilization and right-sizing opportunities.",
+      "commands": [
+        "kubectl top nodes",
+        "kubectl top pods -A",
+        "kubectl get hpa -A",
+        "kubectl get nodes -o custom-columns=NAME:.metadata.name,CPU:.status.allocatable.cpu,MEM:.status.allocatable.memory"
+      ],
+      "examples": [
+        "kubectl top nodes",
+        "kubectl top pods -A",
+        "kubectl get hpa -A"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace scope for resource metrics"
+        },
+        {
+          "default": "wide",
+          "description": "Output format for kubectl top metrics: wide, json.",
+          "name": "format",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "green-software",
+    "cloud-carbon",
+    "energy-api",
+    "prometheus"
+  ],
+  "tools": [
+    "green-software",
+    "cloud-carbon",
+    "energy-api",
+    "prometheus",
+    "grafana"
+  ],
+  "examples": [
+    {
+      "input": "How much carbon does our AWS footprint produce?",
+      "output": "Agent runs ccf estimate with the config for the month and breaks down emissions by service and account."
+    },
+    {
+      "input": "Reduce our cluster's energy use",
+      "output": "Agent analyzes kubectl top nodes and hpa status, right-sizes requests, and shows the projected reduction with infracost."
+    }
+  ],
+  "instructions": "# Sustainability Practices\n\nMeasure and reduce the environmental impact of software.\n\n## What This Skill Does\n\n- Estimates cloud carbon emissions by service and period\n- Identifies idle and oversized workloads\n- Aligns efficiency work with cost data\n- Promotes right-sizing and autoscaling practices\n\n## When to Use\n\n- Reporting software carbon footprint\n- Reducing cloud waste and emissions\n- Prioritizing efficiency investments\n\n## Real Commands\n\n```bash\n# Carbon estimation\nccf estimate --configfile ccf.config.json --period 2024-01-01 2024-01-31\nccf recommendations --configfile ccf.config.json\n\n# Cost-efficiency\ninfracost breakdown --path .\ninfracost diff --path . --compare-to=infracost-base.json\n\n# Utilization\nkubectl top nodes\nkubectl top pods -A\nkubectl get hpa -A\nkubectl get nodes -o custom-columns=NAME:.metadata.name,CPU:.status.allocatable.cpu\n```\n\n## Reduction Checklist\n\n- Right-size pods and instances to measured utilization\n- Autoscale everything that can be scaled to zero\n- Prefer ARM and energy-efficient instance families\n- Cache aggressively to reduce compute demand\n- Offload batch work to off-peak hours\n\n## Best Practices\n\n- Measure first: baseline carbon before optimizing\n- Pair carbon savings with cost savings for buy-in\n- Monitor utilization continuously, not just at launch\n- Document efficiency budgets alongside SLIs\n- Revisit instance families when prices and efficiency change",
+  "display_name": "sustainability-practices",
+  "knowledge": [
+    {
+      "title": "Cloud Carbon Footprint",
+      "type": "documentation",
+      "source": "https://github.com/cloud-carbon-footprint/cloud-carbon-footprint",
+      "description": "Carbon estimation CLI and config"
+    },
+    {
+      "title": "InfraCost Documentation",
+      "type": "documentation",
+      "source": "https://www.infracost.io/docs/",
+      "description": "Infrastructure cost and efficiency analysis"
+    },
+    {
+      "title": "Green Software Foundation",
+      "type": "documentation",
+      "source": "https://greensoftware.foundation/",
+      "description": "Green software patterns and principles"
+    }
+  ],
+  "id": "sustainability-practices",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "carbon-measurement",
+        "name": "configfile",
+        "type": "string",
+        "description": "Cloud Carbon Footprint config file"
+      },
+      {
+        "capability": "carbon-measurement",
+        "name": "period",
+        "type": "string",
+        "description": "Date range for estimation"
+      },
+      {
+        "capability": "cost-efficiency",
+        "name": "path",
+        "type": "string",
+        "description": "Terraform path to analyze"
+      },
+      {
+        "capability": "cost-efficiency",
+        "name": "format",
+        "type": "string",
+        "description": "Output format: html, json, table"
+      },
+      {
+        "capability": "workload-efficiency",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace scope for resource metrics"
+      },
+      {
+        "capability": "workload-efficiency",
+        "name": "format",
+        "type": "string",
+        "description": "Output format for kubectl top metrics: wide, json."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "green-software",
+    "cloud-carbon",
+    "energy-api",
+    "prometheus"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "sustainability-practices/skill/sustainability-practices.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/sustainability-practices/skill/sustainability-practices.yaml",
+    "checksum": "d9525cf9882cd05c152de019192debbcf6f8c7ec1436c44841bb58c96056e658"
+  }
+}

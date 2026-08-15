@@ -1,0 +1,164 @@
+{
+  "name": "api-gateway",
+  "display_name": "API Gateway",
+  "category": "backend",
+  "subcategory": "infrastructure",
+  "description": "Agent for implementing API gateways with routing, rate limiting, and authentication.",
+  "version": "1.0.0",
+  "tags": [
+    "api-gateway",
+    "routing",
+    "rate-limiting",
+    "authentication",
+    "kong"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "api-gateway",
+      "description": "Implement API gateway",
+      "commands": [
+        "kong",
+        "traefik",
+        "nginx"
+      ],
+      "examples": [
+        "Kong: kong migrations bootstrap",
+        "Traefik: traefik --configfile=traefik.yml",
+        "Nginx: nginx -c /etc/nginx/nginx.conf"
+      ],
+      "parameters": [
+        {
+          "name": "gateway",
+          "type": "string",
+          "description": "Gateway: kong, traefik, nginx, tyk"
+        },
+        {
+          "name": "feature",
+          "type": "string",
+          "description": "Feature: routing, auth, rate-limit, transform"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Kong",
+      "type": "documentation",
+      "source": "https://docs.konghq.com/",
+      "description": "Kong documentation"
+    },
+    {
+      "Title": "Traefik",
+      "type": "tutorial",
+      "source": "https://doc.traefik.io/traefik/",
+      "description": "Traefik documentation"
+    }
+  ],
+  "instructions": "You are the API gateway specialist. Call on this agent when the user needs a gateway set up with routing, rate limiting, authentication, or request transformation. Core workflow: choose the gateway (kong, traefik, nginx, tyk) and first bootstrap it, e.g. `kong migrations bootstrap` for a fresh Kong database, then launch the router with `traefik --configfile=traefik.yml` or `nginx -c /etc/nginx/nginx.conf` as appropriate. Configure routing rules to upstream services, then layer on auth, rate limiting, and transforms per the requested feature. Key behaviors: verify each route resolves to a live upstream, test auth and rate-limit policies end to end, and check gateway logs when requests fail. Centralize cross-cutting concerns rather than scattering them in services. Report the gateway config written, routes defined, and how to verify traffic flows.",
+  "examples": [
+    {
+      "input": "API gateway",
+      "output": "I'll set up Kong as your API gateway..."
+    },
+    {
+      "input": "Route traffic",
+      "output": "I'll configure routing rules..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-gateway.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-gateway"
+    },
+    "generic": {
+      "system_prompt": "You are an API gateway expert. Help users implement API gateways with Kong and Traefik.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-gateway",
+  "type": "agent",
+  "skills": [
+    "api-gateway-architect",
+    "api-gateway-engineer",
+    "api-gateway-kong",
+    "api-gateway-routing-design",
+    "api-gateway-specialist",
+    "api-gateway-patterns"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "api-gateway",
+        "name": "gateway",
+        "type": "string",
+        "description": "Gateway: kong, traefik, nginx, tyk"
+      },
+      {
+        "capability": "api-gateway",
+        "name": "feature",
+        "type": "string",
+        "description": "Feature: routing, auth, rate-limit, transform"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/api-gateway.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/api-gateway.yaml",
+    "checksum": "b6a69d09a1f8e9ee04d6a2bc92a1a4a31d758670dc1139397c94468490c4e7d7"
+  }
+}

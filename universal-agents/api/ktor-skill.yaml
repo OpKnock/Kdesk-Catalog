@@ -1,0 +1,111 @@
+name: ktor
+display_name: Ktor
+category: api
+subcategory: general
+description: 'General Ktor development lifecycle: project scaffolding with the Ktor Gradle plugin, dependency
+  management, and dev/test workflows.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ./gradlew
+- build/install/app/bin/app
+- gradle
+capabilities:
+- name: ktor-lifecycle
+  description: Scaffold, build, and run Ktor projects with Gradle.
+  commands:
+  - gradle wrapper --gradle-version 8.7
+  - ./gradlew clean build
+  - ./gradlew run
+  - gradle dependencies --configuration runtimeClasspath | grep -i ktor
+  examples:
+  - gradle wrapper --gradle-version 8.7
+  - ./gradlew clean build
+  - gradle dependencies --configuration runtimeClasspath | grep -i ktor
+  parameters:
+  - name: gradle_version
+    type: string
+    description: Gradle wrapper version.
+  - name: task
+    type: string
+    description: 'Gradle task: run, build, clean, test.'
+- name: plugin-config
+  description: Configure the Ktor Gradle plugin and application entry point.
+  commands:
+  - ./gradlew build -x test
+  - ./gradlew installDist
+  - build/install/app/bin/app
+  - ./gradlew dependencies --configuration ktor
+  examples:
+  - ./gradlew installDist
+  - build/install/app/bin/app
+  - ./gradlew build -x test
+  parameters:
+  - name: main_class
+    type: string
+    description: Application entry class, e.g. io.ktor.server.netty.EngineMain.
+knowledge:
+- title: Ktor Documentation
+  type: documentation
+  source: https://ktor.io/docs/welcome.html
+  description: Main Ktor documentation.
+- title: Ktor Gradle Plugin
+  type: documentation
+  source: https://ktor.io/docs/gradle-plugin.html
+  description: Gradle plugin configuration reference.
+instructions: "# Ktor (General)\n\nThe full Ktor project lifecycle: scaffolding, building, running, and\
+  \ packaging.\n\n## What this skill does\n\n- Bootstraps Ktor projects with the Gradle plugin.\n- Manages\
+  \ engines (Netty, CIO, Jetty) and plugins (content negotiation, auth).\n- Builds runnable distributions.\n\
+  \n## When to use\n\n- Starting any Ktor server or client project.\n- Upgrading Ktor versions and engines.\n\
+  - Understanding which Ktor artifacts a project pulls in.\n\n## Real commands\n\n```bash\n# Wrapper\n\
+  gradle wrapper --gradle-version 8.7\n\n# Full clean build (includes tests)\n./gradlew clean build\n\n\
+  # Dev run\n./gradlew run\n\n# Install distribution\n./gradlew installDist\nbuild/install/app/bin/app\n\
+  \n# Inspect resolved dependencies\ngradle dependencies --configuration runtimeClasspath | grep -i ktor\n\
+  ```\n\n## build.gradle.kts example\n\n```kotlin\nplugins {\n    kotlin(\"jvm\") version \"2.0.0\"\n\
+  \    id(\"io.ktor.plugin\") version \"2.3.10\"\n}\n\napplication {\n    mainClass.set(\"io.ktor.server.netty.EngineMain\"\
+  )\n}\n\nktor {\n    fatJar {\n        archiveFileName.set(\"app-all.jar\")\n    }\n}\n```\n\n## Testing\n\
+  \n```bash\n./gradlew test\n```\n\n## Best practices\n\n- Pin Ktor and Kotlin versions; the plugin ties\
+  \ them together.\n- Prefer EngineMain + application.conf for environment-driven config.\n- Use the fatJar\
+  \ task for simple single-binary deploys.\n"
+examples:
+- input: Start a new Ktor project
+  output: Use the Ktor project generator or apply io.ktor.plugin, set mainClass to EngineMain, then ./gradlew
+    run.
+- input: See which Ktor artifacts are used
+  output: gradle dependencies --configuration runtimeClasspath | grep -i ktor
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ktor.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ktor
+  generic:
+    system_prompt: 'You work Ktor hands-on. You do it through ktor-lifecycle: Scaffold, build, and run
+      Ktor projects with Gradle. The commands are real, e.g. `gradle wrapper --gradle-version 8.7`. You
+      run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

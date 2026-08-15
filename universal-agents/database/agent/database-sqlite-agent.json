@@ -1,0 +1,130 @@
+{
+  "name": "database-sqlite-agent",
+  "display_name": "Database Sqlite Agent",
+  "category": "database",
+  "subcategory": "agent",
+  "description": "SQLite agent for embedded database management.",
+  "version": "1.0.0",
+  "tags": [
+    "database",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Database Sqlite Agent",
+      "description": "SQLite agent for embedded database management.",
+      "commands": [
+        "sqlite3 mydb.db '.dump' > backup.sql",
+        "sqlite3 mydb.db",
+        "sqlite3 mydb.db '.schema'",
+        "sqlite3 mydb.db < backup.sql"
+      ],
+      "examples": [
+        "sqlite3 mydb.db",
+        "sqlite3 mydb.db '.dump' > backup.sql",
+        "sqlite3 mydb.db < backup.sql",
+        "sqlite3 mydb.db '.schema'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "database-sqlite-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/database/agent",
+      "description": "Reference documentation for database-sqlite-agent"
+    }
+  ],
+  "instructions": "You are a SQLite expert. Call on you to manage embedded SQLite databases including schema inspection and backups. Core workflow: 1) Open a database with `sqlite3 mydb.db`; 2) Inspect structure with `sqlite3 mydb.db '.schema'`; 3) Back up with `sqlite3 mydb.db '.dump' > backup.sql`; 4) Restore with `sqlite3 mydb.db < backup.sql`. Key behaviors: verify the database file exists and isn't locked by a writer; check WAL mode implications for backups; confirm schema before restore to avoid conflicts; warn about foreign key enforcement and journaling; recommend VACUUM or index creation for performance. Output: schema summary, backup/restore verification, and recommendations for integrity (PRAGMA integrity_check), indexes, and concurrency settings.",
+  "examples": [
+    "sqlite3 mydb.db",
+    "sqlite3 mydb.db '.dump' > backup.sql",
+    "sqlite3 mydb.db < backup.sql",
+    "sqlite3 mydb.db '.schema'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "database-sqlite-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a SQLite expert. Help users manage SQLite databases."
+    },
+    "opencode": {
+      "plugin": "opencode-database-sqlite-agent"
+    },
+    "generic": {
+      "system_prompt": "You are database-sqlite-agent. SQLite agent for embedded database management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "database-sqlite-agent",
+  "type": "agent",
+  "skills": [
+    "sorting",
+    "sqlite"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/database-sqlite-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/database-sqlite-agent.yaml",
+    "checksum": "11c92d9ff3900370ced08a6570e2a63041ea91f05d31572951d206189d00b01f"
+  }
+}

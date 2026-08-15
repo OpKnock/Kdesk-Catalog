@@ -1,0 +1,109 @@
+name: data-transformation-engineer-data-transformation-engineer
+version: 2.0.0
+type: skill
+category: data
+description: 'Builds reliable transformations: dbt models, Spark SQL, and cleanup logic with validation.'
+keywords:
+- data-transformation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-transformation-engineer-data-transformation-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-data-transformation-engineer
+  generic:
+    system_prompt: 'Your lane is data-transformation-engineer-data-transformation-engineer. You do it
+      through transforms: Create and run SQL/Python transformations with lineage and tests. The commands
+      are real, e.g. `dbt run --select stg_orders+`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: transforms
+  description: Create and run SQL/Python transformations with lineage and tests
+  commands:
+  - dbt run --select stg_orders+
+  - dbt test --select models/marts
+  - spark-sql -e "SELECT date, sum(amount) FROM parquet.`s3://curated/orders/` GROUP BY 1;"
+  - jq -c 'select(.status=="paid") | {id, amount}' raw_orders.json > paid.jsonl
+  - dbt docs generate && dbt docs serve
+  examples:
+  - dbt run --select tag:marts --target prod
+  - spark-submit --master local[4] jobs/transform.py --input s3://raw --output s3://curated
+  - 'jq -s ''group_by(.customer) | map({customer: .[0].customer, total: map(.amount)|add})'' orders.jsonl'
+  parameters:
+  - name: select
+    type: string
+    description: Node or tag selection for run/test
+  - name: target
+    type: string
+    description: dbt environment target (dev/prod)
+  - name: input
+    type: string
+    description: Input location for Spark jobs
+prerequisites:
+- node.js
+- python
+- jsonschema
+- ajv
+- jolt
+tools:
+- node.js
+- python
+- jsonschema
+- ajv
+- jolt
+- apache-spark
+examples:
+- input: Build a revenue mart
+  output: Creates staging + marts models with lineage, runs dbt build, adds tests, and serves docs
+- input: Clean the raw orders file
+  output: Filters with jq into JSONL, verifies row counts, and loads into the curated layer
+instructions: "# Data Transformation Engineer\n\nTurns raw data into analysis-ready tables with documented,\
+  \ tested transformations.\n\n## When to Use\n\n- Building staging/cleaning/mart layers\n- Aggregating\
+  \ raw events into metrics tables\n- Enforcing tests on transformation output\n\n## Real Commands\n\n\
+  ```bash\n# dbt run with lineage\nsudo dbt run --select stg_orders+\n\n# Test marts\nsudo dbt test --select\
+  \ models/marts --store-failures\n\n# Spark SQL ad-hoc\nspark-sql -e \"SELECT date, sum(amount) AS revenue\
+  \ FROM parquet.`s3://curated/orders/` GROUP BY 1 ORDER BY 1;\"\n\n# JSONL cleanup with jq\njq -c 'select(.status==\"\
+  paid\") | {id, amount, ts}' raw_orders.json > paid.jsonl\n\n# Full pipeline test in dev then prod\n\
+  sudo dbt build --select tag:marts --target dev\nsudo dbt build --select tag:marts --target prod\n```\n\
+  \n## Transform Pattern\n\n```sql\n-- stg_orders.sql\nselect\n  order_id,\n  customer_id,\n  cast(order_date\
+  \ as date) as order_date,\n  amount\nfrom {{ source('raw', 'orders') }}\nwhere amount is not null\n\
+  ```\n\n## Best Practices\n\n- One transform = one purpose; keep models narrow\n- Test primary keys and\
+  \ distribution (nulls, negatives)\n- Materialize as views in staging, tables in marts\n- Document business\
+  \ meaning next to the model\n- Reproduce transformations deterministically for reruns\n\n## Example\
+  \ Response\n\nRuns the selected transforms, reports rows affected per model, test outcomes,\nand flags\
+  \ data-quality issues with sample rows."
+display_name: data-transformation-engineer-data-transformation-engineer
+knowledge:
+- title: dbt model docs
+  type: documentation
+  source: https://docs.getdbt.com/docs/build/models
+  description: Model authoring, materialization, and ref()
+- title: Spark SQL reference
+  type: documentation
+  source: https://spark.apache.org/docs/latest/sql-ref.html
+  description: SQL syntax supported by Spark SQL

@@ -1,0 +1,180 @@
+name: nats-streams
+display_name: Nats Streams
+category: api
+subcategory: general
+description: 'Deep JetStream stream management: subjects coverage, limits, backups, views, and replication
+  config.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nats
+capabilities:
+- name: jetstream-stream-admin
+  description: 'Administer JetStream streams: coverage checks, limits, views, backups and replication.'
+  commands:
+  - nats stream add ORDERS --subjects 'orders.*' --replicas 3
+  - nats stream check coverage ORDERS 'orders.>'
+  - nats stream view ORDERS --reverse
+  - nats stream report
+  - nats stream backup ORDERS /backup/orders
+  examples:
+  - nats stream check coverage ORDERS 'orders.*' --detail
+  - nats stream view ORDERS 10
+  - nats stream report
+  parameters:
+  - name: stream
+    type: string
+    description: Stream name
+  - name: replicas
+    type: integer
+    description: Replication factor 1-5
+  - name: max_age
+    type: string
+    description: Retention window e.g. 72h
+knowledge:
+- title: JetStream Streams Concepts
+  type: documentation
+  source: https://docs.nats.io/nats-concepts/jetstream/streams
+  description: Subjects, retention, storage, limits and replication
+- title: nats stream CLI
+  type: documentation
+  source: https://docs.nats.io/using-nats/command-line/
+  description: stream add/info/view/backup/report commands
+instructions: '# NATS Streams
+
+
+  Streams are the durable storage layer of JetStream, capturing subject traffic with configurable retention.
+
+
+  ## What this skill does
+
+
+  - Creates streams with subject coverage and limits
+
+  - Verifies subject coverage and message retention
+
+  - Backs up and restores stream data
+
+
+  ## When to use
+
+
+  - Event sourcing and replay workloads
+
+  - Scaling streams across a cluster
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create replicated stream
+
+  nats stream add ORDERS --subjects ''orders.*'' --replicas 3 --max-age 72h
+
+
+  # Verify coverage
+
+  nats stream check coverage ORDERS ''orders.>''
+
+
+  # View messages
+
+  nats stream view ORDERS --reverse
+
+  nats stream view ORDERS 10
+
+
+  # Storage report
+
+  nats stream report
+
+
+  # Backup
+
+  nats stream backup ORDERS /backup/orders
+
+  ```
+
+
+  ## Config file for streams
+
+
+  ```yaml
+
+  name: ORDERS
+
+  subjects: [orders.*]
+
+  retention: limits
+
+  storage: file
+
+  max_age: 72h
+
+  replicas: 3
+
+  ```
+
+
+  ## Limits to set
+
+
+  - `--max-msgs`, `--max-bytes`, `--max-age` bound the store
+
+  - `--discard new` drops new messages when full (instead of oldest)
+
+
+  ## Best practices
+
+
+  - Run `nats stream check coverage` when adding subjects
+
+  - Replicas 3 for durable critical streams
+
+  - Schedule backups for disaster recovery'
+examples:
+- input: Make sure every orders.* message is captured
+  output: The agent runs `nats stream check coverage ORDERS 'orders.*' --detail` and shows gaps in subject
+    matching.
+- input: Back up my ORDERS stream
+  output: The agent runs `nats stream backup ORDERS /backup/orders` and explains restore with `nats stream
+    restore`.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nats-streams.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nats-streams
+  generic:
+    system_prompt: 'You work Nats Streams hands-on. You do it through jetstream-stream-admin: Administer
+      JetStream streams: coverage checks, limits, views, backups and replication. The commands are real,
+      e.g. `nats stream add ORDERS --subjects orders.* --replicas 3`. You run and verify the real CLI
+      commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

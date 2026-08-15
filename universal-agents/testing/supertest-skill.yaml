@@ -1,0 +1,119 @@
+name: supertest-testing
+display_name: supertest-testing
+category: testing
+subcategory: general
+description: Tests Node.js HTTP APIs with supertest assertions against Express/Fastify servers, including
+  auth and streaming.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+- npm
+- npx
+- request(app).get('/api/stream').pipe(process.stdout
+- request(app).get('/api/users').expect('content-type',
+- request(app).get('/api/users').expect(200
+- request(app).get('/api/users').set('authorization',
+- request(app).post('/api/users').send({
+capabilities:
+- name: supertest-api-tests
+  description: Write and run API assertions with supertest.
+  commands:
+  - npx jest test/api.test.js
+  - npx mocha test/api.test.js
+  - node test/api.test.js
+  - npm test -- --runInBand
+  examples:
+  - npx jest test/api.test.js
+  - npx mocha test/api.test.js
+  - npm test
+  parameters:
+  - name: testFile
+    type: string
+    description: Test file path
+  - name: runner
+    type: string
+    description: 'Test runner: jest, mocha, node'
+- name: request-assertions
+  description: Chain requests and assert responses.
+  commands:
+  - request(app).get('/api/users').expect(200)
+  - 'request(app).post(''/api/users'').send({ name: ''alice'' }).expect(201)'
+  - request(app).get('/api/users').set('Authorization', 'Bearer tok').expect(200)
+  - request(app).get('/api/users').expect('Content-Type', /json/)
+  - request(app).get('/api/stream').pipe(process.stdout)
+  examples:
+  - 'request(app).get(''/api/users'').expect(200, { users: [] })'
+  - 'request(app).post(''/api/users'').send({ name: ''alice'' }).expect(201)'
+  - request(app).get('/api/users').set('Authorization', 'Bearer tok').expect(200)
+  parameters:
+  - name: method
+    type: string
+    description: HTTP method
+  - name: path
+    type: string
+    description: Endpoint path
+  - name: body
+    type: object
+    description: Request payload
+knowledge:
+- title: supertest GitHub
+  type: documentation
+  source: https://github.com/ladjs/supertest
+  description: API reference and usage examples
+- title: supertest npm
+  type: documentation
+  source: https://www.npmjs.com/package/supertest
+  description: Package docs and integration with runners
+instructions: "# supertest\n\nHTTP assertions for Node.js APIs.\n\n## What This Skill Does\n\n- Sends\
+  \ requests to an app instance without binding ports\n- Asserts status, headers, and bodies fluently\n\
+  - Tests auth headers and JSON content\n- Integrates with jest/mocha runners\n\n## When to Use\n\n- Unit-level\
+  \ API tests for Express/Fastify apps\n- Contract checks on endpoints\n- Regression tests for handlers\n\
+  \n## Real Commands\n\n```bash\n# With jest\nnpx jest test/api.test.js\n\n# With mocha\nnpx mocha test/api.test.js\n\
+  \n# Direct\nnode test/api.test.js\n```\n\n## Sample Test\n\n```js\nconst request = require('supertest');\n\
+  const app = require('../app');\n\ndescribe('GET /api/users', () => {\n  it('returns users', async ()\
+  \ => {\n    const res = await request(app)\n      .get('/api/users')\n      .set('Authorization', 'Bearer\
+  \ tok')\n      .expect(200)\n      .expect('Content-Type', /json/);\n    expect(res.body.users).toBeInstanceOf(Array);\n\
+  \  });\n\n  it('rejects unauthenticated', async () => {\n    await request(app).get('/api/users').expect(401);\n\
+  \  });\n});\n```\n\n## Best Practices\n\n- Import the app, not a running server\n- Assert status AND\
+  \ body shape\n- Test auth and error paths, not just happy paths\n- Use .expect('Content-Type', /json/)\
+  \ for contract\n- Keep tests independent of network and databases"
+examples:
+- input: Test the create-user endpoint
+  output: Agent writes supertest assertions for 201, validation errors, and auth, then runs npx jest test/api.test.js.
+- input: Verify the health endpoint in CI
+  output: Agent adds a minimal supertest spec asserting 200 + JSON and wires it into the test script.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: supertest-testing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-supertest
+  generic:
+    system_prompt: 'You are the supertest-testing specialist. You do it through supertest-api-tests: Write
+      and run API assertions with supertest. The commands are real, e.g. `npx jest test/api.test.js`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

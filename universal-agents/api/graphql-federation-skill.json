@@ -1,0 +1,171 @@
+{
+  "name": "graphql-federation",
+  "display_name": "Graphql Federation",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Apollo Federation: build supergraph schemas from subgraph services, compose with rover, and operate the gateway/router.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "rover"
+  ],
+  "capabilities": [
+    {
+      "name": "federation-tooling",
+      "description": "Compose subgraph schemas into a supergraph and manage the router with rover.",
+      "commands": [
+        "rover subgraph introspect http://orders:4001/graphql --output subgraph-orders.graphql",
+        "rover subgraph publish my-graph@prod --name orders --schema subgraph-orders.graphql",
+        "rover supergraph compose --config supergraph.yaml --output supergraph.graphql",
+        "rover supergraph fetch my-graph@prod --output supergraph.graphql",
+        "rover subgraph check my-graph@prod --name orders --schema subgraph-orders.graphql"
+      ],
+      "examples": [
+        "rover subgraph introspect http://orders:4001/graphql --output subgraph-orders.graphql",
+        "rover supergraph compose --config supergraph.yaml --output supergraph.graphql",
+        "rover subgraph check my-graph@prod --name orders --schema subgraph-orders.graphql"
+      ],
+      "parameters": [
+        {
+          "name": "subgraph-name",
+          "type": "string",
+          "description": "Name of the subgraph service"
+        },
+        {
+          "name": "graph-ref",
+          "type": "string",
+          "description": "Graph ref like my-graph@prod"
+        },
+        {
+          "name": "compose-config",
+          "type": "string",
+          "description": "supergraph.yaml path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Apollo Federation docs",
+      "type": "documentation",
+      "source": "https://www.apollographql.com/docs/federation/",
+      "description": "Subgraphs, @key directives, and the supergraph architecture"
+    },
+    {
+      "title": "rover CLI docs",
+      "type": "documentation",
+      "source": "https://www.apollographql.com/docs/rover/",
+      "description": "introspect, compose, publish, and check commands"
+    }
+  ],
+  "instructions": "# GraphQL Federation\n\n## What this skill does\n\nFederation splits one GraphQL API across subgraph services, each owning types it defines. Apollo Router serves the composed supergraph; rover introspects, composes, publishes, and checks subgraphs.\n\n## When to use\n\n- Multiple teams owning different domains behind one graph\n- Adding a new service to an existing federated graph\n- Composing the supergraph in CI\n\n## Real commands\n\n```bash\n# Introspect a subgraph\nrover subgraph introspect http://orders:4001/graphql --output subgraph-orders.graphql\n\n# Publish to the graph registry\nrover subgraph publish my-graph@prod --name orders --schema subgraph-orders.graphql\n\n# Compose a supergraph locally\nrover supergraph compose --config supergraph.yaml --output supergraph.graphql\n\n# Check before publish\nrover subgraph check my-graph@prod --name orders --schema subgraph-orders.graphql\n```\n\n## supergraph.yaml example\n\n```yaml\nfederation_version: 2\nsubgraphs:\n  orders:\n    routing_url: http://orders:4001/graphql\n    schema:\n      file: ./subgraph-orders.graphql\n  users:\n    routing_url: http://users:4002/graphql\n    schema:\n      file: ./subgraph-users.graphql\n```\n\n## Subgraph directive example\n\n```graphql\ntype Order @key(fields: \"id\") {\n  id: ID!\n  total: Int!\n  buyer: User\n}\n\nextend type User @key(fields: \"id\") {\n  id: ID! @external\n  orders: [Order!]!\n}\n```\n\n## Testing\n\n```bash\n# Run the router with a local supergraph\nrover dev --supergraph-config supergraph.yaml\n# query it: curl -X POST localhost:4000/graphql -d '{\"query\":\"{ orders { id total } }\"}'\n```\n\n## Best practices\n\n- Run `rover subgraph check` in CI for every subgraph change.\n- Publish schemas to the registry; never hand-compose in prod.\n- Keep cross-subgraph references limited to @key entities.\n- Version the supergraph with the router deployment.\n- Test local composition with rover dev before publishing.\n",
+  "examples": [
+    {
+      "input": "Add a payments subgraph to the federated graph",
+      "output": "Introspect the payments service, run rover subgraph check against prod, publish, and let the router pick up the new supergraph."
+    },
+    {
+      "input": "Compose fails with a type mismatch",
+      "output": "Use rover supergraph compose with the config, read the error for the conflicting type, fix the subgraph SDL, and re-publish."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-federation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql-federation"
+    },
+    "generic": {
+      "system_prompt": "You work Graphql Federation hands-on. You do it through federation-tooling: Compose subgraph schemas into a supergraph and manage the router with rover. The commands are real, e.g. `rover subgraph introspect http://orders:4001/graphql --output subgraph-orders.graphql`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "graphql-federation",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "federation-tooling",
+        "name": "subgraph-name",
+        "type": "string",
+        "description": "Name of the subgraph service"
+      },
+      {
+        "capability": "federation-tooling",
+        "name": "graph-ref",
+        "type": "string",
+        "description": "Graph ref like my-graph@prod"
+      },
+      {
+        "capability": "federation-tooling",
+        "name": "compose-config",
+        "type": "string",
+        "description": "supergraph.yaml path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "rover"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/graphql-federation-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/graphql-federation-skill.yaml",
+    "checksum": "036ff0599bac186fff5cae25dee49fe529a052a7b2738454d86581077ef6d383"
+  }
+}

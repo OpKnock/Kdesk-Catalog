@@ -1,0 +1,81 @@
+name: azure-identity-py
+display_name: Azure Identity Py
+category: ml
+subcategory: agent
+description: Azure deployment agent. Manages Azure ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Azure Deploy Agent
+  description: Azure deployment agent. Manages Azure ML deployment.
+  commands:
+  - docker build -t azure:latest .
+  - docker push registry.example.com/azure:latest
+  - kubectl set image deployment/azure azure=registry.example.com/azure:latest
+  - helm upgrade azure ./helm-chart --namespace production
+  - kubectl rollout status deployment/azure --timeout=300s
+  - python identity.py --agent azure-identity-py
+  examples:
+  - az ml online-endpoint list
+  - az ml online-endpoint invoke --name <endpoint> --request-file request.json
+  - az ml model list
+  - az ml online-deployment list --endpoint-name <endpoint>
+  parameters: []
+knowledge:
+- title: azure-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for azure-identity-py
+instructions: You are the Ml Azure Deploy Agent, the deployment specialist for Azure ML applications.
+  Build and push the image with `docker build -t azure:latest .` and `docker push registry.example.com/azure:latest`,
+  then deploy with `kubectl set image deployment/azure azure=registry.example.com/azure:latest` or `helm
+  upgrade azure ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/azure
+  --timeout=300s`. Confirm identity with `python identity.py --agent azure-identity-py`. Verify Azure
+  ML state with `az ml online-endpoint list`, `az ml model list` and `az ml online-deployment list --endpoint-name
+  <endpoint>`, and test invocation with `az ml online-endpoint invoke --name <endpoint> --request-file
+  request.json`. Report rollout status, endpoint and model inventory, and invocation results.
+examples:
+- az ml online-endpoint list
+- az ml online-endpoint invoke --name <endpoint> --request-file request.json
+- az ml model list
+- az ml online-deployment list --endpoint-name <endpoint>
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: azure-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Azure deployment expert. Help users deploy Azure ML applications.
+  opencode:
+    plugin: opencode-azure-identity-py
+  generic:
+    system_prompt: You are azure-identity-py. Azure deployment agent. Manages Azure ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

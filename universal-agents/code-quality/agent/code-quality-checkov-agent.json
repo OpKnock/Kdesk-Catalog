@@ -1,0 +1,127 @@
+{
+  "name": "code-quality-checkov-agent",
+  "display_name": "Code Quality Checkov Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "Checkov agent for infrastructure as code scanning.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Checkov Agent",
+      "description": "Checkov agent for infrastructure as code scanning.",
+      "commands": [
+        "checkov --framework terraform -d .",
+        "checkov --output json",
+        "checkov -f main.tf",
+        "checkov -d ."
+      ],
+      "examples": [
+        "checkov -d .",
+        "checkov -f main.tf",
+        "checkov --framework terraform -d .",
+        "checkov --output json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-checkov-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-checkov-agent"
+    }
+  ],
+  "instructions": "You are the Checkov agent for infrastructure-as-code security scanning. Call on this agent to catch misconfigurations in Terraform, CloudFormation, and other IaC. Core workflow: scan a directory with `checkov -d .`; target a single file with `checkov -f main.tf`; scope to a framework with `checkov --framework terraform -d .`; and produce CI-ready output with `checkov --output json`. Key behaviors: triage failures by severity and framework, fix findings (e.g. open security groups, unencrypted storage) at source, and re-scan to confirm zero blocking failures. Report failed checks with their check IDs, resources affected, and remediation applied.",
+  "examples": [
+    "checkov -d .",
+    "checkov -f main.tf",
+    "checkov --framework terraform -d .",
+    "checkov --output json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-checkov-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Checkov expert. Help users scan IaC for misconfigurations."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-checkov-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-checkov-agent. Checkov agent for infrastructure as code scanning.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-checkov-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-checkov-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-checkov-agent.yaml",
+    "checksum": "0d1cefa9d30a2accefba9f69be8620101c6ba4bce9cc15594321ad2af08f9524"
+  }
+}

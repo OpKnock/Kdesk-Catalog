@@ -1,0 +1,98 @@
+name: mux
+display_name: Mux
+category: api
+subcategory: general
+description: 'HTTP routing in Go with gorilla/mux: path variables, method matching, middleware, and route
+  testing.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: gorilla-mux-routing
+  description: 'Build REST routers with gorilla/mux: variables, method/host constraints, middleware chains
+    and subrouters.'
+  commands:
+  - go get github.com/gorilla/mux
+  - go mod tidy
+  - go run main.go
+  - go vet ./...
+  - go test ./...
+  examples:
+  - go run main.go
+  - curl -s http://localhost:8080/users/42
+  - go test -run TestRouter -v ./...
+  parameters:
+  - name: port
+    type: integer
+    description: Port the router listens on
+  - name: path_pattern
+    type: string
+    description: mux route pattern with {id} variables or regex
+  - name: methods
+    type: array
+    description: Allowed HTTP methods for a route
+knowledge:
+- title: gorilla/mux GitHub
+  type: documentation
+  source: https://github.com/gorilla/mux
+  description: Route patterns, middleware, subrouters, and matchers
+- title: Go net/http docs
+  type: documentation
+  source: https://pkg.go.dev/net/http
+  description: Standard library HTTP server and handler types
+instructions: "# gorilla/mux\n\ngorilla/mux is the classic HTTP router for Go REST APIs, with rich matchers\
+  \ and middleware support.\n\n## What this skill does\n\n- Registers routes with path variables and method\
+  \ constraints\n- Chains middleware and uses subrouters\n- Tests route behavior with httptest\n\n## When\
+  \ to use\n\n- REST APIs that need path parameters and named routes\n- Migrating from the standard mux\
+  \ to a richer router\n\n## Real commands\n\n```bash\n# Add the dependency\n go get github.com/gorilla/mux\n\
+  go mod tidy\n\n# Run and verify\n go run main.go\ncurl -s http://localhost:8080/users/42\n\n# Static\
+  \ checks and tests\n go vet ./...\ngo test ./...\n```\n\n## Router setup\n\n```go\nr := mux.NewRouter()\n\
+  r.HandleFunc(\"/users/{id:[0-9]+}\", getUser).Methods(\"GET\")\nr.HandleFunc(\"/users\", createUser).Methods(\"\
+  POST\")\nr.Use(loggingMiddleware)\napi := r.PathPrefix(\"/api/v1\").Subrouter()\nlog.Fatal(http.ListenAndServe(\"\
+  :8080\", r))\n```\n\n## Handler using variables\n\n```go\nfunc getUser(w http.ResponseWriter, r *http.Request)\
+  \ {\n    vars := mux.Vars(r)\n    fmt.Fprintf(w, \"user %s\", vars[\"id\"])\n}\n```\n\n## Best practices\n\
+  \n- Use regex constraints (`{id:[0-9]+}`) to avoid route collisions\n- Group versioned endpoints under\
+  \ subrouters\n- Test handlers with httptest and the mux router directly"
+examples:
+- input: Add a /users/{id} route to my Go API
+  output: The agent registers the route with mux.Vars handling, starts the server with go run, and tests
+    with curl.
+- input: 'Two routes clash: /users/new and /users/{id}'
+  output: The agent constrains {id} with a numeric regex and orders route registration to resolve the
+    conflict.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mux.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-mux
+  generic:
+    system_prompt: 'This is your domain: Mux. You do it through gorilla-mux-routing: Build REST routers
+      with gorilla/mux: variables, method/host constraints, middleware chains and subrouters. The commands
+      are real, e.g. `go get github.com/gorilla/mux`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

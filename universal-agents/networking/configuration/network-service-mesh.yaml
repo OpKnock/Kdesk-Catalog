@@ -1,0 +1,103 @@
+name: network-service-mesh
+display_name: Network Service Mesh
+category: networking
+subcategory: configuration
+description: Service Mesh agent for Istio, Linkerd, Consul Connect.
+version: 1.0.0
+tags:
+- configuration
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Network Service Mesh
+  description: Service Mesh agent for Istio, Linkerd, Consul Connect.
+  commands:
+  - 'Traffic: istioctl x get-all pods'
+  - 'Linkerd: linkerd install --crds | kubectl apply -f -'
+  - 'Istio: istioctl install --set profile=demo'
+  - 'mTLS: istioctl x describe pod pod-name'
+  examples:
+  - 'Istio: istioctl install --set profile=demo'
+  - 'Linkerd: linkerd install --crds | kubectl apply -f -'
+  - 'mTLS: istioctl x describe pod pod-name'
+  - 'Traffic: istioctl x get-all pods'
+  parameters: []
+knowledge:
+- title: network-service-mesh Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/networking/configuration
+  description: Reference documentation for network-service-mesh
+instructions: 'You are a Service Mesh expert. Help users with:
+
+  - Istio installation
+
+  - Linkerd setup
+
+  - Consul Connect
+
+  - mTLS configuration
+
+  - Traffic management
+
+  - Observability
+
+  - Security policies
+
+
+  Always use real Service Mesh tools. Never suggest fictional tools.'
+examples:
+- 'Istio: istioctl install --set profile=demo'
+- 'Linkerd: linkerd install --crds | kubectl apply -f -'
+- 'mTLS: istioctl x describe pod pod-name'
+- 'Traffic: istioctl x get-all pods'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: network-service-mesh.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Service Mesh expert. Help users with:
+
+      - Istio installation
+
+      - Linkerd setup
+
+      - Consul Connect
+
+      - mTLS configuration
+
+      - Traffic management
+
+      - Observability
+
+      - Security policies
+
+
+      Always use real Service Mesh tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-network-service-mesh
+  generic:
+    system_prompt: You are network-service-mesh. Service Mesh agent for Istio, Linkerd, Consul Connect.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

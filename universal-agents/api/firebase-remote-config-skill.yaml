@@ -1,0 +1,110 @@
+name: firebase-remote-config
+display_name: Firebase Remote Config
+category: api
+subcategory: general
+description: 'Firebase Remote Config: manage parameter values per environment, publish changes with conditions,
+  and fetch config from the CLI.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+capabilities:
+- name: remote-config
+  description: List, get, and publish Remote Config parameters and templates.
+  commands:
+  - 'curl -s ''https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'' -H ''Authorization:
+    Bearer $ACCESS_TOKEN'' | jq ''.parameters | keys'''
+  - 'curl -s ''https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'' -H ''Authorization:
+    Bearer $ACCESS_TOKEN'' | jq ''.parameters.maintenance_mode'''
+  - node -e "const rc=require('firebase/remote-config');const app=initializeApp();rc.getRemoteConfig(app).then(c=>{console.log(c.value('welcome_message'));c.activate()})"
+  - 'curl -s ''https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'' -H ''Authorization:
+    Bearer $ACCESS_TOKEN'' | jq ''.version'''
+  - 'curl -s ''https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'' -H ''Authorization:
+    Bearer $ACCESS_TOKEN'' -H ''If-Match: <etag>'' | jq ''.parameters'''
+  examples:
+  - 'curl -s ''https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'' -H ''Authorization:
+    Bearer $ACCESS_TOKEN'' | jq ''.parameters | keys'''
+  - 'curl -s ''https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'' -H ''Authorization:
+    Bearer $ACCESS_TOKEN'' | jq ''.version'''
+  - node -e "const rc=require('firebase/remote-config');const app=initializeApp();rc.getRemoteConfig(app).then(c=>{console.log(c.value('welcome_message'));c.activate()})"
+  parameters:
+  - name: parameter-key
+    type: string
+    description: Remote Config parameter key
+  - name: condition
+    type: string
+    description: Condition like app_version or audience segment
+  - name: default-value
+    type: string
+    description: Fallback value when no condition matches
+knowledge:
+- title: Remote Config REST API
+  type: documentation
+  source: https://firebase.google.com/docs/reference/rest/remote-config/
+  description: Fetch, update, and validate remote config templates
+- title: Remote Config overview
+  type: documentation
+  source: https://firebase.google.com/docs/remote-config
+  description: Parameters, conditions, and client SDK caching
+instructions: "# Firebase Remote Config\n\n## What this skill does\n\nRemote Config changes app behavior\
+  \ without a release: parameters with per-condition values are served to clients with a template versioned\
+  \ server-side. This skill covers template inspection and publishing.\n\n## When to use\n\n- Rolling\
+  \ out UI experiments per audience\n- Killing a feature remotely during incidents\n- A/B testing parameter\
+  \ values\n\n## Real commands\n\n```bash\n# List all parameters\ncurl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters | keys'\n\n# Inspect one parameter and\
+  \ its conditions\ncurl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters.maintenance_mode'\n\n# Current template\
+  \ version\ncurl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.version'\n\n# Client-side fetch and activate\nnode\
+  \ -e \"const rc=require('firebase/remote-config');const app=initializeApp();rc.getRemoteConfig(app).then(c=>{console.log(c.value('welcome_message'));c.activate()})\"\
+  \n```\n\n## Condition example\n\n```json\n\"conditions\": [{\n  \"name\": \"android_2_plus\",\n  \"\
+  expression\": \"device.android_version >= 8\"\n}]\n```\n\n## Publishing safely\n\n```bash\n# Fetch template\
+  \ -> edit -> publish with If-Match etag to avoid conflicts\ncurl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' -H 'If-Match: <etag>'\n```\n\n## Best practices\n\n- Always\
+  \ give every parameter a sensible default in the client SDK.\n- Use conditions sparingly; each adds\
+  \ complexity and cache misses.\n- Publish during low-traffic windows; clients cache templates.\n- Validate\
+  \ with the REST `validate` step before publishing.\n- Version-stamp experiments so analytics can correlate\
+  \ results.\n"
+examples:
+- input: Show a maintenance banner without a release
+  output: Add a maintenance_mode boolean parameter, publish a new template, and have clients fetch/activate
+    it on startup.
+- input: Check what values clients currently get
+  output: Fetch the template and inspect the parameter conditions and default value, then compare with
+    the client SDK fetch.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: firebase-remote-config.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-firebase-remote-config
+  generic:
+    system_prompt: 'You work Firebase Remote Config hands-on. You do it through remote-config: List, get,
+      and publish Remote Config parameters and templates. The commands are real, e.g. `curl -s https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig...`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

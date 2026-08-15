@@ -1,0 +1,166 @@
+{
+  "name": "spring-cloud-config",
+  "display_name": "Spring Cloud Config",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Spring Cloud Config skill: fetch config from the Config Server API, encrypt/decrypt secrets, and trigger runtime refresh with actuator.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "config-server-client",
+      "description": "Query, encrypt, and refresh configuration served by Spring Cloud Config",
+      "commands": [
+        "curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source'",
+        "curl -s localhost:8888/apps-service/dev/master",
+        "curl -X POST http://localhost:8888/actuator/refresh -H 'Content-Type: application/json' -d '{}'",
+        "curl -s -X POST http://localhost:8888/encrypt -d 'secretvalue' -H 'Content-Type: text/plain'",
+        "curl -s -X POST http://localhost:8888/decrypt -d 'AgB...encrypted...'"
+      ],
+      "examples": [
+        "curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source.db'",
+        "curl -s localhost:8888/apps-service/dev/master | jq '.name'",
+        "curl -s -X POST http://localhost:8888/encrypt -d 'dbpass'"
+      ],
+      "parameters": [
+        {
+          "name": "application",
+          "type": "string",
+          "description": "Application name, e.g. apps-service"
+        },
+        {
+          "name": "profile",
+          "type": "string",
+          "description": "Active profile, e.g. dev or prod"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Git label/branch, e.g. master"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Spring Cloud Config docs",
+      "type": "documentation",
+      "source": "https://docs.spring.io/spring-cloud-config/reference/",
+      "description": "Server, clients, encryption, and refresh"
+    },
+    {
+      "title": "Config Server REST API",
+      "type": "documentation",
+      "source": "https://docs.spring.io/spring-cloud-config/reference/server/backend.html",
+      "description": "Environment endpoint URL patterns"
+    }
+  ],
+  "instructions": "# Spring Cloud Config\n\nHand-crafted skill for serving and consuming config with Spring Cloud Config.\n\n## What this skill does\n\n- Fetches resolved config for any app/profile/label from the server\n- Encrypts and decrypts secrets through the /encrypt and /decrypt endpoints\n- Triggers runtime refresh on clients via /actuator/refresh\n\n## When to use\n\n- Centralizing config for a microservice fleet\n- Rotating encrypted passwords without redeploys\n- Debugging why a client sees stale properties\n\n## Real commands\n\n```bash\n# Resolved config for app, profile, label\ncurl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source'\ncurl -s localhost:8888/apps-service/dev/master | jq '.name'\n\n# Encrypt a secret with the server's key\ncurl -s -X POST http://localhost:8888/encrypt -d 'secretvalue' -H 'Content-Type: text/plain'\n\n# Decrypt back\ncurl -s -X POST http://localhost:8888/decrypt -d 'AgB...encrypted...'\n\n# Client picks up new values\ncurl -X POST http://localhost:8888/actuator/refresh -H 'Content-Type: application/json' -d '{}'\n```\n\n## Config in git\n\n```yaml\n# apps-service-dev.yml\ndb:\n  password: '{cipher}AgB...'\n```\n\n## Testing\n\n```bash\ncurl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source[\"db.password\"]'\ncurl -s -X POST http://localhost:8888/encrypt -d 'test' | tee enc.txt\ncurl -s -X POST http://localhost:8888/decrypt -d \"$(cat enc.txt)\"\n```\n\n## Best practices\n\n- Store ciphertext with the {cipher} prefix in config files\n- Scope encryption to the Config Server only; never share the key\n- Version config files with the same tag as the services that use them\n",
+  "examples": [
+    {
+      "input": "What config does apps-service use in dev?",
+      "output": "curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source' returns the merged key-value map."
+    },
+    {
+      "input": "Rotate a database password at runtime",
+      "output": "Commit the new {cipher} value to the config repo, then POST /actuator/refresh to the running clients."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "spring-cloud-config.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-spring-cloud-config"
+    },
+    "generic": {
+      "system_prompt": "You own Spring Cloud Config end to end. You do it through config-server-client: Query, encrypt, and refresh configuration served by Spring Cloud Config. The commands are real, e.g. `curl -s localhost:8888/apps-service/dev | jq -r .propertySources[0].source`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "spring-cloud-config",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "config-server-client",
+        "name": "application",
+        "type": "string",
+        "description": "Application name, e.g. apps-service"
+      },
+      {
+        "capability": "config-server-client",
+        "name": "profile",
+        "type": "string",
+        "description": "Active profile, e.g. dev or prod"
+      },
+      {
+        "capability": "config-server-client",
+        "name": "label",
+        "type": "string",
+        "description": "Git label/branch, e.g. master"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/spring-cloud-config-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/spring-cloud-config-skill.yaml",
+    "checksum": "185b1e532987402d20a82788fd803e8bc23d20fa10c11681ee9ad3d04a0c393d"
+  }
+}

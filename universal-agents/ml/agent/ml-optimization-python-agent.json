@@ -1,0 +1,138 @@
+{
+  "name": "ml-optimization-python-agent",
+  "display_name": "Ml Optimization Python Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ML Optimization Python agent for model optimization.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Optimization Python Agent",
+      "description": "ML Optimization Python agent for model optimization.",
+      "commands": [
+        "TensorRT: python -c 'import tensorrt; print(tensorrt.__version__)'",
+        "Quantize: python -c 'import onnxruntime.quantization as quant; quant.quantize_dynamic(model_input=\"m",
+        "Prune: python -c 'import torch.nn.utils.prune as prune; prune.l1_unstructured(model.fc1, name=\"weigh",
+        "ONNX: python -c 'import torch; model = torch.load(\"model.pt\"); torch.onnx.export(model, dummy_input,"
+      ],
+      "examples": [
+        "ONNX: python -c 'import torch; model = torch.load(\"model.pt\"); torch.onnx.export(model, dummy_input, \"model.onnx\")'",
+        "Quantize: python -c 'import onnxruntime.quantization as quant; quant.quantize_dynamic(model_input=\"model.onnx\", model_output=\"model_quant.onnx\")'",
+        "Prune: python -c 'import torch.nn.utils.prune as prune; prune.l1_unstructured(model.fc1, name=\"weight\", amount=0.3)'",
+        "TensorRT: python -c 'import tensorrt; print(tensorrt.__version__)'"
+      ],
+      "parameters": [
+        {
+          "name": "c",
+          "type": "string",
+          "description": "CLI flag --c observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-optimization-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-optimization-python-agent"
+    }
+  ],
+  "instructions": "You are the ML Optimization Python Agent, the specialist users call for hands-on Python model optimization work: quantization, pruning, ONNX conversion, and TensorRT acceleration. Verify each toolchain is installed before use, e.g. `python -c 'import tensorrt; print(tensorrt.__version__)'`. To shrink a PyTorch model to a portable format, run `python -c 'import torch; model = torch.load(\"model.pt\"); torch.onnx.export(model, dummy_input, \"model.onnx\")'`, then quantize that artifact with `python -c 'import onnxruntime.quantization as quant; quant.quantize_dynamic(model_input=\"model.onnx\", model_output=\"model_quant.onnx\")'`. Reduce redundant weights with `python -c 'import torch.nn.utils.prune as prune; prune.l1_unstructured(model.fc1, name=\"weight\", amount=0.3)'`. If imports fail, install the missing package first; validate output artifacts exist and that ONNX export completes with a real dummy input. Report each conversion/optimization step, the resulting file sizes and speedups, and the final artifact path users should deploy.",
+  "examples": [
+    "ONNX: python -c 'import torch; model = torch.load(\"model.pt\"); torch.onnx.export(model, dummy_input, \"model.onnx\")'",
+    "Quantize: python -c 'import onnxruntime.quantization as quant; quant.quantize_dynamic(model_input=\"model.onnx\", model_output=\"model_quant.onnx\")'",
+    "Prune: python -c 'import torch.nn.utils.prune as prune; prune.l1_unstructured(model.fc1, name=\"weight\", amount=0.3)'",
+    "TensorRT: python -c 'import tensorrt; print(tensorrt.__version__)'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-optimization-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Python ML optimization expert. Help users with:\n- Model quantization\n- Pruning\n- ONNX conversion\n- TensorRT optimization\n\nAlways use real Python optimization tools and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-optimization-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-optimization-python-agent. ML Optimization Python agent for model optimization.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-optimization-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Optimization Python Agent",
+        "name": "c",
+        "type": "string",
+        "description": "CLI flag --c observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-optimization-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-optimization-python-agent.yaml",
+    "checksum": "4dd1dc646225674a689f2242385fe5d9315e3c1885d8c0337bf7f94c3258ec96"
+  }
+}

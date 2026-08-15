@@ -1,0 +1,128 @@
+name: kafka-connectors
+display_name: Kafka Connectors
+category: api
+subcategory: general
+description: 'Deploy specific Kafka connectors: Debezium CDC sources, JDBC, and S3 sinks, including plugin
+  installation with confluent-hub and change-data streaming.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- confluent-hub
+- kafka-console-consumer.sh
+capabilities:
+- name: plugin-install
+  description: Install connector plugins into the Connect worker with confluent-hub.
+  commands:
+  - confluent-hub install debezium/debezium-connector-mysql:2.5.0 --component-dir /opt/connect-plugins
+  - confluent-hub install confluentinc/kafka-connect-jdbc:latest --no-prompt
+  - confluent-hub install confluentinc/kafka-connect-s3:latest --no-prompt
+  - curl -s http://localhost:8083/connector-plugins | jq -r '.[].class' | grep -i debezium
+  examples:
+  - confluent-hub install debezium/debezium-connector-mysql:2.5.0 --component-dir /opt/connect-plugins
+    --no-prompt
+  - confluent-hub install confluentinc/kafka-connect-jdbc:latest --no-prompt
+  - curl -s http://localhost:8083/connector-plugins | jq -r '.[].class' | grep -i jdbc
+  parameters:
+  - name: plugin
+    type: string
+    description: confluent-hub plugin coordinates, e.g. debezium/debezium-connector-mysql:2.5.0.
+  - name: component_dir
+    type: string
+    description: Installation directory listed in plugin.path.
+- name: cdc-pipeline
+  description: Create and monitor a Debezium CDC connector capturing database changes.
+  commands:
+  - 'curl -s -X POST http://localhost:8083/connectors -H ''Content-Type: application/json'' -d @debezium-mysql.json'
+  - curl -s http://localhost:8083/connectors/debezium-mysql/status | jq '.connector,.tasks'
+  - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic dbserver.mydb.products --from-beginning
+  - curl -s -X PUT http://localhost:8083/connectors/debezium-mysql/pause
+  - curl -s http://localhost:8083/connectors/debezium-mysql/tasks/0/topics
+  examples:
+  - 'curl -s -X POST http://localhost:8083/connectors -H ''Content-Type: application/json'' -d @debezium-mysql.json'
+  - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic dbserver.mydb.products --from-beginning
+  - curl -s http://localhost:8083/connectors/debezium-mysql/status | jq '.tasks[0].state'
+  parameters:
+  - name: connector
+    type: string
+    description: Connector name, e.g. debezium-mysql.
+  - name: topic
+    type: string
+    description: CDC topic in format <server>.<db>.<table>.
+knowledge:
+- title: Debezium Connectors
+  type: documentation
+  source: https://debezium.io/documentation/reference/stable/connectors/
+  description: Debezium CDC connector docs for MySQL, Postgres, SQL Server, Mongo.
+- title: confluent-hub
+  type: documentation
+  source: https://docs.confluent.io/platform/current/connect/managing/install.html
+  description: Installing connector plugins with confluent-hub.
+instructions: "# Kafka Connectors (Specific)\n\nDeploy real connector plugins: Debezium CDC sources and\
+  \ common sinks.\n\n## What this skill does\n\n- Installs connector plugins with confluent-hub.\n- Creates\
+  \ Debezium CDC connectors for databases.\n- Monitors CDC topics and connector task state.\n\n## When\
+  \ to use\n\n- Streaming database changes to downstream systems (CDC).\n- Sinking Kafka data to JDBC\
+  \ stores or S3 lakes.\n- Auditing which connector classes are available on a worker.\n\n## Real commands\n\
+  \n```bash\n# Install Debezium MySQL connector\nconfluent-hub install debezium/debezium-connector-mysql:2.5.0\
+  \ \\\n  --component-dir /opt/connect-plugins --no-prompt\n\n# Install JDBC and S3 connectors\nconfluent-hub\
+  \ install confluentinc/kafka-connect-jdbc:latest --no-prompt\nconfluent-hub install confluentinc/kafka-connect-s3:latest\
+  \ --no-prompt\n\n# Restart worker to load new plugins\nsystemctl restart kafka-connect\n\n# Verify plugin\
+  \ is visible\ncurl -s http://localhost:8083/connector-plugins | jq -r '.[].class' | grep -i debezium\n\
+  \n# Create Debezium MySQL source\ncurl -s -X POST http://localhost:8083/connectors \\\n  -H 'Content-Type:\
+  \ application/json' -d @debezium-mysql.json\n\n# Watch change events\nkafka-console-consumer.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --topic dbserver.mydb.products --from-beginning\n\n# Pause/resume to stop data\
+  \ flow temporarily\ncurl -s -X PUT http://localhost:8083/connectors/debezium-mysql/pause\ncurl -s -X\
+  \ PUT http://localhost:8083/connectors/debezium-mysql/resume\n```\n\n## Debezium config example\n\n\
+  ```json\n{\n  \"name\": \"debezium-mysql\",\n  \"config\": {\n    \"connector.class\": \"io.debezium.connector.mysql.MySqlConnector\"\
+  ,\n    \"database.hostname\": \"db-01\",\n    \"database.port\": \"3306\",\n    \"database.user\": \"\
+  debezium\",\n    \"database.password\": \"secret\",\n    \"database.server.name\": \"dbserver\",\n \
+  \   \"database.include.list\": \"mydb\",\n    \"table.include.list\": \"mydb.products\",\n    \"database.history.kafka.bootstrap.servers\"\
+  : \"localhost:9092\",\n    \"database.history.kafka.topic\": \"schema-changes.dbserver\",\n    \"include.schema.changes\"\
+  : \"true\"\n  }\n}\n```\n\n## Testing\n\n```bash\n# A row update in MySQL should appear as a JSON change\
+  \ event in the topic\nmysql -h db-01 -u debezium -p mydb -e \"UPDATE products SET price=9.99 WHERE id=1\"\
+  \nkafka-console-consumer.sh --bootstrap-server localhost:9092 --topic dbserver.mydb.products --from-beginning\n\
+  ```\n\n## Best practices\n\n- Pin connector versions; never use :latest in production.\n- Give Debezium\
+  \ its own DB user with minimal grants (SELECT, RELOAD, SHOW DATABASES).\n- Watch task states; failed\
+  \ CDC tasks silently stall downstream data.\n"
+examples:
+- input: Stream MySQL changes into Kafka
+  output: Install the Debezium MySQL connector, create it via the Connect REST API with database.server.name=dbserver,
+    then consume dbserver.<db>.<table> topics.
+- input: Which connectors are installed?
+  output: curl -s http://localhost:8083/connector-plugins | jq -r '.[].class'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kafka-connectors.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kafka-connectors
+  generic:
+    system_prompt: 'You own Kafka Connectors end to end. You do it through plugin-install: Install connector
+      plugins into the Connect worker with confluent-hub. The commands are real, e.g. `confluent-hub install
+      debezium/debezium-connector-mysql:2.5.0 --component-dir...`. You answer with exact commands, not
+      abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,236 @@
+{
+  "name": "firebase",
+  "display_name": "firebase",
+  "category": "cloud",
+  "subcategory": "general",
+  "description": "Develops Firebase projects with the Firebase CLI: hosting, functions, Firestore, emulators, and deployment.",
+  "version": "2.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "firebase",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npm install -g firebase-tools",
+        "firebase login",
+        "firebase init hosting",
+        "firebase init functions",
+        "firebase use --add"
+      ],
+      "description": "Initialize and configure Firebase projects.",
+      "name": "firebase-init",
+      "examples": [
+        "firebase init --hosting --project myproject",
+        "firebase projects:list",
+        "firebase use myproject"
+      ],
+      "parameters": [
+        {
+          "description": "Firebase project id",
+          "name": "project",
+          "type": "string"
+        },
+        {
+          "description": "hosting, functions, firestore, emulators",
+          "name": "features",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "firebase deploy",
+        "firebase deploy --only hosting",
+        "firebase deploy --only functions:api",
+        "firebase serve",
+        "firebase emulators:start"
+      ],
+      "description": "Deploy hosting and functions.",
+      "name": "firebase-deploy",
+      "examples": [
+        "firebase deploy --only functions",
+        "firebase emulators:start --only firestore",
+        "firebase serve --only hosting"
+      ],
+      "parameters": [
+        {
+          "description": "Targets: hosting, functions:name",
+          "name": "only",
+          "type": "string"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "firebase.json config path"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "firebase firestore:delete --all-collections -y",
+        "firebase deploy --only firestore:rules",
+        "firebase emulators:exec \"npm test\"",
+        "firebase firestore:indexes"
+      ],
+      "description": "Manage Firestore data and rules.",
+      "name": "firestore-ops",
+      "examples": [
+        "firebase firestore:delete users -y",
+        "firebase emulators:start --import ./seed"
+      ],
+      "parameters": [
+        {
+          "description": "Collection to delete",
+          "name": "collection",
+          "type": "string"
+        },
+        {
+          "name": "rules",
+          "type": "string",
+          "description": "Firestore rules file path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Firebase Docs",
+      "description": "Hosting, functions, Firestore reference",
+      "source": "https://firebase.google.com/docs",
+      "type": "documentation"
+    },
+    {
+      "title": "Firebase CLI Reference",
+      "description": "Command list and emulator usage",
+      "source": "https://firebase.google.com/docs/cli",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Firebase\n\nDevelop and deploy Firebase apps.\n\n## When to Use\n\n- Static hosting with CDN (hosting)\n- Serverless functions (Cloud Functions)\n- NoSQL data with Firestore\n- Local development with the emulator suite\n\n## Commands\n\n```bash\n# Setup\nnpm install -g firebase-tools\nfirebase login\nfirebase init hosting\nfirebase init functions\nfirebase use --add\n\n# Deploy\nfirebase deploy\nfirebase deploy --only hosting\nfirebase deploy --only functions:api\n\n# Local\nfirebase serve --only hosting\nfirebase emulators:start\nfirebase emulators:exec \"npm test\"\n\n# Firestore\nfirebase firestore:delete --all-collections -y\nfirebase deploy --only firestore:rules\nfirebase firestore:indexes\n```\n\n## Security Rules Example\n\n```\nrules_version = \"2\";\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /users/{uid} {\n      allow read, write: if request.auth != null && request.auth.uid == uid;\n    }\n  }\n}\n```\n\n## Best Practices\n\n- Develop against emulators before touching the real project\n- Test security rules with the rules emulator\n- Separate staging and production projects\n- Pin firebase-tools versions in CI\n- Deploy functions and hosting independently during rollouts\n- Review generated .firebaserc so deploys target the right project",
+  "examples": [
+    {
+      "input": "Deploy a static site to Firebase Hosting",
+      "output": "Agent runs firebase init hosting, builds the site, and firebase deploy --only hosting."
+    },
+    {
+      "input": "Test my Cloud Functions locally",
+      "output": "Agent starts firebase emulators:start --only functions,firestore and runs requests against localhost."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "firebase.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-firebase"
+    },
+    "generic": {
+      "system_prompt": "You are the firebase specialist. You do it through firebase-init: Initialize and configure Firebase projects. The commands are real, e.g. `npm install -g firebase-tools`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "firebase",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "firebase-init",
+        "name": "project",
+        "type": "string",
+        "description": "Firebase project id"
+      },
+      {
+        "capability": "firebase-init",
+        "name": "features",
+        "type": "string",
+        "description": "hosting, functions, firestore, emulators"
+      },
+      {
+        "capability": "firebase-deploy",
+        "name": "only",
+        "type": "string",
+        "description": "Targets: hosting, functions:name"
+      },
+      {
+        "capability": "firebase-deploy",
+        "name": "config",
+        "type": "string",
+        "description": "firebase.json config path"
+      },
+      {
+        "capability": "firestore-ops",
+        "name": "collection",
+        "type": "string",
+        "description": "Collection to delete"
+      },
+      {
+        "capability": "firestore-ops",
+        "name": "rules",
+        "type": "string",
+        "description": "Firestore rules file path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "firebase",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/firebase-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/firebase-skill.yaml",
+    "checksum": "6b1a1f0e6fa51fb0a3ca14b86c7b4bd1da17f6648a4be800af5e8dca7982fd18"
+  }
+}

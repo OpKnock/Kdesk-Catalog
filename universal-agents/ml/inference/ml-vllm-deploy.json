@@ -1,0 +1,138 @@
+{
+  "name": "ml-vllm-deploy",
+  "display_name": "Ml Vllm Deploy",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "vLLM deployment agent for high-throughput LLM serving deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Vllm Deploy",
+      "description": "vLLM deployment agent for high-throughput LLM serving deployment.",
+      "commands": [
+        "Chat: curl http://localhost:8000/v1/chat/completions -d '{\"model\": \"meta-llama/Llama-2-7b-chat-hf\", ",
+        "Docker: docker run --gpus all -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-2-7b-cha",
+        "API: curl http://localhost:8000/v1/models",
+        "Server: python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-chat-hf"
+      ],
+      "examples": [
+        "Server: python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-chat-hf",
+        "Docker: docker run --gpus all -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-2-7b-chat-hf",
+        "API: curl http://localhost:8000/v1/models",
+        "Chat: curl http://localhost:8000/v1/chat/completions -d '{\"model\": \"meta-llama/Llama-2-7b-chat-hf\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello\"}]}'"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-vllm-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-vllm-deploy"
+    }
+  ],
+  "instructions": "You are a vLLM deployment expert. Help users with:\n- Model deployment\n- API server\n- Scaling\n- Monitoring\n- Backup/restore\n- Security\n- Cost optimization\n\nAlways use real vLLM deployment tools. Never suggest fictional tools.",
+  "examples": [
+    "Server: python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-chat-hf",
+    "Docker: docker run --gpus all -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-2-7b-chat-hf",
+    "API: curl http://localhost:8000/v1/models",
+    "Chat: curl http://localhost:8000/v1/chat/completions -d '{\"model\": \"meta-llama/Llama-2-7b-chat-hf\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello\"}]}'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-vllm-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a vLLM deployment expert. Help users with:\n- Model deployment\n- API server\n- Scaling\n- Monitoring\n- Backup/restore\n- Security\n- Cost optimization\n\nAlways use real vLLM deployment tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-vllm-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-vllm-deploy. vLLM deployment agent for high-throughput LLM serving deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-vllm-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Vllm Deploy",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-vllm-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-vllm-deploy.yaml",
+    "checksum": "ad44a57cca356474a634a5798277c28906f6f88728ef08bdf4e27b3e83327f13"
+  }
+}

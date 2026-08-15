@@ -1,0 +1,187 @@
+{
+  "name": "api-test-data-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "testing",
+  "description": "Generates realistic API test data with Faker: user records, locales, deterministic seeding, and bulk generation for load testing.",
+  "keywords": [
+    "test-data",
+    "faker"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-test-data-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-test-data-engineer"
+    },
+    "generic": {
+      "system_prompt": "You work api-test-data-engineer hands-on. You do it through faker-generation: Generate realistic test datasets. The commands are real, e.g. `npm install @faker-js/faker`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "faker-generation",
+      "description": "Generate realistic test datasets",
+      "commands": [
+        "npm install @faker-js/faker",
+        "node -e \"const {faker}=require('@faker-js/faker'); for(let i=0;i<5;i++) console.log(faker.person.fullName(), faker.internet.email())\"",
+        "node -e \"const {faker}=require('@faker-js/faker'); faker.seed(42); console.log(faker.internet.email())\"",
+        "pip install faker",
+        "python -m faker name --locale=ja_JP"
+      ],
+      "examples": [
+        "faker.seed(42) makes output deterministic",
+        "faker.person.fullName generates realistic names",
+        "--locale=ja_JP localizes generated data"
+      ],
+      "parameters": [
+        {
+          "name": "seed",
+          "type": "integer",
+          "description": "Deterministic generation seed"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "description": "Locale code"
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "description": "Number of records to generate"
+        }
+      ]
+    },
+    {
+      "name": "bulk-generation",
+      "description": "Generate bulk datasets for load tests",
+      "commands": [
+        "node -e \"const {faker}=require('@faker-js/faker'); const out=Array.from({length:1000},()=>({id:faker.string.uuid(),email:faker.internet.email(),name:faker.person.fullName()})); require('fs').writeFileSync('users.json',JSON.stringify(out)); console.log(out.length)\"",
+        "python -c \"from faker import Faker; f=Faker('en_US'); rows=[{'name':f.name(),'email':f.email()} for _ in range(500)]; import json; open('users.json','w').write(json.dumps(rows)); print(len(rows))\"",
+        "curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d @users.json -o /dev/null -w '%{http_code}\\n'"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "faker",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "faker",
+    "node.js",
+    "python",
+    "factory-boy",
+    "json-schema-faker"
+  ],
+  "examples": [
+    {
+      "input": "Generate 1000 users for load testing",
+      "output": "Creates a seeded Faker dataset and writes it to users.json"
+    },
+    {
+      "input": "Localized test data",
+      "output": "Generates ja_JP records with the Python Faker CLI"
+    }
+  ],
+  "instructions": "# API Test Data Engineer\n\nTest data generation with Faker.\n\n## What This Skill Does\n- Generates realistic, localized fake data\n- Seeds deterministic datasets\n- Produces bulk fixtures for load tests\n\n## When to Use\n- Filling development databases\n- Preparing load test datasets\n- Masking PII in test environments\n\n## Real Commands\n\n```bash\nnpm install @faker-js/faker\nnode -e \"const {faker}=require('@faker-js/faker'); faker.seed(42); console.log(faker.internet.email())\"\npython -m faker name --locale=ja_JP\n```\n\n## Patterns\n- Use seeds for reproducible tests\n- Match schemas exactly to production DTOs\n- Generate edge cases deliberately (empty, long, unicode)\n\n## Testing\n- Validate generated data against schemas\n- Check distributions (names, domains)\n- Keep datasets versioned\n\n\n## Best Practices\n- Prefer locale-specific generation\n- Store fixtures in the repo\n- Refresh data when schemas change",
+  "display_name": "api-test-data-engineer",
+  "knowledge": [
+    {
+      "title": "Faker.js Docs",
+      "type": "documentation",
+      "source": "https://fakerjs.dev/",
+      "description": "JavaScript data generation library"
+    },
+    {
+      "title": "Python Faker Docs",
+      "type": "documentation",
+      "source": "https://faker.readthedocs.io/en/master/",
+      "description": "Python Faker reference"
+    }
+  ],
+  "id": "api-test-data-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "faker-generation",
+        "name": "seed",
+        "type": "integer",
+        "description": "Deterministic generation seed"
+      },
+      {
+        "capability": "faker-generation",
+        "name": "locale",
+        "type": "string",
+        "description": "Locale code"
+      },
+      {
+        "capability": "faker-generation",
+        "name": "count",
+        "type": "integer",
+        "description": "Number of records to generate"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "faker",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-test-data-engineer/skill/api-test-data-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-test-data-engineer/skill/api-test-data-engineer.yaml",
+    "checksum": "838de798bcd7ffe86efc80bcc7f786d9923271a080dcbe1c8a9fbc1984a8ae06"
+  }
+}

@@ -1,0 +1,77 @@
+name: gke-deployment
+display_name: Gke Deployment
+category: ml
+subcategory: deployment
+description: GKE SDK deployment agent for ML GKE SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Gke Deploy Sdk
+  description: GKE SDK deployment agent for ML GKE SDK deployment.
+  commands:
+  - docker build -t gke:latest .
+  - docker push registry.example.com/gke:latest
+  - kubectl set image deployment/gke gke=registry.example.com/gke:latest
+  - helm upgrade gke ./helm-chart --namespace production
+  - kubectl rollout status deployment/gke --timeout=300s
+  - python identity.py --agent gke-deployment
+  examples:
+  - 'Server: python -m gke.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 gke-server'
+  parameters: []
+knowledge:
+- title: gke-deployment Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for gke-deployment
+instructions: 'You are a gke SDK deployment expert (you help users deploy GKE applications). A user calls
+  on you to build, ship, and roll out a GKE as a containerized Kubernetes service. Work step by step:
+  build with docker build -t gke:latest ., publish with docker push registry.example.com/gke:latest, then
+  roll out with kubectl set image deployment/gke gke=registry.example.com/gke:latest and confirm via kubectl
+  rollout status deployment/gke --timeout=300s; apply config changes with helm upgrade gke ./helm-chart
+  --namespace production. Verify locally first with python -m gke.server --port 8080 and docker run -p
+  8080:8080 gke-server, and identify with python identity.py --agent gke-deployment. Confirm the cluster
+  context and namespace before acting. If build, push, or rollout fails, stop and surface the exact error
+  (registry auth, missing Dockerfile, tag mismatch) rather than proceeding, and report the image tag,
+  rollout status, and verification performed.'
+examples:
+- 'Server: python -m gke.server --port 8080'
+- 'Docker: docker run -p 8080:8080 gke-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gke-deployment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a GKE SDK deployment expert. Help users deploy GKE applications.
+  opencode:
+    plugin: opencode-gke-deployment
+  generic:
+    system_prompt: You are gke-deployment. GKE SDK deployment agent for ML GKE SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

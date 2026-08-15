@@ -1,0 +1,138 @@
+name: dotnet-test
+display_name: dotnet-test
+category: testing
+subcategory: general
+description: Runs .NET test suites with dotnet test, xUnit/NUnit/MSTest filters, code coverage, and CI
+  output.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- dotnet
+- dotnet-coverage
+capabilities:
+- name: dotnet-testing
+  description: Build and run .NET test projects with filters.
+  commands:
+  - dotnet test
+  - dotnet test --filter "FullyQualifiedName~OrderService"
+  - dotnet test --filter "Category=Unit"
+  - dotnet test --no-build
+  - dotnet test --verbosity detailed
+  examples:
+  - dotnet test
+  - dotnet test --filter "FullyQualifiedName~OrderService"
+  - dotnet test --no-build --verbosity minimal
+  parameters:
+  - name: filter
+    type: string
+    description: Test filter expression
+  - name: noBuild
+    type: boolean
+    description: Skip build step
+  - name: verbosity
+    type: string
+    description: 'Output verbosity: quiet, minimal, detailed'
+- name: coverage-and-reporting
+  description: Collect coverage and generate test reports.
+  commands:
+  - dotnet test --collect:"XPlat Code Coverage"
+  - dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage
+  - dotnet-coverage collect -f cobertura -o coverage.xml "dotnet test"
+  - dotnet test --logger "trx;LogFileName=results.trx"
+  examples:
+  - dotnet test --collect:"XPlat Code Coverage"
+  - dotnet-coverage collect -f cobertura -o coverage.xml "dotnet test"
+  - dotnet test --logger "trx;LogFileName=results.trx"
+  parameters:
+  - name: collector
+    type: string
+    description: Coverage collector, e.g. XPlat Code Coverage
+  - name: logger
+    type: string
+    description: Logger format, e.g. trx
+- name: test-suite-scaffolding
+  description: Create new test projects for frameworks.
+  commands:
+  - dotnet new xunit -o tests/MyApp.Tests
+  - dotnet new nunit -o tests/MyApp.Tests
+  - dotnet new mstest -o tests/MyApp.Tests
+  - dotnet add tests/MyApp.Tests reference src/MyApp/MyApp.csproj
+  examples:
+  - dotnet new xunit -o tests/MyApp.Tests
+  - dotnet add tests/MyApp.Tests reference src/MyApp/MyApp.csproj
+  - dotnet new nunit -o tests/MyApp.Tests
+  parameters:
+  - name: framework
+    type: string
+    description: xunit, nunit, or mstest
+  - name: output
+    type: string
+    description: Output directory
+knowledge:
+- title: dotnet test Documentation
+  type: documentation
+  source: https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test
+  description: CLI reference and test filter syntax
+- title: xUnit Documentation
+  type: documentation
+  source: https://xunit.net/docs
+  description: xUnit attributes and assertions
+- title: dotnet-coverage Tool
+  type: documentation
+  source: https://learn.microsoft.com/en-us/dotnet/core/additional-tools/dotnet-coverage
+  description: Cross-platform coverage collection
+instructions: "# dotnet test\n\nTest .NET applications with xUnit, NUnit, or MSTest.\n\n## What This Skill\
+  \ Does\n\n- Builds and runs test projects with filters\n- Collects code coverage cross-platform\n- Emits\
+  \ TRX logs for CI dashboards\n- Scaffolds new test projects\n\n## When to Use\n\n- Running the test\
+  \ suite in CI\n- Debugging one failing test class\n- Enforcing coverage thresholds\n\n## Real Commands\n\
+  \n```bash\n# Run all tests\n dotnet test\n\n# Filtered runs\ndotnet test --filter \"FullyQualifiedName~OrderService\"\
+  \ndotnet test --filter \"Category=Unit\"\n\n# Fast iteration\n dotnet test --no-build\n\n# Coverage\n\
+  dotnet test --collect:\"XPlat Code Coverage\"\ndotnet-coverage collect -f cobertura -o coverage.xml\
+  \ \"dotnet test\"\n\n# TRX logger\ndotnet test --logger \"trx;LogFileName=results.trx\"\n\n# Scaffold\n\
+  dotnet new xunit -o tests/MyApp.Tests\n```\n\n## Sample Test (xUnit)\n\n```csharp\npublic class OrderTests\n\
+  {\n    [Fact]\n    public void Total_AddsLines()\n    {\n        var order = new Order();\n        order.AddLine(10,\
+  \ 2);\n        Assert.Equal(20, order.Total);\n    }\n\n    [Theory]\n    [InlineData(2, 3, 6)]\n  \
+  \  [InlineData(-1, 5, -5)]\n    public void Multiply_Works(int a, int b, int expected)\n    {\n    \
+  \    Assert.Equal(expected, a * b);\n    }\n}\n```\n\n## Best Practices\n\n- Keep unit tests free of\
+  \ IO; use mocks\n- Use Theory for data-driven cases\n- Collect coverage with Cobertura format for CI\n\
+  - Set --no-build in rerun loops\n- Fail CI on coverage below threshold"
+examples:
+- input: Run only the order tests
+  output: Agent runs dotnet test --filter "FullyQualifiedName~Order" and reports pass/fail counts.
+- input: Add coverage gates to CI
+  output: Agent adds dotnet test --collect:"XPlat Code Coverage" with a coverage threshold check on the
+    Cobertura output.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: dotnet-test.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-dotnet-test
+  generic:
+    system_prompt: 'You take the dotnet-test seat. You do it through dotnet-testing: Build and run .NET
+      test projects with filters. The commands are real, e.g. `dotnet test`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

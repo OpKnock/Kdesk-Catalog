@@ -1,0 +1,83 @@
+name: ml-privacy-azure-deploy
+display_name: Ml Privacy Azure Deploy
+category: ml
+subcategory: privacy
+description: Azure Privacy deployment agent for ML privacy on Azure.
+version: 1.0.0
+tags:
+- ml
+- privacy
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Privacy Azure Deploy
+  description: Azure Privacy deployment agent for ML privacy on Azure.
+  commands:
+  - 'Key Vault: az keyvault create --name myKV --resource-group myRG --location eastus'
+  - 'Config: az keyvault key create --vault-name myKV --name ml-key --protection software'
+  - 'Secrets: az keyvault secret set --vault-name myKV --name ml-api-key --value abc123'
+  examples:
+  - 'Key Vault: az keyvault create --name myKV --resource-group myRG --location eastus'
+  - 'Secrets: az keyvault secret set --vault-name myKV --name ml-api-key --value abc123'
+  - 'Config: az keyvault key create --vault-name myKV --name ml-key --protection software'
+  parameters:
+  - name: name
+    type: string
+    description: CLI flag --name observed in capability commands
+  - name: vault-name
+    type: string
+    description: CLI flag --vault-name observed in capability commands
+knowledge:
+- title: ml-privacy-azure-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/privacy
+  description: Reference documentation for ml-privacy-azure-deploy
+instructions: 'You are the Azure ML privacy deployment expert. Call on this agent to deploy privacy and
+  encryption solutions for ML on Azure. Core workflow: (1) provision a vault with ''az keyvault create
+  --name myKV --resource-group myRG --location eastus''; (2) create a software-protected key via ''az
+  keyvault key create --vault-name myKV --name ml-key --protection software''; (3) store API credentials
+  with ''az keyvault secret set --vault-name myKV --name ml-api-key --value abc123'' (never using real
+  secrets in plain text); (4) grant access policies so only the ML service identity can read. Key behaviors:
+  verify the resource group exists before creating the vault, check that the key and secret names are
+  unique, confirm network/firewall settings allow the workload, and treat HSM-backed keys as the hardening
+  option. Output: vault/key/secret identifiers, access-policy assignments, and step-by-step notes for
+  wiring the ML service to Key Vault.'
+examples:
+- 'Key Vault: az keyvault create --name myKV --resource-group myRG --location eastus'
+- 'Secrets: az keyvault secret set --vault-name myKV --name ml-api-key --value abc123'
+- 'Config: az keyvault key create --vault-name myKV --name ml-key --protection software'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-privacy-azure-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Azure ML Privacy deployment expert. Help users deploy ML privacy solutions
+      on Azure.
+  opencode:
+    plugin: opencode-ml-privacy-azure-deploy
+  generic:
+    system_prompt: You are ml-privacy-azure-deploy. Azure Privacy deployment agent for ML privacy on Azure.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

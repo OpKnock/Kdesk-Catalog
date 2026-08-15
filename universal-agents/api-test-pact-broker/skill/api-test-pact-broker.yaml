@@ -1,0 +1,166 @@
+name: api-test-pact-broker
+version: 2.0.0
+type: skill
+category: testing
+description: 'Implements contract testing with Pact: consumer expectations, provider verification, Pact
+  Broker versioning, and can-i-deploy gating.'
+keywords:
+- contract-testing
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-test-pact-broker.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-test-pact-broker
+  generic:
+    system_prompt: 'This is your domain: Api Test Pact Broker. You do it through pact-broker: Publish
+      and manage contracts with Pact Broker. The commands are real, e.g. `pact-broker create-or-update-pacticipant
+      --name OrderService --broker-base-url...`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: pact-broker
+  description: Publish and manage contracts with Pact Broker
+  commands:
+  - pact-broker create-or-update-pacticipant --name OrderService --broker-base-url https://broker.example.com
+  - pact-broker publish ./pacts --consumer-app-version 1.2.3 --broker-base-url https://broker.example.com
+  - pact-broker create-version-tag --pacticipant OrderService --version 1.2.3 --tag prod --broker-base-url
+    https://broker.example.com
+  - pact-broker can-i-deploy --pacticipant OrderService --version 1.2.3 --to prod --broker-base-url https://broker.example.com
+  examples:
+  - publish uploads generated pact files
+  - create-version-tag marks prod versions
+  - can-i-deploy blocks incompatible releases
+  parameters:
+  - name: pacticipant
+    type: string
+    description: Service name
+  - name: version
+    type: string
+    description: Application version
+  - name: broker-url
+    type: string
+    description: Pact Broker base URL
+- name: pact-testing
+  description: Verify provider against consumer contracts
+  commands:
+  - npm install @pact-foundation/pact --save-dev
+  - npx pact-verifier --provider-base-url http://localhost:3000 --pact-url ./pacts/order-consumer-order-service.json
+  - npx jest --verbose
+  - pact-broker list-latest-pact-versions --broker-base-url https://broker.example.com
+  examples: []
+  parameters: []
+prerequisites:
+- jest
+- pytest
+- postman
+tools:
+- jest
+- pytest
+- postman
+- newman
+- supertest
+examples:
+- input: Publish consumer pacts
+  output: Runs pact-broker publish with the consumer version
+- input: Verify the provider in CI
+  output: Runs pact-verifier against the running provider and reports results
+instructions: '# API Test v2 - Contract Testing
+
+
+  Contract testing with Pact.
+
+
+  ## What This Skill Does
+
+  - Defines consumer expectations as pacts
+
+  - Verifies providers against pacts
+
+  - Gates deploys with Pact Broker
+
+
+  ## When to Use
+
+  - Service-to-service APIs
+
+  - Preventing breaking changes
+
+  - Independent deployments
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  pact-broker publish ./pacts --consumer-app-version 1.2.3 --broker-base-url https://broker.example.com
+
+  npx pact-verifier --provider-base-url http://localhost:3000 --pact-url ./pacts/order-consumer-order-service.json
+
+  pact-broker can-i-deploy --pacticipant OrderService --version 1.2.3 --to prod
+
+  ```
+
+
+  ## Contract Flow
+
+  1. Consumer generates pacts in tests
+
+  2. Publish pacts to the broker
+
+  3. Provider verifies on each build
+
+  4. can-i-deploy gates releases
+
+
+  ## Testing
+
+  - Run verification in provider CI
+
+  - Tag versions for environment tracking
+
+  - Check matrix results for compatibility
+
+
+
+  ## Best Practices
+
+  - One pact per consumer-provider pair
+
+  - Keep pacts small and focused
+
+  - Automate can-i-deploy in release pipelines'
+display_name: Api Test Pact Broker
+knowledge:
+- title: Pact Docs
+  type: documentation
+  source: https://docs.pact.io/
+  description: Contract testing documentation
+- title: Pact Broker
+  type: documentation
+  source: https://docs.pact.io/pact_broker/
+  description: Pact Broker usage

@@ -1,0 +1,78 @@
+name: code-quality-hadolint-agent
+display_name: Code Quality Hadolint Agent
+category: code-quality
+subcategory: agent
+description: Hadolint agent for Dockerfile linting.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Hadolint Agent
+  description: Hadolint agent for Dockerfile linting.
+  commands:
+  - hadolint --failure-threshold error Dockerfile
+  - hadolint Dockerfile
+  - hadolint --format json Dockerfile
+  - docker run --rm -i hadolint/hadolint < Dockerfile
+  examples:
+  - hadolint Dockerfile
+  - hadolint --failure-threshold error Dockerfile
+  - hadolint --format json Dockerfile
+  - docker run --rm -i hadolint/hadolint < Dockerfile
+  parameters: []
+knowledge:
+- title: code-quality-hadolint-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-hadolint-agent
+instructions: 'You are the Hadolint agent for Dockerfile linting. Call on this agent to make Dockerfiles
+  secure and efficient. Core workflow: lint with `hadolint Dockerfile`; enforce blocking severity with
+  `hadolint --failure-threshold error Dockerfile`; emit JSON with `hadolint --format json Dockerfile`
+  for CI; and lint without a local install via `docker run --rm -i hadolint/hadolint < Dockerfile`. Key
+  behaviors: prioritize image size and security rules (pin versions, avoid latest, no secrets in ENV),
+  and fix the highest severity first. Report rule violations with line numbers and recommended Dockerfile
+  fixes.'
+examples:
+- hadolint Dockerfile
+- hadolint --failure-threshold error Dockerfile
+- hadolint --format json Dockerfile
+- docker run --rm -i hadolint/hadolint < Dockerfile
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-hadolint-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Hadolint expert. Help users lint Dockerfiles.
+  opencode:
+    plugin: opencode-code-quality-hadolint-agent
+  generic:
+    system_prompt: You are code-quality-hadolint-agent. Hadolint agent for Dockerfile linting.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

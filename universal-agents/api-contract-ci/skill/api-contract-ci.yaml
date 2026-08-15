@@ -1,0 +1,187 @@
+name: api-contract-ci
+version: 2.0.0
+type: skill
+category: testing
+description: 'Wires contract testing into CI/CD: broker pipelines, deploy gates, and breaking-change detection
+  for every release.'
+keywords:
+- contract-testing
+- pact
+- openapi
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-contract-ci.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-contract-ci
+  generic:
+    system_prompt: 'You work Api Contract Ci hands-on. You do it through ci-integration: Add Pact publish,
+      verify, and can-i-deploy steps to pipelines. The commands are real, e.g. `npx pact-broker publish
+      ./pacts --consumer-version $BUILD_NUMBER --broker-base-url...`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: ci-integration
+  description: Add Pact publish, verify, and can-i-deploy steps to pipelines
+  commands:
+  - npx pact-broker publish ./pacts --consumer-version $BUILD_NUMBER --broker-base-url http://localhost:9292
+  - npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-broker-base-url http://localhost:9292
+    --provider api --consumer-version-selector '{"branch":"main"}'
+  - npx pact-broker can-i-deploy --pacticipant api --version $BUILD_NUMBER --to prod --broker-base-url
+    http://localhost:9292
+  - npx pact-broker record-deployment --pacticipant api --version $BUILD_NUMBER --environment prod --broker-base-url
+    http://localhost:9292
+  - npx pact-broker list-environments --broker-base-url http://localhost:9292
+  examples:
+  - npx pact-broker publish ./pacts --consumer-version $BUILD_NUMBER --broker-base-url http://localhost:9292
+  - npx pact-broker can-i-deploy --pacticipant api --version $BUILD_NUMBER --to prod --broker-base-url
+    http://localhost:9292
+  - npx pact-broker record-deployment --pacticipant api --version $BUILD_NUMBER --environment prod --broker-base-url
+    http://localhost:9292
+  parameters:
+  - name: broker
+    type: string
+    description: Broker base URL
+  - name: environment
+    type: string
+    description: Deployment environment
+  - name: buildNumber
+    type: string
+    description: Build/version identifier
+- name: breaking-change-gates
+  description: Block incompatible spec changes with automated diffs
+  commands:
+  - openapi-diff --fail-on-incompatible main.yaml pr.yaml
+  - git diff main.yaml pr.yaml --stat
+  - npx @stoplight/spectral-cli lint pr.yaml
+  - swagger-cli validate pr.yaml
+  - openapi-diff --fail-on-changed main.yaml pr.yaml
+  examples:
+  - openapi-diff --fail-on-incompatible main.yaml pr.yaml
+  - git diff main.yaml pr.yaml --stat && openapi-diff --fail-on-incompatible main.yaml pr.yaml
+  - swagger-cli validate pr.yaml && npx @stoplight/spectral-cli lint pr.yaml
+  parameters:
+  - name: base
+    type: string
+    description: Baseline spec
+  - name: candidate
+    type: string
+    description: PR spec
+prerequisites:
+- pact
+- openapi
+- node.js
+- python
+tools:
+- pact
+- openapi
+- node.js
+- python
+- postman
+examples:
+- input: Add contract gates to our release pipeline
+  output: Wires publish, verify, can-i-deploy, and record-deployment into consumer and provider pipelines
+- input: Catch breaking OpenAPI changes in PRs
+  output: Adds openapi-diff with --fail-on-incompatible plus spectral lint to every PR
+instructions: '# API Contract (CI/CD)
+
+
+  Makes contract tests a release gate, not an afterthought.
+
+
+  ## When to Use
+
+  - Releases break consumers silently
+
+  - Multiple teams share one API
+
+  - Need deploy-time confidence
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # In the consumer pipeline
+
+  npx pact-broker publish ./pacts --consumer-version $BUILD_NUMBER --broker-base-url http://localhost:9292
+
+
+  # In the provider pipeline
+
+  npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-broker-base-url http://localhost:9292
+  --provider api
+
+
+  # Gate the release
+
+  npx pact-broker can-i-deploy --pacticipant api --version $BUILD_NUMBER --to prod --broker-base-url http://localhost:9292
+
+
+  # Record the deployment
+
+  npx pact-broker record-deployment --pacticipant api --version $BUILD_NUMBER --environment prod --broker-base-url
+  http://localhost:9292
+
+
+  # Spec diff gate
+
+  openapi-diff --fail-on-incompatible main.yaml pr.yaml
+
+  ```
+
+
+  ## Pipeline Layout
+
+  - Consumer: test, publish, can-i-deploy
+
+  - Provider: verify, can-i-deploy
+
+  - Release: record-deployment
+
+
+  ## Testing
+
+  Break a contract on purpose and confirm the gate blocks the release.
+
+
+  ## Best Practices
+
+  - Version every build
+
+  - Record deployments so the broker knows prod state'
+display_name: Api Contract Ci
+knowledge:
+- title: Pact Broker can-i-deploy
+  type: documentation
+  source: https://docs.pact.io/pact_broker/can_i_deploy
+  description: Deploy gating semantics
+- title: Pact Broker Environments
+  type: documentation
+  source: https://docs.pact.io/pact_broker/recording_deployments
+  description: record-deployment and environments

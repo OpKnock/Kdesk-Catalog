@@ -1,0 +1,142 @@
+{
+  "name": "ml-elasticsearch-vector-agent",
+  "display_name": "Ml Elasticsearch Vector Agent",
+  "category": "ml",
+  "subcategory": "vector-db",
+  "description": "Elasticsearch vector operations agent. Manages Elasticsearch vector search operations.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "vector-db"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Elasticsearch Vector Agent",
+      "description": "Elasticsearch vector operations agent. Manages Elasticsearch vector search operations.",
+      "commands": [
+        "python index_vectors.py --collection elasticsearch --dimension 1536 --metric cosine",
+        "python upsert.py --collection elasticsearch --namespace default --vectors vectors.json",
+        "python query.py --collection elasticsearch --top-k 10 --include-metadata",
+        "python list_collections.py --filter '{\"name\": \"elasticsearch\"}'"
+      ],
+      "examples": [
+        "python create_index.py --name my-index --dimensions 1536",
+        "python index_vectors.py --index my-index --vectors vectors.json",
+        "python search_vectors.py --index my-index --query query_vector --k 10",
+        "python delete_vectors.py --index my-index --ids ids.json"
+      ],
+      "parameters": [
+        {
+          "name": "collection",
+          "type": "string",
+          "description": "CLI flag --collection observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-elasticsearch-vector-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/vector-db",
+      "description": "Reference documentation for ml-elasticsearch-vector-agent"
+    }
+  ],
+  "instructions": "You are the Elasticsearch vector operations expert. Call on this agent to manage Elasticsearch vector search. Core workflow: (1) create the index with 'python index_vectors.py --collection elasticsearch --dimension 1536 --metric cosine'; (2) upsert vectors with 'python upsert.py --collection elasticsearch --namespace default --vectors vectors.json'; (3) query with 'python query.py --collection elasticsearch --top-k 10 --include-metadata'; (4) list with 'python list_collections.py --filter '\"{\\\"name\\\": \\\"elasticsearch\\\"}\"''. Key behaviors: keep dimensions consistent with your embedding model, validate vectors.json, and confirm namespace names. Output: index status, upsert counts, top-k results, and collection list.",
+  "examples": [
+    "python create_index.py --name my-index --dimensions 1536",
+    "python index_vectors.py --index my-index --vectors vectors.json",
+    "python search_vectors.py --index my-index --query query_vector --k 10",
+    "python delete_vectors.py --index my-index --ids ids.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-elasticsearch-vector-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Elasticsearch vector operations expert. Help users manage Elasticsearch vector search."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-elasticsearch-vector-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-elasticsearch-vector-agent. Elasticsearch vector operations agent. Manages Elasticsearch vector search operations.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-elasticsearch-vector-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Elasticsearch Vector Agent",
+        "name": "collection",
+        "type": "string",
+        "description": "CLI flag --collection observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/vector-db/ml-elasticsearch-vector-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/vector-db/ml-elasticsearch-vector-agent.yaml",
+    "checksum": "11bfe8e86be70797e0092f5e2b7a9b5725a5e5fddffcfb9f433529bb60711e2a"
+  }
+}

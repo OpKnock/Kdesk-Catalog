@@ -1,0 +1,170 @@
+{
+  "name": "token-refresh",
+  "display_name": "Token Refresh",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted token refresh skill: OAuth2 refresh grant exchange, token rotation behavior, reuse detection, and automated refresh in CLIs and services.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "oauth2l"
+  ],
+  "capabilities": [
+    {
+      "name": "oauth-refresh",
+      "description": "Refresh access tokens with the OAuth2 refresh grant",
+      "commands": [
+        "curl -s -X POST https://idp.example.com/token -d \"grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET\" | jq -r .access_token",
+        "curl -s -X POST https://idp.example.com/token -d \"grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET\" -o /dev/null -w '%{http_code}\\n'",
+        "oauth2l header cloud-platform",
+        "curl -s -H \"Authorization: Bearer $NEW_ACCESS_TOKEN\" https://api.example.com/me"
+      ],
+      "examples": [
+        "curl -s -X POST https://idp.example.com/token -d \"grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET\" | jq -r .access_token",
+        "curl -s -X POST https://idp.example.com/token -d \"grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1\" -o /dev/null -w '%{http_code}\\n'",
+        "oauth2l header cloud-platform"
+      ],
+      "parameters": [
+        {
+          "name": "refresh_token",
+          "type": "string",
+          "description": "Long-lived token from the original grant"
+        },
+        {
+          "name": "client_id",
+          "type": "string",
+          "description": "OAuth client identifier"
+        },
+        {
+          "name": "rotation",
+          "type": "boolean",
+          "description": "Server returns a new refresh token per exchange"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OAuth2 refresh grant (RFC 6749 sec 6)",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc6749#section-6",
+      "description": "Refresh token request/response and errors"
+    },
+    {
+      "title": "oauth2l repo",
+      "type": "documentation",
+      "source": "https://github.com/google/oauth2l",
+      "description": "CLI for fetching and refreshing tokens"
+    }
+  ],
+  "instructions": "# Token Refresh\n\nHand-crafted skill for keeping OAuth2 access tokens fresh.\n\n## What this skill does\n\n- Exchanges refresh tokens for new access tokens\n- Detects rotation and reuse-rejection behavior\n- Automates refreshes for CLIs and background services\n\n## When to use\n\n- Access tokens expire in minutes; refresh tokens last longer\n- A service needs to stay authenticated without user interaction\n- Debugging invalid_grant errors from stale refresh tokens\n\n## Real commands\n\n```bash\n# Exchange the refresh token for a new access token\ncurl -s -X POST https://idp.example.com/token -d \"grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET\" | jq -r .access_token\n\n# With rotation, the response also contains a new refresh_token:\n#   curl ... | jq -r .refresh_token   (store it)\n\n# Reuse detection: second use of a rotated token should 400\ncurl -s -X POST https://idp.example.com/token -d \"grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1\" -o /dev/null -w '%{http_code}\\n'\n\n# Convenience CLI (Google APIs)\noauth2l header cloud-platform\n\n# Use the fresh token\ncurl -s -H \"Authorization: Bearer $NEW_ACCESS_TOKEN\" https://api.example.com/me\n```\n\n## Refresh loop\n\n- Store the latest refresh_token after every exchange\n- Refresh when access token has <10% TTL left\n- On invalid_grant: force a full re-login\n\n## Testing\n\n```bash\nTOKEN=$(curl -s -X POST https://idp.example.com/token -d \"grant_type=refresh_token&refresh_token=$RT&client_id=app1&client_secret=$S\" | jq -r .access_token)\ncurl -s -H \"Authorization: Bearer $TOKEN\" https://api.example.com/me\n```\n\n## Best practices\n\n- Treat refresh tokens as sensitive: store encrypted, rotate on use\n- Persist the newest refresh token atomically with the exchange\n- Never put refresh tokens in URLs or logs\n",
+  "examples": [
+    {
+      "input": "My access token expired, renew it",
+      "output": "curl -s -X POST https://idp.example.com/token -d \"grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET\" | jq -r .access_token."
+    },
+    {
+      "input": "Refresh suddenly returns invalid_grant",
+      "output": "With rotation, a reused token fails; use the latest stored refresh_token or re-run the interactive login."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "token-refresh.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-token-refresh"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Token Refresh. You do it through oauth-refresh: Refresh access tokens with the OAuth2 refresh grant. The commands are real, e.g. `curl -s -X POST https://idp.example.com/token -d...`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "token-refresh",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "oauth-refresh",
+        "name": "refresh_token",
+        "type": "string",
+        "description": "Long-lived token from the original grant"
+      },
+      {
+        "capability": "oauth-refresh",
+        "name": "client_id",
+        "type": "string",
+        "description": "OAuth client identifier"
+      },
+      {
+        "capability": "oauth-refresh",
+        "name": "rotation",
+        "type": "boolean",
+        "description": "Server returns a new refresh token per exchange"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "oauth2l"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/token-refresh-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/token-refresh-skill.yaml",
+    "checksum": "9e3daa0073723e3064f82d138ec04aa98ecac8ba84fc7ddb50cd8123c4bdc3d4"
+  }
+}

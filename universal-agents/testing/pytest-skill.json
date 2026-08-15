@@ -1,0 +1,253 @@
+{
+  "name": "pytest",
+  "display_name": "pytest",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Runs Python tests with pytest: fixtures, parametrization, markers, parallel execution, and coverage.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pytest"
+  ],
+  "capabilities": [
+    {
+      "name": "pytest-runs",
+      "description": "Run tests with filters, markers, and ordering.",
+      "commands": [
+        "pytest",
+        "pytest tests/test_app.py::test_login",
+        "pytest -k \"login or signup\"",
+        "pytest -m slow",
+        "pytest -x --maxfail=1"
+      ],
+      "examples": [
+        "pytest tests/test_app.py::test_login",
+        "pytest -k login",
+        "pytest -m smoke --maxfail=1"
+      ],
+      "parameters": [
+        {
+          "name": "testPath",
+          "type": "string",
+          "description": "File::test selector"
+        },
+        {
+          "name": "keyword",
+          "type": "string",
+          "description": "Expression filter (-k)"
+        },
+        {
+          "name": "marker",
+          "type": "string",
+          "description": "Marker filter (-m)"
+        }
+      ]
+    },
+    {
+      "name": "fixtures-and-parametrize",
+      "description": "Build shared fixtures and data-driven tests.",
+      "commands": [
+        "pytest --fixtures",
+        "pytest --setup-show",
+        "pytest tests/test_order.py::test_calc[2-3-6]",
+        "pytest --collect-only",
+        "pytest --pdb"
+      ],
+      "examples": [
+        "pytest --fixtures",
+        "pytest --collect-only",
+        "pytest tests/test_order.py::test_calc[2-3-6] --pdb"
+      ],
+      "parameters": [
+        {
+          "name": "fixtures",
+          "type": "boolean",
+          "description": "List available fixtures"
+        },
+        {
+          "name": "pdb",
+          "type": "boolean",
+          "description": "Drop into pdb on failure"
+        }
+      ]
+    },
+    {
+      "name": "parallel-and-coverage",
+      "description": "Parallel runs and coverage reports.",
+      "commands": [
+        "pytest -n 4",
+        "pytest --cov=src --cov-report=term-missing",
+        "pytest --cov=src --cov-report=html:coverage_html",
+        "pytest --junitxml=results.xml",
+        "pytest --lf --last-failed-no-failures=all"
+      ],
+      "examples": [
+        "pytest -n 4 --cov=src",
+        "pytest --cov=src --cov-report=html:coverage_html",
+        "pytest --junitxml=results.xml"
+      ],
+      "parameters": [
+        {
+          "name": "workers",
+          "type": "number",
+          "description": "Parallel workers (-n)"
+        },
+        {
+          "name": "cov",
+          "type": "string",
+          "description": "Package to measure coverage"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "pytest Documentation",
+      "type": "documentation",
+      "source": "https://docs.pytest.org/",
+      "description": "Fixtures, parametrization, and plugins"
+    },
+    {
+      "title": "pytest-xdist",
+      "type": "documentation",
+      "source": "https://pytest-xdist.readthedocs.io/",
+      "description": "Parallel test execution"
+    },
+    {
+      "title": "pytest-cov",
+      "type": "documentation",
+      "source": "https://pytest-cov.readthedocs.io/",
+      "description": "Coverage integration"
+    }
+  ],
+  "instructions": "# pytest\n\nThe standard Python testing framework.\n\n## What This Skill Does\n\n- Runs tests with precise selectors and filters\n- Writes fixtures for shared state and mocks\n- Parametrizes tests for data-driven coverage\n- Parallelizes runs and measures coverage\n\n\n## When to Use\n\n- Unit and integration tests for Python services\n- Data-driven test matrices\n- CI coverage gates\n\n## Real Commands\n\n```bash\n# Run\npytest\npytest tests/test_app.py::test_login\npytest -k \"login or signup\"\npytest -m smoke --maxfail=1\n\n# Debug\npytest --collect-only\npytest tests/test_order.py::test_calc[2-3-6] --pdb\n\n# Parallel and coverage\npytest -n 4 --cov=src --cov-report=term-missing\npytest --cov=src --cov-report=html:coverage_html\npytest --junitxml=results.xml\n```\n\n## Sample Test\n\n```python\nimport pytest\n\n@pytest.fixture\ndef client():\n    return TestClient(app)\n\n@pytest.mark.parametrize(\"a,b,expected\", [(2, 3, 6), (-1, 5, -5)])\ndef test_multiply(a, b, expected):\n    assert multiply(a, b) == expected\n\n@pytest.mark.smoke\ndef test_health(client):\n    assert client.get(\"/health\").status_code == 200\n```\n\n## Best Practices\n\n- Use fixtures over module-level setup\n- Parametrize edge cases; keep one assertion intent per test\n- Tag smoke tests and run them on every PR\n- Use -n parallel in CI with careful fixture isolation\n- Set coverage thresholds in pytest.ini",
+  "examples": [
+    {
+      "input": "Run only the login tests",
+      "output": "Agent runs pytest tests/test_auth.py -k login and reports results with verbose output."
+    },
+    {
+      "input": "Add coverage gates to the Python CI",
+      "output": "Agent configures --cov and thresholds, then runs pytest -n 4 --cov=src --junitxml for CI."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pytest.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pytest"
+    },
+    "generic": {
+      "system_prompt": "You are the pytest specialist. You do it through pytest-runs: Run tests with filters, markers, and ordering. The commands are real, e.g. `pytest`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pytest",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pytest-runs",
+        "name": "testPath",
+        "type": "string",
+        "description": "File::test selector"
+      },
+      {
+        "capability": "pytest-runs",
+        "name": "keyword",
+        "type": "string",
+        "description": "Expression filter (-k)"
+      },
+      {
+        "capability": "pytest-runs",
+        "name": "marker",
+        "type": "string",
+        "description": "Marker filter (-m)"
+      },
+      {
+        "capability": "fixtures-and-parametrize",
+        "name": "fixtures",
+        "type": "boolean",
+        "description": "List available fixtures"
+      },
+      {
+        "capability": "fixtures-and-parametrize",
+        "name": "pdb",
+        "type": "boolean",
+        "description": "Drop into pdb on failure"
+      },
+      {
+        "capability": "parallel-and-coverage",
+        "name": "workers",
+        "type": "number",
+        "description": "Parallel workers (-n)"
+      },
+      {
+        "capability": "parallel-and-coverage",
+        "name": "cov",
+        "type": "string",
+        "description": "Package to measure coverage"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pytest"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/pytest-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/pytest-skill.yaml",
+    "checksum": "51715bb0523ca13bcbc102e4c910f712b7a93dadcecf19b2ccce77fc547c5521"
+  }
+}

@@ -1,0 +1,102 @@
+name: mqtt-paho-java
+display_name: Mqtt Paho Java
+category: api
+subcategory: general
+description: 'Build Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks, persistence and
+  Maven setup.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- mvn
+capabilities:
+- name: paho-java-client
+  description: Add the paho.mqttv3 dependency, write synchronous/async clients and manage connections
+    in Maven projects.
+  commands:
+  - mvn dependency:tree
+  - mvn compile
+  - mvn package
+  - mvn exec:java -Dexec.mainClass=com.example.Publisher
+  - curl -s https://repo1.maven.org/maven2/org/eclipse/paho/org.eclipse.paho.client.mqttv3/maven-metadata.xml
+  examples:
+  - mvn dependency:tree -Dincludes=org.eclipse.paho
+  - mvn package -DskipTests
+  - mvn exec:java -Dexec.mainClass=com.example.Subscriber
+  parameters:
+  - name: version
+    type: string
+    description: paho.mqttv3 version, e.g. 1.2.5
+  - name: main_class
+    type: string
+    description: Java main class to run via exec plugin
+  - name: broker_url
+    type: string
+    description: tcp:// or ssl:// broker URL
+knowledge:
+- title: Paho Java client page
+  type: documentation
+  source: https://www.eclipse.org/paho/index.php?page=clients/java/index.php
+  description: Downloads, Javadocs and Maven coordinates
+- title: Paho Java GitHub
+  type: documentation
+  source: https://github.com/eclipse/paho.mqtt.java
+  description: Source, samples and issue tracker
+instructions: "# Paho MQTT Java\n\nThe Eclipse Paho Java client (org.eclipse.paho.client.mqttv3) is the\
+  \ standard MQTT client for JVM apps.\n\n## What this skill does\n\n- Configures the Maven dependency\n\
+  - Writes MqttClient publish/subscribe code\n- Covers persistent sessions and async callbacks\n\n## When\
+  \ to use\n\n- JVM services publishing events to MQTT\n- IoT backends and edge gateways in Java\n\n##\
+  \ Real commands\n\n```bash\n# Verify the dependency resolves\nmvn dependency:tree -Dincludes=org.eclipse.paho\n\
+  \n# Build and run\nmvn compile\nmvn exec:java -Dexec.mainClass=com.example.Publisher\nmvn package\n\
+  ```\n\n## Publish code\n\n```java\nMqttClient client = new MqttClient(\"tcp://localhost:1883\", \"java-pub\"\
+  );\nclient.connect();\nclient.publish(\"sensors/temp\", new MqttMessage(\"21.5\".getBytes()));\nclient.disconnect();\n\
+  ```\n\n## Callbacks for async\n\n```java\nclient.setCallback(new MqttCallback() {\n    public void messageArrived(String\
+  \ topic, MqttMessage m) { /* handle */ }\n    public void connectionLost(Throwable c) { client.reconnect();\
+  \ }\n    public void deliveryComplete(IMqttDeliveryToken t) { }\n});\n```\n\n## pom.xml dependency\n\
+  \n```xml\n<dependency>\n  <groupId>org.eclipse.paho</groupId>\n  <artifactId>org.eclipse.paho.client.mqttv3</artifactId>\n\
+  \  <version>1.2.5</version>\n</dependency>\n```\n\n## Best practices\n\n- Use `MqttConnectOptions#setCleanSession(false)`\
+  \ for durable subscriptions\n- Reconnect with exponential backoff in connectionLost\n- Match MQTT QoS\
+  \ with your reliability requirements"
+examples:
+- input: Add MQTT publishing to my Spring Boot service
+  output: The agent adds the paho dependency, writes a MqttClient publisher component, and verifies with
+    mvn compile and a mosquitto_sub listener.
+- input: My Java subscriber misses messages when the broker restarts
+  output: The agent switches to cleanSession=false with QoS 1 and sets a callback that reconnects and
+    resubscribes.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mqtt-paho-java.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-mqtt-paho-java
+  generic:
+    system_prompt: 'Your lane is Mqtt Paho Java. You do it through paho-java-client: Add the paho.mqttv3
+      dependency, write synchronous/async clients and manage connections in Maven projects. The commands
+      are real, e.g. `mvn dependency:tree`. You verify each step you report and stay honest about what
+      you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

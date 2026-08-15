@@ -1,0 +1,189 @@
+name: sorting
+display_name: Sorting
+category: api
+subcategory: general
+description: 'Hand-crafted sorting skill: sort data on the command line and in code — sort, sort -h for
+  human sizes, jq sort_by, and SQL ORDER BY for API responses.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- python
+- sort
+- sqlite3
+capabilities:
+- name: sort-data
+  description: Sort files, JSON, and database results with the right tool
+  commands:
+  - sort -t, -k2 -n sales.csv
+  - du -sh * | sort -h
+  - jq 'sort_by(.price) | reverse' products.json
+  - 'python -c ''data = [3,1,2]; print(sorted(data, key=lambda x: -x))'''
+  - sqlite3 app.db "SELECT name FROM users ORDER BY created_at DESC LIMIT 10;"
+  examples:
+  - sort -t, -k2 -n sales.csv
+  - du -sh * | sort -h | tail -5
+  - jq 'sort_by(.price)' products.json
+  parameters:
+  - name: field
+    type: integer
+    description: Sort key column for sort -k
+  - name: reverse
+    type: boolean
+    description: Descending order
+  - name: numeric
+    type: boolean
+    description: Numeric compare instead of lexicographic
+knowledge:
+- title: GNU sort manual
+  type: documentation
+  source: https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html
+  description: 'sort flags: -k, -n, -h, -t, -r'
+- title: jq manual (sort functions)
+  type: documentation
+  source: https://jqlang.github.io/jq/manual/#sort-sort_by
+  description: sort_by and friends
+instructions: '# Sorting
+
+
+  Hand-crafted skill for sorting data correctly on the CLI and in code.
+
+
+  ## What this skill does
+
+
+  - Sorts CSV and text by column with numeric awareness
+
+  - Sorts human-readable sizes like 4.2K and 1.3G
+
+  - Sorts JSON arrays and SQL results for API work
+
+
+  ## When to use
+
+
+  - Ordering report data before pasting into a table
+
+  - Checking the largest files or slowest endpoints
+
+  - Deciding the sort order an API should return
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # CSV by column 2 numerically
+
+  sort -t, -k2 -n sales.csv
+
+
+  # Human sizes
+
+  du -sh * | sort -h | tail -5
+
+
+  # JSON by price, then reversed
+
+  jq ''sort_by(.price)'' products.json
+
+  jq ''sort_by(.price) | reverse'' products.json
+
+
+  # Python
+
+  python -c ''data = [3,1,2]; print(sorted(data, key=lambda x: -x))''
+
+
+  # SQL
+
+  sqlite3 app.db "SELECT name FROM users ORDER BY created_at DESC LIMIT 10;"
+
+  ```
+
+
+  ## Comparing strings vs numbers
+
+
+  - sort -n for numeric, plain sort for lexicographic (10 < 2!)
+
+  - sort -h understands 2K < 1M
+
+  - jq sort_by compares numbers correctly when they are numbers
+
+
+  ## Testing
+
+
+  ```bash
+
+  printf ''b,2
+
+  a,10
+
+  c,1
+
+  '' | sort -t, -k2 -n   # c,1 b,2 a,10
+
+  printf ''b,2
+
+  a,10
+
+  c,1
+
+  '' | sort              # a,10 b,2 c,1
+
+  ```
+
+
+  ## Best practices
+
+
+  - Always state -n or -h: lexicographic ordering of numbers misleads
+
+  - For APIs, sort server-side; clients should never re-sort big pages
+
+  - Add secondary keys: sort -k1,1 -k2,2n for stable results
+
+  '
+examples:
+- input: Which 5 directories use the most disk?
+  output: du -sh */ 2>/dev/null | sort -h | tail -5 lists the largest by human-readable size.
+- input: Sort products cheapest-first in JSON
+  output: jq 'sort_by(.price)' products.json returns the array ordered by the price field ascending.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: sorting.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-sorting
+  generic:
+    system_prompt: 'Your lane is Sorting. You do it through sort-data: Sort files, JSON, and database
+      results with the right tool. The commands are real, e.g. `sort -t, -k2 -n sales.csv`. You run and
+      verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

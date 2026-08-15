@@ -1,0 +1,153 @@
+{
+  "name": "ml-xgboost-training-agent",
+  "display_name": "Ml Xgboost Training Agent",
+  "category": "ml",
+  "subcategory": "training",
+  "description": "XGBoost model training agent. Manages XGBoost training and hyperparameter tuning.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "training"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Xgboost Training Agent",
+      "description": "XGBoost model training agent. Manages XGBoost training and hyperparameter tuning.",
+      "commands": [
+        "python tune.py --model xgboost --data train.csv",
+        "python train.py --model xgboost --epochs 100",
+        "python predict.py --model xgboost_model.json --data test.csv",
+        "xgboost --model_type tree --num_rounds 100 --data train.csv"
+      ],
+      "examples": [
+        "xgboost --model_type tree --num_rounds 100 --data train.csv",
+        "python train.py --model xgboost --epochs 100",
+        "python tune.py --model xgboost --data train.csv",
+        "python predict.py --model xgboost_model.json --data test.csv"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-xgboost-training-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/training",
+      "description": "Reference documentation for ml-xgboost-training-agent"
+    }
+  ],
+  "instructions": "You are the XGBoost training expert. Call on this agent to train and tune XGBoost models. Core workflow: (1) train with 'python train.py --model xgboost --epochs 100' or the CLI 'xgboost --model_type tree --num_rounds 100 --data train.csv'; (2) tune with 'python tune.py --model xgboost --data train.csv'; (3) predict with 'python predict.py --model xgboost_model.json --data test.csv'; (4) iterate on rounds and hyperparameters. Key behaviors: verify data format matches the CLI expectations, keep the saved model path consistent between train and predict, and compare validation metrics across rounds. Output: best params, metrics, and prediction results.",
+  "examples": [
+    "xgboost --model_type tree --num_rounds 100 --data train.csv",
+    "python train.py --model xgboost --epochs 100",
+    "python tune.py --model xgboost --data train.csv",
+    "python predict.py --model xgboost_model.json --data test.csv"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-xgboost-training-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an XGBoost training expert. Help users with XGBoost model training."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-xgboost-training-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-xgboost-training-agent. XGBoost model training agent. Manages XGBoost training and hyperparameter tuning.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-xgboost-training-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Xgboost Training Agent",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Xgboost Training Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/training/ml-xgboost-training-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/training/ml-xgboost-training-agent.yaml",
+    "checksum": "48c70585906cdc29effea7fd82e614f76e053b568dbfdc15e7ffba1aac7cab8e"
+  }
+}

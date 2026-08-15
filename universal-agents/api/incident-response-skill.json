@@ -1,0 +1,175 @@
+{
+  "name": "incident-response",
+  "display_name": "Incident Response",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Incident response from the terminal: triaging with journalctl and kubectl, capturing evidence with timestamps, and coordinating the timeline.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "journalctl",
+    "kubectl",
+    "top"
+  ],
+  "capabilities": [
+    {
+      "name": "incident-triage",
+      "description": "Collect logs, events, and system state to triage incidents fast.",
+      "commands": [
+        "journalctl -u myapp --since '10 min ago' -f",
+        "kubectl get events --sort-by=.lastTimestamp",
+        "kubectl logs deployment/myapp --tail=200 --timestamps",
+        "curl -fsS --max-time 5 http://localhost:8080/health",
+        "top -b -n 1 -o %CPU | head -20"
+      ],
+      "examples": [
+        "journalctl -u myapp -p err --since yesterday",
+        "kubectl describe pod myapp-abc123",
+        "free -m && df -h /"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Service or pod name under investigation."
+        },
+        {
+          "name": "since",
+          "type": "string",
+          "description": "Time window, e.g. '10 min ago' or '1h'."
+        },
+        {
+          "name": "tail",
+          "type": "integer",
+          "description": "Lines of log tail."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "PagerDuty Incident Response Docs",
+      "type": "documentation",
+      "source": "https://response.pagerduty.com/",
+      "description": "Incident response best practices: roles, timeline, communication."
+    },
+    {
+      "title": "kubectl Cheat Sheet",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/reference/kubectl/cheatsheet/",
+      "description": "kubectl commands for inspecting workloads and events."
+    }
+  ],
+  "instructions": "# Incident Response\n\nRespond to incidents from the terminal with disciplined triage.\n\n## What this skill does\n\n- Collects logs, events, and system metrics for the affected service.\n- Captures evidence with timestamps for the incident timeline.\n- Checks health endpoints and resource state.\n- Produces a reproducible runbook of commands.\n\n## When to use\n\n- An alert pages: service down, latency spike, or errors rising.\n- Debugging post-incident: what changed right before the event.\n- Handoffs: passing a concise evidence trail to the on-call next shift.\n\n## Real commands\n\n```bash\n# Application logs with timestamps\njournalctl -u myapp --since '10 min ago' -f\nkubectl logs deployment/myapp --tail=200 --timestamps\n\n# Cluster events\nkubectl get events --sort-by=.lastTimestamp | tail -30\n\n# Pod state\nkubectl describe pod myapp-abc123 | grep -A5 -i \"events\\|status\"\n\n# Health and resources\ncurl -fsS --max-time 5 http://localhost:8080/health\ntop -b -n 1 -o %CPU | head -20\nfree -m && df -h /\n```\n\n## Timeline discipline\n\n```bash\n# Stamp every evidence capture\necho \"=== $(date -u +%FT%TZ) start of incident ===\" > incident.log\njournalctl -u myapp -p err --since '30 min ago' >> incident.log\ncurl -fsS http://localhost:8080/health >> incident.log 2>&1\n```\n\n## Testing\n\n```bash\n# Reproduce with a fixed window to compare before/after changes\njournalctl -u myapp --since \"$(date -d '1 hour ago' +%FT%T)\" --until now | grep -iE \"error|panic|timeout\" | tail -50\n```\n\n## Best practices\n\n- First command is always: confirm scope (which service, which hosts, since when).\n- Capture evidence BEFORE changing anything; you cannot un-restart.\n- Never restart a pod before grabbing its logs and events.\n- Keep a running timeline with UTC timestamps for the postmortem.\n- Escalate early; communicate in the channel, not just the terminal.\n\n## Example exchange\n\n```\nUser: /api started 500ing five minutes ago.\nAgent: kubectl logs deployment/myapp --since=10m --timestamps | tail -100\n       kubectl get events --sort-by=.lastTimestamp\n       curl -fsS http://localhost:8080/health\n```",
+  "examples": [
+    {
+      "input": "Triage a sudden 500 spike on myapp",
+      "output": "journalctl -u myapp --since '10 min ago' | grep -iE 'error|panic' | tail -50 && curl -fsS http://localhost:8080/health"
+    },
+    {
+      "input": "Check what happened in the cluster around the outage",
+      "output": "kubectl get events --sort-by=.lastTimestamp | tail -30"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "incident-response.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-incident-response"
+    },
+    "generic": {
+      "system_prompt": "You are the Incident Response specialist. You do it through incident-triage: Collect logs, events, and system state to triage incidents fast. The commands are real, e.g. `journalctl -u myapp --since 10 min ago -f`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "incident-response",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "incident-triage",
+        "name": "service",
+        "type": "string",
+        "description": "Service or pod name under investigation."
+      },
+      {
+        "capability": "incident-triage",
+        "name": "since",
+        "type": "string",
+        "description": "Time window, e.g. '10 min ago' or '1h'."
+      },
+      {
+        "capability": "incident-triage",
+        "name": "tail",
+        "type": "integer",
+        "description": "Lines of log tail."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "journalctl",
+    "kubectl",
+    "top"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/incident-response-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/incident-response-skill.yaml",
+    "checksum": "0f398c2561e73d318dbe8d62818703795ca271dfe63a7c9bb40a53d0c5e87ec1"
+  }
+}

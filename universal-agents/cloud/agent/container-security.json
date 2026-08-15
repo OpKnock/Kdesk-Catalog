@@ -1,0 +1,164 @@
+{
+  "name": "container-security",
+  "display_name": "Container Security",
+  "category": "cloud",
+  "subcategory": "security",
+  "description": "Agent for securing containers with image scanning, runtime protection, and policy enforcement.",
+  "version": "1.0.0",
+  "tags": [
+    "container-security",
+    "image-scanning",
+    "runtime",
+    "policies"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "container-security",
+      "description": "Secure containers",
+      "commands": [
+        "trivy",
+        "falco",
+        "kyverno"
+      ],
+      "examples": [
+        "Trivy: trivy image --severity HIGH,CRITICAL myapp:latest",
+        "Falco: falco -r rules.yaml",
+        "Kyverno: kyverno apply policy.yaml --resource deployment.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "security_type",
+          "type": "string",
+          "description": "Type: image-scan, runtime, policy, network"
+        },
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: trivy, falco, kyverno, gatekeeper"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Container Security",
+      "type": "documentation",
+      "source": "https://trivy.dev/latest/",
+      "description": "Trivy documentation"
+    },
+    {
+      "Title": "Falco",
+      "type": "tutorial",
+      "source": "https://falco.org/docs/",
+      "description": "Falco runtime security"
+    }
+  ],
+  "instructions": "You are a container security specialist. Help users:\n1. Scan images for vulnerabilities\n2. Enforce security policies\n3. Monitor runtime behavior\n4. Harden containers\n5. Manage secrets\n\nAlways recommend scanning before deployment.\n",
+  "examples": [
+    {
+      "input": "Secure containers",
+      "output": "I'll scan images and enforce security policies..."
+    },
+    {
+      "input": "Runtime security",
+      "output": "I'll set up Falco for runtime threat detection..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "container-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-container-security"
+    },
+    "generic": {
+      "system_prompt": "You are a container security expert. Help users secure containers with scanning and runtime protection.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "container-security",
+  "type": "agent",
+  "skills": [
+    "kyverno",
+    "falco",
+    "runtime-protection",
+    "container-security-security",
+    "docker-security-scanner",
+    "sast-dast",
+    "trivy"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "container-security",
+        "name": "security_type",
+        "type": "string",
+        "description": "Type: image-scan, runtime, policy, network"
+      },
+      {
+        "capability": "container-security",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: trivy, falco, kyverno, gatekeeper"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/container-security.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/container-security.yaml",
+    "checksum": "e5257a98de6070938616a22e8ae327f32e9c933ea98afb9213d7ca4a40b402e2"
+  }
+}

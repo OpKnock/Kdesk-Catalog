@@ -1,0 +1,109 @@
+name: fallback-pattern
+display_name: Fallback Pattern
+category: api
+subcategory: general
+description: 'Resilience fallback patterns: circuit breakers, retries with backoff, timeouts, and graceful
+  degradation for downstream dependencies.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- grep
+- node
+capabilities:
+- name: resilience-patterns
+  description: Configure and test circuit breakers and fallbacks in Java (Resilience4j) and verify behavior.
+  commands:
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/api/orders
+  - curl -s http://localhost:8080/api/orders | jq '.source'
+  - 'node -e "const f=require(''p-retry'');f(async()=>{const r=await fetch(''http://db:5432'');if(!r.ok)throw
+    new Error(''down'')},{retries:3,minTimeout:500}).catch(e=>console.log(''fallback: cached data''))"'
+  - grep -rn 'CircuitBreaker' src/ | head -10
+  - curl -s http://localhost:8080/actuator/health | jq '.components.ordersCircuit'
+  examples:
+  - curl -s http://localhost:8080/api/orders | jq '.source'
+  - curl -s http://localhost:8080/actuator/health | jq '.components.ordersCircuit'
+  - grep -rn 'CircuitBreaker' src/ | head -10
+  parameters:
+  - name: service-url
+    type: string
+    description: Endpoint to test fallback behavior against
+  - name: retries
+    type: integer
+    description: Retry count before falling back
+  - name: timeout-ms
+    type: integer
+    description: Per-call timeout before failure
+knowledge:
+- title: Resilience4j Docs
+  type: documentation
+  source: https://resilience4j.readme.io/docs/circuitbreaker
+  description: Circuit breaker, retry, timeout, and fallback configuration
+- title: p-retry (Node)
+  type: documentation
+  source: https://github.com/sindresorhus/p-retry
+  description: Retry wrapper with backoff for Node.js promises
+instructions: "# Fallback Pattern\n\n## What this skill does\n\nFallback patterns keep the API alive when\
+  \ dependencies fail: circuit breakers stop calls to a dead service, retries with backoff absorb transient\
+  \ errors, timeouts bound slow calls, and fallback values serve degraded responses.\n\n## When to use\n\
+  \n- A downstream service is down and requests pile up\n- Designing for partial outages instead of total\
+  \ failure\n- Adding resilience to third-party API calls\n\n## Real commands\n\n```bash\n# Observe current\
+  \ behavior\ncurl -s http://localhost:8080/api/orders | jq '.source'\n\n# Health shows the circuit state\n\
+  curl -s http://localhost:8080/actuator/health | jq '.components.ordersCircuit'\n\n# Node fallback demo\n\
+  node -e \"const f=require('p-retry');f(async()=>{const r=await fetch('http://db:5432');if(!r.ok)throw\
+  \ new Error('down')},{retries:3,minTimeout:500}).catch(e=>console.log('fallback: cached data'))\"\n\
+  ```\n\n## Circuit breaker config (Resilience4j)\n\n```yaml\nresilience4j.circuitbreaker:\n  instances:\n\
+  \    orders:\n      failureRateThreshold: 50\n      waitDurationInOpenState: 10s\n      slidingWindowSize:\
+  \ 20\n      recordExceptions:\n        - java.io.IOException\n```\n\n## Fallback handler example (Java)\n\
+  \n```java\n@CircuitBreaker(name = \"orders\", fallbackMethod = \"ordersFallback\")\npublic List<Order>\
+  \ getOrders() {\n    return ordersClient.fetch();\n}\n\npublic List<Order> ordersFallback(Throwable\
+  \ t) {\n    return cache.read(\"orders\"); // degraded response\n}\n```\n\n## Testing\n\n```bash\n#\
+  \ Kill the dependency, then verify the circuit opens\nsystemctl stop orders-db\nsleep 5\ncurl -s http://localhost:8080/actuator/health\
+  \ | jq '.components.ordersCircuit'\n```\n\n## Best practices\n\n- Always provide a fallback; never let\
+  \ a dependency failure bubble to 5xx when a degraded answer exists.\n- Retry only on transient errors,\
+  \ with jittered exponential backoff.\n- Timeouts must be shorter than the circuit breaker's wait window.\n\
+  - Cache last-known-good data for fallback reads.\n- Monitor open/closed state and fallback invocation\
+  \ rate.\n"
+examples:
+- input: Third-party API is flaky and users see errors
+  output: Add retry with backoff for transient errors, a timeout, and a circuit breaker; serve cached
+    data as fallback when the breaker is open.
+- input: Circuit breaker keeps tripping on healthy service
+  output: Check failureRateThreshold vs actual error rate, ensure only real failures are recorded, and
+    inspect waitDurationInOpenState.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: fallback-pattern.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-fallback-pattern
+  generic:
+    system_prompt: 'This is your domain: Fallback Pattern. You do it through resilience-patterns: Configure
+      and test circuit breakers and fallbacks in Java (Resilience4j) and verify behavior. The commands
+      are real, e.g. `curl -s -o /dev/null -w %{http_code} http://localhost:8080/api/orders`. You work
+      hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

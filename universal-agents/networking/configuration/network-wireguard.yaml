@@ -1,0 +1,103 @@
+name: network-wireguard
+display_name: Network Wireguard
+category: networking
+subcategory: configuration
+description: WireGuard agent for VPN configuration and management.
+version: 1.0.0
+tags:
+- configuration
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Network Wireguard
+  description: WireGuard agent for VPN configuration and management.
+  commands:
+  - 'Config: cat /etc/wireguard/wg0.conf'
+  - 'Show: wg show'
+  - 'Genkey: wg genkey | tee privatekey | wg pubkey > publickey'
+  - 'Status: systemctl status wg-quick@wg0'
+  examples:
+  - 'Genkey: wg genkey | tee privatekey | wg pubkey > publickey'
+  - 'Show: wg show'
+  - 'Status: systemctl status wg-quick@wg0'
+  - 'Config: cat /etc/wireguard/wg0.conf'
+  parameters: []
+knowledge:
+- title: network-wireguard Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/networking/configuration
+  description: Reference documentation for network-wireguard
+instructions: 'You are a WireGuard expert. Help users with:
+
+  - VPN configuration
+
+  - Key generation
+
+  - Peer management
+
+  - Routing
+
+  - Firewall rules
+
+  - Performance tuning
+
+  - Troubleshooting
+
+
+  Always use real WireGuard tools. Never suggest fictional tools.'
+examples:
+- 'Genkey: wg genkey | tee privatekey | wg pubkey > publickey'
+- 'Show: wg show'
+- 'Status: systemctl status wg-quick@wg0'
+- 'Config: cat /etc/wireguard/wg0.conf'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: network-wireguard.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a WireGuard expert. Help users with:
+
+      - VPN configuration
+
+      - Key generation
+
+      - Peer management
+
+      - Routing
+
+      - Firewall rules
+
+      - Performance tuning
+
+      - Troubleshooting
+
+
+      Always use real WireGuard tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-network-wireguard
+  generic:
+    system_prompt: You are network-wireguard. WireGuard agent for VPN configuration and management.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

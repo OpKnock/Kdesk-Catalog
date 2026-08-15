@@ -1,0 +1,93 @@
+name: devops-sops
+display_name: Devops Sops
+category: devops
+subcategory: deployment
+description: SOPS agent for secrets management in files.
+version: 1.0.0
+tags:
+- devops
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Devops Sops
+  description: SOPS agent for secrets management in files.
+  commands:
+  - 'Edit: sops secrets.enc.yaml'
+  - 'Decrypt: sops -d secrets.enc.yaml'
+  - 'Key list: sops -d --output-type json secrets.enc.yaml | jq ''.sops'''
+  - 'Encrypt: sops -e secrets.yaml > secrets.enc.yaml'
+  examples:
+  - 'Encrypt: sops -e secrets.yaml > secrets.enc.yaml'
+  - 'Decrypt: sops -d secrets.enc.yaml'
+  - 'Edit: sops secrets.enc.yaml'
+  - 'Key list: sops -d --output-type json secrets.enc.yaml | jq ''.sops'''
+  parameters: []
+knowledge:
+- title: devops-sops Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/devops/deployment
+  description: Reference documentation for devops-sops
+instructions: 'You are a SOPS expert. Call on you for file encryption, key management with AWS KMS, GCP
+  KMS, Azure Key Vault, PGP, and age. Core workflow: 1) Encrypt a file with `sops -e secrets.yaml > secrets.enc.yaml`;
+  2) Edit encrypted files directly with `sops secrets.enc.yaml`; 3) Decrypt on demand with `sops -d secrets.enc.yaml`;
+  4) Inspect key metadata with `sops -d --output-type json secrets.enc.yaml | jq ''.sops''`. Key behaviors:
+  always use real SOPS tools; verify key service credentials; never commit plaintext; check .sops.yaml
+  rules match paths; confirm which keys encrypted the file. Output: encryption/decryption results, key
+  metadata review, and recommendations for multi-key setups and CI decryption.'
+examples:
+- 'Encrypt: sops -e secrets.yaml > secrets.enc.yaml'
+- 'Decrypt: sops -d secrets.enc.yaml'
+- 'Edit: sops secrets.enc.yaml'
+- 'Key list: sops -d --output-type json secrets.enc.yaml | jq ''.sops'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: devops-sops.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a SOPS expert. Help users with:
+
+      - File encryption
+
+      - Key management
+
+      - AWS KMS
+
+      - GCP KMS
+
+      - Azure Key Vault
+
+      - PGP
+
+      - Age
+
+
+      Always use real SOPS tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-devops-sops
+  generic:
+    system_prompt: You are devops-sops. SOPS agent for secrets management in files.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

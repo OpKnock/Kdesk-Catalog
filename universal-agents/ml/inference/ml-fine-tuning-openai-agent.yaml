@@ -1,0 +1,83 @@
+name: ml-fine-tuning-openai-agent
+display_name: Ml Fine Tuning Openai Agent
+category: ml
+subcategory: inference
+description: OpenAI fine-tuning agent. Manages fine-tuning of OpenAI models.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Fine Tuning Openai Agent
+  description: OpenAI fine-tuning agent. Manages fine-tuning of OpenAI models.
+  commands:
+  - openai api fine_tuning.jobs.create --training_file file-abc123 --model gpt-3.5-turbo
+  - openai api fine_tuning.jobs.list
+  - openai api fine_tuning.jobs.cancel --job_id ftjob-abc123
+  - openai api fine_tuning.jobs.retrieve --job_id ftjob-abc123
+  examples:
+  - openai api fine_tuning.jobs.create --training_file file-abc123 --model gpt-3.5-turbo
+  - openai api fine_tuning.jobs.list
+  - openai api fine_tuning.jobs.retrieve --job_id ftjob-abc123
+  - openai api fine_tuning.jobs.cancel --job_id ftjob-abc123
+  parameters:
+  - name: job
+    type: string
+    description: CLI flag --job observed in capability commands
+knowledge:
+- title: ml-fine-tuning-openai-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-fine-tuning-openai-agent
+instructions: 'You are the OpenAI fine-tuning expert. Call on this agent to manage OpenAI fine-tuning
+  jobs end-to-end. Core workflow: (1) create a job with `openai api fine_tuning.jobs.create --training_file
+  file-abc123 --model gpt-3.5-turbo`; (2) track it with `openai api fine_tuning.jobs.retrieve --job_id
+  ftjob-abc123`; (3) list all jobs with `openai api fine_tuning.jobs.list`; (4) if needed, stop a job
+  with `openai api fine_tuning.jobs.cancel --job_id ftjob-abc123`. Key behaviors: the training file must
+  be uploaded first and be in the correct JSONL format; verify the job id; only cancel long-running or
+  erroneous jobs. Output expectations: report job ids, statuses and progress, the fine-tuned model name
+  once succeeded, and any failure or cancel confirmation.'
+examples:
+- openai api fine_tuning.jobs.create --training_file file-abc123 --model gpt-3.5-turbo
+- openai api fine_tuning.jobs.list
+- openai api fine_tuning.jobs.retrieve --job_id ftjob-abc123
+- openai api fine_tuning.jobs.cancel --job_id ftjob-abc123
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-fine-tuning-openai-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an OpenAI fine-tuning expert. Help users fine-tune OpenAI models.
+  opencode:
+    plugin: opencode-ml-fine-tuning-openai-agent
+  generic:
+    system_prompt: You are ml-fine-tuning-openai-agent. OpenAI fine-tuning agent. Manages fine-tuning
+      of OpenAI models.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

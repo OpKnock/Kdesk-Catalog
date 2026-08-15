@@ -1,0 +1,173 @@
+{
+  "name": "timeout",
+  "display_name": "Timeout",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted GNU timeout skill: deadline-bounded commands, kill-after grace, exit statuses, and wrapping flaky or hung shell jobs.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "python",
+    "timeout"
+  ],
+  "capabilities": [
+    {
+      "name": "timeout-guard",
+      "description": "Bound shell commands with GNU timeout and related tools",
+      "commands": [
+        "timeout 30s sleep 60",
+        "timeout -k 5 30s docker pull busybox",
+        "timeout 10s ping -c 20 8.8.8.8",
+        "curl --max-time 10 -s https://example.com",
+        "python -c 'import signal; signal.alarm(5); print(\"alarm set\")'"
+      ],
+      "examples": [
+        "timeout 30s sleep 60; echo $?",
+        "timeout -k 5 30s docker pull busybox",
+        "timeout 10s ping -c 20 8.8.8.8"
+      ],
+      "parameters": [
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Timeout like 30s, 5m, 1h"
+        },
+        {
+          "name": "kill_after",
+          "type": "string",
+          "description": "Grace period before SIGKILL with -k"
+        },
+        {
+          "name": "signal",
+          "type": "string",
+          "description": "Signal to send on timeout, e.g. -s HUP"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GNU timeout manual",
+      "type": "documentation",
+      "source": "https://www.gnu.org/software/coreutils/manual/html_node/timeout-invocation.html",
+      "description": "Duration syntax, -k, -s, exit status"
+    },
+    {
+      "title": "curl --max-time",
+      "type": "documentation",
+      "source": "https://curl.se/docs/manpage.html#--max-time",
+      "description": "Bounding transfers"
+    }
+  ],
+  "instructions": "# GNU timeout\n\nHand-crafted skill for bounding command execution with coreutils timeout.\n\n## What this skill does\n\n- Kills long-running commands after a deadline\n- Sends SIGKILL after a grace period with -k\n- Wraps flaky network commands so scripts cannot hang\n\n## When to use\n\n- Cron jobs that occasionally hang\n- CI steps stuck on network waits\n- Any script that must finish in a bounded time\n\n## Real commands\n\n```bash\n# Kill after 30s; exit status 124 on timeout\ntimeout 30s sleep 60\necho $?\n\n# Grace: TERM, then KILL after 5s more\ntimeout -k 5 30s docker pull busybox\n\n# Network probe that cannot hang\ntimeout 10s ping -c 20 8.8.8.8\n\n# curl's own bound\ncurl --max-time 10 -s https://example.com\n\n# Python equivalent\npython -c 'import signal; signal.alarm(5); print(\"alarm set\")'\n```\n\n## Exit statuses\n\n- 124: the command was killed by the timeout\n- 125: timeout itself failed\n- 126/127: command could not be run/found\n\n## Script pattern\n\n```bash\nif timeout 30s ./deploy.sh; then\n  echo \"deploy finished\"\nelse\n  echo \"deploy timed out\"\nfi\n```\n\n## Testing\n\n```bash\ntimeout 2s sleep 10; echo \"exit: $?\"   # expect 124\ntimeout 5s curl -sf https://example.com && echo ok\n```\n\n## Best practices\n\n- Check exit code 124 explicitly to distinguish timeouts from failures\n- Add -k only when the process ignores TERM\n- Combine with retry loops: bounded attempts, bounded runtime\n",
+  "examples": [
+    {
+      "input": "A cron job hangs forever",
+      "output": "Wrap it: timeout 30m /path/to/job.sh; exit 124 means it exceeded the budget."
+    },
+    {
+      "input": "Kill a stuck docker pull",
+      "output": "timeout -k 5 60s docker pull busybox sends TERM at 60s and KILL at 65s."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "timeout.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-timeout"
+    },
+    "generic": {
+      "system_prompt": "You own Timeout end to end. You do it through timeout-guard: Bound shell commands with GNU timeout and related tools. The commands are real, e.g. `timeout 30s sleep 60`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "timeout",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "timeout-guard",
+        "name": "duration",
+        "type": "string",
+        "description": "Timeout like 30s, 5m, 1h"
+      },
+      {
+        "capability": "timeout-guard",
+        "name": "kill_after",
+        "type": "string",
+        "description": "Grace period before SIGKILL with -k"
+      },
+      {
+        "capability": "timeout-guard",
+        "name": "signal",
+        "type": "string",
+        "description": "Signal to send on timeout, e.g. -s HUP"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python",
+    "timeout"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/timeout-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/timeout-skill.yaml",
+    "checksum": "644b15111122abb3f770092593ac679e42b7b8406e272588bb47ac5981f203f2"
+  }
+}

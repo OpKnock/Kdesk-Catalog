@@ -1,0 +1,230 @@
+{
+  "name": "nginx",
+  "display_name": "nginx",
+  "category": "infrastructure",
+  "subcategory": "general",
+  "description": "Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and zero-downtime reloads.",
+  "version": "2.0.0",
+  "tags": [
+    "infrastructure"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "awk",
+    "grep",
+    "nginx",
+    "tail"
+  ],
+  "capabilities": [
+    {
+      "name": "server",
+      "description": "Manage nginx runtime: test, reload, and inspect.",
+      "commands": [
+        "nginx -t",
+        "nginx -s reload",
+        "nginx -T",
+        "nginx -v",
+        "nginx -s stop"
+      ],
+      "examples": [
+        "nginx -t -c /etc/nginx/nginx.conf",
+        "nginx -T | grep -E 'server_name|listen'",
+        "nginx -s reload && nginx -v"
+      ],
+      "parameters": [
+        {
+          "name": "c",
+          "type": "string",
+          "description": "Config file path"
+        },
+        {
+          "name": "s",
+          "type": "string",
+          "description": "Signal: reload, reopen, stop, quit"
+        },
+        {
+          "name": "T",
+          "type": "string",
+          "description": "Dump full effective configuration"
+        }
+      ]
+    },
+    {
+      "name": "logs",
+      "description": "Analyze access and error logs for issues.",
+      "commands": [
+        "tail -f /var/log/nginx/error.log",
+        "tail -n 100 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn",
+        "grep -E '5[0-9]{2}' /var/log/nginx/access.log | tail -20",
+        "tail -f /var/log/nginx/access.log | grep -v ' 200 '",
+        "awk '{print $1}' /var/log/nginx/access.log | sort | uniq -c | sort -rn | head -10"
+      ],
+      "examples": [
+        "tail -f /var/log/nginx/error.log",
+        "grep 'upstream timed out' /var/log/nginx/error.log | tail",
+        "tail -n 1000 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn"
+      ],
+      "parameters": [
+        {
+          "name": "log-file",
+          "type": "string",
+          "description": "Path to access or error log"
+        },
+        {
+          "name": "status-code",
+          "type": "string",
+          "description": "HTTP status filter like 5xx"
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "description": "Number of lines to tail"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "nginx.org Docs",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/",
+      "description": "http module, virtual hosts, and TLS directives"
+    },
+    {
+      "title": "nginx Beginner Guide",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/beginners_guide.html",
+      "description": "Configuration basics and request routing"
+    },
+    {
+      "title": "nginx admin guide",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/control.html",
+      "description": "Signals: reload, reopen, stop, quit"
+    }
+  ],
+  "instructions": "# Nginx\n\nConfigure and run nginx with confidence.\n\n## When to Use\n\n- Serving static content and reverse-proxying apps\n- TLS termination and HTTP/2\n- Diagnosing 4xx/5xx traffic patterns\n\n## Virtual host\n\n```nginx\nserver {\n  listen 443 ssl http2;\n  server_name api.example.com;\n\n  ssl_certificate     /etc/nginx/ssl/fullchain.pem;\n  ssl_certificate_key /etc/nginx/ssl/privkey.pem;\n\n  location /api/ {\n    proxy_pass http://backend;\n    proxy_set_header Host $host;\n    proxy_set_header X-Forwarded-Proto $scheme;\n  }\n\n  location /static/ {\n    alias /srv/static/;\n    expires 7d;\n    add_header Cache-Control 'public';\n  }\n}\n```\n\n## Safe reload loop\n\n```bash\nnginx -t\nnginx -s reload\n```\n\nAlways test before reload; a bad config leaves the old process running.\n\n## Inspect effective config\n\n```bash\nnginx -T | grep -E 'server_name|listen'\n```\n\n## Log triage\n\n```bash\ntail -f /var/log/nginx/error.log\ngrep 'upstream timed out' /var/log/nginx/error.log | tail\n```\n\nStatus-code distribution:\n\n```bash\ntail -n 1000 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn\n```\n\n## Best practices\n\n- Pin worker_processes to core count; enable keepalive to upstreams.\n- Enable `gzip` and static asset caching for the web tier.\n- Never serve `server_tokens off;` default leakage - hide version.\n- Redirect HTTP to HTTPS at the server level, not per-location.\n\n## Testing\n\n```bash\nnginx -t\ncurl -I http://localhost/static/app.js\n```\n\nVerify cache headers and TLS chain after each config change.",
+  "examples": [
+    {
+      "input": "Add a new virtual host for api.example.com.",
+      "output": "Creates the server block with TLS and proxy_pass, runs nginx -t, then nginx -s reload."
+    },
+    {
+      "input": "Users report 502s; investigate.",
+      "output": "Tails error.log for upstream failures, checks backend health, and reviews the 5xx distribution in access.log."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nginx.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nginx"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: nginx. You do it through server: Manage nginx runtime: test, reload, and inspect. The commands are real, e.g. `nginx -t`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nginx",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "server",
+        "name": "c",
+        "type": "string",
+        "description": "Config file path"
+      },
+      {
+        "capability": "server",
+        "name": "s",
+        "type": "string",
+        "description": "Signal: reload, reopen, stop, quit"
+      },
+      {
+        "capability": "server",
+        "name": "T",
+        "type": "string",
+        "description": "Dump full effective configuration"
+      },
+      {
+        "capability": "logs",
+        "name": "log-file",
+        "type": "string",
+        "description": "Path to access or error log"
+      },
+      {
+        "capability": "logs",
+        "name": "status-code",
+        "type": "string",
+        "description": "HTTP status filter like 5xx"
+      },
+      {
+        "capability": "logs",
+        "name": "lines",
+        "type": "number",
+        "description": "Number of lines to tail"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "awk",
+    "grep",
+    "nginx",
+    "tail"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/nginx-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/nginx-skill.yaml",
+    "checksum": "9246ca5c459b6a3b491133f66e641f81aeed438dd62bc63d2403c15c987f8533"
+  }
+}

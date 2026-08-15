@@ -1,0 +1,130 @@
+name: async-retry
+display_name: Async Retry
+category: api
+subcategory: general
+description: 'Implements resilient retry strategies with tenacity (Python) and async-retry (Node.js):
+  backoff, jitter, bounded retries, and bail conditions.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+- npm
+- npx
+- pip
+- python
+capabilities:
+- name: python-tenacity
+  description: Add retry logic to Python async calls with tenacity.
+  commands:
+  - pip install tenacity
+  - python -c "from tenacity import retry, wait_exponential, stop_after_attempt; print('ok')"
+  - python -m pytest tests/test_retry.py -k retry
+  - python -m unittest discover -s tests
+  examples:
+  - python -c "from tenacity import retry, stop_after_attempt, wait_exponential; print(retry.__module__)"
+  - pytest tests/test_retry.py -x
+  - python -m pip install tenacity==8.2.3
+  parameters:
+  - name: attempts
+    type: number
+    description: Maximum retry attempts
+  - name: backoff
+    type: string
+    description: fixed, exponential, or random backoff
+  - name: retry_on
+    type: string
+    description: Exception types or predicates to retry on
+- name: node-async-retry
+  description: Wrap Node.js async functions with async-retry.
+  commands:
+  - npm install async-retry
+  - npm install --save-dev mocha
+  - npx mocha test/retry.test.js
+  - node -e "const retry=require('async-retry'); retry(async()=>{throw new Error('x')},{retries:2}).catch(e=>console.log('gave
+    up', e.message))"
+  examples:
+  - npm init -y && npm install async-retry
+  - node -e "const retry=require('async-retry'); retry(()=>Promise.resolve(42),{retries:3}).then(console.log)"
+  - npx mocha --reporter spec test/retry.test.js
+  parameters:
+  - name: retries
+    type: number
+    description: Number of retry attempts
+  - name: minTimeout
+    type: number
+    description: Minimum backoff in ms
+  - name: factor
+    type: number
+    description: Exponential backoff factor
+knowledge:
+- title: tenacity
+  type: documentation
+  source: https://tenacity.readthedocs.io/en/latest/
+  description: Retry decorators, wait strategies, stop conditions
+- title: async-retry
+  type: documentation
+  source: https://github.com/vercel/async-retry
+  description: Node.js retry helper
+- title: Azure Retry Pattern
+  type: documentation
+  source: https://learn.microsoft.com/en-us/azure/architecture/patterns/retry
+  description: Transient-fault handling guidance
+instructions: "# Async Retry\n\n## What this skill does\n\nAdds production-grade retry behavior to async\
+  \ code: tenacity for Python, async-retry for Node.js. Covers exponential backoff, full jitter, bounded\
+  \ retries, retry-on-specific exceptions, and tests.\n\n## When to use\n\n- Transient failures (connection\
+  \ resets, 503s) should not crash jobs\n- A third-party API occasionally times out but succeeds on retry\n\
+  - Retries must not amplify load during an outage (jitter matters)\n\n## Real commands\n\n```bash\npip\
+  \ install tenacity\nnpm install async-retry\n```\n\n## Python example\n\n```python\nfrom tenacity import\
+  \ retry, stop_after_attempt, wait_exponential_jitter\n\n@retry(stop=stop_after_attempt(4), wait=wait_exponential_jitter(initial=0.5,\
+  \ max=8))\nasync def fetch():\n    async with aiohttp.ClientSession() as s:\n        async with s.get(\"\
+  https://api.example.com/orders\") as r:\n            r.raise_for_status()\n            return await\
+  \ r.json()\n```\n\n## Node example\n\n```js\nconst retry = require('async-retry')\nconst fetchOrders\
+  \ = async () => {\n  return retry(async bail => {\n    const res = await fetch('https://api.example.com/orders')\n\
+  \    if (res.status === 404) bail(new Error('not found'))  // do not retry\n    if (!res.ok) throw new\
+  \ Error('retryable')\n    return res.json()\n  }, { retries: 3, minTimeout: 200, factor: 2, randomize:\
+  \ true })\n}\n```\n\n## Testing\n\n- Mock failures N times then success; assert call count equals N+1\n\
+  - Assert non-retryable errors (4xx) are not retried\n\n## Best practices\n\n- Never retry non-idempotent\
+  \ writes without dedupe keys\n- Cap attempts and total elapsed time\n- Add jitter to avoid thundering\
+  \ herds\n- Respect the upstream Retry-After header"
+examples:
+- input: Our Python worker crashes when the DB briefly disconnects
+  output: Wraps the DB call with tenacity @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=0.5,
+    max=10), retry=retry_if_exception_type(ConnectionError)) and shows a pytest case.
+- input: Add retries to Node fetch without retrying 404s
+  output: Uses async-retry with bail on 404 and {retries:3, factor:2, randomize:true}, verified with mocha.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: async-retry.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-async-retry
+  generic:
+    system_prompt: 'Your lane is Async Retry. You do it through python-tenacity: Add retry logic to Python
+      async calls with tenacity. The commands are real, e.g. `pip install tenacity`. You work hands-on
+      and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

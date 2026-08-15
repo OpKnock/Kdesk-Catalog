@@ -1,0 +1,134 @@
+{
+  "name": "scikit-learn-training-ing-server",
+  "display_name": "Scikit Learn Training Ing Server",
+  "category": "ml",
+  "subcategory": "training",
+  "description": "Scikit-learn training server agent. Manages Scikit-learn training server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "training"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Scikit Learn Training Server Agent",
+      "description": "Scikit-learn training server agent. Manages Scikit-learn training server.",
+      "commands": [
+        "python -m scikit-learn-ing.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart scikit-learn-ing",
+        "systemctl status scikit-learn-ing.service"
+      ],
+      "examples": [
+        "python train_server.py --model model.pkl --port 8080",
+        "curl http://localhost:8080/train --data '{\"data\": \"train.csv\"}'",
+        "python test_train_server.py --endpoint http://localhost:8080",
+        "python config_train.py --model model.pkl --epochs 10"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "scikit-learn-training-ing-server Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/training",
+      "description": "Reference documentation for scikit-learn-training-ing-server"
+    }
+  ],
+  "instructions": "You are the scikit-learn training server expert. Call on this agent to set up and operate the scikit-learn training server. Core workflow: (1) launch with 'python train_server.py --model model.pkl --port 8080' and trigger jobs via 'curl http://localhost:8080/train --data '\"{\\\"data\\\": \\\"train.csv\\\"}\"''; (2) configure with 'python config_train.py --model model.pkl --epochs 10'; (3) validate with 'python test_train_server.py --endpoint http://localhost:8080'; (4) operate via 'python -m scikit-learn-ing.server --port 8000 --workers 4', check 'curl -s http://localhost:8000/healthz' and metrics, restart with 'supervisorctl restart scikit-learn-ing' or inspect 'systemctl status scikit-learn-ing.service'. Output: health status, validation results, and job diagnostics.",
+  "examples": [
+    "python train_server.py --model model.pkl --port 8080",
+    "curl http://localhost:8080/train --data '{\"data\": \"train.csv\"}'",
+    "python test_train_server.py --endpoint http://localhost:8080",
+    "python config_train.py --model model.pkl --epochs 10"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "scikit-learn-training-ing-server.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Scikit-learn training server expert. Help users set up Scikit-learn training server."
+    },
+    "opencode": {
+      "plugin": "opencode-scikit-learn-training-ing-server"
+    },
+    "generic": {
+      "system_prompt": "You are scikit-learn-training-ing-server. Scikit-learn training server agent. Manages Scikit-learn training server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "scikit-learn-training-ing-server",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/training/scikit-learn-training-ing-server.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/training/scikit-learn-training-ing-server.yaml",
+    "checksum": "86154ee6df8a29d970f3a211bbc90a11b8781f12de395d026e56dfc05f508f1b"
+  }
+}

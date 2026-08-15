@@ -1,0 +1,171 @@
+{
+  "name": "wget",
+  "display_name": "Wget",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Download and mirror resources with wget: recursive crawling, resume, authentication, rate limiting, and scripted batch downloads.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "wget"
+  ],
+  "capabilities": [
+    {
+      "name": "wget-downloads",
+      "description": "Fetch, resume, and mirror HTTP resources",
+      "commands": [
+        "wget -c https://downloads.example.com/release.tar.gz",
+        "wget -r -l 2 -np https://docs.example.com/api/",
+        "wget --mirror -p --convert-links -P ./mirror https://example.com",
+        "wget -i urls.txt --limit-rate=1m -q",
+        "wget --header='Authorization: Bearer token123' -O data.json https://api.example.com/v1/export"
+      ],
+      "examples": [
+        "wget -c -t 10 --timeout=30 https://downloads.example.com/big-file.iso",
+        "wget -r -A '*.pdf' -np -l 3 https://example.com/docs",
+        "wget --user=ci --password=secret https://repo.example.com/artifact.zip"
+      ],
+      "parameters": [
+        {
+          "name": "recursive",
+          "type": "boolean",
+          "description": "Follow links recursively (-r)"
+        },
+        {
+          "name": "level",
+          "type": "integer",
+          "description": "Maximum recursion depth (-l)"
+        },
+        {
+          "name": "rate",
+          "type": "string",
+          "description": "Bandwidth limit, e.g. 1m, 500k (--limit-rate)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GNU Wget Manual",
+      "type": "documentation",
+      "source": "https://www.gnu.org/software/wget/manual/wget.html",
+      "description": "All wget options: recursion, mirroring, auth, scripting"
+    },
+    {
+      "title": "Wget WARC Guide",
+      "type": "documentation",
+      "source": "https://www.gnu.org/software/wget/manual/wget.html#WARC",
+      "description": "Archiving web content as WARC files"
+    }
+  ],
+  "instructions": "# wget\n\n## What this skill does\nDownload files and mirror websites with GNU wget: single-file downloads with resume, recursive site crawling, full mirroring with link conversion, authenticated requests, and batch downloads from URL lists.\n\n## When to use\n- Downloading large artifacts reliably\n- Mirroring documentation for offline use\n- Scripting downloads in CI\n\n## Real commands\n```bash\n# Resume an interrupted download\nwget -c https://downloads.example.com/release.tar.gz\n\n# Recursive crawl (2 levels, no parent)\nwget -r -l 2 -np https://docs.example.com/api/\n\n# Full mirror with assets and converted links\nwget --mirror -p --convert-links -P ./mirror https://example.com\n\n# Batch download with bandwidth cap\nwget -i urls.txt --limit-rate=1m -q\n\n# Authenticated API export\nwget --header='Authorization: Bearer token123' -O data.json https://api.example.com/v1/export\n\n# Basic auth\nwget --user=ci --password=secret https://repo.example.com/artifact.zip\n\n# Retry-tolerant download\nwget -c -t 10 --timeout=30 https://downloads.example.com/big-file.iso\n```\n\n## Common flags\n- `-c` continue/resume\n- `-r -l N -np` recursive, depth, no parent\n- `-p` page requisites (css/js/img)\n- `--convert-links` rewrite links for offline use\n- `-P DIR` output directory\n- `-q` quiet for scripts\n\n## Best practices\n- Use `-c` for large downloads\n- Cap recursion depth before mirroring big sites\n- Prefer `--header` over `--user` for token auth\n- Never mirror sites that forbid it in robots.txt\n\n## Testing\n```bash\nwget --spider -S https://example.com 2>&1 | grep -E 'HTTP|Content-Length'\nwget -q -O /dev/null -w '%{http_code}' https://example.com\n```",
+  "examples": [
+    {
+      "input": "Mirror the API docs for offline use",
+      "output": "Runs --mirror -p --convert-links into ./mirror and confirms index.html loads without network."
+    },
+    {
+      "input": "My download keeps dying at 90%",
+      "output": "Resumes with wget -c and adds retries and timeout settings."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "wget.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-wget"
+    },
+    "generic": {
+      "system_prompt": "You work Wget hands-on. You do it through wget-downloads: Fetch, resume, and mirror HTTP resources. The commands are real, e.g. `wget -c https://downloads.example.com/release.tar.gz`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "wget",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "wget-downloads",
+        "name": "recursive",
+        "type": "boolean",
+        "description": "Follow links recursively (-r)"
+      },
+      {
+        "capability": "wget-downloads",
+        "name": "level",
+        "type": "integer",
+        "description": "Maximum recursion depth (-l)"
+      },
+      {
+        "capability": "wget-downloads",
+        "name": "rate",
+        "type": "string",
+        "description": "Bandwidth limit, e.g. 1m, 500k (--limit-rate)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "wget"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/wget-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/wget-skill.yaml",
+    "checksum": "a096f069815e4cbb31e8e1f92142021c6dad933bff17c3929a0bced0b662833c"
+  }
+}

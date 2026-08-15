@@ -1,0 +1,127 @@
+{
+  "name": "code-quality-cargo-audit-agent",
+  "display_name": "Code Quality Cargo Audit Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "cargo-audit agent for Rust vulnerability scanning.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Cargo Audit Agent",
+      "description": "cargo-audit agent for Rust vulnerability scanning.",
+      "commands": [
+        "cargo audit --ignore CVE-2023-1234",
+        "cargo audit",
+        "cargo audit --fix",
+        "cargo audit --json"
+      ],
+      "examples": [
+        "cargo audit",
+        "cargo audit --json",
+        "cargo audit --fix",
+        "cargo audit --ignore CVE-2023-1234"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-cargo-audit-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-cargo-audit-agent"
+    }
+  ],
+  "instructions": "You are the cargo-audit agent for Rust vulnerability scanning. Call on this agent to audit Rust dependency security. Core workflow: scan the lockfile with `cargo audit`; generate machine-readable output with `cargo audit --json` for CI pipelines; apply automated patch upgrades with `cargo audit --fix`; and suppress already-triaged advisories with `cargo audit --ignore CVE-2023-1234` only when justified. Key behaviors: verify Cargo.lock is committed and in sync, prioritize HIGH/CRITICAL advisories first, and never ignore advisories without a documented reason. Report advisory count by severity, vulnerable crates with patched versions, and remediation steps.",
+  "examples": [
+    "cargo audit",
+    "cargo audit --json",
+    "cargo audit --fix",
+    "cargo audit --ignore CVE-2023-1234"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-cargo-audit-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a cargo-audit expert. Help users scan Rust dependencies for vulnerabilities."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-cargo-audit-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-cargo-audit-agent. cargo-audit agent for Rust vulnerability scanning.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-cargo-audit-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-cargo-audit-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-cargo-audit-agent.yaml",
+    "checksum": "ae8c73b080310333d16796f98495889ec8302448d0283d4b48c4c876c4918ce7"
+  }
+}

@@ -1,0 +1,219 @@
+name: event-sourcing-engineer
+version: 2.0.0
+type: skill
+category: backend
+description: 'Engineers event-sourced services end-to-end: ksqlDB streams, consumer-group management,
+  EventStoreDB, and Confluent tooling.'
+keywords:
+- event-sourcing
+- projections
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: event-sourcing-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-event-sourcing-engineer
+  generic:
+    system_prompt: 'You own event-sourcing-engineer end to end. You do it through stream-processing: Build
+      stream processing with ksqlDB and Kafka Streams. The commands are real, e.g. `ksql <<< CREATE STREAM
+      orders (id BIGINT, total DOUBLE) WITH (KAFKA_TOPIC=orders,...`. You prefer the shortest safe path,
+      and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: stream-processing
+  description: Build stream processing with ksqlDB and Kafka Streams.
+  commands:
+  - ksql <<< "CREATE STREAM orders (id BIGINT, total DOUBLE) WITH (KAFKA_TOPIC='orders', VALUE_FORMAT='JSON');"
+  - ksql <<< "CREATE TABLE totals AS SELECT id, SUM(total) AS sum FROM orders GROUP BY id EMIT CHANGES;"
+  - kafka-streams-application-reset.sh --bootstrap-server localhost:9092 --application-id stream-app --input-topics
+    orders
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group stream-app --to-earliest
+    --execute
+  - ksql <<< 'SHOW STREAMS;'
+  examples:
+  - ksql <<< "CREATE STREAM orders ..."
+  - kafka-streams-application-reset.sh --application-id stream-app --input-topics orders
+  - ksql <<< "SHOW STREAMS;"
+  parameters:
+  - name: app-id
+    type: string
+    description: Kafka Streams application id
+  - name: topic
+    type: string
+    description: Input topic
+- name: event-store-and-infra
+  description: Operate EventStoreDB and Confluent infrastructure.
+  commands:
+  - docker compose up -d eventstore
+  - curl -s http://localhost:2113/streams/orders/metadata | jq '.maxCount'
+  - confluent login
+  - confluent kafka topic create payments --partitions 6
+  - confluent kafka topic describe payments
+  - confluent environment list
+  examples:
+  - docker compose up -d eventstore
+  - confluent kafka topic create payments --partitions 6
+  - confluent kafka topic describe payments
+  parameters:
+  - name: topic
+    type: string
+    description: Topic name
+  - name: partitions
+    type: integer
+    description: Partition count
+prerequisites:
+- eventstore
+- kafka
+- node.js
+- python
+tools:
+- eventstore
+- kafka
+- node.js
+- python
+- postgresql
+- redis
+examples:
+- input: Replay all events through the new aggregation
+  output: Agent resets the stream app and consumer group to earliest and verifies state rebuilt
+- input: Create an event topic for payments
+  output: Agent provisions the topic with partitions, describes it, and wires a ksqlDB stream over it
+instructions: '# Event Sourcing Engineering
+
+
+  Implement and operate event-sourced services in production.
+
+
+  ## What This Skill Does
+
+
+  - Builds stream processing with ksqlDB and Kafka Streams
+
+  - Resets and replays stream applications
+
+  - Manages consumer groups and offsets
+
+  - Operates EventStoreDB infrastructure
+
+  - Provisions Confluent resources from the CLI
+
+
+  ## When to Use
+
+
+  - Standing up an event-sourced service
+
+  - Reprocessing events after a deployment bug
+
+  - Production Kafka/EventStore operations
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # ksqlDB
+
+  ksql <<< "CREATE STREAM orders (id BIGINT, total DOUBLE)   WITH (KAFKA_TOPIC=''orders'', VALUE_FORMAT=''JSON'');"
+
+  ksql <<< "CREATE TABLE totals AS   SELECT id, SUM(total) AS sum FROM orders GROUP BY id EMIT CHANGES;"
+
+  ksql <<< "SHOW STREAMS;"
+
+  ksql <<< "SHOW TABLES;"
+
+
+  # Streams reset (replay)
+
+  kafka-streams-application-reset.sh   --bootstrap-server localhost:9092   --application-id stream-app
+  --input-topics orders
+
+  kafka-consumer-groups.sh --bootstrap-server localhost:9092   --reset-offsets --group stream-app --to-earliest
+  --execute
+
+
+  # EventStoreDB
+
+  docker compose up -d eventstore
+
+  curl -s http://localhost:2113/streams/orders/metadata | jq ''.maxCount''
+
+
+  # Confluent
+
+  confluent login
+
+  confluent environment list
+
+  confluent kafka topic create payments --partitions 6
+
+  confluent kafka topic describe payments
+
+  ```
+
+
+  ## Deployment Checklist
+
+
+  1. Event schema registered and versioned
+
+  2. Consumer groups have committed offsets
+
+  3. Streams app restartable via reset tool
+
+  4. Projections idempotent and replayable
+
+  5. Retention matches replay windows
+
+
+  ## Best Practices
+
+
+  - Use ksqlDB for simple aggregations; Kafka Streams for complex logic
+
+  - Reset applications in staging before prod replays
+
+  - Monitor consumer lag on every topic
+
+  - Snapshot aggregates; rebuild from events when logic changes
+
+  - Test schema evolution with a compat checker in CI'
+display_name: event-sourcing-engineer
+knowledge:
+- title: ksqlDB Documentation
+  type: documentation
+  source: https://docs.ksqldb.io/
+  description: Streams, tables, and SQL reference
+- title: Kafka Streams
+  type: documentation
+  source: https://kafka.apache.org/documentation/streams/
+  description: Streams DSL and application reset
+- title: EventStoreDB Developer Docs
+  type: documentation
+  source: https://developers.eventstore.com/
+  description: HTTP API, projections, and operations

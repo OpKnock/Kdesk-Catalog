@@ -1,0 +1,85 @@
+name: elasticsearch-inference
+display_name: Elasticsearch Inference
+category: ml
+subcategory: vector-db
+description: Elasticsearch inference server agent. Manages Elasticsearch ML inference server.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Elasticsearch Inference Server Agent
+  description: Elasticsearch inference server agent. Manages Elasticsearch ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "elasticsearch", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent elasticsearch-inference
+  examples:
+  - python create_index.py --name my-index --dimensions 1536
+  - python index_vectors.py --index my-index --vectors vectors.json
+  - python search_vectors.py --index my-index --query query_vector --k 10
+  - python delete_vectors.py --index my-index --ids ids.json
+  parameters: []
+knowledge:
+- title: elasticsearch-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for elasticsearch-inference
+instructions: 'You are the Elasticsearch inference server expert. Call on this agent to set up and operate
+  the Elasticsearch ML inference server. Core workflow: (1) serve predictions via ''curl -X POST http://localhost:8080/v1/predict
+  -H ''"Content-Type: application/json"'' -d ''"{\"inputs\": \"hello\"}"'''' and chat/completions; (2)
+  list models with ''curl -s http://localhost:8080/v1/models | jq -r ''".data[].id"''''; (3) monitor health
+  with ''curl -s -o /dev/null -w ''"%{http_code}"'' http://localhost:8080/v1/health''; (4) maintain vector
+  indexes with ''python create_index.py --name my-index --dimensions 1536'', ''python index_vectors.py
+  --index my-index --vectors vectors.json'', ''python search_vectors.py --index my-index --query query_vector
+  --k 10'', and ''python delete_vectors.py --index my-index --ids ids.json''; run ''python identity.py
+  --agent elasticsearch-inference''. Output: health status, model ids, and index/search results.'
+examples:
+- python create_index.py --name my-index --dimensions 1536
+- python index_vectors.py --index my-index --vectors vectors.json
+- python search_vectors.py --index my-index --query query_vector --k 10
+- python delete_vectors.py --index my-index --ids ids.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: elasticsearch-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Elasticsearch inference server expert. Help users set up Elasticsearch ML
+      inference server.
+  opencode:
+    plugin: opencode-elasticsearch-inference
+  generic:
+    system_prompt: You are elasticsearch-inference. Elasticsearch inference server agent. Manages Elasticsearch
+      ML inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,132 @@
+{
+  "name": "embedding-docker",
+  "display_name": "Embedding Docker",
+  "category": "ml",
+  "subcategory": "embedding",
+  "description": "Embedding SDK deployment agent for ML Embedding SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "embedding"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Embedding Deploy Sdk",
+      "description": "Embedding SDK deployment agent for ML Embedding SDK deployment.",
+      "commands": [
+        "Docker: docker run -p 8080:8080 embedding-server --model sentence-transformers/all-MiniLM-L6-v2",
+        "Server: python -m embedding.server --model sentence-transformers/all-MiniLM-L6-v2"
+      ],
+      "examples": [
+        "Server: python -m embedding.server --model sentence-transformers/all-MiniLM-L6-v2",
+        "Docker: docker run -p 8080:8080 embedding-server --model sentence-transformers/all-MiniLM-L6-v2"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "embedding-docker Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/embedding",
+      "description": "Reference documentation for embedding-docker"
+    }
+  ],
+  "instructions": "You are the Embedding SDK deployment expert. Call on this agent to deploy an embedding service backed by a sentence-transformers model. Core workflow: (1) start the Python server with `python -m embedding.server --model sentence-transformers/all-MiniLM-L6-v2` (or the port variant `--port 8080`); (2) for containerized deployments run `docker run -p 8080:8080 embedding-server --model sentence-transformers/all-MiniLM-L6-v2` and confirm the port mapping; (3) verify the model is loaded correctly and embeddings are returned for sample text. Key behaviors: confirm the model id is available locally or can be fetched from Hugging Face; check GPU/CPU memory before loading large models; if the server starts but returns errors, validate the model path and Python package versions. Output expectations: report which deployment mode is running (python vs docker), the model loaded, the bind address and port, and a sample embedding response proving the service works.",
+  "examples": [
+    "Server: python -m embedding.server --model sentence-transformers/all-MiniLM-L6-v2",
+    "Docker: docker run -p 8080:8080 embedding-server --model sentence-transformers/all-MiniLM-L6-v2"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "embedding-docker.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Embedding SDK deployment expert. Help users deploy Embedding applications."
+    },
+    "opencode": {
+      "plugin": "opencode-embedding-docker"
+    },
+    "generic": {
+      "system_prompt": "You are embedding-docker. Embedding SDK deployment agent for ML Embedding SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "embedding-docker",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Embedding Deploy Sdk",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/embedding/embedding-docker.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/embedding/embedding-docker.yaml",
+    "checksum": "8d858cd0b9c07d3813c638486e6160022a9bdbad475d1c8fb8b20c6a9f684d5f"
+  }
+}

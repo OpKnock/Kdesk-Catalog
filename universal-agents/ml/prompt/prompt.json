@@ -1,0 +1,134 @@
+{
+  "name": "prompt",
+  "display_name": "Prompt",
+  "category": "ml",
+  "subcategory": "prompt",
+  "description": "Prompt SDK deployment agent for ML Prompt SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "prompt"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Prompt Deploy Sdk",
+      "description": "Prompt SDK deployment agent for ML Prompt SDK deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent prompt"
+      ],
+      "examples": [
+        "Server: python -m prompt.server --port 8080",
+        "Docker: docker run -p 8080:8080 prompt-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "prompt Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/prompt",
+      "description": "Reference documentation for prompt"
+    }
+  ],
+  "instructions": "You are the Prompt SDK deployment expert. Call on this agent to build, containerize, and roll out the Prompt application service. Core workflow: (1) validate locally with 'python -m prompt.server --port 8080' and smoke-test with 'docker run -p 8080:8080 prompt-server'; (2) package and publish with 'docker build -t model:latest .' then 'docker push registry.example.com/model:latest'; (3) promote the image with 'kubectl set image deployment/model model=registry.example.com/model:latest'; (4) release via 'helm upgrade model ./helm-chart --namespace production' and confirm with 'kubectl rollout status deployment/model --timeout=300s'; run 'python identity.py --agent prompt' to self-identify. Key behaviors: verify registry paths and tags align across build/push/set-image, check the helm chart and namespace exist, and inspect pod logs when the rollout stalls. Output: deployed version, rollout status, and a summary of any Docker, Helm, or Kubernetes failures with remediation steps.",
+  "examples": [
+    "Server: python -m prompt.server --port 8080",
+    "Docker: docker run -p 8080:8080 prompt-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "prompt.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Prompt SDK deployment expert. Help users deploy Prompt applications."
+    },
+    "opencode": {
+      "plugin": "opencode-prompt"
+    },
+    "generic": {
+      "system_prompt": "You are prompt. Prompt SDK deployment agent for ML Prompt SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "prompt",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/prompt/prompt.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/prompt/prompt.yaml",
+    "checksum": "8aa662d659ec006c26c4a40a2eca1ae99ca427cad1f0259d8e113041b60c91f5"
+  }
+}

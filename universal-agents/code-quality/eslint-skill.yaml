@@ -1,0 +1,111 @@
+name: eslint
+display_name: eslint
+category: code-quality
+subcategory: general
+description: 'Lints JavaScript and TypeScript with ESLint: full lint runs, autofix, custom rulesets, and
+  CI integration.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- eslint
+- npx
+capabilities:
+- commands:
+  - eslint src/ --ext .js,.mjs
+  - eslint src/main.js --fix
+  - eslint . --ext .js,.ts
+  - eslint --max-warnings 10 src/
+  - eslint --format json src/ -o eslint-report.json
+  description: Lint and fix code with real CLI flags.
+  name: eslint-lint
+  examples:
+  - eslint src/ --fix-dry-run
+  - eslint --no-error-on-unmatched-pattern "src/**/*.ts"
+  - eslint --cache src/
+  parameters:
+  - description: Files or directories
+    name: paths
+    type: string
+  - description: Autofix problems
+    name: fix
+    type: boolean
+  - description: Warnings allowed before error
+    name: max-warnings
+    type: integer
+- commands:
+  - 'npx eslint --rule "no-console: error" src/'
+  - eslint --rulesdir ./rules src/
+  - 'eslint --plugin react --rule "react/jsx-uses-react: error" src/'
+  - eslint --print-config src/main.js
+  description: Inspect and apply specific rules.
+  name: eslint-rules
+  examples:
+  - npx eslint --fix --ext .jsx,.tsx src/components/
+  - 'eslint --no-eslintrc --parser-options "ecmaVersion: latest" src/'
+  parameters:
+  - description: Inline rule override
+    name: rule
+    type: string
+  - name: plugin
+    type: string
+    description: Plugin namespace to enable, e.g. react
+knowledge:
+- title: ESLint Docs
+  description: CLI options and rules reference
+  source: https://eslint.org/docs/latest/
+  type: documentation
+- title: ESLint Rules
+  description: Built-in rule list
+  source: https://eslint.org/docs/latest/rules/
+  type: documentation
+instructions: "# ESLint\n\nJavaScript and TypeScript linting.\n\n## When to Use\n\n- Enforcing code style\
+  \ and catching bugs early\n- Autofixing safe issues in CI or pre-commit\n- TS projects with typescript-eslint\n\
+  - Framework code with React/Vue plugins\n\n## Commands\n\n```bash\n# Basic lint\neslint src/\n\n# Autofix\n\
+  eslint src/ --fix\neslint --fix-dry-run src/  # preview\n\n# Scope and extensions\neslint . --ext .js,.ts\n\
+  eslint src/components/ --ext .jsx,.tsx\n\n# Warnings budget\neslint --max-warnings 10 src/\n\n# Reports\n\
+  eslint --format json src/ -o eslint-report.json\neslint --format sarif src/ -o eslint-report.sarif\n\
+  \n# Caching\neslint --cache src/\n```\n\n## Common Rules\n\n```javascript\nrules: {\n  \"semi\": [\"\
+  error\", \"always\"],\n  \"no-unused-vars\": [\"error\", { argsIgnorePattern: \"^_\" }],\n  \"@typescript-eslint/no-explicit-any\"\
+  : \"warn\",\n}\n```\n\n## Best Practices\n\n- Use --fix in pre-commit, verify-only in CI\n- Set --max-warnings\
+  \ 0 to block warning creep\n- Cache runs locally; disable cache in CI\n- Emit JSON/SARIF reports in\
+  \ CI for dashboards\n- Pin ESLint and plugin versions together\n- Use --fix-dry-run to review autofixes\
+  \ before applying"
+examples:
+- input: Lint my whole project and fix issues
+  output: Agent runs eslint . --ext .js,.ts --fix, reviews the diff, and re-runs to verify zero problems.
+- input: ESLint hangs on a huge monorepo
+  output: Agent adds --cache, scopes runs per package, and uses --no-error-on-unmatched-pattern.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: eslint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-eslint
+  generic:
+    system_prompt: 'This is your domain: eslint. You do it through eslint-lint: Lint and fix code with
+      real CLI flags. The commands are real, e.g. `eslint src/ --ext .js,.mjs`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

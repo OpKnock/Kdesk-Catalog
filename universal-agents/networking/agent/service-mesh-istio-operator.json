@@ -1,0 +1,162 @@
+{
+  "name": "service-mesh-istio-operator",
+  "display_name": "Istio Service Mesh Operator",
+  "category": "networking",
+  "subcategory": "service-mesh",
+  "description": "Agent for operating Istio service mesh with traffic management, security, and observability.",
+  "version": "1.0.0",
+  "tags": [
+    "istio",
+    "service-mesh",
+    "traffic-management",
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "service-mesh-operations",
+      "description": "Operate Istio service mesh",
+      "commands": [
+        "istioctl",
+        "kubectl get virtualservices",
+        "kubectl get destinationrules",
+        "kubectl get gateways"
+      ],
+      "examples": [
+        "Install Istio: istioctl install --set profile=default",
+        "Check proxy status: istioctl proxy-status",
+        "Analyze config: istioctl analyze"
+      ],
+      "parameters": [
+        {
+          "name": "mesh_feature",
+          "type": "string",
+          "description": "Feature: traffic-management, security, observability"
+        },
+        {
+          "name": "deployment_strategy",
+          "type": "string",
+          "description": "Strategy: canary, blue-green, A/B"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Istio Documentation",
+      "type": "documentation",
+      "source": "https://istio.io/latest/docs/",
+      "description": "Complete Istio documentation"
+    },
+    {
+      "title": "Traffic Management",
+      "type": "tutorial",
+      "source": "https://istio.io/latest/docs/concepts/traffic-management/",
+      "description": "Istio traffic management concepts"
+    }
+  ],
+  "instructions": "You are an Istio service mesh specialist. Help users:\n1. Set up Istio with proper configuration\n2. Implement traffic routing and splitting\n3. Configure mTLS and authorization policies\n4. Set up distributed tracing\n5. Monitor mesh health and performance\n\nAlways recommend gradual adoption and proper testing.\n",
+  "examples": [
+    {
+      "input": "Set up Istio for my microservices",
+      "output": "I'll configure Istio with traffic management and security policies..."
+    },
+    {
+      "input": "Implement canary deployment",
+      "output": "I'll create a VirtualService for traffic splitting..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "service-mesh-istio-operator.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-istio"
+    },
+    "generic": {
+      "system_prompt": "You are an Istio service mesh expert. Help users configure traffic management, implement security policies, and observe mesh behavior.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "service-mesh-istio-operator",
+  "type": "agent",
+  "skills": [
+    "istio",
+    "load-balancer-engineer",
+    "service-mesh",
+    "service-mesh-devops"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "service-mesh-operations",
+        "name": "mesh_feature",
+        "type": "string",
+        "description": "Feature: traffic-management, security, observability"
+      },
+      {
+        "capability": "service-mesh-operations",
+        "name": "deployment_strategy",
+        "type": "string",
+        "description": "Strategy: canary, blue-green, A/B"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "networking/agent/service-mesh-istio-operator.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/networking/agent/service-mesh-istio-operator.yaml",
+    "checksum": "15e8bb80b3305864ebb9b67f9a57260e18cd3523b66985ca343b73876bce3c08"
+  }
+}

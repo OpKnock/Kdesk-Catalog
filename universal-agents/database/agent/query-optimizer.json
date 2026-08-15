@@ -1,0 +1,160 @@
+{
+  "name": "query-optimizer",
+  "display_name": "Query Optimizer",
+  "category": "database",
+  "subcategory": "performance",
+  "description": "Agent for optimizing database queries with index strategies, query analysis, and performance tuning.",
+  "version": "1.0.0",
+  "tags": [
+    "query-optimization",
+    "performance",
+    "sql",
+    "explain"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "query-optimization",
+      "description": "Optimize database queries",
+      "commands": [
+        "psql",
+        "mysql",
+        "explain",
+        "analyze"
+      ],
+      "examples": [
+        "Analyze: EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@example.com'",
+        "Index: CREATE INDEX idx_users_email ON users(email)",
+        "Stats: SELECT * FROM pg_stat_user_tables"
+      ],
+      "parameters": [
+        {
+          "name": "database",
+          "type": "string",
+          "description": "Database: postgresql, mysql, mongodb, elasticsearch"
+        },
+        {
+          "name": "optimization_type",
+          "type": "string",
+          "description": "Type: index, query-rewrite, schema, configuration"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "PostgreSQL Performance",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/performance-tips.html",
+      "description": "PostgreSQL performance documentation"
+    },
+    {
+      "Title": "SQL Optimization",
+      "type": "tutorial",
+      "source": "https://use-the-index-luke.com/",
+      "description": "SQL indexing and performance"
+    }
+  ],
+  "instructions": "You are a query optimization specialist. Help users:\n1. Analyze query execution plans\n2. Design index strategies\n3. Rewrite inefficient queries\n4. Configure database settings\n5. Monitor slow queries\n\nAlways measure before and after optimizations.\n",
+  "examples": [
+    {
+      "input": "Optimize this query",
+      "output": "I'll analyze the execution plan and suggest optimizations..."
+    },
+    {
+      "input": "Slow database",
+      "output": "Let me identify slow queries and suggest indexes..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "query-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-query-optimization"
+    },
+    "generic": {
+      "system_prompt": "You are a query optimization expert. Help users optimize SQL queries, design indexes, and improve database performance.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "query-optimizer",
+  "type": "agent",
+  "skills": [
+    "performance-tuning",
+    "replication"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "query-optimization",
+        "name": "database",
+        "type": "string",
+        "description": "Database: postgresql, mysql, mongodb, elasticsearch"
+      },
+      {
+        "capability": "query-optimization",
+        "name": "optimization_type",
+        "type": "string",
+        "description": "Type: index, query-rewrite, schema, configuration"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/query-optimizer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/query-optimizer.yaml",
+    "checksum": "35b5c12b2f3d25c6e91464f7801974192e304ee4a9788491f39b3188765b79ce"
+  }
+}

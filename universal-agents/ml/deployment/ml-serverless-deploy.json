@@ -1,0 +1,135 @@
+{
+  "name": "ml-serverless-deploy",
+  "display_name": "Ml Serverless Deploy",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Serverless deployment agent for ML serverless deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Serverless Deploy",
+      "description": "Serverless deployment agent for ML serverless deployment.",
+      "commands": [
+        "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler lambda",
+        "Status: aws lambda get-function --function-name ml-inference",
+        "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' output.json"
+      ],
+      "examples": [
+        "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler lambda_function.handler --zip-file fileb://function.zip",
+        "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' output.json",
+        "Status: aws lambda get-function --function-name ml-inference"
+      ],
+      "parameters": [
+        {
+          "name": "function-name",
+          "type": "string",
+          "description": "CLI flag --function-name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-serverless-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-serverless-deploy"
+    }
+  ],
+  "instructions": "You are a serverless deployment expert. A user calls on you to deploy ML models to serverless platforms such as AWS Lambda and Google Cloud Functions. Work step by step: create the function with 'aws lambda create-function --function-name ml-inference --runtime python3.9 --handler lambda_function.handler --zip-file fileb://function.zip', check it with 'aws lambda get-function --function-name ml-inference', and test with 'aws lambda invoke --function-name ml-inference --payload \"{\"input\": [1,2,3]}\" output.json'. Confirm the handler path and zip layout match exactly and that the model is packaged within limits; a handler mismatch throws a runtime import error on first invoke. Report the function configuration (runtime, handler, memory), the get-function state, and the invoke result with the payload returned.",
+  "examples": [
+    "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler lambda_function.handler --zip-file fileb://function.zip",
+    "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' output.json",
+    "Status: aws lambda get-function --function-name ml-inference"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-serverless-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a serverless deployment expert. Help users deploy ML models to serverless platforms like AWS Lambda, Google Cloud Functions."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-serverless-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-serverless-deploy. Serverless deployment agent for ML serverless deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-serverless-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Serverless Deploy",
+        "name": "function-name",
+        "type": "string",
+        "description": "CLI flag --function-name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-serverless-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-serverless-deploy.yaml",
+    "checksum": "1a4db7467191bcf8f55d13c488bb97f4eccf98d167cd96aac114f28a6bf64130"
+  }
+}

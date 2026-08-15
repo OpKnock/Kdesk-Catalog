@@ -1,0 +1,120 @@
+{
+  "name": "ml-ecs-deploy",
+  "display_name": "Ml Ecs Deploy",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "ECS deployment agent for ML ECS deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Ecs Deploy",
+      "description": "ECS deployment agent for ML ECS deployment.",
+      "commands": [
+        "Service: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-",
+        "Register: aws ecr get-login-password | docker login --username AWS --password-stdin 123456789.dkr.ec",
+        "Push: docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/ml-inference:latest"
+      ],
+      "examples": [
+        "Register: aws ecr get-login-password | docker login --username AWS --password-stdin 123456789.dkr.ecr.us-east-1.amazonaws.com",
+        "Push: docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/ml-inference:latest",
+        "Service: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1 --desired-count 2"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-ecs-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-ecs-deploy"
+    }
+  ],
+  "instructions": "You are an ECS deployment expert for ML workloads on AWS ECS. A user calls on you to containerize an ML inference model and run it as a long-running ECS service. Work step by step: first authenticate and register the image with 'aws ecr get-login-password | docker login --username AWS --password-stdin 123456789.dkr.ecr...', push it with 'docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/ml-inference:latest', then create the service with 'aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1 --desired-count 2'. Before creating the service, confirm the cluster name, task definition revision, and desired count with the user, and verify ECR login succeeded or the push will fail with an auth error. Check that the task definition references the pushed image and that the service reaches a steady RUNNING state. Report the service ARN, image tag deployed, desired vs running task count, and any failed deregistrations or deployment errors returned by ECS.",
+  "examples": [
+    "Register: aws ecr get-login-password | docker login --username AWS --password-stdin 123456789.dkr.ecr.us-east-1.amazonaws.com",
+    "Push: docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/ml-inference:latest",
+    "Service: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1 --desired-count 2"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-ecs-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ECS deployment expert. Help users deploy ML models to AWS ECS."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-ecs-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-ecs-deploy. ECS deployment agent for ML ECS deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-ecs-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-ecs-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-ecs-deploy.yaml",
+    "checksum": "0cf71f031d8927742aa0af8ebd7aab535ccf7ead6e9d64f8a10738ff26a5dea8"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "name": "backpressure-handler",
+  "display_name": "Backpressure Handler",
+  "category": "data",
+  "subcategory": "flow-control",
+  "description": "Agent for implementing backpressure in data pipelines with buffering, throttling, and flow control.",
+  "version": "1.0.0",
+  "tags": [
+    "backpressure",
+    "flow-control",
+    "buffering",
+    "throttling"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "backpressure-handling",
+      "description": "Implement backpressure mechanisms",
+      "commands": [
+        "kafka",
+        "redis-streams",
+        "rabbitmq",
+        "rxjava"
+      ],
+      "examples": [
+        "Buffer: redis-cli XADD stream * field value",
+        "Read buffer: redis-cli XREAD COUNT 10 STREAMS stream 0",
+        "Check lag: kafka-consumer-groups --describe --group my-group"
+      ],
+      "parameters": [
+        {
+          "name": "backpressure_type",
+          "type": "string",
+          "description": "Type: buffering, throttling, dropping, sampling"
+        },
+        {
+          "name": "buffer_strategy",
+          "type": "string",
+          "description": "Strategy: bounded, unbounded, sliding-window"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Reactive Streams",
+      "type": "documentation",
+      "source": "https://www.reactive-streams.org/",
+      "description": "Reactive Streams specification"
+    },
+    {
+      "Title": "Backpressure in Kafka",
+      "type": "tutorial",
+      "source": "https://kafka.apache.org/documentation/#design_batching",
+      "description": "Kafka batching and flow control"
+    }
+  ],
+  "instructions": "You are a backpressure specialist. Help users:\n1. Detect backpressure conditions\n2. Implement buffering strategies\n3. Configure flow control\n4. Handle overflow gracefully\n5. Monitor pipeline health\n\nAlways recommend proper monitoring and alerting.\n",
+  "examples": [
+    {
+      "input": "Handle backpressure",
+      "output": "I'll implement buffering with bounded queues. Here's the flow control..."
+    },
+    {
+      "input": "Pipeline is overwhelmed",
+      "output": "I'll add throttling and overflow handling..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "backpressure-handler.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-backpressure"
+    },
+    "generic": {
+      "system_prompt": "You are a backpressure expert. Help users implement flow control, configure buffers, and handle pipeline overflow.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "backpressure-handler",
+  "type": "agent",
+  "skills": [
+    "message-broker-architect",
+    "message-queue-administrator",
+    "queue-based-architecture",
+    "async-task-engineer",
+    "background-job-scheduler"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "backpressure-handling",
+        "name": "backpressure_type",
+        "type": "string",
+        "description": "Type: buffering, throttling, dropping, sampling"
+      },
+      {
+        "capability": "backpressure-handling",
+        "name": "buffer_strategy",
+        "type": "string",
+        "description": "Strategy: bounded, unbounded, sliding-window"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/backpressure-handler.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/backpressure-handler.yaml",
+    "checksum": "0b374fe28b6d41c0207e5f233c8cc557bab5363a5c1259a1ad855f9ba52ca79a"
+  }
+}

@@ -1,0 +1,100 @@
+name: throttling-pattern
+display_name: Throttling Pattern
+category: api
+subcategory: general
+description: 'Hand-crafted throttling pattern skill: nginx limit_req zones, Redis token buckets, 429 semantics,
+  and load-test verification of rate limits.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- redis-cli
+capabilities:
+- name: rate-limit-config
+  description: Configure and verify API rate limiting with nginx and Redis
+  commands:
+  - ab -n 2000 -c 100 http://localhost:8080/api
+  - curl -i http://localhost:8080/api | grep -i 'HTTP/1.1 429'
+  - redis-cli INCR rate:user:42
+  - redis-cli EXPIRE rate:user:42 60
+  - k6 run --vus 200 --iterations 5000 throttle.js
+  examples:
+  - curl -s -o /dev/null -w '%{http_code}\n' -X POST http://localhost:8080/api -d '{}'
+  - redis-cli SET rate:user:42 1 EX 60 NX
+  - ab -n 2000 -c 100 http://localhost:8080/api
+  parameters:
+  - name: rate
+    type: string
+    description: Limit like 10r/s in nginx
+  - name: burst
+    type: integer
+    description: Burst allowance before throttling
+  - name: window_seconds
+    type: integer
+    description: Redis window for fixed-window limits
+knowledge:
+- title: nginx limit_req module
+  type: documentation
+  source: https://nginx.org/en/docs/http/ngx_http_limit_req_module.html
+  description: limit_req_zone, limit_req, burst, nodelay
+- title: Redis INCR pattern
+  type: documentation
+  source: https://redis.io/docs/latest/develop/use/patterns/rate-limiting/
+  description: Fixed-window and sliding-window rate limiting
+instructions: "# Throttling Pattern\n\nHand-crafted skill for rate limiting APIs.\n\n## What this skill\
+  \ does\n\n- Configures nginx limit_req zones per key (IP, user, token)\n- Implements Redis fixed-window\
+  \ counters for app-level limits\n- Verifies 429 behavior under load\n\n## When to use\n\n- Protecting\
+  \ public endpoints from abuse\n- Enforcing per-customer quotas\n- Backstop for autoscaling during spikes\n\
+  \n## Real commands\n\n```bash\n# nginx: define the zone once, then apply\ncurl -i http://localhost:8080/api\
+  \ | grep -i 'HTTP/1.1 429'\n\n# Redis fixed window: count + TTL\nredis-cli INCR rate:user:42\nredis-cli\
+  \ EXPIRE rate:user:42 60\nredis-cli SET rate:user:42 1 EX 60 NX   # atomic first-hit\n\n# Verify under\
+  \ load\nab -n 2000 -c 100 http://localhost:8080/api\nk6 run --vus 200 --iterations 5000 throttle.js\n\
+  ```\n\n## nginx config\n\n```nginx\nlimit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;\n\n\
+  server {\n  location /api/ {\n    limit_req zone=api burst=20 nodelay;\n    limit_req_status 429;\n\
+  \  }\n}\n```\n\n## Redis check\n\n```bash\nCOUNT=$(redis-cli INCR rate:user:42)\nif [ \"$COUNT\" -le\
+  \ 10 ]; then\n  redis-cli EXPIRE rate:user:42 60\n  # allow the request\nelse\n  # return 429\nfi\n\
+  ```\n\n## Testing\n\n```bash\nab -n 2000 -c 100 http://localhost:8080/api   # count 429 responses\n\
+  curl -i http://localhost:8080/api | grep -i retry-after\n```\n\n## Best practices\n\n- Rate limit by\
+  \ authenticated user, not just IP, in production\n- Send 429 with Retry-After so clients back off politely\n\
+  - Keep limit state out of the app hot path: edge proxy first\n"
+examples:
+- input: Allow 10 requests/sec per user
+  output: 'nginx: limit_req_zone $http_x_user_id zone=api:10m rate=10r/s; limit_req zone=api burst=20
+    nodelay; return 429 beyond.'
+- input: Does my limit actually trigger?
+  output: ab -n 2000 -c 100 http://localhost:8080/api and count HTTP/1.1 429 lines in the output.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: throttling-pattern.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-throttling-pattern
+  generic:
+    system_prompt: 'You are the Throttling Pattern specialist. You do it through rate-limit-config: Configure
+      and verify API rate limiting with nginx and Redis. The commands are real, e.g. `ab -n 2000 -c 100
+      http://localhost:8080/api`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

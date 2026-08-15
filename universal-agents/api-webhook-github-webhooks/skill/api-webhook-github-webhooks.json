@@ -1,0 +1,190 @@
+{
+  "name": "api-webhook-github-webhooks",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Integrates with platform webhooks: GitHub repository hooks, Stripe event triggers, Slack incoming webhooks, and signature verification patterns.",
+  "keywords": [
+    "webhooks",
+    "delivery",
+    "signature"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-webhook-github-webhooks.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-webhook-github-webhooks"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Api Webhook Github Webhooks. You do it through github-webhooks: Manage GitHub repository webhooks. The commands are real, e.g. `gh api repos/octocat/Hello-World/hooks --method POST -f...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "github-webhooks",
+      "description": "Manage GitHub repository webhooks",
+      "commands": [
+        "gh api repos/octocat/Hello-World/hooks --method POST -f config.url=https://example.com/hook -f config.content_type=json -f events[]=push",
+        "gh api repos/octocat/Hello-World/hooks | jq '.[].config.url'",
+        "gh api repos/octocat/Hello-World/hooks/1 --method PATCH -f active=false",
+        "gh api repos/octocat/Hello-World/hooks/1/deliveries | jq '.[0].status'"
+      ],
+      "examples": [
+        "gh api POST creates a push webhook",
+        "deliveries endpoints show delivery status",
+        "config.content_type=json sets the payload format"
+      ],
+      "parameters": [
+        {
+          "name": "repo",
+          "type": "string",
+          "description": "owner/repo"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Webhook URL"
+        },
+        {
+          "name": "events",
+          "type": "array",
+          "description": "Event types"
+        }
+      ]
+    },
+    {
+      "name": "stripe-slack",
+      "description": "Trigger and receive Stripe and Slack events",
+      "commands": [
+        "stripe listen --forward-to localhost:3000/webhooks",
+        "stripe trigger payment_intent.succeeded",
+        "curl -s -X POST -H \"Authorization: Bearer $SLACK_TOKEN\" -H 'Content-Type: application/json' -d '{\"text\":\"Deploy complete\"}' https://slack.com/api/chat.postMessage",
+        "stripe trigger checkout.session.completed"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis",
+    "stripe-cli"
+  ],
+  "examples": [
+    {
+      "input": "Receive Stripe payments locally",
+      "output": "Runs stripe listen and triggers payment_intent.succeeded"
+    },
+    {
+      "input": "Add a GitHub push hook",
+      "output": "Creates the hook with gh api and verifies deliveries"
+    }
+  ],
+  "instructions": "# API Webhook v5 - Integrations\n\nPlatform webhook integration patterns.\n\n## What This Skill Does\n- Manages GitHub webhooks via API\n- Triggers Stripe events locally\n- Posts to Slack channels\n\n## When to Use\n- CI-driven webhook consumers\n- Payment event handling\n- Notification pipelines\n\n## Real Commands\n\n```bash\ngh api repos/octocat/Hello-World/hooks --method POST -f config.url=https://example.com/hook -f config.content_type=json -f events[]=push\nstripe listen --forward-to localhost:3000/webhooks\nstripe trigger payment_intent.succeeded\n```\n\n## Integration Pattern\n1. Listen locally with stripe CLI\n2. Trigger a real event\n3. Verify signature and payload\n4. Process and acknowledge\n\n## Testing\n- Trigger each event type\n- Check delivery status via APIs\n- Verify signature failures are rejected\n\n\n## Best Practices\n- Verify provider signatures always\n- Handle delivery retries gracefully\n- Log event IDs end-to-end",
+  "display_name": "Api Webhook Github Webhooks",
+  "knowledge": [
+    {
+      "title": "GitHub Webhook Docs",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/webhooks",
+      "description": "GitHub webhook events and delivery"
+    },
+    {
+      "title": "Stripe CLI Docs",
+      "type": "documentation",
+      "source": "https://docs.stripe.com/stripe-cli",
+      "description": "Triggering events locally with stripe"
+    }
+  ],
+  "id": "api-webhook-github-webhooks",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "github-webhooks",
+        "name": "repo",
+        "type": "string",
+        "description": "owner/repo"
+      },
+      {
+        "capability": "github-webhooks",
+        "name": "url",
+        "type": "string",
+        "description": "Webhook URL"
+      },
+      {
+        "capability": "github-webhooks",
+        "name": "events",
+        "type": "array",
+        "description": "Event types"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-webhook-github-webhooks/skill/api-webhook-github-webhooks.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-webhook-github-webhooks/skill/api-webhook-github-webhooks.yaml",
+    "checksum": "9f30f8ec11787080d776b6e668f133df410929771325c3de9b865659aeebc347"
+  }
+}

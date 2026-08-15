@@ -1,0 +1,169 @@
+name: api-sec-jwt-auditing
+version: 2.0.0
+type: skill
+category: security
+description: 'Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm
+  confusion tests, and auth header verification with jwt-cli.'
+keywords:
+- api-security
+- authentication
+- authorization
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-sec-jwt-auditing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-sec-jwt-auditing
+  generic:
+    system_prompt: 'This is your domain: Api Sec JWT Auditing. You do it through jwt-auditing: Inspect
+      and validate JWTs. The commands are real, e.g. `npm install -g jwt-cli`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: jwt-auditing
+  description: Inspect and validate JWTs
+  commands:
+  - npm install -g jwt-cli
+  - jwt decode $TOKEN
+  - jwt encode --secret "s3cret" --alg HS256 '{"sub":"1234567890","name":"alice"}'
+  - jwt encode --secret "s3cret" --alg none '{"sub":"admin"}'
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $TOKEN" https://api.example.com/me'
+  examples:
+  - jwt decode $TOKEN prints header and payload
+  - jwt encode with alg none probes algorithm confusion
+  - curl with the token checks endpoint enforcement
+  parameters:
+  - name: token
+    type: string
+    description: JWT to decode
+  - name: secret
+    type: string
+    description: HMAC signing secret
+  - name: claims
+    type: object
+    description: Claims object to encode
+- name: auth-header-checks
+  description: Verify bearer and basic auth enforcement
+  commands:
+  - curl -s -o /dev/null -w '%{http_code}\n' https://api.example.com/me
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H ''Authorization: Bearer expired-token'' https://api.example.com/me'
+  - node -e "const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'1'},'secret',{expiresIn:'1h'});
+    console.log(t.split('.')[0]); console.log(jwt.verify(t,'secret').sub)"
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- owasp-zap
+tools:
+- node.js
+- python
+- owasp-zap
+- helmet
+- cors
+examples:
+- input: Audit JWT handling
+  output: Decodes tokens with jwt-cli and tests alg none and expiry vectors
+- input: Verify /me enforcement
+  output: Curls the endpoint with missing, expired, and valid tokens
+instructions: '# API Security v2 - Auth Tokens
+
+
+  JWT security hardening.
+
+
+  ## What This Skill Does
+
+  - Inspects tokens for weak signatures
+
+  - Tests algorithm confusion vectors
+
+  - Verifies endpoint enforcement
+
+
+  ## When to Use
+
+  - Auditing authentication implementation
+
+  - Testing token expiry handling
+
+  - Investigating auth bypasses
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npm install -g jwt-cli
+
+  jwt decode $TOKEN
+
+  jwt encode --secret "s3cret" --alg HS256 ''{"sub":"1234567890"}''
+
+  curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $TOKEN" https://api.example.com/me
+
+  ```
+
+
+  ## Checks to Run
+
+  - alg none: does the server accept unsigned tokens?
+
+  - Expired tokens: are they rejected with 401?
+
+  - Tampered payloads: does signature validation catch them?
+
+  - Weak secrets: crackable HS256 keys
+
+
+  ## Testing
+
+  - Confirm 401 without a token
+
+  - Confirm 401 with an expired token
+
+  - Verify the server pins the expected algorithm
+
+
+  ## Best Practices
+
+  - Reject alg:none explicitly
+
+  - Use RS256/ES256 for issuance
+
+  - Rotate signing keys on rotation schedules'
+display_name: Api Sec JWT Auditing
+knowledge:
+- title: jwt-cli GitHub
+  type: documentation
+  source: https://github.com/mike-engel/jwt-cli
+  description: JWT CLI encoding and decoding
+- title: JWT.io Introduction
+  type: documentation
+  source: https://jwt.io/introduction
+  description: JWT structure and usage

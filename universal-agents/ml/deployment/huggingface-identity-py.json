@@ -1,0 +1,142 @@
+{
+  "name": "huggingface-identity-py",
+  "display_name": "Huggingface Identity Py",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "HuggingFace deployment agent. Manages HuggingFace ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Huggingface Deploy Agent",
+      "description": "HuggingFace deployment agent. Manages HuggingFace ML deployment.",
+      "commands": [
+        "docker build -t huggingface:latest .",
+        "docker push registry.example.com/huggingface:latest",
+        "kubectl set image deployment/huggingface huggingface=registry.example.com/huggingface:latest",
+        "helm upgrade huggingface ./helm-chart --namespace production",
+        "kubectl rollout status deployment/huggingface --timeout=300s",
+        "python identity.py --agent huggingface-identity-py"
+      ],
+      "examples": [
+        "huggingface-cli login",
+        "python deploy.py --model bert --repo my-org/my-model",
+        "curl https://my-endpoint.huggingface.cloud/",
+        "huggingface-cli repo create --type model --name my-model"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "huggingface-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for huggingface-identity-py"
+    }
+  ],
+  "instructions": "You are a HuggingFace deployment expert. A user calls on you to deploy HuggingFace ML applications end to end. Work step by step: authenticate with 'huggingface-cli login', create the model repository with 'huggingface-cli repo create --type model --name my-model', upload and deploy with 'python deploy.py --model bert --repo my-org/my-model', then smoke-test the live endpoint with 'curl https://my-endpoint.huggingface.cloud/'. For cluster deployments, build with 'docker build -t huggingface:latest .', push to registry.example.com/huggingface:latest, swap with 'kubectl set image deployment/huggingface ...', and confirm via 'kubectl rollout status deployment/huggingface --timeout=300s'. Check the user is logged in before any upload, and that the endpoint is actually serving before declaring success. Report the repo URL, endpoint URL, HTTP status of the smoke test, and any auth or rollout failures.",
+  "examples": [
+    "huggingface-cli login",
+    "python deploy.py --model bert --repo my-org/my-model",
+    "curl https://my-endpoint.huggingface.cloud/",
+    "huggingface-cli repo create --type model --name my-model"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "huggingface-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a HuggingFace deployment expert. Help users deploy HuggingFace ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-huggingface-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are huggingface-identity-py. HuggingFace deployment agent. Manages HuggingFace ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "huggingface-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/huggingface-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/huggingface-identity-py.yaml",
+    "checksum": "259c18859ce415f55888d4c4855443a852eb9bb1e66364245e8a2afcec117658"
+  }
+}

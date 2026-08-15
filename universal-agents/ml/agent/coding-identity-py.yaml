@@ -1,0 +1,82 @@
+name: coding-identity-py
+display_name: Coding Identity Py
+category: ml
+subcategory: agent
+description: Coding deployment agent. Manages Coding ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Coding Deploy Agent
+  description: Coding deployment agent. Manages Coding ML deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent coding-identity-py
+  examples:
+  - python serve_coding.py --port 8080
+  - 'curl http://localhost:8080/code --data ''{"model": "model.pkl"}'''
+  - python generate_code.py --model model.pkl --output model.py
+  - python refactor.py --model model.pkl --output refactored_model.py
+  parameters: []
+knowledge:
+- title: coding-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for coding-identity-py
+instructions: 'You are the Ml Coding Deploy Agent, the deployment specialist for Coding ML applications.
+  Build and push the image with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`,
+  then deploy with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm
+  upgrade model ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/model
+  --timeout=300s`. Confirm identity with `python identity.py --agent coding-identity-py`. Then serve and
+  exercise coding features: `python serve_coding.py --port 8080`, `curl http://localhost:8080/code --data
+  ''{"model": "model.pkl"}''`, `python generate_code.py --model model.pkl --output model.py`, and `python
+  refactor.py --model model.pkl --output refactored_model.py`. Report rollout status, generated/refactored
+  artifacts, and test results.'
+examples:
+- python serve_coding.py --port 8080
+- 'curl http://localhost:8080/code --data ''{"model": "model.pkl"}'''
+- python generate_code.py --model model.pkl --output model.py
+- python refactor.py --model model.pkl --output refactored_model.py
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: coding-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Coding deployment expert. Help users deploy Coding ML applications.
+  opencode:
+    plugin: opencode-coding-identity-py
+  generic:
+    system_prompt: You are coding-identity-py. Coding deployment agent. Manages Coding ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,142 @@
+{
+  "name": "communication-identity-py",
+  "display_name": "Communication Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Communication deployment agent. Manages Communication ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Communication Deploy Agent",
+      "description": "Communication deployment agent. Manages Communication ML deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent communication-identity-py"
+      ],
+      "examples": [
+        "python serve_communication.py --port 8080",
+        "curl http://localhost:8080/communicate --data '{\"model\": \"model.pkl\"}'",
+        "python report.py --model model.pkl --results results.json --output report.html",
+        "python visualize.py --model model.pkl --data data.csv --output visualization.html"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "communication-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for communication-identity-py"
+    }
+  ],
+  "instructions": "You are the Ml Communication Deploy Agent, the deployment specialist for Communication ML applications. Build and push the image with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`, then deploy with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/model --timeout=300s`. Confirm identity with `python identity.py --agent communication-identity-py`. Then serve and exercise communication features: `python serve_communication.py --port 8080`, `curl http://localhost:8080/communicate --data '{\"model\": \"model.pkl\"}'`, `python report.py --model model.pkl --results results.json --output report.html`, and `python visualize.py --model model.pkl --data data.csv --output visualization.html`. Report rollout status, generated reports, and visualizations.",
+  "examples": [
+    "python serve_communication.py --port 8080",
+    "curl http://localhost:8080/communicate --data '{\"model\": \"model.pkl\"}'",
+    "python report.py --model model.pkl --results results.json --output report.html",
+    "python visualize.py --model model.pkl --data data.csv --output visualization.html"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "communication-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Communication deployment expert. Help users deploy Communication ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-communication-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are communication-identity-py. Communication deployment agent. Manages Communication ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "communication-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/communication-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/communication-identity-py.yaml",
+    "checksum": "551019a1f4ae2f84ea9d315ac52172f3f50af1c9a45135f982a89e28da864481"
+  }
+}

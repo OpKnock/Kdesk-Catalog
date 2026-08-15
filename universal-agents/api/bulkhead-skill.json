@@ -1,0 +1,243 @@
+{
+  "name": "bulkhead",
+  "display_name": "Bulkhead",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implements bulkhead isolation with opossum (Node.js) and Resilience4j (Java): semaphores, per-dependency pools, and testing.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubectl",
+    "mvn",
+    "node",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "name": "opossum-node",
+      "description": "Add bulkhead limits to Node.js calls with opossum.",
+      "commands": [
+        "npm install opossum",
+        "node -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>42, {maxConcurrent:2}); b.call().then(console.log)\"",
+        "node -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>{await new Promise(r=>setTimeout(r,1000)); return 1},{maxConcurrent:1}); b.call().then(console.log).catch(e=>console.log('rejected', e.message))\"",
+        "npm run test"
+      ],
+      "examples": [
+        "node -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>42,{maxConcurrent:2}); Promise.all([b.call(),b.call(),b.call()]).catch(e=>console.log('blocked'))\"",
+        "node -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>1,{maxConcurrent:1, queue:3, maxQueue:3}); console.log(b.status)\"",
+        "node -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>1,{maxConcurrent:1}); b.call().then(()=>console.log(b.status.stats.active))\""
+      ],
+      "parameters": [
+        {
+          "name": "max_concurrent",
+          "type": "number",
+          "description": "Max concurrent executions"
+        },
+        {
+          "name": "queue_size",
+          "type": "number",
+          "description": "Max queued executions"
+        }
+      ]
+    },
+    {
+      "name": "resilience4j-java",
+      "description": "Configure Resilience4j bulkheads in Java apps.",
+      "commands": [
+        "mvn dependency:tree | grep resilience4j-bulkhead",
+        "mvn test",
+        "curl -s http://localhost:8080/actuator/health",
+        "curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.available.concurrent.calls"
+      ],
+      "examples": [
+        "curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.available.concurrent.calls | jq '.measurements'",
+        "mvn test -Dtest=BulkheadTest",
+        "curl -s http://localhost:8080/actuator/health | jq '.components.resilience4jBulkhead'"
+      ],
+      "parameters": [
+        {
+          "name": "max_concurrent",
+          "type": "number",
+          "description": "resilience4j bulkhead maxConcurrentCalls"
+        },
+        {
+          "name": "wait_timeout",
+          "type": "number",
+          "description": "maxWaitDuration"
+        }
+      ]
+    },
+    {
+      "name": "verify",
+      "description": "Load-test bulkhead behavior.",
+      "commands": [
+        "ab -n 1000 -c 100 http://localhost:8080/api/calls",
+        "curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/calls",
+        "curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.max.allowed.concurrent.calls",
+        "kubectl get hpa"
+      ],
+      "examples": [
+        "ab -n 1000 -c 100 http://localhost:8080/api/calls | grep -E 'Non-2xx|Failed'",
+        "curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.rejected.calls | jq '.measurements'",
+        "watch -n1 'curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/calls'"
+      ],
+      "parameters": [
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "Protected endpoint"
+        },
+        {
+          "name": "concurrency",
+          "type": "number",
+          "description": "Load test concurrency"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "opossum npm",
+      "type": "documentation",
+      "source": "https://github.com/nodeshift/opossum",
+      "description": "Node.js circuit breaker + bulkhead"
+    },
+    {
+      "title": "Resilience4j Bulkhead",
+      "type": "documentation",
+      "source": "https://resilience4j.readme.io/docs/bulkhead",
+      "description": "Semaphore and thread-pool bulkheads"
+    }
+  ],
+  "instructions": "# Bulkhead\n\n## What this skill does\n\nImplements bulkhead isolation in code: opossum bulkheads for Node.js, Resilience4j bulkheads for Java, and load-test verification that rejected calls fail fast.\n\n## When to use\n\n- Limiting concurrent calls to a dependency in application code\n- Protecting a service from slow downstreams\n- Adding queueing with bounded size\n\n## Real commands\n\n```bash\n# Node.js (opossum)\nnpm install opossum\nnode -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>42, {maxConcurrent:2}); b.call().then(console.log)\"\n\n# Rejection beyond the limit\nnode -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>{await new Promise(r=>setTimeout(r,1000)); return 1},{maxConcurrent:1}); b.call().then(console.log).catch(e=>console.log('rejected', e.message))\"\n\n# Java (Resilience4j) metrics\ncurl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.available.concurrent.calls\n\n# Verify with load\nab -n 1000 -c 100 http://localhost:8080/api/calls\n```\n\n## Config (resilience4j)\n\n```yaml\nresilience4j.bulkhead:\n  instances:\n    db:\n      maxConcurrentCalls: 10\n      maxWaitDuration: 100ms\n```\n\n## Testing\n\n- Load until rejection rate matches (concurrency - maxConcurrent)\n- Assert rejected calls return quickly, not hang\n\n## Best practices\n\n- Size bulkhead = dependency concurrency limit\n- Expose rejected.calls metrics and alert on them\n- Combine with timeouts so queued calls do not pile up",
+  "examples": [
+    {
+      "input": "Limit concurrent DB calls to 10 in our Node API",
+      "output": "Wraps the DB call in opossum.bulkhead with maxConcurrent 10 and shows a one-liner proving call 11 is rejected fast."
+    },
+    {
+      "input": "Why are requests queueing up in our Java service?",
+      "output": "Checks resilience4j.bulkhead metrics via actuator, tunes maxConcurrentCalls/maxWaitDuration, and re-runs the load test."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "bulkhead.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-bulkhead"
+    },
+    "generic": {
+      "system_prompt": "You work Bulkhead hands-on. You do it through opossum-node: Add bulkhead limits to Node.js calls with opossum. The commands are real, e.g. `npm install opossum`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "bulkhead",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "opossum-node",
+        "name": "max_concurrent",
+        "type": "number",
+        "description": "Max concurrent executions"
+      },
+      {
+        "capability": "opossum-node",
+        "name": "queue_size",
+        "type": "number",
+        "description": "Max queued executions"
+      },
+      {
+        "capability": "resilience4j-java",
+        "name": "max_concurrent",
+        "type": "number",
+        "description": "resilience4j bulkhead maxConcurrentCalls"
+      },
+      {
+        "capability": "resilience4j-java",
+        "name": "wait_timeout",
+        "type": "number",
+        "description": "maxWaitDuration"
+      },
+      {
+        "capability": "verify",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Protected endpoint"
+      },
+      {
+        "capability": "verify",
+        "name": "concurrency",
+        "type": "number",
+        "description": "Load test concurrency"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubectl",
+    "mvn",
+    "node",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/bulkhead-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/bulkhead-skill.yaml",
+    "checksum": "6b22d40a4e283270d2e285373eef7f919f4a7e38e69aee5385c689ef3fca54c5"
+  }
+}

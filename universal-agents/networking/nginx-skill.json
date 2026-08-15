@@ -1,0 +1,230 @@
+{
+  "name": "nginx-networking",
+  "display_name": "Nginx",
+  "category": "networking",
+  "subcategory": "general",
+  "description": "Engineers nginx as a reverse proxy and API gateway: location routing, headers, rate limiting, and caching layers.",
+  "version": "2.0.0",
+  "tags": [
+    "networking"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nginx",
+    "tail"
+  ],
+  "capabilities": [
+    {
+      "name": "proxy",
+      "description": "Route and transform traffic with nginx locations.",
+      "commands": [
+        "nginx -t -c /etc/nginx/nginx.conf",
+        "nginx -s reload",
+        "nginx -T | grep -E 'server_name|proxy_pass|location'",
+        "curl -sI -H 'Host: api.example.com' http://127.0.0.1/api/v1/healthz",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://127.0.0.1/api/v1/healthz"
+      ],
+      "examples": [
+        "nginx -T | grep proxy_pass | head -20",
+        "curl -sI http://127.0.0.1/api/ | head -8",
+        "nginx -t && nginx -s reload"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "nginx config path"
+        },
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Host header for vhost routing"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "URL to probe"
+        }
+      ]
+    },
+    {
+      "name": "gateway",
+      "description": "Apply rate limits, caching, and header policies.",
+      "commands": [
+        "ab -n 200 -c 20 http://127.0.0.1/api/v1/search | grep -E 'Failed|Requests per second'",
+        "curl -s -o /dev/null -w '%{size_download}' -H 'Cache-Control: max-age=60' http://127.0.0.1/static/app.js",
+        "curl -sI http://127.0.0.1/static/app.js | grep -i cache",
+        "ab -n 1000 -c 50 http://127.0.0.1/api/v1/ | grep -E 'Non-2xx|Requests per second'",
+        "tail -n 50 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c"
+      ],
+      "examples": [
+        "ab -n 500 -c 50 http://127.0.0.1/api/ | grep 'Non-2xx responses'",
+        "curl -sI -H 'Host: api.example.com' http://127.0.0.1/api/v1/healthz | grep -i x-rate",
+        "tail -n 200 /var/log/nginx/access.log | grep ' 429 ' | wc -l"
+      ],
+      "parameters": [
+        {
+          "name": "requests",
+          "type": "number",
+          "description": "Load test request count"
+        },
+        {
+          "name": "concurrency",
+          "type": "number",
+          "description": "Load test concurrency"
+        },
+        {
+          "name": "header",
+          "type": "string",
+          "description": "Header to inspect in response"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ngx_http_proxy_module",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+      "description": "proxy_pass, headers, and upstream directives"
+    },
+    {
+      "title": "ngx_http_limit_req_module",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/http/ngx_http_limit_req_module.html",
+      "description": "Rate limiting directives"
+    },
+    {
+      "title": "ngx_http_headers_module",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/http/ngx_http_headers_module.html",
+      "description": "Cache and security headers"
+    }
+  ],
+  "instructions": "# Nginx (Networking)\n\nEngineer nginx as the L7 edge: proxies, limits, and cache.\n\n## When to Use\n\n- Reverse proxying to services with path routing\n- Rate limiting public endpoints\n- Caching static and API responses\n\n## Proxy config\n\n```nginx\nupstream api_servers {\n  least_conn;\n  server 10.0.1.11:8080 max_fails=3 fail_timeout=10s;\n  server 10.0.1.12:8080 max_fails=3 fail_timeout=10s;\n}\n\nserver {\n  listen 80;\n  server_name api.example.com;\n\n  location /api/v1/ {\n    proxy_pass http://api_servers;\n    proxy_set_header X-Real-IP $remote_addr;\n    proxy_set_header X-Request-Id $request_id;\n  }\n}\n```\n\n## Rate limiting\n\n```nginx\nlimit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;\nlocation /api/ {\n  limit_req zone=api burst=20 nodelay;\n  proxy_pass http://api_servers;\n}\n```\n\n## Cache headers\n\n```nginx\nlocation /static/ {\n  alias /srv/static/;\n  expires 7d;\n  add_header Cache-Control 'public, max-age=604800';\n}\n```\n\n## Verify behavior\n\n```bash\nnginx -t && nginx -s reload\ncurl -sI -H 'Host: api.example.com' http://127.0.0.1/api/v1/healthz\nab -n 200 -c 20 http://127.0.0.1/api/v1/search\n```\n\n## Best practices\n\n- Add X-Request-Id at the edge for tracing.\n- Rate limit at the edge AND at the app.\n- Test 429 responses in load tests.\n- Keep upstream health checks tight (5s interval).\n\n## Testing\n\nRun ab/hey against limited endpoints and confirm 429s beyond the burst.",
+  "examples": [
+    {
+      "input": "Proxy /api/v1 to a load-balanced backend.",
+      "output": "Configures the upstream with least_conn and health checks, wires proxy_pass, and verifies with curl -sI and nginx -t."
+    },
+    {
+      "input": "Rate limit the search endpoint to 10 rps.",
+      "output": "Adds the limit_req_zone and applies burst=20 nodelay, then confirms 429s with ab."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nginx-networking.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nginx"
+    },
+    "generic": {
+      "system_prompt": "You take the Nginx seat. You do it through proxy: Route and transform traffic with nginx locations. The commands are real, e.g. `nginx -t -c /etc/nginx/nginx.conf`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nginx-networking",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "proxy",
+        "name": "config",
+        "type": "string",
+        "description": "nginx config path"
+      },
+      {
+        "capability": "proxy",
+        "name": "host",
+        "type": "string",
+        "description": "Host header for vhost routing"
+      },
+      {
+        "capability": "proxy",
+        "name": "url",
+        "type": "string",
+        "description": "URL to probe"
+      },
+      {
+        "capability": "gateway",
+        "name": "requests",
+        "type": "number",
+        "description": "Load test request count"
+      },
+      {
+        "capability": "gateway",
+        "name": "concurrency",
+        "type": "number",
+        "description": "Load test concurrency"
+      },
+      {
+        "capability": "gateway",
+        "name": "header",
+        "type": "string",
+        "description": "Header to inspect in response"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nginx",
+    "tail"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "networking/nginx-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/networking/nginx-skill.yaml",
+    "checksum": "c86f1d98d8f2a62c396263a1301f4d5bb449716ac6ac1826273bbb230195197b"
+  }
+}

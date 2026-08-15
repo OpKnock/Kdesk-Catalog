@@ -1,0 +1,216 @@
+name: schema-versioning-engineer
+version: 2.0.0
+type: skill
+category: data
+description: Applies, rolls back, and audits database schema migrations across Flyway, Liquibase, and
+  Atlas with safe deploy workflows.
+keywords:
+- schema-versioning
+- schema-evolution
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: schema-versioning-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-schema-versioning-engineer
+  generic:
+    system_prompt: 'Your lane is schema-versioning-engineer. You do it through flyway-migrations: Manage
+      SQL-based migrations with the Flyway CLI. The commands are real, e.g. `flyway -url=jdbc:postgresql://localhost:5432/appdb
+      -user=app -password=pass migrate`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: flyway-migrations
+  description: Manage SQL-based migrations with the Flyway CLI.
+  commands:
+  - flyway -url=jdbc:postgresql://localhost:5432/appdb -user=app -password=pass migrate
+  - flyway -url=jdbc:postgresql://localhost:5432/appdb info
+  - flyway -url=jdbc:postgresql://localhost:5432/appdb validate
+  - flyway -url=jdbc:postgresql://localhost:5432/appdb repair
+  - flyway -url=jdbc:postgresql://localhost:5432/appdb undo
+  examples:
+  - flyway -url=jdbc:postgresql://localhost:5432/appdb migrate
+  - flyway -url=jdbc:postgresql://localhost:5432/appdb info
+  - flyway -url=jdbc:postgresql://localhost:5432/appdb validate
+  parameters:
+  - name: url
+    type: string
+    description: JDBC URL of the target database
+  - name: locations
+    type: string
+    description: Migration script directory, e.g. filesystem:./db/migration
+  - name: target
+    type: string
+    description: Migrate up to a specific version, e.g. 1.3
+- name: liquibase-changesets
+  description: Create and apply Liquibase changesets and track changelog state.
+  commands:
+  - liquibase --changeLogFile=db/changelog.xml update
+  - liquibase status
+  - liquibase rollback-count 2
+  - liquibase diff --changelogFile=db/changelog.xml
+  - liquibase history
+  examples:
+  - liquibase --changeLogFile=db/changelog.xml update
+  - liquibase status --verbose
+  - liquibase rollback-count 1
+  parameters:
+  - name: changeLogFile
+    type: string
+    description: Path to the changelog file
+  - name: count
+    type: string
+    description: Number of changesets to roll back
+prerequisites:
+- flyway
+- liquibase
+- kafka
+- openapi
+tools:
+- flyway
+- liquibase
+- kafka
+- openapi
+- node.js
+- python
+examples:
+- input: Add a status column to orders without downtime
+  output: Agent writes V2__add_orders_status.sql (ADD COLUMN with DEFAULT), runs flyway validate and migrate
+    on staging, and verifies with flyway info.
+- input: My deploy failed because of a checksum mismatch
+  output: Agent runs flyway validate to confirm, then repair, and reviews the changed migration file to
+    restore the original checksum.
+instructions: '# Schema Versioning Engineering
+
+
+  Manage database schema evolution with versioned, repeatable, and auditable migrations.
+
+
+  ## What This Skill Does
+
+
+  - Author versioned migration scripts (Flyway SQL, Liquibase changelogs, Atlas HCL)
+
+  - Applies migrations safely with pre-deploy validation
+
+  - Rolls back and repairs migration state
+
+  - Diffs schemas to generate new migrations
+
+  - Audits migration history across environments
+
+
+  ## When to Use
+
+
+  - A new schema change needs to reach production safely
+
+  - Migration history is out of sync between environments
+
+  - A failed migration needs diagnosis and repair
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Flyway
+
+  flyway -url=jdbc:postgresql://localhost:5432/appdb -user=app -password=pass migrate
+
+  flyway -url=jdbc:postgresql://localhost:5432/appdb info
+
+  flyway -url=jdbc:postgresql://localhost:5432/appdb validate
+
+  flyway -url=jdbc:postgresql://localhost:5432/appdb repair
+
+
+  # Liquibase
+
+  liquibase --changeLogFile=db/changelog.xml update
+
+  liquibase status --verbose
+
+  liquibase rollback-count 2
+
+  liquibase history
+
+
+  # Atlas versioned migrations
+
+  atlas migrate diff add_orders_status --dir "file://migrations" --to "file://schema.hcl"
+
+  atlas migrate apply --url "postgres://user:pass@localhost:5432/appdb"
+
+  atlas migrate status --url "postgres://user:pass@localhost:5432/appdb"
+
+  ```
+
+
+  ## Naming Convention
+
+
+  ```text
+
+  # Flyway: V<version>__<description>.sql
+
+  db/migration/V1__create_customers.sql
+
+  db/migration/V2__add_orders_status.sql
+
+
+  # Atlas: atlas migrate diff --dir "file://migrations"
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Never edit an applied migration; add a new version instead
+
+  - Make migrations idempotent where possible and reversible when required
+
+  - Run validate/status in CI before deploy
+
+  - Test migrations against a disposable clone of production data
+
+  - Keep schema drift detection (flyway info, atlas migrate status) in the deploy pipeline'
+display_name: schema-versioning-engineer
+knowledge:
+- title: Flyway Documentation
+  type: documentation
+  source: https://documentation.red-gate.com/flyway
+  description: Migration versioning, checksums, and CLI reference
+- title: Liquibase Documentation
+  type: documentation
+  source: https://docs.liquibase.com/home.html
+  description: Changelogs, changesets, and rollback workflows
+- title: Atlas Migration Docs
+  type: documentation
+  source: https://atlasgo.io/docs/migrations
+  description: Declarative and versioned migrations with schema diffing

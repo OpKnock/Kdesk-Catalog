@@ -1,0 +1,228 @@
+name: websocket-engineer
+version: 2.0.0
+type: skill
+category: backend
+description: Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd
+  for real-time messaging.
+keywords:
+- websocket
+- real-time
+- bidirectional
+- scaling
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: websocket-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-websocket-engineer
+  generic:
+    system_prompt: 'You take the websocket-engineer seat. You do it through Test WebSocket servers with
+      wscat: Connect interactively or non-interactively, send frames, and verify server responses, headers,
+      and protocols. The commands are real, e.g. `wscat -c ws://localhost:8080`. You verify each step
+      you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: Test WebSocket servers with wscat
+  description: Connect interactively or non-interactively, send frames, and verify server responses, headers,
+    and protocols.
+  commands:
+  - wscat -c ws://localhost:8080
+  - 'wscat -c wss://api.example.com/socket -H ''Authorization: Bearer <token>'''
+  - wscat -c ws://localhost:8080 --wait 5 --execute 'ping'
+  - wscat -c ws://localhost:8080 -p chat-v1
+  examples:
+  - 'wscat -c wss://api.example.com/socket -H ''Authorization: Bearer <token>'''
+  - wscat -c ws://localhost:8080 -p chat-v1
+  parameters:
+  - name: headers
+    type: string
+    description: Extra HTTP headers for the opening handshake, e.g. authorization tokens.
+    default: none
+  - name: subprotocol
+    type: string
+    description: Requested WebSocket subprotocol via -p.
+    default: none
+- name: Relay and stream with websocat
+  description: Tunnel WebSocket traffic, stream files into connections, and bridge websocket endpoints
+    for debugging.
+  commands:
+  - websocat ws://localhost:8080
+  - websocat -t ws://internal:8080 wss://public.example.com/socket
+  - websocat ws://localhost:8080 payload.txt
+  - websocat -s 9000
+  - websocat -b -E ws://localhost:8080
+  examples:
+  - websocat -t ws://internal:8080 wss://public.example.com/socket
+  - websocat -s 9000
+  parameters:
+  - name: bridge
+    type: flag
+    description: -t bridges two endpoints, forwarding frames in both directions.
+    default: 'false'
+  - name: listen port
+    type: integer
+    description: Port for -s server mode to accept incoming connections.
+    default: none
+- name: Run WebSocket servers with websocketd
+  description: Turn any stdin/stdout program into a WebSocket server and serve a static demo page.
+  commands:
+  - websocketd --port=8080 ./counter.sh
+  - websocketd --port=8080 --staticdir=./public ./echo.py
+  - websocketd --port=8080 --passenv=API_KEY ./feed.sh
+  - websocketd --port=8080 --loglevel=debug ./counter.sh
+  examples:
+  - websocketd --port=8080 ./counter.sh
+  - websocketd --port=8080 --staticdir=./public ./echo.py
+  parameters:
+  - name: port
+    type: integer
+    description: Port the server listens on.
+    default: '8080'
+  - name: staticdir
+    type: string
+    description: Directory of static files served alongside the WebSocket endpoint.
+prerequisites:
+- node.js
+- socket.io
+- ws
+- redis
+tools:
+- node.js
+- socket.io
+- ws
+- redis
+- nginx
+- kubernetes
+examples:
+- input: wscat -c ws://localhost:8080
+  output: Opened an interactive terminal to the local server; frames typed are sent and server frames
+    are printed until the socket closes.
+- input: websocat -t ws://internal:8080 wss://public.example.com/socket
+  output: Bridged internal ws:// and public wss:// endpoints, forwarding every frame in both directions
+    for live traffic inspection.
+instructions: '# WebSocket Engineering
+
+
+  Design and debug real-time, bidirectional, persistent connections for chat, streaming, and live data.
+
+
+  ## When to Use
+
+
+  - Live chat, notifications, and collaborative editing
+
+  - Streaming market data, logs, or telemetry
+
+  - Server push where polling or SSE latency is unacceptable
+
+  - Any duplex real-time protocol you control end to end
+
+
+  ## Handshake and Protocol
+
+
+  1. Client opens a GET upgrade request with Sec-WebSocket-Key; server answers 101 with Sec-WebSocket-Accept.
+
+  2. Frames are masked client-to-server and unmasked server-to-client; binary vs text must be distinguished.
+
+  3. Subprotocols negotiate application-level message formats; pick one and document it.
+
+  4. Ping/pong keepalives detect dead peers; respond to pings promptly or the stack drops you.
+
+
+  ## Connection Lifecycle
+
+
+  - Clients reconnect with exponential backoff plus jitter and a max cap.
+
+  - Track a connection id per socket for correlation in logs.
+
+  - Replay missed messages: clients send a resume point (last seen sequence) on reconnect.
+
+  - Close gracefully: server sends Close frame with code 1000; clients echo and terminate.
+
+
+  ## Scaling Patterns
+
+
+  - Single node: in-memory pub/sub with one socket per connection.
+
+  - Multi node: fan-out via a broker (Redis, NATS) keyed by room or user; never send from the socket owner
+  only.
+
+  - Backpressure: slow consumers must not block the broker; use per-connection queues with drop-oldest
+  or close policy.
+
+
+  ## Debugging Toolkit
+
+
+  - wscat for quick manual tests with custom headers and subprotocols.
+
+  - websocat -t to bridge two endpoints and inspect frame flow.
+
+  - websocketd to stand up throwaway servers from shell scripts.
+
+  - Check the 101 response, Sec-WebSocket-Accept, and frame fragmentation on the wire when clients misbehave.
+
+
+  ## Common Pitfalls
+
+
+  - Heartbeat only from client side; servers die silently in NAT setups.
+
+  - Broadcast loops: echoing your own messages back to the sender.
+
+  - Unbounded queue growth when a client stops reading.
+
+  - TLS mismatch (wss on plain ws port) producing confusing handshake failures.
+
+
+  ## Production Checklist
+
+
+  - Ping/pong heartbeat with timeout disconnect
+
+  - Reconnect with backoff and resume semantics
+
+  - Room-level authorization at subscribe time
+
+  - Connection metrics: active count, open rate, close rate, error rate
+
+  - Graceful drain on deploy (drain connections, then stop accepting)
+
+  '
+display_name: websocket-engineer
+knowledge:
+- name: wscat
+  url: https://github.com/websockets/wscat
+- name: websocat
+  url: https://github.com/vi/websocat
+- name: websocketd
+  url: https://github.com/joewalnes/websocketd
+- name: MDN WebSockets API
+  url: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API

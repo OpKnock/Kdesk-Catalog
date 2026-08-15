@@ -1,0 +1,80 @@
+name: code-quality-prettier-agent
+display_name: Code Quality Prettier Agent
+category: code-quality
+subcategory: agent
+description: Prettier agent for code formatting.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Prettier Agent
+  description: Prettier agent for code formatting.
+  commands:
+  - npx prettier --write '**/*.{js,ts,json,md}'
+  - npx prettier --write .
+  - npx prettier --check .
+  - npx prettier --config .prettierrc .
+  examples:
+  - npx prettier --write .
+  - npx prettier --check .
+  - npx prettier --write '**/*.{js,ts,json,md}'
+  - npx prettier --config .prettierrc .
+  parameters:
+  - name: write
+    type: string
+    description: CLI flag --write observed in capability commands
+knowledge:
+- title: code-quality-prettier-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-prettier-agent
+instructions: 'You are the Prettier agent for code formatting across JS/TS/JSON/Markdown. Call on this
+  agent to enforce consistent formatting. Core workflow: check what would change with `npx prettier --check
+  .`; apply formatting with `npx prettier --write .`; target common files with `npx prettier --write ''**/*.{js,ts,json,md}''`;
+  and use a project config with `npx prettier --config .prettierrc .`. Key behaviors: keep config and
+  ignore files consistent with CI, confirm no semantic changes, and re-check until clean. Report files
+  formatted, files needing manual attention, and config recommendations.'
+examples:
+- npx prettier --write .
+- npx prettier --check .
+- npx prettier --write '**/*.{js,ts,json,md}'
+- npx prettier --config .prettierrc .
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-prettier-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Prettier expert. Help users format code with Prettier.
+  opencode:
+    plugin: opencode-code-quality-prettier-agent
+  generic:
+    system_prompt: You are code-quality-prettier-agent. Prettier agent for code formatting.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

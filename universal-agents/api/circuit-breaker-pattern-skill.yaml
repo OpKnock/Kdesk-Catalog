@@ -1,0 +1,118 @@
+name: circuit-breaker-pattern
+display_name: Circuit Breaker Pattern
+category: api
+subcategory: general
+description: Implement the circuit breaker pattern in Java with Resilience4j and in Go with gobreaker,
+  including thresholds and fallbacks.
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- mvn
+capabilities:
+- name: resilience4j
+  description: Add circuit breakers to Java apps with Resilience4j and configure thresholds
+  commands:
+  - mvn dependency:get -Dartifact=io.github.resilience4j:resilience4j-circuitbreaker:2.2.0
+  - mvn dependency:get -Dartifact=io.github.resilience4j:resilience4j-spring-boot3:2.2.0
+  - mvn test
+  - mvn spring-boot:run
+  examples:
+  - mvn dependency:get -Dartifact=io.github.resilience4j:resilience4j-circuitbreaker:2.2.0
+  - mvn test -Dtest=CircuitBreakerTest
+  - mvn spring-boot:run
+  parameters:
+  - name: artifact
+    type: string
+    description: Resilience4j artifact coordinate
+  - name: version
+    type: string
+    description: Resilience4j version such as 2.2.0
+- name: gobreaker
+  description: Use sony/gobreaker circuit breaker in Go services with custom thresholds and fallbacks
+  commands:
+  - go get github.com/sony/gobreaker
+  - go run ./cmd/server
+  - go test ./...
+  - go vet ./...
+  examples:
+  - go get github.com/sony/gobreaker
+  - go test -run TestBreaker -v ./...
+  - go run ./cmd/server
+  parameters:
+  - name: failure_ratio
+    type: string
+    description: Failure ratio that opens the circuit, e.g. 0.6
+  - name: timeout
+    type: string
+    description: Timeout before probing closed again, e.g. 10s
+knowledge:
+- title: Resilience4j Docs
+  type: documentation
+  source: https://resilience4j.readme.io/
+  description: Resilience4j circuit breaker, retry, and bulkhead reference
+- title: Circuit Breaker Pattern
+  type: documentation
+  source: https://martinfowler.com/bliki/CircuitBreaker.html
+  description: Martin Fowler on the circuit breaker pattern and states
+instructions: "# Circuit Breaker Pattern\n\nProtect APIs from cascading failures with circuit breakers.\n\
+  \n## When to Use\n\n- A downstream dependency is failing or slow\n- Preventing timeouts from piling\
+  \ up on a flaky service\n- Fast-failing with fallbacks instead of hanging\n\n## States\n\nClosed ->\
+  \ (failure ratio exceeded) -> Open -> (timeout) -> Half-open -> (success) -> Closed\n\n## Java with\
+  \ Resilience4j\n\n```xml\n<dependency>\n  <groupId>io.github.resilience4j</groupId>\n  <artifactId>resilience4j-circuitbreaker</artifactId>\n\
+  \  <version>2.2.0</version>\n</dependency>\n```\n\n```java\nCircuitBreakerConfig config = CircuitBreakerConfig.custom()\n\
+  \    .failureRateThreshold(60)\n    .waitDurationInOpenState(Duration.ofSeconds(10))\n    .slidingWindowSize(20)\n\
+  \    .build();\nCircuitBreaker cb = CircuitBreaker.of(\"payments\", config);\nString result = cb.executeSupplier(()\
+  \ -> paymentsClient.charge(order));\n```\n\n## Go with gobreaker\n\n```go\nst := gobreaker.Settings{\n\
+  \  Name: \"payments\",\n  MaxRequests: 5,\n  Interval: 60 * time.Second,\n  Timeout: 10 * time.Second,\n\
+  \  ReadyToTrip: func(counts gobreaker.Counts) bool {\n    return counts.ConsecutiveFailures > 5\n  },\n\
+  }\ncb := gobreaker.NewCircuitBreaker(st)\nresp, err := cb.Execute(func() (interface{}, error) {\n  return\
+  \ charge(order)\n})\n```\n\n## Testing\n\n```bash\n# Open the circuit by failing repeatedly, then confirm\
+  \ fast-fail\ncurl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/payments\n# Load\
+  \ to trigger thresholds\nhey -n 200 -c 20 http://localhost:8080/api/payments\n```\n\n## Best Practices\n\
+  \n- Tune thresholds from observed p99 and error budgets\n- Provide fallbacks for degraded mode\n- Expose\
+  \ breaker state as metrics\n- Set a probe timeout to recover automatically\n- Do not place breakers\
+  \ between a client and its own gateway\n- Test the open, half-open, and closed transitions explicitly"
+examples:
+- input: Add a circuit breaker so my API stops hammering a failing payment service.
+  output: The agent adds Resilience4j (Java) or gobreaker (Go), sets a 60% failure threshold with a 10s
+    open timeout, and shows the fallback path.
+- input: How do I verify my circuit breaker opens?
+  output: The agent runs a load test with hey against the endpoint while the downstream fails, then checks
+    breaker metrics/state to confirm open state and fast-fail.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: circuit-breaker-pattern.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-circuit-breaker-pattern
+  generic:
+    system_prompt: 'You own Circuit Breaker Pattern end to end. You do it through resilience4j: Add circuit
+      breakers to Java apps with Resilience4j and configure thresholds. The commands are real, e.g. `mvn
+      dependency:get -Dartifact=io.github.resilience4j:resilience4j-circuitbreaker:2.2.0`. You prefer
+      the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

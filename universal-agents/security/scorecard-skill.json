@@ -1,0 +1,207 @@
+{
+  "name": "scorecard",
+  "display_name": "scorecard",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Evaluates open-source project health and supply-chain risk with OSSF Scorecard, checking CI, code review, and dependency practices.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "scorecard"
+  ],
+  "capabilities": [
+    {
+      "name": "repo-assessment",
+      "description": "Assess repositories locally or on GitHub.",
+      "commands": [
+        "scorecard --repo github.com/org/repo",
+        "scorecard --local .",
+        "scorecard --repo github.com/org/repo --checks Code-Review,Branch-Protection",
+        "scorecard --repo github.com/org/repo --show-details",
+        "scorecard --repo github.com/org/repo --format json"
+      ],
+      "examples": [
+        "scorecard --repo github.com/kubernetes/kubernetes",
+        "scorecard --local .",
+        "scorecard --repo github.com/org/repo --show-details"
+      ],
+      "parameters": [
+        {
+          "name": "repo",
+          "type": "string",
+          "description": "GitHub repository in owner/name form"
+        },
+        {
+          "name": "checks",
+          "type": "array",
+          "description": "Checks to run: Code-Review, Branch-Protection, Signed-Releases, etc."
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output: default, json, sarif"
+        }
+      ]
+    },
+    {
+      "name": "dependency-assessment",
+      "description": "Score package dependencies for supply-chain risk.",
+      "commands": [
+        "scorecard --npm=lodash",
+        "scorecard --pypi=requests",
+        "scorecard --npm=express --format json",
+        "scorecard --local ./node_modules/express"
+      ],
+      "examples": [
+        "scorecard --npm=express",
+        "scorecard --pypi=requests",
+        "scorecard --npm=lodash --show-details"
+      ],
+      "parameters": [
+        {
+          "name": "package",
+          "type": "string",
+          "description": "Package name for npm or pypi scoring"
+        },
+        {
+          "default": "json",
+          "description": "Output format for package scoring: json, csv, sarif, sonar.",
+          "name": "format",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OSSF Scorecard GitHub",
+      "type": "documentation",
+      "source": "https://github.com/ossf/scorecard",
+      "description": "Checks, scoring model, and CLI usage"
+    },
+    {
+      "title": "OpenSSF Scorecard Site",
+      "type": "documentation",
+      "source": "https://securityscorecards.dev/",
+      "description": "Project overview and check documentation"
+    }
+  ],
+  "instructions": "# OSSF Scorecard\n\nAutomated supply-chain risk scoring for open-source projects and dependencies.\n\n## What This Skill Does\n\n- Scores repos on branch protection, code review, CI, and signing\n- Assesses npm/pypi packages before adoption\n- Reports per-check evidence and remediation guidance\n- Integrates into dependency-review workflows via SARIF\n\n## When to Use\n\n- Vetting a third-party dependency for production use\n- Auditing your own repo's security posture\n- Supply-chain due diligence reports\n\n## Real Commands\n\n```bash\n# Assess a repository\nscorecard --repo github.com/org/repo\nscorecard --repo github.com/org/repo --show-details\n\n# Local directory\nscorecard --local .\n\n# Targeted checks\nscorecard --repo github.com/org/repo --checks Code-Review,Branch-Protection\n\n# Packages\nscorecard --npm=express\nscorecard --pypi=requests\n\n# Machine-readable\nscorecard --repo github.com/org/repo --format json\n```\n\n## Reading Scores\n\n- 0-4: critical gaps (no CI, no review, no signing)\n- 5-7: partial hygiene (some automation, gaps in release processes)\n- 8-10: strong practices (protected branches, signed releases, fuzzing)\n\n## Best Practices\n\n- Gate dependency adoption on a minimum score (e.g. >= 6)\n- Re-run scorecard quarterly on critical dependencies\n- Fix the highest-weight checks first: Branch-Protection and Code-Review\n- Combine with Dependabot alerts and SBOMs for the full picture\n- Run scorecard on your own repos in CI and track the trend",
+  "examples": [
+    {
+      "input": "Is library X safe to use?",
+      "output": "Agent runs scorecard --npm=X --show-details and summarizes the score with the weakest checks and remediation suggestions."
+    },
+    {
+      "input": "How does my repo score?",
+      "output": "Agent runs scorecard --repo github.com/org/repo --format json, maps failures to concrete fixes, and prioritizes branch protection."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "scorecard.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-scorecard"
+    },
+    "generic": {
+      "system_prompt": "Your lane is scorecard. You do it through repo-assessment: Assess repositories locally or on GitHub. The commands are real, e.g. `scorecard --repo github.com/org/repo`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "scorecard",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "repo-assessment",
+        "name": "repo",
+        "type": "string",
+        "description": "GitHub repository in owner/name form"
+      },
+      {
+        "capability": "repo-assessment",
+        "name": "checks",
+        "type": "array",
+        "description": "Checks to run: Code-Review, Branch-Protection, Signed-Releases, etc."
+      },
+      {
+        "capability": "repo-assessment",
+        "name": "format",
+        "type": "string",
+        "description": "Output: default, json, sarif"
+      },
+      {
+        "capability": "dependency-assessment",
+        "name": "package",
+        "type": "string",
+        "description": "Package name for npm or pypi scoring"
+      },
+      {
+        "capability": "dependency-assessment",
+        "name": "format",
+        "type": "string",
+        "description": "Output format for package scoring: json, csv, sarif, sonar."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "scorecard"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/scorecard-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/scorecard-skill.yaml",
+    "checksum": "c1860db9b450c62a040cba1be9cfcd60444f8746e43dca00b45409cfc1494993"
+  }
+}

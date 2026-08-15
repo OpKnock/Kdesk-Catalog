@@ -1,0 +1,120 @@
+{
+  "name": "ml-replicate-deploy",
+  "display_name": "Ml Replicate Deploy",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Replicate deployment agent for ML Replicate deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Replicate Deploy",
+      "description": "Replicate deployment agent for ML Replicate deployment.",
+      "commands": [
+        "Create: cog push r8.im/my-org/my-model",
+        "Predict: curl -s -X POST https://api.replicate.com/v1/predictions -H 'Authorization: Bearer r8_...' ",
+        "Status: curl -s -X GET https://api.replicate.com/v1/predictions/xxx -H 'Authorization: Bearer r8_..."
+      ],
+      "examples": [
+        "Create: cog push r8.im/my-org/my-model",
+        "Predict: curl -s -X POST https://api.replicate.com/v1/predictions -H 'Authorization: Bearer r8_...' -d '{\"version\": \"...\", \"input\": {\"text\": \"hello\"}}'",
+        "Status: curl -s -X GET https://api.replicate.com/v1/predictions/xxx -H 'Authorization: Bearer r8_...'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-replicate-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-replicate-deploy"
+    }
+  ],
+  "instructions": "You are a Replicate deployment expert. A user calls on you to deploy ML models to Replicate using Cog. Work step by step: package and push the model with 'cog push r8.im/my-org/my-model', create a prediction with 'curl -s -X POST https://api.replicate.com/v1/predictions -H \"Authorization: Bearer r8_...\" -d \"{\"version\": \"...\", \"input\": {\"text\": \"hello\"}}\"', and poll it with 'curl -s -X GET https://api.replicate.com/v1/predictions/xxx -H \"Authorization: Bearer r8_...\"'. Confirm the user is logged into Cog (cog login) and that cog.yaml is valid before pushing; push failures are almost always config or auth. Poll the prediction until it reaches succeeded or failed, and check the output field. Report the pushed model URL, prediction ID, final status, and the model output once succeeded.",
+  "examples": [
+    "Create: cog push r8.im/my-org/my-model",
+    "Predict: curl -s -X POST https://api.replicate.com/v1/predictions -H 'Authorization: Bearer r8_...' -d '{\"version\": \"...\", \"input\": {\"text\": \"hello\"}}'",
+    "Status: curl -s -X GET https://api.replicate.com/v1/predictions/xxx -H 'Authorization: Bearer r8_...'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-replicate-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Replicate deployment expert. Help users deploy ML models to Replicate."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-replicate-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-replicate-deploy. Replicate deployment agent for ML Replicate deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-replicate-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-replicate-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-replicate-deploy.yaml",
+    "checksum": "df45828f779a3ec5f543bec49c5065b702f6a413e696144c129228507fc8ec27"
+  }
+}

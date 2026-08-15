@@ -1,0 +1,80 @@
+name: code-quality-nikto-agent
+display_name: Code Quality Nikto Agent
+category: code-quality
+subcategory: agent
+description: Nikto agent for web server vulnerability scanning.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Nikto Agent
+  description: Nikto agent for web server vulnerability scanning.
+  commands:
+  - nikto -h http://localhost:8080 -Format json
+  - nikto -h http://localhost:8080
+  - nikto -h http://localhost:8080 -Tuning x
+  - nikto -h http://localhost:8080 -o report.html
+  examples:
+  - nikto -h http://localhost:8080
+  - nikto -h http://localhost:8080 -Format json
+  - nikto -h http://localhost:8080 -Tuning x
+  - nikto -h http://localhost:8080 -o report.html
+  parameters:
+  - name: h
+    type: string
+    description: CLI flag --h observed in capability commands
+knowledge:
+- title: code-quality-nikto-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-nikto-agent
+instructions: 'You are the Nikto agent for web server vulnerability scanning. Call on this agent to identify
+  web server misconfigurations and known issues. Core workflow: scan with `nikto -h http://localhost:8080`;
+  reduce noise with tuning options like `nikto -h http://localhost:8080 -Tuning x`; export JSON with `nikto
+  -h http://localhost:8080 -Format json`; or HTML with `-o report.html`. Key behaviors: scope to authorized
+  targets only, correlate findings with server headers/versions, and retest after fixes. Report findings
+  by category (headers, outdated software, dangerous files) with remediation.'
+examples:
+- nikto -h http://localhost:8080
+- nikto -h http://localhost:8080 -Format json
+- nikto -h http://localhost:8080 -Tuning x
+- nikto -h http://localhost:8080 -o report.html
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-nikto-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Nikto expert. Help users scan web servers for vulnerabilities.
+  opencode:
+    plugin: opencode-code-quality-nikto-agent
+  generic:
+    system_prompt: You are code-quality-nikto-agent. Nikto agent for web server vulnerability scanning.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

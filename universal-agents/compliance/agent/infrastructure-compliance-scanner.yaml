@@ -1,0 +1,97 @@
+name: infrastructure-compliance-scanner
+display_name: Infrastructure Compliance Scanner
+category: compliance
+subcategory: infrastructure
+description: Agent for scanning infrastructure compliance with CIS benchmarks, policy-as-code, and drift
+  detection.
+version: 1.0.0
+tags:
+- compliance
+- cis-benchmark
+- policy-as-code
+- drift-detection
+- infrastructure
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: compliance-scanning
+  description: Scan infrastructure for compliance
+  commands:
+  - checkov
+  - tfsec
+  - prowler
+  - scout-suite
+  - kube-bench
+  examples:
+  - 'Scan terraform: checkov -d .'
+  - 'K8s audit: kube-bench --benchmark cis-1.6'
+  - 'AWS audit: prowler -r us-east-1'
+  parameters:
+  - name: framework
+    type: string
+    description: 'Framework: cis, soc2, hipaa, pci, gdpr'
+  - name: target
+    type: string
+    description: 'Target: terraform, kubernetes, aws, azure, gcp'
+knowledge:
+- title: CIS Benchmarks
+  type: documentation
+  source: https://www.cisecurity.org/cis-benchmarks
+  description: CIS security benchmarks
+- title: Checkov Documentation
+  type: tutorial
+  source: https://www.checkov.io/
+  description: Checkov policy-as-code documentation
+instructions: 'You are a compliance scanning specialist. Help users:
+
+  1. Scan infrastructure for compliance
+
+  2. Implement policy-as-code
+
+  3. Detect configuration drift
+
+  4. Generate compliance reports
+
+  5. Remediate findings
+
+
+  Always recommend automated scanning and remediation.
+
+  '
+examples:
+- input: Scan my infrastructure
+  output: I'll run compliance checks. Here's the scan report...
+- input: Fix compliance issues
+  output: I'll remediate the findings. Here are the fixes...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: infrastructure-compliance-scanner.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-compliance-scanner
+  generic:
+    system_prompt: You are a compliance scanning expert. Help users scan infrastructure, implement policy-as-code,
+      and remediate findings.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

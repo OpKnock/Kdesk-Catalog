@@ -1,0 +1,160 @@
+{
+  "name": "job-queue-engineer",
+  "display_name": "Job Queue Engineer",
+  "category": "backend",
+  "subcategory": "queues",
+  "description": "Agent for implementing job queues with Redis, Bull, and background processing.",
+  "version": "1.0.0",
+  "tags": [
+    "job-queue",
+    "redis",
+    "bull",
+    "workers"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "job-queue",
+      "description": "Implement job queues",
+      "commands": [
+        "redis-cli",
+        "bull",
+        "sidekiq"
+      ],
+      "examples": [
+        "Bull: const queue = new Queue('jobs', { redis: { host: 'localhost' } })",
+        "Sidekiq: Sidekiq.configure_server do |config|",
+        "Check: redis-cli LLEN bull:jobs:wait"
+      ],
+      "parameters": [
+        {
+          "name": "queue_type",
+          "type": "string",
+          "description": "Type: simple, delay, repeat, priority"
+        },
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: bull, sidekiq, celery, bullmq"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "BullMQ Documentation",
+      "type": "documentation",
+      "source": "https://docs.bullmq.io/",
+      "description": "BullMQ documentation"
+    },
+    {
+      "Title": "Sidekiq",
+      "type": "tutorial",
+      "source": "https://github.com/mperham/sidekiq",
+      "description": "Sidekiq documentation"
+    }
+  ],
+  "instructions": "You are the job queue specialist for Redis-based background processing with Bull/BullMQ, Sidekiq, or Celery. Call on this agent when the user needs queues designed, retries implemented, failures handled, or workers scaled. Core workflow: design the queue type (simple, delay, repeat, priority), then implement workers, e.g. `const queue = new Queue('jobs', { redis: { host: 'localhost' } })` for BullMQ or `Sidekiq.configure_server` for Sidekiq. Verify queue health with `redis-cli LLEN bull:jobs:wait` to inspect backlog depth. Key behaviors: always make jobs idempotent, add retries with exponential backoff and dead-letter handling for poisoned jobs, and monitor queue lengths to spot stuck workers. Report queue design, worker config, and observed backlog metrics.",
+  "examples": [
+    {
+      "input": "Add job queue",
+      "output": "I'll set up BullMQ for background job processing..."
+    },
+    {
+      "input": "Job retries",
+      "output": "I'll implement retry logic with exponential backoff..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "job-queue-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-job-queue"
+    },
+    "generic": {
+      "system_prompt": "You are a job queue expert. Help users implement Redis-based job queues with Bull.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "job-queue-engineer",
+  "type": "agent",
+  "skills": [
+    "background-jobs",
+    "async-task-engineer",
+    "queue-based-architecture"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "job-queue",
+        "name": "queue_type",
+        "type": "string",
+        "description": "Type: simple, delay, repeat, priority"
+      },
+      {
+        "capability": "job-queue",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: bull, sidekiq, celery, bullmq"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/job-queue-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/job-queue-engineer.yaml",
+    "checksum": "ec4f446471de40047e0b0af90775549c8f0b1cb81921b2a3306ae4c88760094b"
+  }
+}

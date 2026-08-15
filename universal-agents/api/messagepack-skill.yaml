@@ -1,0 +1,201 @@
+name: messagepack
+display_name: Messagepack
+category: api
+subcategory: general
+description: 'MessagePack binary serialization: encode/decode payloads, integrate MessagePack into APIs,
+  and debug binary message dumps.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- json2msgpack
+- msgpack-cli
+- msgpack2json
+- python3
+capabilities:
+- name: messagepack-encode-decode
+  description: Encode JSON to MessagePack, decode MessagePack to JSON, and inspect binary payloads using
+    the msgpack-tools utilities.
+  commands:
+  - json2msgpack < input.json > output.msgpack
+  - msgpack2json < output.msgpack
+  - msgpack2json -j < output.msgpack
+  - python3 -c "import msgpack,sys; print(msgpack.unpackb(open('output.msgpack','rb').read(), raw=False))"
+  - msgpack-cli decode output.msgpack
+  examples:
+  - json2msgpack < user.json > user.msgpack
+  - msgpack2json -j < user.msgpack
+  - python3 -c "import msgpack; print(msgpack.packb({'a':1,'b':[1,2,3]}, use_bin_type=True))"
+  parameters:
+  - name: input_file
+    type: string
+    description: JSON file to encode into MessagePack
+  - name: pretty
+    type: boolean
+    description: Pretty-print decoded JSON output
+  - name: use_bin_type
+    type: boolean
+    description: Use msgpack bin type for bytes instead of str
+knowledge:
+- title: MessagePack Official Site
+  type: documentation
+  source: https://msgpack.org/
+  description: Specification, implementations and format details for MessagePack
+- title: msgpack-tools GitHub
+  type: documentation
+  source: https://github.com/ludocode/msgpack-tools
+  description: json2msgpack and msgpack2json command-line utilities
+instructions: '# MessagePack
+
+
+  MessagePack is an efficient binary serialization format that represents JSON-like objects as compact
+  binary data.
+
+
+  ## What this skill does
+
+
+  - Encodes JSON data into MessagePack binary for storage or wire transfer
+
+  - Decodes MessagePack binaries back into human-readable JSON
+
+  - Verifies that a production client and server agree on the same payload bytes
+
+
+  ## When to use
+
+
+  - Replacing JSON with a compact binary format on HTTP or TCP APIs
+
+  - Debugging raw MessagePack payloads captured from a wire or a message queue
+
+  - Adding MessagePack support to Python/Go/Java services
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Encode JSON file to MessagePack
+
+  json2msgpack < input.json > output.msgpack
+
+
+  # Decode MessagePack to JSON
+
+  msgpack2json < output.msgpack
+
+  msgpack2json -j < output.msgpack   # pretty printed
+
+
+  # Inspect binary payload with Python
+
+  python3 -c "import msgpack; print(msgpack.unpackb(open(''output.msgpack'',''rb'').read(), raw=False))"
+
+
+  # Hex-dump to verify on-the-wire bytes
+
+  xxd output.msgpack
+
+  ```
+
+
+  ## Language integration
+
+
+  ```python
+
+  # Python client
+
+  import msgpack
+
+  payload = msgpack.packb({"user": "alice", "roles": ["admin"]}, use_bin_type=True)
+
+  msg = msgpack.unpackb(payload, raw=False)
+
+  ```
+
+
+  ```go
+
+  // Go: gopkg.in/vmihailenco/msgpack.v2
+
+  b, _ := msgpack.Marshal(map[string]interface{}{"user": "alice"})
+
+  var m map[string]interface{}
+
+  msgpack.Unmarshal(b, &m)
+
+  ```
+
+
+  ## Testing
+
+
+  Round-trip a payload and compare bytes before and after re-encoding:
+
+
+  ```bash
+
+  json2msgpack < input.json > a.msgpack
+
+  msgpack2json -j < a.msgpack > roundtrip.json
+
+  python3 -c "import json,sys; a=json.load(open(''input.json'')); b=json.load(open(''roundtrip.json''));
+  sys.exit(0 if a==b else 1)"
+
+  ```
+
+
+  ## Best practices
+
+
+  - Use `use_bin_type=True` / `use_ext_types` so strings and bytes stay distinct
+
+  - Always send `Content-Type: application/msgpack` on HTTP endpoints
+
+  - Never log raw binary; base64-encode first with `base64 output.msgpack`'
+examples:
+- input: My API returns a huge JSON list and latency is high. How do I switch to MessagePack?
+  output: 'The agent encodes payloads with `json2msgpack`, updates the HTTP handler to set `Content-Type:
+    application/msgpack`, and shows the Python/Go server changes to pack and unpack the body.'
+- input: Decode this binary file I captured from my MQTT topic
+  output: The agent runs `msgpack2json -j < capture.msgpack` and interprets the resulting JSON fields
+    for the user.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: messagepack.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-messagepack
+  generic:
+    system_prompt: 'You own Messagepack end to end. You do it through messagepack-encode-decode: Encode
+      JSON to MessagePack, decode MessagePack to JSON, and inspect binary payloads using the msgpack-tools
+      utilities. The commands are real, e.g. `json2msgpack < input.json > output.msgpack`. You run and
+      verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,175 @@
+{
+  "name": "saml",
+  "display_name": "Saml",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted SAML 2.0 skill: sign and verify assertions with xmlsec1, base64-decode SAMLResponses, exchange metadata, and wire SP-initiated login.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "openssl",
+    "python",
+    "xmlsec1"
+  ],
+  "capabilities": [
+    {
+      "name": "saml-assertion-tooling",
+      "description": "Sign, verify, and decode SAML assertions with xmlsec1 and openssl",
+      "commands": [
+        "xmlsec1 --verify --pubkey-cert-pem sp-cert.pem saml-response.xml",
+        "xmlsec1 --sign --privkey-pem idp-key.pem --pubkey-pem idp-cert.pem --output signed.xml unsigned-assertion.xml",
+        "python -c 'import base64; print(base64.b64decode(open(\"saml-response.b64\").read()).decode())'",
+        "curl -d \"SAMLResponse=$(cat saml-response.b64)\" https://app.example.com/acs",
+        "openssl x509 -in idp-cert.pem -noout -fingerprint -sha256"
+      ],
+      "examples": [
+        "python -c 'import base64; print(base64.b64decode(open(\"saml-response.b64\").read()).decode())'",
+        "xmlsec1 --verify --pubkey-cert-pem sp-cert.pem signed.xml",
+        "curl -d \"SAMLResponse=$(cat saml-response.b64)\" https://app.example.com/acs"
+      ],
+      "parameters": [
+        {
+          "name": "cert_file",
+          "type": "string",
+          "description": "PEM certificate used for verification"
+        },
+        {
+          "name": "key_file",
+          "type": "string",
+          "description": "Private key used for signing"
+        },
+        {
+          "name": "acs_url",
+          "type": "string",
+          "description": "Assertion Consumer Service endpoint"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "xmlsec1 documentation",
+      "type": "documentation",
+      "source": "https://www.aleksey.com/xmlsec/api.html",
+      "description": "Signing and verification with XML-DSig"
+    },
+    {
+      "title": "SAML V2.0 standard",
+      "type": "documentation",
+      "source": "https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf",
+      "description": "Assertions, protocols, and bindings"
+    }
+  ],
+  "instructions": "# SAML 2.0\n\nHand-crafted skill for debugging and building SAML 2.0 SSO.\n\n## What this skill does\n\n- Verifies XML-DSig signatures on SAML assertions with xmlsec1\n- Decodes base64 SAMLResponses to inspect their XML\n- Posts SAMLResponses to the Assertion Consumer Service endpoint\n\n## When to use\n\n- SP cannot validate an IdP-issued assertion\n- Analyzing why a login fails: signature, audience, or expiry\n- Testing an ACS endpoint without a browser flow\n\n## Real commands\n\n```bash\n# Verify a signature against the IdP certificate\nxmlsec1 --verify --pubkey-cert-pem idp-cert.pem saml-response.xml\n\n# Sign an unsigned assertion (IdP side)\nxmlsec1 --sign --privkey-pem idp-key.pem --pubkey-pem idp-cert.pem --output signed.xml unsigned-assertion.xml\n\n# Decode the base64 SAMLResponse from the browser POST\npython -c 'import base64; print(base64.b64decode(open(\"saml-response.b64\").read()).decode())'\n\n# Simulate the ACS POST\ncurl -d \"SAMLResponse=$(cat saml-response.b64)\" https://app.example.com/acs\n\n# Compare certificates\nopenssl x509 -in idp-cert.pem -noout -fingerprint -sha256\n```\n\n## Checking an assertion\n\n- Confirm the Issuer matches the IdP entity ID\n- Confirm Conditions: NotBefore/NotOnOrAfter cover the current time\n- Confirm AudienceRestriction lists your SP entity ID\n\n## Testing\n\n```bash\npython -c 'import base64; print(base64.b64decode(open(\"saml-response.b64\").read()).decode())' > response.xml\nxmlsec1 --verify --pubkey-cert-pem idp-cert.pem response.xml\n```\n\n## Best practices\n\n- Validate signature, audience, and NotOnOrAfter, in that order\n- Never trust an unsigned assertion, even from a test IdP\n- Rotate IdP certs before expiry; keep metadata current\n",
+  "examples": [
+    {
+      "input": "SAML login fails with invalid signature",
+      "output": "xmlsec1 --verify --pubkey-cert-pem idp-cert.pem saml-response.xml to see the exact failure; make sure the IdP certificate matches the fingerprint from openssl x509."
+    },
+    {
+      "input": "Inspect what the IdP actually sent",
+      "output": "Save the SAMLResponse parameter, then python -c 'import base64; print(base64.b64decode(open(\"saml-response.b64\").read()).decode())' and read the assertion XML."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "saml.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-saml"
+    },
+    "generic": {
+      "system_prompt": "You take the Saml seat. You do it through saml-assertion-tooling: Sign, verify, and decode SAML assertions with xmlsec1 and openssl. The commands are real, e.g. `xmlsec1 --verify --pubkey-cert-pem sp-cert.pem saml-response.xml`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "saml",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "saml-assertion-tooling",
+        "name": "cert_file",
+        "type": "string",
+        "description": "PEM certificate used for verification"
+      },
+      {
+        "capability": "saml-assertion-tooling",
+        "name": "key_file",
+        "type": "string",
+        "description": "Private key used for signing"
+      },
+      {
+        "capability": "saml-assertion-tooling",
+        "name": "acs_url",
+        "type": "string",
+        "description": "Assertion Consumer Service endpoint"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "openssl",
+    "python",
+    "xmlsec1"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/saml-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/saml-skill.yaml",
+    "checksum": "431146b5f5521354d50468ab9bc6afa9a56e164148181ed4728d5900a46276af"
+  }
+}

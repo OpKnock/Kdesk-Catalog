@@ -1,0 +1,150 @@
+name: terraform-module-builder
+version: 2.0.0
+type: skill
+category: infrastructure
+description: Builds reusable, tested Terraform modules with scaffolding, validation, docs generation,
+  and tflint compliance.
+keywords:
+- terraform
+- module
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: terraform-module-builder.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-terraform-module-builder
+  generic:
+    system_prompt: 'You work terraform-module-builder hands-on. You do it through module-scaffolding:
+      Initialize and structure a Terraform module. The commands are real, e.g. `terraform init`. You run
+      and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: module-scaffolding
+  description: Initialize and structure a Terraform module.
+  commands:
+  - terraform init
+  - terraform fmt -recursive
+  - terraform validate
+  - terraform providers lock -platform=linux_amd64
+  - terraform-docs markdown . > README.md
+  examples:
+  - terraform init
+  - terraform fmt -recursive
+  - terraform validate
+  parameters:
+  - name: dir
+    type: string
+    description: Module directory
+  - name: platform
+    type: string
+    description: Provider platform lock, e.g. linux_amd64
+- name: module-testing
+  description: Plan, apply, and destroy test fixtures.
+  commands:
+  - terraform plan -var-file=tests/fixtures/dev.tfvars
+  - terraform apply -auto-approve -var-file=tests/fixtures/dev.tfvars
+  - terraform destroy -auto-approve -var-file=tests/fixtures/dev.tfvars
+  - terraform state list
+  - terraform output
+  examples:
+  - terraform plan -var-file=tests/fixtures/dev.tfvars
+  - terraform apply -auto-approve -var-file=tests/fixtures/dev.tfvars
+  - terraform destroy -auto-approve
+  parameters:
+  - name: varFile
+    type: string
+    description: Variable file path
+  - name: target
+    type: string
+    description: Resource address to target
+- name: linting-and-quality
+  description: Enforce style and best practices with tflint and docs.
+  commands:
+  - tflint --init
+  - tflint --recursive
+  - tflint --format sarif
+  - terraform-docs markdown table . --output-file README.md
+  - tofu fmt -recursive
+  examples:
+  - tflint --init && tflint --recursive
+  - terraform-docs markdown table . --output-file README.md
+  - tflint --format sarif --output-file tflint.sarif
+  parameters:
+  - name: format
+    type: string
+    description: 'tflint output format: default, sarif, json'
+  - name: outputFile
+    type: string
+    description: Docs output path
+prerequisites:
+- terraform
+- terragrunt
+- tflint
+- checkov
+tools:
+- terraform
+- terragrunt
+- tflint
+- checkov
+- infracost
+- terratest
+examples:
+- input: Build a reusable VPC module
+  output: Agent scaffolds main/variables/outputs, adds CIDR and tagging inputs, generates README with
+    terraform-docs, and runs validate + tflint.
+- input: My module fails validate in CI
+  output: Agent runs terraform validate -no-color, checks variable references, and runs tflint to isolate
+    the error.
+instructions: "# Terraform Module Builder\n\nCreate production-grade, reusable Terraform modules.\n\n\
+  ## What This Skill Does\n\n- Scaffolds module structure (variables, outputs, locals, resources)\n- Validates\
+  \ and formats code before merge\n- Generates README docs with terraform-docs\n- Lints with tflint and\
+  \ tests with plan/apply fixtures\n\n## When to Use\n\n- Creating a new reusable module for a team\n\
+  - Refactoring duplicated config into modules\n- Publishing modules to a registry\n\n## Real Commands\n\
+  \n```bash\n# Scaffold and validate\nterraform init\nterraform fmt -recursive\nterraform validate\n\n\
+  # Docs and lint\nterraform-docs markdown table . --output-file README.md\ntflint --init\ntflint --recursive\n\
+  \n# Test fixture cycle\nterraform plan -var-file=tests/fixtures/dev.tfvars\nterraform apply -auto-approve\
+  \ -var-file=tests/fixtures/dev.tfvars\nterraform output\nterraform destroy -auto-approve -var-file=tests/fixtures/dev.tfvars\n\
+  \n# Lock providers for reproducibility\nterraform providers lock -platform=linux_amd64\n```\n\n## Module\
+  \ Structure\n\n```text\nmodules/vpc/\n  main.tf\n  variables.tf\n  outputs.tf\n  locals.tf\n  README.md\n\
+  \  versions.tf\n  tests/fixtures/dev.tfvars\n```\n\n## Best Practices\n\n- Make modules composable:\
+  \ inputs, outputs, no hidden state\n- Version all modules; never point consumers at main\n- Document\
+  \ every variable and output (terraform-docs in CI)\n- Run tflint and validate in CI on every change\n\
+  - Test apply/destroy on fixtures before publishing"
+display_name: terraform-module-builder
+knowledge:
+- title: Terraform Module Documentation
+  type: documentation
+  source: https://developer.hashicorp.com/terraform/language/modules
+  description: Module structure, inputs, and outputs
+- title: Terraform Module Best Practices
+  type: documentation
+  source: https://developer.hashicorp.com/terraform/tutorials/modules
+  description: Authoring guidance from HashiCorp
+- title: tflint Documentation
+  type: documentation
+  source: https://github.com/terraform-linters/tflint
+  description: Linter and rules for Terraform

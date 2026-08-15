@@ -1,0 +1,174 @@
+{
+  "name": "fault-injection",
+  "display_name": "Fault Injection",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Chaos engineering and fault injection: inject network latency/aborts with Istio, run Chaos Mesh experiments, and use toxiproxy for proxy-level failures.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "chaos-experiments",
+      "description": "Inject faults at proxy, mesh, and node level, then verify application resilience.",
+      "commands": [
+        "kubectl apply -f fault-injection.yaml",
+        "kubectl get virtualservice reviews -o yaml | grep -A5 fault",
+        "kubectl apply -f chaos-mesh-experiment.yaml",
+        "kubectl get chaosexperiments -n chaos-mesh",
+        "docker run -d -p 8474:8474 shopify/toxiproxy",
+        "curl -s -X POST localhost:8474/proxies -d '{\"name\":\"db\",\"listen\":\"0.0.0.0:5433\",\"upstream\":\"db:5432\"}'"
+      ],
+      "examples": [
+        "kubectl apply -f fault-injection.yaml && kubectl get virtualservice reviews -o yaml | grep -A5 fault",
+        "curl -s -X POST localhost:8474/proxies -d '{\"name\":\"db\",\"listen\":\"0.0.0.0:5433\",\"upstream\":\"db:5432\"}'",
+        "kubectl get chaosexperiments -n chaos-mesh"
+      ],
+      "parameters": [
+        {
+          "name": "fault-type",
+          "type": "string",
+          "description": "delay, abort, or packet-loss"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Service or pod targeted by the experiment"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Fault duration like 30s or 5m"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Istio Fault Injection",
+      "type": "documentation",
+      "source": "https://istio.io/latest/docs/tasks/traffic-management/fault-injection/",
+      "description": "Delaying and aborting requests via VirtualService rules"
+    },
+    {
+      "title": "Chaos Mesh docs",
+      "type": "documentation",
+      "source": "https://chaos-mesh.org/docs/",
+      "description": "Pod, network, and stress fault experiments on Kubernetes"
+    }
+  ],
+  "instructions": "# Fault Injection\n\n## What this skill does\n\nFault injection deliberately breaks parts of the system to prove resilience: Istio delays/aborts HTTP traffic, Chaos Mesh kills pods or saturates IO, and toxiproxy simulates proxy-level failures. The goal is finding weaknesses before customers do.\n\n## When to use\n\n- Validating retries and fallbacks actually work\n- Testing degraded-mode behavior before launch\n- Game-day exercises for on-call\n\n## Real commands\n\n```bash\n# Istio: delay 2s on 50% of requests to reviews\nkubectl apply -f fault-injection.yaml\nkubectl get virtualservice reviews -o yaml | grep -A5 fault\n\n# Chaos Mesh: kill 20% of pods for 1 minute\nkubectl apply -f chaos-mesh-experiment.yaml\nkubectl get chaosexperiments -n chaos-mesh\n\n# Toxiproxy: run and add a proxy\n docker run -d -p 8474:8474 shopify/toxiproxy\ncurl -s -X POST localhost:8474/proxies -d '{\"name\":\"db\",\"listen\":\"0.0.0.0:5433\",\"upstream\":\"db:5432\"}'\n```\n\n## Istio fault injection example\n\n```yaml\napiVersion: networking.istio.io/v1beta1\nkind: VirtualService\nmetadata:\n  name: reviews\nspec:\n  hosts:\n    - reviews\n  http:\n    - fault:\n        delay:\n          percentage:\n            value: 50\n          fixedDelay: 2s\n      route:\n        - destination:\n            host: reviews\n```\n\n## Safe experiment checklist\n\n- Start in staging; 5-10% blast radius.\n- Set a hard end time for every experiment.\n- Verify monitoring covers the injected failure before running.\n- Roll back via kubectl delete -f <experiment> immediately if impact surprises.\n\n## Testing\n\n```bash\n# During the delay injection, watch client behavior\ncurl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' http://gateway.example/reviews\n```\n\n## Best practices\n\n- Run experiments during low traffic windows first.\n- Tie experiments to a specific hypothesis (e.g. \"retry 3x survives 2s delays\").\n- Automate with a game-day schedule; never run ad hoc in prod.\n",
+  "examples": [
+    {
+      "input": "Prove our retries survive a 5s DB lag",
+      "output": "Use Istio delay injection at 50% for 5s on the reviews route, then curl through the gateway and confirm p95 stays within the retry budget."
+    },
+    {
+      "input": "Test pod restart resilience",
+      "output": "Create a Chaos Mesh PodChaos kill experiment at 20% for 60s and watch service availability and auto-healing."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "fault-injection.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-fault-injection"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Fault Injection. You do it through chaos-experiments: Inject faults at proxy, mesh, and node level, then verify application resilience. The commands are real, e.g. `kubectl apply -f fault-injection.yaml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "fault-injection",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "chaos-experiments",
+        "name": "fault-type",
+        "type": "string",
+        "description": "delay, abort, or packet-loss"
+      },
+      {
+        "capability": "chaos-experiments",
+        "name": "target",
+        "type": "string",
+        "description": "Service or pod targeted by the experiment"
+      },
+      {
+        "capability": "chaos-experiments",
+        "name": "duration",
+        "type": "string",
+        "description": "Fault duration like 30s or 5m"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/fault-injection-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/fault-injection-skill.yaml",
+    "checksum": "123e5a2707f9a08193cc7c67cbfe03b0fa0f59f4c8f2ee6bfec933a74fdf3972"
+  }
+}

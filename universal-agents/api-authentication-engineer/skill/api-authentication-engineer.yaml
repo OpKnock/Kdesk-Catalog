@@ -1,0 +1,185 @@
+name: api-authentication-engineer
+version: 2.0.0
+type: skill
+category: security
+description: 'Implements API authentication: JWT issuance and validation, OAuth 2.0 flows, API keys, and
+  mTLS with rotation.'
+keywords:
+- api-authentication
+- jwt
+- api-keys
+- mtls
+- authentication
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-authentication-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-authentication-engineer
+  generic:
+    system_prompt: 'You take the api-authentication-engineer seat. You do it through jwt-implementation:
+      Issue, validate, and rotate JWTs for API access. The commands are real, e.g. `npm install jsonwebtoken`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: jwt-implementation
+  description: Issue, validate, and rotate JWTs for API access
+  commands:
+  - npm install jsonwebtoken
+  - node -e "const j=require('jsonwebtoken');const t=j.sign({sub:'u1',scope:'read'},'secret',{expiresIn:'1h'});console.log(t)"
+  - node -e "const j=require('jsonwebtoken');const t=j.sign({sub:'u1'},'secret',{expiresIn:'1h'});console.log(j.verify(t,'secret'))"
+  - jwt decode $(node -e "const j=require('jsonwebtoken');console.log(j.sign({sub:'u1'},'secret',{expiresIn:'1h'}))")
+  - node -e "const j=require('jsonwebtoken');try{j.verify('bad.token.here','secret')}catch(e){console.log(e.message)}"
+  examples:
+  - jwt decode $(node -e "const j=require('jsonwebtoken');console.log(j.sign({sub:'u1'},'secret',{expiresIn:'1h'}))")
+  - node -e "const j=require('jsonwebtoken');const t=j.sign({sub:'u1'},'secret',{expiresIn:'1h'});setTimeout(()=>{try{j.verify(t,'secret');console.log('ok')}catch(e){console.log('expired')}},2000)"
+  - node -e "const j=require('jsonwebtoken');console.log(j.sign({sub:'u1'},'secret',{expiresIn:'15m',aud:'api'})
+    && 'token issued')"
+  parameters:
+  - name: audience
+    type: string
+    description: Token audience
+  - name: expiry
+    type: string
+    description: Token lifetime
+- name: oauth2-flows
+  description: Configure OAuth 2.0 authorization code and client credentials flows
+  commands:
+  - npm install openid-client
+  - node -e "const {Issuer}=require('openid-client');Issuer.discover('https://auth.example.com/.well-known/openid-configuration').then(i=>console.log(i.metadata.token_endpoint))"
+  - kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password
+    admin
+  - kcadm.sh create clients -r demo -s clientId=api-client -s publicClient=false -s secret=change-me
+  - curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d 'grant_type=client_credentials&client_id=api-client&client_secret=change-me'
+  examples:
+  - node -e "const {Issuer}=require('openid-client');Issuer.discover('https://auth.example.com/.well-known/openid-configuration').then(i=>console.log(i.metadata.token_endpoint))"
+  - kcadm.sh create clients -r demo -s clientId=api-client -s secret=change-me
+  - curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d 'grant_type=client_credentials&client_id=api-client&client_secret=change-me'
+  parameters:
+  - name: issuer
+    type: string
+    description: OIDC issuer URL
+  - name: clientId
+    type: string
+    description: OAuth client ID
+prerequisites:
+- node.js
+- python
+- openssl
+- jwt-cli
+tools:
+- node.js
+- python
+- openssl
+- jwt-cli
+- keycloak
+- auth0
+examples:
+- input: Implement JWT authentication for the API
+  output: Issues and validates signed JWTs with expiry, audience, and scope claims in middleware
+- input: Add API key authentication for partners
+  output: Generates hashed keys, enforces per-key scopes and rate limits, and supports revocation
+instructions: '# API Authentication Engineer
+
+
+  Implements authentication for APIs: JWTs, OAuth 2.0, API keys, and mTLS.
+
+
+  ## When to Use
+
+  - Adding auth to an API
+
+  - Implementing OAuth client flows
+
+  - Securing service-to-service calls
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # JWT
+
+  npm install jsonwebtoken
+
+  jwt decode $(node -e "const j=require(''jsonwebtoken'');console.log(j.sign({sub:''u1''},''secret'',{expiresIn:''1h''}))")
+  2>/dev/null || node -e "const j=require(''jsonwebtoken'');console.log(j.verify(j.sign({sub:''u1''},''secret'',{expiresIn:''1h''}),''secret''))"
+
+
+  # Keycloak client
+
+  kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin
+
+  kcadm.sh create clients -r demo -s clientId=api-client -s secret=change-me
+
+
+  # Client credentials token
+
+  curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d ''grant_type=client_credentials&client_id=api-client&client_secret=change-me''
+
+
+  # mTLS certs
+
+  openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+
+  ```
+
+
+  ## Token Design
+
+  - Short-lived access tokens (15m)
+
+  - Refresh tokens with rotation
+
+  - Audience and scope claims enforced
+
+
+  ## Testing
+
+  Verify expired tokens are rejected and scopes are enforced per route.
+
+
+  ## Best Practices
+
+  - Rotate signing keys on a schedule
+
+  - Never log tokens or secrets'
+display_name: api-authentication-engineer
+knowledge:
+- title: JWT Introduction
+  type: documentation
+  source: https://jwt.io/introduction
+  description: JWT structure and claims
+- title: OAuth 2.0
+  type: documentation
+  source: https://oauth.net/2/
+  description: Grant types and flows
+- title: Keycloak Admin CLI
+  type: documentation
+  source: https://www.keycloak.org/docs/latest/server_admin/
+  description: kcadm.sh usage

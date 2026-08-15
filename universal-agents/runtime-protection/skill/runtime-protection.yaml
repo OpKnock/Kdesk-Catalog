@@ -1,0 +1,133 @@
+name: runtime-protection
+version: 2.0.0
+type: skill
+category: security
+description: 'Detects and responds to threats at runtime with Falco, Tracee, auditd, and strace: suspicious
+  syscalls, containers, and process behavior.'
+keywords:
+- runtime-protection
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: runtime-protection.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-runtime-protection
+  generic:
+    system_prompt: 'This is your domain: runtime-protection. You do it through falco: Run Falco threat
+      detection and manage rules. The commands are real, e.g. `falco --version`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: falco
+  description: Run Falco threat detection and manage rules.
+  commands:
+  - falco --version
+  - falcoctl install falco
+  - falco -r /etc/falco/falco_rules.yaml -e /dev/null
+  - falco --json --output '{"event":"%evt.type","proc":"%proc.name"}'
+  - falcoctl artifact list --type rules
+  examples:
+  - falco -r my-rules.yaml | head -20
+  - falcoctl artifact install falco_rules:2.0
+  - falco --version && falco -h | head -20
+  parameters:
+  - name: rules
+    type: string
+    description: Rules file path
+  - name: json
+    type: string
+    description: JSON output mode
+  - name: output
+    type: string
+    description: Output template
+- name: syscall
+  description: Trace and audit syscall activity.
+  commands:
+  - strace -f -e trace=execve,openat -o trace.log ./app
+  - strace -p 1234 -f -e trace=network
+  - auditctl -a always,exit -F arch=b64 -S execve -k exec-log
+  - auditctl -l
+  - ausearch -k exec-log -ts recent | head -30
+  examples:
+  - strace -f -e trace=openat ./app 2>&1 | grep ENOENT | head
+  - auditctl -a always,exit -F arch=b64 -S socket -k net-conn
+  - ausearch -k net-conn -i | head -20
+  parameters:
+  - name: syscall
+    type: string
+    description: Syscalls to trace
+  - name: key
+    type: string
+    description: Audit rule key
+  - name: pid
+    type: number
+    description: Process id to attach
+prerequisites:
+- openrasp
+- contrast-security
+- falco
+- sysdig
+tools:
+- openrasp
+- contrast-security
+- falco
+- sysdig
+- aqua
+examples:
+- input: Detect a shell spawned inside a container.
+  output: Installs Falco, adds the terminal-in-container rule, and verifies detection with a kubectl exec
+    test.
+- input: Audit all outbound socket calls for a service.
+  output: Adds an auditctl socket rule with a key, then reviews with ausearch for recent events.
+instructions: "# Runtime Protection\n\nDetect malicious behavior while it happens.\n\n## When to Use\n\
+  \n- Container escape and privilege escalation detection\n- Suspicious process behavior monitoring\n\
+  - Forensics after an incident\n\n## Falco\n\n```bash\nfalcoctl install falco\nfalco -r /etc/falco/falco_rules.yaml\n\
+  ```\n\nRule example - terminal in container:\n\n```yaml\n- rule: Terminal shell in container\n  desc:\
+  \ A shell was spawned in a container\n  condition: container.id != host and proc.name = bash\n  output:\
+  \ shell spawned in container (proc=%proc.name container=%container.id)\n  priority: WARNING\n```\n\n\
+  ## Tracee\n\n```bash\ntracee-ebpf --events execve,openat\n```\n\n## Syscall tracing\n\n```bash\nstrace\
+  \ -f -e trace=execve,openat -o trace.log ./app\n```\n\n## Kernel audit\n\n```bash\nauditctl -a always,exit\
+  \ -F arch=b64 -S execve -k exec-log\nauditctl -l\nausearch -k exec-log -ts recent\n```\n\n## Alert pipeline\n\
+  \nFalco events -> priority threshold -> pager. Wire outputs to a SIEM or message queue.\n\n## Best practices\n\
+  \n- Tune rules to the workload to avoid alert fatigue.\n- Ship the event stream off-host immediately.\n\
+  - Test rules with real attack simulations (e.g., kubectl exec).\n- Keep Falco/Tracee versions pinned\
+  \ and updated.\n\n## Testing\n\nSimulate a known-bad action (shell in container) and verify the rule\
+  \ fires within seconds."
+display_name: runtime-protection
+knowledge:
+- title: Falco Docs
+  type: documentation
+  source: https://falco.org/docs/
+  description: Rules, outputs, and deployment
+- title: Tracee
+  type: documentation
+  source: https://github.com/aquasecurity/tracee
+  description: eBPF runtime security and forensics
+- title: auditd
+  type: documentation
+  source: https://man7.org/linux/man-pages/man8/auditctl.8.html
+  description: auditctl and ausearch references

@@ -1,0 +1,99 @@
+name: doc-generator
+display_name: Doc Generator
+category: devtools
+subcategory: productivity
+description: Documentation generation assistant for code, APIs, and architecture
+version: 1.0.0
+tags:
+- doc-generator
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Doc Generator
+  description: Documentation generation assistant for code, APIs, and architecture
+  commands:
+  - 'Swagger: swagger-codegen generate'
+  - 'Sphinx: sphinx-build -b html docs/'
+  - 'Mermaid: mermaid-cli -i diagram.mmd'
+  - 'JSDoc: jsdoc -c jsdoc.json'
+  examples:
+  - 'Swagger: swagger-codegen generate'
+  - 'JSDoc: jsdoc -c jsdoc.json'
+  - 'Sphinx: sphinx-build -b html docs/'
+  - 'Mermaid: mermaid-cli -i diagram.mmd'
+  parameters: []
+knowledge:
+- title: doc-generator Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/devtools/productivity
+  description: Reference documentation for doc-generator
+instructions: 'You are a documentation expert. Help users with:
+
+  - API docs (OpenAPI/Swagger)
+
+  - Code docs (JSDoc, Sphinx, godoc)
+
+  - Architecture diagrams (Mermaid, PlantUML)
+
+  - README generation
+
+  - Changelog generation
+
+  - MkDocs/Docusaurus
+
+
+  Always use real documentation tools. Never suggest fictional tools.'
+examples:
+- 'Swagger: swagger-codegen generate'
+- 'JSDoc: jsdoc -c jsdoc.json'
+- 'Sphinx: sphinx-build -b html docs/'
+- 'Mermaid: mermaid-cli -i diagram.mmd'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: doc-generator.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a documentation expert. Help users with:
+
+      - API docs (OpenAPI/Swagger)
+
+      - Code docs (JSDoc, Sphinx, godoc)
+
+      - Architecture diagrams (Mermaid, PlantUML)
+
+      - README generation
+
+      - Changelog generation
+
+      - MkDocs/Docusaurus
+
+
+      Always use real documentation tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-doc-generator
+  generic:
+    system_prompt: You are doc-generator. Documentation generation assistant for code, APIs, and architecture
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

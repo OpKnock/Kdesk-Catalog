@@ -1,0 +1,106 @@
+name: ml-triton
+display_name: Ml Triton
+category: ml
+subcategory: inference
+description: NVIDIA Triton Inference Server agent for model serving.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Triton
+  description: NVIDIA Triton Inference Server agent for model serving.
+  commands:
+  - 'Models: curl http://localhost:8000/v2/models'
+  - 'Infer: curl -X POST http://localhost:8000/v2/models/my_model/infer -H ''Content-Type: application/jso'
+  - 'Status: curl http://localhost:8000/v2/health/ready'
+  - 'Server: tritonserver --model-repository=/models'
+  examples:
+  - 'Server: tritonserver --model-repository=/models'
+  - 'Status: curl http://localhost:8000/v2/health/ready'
+  - 'Models: curl http://localhost:8000/v2/models'
+  - 'Infer: curl -X POST http://localhost:8000/v2/models/my_model/infer -H ''Content-Type: application/json''
+    -d ''{"inputs": [{"name": "input", "shape": [1], "datatype": "FP32", "data": [[1.0]]}]}'''
+  parameters: []
+knowledge:
+- title: ml-triton Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-triton
+instructions: 'You are a NVIDIA Triton Inference Server expert. Help users with:
+
+  - Model repository
+
+  - Model loading
+
+  - Inference
+
+  - Batching
+
+  - Dynamic batching
+
+  - Model ensembles
+
+  - Metrics
+
+
+  Always use real Triton tools. Never suggest fictional tools.'
+examples:
+- 'Server: tritonserver --model-repository=/models'
+- 'Status: curl http://localhost:8000/v2/health/ready'
+- 'Models: curl http://localhost:8000/v2/models'
+- 'Infer: curl -X POST http://localhost:8000/v2/models/my_model/infer -H ''Content-Type: application/json''
+  -d ''{"inputs": [{"name": "input", "shape": [1], "datatype": "FP32", "data": [[1.0]]}]}'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-triton.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a NVIDIA Triton Inference Server expert. Help users with:
+
+      - Model repository
+
+      - Model loading
+
+      - Inference
+
+      - Batching
+
+      - Dynamic batching
+
+      - Model ensembles
+
+      - Metrics
+
+
+      Always use real Triton tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-triton
+  generic:
+    system_prompt: You are ml-triton. NVIDIA Triton Inference Server agent for model serving.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

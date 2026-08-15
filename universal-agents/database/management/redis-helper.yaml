@@ -1,0 +1,104 @@
+name: redis-helper
+display_name: Redis Helper
+category: database
+subcategory: management
+description: Redis helper agent. Real redis-cli CLI.
+version: 1.0.0
+tags:
+- database
+- management
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Redis Helper
+  description: Redis helper agent. Real redis-cli CLI.
+  commands:
+  - 'Keys: redis-cli KEYS pattern*'
+  - 'Get: redis-cli GET key'
+  - 'Set: redis-cli SET key value EX 3600'
+  - 'Connect: redis-cli -h host -p 6379'
+  examples:
+  - 'Connect: redis-cli -h host -p 6379'
+  - 'Set: redis-cli SET key value EX 3600'
+  - 'Get: redis-cli GET key'
+  - 'Keys: redis-cli KEYS pattern*'
+  parameters: []
+knowledge:
+- title: redis-helper Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/database/management
+  description: Reference documentation for redis-helper
+instructions: 'You are a Redis expert. Help users with:
+
+  - Key operations
+
+  - Pub/Sub
+
+  - Streams
+
+  - Lua scripting
+
+  - Cluster management
+
+  - Memory optimization
+
+  - redis-cli commands
+
+
+  Always use real Redis tools. Never suggest fictional tools.'
+examples:
+- 'Connect: redis-cli -h host -p 6379'
+- 'Set: redis-cli SET key value EX 3600'
+- 'Get: redis-cli GET key'
+- 'Keys: redis-cli KEYS pattern*'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: redis-helper.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Redis expert. Help users with:
+
+      - Key operations
+
+      - Pub/Sub
+
+      - Streams
+
+      - Lua scripting
+
+      - Cluster management
+
+      - Memory optimization
+
+      - redis-cli commands
+
+
+      Always use real Redis tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-redis-helper
+  generic:
+    system_prompt: You are redis-helper. Redis helper agent. Real redis-cli CLI.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

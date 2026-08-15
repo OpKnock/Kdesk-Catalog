@@ -1,0 +1,125 @@
+name: swift
+display_name: Swift
+category: mobile
+subcategory: general
+description: 'Develops iOS and Swift apps: SwiftPM packages, SwiftLint gates, swift-format, and xcodebuild
+  CI builds.'
+version: 2.0.0
+tags:
+- swift
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- swift
+- xcodebuild
+capabilities:
+- name: swiftpm
+  description: Create and manage Swift packages.
+  commands:
+  - swift package init --type executable
+  - swift build
+  - swift test --filter 'LoginTests'
+  - swift run my-tool --help
+  - swift package resolve
+  examples:
+  - swift package init --type library
+  - swift test --parallel
+  - swift run my-tool config.json
+  parameters:
+  - name: type
+    type: string
+    description: executable, library, or empty package
+  - name: filter
+    type: string
+    description: Test name filter
+  - name: parallel
+    type: string
+    description: Run tests in parallel
+- name: xcodebuild
+  description: Build and test iOS apps in CI.
+  commands:
+  - xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15' build
+  - xcodebuild test -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15'
+  - xcodebuild -scheme MyApp -archivePath build/MyApp.xcarchive archive
+  - xcodebuild -exportArchive -archivePath build/MyApp.xcarchive -exportPath dist -exportOptionsPlist
+    ExportOptions.plist
+  - xcodebuild -list
+  examples:
+  - xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15,OS=18.0' test
+  - xcodebuild -scheme MyApp archive -archivePath build/MyApp.xcarchive
+  - xcodebuild -project MyApp.xcodeproj -scheme MyApp -showBuildSettings | grep PRODUCT_BUNDLE_IDENTIFIER
+  parameters:
+  - name: scheme
+    type: string
+    description: Xcode scheme name
+  - name: destination
+    type: string
+    description: Simulator or device destination
+  - name: archivePath
+    type: string
+    description: Archive output path
+knowledge:
+- title: Swift Docs
+  type: documentation
+  source: https://www.swift.org/documentation/
+  description: Language guide and SwiftPM reference
+- title: SwiftLint
+  type: documentation
+  source: https://github.com/realm/SwiftLint
+  description: Swift lint rules and configuration
+- title: xcodebuild manual
+  type: documentation
+  source: https://manpagez.com/man/1/xcodebuild/
+  description: xcodebuild build/test/archive options
+instructions: "# Swift\n\nBuild iOS and Swift packages with SwiftPM and xcodebuild.\n\n## When to Use\n\
+  \n- iOS/macOS application development\n- Reusable Swift libraries via SwiftPM\n- CI builds, tests, and\
+  \ archives\n\n## SwiftPM\n\n```bash\nswift package init --type executable\nswift build\nswift test --filter\
+  \ 'LoginTests'\n```\n\n## SwiftLint\n\n```swift\n// .swiftlint.yml\ndisabled_rules:\n  - trailing_whitespace\n\
+  opt_in_rules:\n  - empty_count\n  - force_unwrapping\n```\n\n```bash\nswiftlint lint --strict\nswiftlint\
+  \ --fix\n```\n\nUse `--strict` in CI to treat warnings as errors.\n\n## swift-format\n\n```bash\nswift-format\
+  \ lint --strict --recursive Sources/\nswift-format format --in-place --recursive Sources/\n```\n\n##\
+  \ xcodebuild in CI\n\n```bash\nxcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone\
+  \ 15' test\nxcodebuild -scheme MyApp -archivePath build/MyApp.xcarchive archive\n```\n\nExport the archive\
+  \ with an options plist for signing in CI.\n\n## Best practices\n\n- Commit Package.resolved for reproducible\
+  \ builds.\n- Gate on swiftlint --strict and swift-format lint.\n- Parallelize tests with --parallel\
+  \ on fast machines.\n- Use Xcode cloud or runner pools with simulator caching.\n\n## Testing\n\n```bash\n\
+  swift test --parallel\nswiftlint lint --strict\n```\n\nRun unit tests and lint in CI on every PR."
+examples:
+- input: Create a reusable Swift logging library.
+  output: Inits a SwiftPM library, adds the Logging API, writes tests, and runs swift test --parallel.
+- input: Build and archive the iOS app for TestFlight.
+  output: Runs xcodebuild test on the simulator, archives with xcodebuild archive, and exports with the
+    options plist.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: swift.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-swift
+  generic:
+    system_prompt: 'This is your domain: Swift. You do it through swiftpm: Create and manage Swift packages.
+      The commands are real, e.g. `swift package init --type executable`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

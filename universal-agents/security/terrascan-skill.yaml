@@ -1,0 +1,179 @@
+name: terrascan
+display_name: terrascan
+category: security
+subcategory: general
+description: Scans Terraform, Kubernetes, and other IaC with Terrascan's 1500+ policies for cloud misconfigurations.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- terrascan
+capabilities:
+- name: terrascan-scan
+  description: Scan directories, files, and modules against policy packs.
+  commands:
+  - terrascan init
+  - terrascan scan -d .
+  - terrascan scan -f main.tf
+  - terrascan scan -i terraform
+  - terrascan scan -d . --policy-type aws
+  examples:
+  - terrascan init && terrascan scan -d .
+  - terrascan scan -f main.tf -i terraform
+  - terrascan scan -d . --policy-type aws --severity high
+  parameters:
+  - name: directory
+    type: string
+    description: Directory to scan recursively
+  - name: file
+    type: string
+    description: Single file to scan
+  - name: policyType
+    type: string
+    description: 'Cloud policy type: aws, azure, gcp, k8s'
+- name: reporting-and-fixing
+  description: Emit reports and apply automatic fixes.
+  commands:
+  - terrascan scan -d . -o sarif
+  - terrascan scan -d . -o json --output-file results.json
+  - terrascan scan -d . --fix
+  - terrascan scan -d . --skip-rules AWS.S3Bucket.DS.High.1043
+  - terrascan scan -d . --severity critical
+  examples:
+  - terrascan scan -d . -o sarif --output-file scan.sarif
+  - terrascan scan -d . --fix
+  - terrascan scan -d . --skip-rules AWS.S3Bucket.DS.High.1043
+  parameters:
+  - name: output
+    type: string
+    description: 'Format: yaml, json, xml, html, sarif'
+  - name: fix
+    type: boolean
+    description: Auto-fix supported violations
+  - name: skipRules
+    type: array
+    description: Rule IDs to skip
+knowledge:
+- title: Terrascan Documentation
+  type: documentation
+  source: https://docs.tenable.com/terrascan/
+  description: Installation, scanning, and policy reference
+- title: Terrascan GitHub
+  type: documentation
+  source: https://github.com/tenable/terrascan
+  description: Supported IaC and policy packs
+instructions: '# Terrascan
+
+
+  Static IaC security scanning with deep cloud policy coverage.
+
+
+  ## What This Skill Does
+
+
+  - Scans Terraform, Kubernetes, Helm, and cloudformation
+
+  - Applies 1500+ policies across AWS, Azure, GCP
+
+  - Auto-fixes supported violations with --fix
+
+  - Emits SARIF/JSON/HTML reports for CI
+
+
+  ## When to Use
+
+
+  - Terraform module review before merge
+
+  - Cloud misconfiguration auditing at scale
+
+  - Kubernetes manifest checks with a single tool
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # First-time policy download
+
+  terrascan init
+
+
+  # Scans
+
+  terrascan scan -d .
+
+  terrascan scan -f main.tf
+
+  terrascan scan -d . --policy-type aws --severity high
+
+
+  # Reports
+
+  terrascan scan -d . -o sarif --output-file scan.sarif
+
+  terrascan scan -d . -o json --output-file results.json
+
+
+  # Fixes and exclusions
+
+  terrascan scan -d . --fix
+
+  terrascan scan -d . --skip-rules AWS.S3Bucket.DS.High.1043
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run terrascan init in CI before scanning
+
+  - Scan modules and root configs separately for clarity
+
+  - Review auto-fixes (--fix) before merging
+
+  - Skip rules with a documented reason, tracked in a config file
+
+  - Combine with checkov for overlapping but complementary coverage'
+examples:
+- input: Scan my Terraform for cloud misconfigs
+  output: Agent runs terrascan init and terrascan scan -d . --severity high, then summarizes violations
+    by cloud provider with rule IDs.
+- input: Fix the S3 policy violations automatically
+  output: Agent runs terrascan scan -d . --fix and diffs the changed Terraform before suggesting a review
+    and commit.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: terrascan.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-terrascan
+  generic:
+    system_prompt: 'You take the terrascan seat. You do it through terrascan-scan: Scan directories, files,
+      and modules against policy packs. The commands are real, e.g. `terrascan init`. You run and verify
+      the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,186 @@
+{
+  "name": "design-system",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "frontend",
+  "description": "Builds design systems: Storybook components, design tokens, Chromatic visual tests, and docs.",
+  "keywords": [
+    "design-system",
+    "component-library",
+    "design-tokens",
+    "storybook"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "design-system.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-design-system"
+    },
+    "generic": {
+      "system_prompt": "You are the design-system specialist. You do it through storybook-workflow: Create, test, and publish component libraries with Storybook. The commands are real, e.g. `npx storybook@latest init --yes`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "storybook-workflow",
+      "description": "Create, test, and publish component libraries with Storybook",
+      "commands": [
+        "npx storybook@latest init --yes",
+        "npm run storybook -- --port 6006",
+        "npm run build-storybook",
+        "npx chromatic --project-token=$CHROMATIC_TOKEN --exit-zero-on-changes",
+        "npx style-dictionary build"
+      ],
+      "examples": [
+        "npx storybook addon install @storybook/addon-a11y",
+        "npx chromatic --auto-accept-changes",
+        "npx tokens-transformer tokens.json tokens/"
+      ],
+      "parameters": [
+        {
+          "name": "project-token",
+          "type": "string",
+          "description": "Chromatic project token for visual tests"
+        },
+        {
+          "name": "exit-zero-on-changes",
+          "type": "boolean",
+          "description": "Don't fail CI when visual changes exist"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Dev server port for Storybook"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "react",
+    "storybook",
+    "styled-components"
+  ],
+  "tools": [
+    "node.js",
+    "react",
+    "storybook",
+    "styled-components",
+    "chromatic"
+  ],
+  "examples": [
+    {
+      "input": "Set up a design system for the team",
+      "output": "Initializes Storybook, adds a11y, defines tokens via style-dictionary, and publishes build-storybook"
+    },
+    {
+      "input": "Verify no visual regressions",
+      "output": "Runs npx chromatic with the project token and summarizes the diff set"
+    }
+  ],
+  "instructions": "# Design System\n\nBuilds a component library with Storybook: stories, design tokens, visual\nregression tests, and published docs.\n\n## When to Use\n\n- Establishing a shared component library\n- Visual regression testing UI\n- Distributing design tokens across platforms\n\n## Real Commands\n\n```bash\n# Init Storybook in an existing project\nsudo npx storybook@latest init --yes\n\n# Dev server\nsudo npm run storybook -- --port 6006\n\n# Static build for publishing\nsudo npm run build-storybook\n\n# Visual tests with Chromatic\nsudo npx chromatic --project-token=$CHROMATIC_TOKEN\nsudo npx chromatic --exit-zero-on-changes --auto-accept-changes\n\n# Accessibility addon\nsudo npx storybook addon install @storybook/addon-a11y\n\n# Tokens: transform to platforms\nsudo npx style-dictionary build\n```\n\n## Story Example (Button.stories.tsx)\n\n```tsx\nexport const Primary: Story = {\n  args: { label: 'Click me', variant: 'primary' },\n};\n```\n\n## Token Pipeline (tokens.json -> style-dictionary)\n\n```json\n{\n  \"color\": { \"primary\": { \"value\": \"#4f46e5\" } },\n  \"spacing\": { \"md\": { \"value\": \"16px\" } }\n}\n```\n\n## Best Practices\n\n- One story per component state; use args tables\n- Add a11y checks to every story\n- Keep tokens the single source of truth for colors/spacing\n- Run Chromatic on every PR; review diffs visually\n- Version the design system package and document migrations\n\n## Example Response\n\nScaffolds the library, authors stories, runs Chromatic, and reports the visual\nchange set with links for review.",
+  "display_name": "design-system",
+  "knowledge": [
+    {
+      "title": "Storybook docs",
+      "type": "documentation",
+      "source": "https://storybook.js.org/docs/",
+      "description": "Component authoring, addons, and testing"
+    },
+    {
+      "title": "Chromatic docs",
+      "type": "documentation",
+      "source": "https://www.chromatic.com/docs/",
+      "description": "Visual testing and review workflows"
+    },
+    {
+      "title": "Style Dictionary docs",
+      "type": "documentation",
+      "source": "https://styledictionary.com/",
+      "description": "Design token transformation pipeline"
+    }
+  ],
+  "id": "design-system",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "storybook-workflow",
+        "name": "project-token",
+        "type": "string",
+        "description": "Chromatic project token for visual tests"
+      },
+      {
+        "capability": "storybook-workflow",
+        "name": "exit-zero-on-changes",
+        "type": "boolean",
+        "description": "Don't fail CI when visual changes exist"
+      },
+      {
+        "capability": "storybook-workflow",
+        "name": "port",
+        "type": "integer",
+        "description": "Dev server port for Storybook"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "react",
+    "storybook",
+    "styled-components"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "design-system/skill/design-system.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/design-system/skill/design-system.yaml",
+    "checksum": "1e269a1a04f0843a1f07504d5822d40e258186483d6322c18168b171fa436be3"
+  }
+}

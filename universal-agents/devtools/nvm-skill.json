@@ -1,0 +1,202 @@
+{
+  "name": "nvm",
+  "display_name": "Nvm",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Installs and switches Node.js versions with nvm: version management, aliases, .nvmrc files, and per-project Node selection.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nvm"
+  ],
+  "capabilities": [
+    {
+      "name": "version-management",
+      "description": "Install, list, and switch Node.js versions.",
+      "commands": [
+        "nvm install 20",
+        "nvm install --lts",
+        "nvm ls",
+        "nvm ls-remote",
+        "nvm use 18.20.4",
+        "nvm current"
+      ],
+      "examples": [
+        "nvm install 20",
+        "nvm use 18.20.4",
+        "nvm ls-remote --lts"
+      ],
+      "parameters": [
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Node version or alias, e.g. 20, --lts"
+        },
+        {
+          "name": "alias",
+          "type": "string",
+          "description": "Alias name"
+        }
+      ]
+    },
+    {
+      "name": "aliases-and-autoload",
+      "description": "Set default versions, create aliases, and use .nvmrc.",
+      "commands": [
+        "nvm alias default 20",
+        "nvm alias project-node 18.20.4",
+        "nvm unalias project-node",
+        "nvm use 20 >/dev/null 2>&1 || nvm install 20",
+        "nvm exec 18 node -v",
+        "nvm uninstall 16"
+      ],
+      "examples": [
+        "nvm alias default 20",
+        "nvm exec 18 node -v",
+        "nvm use 20 || nvm install 20"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Alias or default name"
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Version the alias points to"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "nvm-sh GitHub",
+      "type": "documentation",
+      "source": "https://github.com/nvm-sh/nvm",
+      "description": "Install, usage, and troubleshooting"
+    },
+    {
+      "title": "Node.js Releases",
+      "type": "documentation",
+      "source": "https://nodejs.org/en/about/previous-releases",
+      "description": "LTS schedule and supported versions"
+    }
+  ],
+  "instructions": "# nvm Node Version Management\n\nRun multiple Node.js versions side by side.\n\n## What This Skill Does\n\n- Installs Node versions (LTS, latest, exact)\n- Switches versions per shell/project\n- Sets default and named aliases\n- Uses .nvmrc for repo-pinned versions\n- Runs commands with a specific version (nvm exec)\n\n## When to Use\n\n- Projects pinned to different Node majors\n- Testing against multiple Node versions\n- Avoiding global sudo installs\n\n## Real Commands\n\n```bash\n# Install and switch\nnvm install 20\nnvm install --lts\nnvm use 18.20.4\nnvm current\nnvm ls\nnvm ls-remote\n\n# Aliases and defaults\nnvm alias default 20\nnvm alias project-node 18.20.4\nnvm unalias project-node\n\n# Repo-pinned version (.nvmrc = \"20\")\nnvm use                      # reads .nvmrc\nnvm install                  # installs .nvmrc version\n\n# One-off\nnvm exec 18 node -v\nnvm run 18 --version\n\n# Cleanup\nnvm uninstall 16\n```\n\n## Best Practices\n\n- Commit `.nvmrc` with major.minor.patch to pin runtime\n- Add `nvm use` to your shell hook (nvm alias default + cd hook)\n- Use CI matrix to test against multiple LTS versions\n- Never sudo install Node globally; nvm keeps it in $HOME\n- Set default to an active LTS for new projects",
+  "examples": [
+    {
+      "input": "Project A needs Node 18, Project B Node 20",
+      "output": "Agent creates .nvmrc files and demonstrates nvm use switching per directory"
+    },
+    {
+      "input": "Test our app on Node 18 and 20 in CI",
+      "output": "Agent sets up a CI matrix using nvm install and nvm exec per version"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nvm.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nvm"
+    },
+    "generic": {
+      "system_prompt": "You own Nvm end to end. You do it through version-management: Install, list, and switch Node.js versions. The commands are real, e.g. `nvm install 20`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nvm",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "version-management",
+        "name": "version",
+        "type": "string",
+        "description": "Node version or alias, e.g. 20, --lts"
+      },
+      {
+        "capability": "version-management",
+        "name": "alias",
+        "type": "string",
+        "description": "Alias name"
+      },
+      {
+        "capability": "aliases-and-autoload",
+        "name": "name",
+        "type": "string",
+        "description": "Alias or default name"
+      },
+      {
+        "capability": "aliases-and-autoload",
+        "name": "version",
+        "type": "string",
+        "description": "Version the alias points to"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nvm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/nvm-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/nvm-skill.yaml",
+    "checksum": "d5307cc32627a83eebd0bac98154b6ad20e7737ddbd567c2c798d41a30242521"
+  }
+}

@@ -1,0 +1,206 @@
+name: environment
+display_name: environment
+category: devtools
+subcategory: general
+description: 'Manages development environments: dotfiles, asdf/mise version managers, direnv environment
+  switching, and shell init configs.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- asdf
+- direnv
+- env
+- mise
+- source
+capabilities:
+- name: runtime-version-managers
+  description: Install and switch tool versions with asdf/mise.
+  commands:
+  - asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+  - asdf install nodejs 20.11.0
+  - asdf global nodejs 20.11.0
+  - asdf current
+  - mise use node@22
+  - mise install
+  examples:
+  - asdf install nodejs 20.11.0
+  - asdf global nodejs 20.11.0
+  - mise use node@22
+  parameters:
+  - name: tool
+    type: string
+    description: Tool name, e.g. nodejs, python, ruby
+  - name: version
+    type: string
+    description: Version to install or set
+- name: directory-env-and-shell
+  description: Load environment variables per directory with direnv and manage shell init.
+  commands:
+  - direnv allow .
+  - direnv edit .
+  - direnv status
+  - direnv reload
+  - env | grep -i api
+  - source .env
+  examples:
+  - direnv allow .
+  - direnv edit .
+  - direnv status
+  parameters:
+  - name: dir
+    type: string
+    description: Directory with .envrc
+  - name: env-var
+    type: string
+    description: Environment variable to inspect or set
+knowledge:
+- title: asdf Documentation
+  type: documentation
+  source: https://asdf-vm.com/
+  description: Multi-language version manager docs
+- title: direnv
+  type: documentation
+  source: https://direnv.net/
+  description: Per-directory environment loading
+- title: mise
+  type: documentation
+  source: https://mise.jdx.dev/
+  description: dev tools, env vars, and tasks manager
+instructions: '# Environment Engineering
+
+
+  Set up and standardize development environments across machines.
+
+
+  ## What This Skill Does
+
+
+  - Installs and manages runtime versions (asdf/mise)
+
+  - Loads project-specific env vars with direnv
+
+  - Writes .tool-versions/.mise.toml for repo pinning
+
+  - Bootstraps shell configs (bash/zsh/fish)
+
+  - Debugs PATH and environment variable issues
+
+
+  ## When to Use
+
+
+  - Onboarding a new machine or teammate
+
+  - Multiple projects needing different runtime versions
+
+  - Environment variable chaos between projects
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # asdf
+
+  asdf plugin add nodejs
+
+  asdf install nodejs 20.11.0
+
+  asdf global nodejs 20.11.0
+
+  asdf local nodejs 20.11.0   # writes .tool-versions
+
+  asdf current
+
+
+  # mise
+
+  mise use node@22
+
+  mise use --global node@lts
+
+  mise install
+
+  mise ls
+
+
+  # direnv
+
+  direnv allow .
+
+  direnv edit .          # edit .envrc
+
+  direnv status
+
+  direnv reload
+
+  ```
+
+
+  ## .envrc Example
+
+
+  ```bash
+
+  export API_URL=http://localhost:8080
+
+  export NODE_ENV=development
+
+  use asdf
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Commit .tool-versions or .mise.toml to pin runtimes per repo
+
+  - Keep dotfiles in a git repo with a bootstrap script
+
+  - Use direnv to scope secrets to directories, not shells
+
+  - Document the golden PATH in the repo README
+
+  - Test environment bootstrap in CI with a clean container'
+examples:
+- input: Projects need different Node versions
+  output: Agent sets up asdf with .tool-versions per project and verifies version switching
+- input: API keys keep leaking between projects
+  output: Agent moves secrets into .envrc per project and enforces direnv allow
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: environment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-environment
+  generic:
+    system_prompt: 'This is your domain: environment. You do it through runtime-version-managers: Install
+      and switch tool versions with asdf/mise. The commands are real, e.g. `asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

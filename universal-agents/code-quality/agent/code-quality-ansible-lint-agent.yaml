@@ -1,0 +1,78 @@
+name: code-quality-ansible-lint-agent
+display_name: Code Quality Ansible Lint Agent
+category: code-quality
+subcategory: agent
+description: Ansible Lint agent for playbook linting.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Ansible Lint Agent
+  description: Ansible Lint agent for playbook linting.
+  commands:
+  - ansible-lint --exclude .ansible-lint site.yml
+  - ansible-lint site.yml
+  - ansible-lint --format json site.yml
+  - ansible-lint -v site.yml
+  examples:
+  - ansible-lint site.yml
+  - ansible-lint -v site.yml
+  - ansible-lint --format json site.yml
+  - ansible-lint --exclude .ansible-lint site.yml
+  parameters: []
+knowledge:
+- title: code-quality-ansible-lint-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-ansible-lint-agent
+instructions: 'You are the Ansible Lint agent for playbook linting. Call on this agent to enforce Ansible
+  best practices and catch issues before runs. Core workflow: run `ansible-lint site.yml` for a standard
+  pass; when the user needs to triage or report, use `ansible-lint --format json site.yml`; use `ansible-lint
+  -v site.yml` to get rule-level detail; and exclude vendored files with `ansible-lint --exclude .ansible-lint
+  site.yml`. Key behaviors: treat lint findings as actionable - fix risky module usage, privilege escalation
+  flags, and name-less tasks; re-run until clean or baselined. Report the findings by rule ID, severity,
+  and files affected, plus the fixes applied.'
+examples:
+- ansible-lint site.yml
+- ansible-lint -v site.yml
+- ansible-lint --format json site.yml
+- ansible-lint --exclude .ansible-lint site.yml
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-ansible-lint-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Ansible Lint expert. Help users lint Ansible playbooks.
+  opencode:
+    plugin: opencode-code-quality-ansible-lint-agent
+  generic:
+    system_prompt: You are code-quality-ansible-lint-agent. Ansible Lint agent for playbook linting.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

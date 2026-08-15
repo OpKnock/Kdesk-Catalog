@@ -1,0 +1,171 @@
+{
+  "name": "duckdb",
+  "display_name": "Duckdb",
+  "category": "database",
+  "subcategory": "general",
+  "description": "In-process analytical SQL with DuckDB: querying CSV/Parquet directly, extensions, and CLI use.",
+  "version": "2.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "duckdb"
+  ],
+  "capabilities": [
+    {
+      "name": "duckdb-cli",
+      "description": "Query files and databases with DuckDB's CLI and in-process SQL",
+      "commands": [
+        "duckdb mydb.duckdb",
+        "duckdb -c \"SELECT count(*) FROM read_csv_auto('data.csv')\"",
+        "duckdb -c \"SELECT * FROM read_parquet('s3://bucket/part-*.parquet')\"",
+        "duckdb -c \"INSTALL httpfs; LOAD httpfs;\"",
+        "duckdb -json -c \"SELECT 1 AS a\""
+      ],
+      "examples": [
+        "duckdb -c \"SELECT * FROM 'orders.csv' WHERE amount > 100 LIMIT 5\"",
+        "python -c \"import duckdb; print(duckdb.sql('SELECT 42').fetchall())\"",
+        "duckdb -c \"ATTACH 's3://bucket/db.duckdb' AS remote; SHOW ALL TABLES\""
+      ],
+      "parameters": [
+        {
+          "name": "command",
+          "type": "string",
+          "description": "SQL to execute in one-shot mode (-c)"
+        },
+        {
+          "name": "json",
+          "type": "boolean",
+          "description": "Output results as JSON"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "description": "Open the database read-only"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "DuckDB docs",
+      "type": "documentation",
+      "source": "https://duckdb.org/docs/",
+      "description": "CLI, SQL features, and extensions"
+    },
+    {
+      "title": "DuckDB data ingestion",
+      "type": "documentation",
+      "source": "https://duckdb.org/docs/data/overview",
+      "description": "read_csv_auto, read_parquet, and multi-file globs"
+    }
+  ],
+  "instructions": "# DuckDB\n\nAnalytical SQL engine that runs in-process: query CSV/Parquet/JSON files directly\nwith no server.\n\n## When to Use\n\n- Ad-hoc analysis of local or remote files\n- Lightweight warehouse-style queries in scripts\n- Converting between formats (CSV -> Parquet)\n\n## Real Commands\n\n```bash\n# One-shot query\nsudo duckdb -c \"SELECT count(*) FROM read_csv_auto('data.csv')\"\n\n# Interactive shell\nsudo duckdb mydb.duckdb\n\n# Parquet globs\nsudo duckdb -c \"SELECT year, sum(amount) FROM read_parquet('s3://bucket/orders/*.parquet') GROUP BY 1 ORDER BY 1 DESC LIMIT 5\"\n\n# Extensions for remote/JSON data\nsudo duckdb -c \"INSTALL httpfs; LOAD httpfs;\"\nsudo duckdb -c \"INSTALL json; LOAD json;\"\n\n# JSON output\nsudo duckdb -json -c \"SELECT order_id, amount FROM 'orders.parquet' LIMIT 3\"\n\n# Convert CSV to Parquet\nsudo duckdb -c \"COPY (SELECT * FROM read_csv_auto('data.csv')) TO 'data.parquet' (FORMAT PARQUET)\"\n```\n\n## Python Usage\n\n```python\nimport duckdb\ncon = duckdb.connect()\ncon.sql(\"SELECT * FROM read_csv_auto('data.csv')\").df()\n```\n\n## Best Practices\n\n- Prefer Parquet over CSV for repeated queries\n- Install extensions per database (httpfs, json, spatial)\n- Use glob patterns instead of loading file lists\n- For ad-hoc: use :memory: database; persist only for reuse\n\n## Example Response\n\nAnswers the analytical question with the query run and results, and can convert\nthe source data into Parquet for faster future queries.",
+  "examples": [
+    {
+      "input": "Analyze the sales CSV quickly",
+      "output": "Runs duckdb -c with read_csv_auto aggregations and returns totals/groupings"
+    },
+    {
+      "input": "Convert our CSVs to Parquet",
+      "output": "Runs COPY ... TO parquet for each file and verifies with read_parquet counts"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "duckdb.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-duckdb"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Duckdb. You do it through duckdb-cli: Query files and databases with DuckDBs CLI and in-process SQL. The commands are real, e.g. `duckdb mydb.duckdb`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "duckdb",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "duckdb-cli",
+        "name": "command",
+        "type": "string",
+        "description": "SQL to execute in one-shot mode (-c)"
+      },
+      {
+        "capability": "duckdb-cli",
+        "name": "json",
+        "type": "boolean",
+        "description": "Output results as JSON"
+      },
+      {
+        "capability": "duckdb-cli",
+        "name": "readonly",
+        "type": "boolean",
+        "description": "Open the database read-only"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "duckdb"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/duckdb-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/duckdb-skill.yaml",
+    "checksum": "b35472833b6b182fa1469452efd9d8100f9a42c7a74796f5c6d9a1d03a0daa3e"
+  }
+}

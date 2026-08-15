@@ -1,0 +1,205 @@
+{
+  "name": "api-design-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Designs RESTful and GraphQL APIs with resource modeling, URL conventions, pagination, HATEOAS, and versioning.",
+  "keywords": [
+    "api-design",
+    "restful",
+    "graphql",
+    "resource-modeling"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-design-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-design-engineer"
+    },
+    "generic": {
+      "system_prompt": "You are the api-design-engineer specialist. You do it through rest-design: Model resources, verbs, status codes, and pagination for REST APIs. The commands are real, e.g. `curl -s http://localhost:3000/api/posts?page=2&limit=10 -w \\n%{http_code}`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "rest-design",
+      "description": "Model resources, verbs, status codes, and pagination for REST APIs",
+      "commands": [
+        "curl -s 'http://localhost:3000/api/posts?page=2&limit=10' -w '\\n%{http_code}'",
+        "curl -s -X POST http://localhost:3000/api/posts -H 'Content-Type: application/json' -d '{\"title\":\"Hello\"}' -o /dev/null -w '%{http_code}'",
+        "curl -s -X PATCH http://localhost:3000/api/posts/1 -H 'Content-Type: application/json' -d '{\"title\":\"Updated\"}' -o /dev/null -w '%{http_code}'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/api/posts/999999",
+        "curl -s http://localhost:3000/api/posts -H 'Accept: application/json' | python -m json.tool"
+      ],
+      "examples": [
+        "curl -s 'http://localhost:3000/api/posts?page=2&limit=10' | python -m json.tool",
+        "curl -s -X POST http://localhost:3000/api/posts -H 'Content-Type: application/json' -d '{\"title\":\"Hello\"}' -w 'status=%{http_code}'",
+        "curl -s -o /dev/null -w 'not_found_status=%{http_code}\\n' http://localhost:3000/api/posts/999999"
+      ],
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "Resource name for URL modeling"
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "API version prefix"
+        }
+      ]
+    },
+    {
+      "name": "spec-authoring",
+      "description": "Author and validate OpenAPI specs as the design contract",
+      "commands": [
+        "swagger-cli validate openapi.yaml",
+        "redocly bundle openapi.yaml -o bundled.yaml",
+        "npx @stoplight/spectral-cli lint openapi.yaml",
+        "openapi-generator validate -i openapi.yaml",
+        "prism mock openapi.yaml -p 4010"
+      ],
+      "examples": [
+        "swagger-cli validate openapi.yaml && prism mock openapi.yaml -p 4010",
+        "redocly bundle openapi.yaml -o bundled.yaml",
+        "npx @stoplight/spectral-cli lint --ruleset design-rules.yaml openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "OpenAPI file path"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "openapi",
+    "graphql"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "openapi",
+    "graphql",
+    "postman",
+    "stoplight-studio"
+  ],
+  "examples": [
+    {
+      "input": "Design REST API for a blog platform",
+      "output": "Models /posts, /authors, /comments with proper verbs, pagination, and error responses in an OpenAPI spec"
+    },
+    {
+      "input": "Add HATEOAS to API responses",
+      "output": "Adds link objects to list responses so clients can discover next pages and related resources"
+    }
+  ],
+  "instructions": "# API Design Engineer\n\nDesigns clean, consistent APIs: resource modeling, URLs, verbs, pagination, and versioning.\n\n## When to Use\n- Greenfield API design\n- Refactoring inconsistent endpoints\n- Establishing design standards\n\n## Real Commands\n\n```bash\n# Validate the design contract\nswagger-cli validate openapi.yaml\nnpx @stoplight/spectral-cli lint openapi.yaml\n\n# Mock it before implementation\nprism mock openapi.yaml -p 4010\n\n# Exercise pagination\ncurl -s 'http://localhost:3000/api/posts?page=2&limit=10'\n\n# Check status codes\ncurl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api/posts/999999\n```\n\n## Design Rules\n- Nouns not verbs: `GET /users` not `GET /getUsers`\n- Plural collections, singular items\n- Pagination via `page`/`limit` + `X-Total-Count`\n- 2xx/3xx/4xx/5xx used honestly\n\n## Testing\nVerify every documented example against `prism mock` before backend implementation.\n\n## Best Practices\n- Version via URL prefix (`/v1`) and keep it forever\n- Document error bodies in the spec\n- Design first, implement second",
+  "display_name": "api-design-engineer",
+  "knowledge": [
+    {
+      "title": "OpenAPI 3.1 Spec",
+      "type": "documentation",
+      "source": "https://spec.openapis.org/oas/v3.1.0",
+      "description": "Spec structure, paths, schemas"
+    },
+    {
+      "title": "RESTful API Guidelines",
+      "type": "documentation",
+      "source": "https://opensource.zalando.com/restful-api-guidelines/",
+      "description": "Naming, pagination, status codes"
+    },
+    {
+      "title": "Prism Mock Server",
+      "type": "documentation",
+      "source": "https://meta.stoplight.io/docs/prism",
+      "description": "Mock and proxy servers from OpenAPI"
+    }
+  ],
+  "id": "api-design-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rest-design",
+        "name": "resource",
+        "type": "string",
+        "description": "Resource name for URL modeling"
+      },
+      {
+        "capability": "rest-design",
+        "name": "version",
+        "type": "string",
+        "description": "API version prefix"
+      },
+      {
+        "capability": "spec-authoring",
+        "name": "spec",
+        "type": "string",
+        "description": "OpenAPI file path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "openapi",
+    "graphql"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-design-engineer/skill/api-design-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-design-engineer/skill/api-design-engineer.yaml",
+    "checksum": "7f036bc433bd5b156d2d305868f13e262af9e856c00fc34adadc46ef17dcfd0d"
+  }
+}

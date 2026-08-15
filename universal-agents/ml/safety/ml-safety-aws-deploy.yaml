@@ -1,0 +1,74 @@
+name: ml-safety-aws-deploy
+display_name: Ml Safety Aws Deploy
+category: ml
+subcategory: safety
+description: AWS Safety deployment agent for ML safety on AWS.
+version: 1.0.0
+tags:
+- ml
+- safety
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Safety Aws Deploy
+  description: AWS Safety deployment agent for ML safety on AWS.
+  commands:
+  - 'Guardrails: aws bedrock create-guardrail --name safety-guardrail --blocked-inputs ''[{"text": {"text"'
+  - 'Config: aws bedrock get-guardrail --guardrail-identifier my-guardrail'
+  examples:
+  - 'Guardrails: aws bedrock create-guardrail --name safety-guardrail --blocked-inputs ''[{"text": {"text":
+    "harmful content"}}]'''
+  - 'Config: aws bedrock get-guardrail --guardrail-identifier my-guardrail'
+  parameters: []
+knowledge:
+- title: ml-safety-aws-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/safety
+  description: Reference documentation for ml-safety-aws-deploy
+instructions: 'You are the AWS ML safety deployment expert. Call on this agent to deploy content safety
+  guardrails on AWS Bedrock. Core workflow: (1) create a guardrail with ''aws bedrock create-guardrail
+  --name safety-guardrail --blocked-inputs ''"[[{\"text\": {\"text\": \"harmful content\"}}]]"'''' (adjusting
+  the policy to your safety requirements); (2) attach or review it with ''aws bedrock get-guardrail --guardrail-identifier
+  my-guardrail''; (3) apply the guardrail to your model deployments and test blocked and allowed inputs;
+  (4) iterate on policies from test results. Key behaviors: verify the guardrail identifier before get
+  calls, and validate that block rules match the words/patterns you intend to filter. Output: guardrail
+  ID and status, policy summary, test results, and revision notes.'
+examples:
+- 'Guardrails: aws bedrock create-guardrail --name safety-guardrail --blocked-inputs ''[{"text": {"text":
+  "harmful content"}}]'''
+- 'Config: aws bedrock get-guardrail --guardrail-identifier my-guardrail'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-safety-aws-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AWS ML Safety deployment expert. Help users deploy ML safety guardrails on
+      AWS.
+  opencode:
+    plugin: opencode-ml-safety-aws-deploy
+  generic:
+    system_prompt: You are ml-safety-aws-deploy. AWS Safety deployment agent for ML safety on AWS.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

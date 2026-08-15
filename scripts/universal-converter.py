@@ -4,13 +4,14 @@ Universal Agent Converter
 Converts universal YAML agents to platform-specific formats
 """
 import os
+import sys
 import re
 import yaml
 import json
 import argparse
 import hashlib
 from pathlib import Path
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
 
 QUIET = False
@@ -208,6 +209,51 @@ PLATFORM_INFO: Dict[str, Tuple[str, str, str]] = {
 ALL_PLATFORMS: List[str] = [
     "claude_code", "cursor", "github_copilot", "windsurf", "opencode", "generic",
 ] + list(NEW_PLATFORMS)
+
+REPO_ROOT: Path = Path(__file__).resolve().parent.parent
+TOOLS_MANIFEST_PATH: Path = REPO_ROOT / "tools.json"
+
+def load_tools_manifest(path: Path = TOOLS_MANIFEST_PATH) -> Dict[str, Any]:
+    """Load the tools manifest (tools.json) describing every platform."""
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def validate_tools_manifest(manifest: Optional[Dict[str, Any]] = None) -> List[str]:
+    """Cross-check tools.json against ALL_PLATFORMS and the deprecated set.
+
+    Returns a list of error strings (empty when the manifest is valid).
+    """
+    if manifest is None:
+        manifest = load_tools_manifest()
+    errors: List[str] = []
+    tools = manifest.get("tools", {})
+    expected = set(ALL_PLATFORMS) | set(DEPRECATED_SINGLE_FILE_PLATFORMS)
+    missing = sorted(expected - set(tools))
+    extra = sorted(set(tools) - expected)
+    if missing:
+        errors.append(f"tools.json missing platform entries: {', '.join(missing)}")
+    if extra:
+        errors.append(f"tools.json has unknown platform entries: {', '.join(extra)}")
+    required = (
+        "id", "label", "kebab", "accent", "icon", "order",
+        "scope", "detect", "version", "format",
+        "installKind", "slugFrom", "slugPrefix", "dest",
+    )
+    for key, entry in tools.items():
+        if entry.get("id") != key:
+            errors.append(f"{key}: id != manifest key")
+        if entry.get("kebab") != key:
+            errors.append(f"{key}: kebab != manifest key")
+        for field in required:
+            if field not in entry:
+                errors.append(f"{key}: missing field '{field}'")
+        dest = entry.get("dest", {})
+        if "user" not in dest or "project" not in dest:
+            errors.append(f"{key}: dest must have 'user' and 'project'")
+        detect = entry.get("detect", {})
+        if "dirs" not in detect or "agentsDir" not in detect:
+            errors.append(f"{key}: detect must have 'dirs' and 'agentsDir'")
+    return errors
 
 def load_universal_agent(path: Path) -> Dict[str, Any]:
     """Load and validate a universal agent YAML"""
@@ -845,6 +891,13 @@ def main():
         platforms = parse_platforms(args.platforms)
     except ValueError as e:
         parser.error(f"{e} (choices: {', '.join(ALL_PLATFORMS + ['all'])})")
+    
+    manifest_errors = validate_tools_manifest()
+    if manifest_errors:
+        print("tools.json validation failed:")
+        for err in manifest_errors:
+            print(f"  [ERR] {err}")
+        sys.exit(2)
     
     agents = get_all_universal_agents()
     print(f"Loaded {len(agents)} universal agents")

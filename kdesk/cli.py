@@ -162,11 +162,25 @@ def _cmd_install(args) -> int:
     installer = Installer(adapters, dry_run=args.dry_run,
                           home_dir=Path(args.home) if args.home else None)
     try:
-        result = installer.install(args.platform, target=args.target,
-                                   base=Path(args.base) if args.base else None)
+        result = installer.install(
+            args.platform, target=args.target,
+            base=Path(args.base) if args.base else None,
+            scope=args.scope, tool=args.tool,
+            agents=set(args.agents.split(",")) if args.agents else None,
+            category=set(args.category.split(",")) if args.category else None,
+            link=args.link)
     except InstallError as exc:
         print(f"ERROR: {exc}")
+        if str(exc).startswith(("unknown scope", "unknown tool",
+                                "filter (scope", "filter (tool",
+                                "filter (agents", "filter (category")):
+            return 2
         return 1
+    total = sum(r.get("files", 0) for r in result.get("results", []))
+    if args.platform == "opencode" and total > 119:
+        print(f"WARNING: opencode supports ~119 subagents upstream; "
+              f"{total} definitions selected, excess will not be usable",
+              file=sys.stderr)
     print(json.dumps(result, indent=2, default=str))
     return 0
 
@@ -479,6 +493,16 @@ def build_parser() -> argparse.ArgumentParser:
     i.add_argument("--target", choices=["project", "home"], default="project")
     i.add_argument("--base", default=None, help="install base dir")
     i.add_argument("--home", default=None, help="home dir for ~-prefixed targets")
+    i.add_argument("--scope", choices=None, default=None,
+                   help="restrict install to one definition kind (agents|skills)")
+    i.add_argument("--tool", default=None,
+                   help="restrict install to definitions invoking a tool")
+    i.add_argument("--agents", default=None,
+                   help="restrict install to comma-separated definition ids")
+    i.add_argument("--category", default=None,
+                   help="restrict install to comma-separated categories")
+    i.add_argument("--link", action="store_true",
+                   help="create symlinks instead of copying")
     i.add_argument("--dry-run", action="store_true")
 
     u = sub.add_parser("uninstall", parents=[root_parent], help="remove installed artifacts")

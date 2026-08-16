@@ -13,9 +13,9 @@ from kdesk.registry import Catalog, default_repo_root
 
 
 class SupportLevel(str, Enum):
-    SUPPORTED = "SUPPORTED"
+    FULLY_SUPPORTED = "FULLY_SUPPORTED"
     PARTIALLY_SUPPORTED = "PARTIALLY_SUPPORTED"
-    EMULATED = "EMULATED"
+    DEPRECATED = "DEPRECATED"
     NOT_SUPPORTED = "NOT_SUPPORTED"
     UNKNOWN = "UNKNOWN"
 
@@ -28,7 +28,7 @@ class PlatformAdapter:
     display_name: str = ""
     format: str = ""
     install_target: str = ""
-    support_level: SupportLevel = SupportLevel.SUPPORTED
+    support_level: SupportLevel = SupportLevel.FULLY_SUPPORTED
     family: str = ""
 
     def __init__(self, root: Optional[Path] = None):
@@ -98,7 +98,7 @@ _RULES_MD = "rules .md"
 _LEGACY = "legacy native"
 
 
-def _mk(name: str, display: str, fmt: str, target: str, family: str, level: SupportLevel = SupportLevel.SUPPORTED) -> type:
+def _mk(name: str, display: str, fmt: str, target: str, family: str, level: SupportLevel = SupportLevel.FULLY_SUPPORTED) -> type:
     return type(
         f"Adapter_{name}",
         (PlatformAdapter,),
@@ -164,7 +164,7 @@ ADAPTER_SPECS: List[Dict[str, Any]] = [
     {"name": "cody", "display": "Sourcegraph Cody", "fmt": "cody.json", "target": ".vscode/", "family": "single-file", "level": SupportLevel.PARTIALLY_SUPPORTED},
     {"name": "firebender", "display": "Firebender", "fmt": "agents .md + firebender.json", "target": ".firebender/", "family": "single-file", "level": SupportLevel.PARTIALLY_SUPPORTED},
     # deprecated (1)
-    {"name": "void", "display": "Void (deprecated)", "fmt": "fragments only", "target": "-", "family": "deprecated", "level": SupportLevel.PARTIALLY_SUPPORTED},
+    {"name": "void", "display": "Void (deprecated)", "fmt": "fragments only", "target": "-", "family": "deprecated", "level": SupportLevel.DEPRECATED},
 ]
 
 
@@ -179,7 +179,7 @@ class AdapterRegistry:
                 spec["fmt"],
                 spec["target"],
                 spec["family"],
-                spec.get("level", SupportLevel.SUPPORTED),
+                spec.get("level", SupportLevel.FULLY_SUPPORTED),
             )
             self._adapters[spec["name"]] = cls(self.root)
 

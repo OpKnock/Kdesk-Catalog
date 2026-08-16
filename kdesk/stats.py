@@ -122,8 +122,14 @@ def compute(root: Optional[Path] = None, fast: bool = False) -> Dict[str, Any]:
     platform_dir = root / "platform-agents"
     platform_dirs = _dir_count(platform_dir)
     if fast:
-        # Use cached value from catalog-stats.json (130954)
-        platform_output_files = 130954
+        report = root / "reports" / "catalog-stats.json"
+        if report.is_file():
+            try:
+                platform_output_files = int(json.loads(report.read_text(encoding="utf-8")).get("platform_output_files", 0))
+            except (OSError, ValueError):
+                platform_output_files = _platform_output_count(platform_dir)
+        else:
+            platform_output_files = _platform_output_count(platform_dir)
     else:
         platform_output_files = _platform_output_count(platform_dir)
     platform_registry_files = (

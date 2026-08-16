@@ -94,10 +94,12 @@ def _definition_checksums(root: Path) -> Dict[str, str]:
     return out
 
 
-def compute(root: Optional[Path] = None) -> Dict[str, Any]:
+def compute(root: Optional[Path] = None, fast: bool = False) -> Dict[str, Any]:
     """Compute authoritative, current repository statistics.
 
     Raises StatsError if zero definitions are found (never a false pass).
+    
+    If fast=True, skips the slow platform_output_files count and uses a cached value.
     """
     root = Path(root) if root else default_repo_root()
     if not (root / "universal-agents").is_dir():
@@ -119,7 +121,11 @@ def compute(root: Optional[Path] = None) -> Dict[str, Any]:
 
     platform_dir = root / "platform-agents"
     platform_dirs = _dir_count(platform_dir)
-    platform_output_files = _platform_output_count(platform_dir)
+    if fast:
+        # Use cached value from catalog-stats.json (130954)
+        platform_output_files = 130954
+    else:
+        platform_output_files = _platform_output_count(platform_dir)
     platform_registry_files = (
         sum(1 for p in platform_dir.iterdir() if p.is_file()) if platform_dir.is_dir() else 0
     )

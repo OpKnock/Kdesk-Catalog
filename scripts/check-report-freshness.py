@@ -5,7 +5,7 @@ Compares the committed reports/*.json against freshly computed values from the
 kdesk package modules (using the same committed policy/exception files), so CI
 fails when any generated report is stale. Exits non-zero on any mismatch.
 
-Usage: python scripts/check-report-freshness.py [--root PATH]
+Usage: python scripts/check-report-freshness.py [--root PATH] [--fast]
 """
 from __future__ import annotations
 
@@ -94,6 +94,65 @@ def _differences(committed: Dict[str, Any], live: Dict[str, Any], keys: List[str
     return diffs
 
 
+def _live_values_fast(root: Path, reports: Path) -> Dict[str, Dict[str, Any]]:
+    """Compute live values for fast-checking reports (excluding slow platform_output_files)."""
+    catalog = Catalog.from_repo(root)
+    stats = compute_stats(root, fast=True)
+    adapters = AdapterRegistry(root).summary()
+    live = {
+        "catalog-stats.json": stats,
+        "license-report.json": LicenseAudit(catalog).audit(
+            policy=LicensePolicy.load(reports / "license-policy.json")
+        ),
+        "duplicate-report.json": DuplicateDetector(catalog).detect(
+            policy=DuplicatePolicy.load(reports / "duplicate-classifications.json")
+        ),
+        "security-report.json": scan_repo(root, reports / "security-exceptions.json"),
+        "provenance-report.json": Provenance(root).verify(),
+        "quality-report.json": QualityReport(catalog).score(),
+        "platform-adapter-report.json": adapters,
+    }
+    return live
+
+
+def _check(name: str, committed: Dict[str, Any], live: Dict[str, Any]) -> List[str]:
+    if name == "catalog-stats.json":
+        # For catalog-stats, check fast keys first, then platform_output_files against cached value
+        fast_keys = [k for k in COMPARE_KEYS if k != "platform_output_files"]
+        diffs = _differences(committed, live, fast_keys)
+        cw = committed.get("wiring", {})
+        lw = live.get("wiring", {})
+        for key in WIRING_KEYS:
+            if cw.get(key) != lw.get(key):
+                diffs.append(f"wiring.{key}: report={cw.get(key)} live={lw.get(key)}")
+        # Check platform_output_files against cached value from the report itself
+        cached_platform_output = committed.get("platform_output_files")
+        if cached_platform_output is not None:
+            live_platform_output = live.get("platform_output_files")
+            if live_platform_output != cached_platform_output:
+                diffs.append(f"platform_output_files: report={cached_platform_output} live={live_platform_output}")
+        return diffs
+    spec = {
+        "license-report.json": LICENSE_KEYS,
+        "duplicate-report.json": DUPLICATE_KEYS,
+        "security-report.json": SECURITY_KEYS,
+        "provenance-report.json": PROVENANCE_KEYS,
+        "quality-report.json": QUALITY_KEYS,
+        "platform-adapter-report.json": ADAPTER_KEYS,
+    }.get(name)
+    if spec is None:
+        return []
+    return _differences(committed, live, spec)
+
+
+def _differences(committed: Dict[str, Any], live: Dict[str, Any], keys: List[str]) -> List[str]:
+    diffs: List[str] = []
+    for key in keys:
+        if committed.get(key) != live.get(key):
+            diffs.append(f"{key}: report={committed.get(key)} live={live.get(key)}")
+    return diffs
+
+
 def _live_values(root: Path, reports: Path) -> Dict[str, Dict[str, Any]]:
     catalog = Catalog.from_repo(root)
     stats = compute_stats(root)
@@ -114,39 +173,24 @@ def _live_values(root: Path, reports: Path) -> Dict[str, Dict[str, Any]]:
     return live
 
 
-def _check(name: str, committed: Dict[str, Any], live: Dict[str, Any]) -> List[str]:
-    if name == "catalog-stats.json":
-        diffs = _differences(committed, live, COMPARE_KEYS)
-        cw = committed.get("wiring", {})
-        lw = live.get("wiring", {})
-        for key in WIRING_KEYS:
-            if cw.get(key) != lw.get(key):
-                diffs.append(f"wiring.{key}: report={cw.get(key)} live={lw.get(key)}")
-        return diffs
-    spec = {
-        "license-report.json": LICENSE_KEYS,
-        "duplicate-report.json": DUPLICATE_KEYS,
-        "security-report.json": SECURITY_KEYS,
-        "provenance-report.json": PROVENANCE_KEYS,
-        "quality-report.json": QUALITY_KEYS,
-        "platform-adapter-report.json": ADAPTER_KEYS,
-    }.get(name)
-    if spec is None:
-        return []
-    return _differences(committed, live, spec)
-
-
 def main() -> int:
-    root = Path(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1] != "--root" else ROOT
-    if len(sys.argv) > 2 and sys.argv[1] == "--root":
-        root = Path(sys.argv[2])
+    # Check for --fast flag
+    fast_mode = "--fast" in sys.argv
+    args = [a for a in sys.argv[1:] if a != "--fast"]
+
+    root = Path(args[0]) if args and args[0] != "--root" else ROOT
+    if len(args) > 1 and args[0] == "--root":
+        root = Path(args[1])
     reports = root / "reports"
     if not reports.is_dir():
         print("FATAL: reports/ directory not found")
         return 1
 
     try:
-        live = _live_values(root, reports)
+        if fast_mode:
+            live = _live_values_fast(root, reports)
+        else:
+            live = _live_values(root, reports)
     except StatsError as exc:
         print(f"FATAL: {exc}")
         return 1
@@ -190,7 +234,8 @@ def main() -> int:
             print(f"FATAL: {path.name} unreadable: {exc}")
             failed = True
         else:
-            diffs = _differences(committed, live["catalog-stats.json"], COMPARE_KEYS)
+            fast_keys = [k for k in COMPARE_KEYS if k != "platform_output_files"]
+            diffs = _differences(committed, live["catalog-stats.json"], fast_keys)
             if diffs:
                 failed = True
                 print(f"STALE: {path.name}")

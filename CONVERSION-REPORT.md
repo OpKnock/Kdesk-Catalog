@@ -2,6 +2,8 @@
 
 **Generated:** 2026-08-11 · **Tools:** `scripts/yaml-to-json.py` + `scripts/validate-conversion.py`
 
+> **Note:** This is a historical conversion report from the initial migration. Metrics (e.g., "631 agents wired", "2,947 YAML definitions") reflect the state at that time and may not match the current catalog. For current metrics, see `reports/catalog-stats.json` and `README.md`.
+
 ## Summary
 
 | Item | YAML (source) | JSON | Workflows |

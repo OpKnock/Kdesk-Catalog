@@ -14,7 +14,7 @@ The largest catalog of production-ready AI agents and skills with **real, workin
 | **Universal Skills** | 1,143 | Real workflows and best practices |
 | **Total Universal** | **2,909** | Schema-validated + pipeline-verified (see Known Limits) |
 | **Platforms** | **45** | One source of truth, every format |
-| **Platform Files** | **130,954** | Regenerated on demand: ~2,910 per platform × 45 (2,909 items + per-platform READMEs/manifests/registry) |
+| **Platform Files** | **130,955** | Regenerated on demand: ~2,910 per platform × 45 (2,909 items + per-platform READMEs/manifests/registry) |
 
 ### Supported Platforms
 

@@ -110,7 +110,7 @@ def main() -> int:
 
     for name, cmd in GATES:
         # Use longer timeout for slow gates
-        if name in ("Package build (sdist + wheel)", "Clean install + CLI smoke test", "Unit tests (quick)"):
+        if name in ("Package build (sdist + wheel)", "Clean install + CLI smoke test", "Unit tests (quick)", "Report freshness"):
             timeout = 600
         else:
             timeout = 300

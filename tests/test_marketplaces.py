@@ -3,7 +3,8 @@
 Assert that per-platform marketplaces (marketplaces/*.marketplace.json):
 - exist for every active platform in tools.json (format != "none")
 - carry the manifest shape (version/name/label/format/description/entries)
-- list the full catalog (1766 agents + 1143 skills per platform)
+- list the full catalog (agents + skills per platform, derived from the
+  committed, freshness-gated reports/catalog-stats.json)
 - entries are sorted by id and carry required fields
 - category accents/icons resolve from divisions.json
 - the marketplace report exists and is non-empty
@@ -18,8 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 MARKETPLACES_DIR = ROOT / "marketplaces"
 REPORT_PATH = ROOT / "reports" / "marketplace-report.md"
 
-AGENT_COUNT = 1766
-SKILL_COUNT = 1143
+with open(ROOT / "reports" / "catalog-stats.json", "r", encoding="utf-8") as f:
+    STATS = json.load(f)
+AGENT_COUNT = STATS["agents"]
+SKILL_COUNT = STATS["skills"]
 ENTRY_COUNT = AGENT_COUNT + SKILL_COUNT
 
 REQUIRED_ENTRY_FIELDS = ("id", "name", "label", "description", "category")

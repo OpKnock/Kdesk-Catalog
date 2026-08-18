@@ -109,7 +109,7 @@ agents:
 ```bash
 python scripts/schema-check.py                                  # 0 violations
 python scripts/fix-stale-model-ids.py --dry-run                 # no stale models
-python -m unittest discover tests -v                            # full suite green
+pytest -q tests                                   # full suite green
 python scripts/universal-converter.py --platforms claude_code   # regenerate one platform
 python scripts/validate-conversion.py                           # 12 checks
 ```

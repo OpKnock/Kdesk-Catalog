@@ -1,0 +1,35 @@
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    name: Verify-all and report freshness
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pyyaml jsonschema
+
+      - name: No stale model IDs (gate)
+        run: python scripts/fix-stale-model-ids.py --dry-run
+
+      - name: Marketplaces mirror the definitions (gate)
+        run: python scripts/generate-marketplaces.py --validate
+
+      - name: Report freshness (reports must match current repository state)
+        run: python scripts/check-report-freshness.py --root .
+
+      - name: No uncommitted generated output
+        run: |
+          git diff --exit-code -- . ':(exclude)reports/*' \
+            || { echo "generated output is stale; rerun converter"; exit 1; }

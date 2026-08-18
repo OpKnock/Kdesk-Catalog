@@ -12,12 +12,20 @@ This test verifies:
 3. The installed package is used (not the source tree)
 4. The CLI fails appropriately when no catalog repository is provided
 """
+import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def venv_executables(venv_dir: Path) -> tuple:
+    """Return (python, pip) paths for a venv on the current platform."""
+    if os.name == "nt":
+        return venv_dir / "Scripts" / "python.exe", venv_dir / "Scripts" / "pip.exe"
+    return venv_dir / "bin" / "python", venv_dir / "bin" / "pip"
 
 
 def run(cmd: list, cwd: Path = None, timeout: int = 120) -> subprocess.CompletedProcess:
@@ -56,8 +64,7 @@ def main() -> int:
             print(f"Venv creation failed: {result.stderr}")
             return 1
 
-        pip = venv_dir / "Scripts" / "pip.exe"
-        python_exe = venv_dir / "Scripts" / "python.exe"
+        python_exe, pip = venv_executables(venv_dir)
 
         print("Installing package in clean venv...")
         result = run([str(pip), "install", str(wheel)])
@@ -91,7 +98,9 @@ def main() -> int:
 
         import json
         stats = json.loads(result.stdout)
-        if stats.get("agents") != 1766 or stats.get("skills") != 1143:
+        with open(ROOT / "reports" / "catalog-stats.json", "r", encoding="utf-8") as f:
+            committed = json.load(f)
+        if stats.get("agents") != committed["agents"] or stats.get("skills") != committed["skills"]:
             print(f"Stats mismatch: {stats}")
             return 1
 

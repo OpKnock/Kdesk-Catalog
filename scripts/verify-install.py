@@ -1,11 +1,18 @@
 """Verify the install into ~/.claude (main AI global dirs)."""
 import io
+import json
 import os
 import re
 import sys
 from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+
+ROOT = Path(__file__).resolve().parents[1]
+with open(ROOT / "reports" / "catalog-stats.json", "r", encoding="utf-8") as f:
+    STATS = json.load(f)
+total_agents = STATS["agents"]
+total_skills = STATS["skills"]
 
 CLAUDE = Path(os.environ.get("KDESK_CLAUDE_DIR", Path.home() / ".claude"))
 AGENTS = CLAUDE / "agents"
@@ -42,7 +49,7 @@ sample = md[0]
 print("\nsample installed subagent:", sample.name)
 print(open(sample, encoding="utf-8").read()[:300])
 
-missing = 1766 - len(md)
-missing_skills = 1143 - len(new_skill_dirs)
+missing = total_agents - len(md)
+missing_skills = total_skills - len(new_skill_dirs)
 print("\nmissing agents:", missing, "| missing skills:", missing_skills)
 print("RESULT:", "INSTALL COMPLETE" if missing == 0 and missing_skills == 0 and not bad_agent and not bad_skill else "INCOMPLETE")

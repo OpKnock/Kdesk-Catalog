@@ -225,7 +225,7 @@ def main() -> int:
         else:
             print(f"OK: {name} matches current repository state")
 
-    # baseline-stats.json is a stats snapshot only.
+    # baseline-stats.json is a historical snapshot: OK when marked historical.
     path = reports / "baseline-stats.json"
     if path.is_file():
         try:
@@ -234,15 +234,18 @@ def main() -> int:
             print(f"FATAL: {path.name} unreadable: {exc}")
             failed = True
         else:
-            fast_keys = [k for k in COMPARE_KEYS if k != "platform_output_files"]
-            diffs = _differences(committed, live["catalog-stats.json"], fast_keys)
-            if diffs:
-                failed = True
-                print(f"STALE: {path.name}")
-                for d in diffs:
-                    print(f"  {d}")
+            if committed.get("status") == "historical" and committed.get("authoritative") is False:
+                print(f"OK: {path.name} is a marked historical snapshot (snapshot_date={committed.get('snapshot_date')})")
             else:
-                print(f"OK: {path.name} matches current repository state")
+                fast_keys = [k for k in COMPARE_KEYS if k != "platform_output_files"]
+                diffs = _differences(committed, live["catalog-stats.json"], fast_keys)
+                if diffs:
+                    failed = True
+                    print(f"STALE: {path.name}")
+                    for d in diffs:
+                        print(f"  {d}")
+                else:
+                    print(f"OK: {path.name} matches current repository state")
 
     if failed:
         print("FATAL: generated reports are stale - regenerate with scripts/generate-reports.py")

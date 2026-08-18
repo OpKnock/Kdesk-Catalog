@@ -68,7 +68,7 @@ kdesk duplicates                      # duplicate-family report
 
 ```bash
 kdesk doctor                          # per-platform OK/MISSING/EXTRA/MALFORMED
-python -m unittest tests.test_platform_spec -v   # platform contract tests
+pytest tests/test_platform_spec.py -v   # platform contract tests
 python scripts/verify-all.py          # legacy full verification
 ```
 

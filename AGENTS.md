@@ -34,7 +34,7 @@ python scripts/generate-marketplaces.py
 python scripts/generate-marketplaces.py --validate
 
 # Full test suite (platform-spec, converter CLI, yaml-to-json, wire-skills)
-python -m unittest discover tests -v
+pytest -q tests
 ```
 
 ## Conventions that must not be violated
@@ -79,4 +79,4 @@ python -m unittest discover tests -v
 
 All emitters live in `scripts/universal-converter.py` (`convert_to_*` /
 `convert_new_platform`). After changing an emitter, regenerate that platform
-with `--platforms <name>` and run `python -m unittest tests.test_platform_spec -v`.
+with `--platforms <name>` and run `pytest tests/test_platform_spec.py -v`.

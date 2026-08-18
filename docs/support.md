@@ -8,7 +8,7 @@ How to diagnose, verify, and maintain the Kdesk-Catalog platform.
 python scripts/schema-check.py                                    # schema: 0 violations
 python scripts/universal-converter.py --platforms all --validate  # all source YAMLs parse
 python scripts/validate-conversion.py                             # 12 conversion checks
-python -m unittest discover tests -v                              # full suite (57 passed, 3 skipped)
+pytest -q tests                                 # full suite
 kdesk doctor                                                      # per-platform install verification
 kdesk provenance verify                                           # every JSON resolves to its YAML
 ```
@@ -70,7 +70,7 @@ python scripts/yaml-to-json.py --agents universal-agents --out . --wiring skills
 python scripts/validate-conversion.py
 python scripts/schema-check.py
 python scripts/universal-converter.py --platforms all --quiet     # ~15 min, 130,955 files
-python -m unittest discover tests -v
+pytest -q tests
 ```
 
 ## 6. Escalation

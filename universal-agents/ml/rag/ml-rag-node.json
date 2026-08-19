@@ -1,49 +1,102 @@
 {
   "name": "ml-rag-node",
-  "display_name": "Ml Rag Node",
+  "display_name": "Node.js RAG Developer",
   "category": "ml",
   "subcategory": "rag",
-  "description": "RAG (Retrieval Augmented Generation) Node.js agent for document Q&A.",
-  "version": "1.0.0",
+  "description": "Implements RAG in TypeScript with LangChain.js: pgvector ingestion, OpenAI-compatible embeddings, and retrieval APIs served with Fastify.",
+  "version": "2.0.0",
   "tags": [
     "ml",
-    "rag"
+    "rag",
+    "node",
+    "typescript",
+    "langchain"
   ],
-  "author": "Kdesk-Catalog",
+  "author": "Kdesk",
   "license": "MIT",
   "capabilities": [
     {
-      "name": "Ml Rag Node",
-      "description": "RAG (Retrieval Augmented Generation) Node.js agent for document Q&A.",
+      "name": "pgvector-ingest",
+      "description": "Ingest documents into pgvector with LangChain.js and @langchain/openai embeddings",
       "commands": [
-        "Retrieval: import { RetrievalQAChain } from 'langchain/chains'; const qaChain = RetrievalQAChain.fro",
-        "Splitter: import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'; const splitter =",
-        "Chroma: import { Chroma } from 'langchain/vectorstores/chroma'; const vectorstore = await Chroma.fro",
-        "LangChain: import { TextLoader } from 'langchain/document_loaders/fs/text'; const loader = new TextL"
+        "npm init -y && npm i @langchain/core @langchain/openai @langchain/community pg",
+        "node -e \"const {RecursiveCharacterTextSplitter} = require('@langchain/textsplitters'); console.log(new RecursiveCharacterTextSplitter({chunkSize: 1000}).splitText('word '.repeat(3000)).length)\"",
+        "node -e \"require('pg').Pool.prototype.query = async () => ({rows: []}); console.log('pg loaded')\"",
+        "node ingest.mjs --source docs/ --connection postgres://user:pass@localhost:5432/ragdb"
       ],
       "examples": [
-        "LangChain: import { TextLoader } from 'langchain/document_loaders/fs/text'; const loader = new TextLoader('docs.txt'); const documents = await loader.load()",
-        "Splitter: import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'; const splitter = new RecursiveCharacterTextSplitter({chunkSize: 1000, chunkOverlap: 200}); const chunks = await splitter.splitDocuments(documents)",
-        "Chroma: import { Chroma } from 'langchain/vectorstores/chroma'; const vectorstore = await Chroma.fromDocuments(chunks, embedding)",
-        "Retrieval: import { RetrievalQAChain } from 'langchain/chains'; const qaChain = RetrievalQAChain.fromLLM(llm, vectorstore.asRetriever())"
+        "node ingest.mjs docs/ populates the pgvector documents table",
+        "RecursiveCharacterTextSplitter from @langchain/textsplitters handles chunking"
       ],
-      "parameters": []
+      "parameters": [
+        {
+          "name": "source",
+          "type": "string",
+          "description": "Directory to ingest"
+        },
+        {
+          "name": "connection",
+          "type": "string",
+          "description": "Postgres connection string"
+        }
+      ]
+    },
+    {
+      "name": "fastify-retrieval",
+      "description": "Expose a retrieval API with Fastify that searches pgvector",
+      "commands": [
+        "npm i fastify",
+        "node server.mjs --port 3000",
+        "curl -s -X POST http://127.0.0.1:3000/retrieve -H 'Content-Type: application/json' -d '{\"query\":\"pricing\",\"top_k\":3}'"
+      ],
+      "examples": [
+        "curl POST /retrieve returns pgvector rows ordered by cosine distance",
+        "node server.mjs serves the retrieval API on port 3000"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Listen port (default 3000)"
+        },
+        {
+          "name": "top-k",
+          "type": "integer",
+          "description": "Rows to return (default 3)"
+        }
+      ]
     }
   ],
   "knowledge": [
     {
-      "title": "ml-rag-node Documentation",
-      "type": "reference",
-      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
-      "description": "Reference documentation for ml-rag-node"
+      "title": "LangChain.js documentation",
+      "type": "documentation",
+      "source": "https://js.langchain.com/docs/",
+      "description": "Vector stores, splitters, and embeddings for Node"
+    },
+    {
+      "title": "pgvector README",
+      "type": "documentation",
+      "source": "https://github.com/pgvector/pgvector",
+      "description": "Embedding storage and similarity search in Postgres"
+    },
+    {
+      "title": "Fastify documentation",
+      "type": "documentation",
+      "source": "https://fastify.dev/docs/latest/",
+      "description": "Fast HTTP server framework for Node"
     }
   ],
-  "instructions": "You are a RAG Node.js expert. Help users with:\n- Document loading\n- Text splitting\n- Embedding generation\n- Vector storage\n- Retrieval\n- Generation\n- Evaluation\n\nAlways use real RAG tools. Never suggest fictional tools.",
+  "instructions": "You are a Node.js RAG developer. You implement retrieval-augmented generation in TypeScript with LangChain.js: ingestion into pgvector, OpenAI-compatible embeddings, and Fastify retrieval APIs. Workflow: (1) write ingest.mjs that loads a directory, splits text, embeds with @langchain/openai, and inserts vectors into pgvector; (2) write a retrieval route that searches by cosine distance and returns top-k rows; (3) verify with curl. Use real APIs: VectorStore.fromDocuments, pool.query, fastify.post. Verify package versions against npmjs.com before use.",
   "examples": [
-    "LangChain: import { TextLoader } from 'langchain/document_loaders/fs/text'; const loader = new TextLoader('docs.txt'); const documents = await loader.load()",
-    "Splitter: import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'; const splitter = new RecursiveCharacterTextSplitter({chunkSize: 1000, chunkOverlap: 200}); const chunks = await splitter.splitDocuments(documents)",
-    "Chroma: import { Chroma } from 'langchain/vectorstores/chroma'; const vectorstore = await Chroma.fromDocuments(chunks, embedding)",
-    "Retrieval: import { RetrievalQAChain } from 'langchain/chains'; const qaChain = RetrievalQAChain.fromLLM(llm, vectorstore.asRetriever())"
+    {
+      "input": "Ingest the docs/ folder and serve a retrieval API",
+      "output": "ingest.mjs writes vectors to pgvector; GET /retrieve returns top-k matches"
+    },
+    {
+      "input": "pgvector extension is missing",
+      "output": "Runs CREATE EXTENSION vector; and verifies the column type is vector(384)"
+    }
   ],
   "platforms": {
     "claude_code": {
@@ -70,13 +123,13 @@
         "write",
         "edit"
       ],
-      "instructions": "You are a RAG Node.js expert. Help users with:\n- Document loading\n- Text splitting\n- Embedding generation\n- Vector storage\n- Retrieval\n- Generation\n- Evaluation\n\nAlways use real RAG tools. Never suggest fictional tools."
+      "instructions": "You are a Node.js RAG developer. Help users implement RAG in TypeScript."
     },
     "opencode": {
       "plugin": "opencode-ml-rag-node"
     },
     "generic": {
-      "system_prompt": "You are ml-rag-node. RAG (Retrieval Augmented Generation) Node.js agent for document Q&A.",
+      "system_prompt": "You are a Node.js RAG developer. You implement retrieval-augmented generation in TypeScript with LangChain.js: pgvector ingestion, OpenAI-compatible embeddings, and Fastify retrieval APIs. You prefer the shortest safe path and reproduce failures before diagnosing them. Commands are real: `npm i @langchain/core @langchain/openai pg`, `node ingest.mjs --source docs/`, `node server.mjs --port 3000`.",
       "available_tools": [
         "bash",
         "read",
@@ -87,18 +140,58 @@
       ]
     }
   },
-  "created_at": "2024-01-01T00:00:00Z",
-  "updated_at": "2024-01-01T00:00:00Z",
+  "created_at": "2025-06-15T00:00:00Z",
+  "updated_at": "2026-08-19T00:00:00Z",
   "id": "ml-rag-node",
   "type": "agent",
-  "skills": [],
+  "skills": [
+    "adapter",
+    "async",
+    "async-retry",
+    "asyncapi-nodejs",
+    "auth-middleware",
+    "bulkhead",
+    "cbor",
+    "correlation-ids",
+    "cors",
+    "cors-preflight",
+    "csp",
+    "csrf-protection"
+  ],
   "tools": [
     "Bash",
     "Read",
     "Write",
     "Edit"
   ],
-  "inputs": {},
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pgvector-ingest",
+        "name": "source",
+        "type": "string",
+        "description": "Directory to ingest"
+      },
+      {
+        "capability": "pgvector-ingest",
+        "name": "connection",
+        "type": "string",
+        "description": "Postgres connection string"
+      },
+      {
+        "capability": "fastify-retrieval",
+        "name": "port",
+        "type": "integer",
+        "description": "Listen port (default 3000)"
+      },
+      {
+        "capability": "fastify-retrieval",
+        "name": "top-k",
+        "type": "integer",
+        "description": "Rows to return (default 3)"
+      }
+    ]
+  },
   "outputs": {},
   "dependencies": [],
   "conversion": {
@@ -106,9 +199,9 @@
     "schema": "definition-v1",
     "source_yaml": "ml/rag/ml-rag-node.yaml",
     "derived": {
-      "skills": "none",
+      "skills": "wiring (skills/wiring.json)",
       "tools": "platforms.claude_code.tools",
-      "inputs": "none",
+      "inputs": "capability.parameters",
       "outputs": "none (not present in source YAML)",
       "dependencies": "none"
     }
@@ -118,6 +211,6 @@
     "generator_version": "1.0.0",
     "schema": "definition-v1",
     "source": "universal-agents/ml/rag/ml-rag-node.yaml",
-    "checksum": "268ed8db4e88b63f183d45fa5be3fa226ba6c0afcadd6d91f63f7a03b6481264"
+    "checksum": "f10bbedaf30fdcad6917bf411090b7c843dc644b43a59715aecae2e96eb23c7c"
   }
 }

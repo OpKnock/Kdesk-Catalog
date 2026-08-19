@@ -1,48 +1,68 @@
 name: rag-model-server
-display_name: Rag Model Server
+display_name: RAG Model Server
 category: ml
 subcategory: rag
-description: RAG server agent. Manages RAG ML server.
-version: 1.0.0
+description: 'Operates the RAG model server: vLLM OpenAI-compatible serving, model swaps, batch inference, and GPU monitoring.'
+version: 2.0.0
 tags:
 - ml
 - rag
-author: Kdesk-Catalog
+- vllm
+- gpu
+- serving
+author: Kdesk
 license: MIT
 capabilities:
-- name: Ml Rag Server Agent
-  description: RAG server agent. Manages RAG ML server.
+- name: vllm-serve
+  description: Serve a model with vLLM on an OpenAI-compatible endpoint
   commands:
-  - python -m model.server --port 8000 --workers 4
-  - curl -s http://localhost:8000/healthz
-  - curl -s http://localhost:8000/metrics | head -20
-  - supervisorctl restart model
-  - systemctl status model.service
-  - python identity.py --agent rag-model-server
+  - python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-3.1-8B-Instruct --max-model-len 8192 --gpu-memory-utilization 0.9
+  - curl -s http://127.0.0.1:8000/v1/models
+  - 'curl -s http://127.0.0.1:8000/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":"meta-llama/Llama-3.1-8B-Instruct","messages":[{"role":"user","content":"hi"}]}'''
   examples:
-  - python serve_rag.py --index index --port 8080
-  - 'curl http://localhost:8080/query --data ''{"query": "What is machine learning?"}'''
-  - python ingest.py --docs ./documents --output index
-  - python evaluate_rag.py --index index --test-questions questions.json
-  parameters: []
+  - api_server serves an OpenAI-compatible endpoint on port 8000
+  - curl /v1/models confirms the model is loaded
+  parameters:
+  - name: model
+    type: string
+    description: HuggingFace model id to serve
+  - name: max-model-len
+    type: integer
+    description: Max context length (default 8192)
+- name: gpu-monitor
+  description: Monitor GPU utilization during inference
+  commands:
+  - nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv
+  - watch -n 1 nvidia-smi
+  - nvidia-smi --query-compute-apps=pid,used_memory --format=csv
+  examples:
+  - nvidia-smi --query-gpu reports utilization and memory per GPU
+  - watch -n 1 refreshes the view every second
+  parameters:
+  - name: interval
+    type: integer
+    description: Refresh interval in seconds for watch (default 1)
 knowledge:
-- title: rag-model-server Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/rag
-  description: Reference documentation for rag-model-server
-instructions: 'You are the RAG ML server operations expert. Call on this agent to deploy, monitor, and
-  recover the RAG model server. Core workflow: (1) start with ''python -m model.server --port 8000 --workers
-  4''; (2) check liveness with ''curl -s http://localhost:8000/healthz''; (3) inspect throughput and latency
-  via ''curl -s http://localhost:8000/metrics | head -20''; (4) manage the process with ''supervisorctl
-  restart model'' or check ''systemctl status model.service''; self-identify with ''python identity.py
-  --agent rag-model-server''. Key behaviors: verify healthz before load, correlate metrics anomalies with
-  worker counts, and restart cleanly when the process hangs. Output: health/metrics summary, restart actions
-  taken, and capacity recommendations.'
+- title: vLLM OpenAI-compatible server
+  type: documentation
+  source: https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html
+  description: Server flags, models, and endpoints
+- title: NVIDIA nvidia-smi docs
+  type: documentation
+  source: https://docs.nvidia.com/deploy/nvidia-smi/
+  description: GPU query and monitoring options
+instructions: 'You are the RAG model server operator. You operate the RAG model server: vLLM
+  OpenAI-compatible serving, model swaps, batch inference, and GPU monitoring. Workflow: (1) start
+  api_server with the right max-model-len and gpu-memory-utilization; (2) confirm the model with
+  /v1/models; (3) swap models without downtime by starting the new server on another port; (4) watch
+  GPU utilization and memory. Debug order: model download, then GPU memory, then request errors. Use
+  real commands: python -m vllm.entrypoints.openai.api_server, curl /v1/models, nvidia-smi. Reserve
+  GPU memory headroom below 95 percent.'
 examples:
-- python serve_rag.py --index index --port 8080
-- 'curl http://localhost:8080/query --data ''{"query": "What is machine learning?"}'''
-- python ingest.py --docs ./documents --output index
-- python evaluate_rag.py --index index --test-questions questions.json
+- input: 'Serve Llama 3.1 8B for the RAG API'
+  output: 'Starts vLLM api_server and confirms it with /v1/models'
+- input: 'The server OOMs during a batch'
+  output: 'Lowers gpu-memory-utilization and checks nvidia-smi memory'
 platforms:
   claude_code:
     tools:
@@ -50,8 +70,6 @@ platforms:
     - Read
     - Write
     - Edit
-    - Glob
-    - Grep
     model: inherit
   cursor:
     rule_type: auto
@@ -65,11 +83,14 @@ platforms:
     - read
     - write
     - edit
-    instructions: You are a RAG server expert. Help users set up RAG ML server.
+    instructions: You are a RAG model server operator. Help users run vLLM.
   opencode:
     plugin: opencode-rag-model-server
   generic:
-    system_prompt: You are rag-model-server. RAG server agent. Manages RAG ML server.
+    system_prompt: 'You are the RAG model server operator. You operate the RAG model server: vLLM
+      OpenAI-compatible serving, model swaps, batch inference, and GPU monitoring. You prefer the
+      shortest safe path and reproduce failures before diagnosing them. Commands are real: `python -m
+      vllm.entrypoints.openai.api_server`, `curl /v1/models`, `nvidia-smi`.'
     available_tools:
     - bash
     - read
@@ -77,5 +98,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

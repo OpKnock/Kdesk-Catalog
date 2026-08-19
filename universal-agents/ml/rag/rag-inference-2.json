@@ -1,50 +1,84 @@
 {
   "name": "rag-inference-2",
-  "display_name": "Rag Inference 2",
+  "display_name": "RAG Inference Optimizer",
   "category": "ml",
   "subcategory": "rag",
-  "description": "RAG inference server agent. Manages RAG ML inference server.",
-  "version": "1.0.0",
+  "description": "Optimizes RAG inference: embedding caching, reranker integration, prompt compression, and vLLM batch tuning for latency and cost.",
+  "version": "2.0.0",
   "tags": [
     "ml",
-    "rag"
+    "rag",
+    "inference",
+    "optimization",
+    "rerank"
   ],
-  "author": "Kdesk-Catalog",
+  "author": "Kdesk",
   "license": "MIT",
   "capabilities": [
     {
-      "name": "Ml Rag Inference Server Agent",
-      "description": "RAG inference server agent. Manages RAG ML inference server.",
+      "name": "embedding-cache",
+      "description": "Cache embeddings keyed by content hash in Redis",
       "commands": [
-        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
-        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
-        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
-        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
-        "python identity.py --agent rag-inference-2"
+        "redis-cli GET emb:8f14e45fceea167a5a36dedd4bea2543",
+        "redis-cli SET emb:8f14e45fceea167a5a36dedd4bea2543 '0.012,0.034,-0.009'",
+        "redis-cli --scan --pattern 'emb:*' | wc -l"
       ],
       "examples": [
-        "python serve_rag.py --index index --port 8080",
-        "curl http://localhost:8080/query --data '{\"query\": \"What is machine learning?\"}'",
-        "python ingest.py --docs ./documents --output index",
-        "python evaluate_rag.py --index index --test-questions questions.json"
+        "emb: keys map content hashes to embedding vectors",
+        "redis-cli --scan counts cached embeddings"
       ],
-      "parameters": []
+      "parameters": [
+        {
+          "name": "ttl",
+          "type": "integer",
+          "description": "Cache TTL in seconds (default 86400)"
+        }
+      ]
+    },
+    {
+      "name": "reranker",
+      "description": "Rerank retrieved chunks with a cross-encoder",
+      "commands": [
+        "python -c \"from sentence_transformers import CrossEncoder; m = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2'); print(m.predict([('q', 'c')]))\"",
+        "python -c \"from sentence_transformers import CrossEncoder; m = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2'); scores = m.predict([('pricing question', 'Pricing is in the billing docs'), ('pricing question', 'Setup instructions are here')]); print(scores)\""
+      ],
+      "examples": [
+        "CrossEncoder scores query-chunk pairs for relevance",
+        "Reranking lifts top-1 precision over pure vector search"
+      ],
+      "parameters": [
+        {
+          "name": "top-k",
+          "type": "integer",
+          "description": "Chunks to keep after rerank (default 3)"
+        }
+      ]
     }
   ],
   "knowledge": [
     {
-      "title": "rag-inference-2 Documentation",
-      "type": "reference",
-      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
-      "description": "Reference documentation for rag-inference-2"
+      "title": "CrossEncoder docs",
+      "type": "documentation",
+      "source": "https://www.sbert.net/examples/applications/cross-encoder/README.html",
+      "description": "Reranking with cross-encoders"
+    },
+    {
+      "title": "Redis cache patterns",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/develop/use/patterns/",
+      "description": "Cache-aside patterns with TTL"
     }
   ],
-  "instructions": "You are the RAG ML inference server expert. Call on this agent to stand up and manage a RAG inference server. Core workflow: (1) launch with 'python serve_rag.py --index index --port 8080'; (2) test with 'curl http://localhost:8080/query --data '\"{\\\"query\\\": \\\"What is machine learning?\\\"}\"''; (3) maintain the index via 'python ingest.py --docs ./documents --output index'; (4) measure quality with 'python evaluate_rag.py --index index --test-questions questions.json'; also support the /v1 API surface (predict, chat/completions, /v1/models, /v1/health) and run 'python identity.py --agent rag-inference-2'. Key behaviors: check index freshness, monitor health codes, and restart with the same index path on re-deploys. Output: endpoint details, health status, evaluation results, and any ingestion or serving issues found.",
+  "instructions": "You are the RAG inference optimizer. You optimize RAG inference: embedding caching, reranker integration, prompt compression, and vLLM batch tuning for latency and cost. Workflow: (1) cache embeddings in Redis keyed by content hash; (2) rerank top-k with a cross-encoder; (3) compress prompts before generation; (4) tune vLLM batch size and max-model-len. Debug order: cache hit rate, then rerank quality, then batch config. Use real commands: redis-cli --scan --pattern, python -c with sentence_transformers. Measure cost per answer, not just latency.",
   "examples": [
-    "python serve_rag.py --index index --port 8080",
-    "curl http://localhost:8080/query --data '{\"query\": \"What is machine learning?\"}'",
-    "python ingest.py --docs ./documents --output index",
-    "python evaluate_rag.py --index index --test-questions questions.json"
+    {
+      "input": "Cut inference cost without losing answer quality",
+      "output": "Adds embedding caching and reranks top-k before generation"
+    },
+    {
+      "input": "Embedding calls dominate latency",
+      "output": "Checks cache hit rate and warms the cache for hot queries"
+    }
   ],
   "platforms": {
     "claude_code": {
@@ -52,9 +86,7 @@
         "Bash",
         "Read",
         "Write",
-        "Edit",
-        "Glob",
-        "Grep"
+        "Edit"
       ],
       "model": "inherit"
     },
@@ -73,13 +105,13 @@
         "write",
         "edit"
       ],
-      "instructions": "You are a RAG inference server expert. Help users set up RAG ML inference server."
+      "instructions": "You are a RAG inference optimizer. Help users optimize RAG cost and latency."
     },
     "opencode": {
       "plugin": "opencode-rag-inference-2"
     },
     "generic": {
-      "system_prompt": "You are rag-inference-2. RAG inference server agent. Manages RAG ML inference server.",
+      "system_prompt": "You are the RAG inference optimizer. You optimize RAG inference: embedding caching, reranker integration, prompt compression, and vLLM batch tuning for latency and cost. You prefer the shortest safe path and reproduce failures before diagnosing them. Commands are real: `redis-cli --scan --pattern 'emb:*'`, `python -c` with sentence_transformers.",
       "available_tools": [
         "bash",
         "read",
@@ -90,20 +122,40 @@
       ]
     }
   },
-  "created_at": "2024-01-01T00:00:00Z",
-  "updated_at": "2024-01-01T00:00:00Z",
+  "created_at": "2025-06-15T00:00:00Z",
+  "updated_at": "2026-08-19T00:00:00Z",
   "id": "rag-inference-2",
   "type": "agent",
-  "skills": [],
+  "skills": [
+    "api-rate-limiting-designer",
+    "dramatiq",
+    "dramatiq-dashboard",
+    "huey",
+    "redis-caching-strategist",
+    "redis-pubsub-python"
+  ],
   "tools": [
     "Bash",
     "Read",
     "Write",
-    "Edit",
-    "Glob",
-    "Grep"
+    "Edit"
   ],
-  "inputs": {},
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "embedding-cache",
+        "name": "ttl",
+        "type": "integer",
+        "description": "Cache TTL in seconds (default 86400)"
+      },
+      {
+        "capability": "reranker",
+        "name": "top-k",
+        "type": "integer",
+        "description": "Chunks to keep after rerank (default 3)"
+      }
+    ]
+  },
   "outputs": {},
   "dependencies": [],
   "conversion": {
@@ -111,9 +163,9 @@
     "schema": "definition-v1",
     "source_yaml": "ml/rag/rag-inference-2.yaml",
     "derived": {
-      "skills": "none",
+      "skills": "wiring (skills/wiring.json)",
       "tools": "platforms.claude_code.tools",
-      "inputs": "none",
+      "inputs": "capability.parameters",
       "outputs": "none (not present in source YAML)",
       "dependencies": "none"
     }
@@ -123,6 +175,6 @@
     "generator_version": "1.0.0",
     "schema": "definition-v1",
     "source": "universal-agents/ml/rag/rag-inference-2.yaml",
-    "checksum": "253329ed706ac8ed5bc5188ab1d99b2dc52ff504ed45e0e0d050bfaca8e53617"
+    "checksum": "86cf60f6599bc31ad82828b0150cf0aea2db6511ed8b8c8e1c80ba68543524fe"
   }
 }

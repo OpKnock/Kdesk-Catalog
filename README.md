@@ -2,7 +2,7 @@
 
 **Author:** Mehul Wagde  
 **License:** MIT  
-**Status:** Production-ready pipeline; 2,909 agents/skills verified across 45 AI coding platforms
+**Repo:** https://github.com/OpKnock/Kdesk-Catalog
 
 ---
 
@@ -22,19 +22,45 @@ A **universal registry** of AI agents and skills that converts **once** to **45 
 
 ---
 
+## Trust & Curation Status
+
+This catalog is **not** fully hand-authored. It was bulk-generated, and curation is an ongoing, tracked effort. Read the numbers before you trust a definition.
+
+| Tier | Count |
+|------|-------|
+| **Curated** (hand-written: real commands, real knowledge links, unique text) | 227 (7.8%) |
+| **Template** (generated: placeholder commands, frozen timestamps, boilerplate) | 2,682 (92.2%) |
+
+- Machine-readable per-file classification: `reports/curation-status.json`
+- Human-readable breakdown by category and fingerprint: `reports/CURATION-STATUS.md`
+- Classifier: `scripts/curate-tier.py` (deterministic, fingerprint-based)
+
+How to use this: every `universal-agents/**/*.yaml` starts untrusted. A definition is trustworthy once it (a) appears as `curated` in `reports/curation-status.json` **or** (b) you have read it and verified its commands yourself. Do not copy commands from template-tier files into production setups without checking them.
+
+Curated example (this repo's own quality bar):
+
+- `universal-agents/ml/rag/rag.yaml` — RAG pipeline: build → serve → query
+- `universal-agents/ml/rag/ml-rag-python.yaml` — full LangChain/LlamaIndex stack
+- `universal-agents/ml/rag/ml-rag-node.yaml` — Node.js + LangChain.js stack
+- `universal-agents/ml/rag/ml-rag-deploy.yaml` — vLLM/Llama.cpp serving with health-gated rollout
+
+Each curated file: real executable CLI commands (curl, docker, python), real official-documentation links, per-capability `commands` / `examples` / `parameters`, and expert `instructions` — not placeholders.
+
+---
+
 ## Quick Start
 
 ### 1. Clone & Generate
 
 ```bash
-git clone https://github.com/yourusername/Kdesk-Catalog
+git clone https://github.com/OpKnock/Kdesk-Catalog
 cd Kdesk-Catalog
 
 # Generate for ALL platforms (~15 min, 130k files)
-python scripts/universal-converter.py --platforms all --output ./platform-agents --universal-dir universal-agents
+python scripts/universal-converter.py --platforms all --quiet
 
 # Or just one platform (fast)
-python scripts/universal-converter.py --platforms claude_code --output ./claude-agents --universal-dir universal-agents
+python scripts/universal-converter.py --platforms windsurf --quiet
 ```
 
 ### 2. Install to Your Tool
@@ -60,7 +86,7 @@ python scripts/universal-converter.py --platforms claude_code --output ./claude-
 
 The power of Kdesk-Catalog: **write YAML once → works everywhere**.
 
-### Example: Persona Agent (like agency-agents)
+### Example: Persona Agent
 
 Create `universal-agents/personas/ml-engineer.yaml`:
 
@@ -98,7 +124,7 @@ platforms:
     model: inherit
 ```
 
-### Example: Skill Pack (like google/skills)
+### Example: Skill Pack
 
 Create `universal-agents/gcp/skill/gke-basics.yaml`:
 
@@ -145,10 +171,8 @@ platforms:
 ### Then Regenerate
 
 ```bash
-python scripts/universal-converter.py --platforms all --output ./platform-agents --universal-dir universal-agents
+python scripts/universal-converter.py --platforms all --quiet
 ```
-
-**Both examples now work on all 45 platforms automatically.**
 
 ---
 
@@ -195,14 +219,20 @@ universal-agents/patterns/agent/patterns-template-agent.yaml  # Agent template
 ## Key Commands
 
 ```bash
-# Validate all YAMLs (0 violations required)
+# Validate all source YAMLs (0 violations required)
 python scripts/schema-check.py
 
-# Full verification
-python scripts/verify-all.py
+# Classify every definition into curated / template tiers
+python scripts/curate-tier.py --quiet
+
+# Regenerate JSON definitions (agents/, skills/, workflows/) from YAML
+python scripts/yaml-to-json.py --inplace --wiring skills/wiring.json
+
+# Regenerate per-platform marketplace manifests + report
+python scripts/generate-marketplaces.py
 
 # Convert single platform
-python scripts/universal-converter.py --platforms claude_code --output ./out --universal-dir universal-agents
+python scripts/universal-converter.py --platforms windsurf --quiet
 
 # Run tests
 pytest -q tests
@@ -239,7 +269,8 @@ Kdesk-Catalog/
 │   ├── personas/              # ← ADD YOUR PERSONAS HERE
 │   ├── gcp/skill/             # ← ADD YOUR SKILL PACKS HERE
 │   └── ... (40+ more categories)
-├── scripts/                   # Automation (converter, validators, etc.)
+├── scripts/                   # Automation (converter, validators, curate-tier)
+├── reports/                   # Curation status (trust layer)
 ├── platform-agents/           # AUTO-GENERATED (gitignored)
 ├── schemas/universal-agent.schema.json
 ├── tests/
@@ -248,22 +279,25 @@ Kdesk-Catalog/
 
 ---
 
-## Quality Gates (All Pass)
+## Verification (Honest)
 
-- ✅ Schema validation: 0 violations on 2,909 files
-- ✅ Unique names & command sets
-- ✅ Real CLI commands (no templates)
-- ✅ Platform format correctness (all 45)
-- ✅ 135 unit tests passing
+- ✅ `schema-check.py` — 0 violations across 2,909 files
+- ✅ `yaml-to-json.py` — deterministic JSON regeneration with skill wiring
+- ✅ `curate-tier.py` — deterministic curated/template classification
+- ✅ `test_wire_skills.py`, `test_yaml_to_json.py`, `test_marketplaces.py` — pass
+- ⚠️ Platform-format tests (`test_platform_spec.py`) need a full `--platforms all` conversion first (~15 min); they check the generated output, not the YAMLs
+- ⚠️ `deep-audit.py` currently crashes on an unhashable-command edge case (pre-existing) — fix in progress
 
 ---
 
 ## Known Limits (Honest)
 
-- ~95% template-generated; curation ongoing
+- 92% of definitions are template-tier (2,682 of 2,909) — bulk-generated, needs curation
+- Most template-tier files carry the same frozen `created_at` timestamp and `template_author` fingerprints (2,616 files)
+- ~1,483 files link to the generic Kdesk agents page rather than topic-specific docs
+- 535 placeholder-style commands flagged by `curate-tier.py`
 - 53/1,143 skills are conceptual (no CLI binary)
-- 204 near-duplicate families flagged for review
-- `platform-agents/` is gitignored — regenerate with converter
+- `platform-agents/` is gitignored — regenerate with the converter
 
 ---
 

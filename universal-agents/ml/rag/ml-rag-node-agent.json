@@ -1,43 +1,92 @@
 {
   "name": "ml-rag-node-agent",
-  "display_name": "Ml Rag Node Agent",
+  "display_name": "Node.js RAG Agent Developer",
   "category": "ml",
   "subcategory": "rag",
-  "description": "RAG Node.js agent for Retrieval-Augmented Generation.",
-  "version": "1.0.0",
+  "description": "Builds agentic RAG in TypeScript with LangGraph.js and Vercel AI SDK: tool-calling retrieval, streaming answers, and pgvector search.",
+  "version": "2.0.0",
   "tags": [
     "ml",
-    "rag"
+    "rag",
+    "node",
+    "langgraph",
+    "ai-sdk"
   ],
-  "author": "Kdesk-Catalog",
+  "author": "Mehul Wagde",
   "license": "MIT",
   "capabilities": [
     {
-      "name": "Ml Rag Node Agent",
-      "description": "RAG Node.js agent for Retrieval-Augmented Generation.",
+      "name": "langgraph-retrieval",
+      "description": "Build a tool-calling retrieval agent with LangGraph.js",
       "commands": [
-        "LlamaIndex.js: node -e \"const { VectorStoreIndex, SimpleDirectoryReader } = require('llamaindex'); c",
-        "LangChain.js: node -e \"const { OpenAIEmbeddings } = require('langchain/embeddings/openai'); const { "
+        "npm i @langchain/langgraph @langchain/core",
+        "node -e \"const {StateGraph} = require('@langchain/langgraph'); console.log(typeof StateGraph)\"",
+        "node -e \"const {Annotation} = require('@langchain/langgraph'); console.log(Annotation.Root({messages: Annotation({reducer: (a, b) => a.concat(b)})}) ? 'ok' : 'no')\"",
+        "node agent.mjs --retriever ./store"
       ],
       "examples": [
-        "LangChain.js: node -e \"const { OpenAIEmbeddings } = require('langchain/embeddings/openai'); const { Chroma } = require('langchain/vectorstores/chroma'); const db = await Chroma.fromDocuments(docs, new OpenAIEmbeddings()); console.log(await db.similaritySearch('What is RAG?'))\"",
-        "LlamaIndex.js: node -e \"const { VectorStoreIndex, SimpleDirectoryReader } = require('llamaindex'); const docs = await new SimpleDirectoryReader('data').loadData(); const index = await VectorStoreIndex.fromDocuments(docs); console.log(await index.query('What is RAG?'))\""
+        "The LangGraph StateGraph routes between retrieve and answer nodes",
+        "Tool calls stream to the client as the agent works"
       ],
-      "parameters": []
+      "parameters": [
+        {
+          "name": "retriever",
+          "type": "string",
+          "description": "Path to the persisted vector store"
+        }
+      ]
+    },
+    {
+      "name": "ai-sdk-streaming",
+      "description": "Stream agent answers and tool results with the Vercel AI SDK",
+      "commands": [
+        "npm i ai @ai-sdk/openai",
+        "node -e \"const {streamText} = require('ai'); console.log(typeof streamText)\"",
+        "curl -s -N http://127.0.0.1:3000/chat -H 'Content-Type: application/json' -d '{\"message\":\"What is the refund policy?\"}'"
+      ],
+      "examples": [
+        "streamText emits token deltas as the answer is generated",
+        "curl -N shows the streaming response on the terminal"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Listen port (default 3000)"
+        }
+      ]
     }
   ],
   "knowledge": [
     {
-      "title": "ml-rag-node-agent Documentation",
-      "type": "reference",
-      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
-      "description": "Reference documentation for ml-rag-node-agent"
+      "title": "LangGraph.js reference",
+      "type": "documentation",
+      "source": "https://langchain-ai.github.io/langgraphjs/",
+      "description": "State machines and tool nodes for agent loops"
+    },
+    {
+      "title": "Vercel AI SDK docs",
+      "type": "documentation",
+      "source": "https://ai-sdk.dev/docs/",
+      "description": "streamText, tool loops, and providers"
+    },
+    {
+      "title": "pgvector documentation",
+      "type": "documentation",
+      "source": "https://github.com/pgvector/pgvector",
+      "description": "Vector search in Postgres"
     }
   ],
-  "instructions": "You are the RAG Node.js expert. Call on this agent when building RAG applications in JavaScript/TypeScript. Core workflow: (1) load and index documents with LlamaIndex.js: 'node -e \"const { VectorStoreIndex, SimpleDirectoryReader } = require('‘llamaindex’'); ...\"' using SimpleDirectoryReader and VectorStoreIndex.fromDocuments; (2) build LangChain.js retrieval with OpenAIEmbeddings and Chroma fromDocuments followed by db.similaritySearch('‘What is RAG?’'); (3) advise on document loading, chunking strategies, and vector storage; (4) wire query retrieval into the application. Key behaviors: verify packages are installed, keep chunk sizes aligned with the embedding model, and test queries against a few documents before scaling. Output: working code snippets, index/query results, and chunking recommendations.",
+  "instructions": "You are a Node.js RAG agent developer. You build agentic retrieval-augmented generation in TypeScript with LangGraph.js and the Vercel AI SDK: tool-calling loops, streaming, and pgvector search. Workflow: (1) define a retrieve tool and wire it into a StateGraph with retrieve and answer nodes; (2) stream the answer with streamText so tool results and tokens arrive live; (3) search pgvector by cosine distance inside the tool. Debug order: graph state transitions, tool schema, then retrieval quality. Use real APIs: StateGraph, Annotation, streamText, tool(). Verify against the LangGraph.js docs before use.",
   "examples": [
-    "LangChain.js: node -e \"const { OpenAIEmbeddings } = require('langchain/embeddings/openai'); const { Chroma } = require('langchain/vectorstores/chroma'); const db = await Chroma.fromDocuments(docs, new OpenAIEmbeddings()); console.log(await db.similaritySearch('What is RAG?'))\"",
-    "LlamaIndex.js: node -e \"const { VectorStoreIndex, SimpleDirectoryReader } = require('llamaindex'); const docs = await new SimpleDirectoryReader('data').loadData(); const index = await VectorStoreIndex.fromDocuments(docs); console.log(await index.query('What is RAG?'))\""
+    {
+      "input": "Stream a grounded answer from a tool-calling agent",
+      "output": "agent.mjs streams tokens and cites retrieved chunks"
+    },
+    {
+      "input": "The agent loops without ending",
+      "output": "Adds a max-steps guard to the graph state machine"
+    }
   ],
   "platforms": {
     "claude_code": {
@@ -64,13 +113,13 @@
         "write",
         "edit"
       ],
-      "instructions": "You are a RAG Node.js expert. Help users with:\n- Document loading\n- Chunking strategies\n- Vector storage\n- Query retrieval\n\nAlways use real Node.js RAG commands and best practices."
+      "instructions": "You are a Node.js RAG agent developer. Help users build agentic RAG in TypeScript."
     },
     "opencode": {
       "plugin": "opencode-ml-rag-node-agent"
     },
     "generic": {
-      "system_prompt": "You are ml-rag-node-agent. RAG Node.js agent for Retrieval-Augmented Generation.",
+      "system_prompt": "You are a Node.js RAG agent developer. You build agentic retrieval-augmented generation in TypeScript with LangGraph.js and the Vercel AI SDK: tool-calling retrieval, streaming answers, and pgvector search. You prefer the shortest safe path and reproduce failures before diagnosing them. Commands are real: `npm i @langchain/langgraph ai @ai-sdk/openai`, `node agent.mjs --retriever ./store`.",
       "available_tools": [
         "bash",
         "read",
@@ -81,18 +130,46 @@
       ]
     }
   },
-  "created_at": "2024-01-01T00:00:00Z",
-  "updated_at": "2024-01-01T00:00:00Z",
+  "created_at": "2025-06-15T00:00:00Z",
+  "updated_at": "2026-08-19T00:00:00Z",
   "id": "ml-rag-node-agent",
   "type": "agent",
-  "skills": [],
+  "skills": [
+    "adapter",
+    "async",
+    "async-retry",
+    "asyncapi-nodejs",
+    "auth-middleware",
+    "bulkhead",
+    "cbor",
+    "correlation-ids",
+    "cors",
+    "cors-preflight",
+    "csp",
+    "csrf-protection"
+  ],
   "tools": [
     "Bash",
     "Read",
     "Write",
     "Edit"
   ],
-  "inputs": {},
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "langgraph-retrieval",
+        "name": "retriever",
+        "type": "string",
+        "description": "Path to the persisted vector store"
+      },
+      {
+        "capability": "ai-sdk-streaming",
+        "name": "port",
+        "type": "integer",
+        "description": "Listen port (default 3000)"
+      }
+    ]
+  },
   "outputs": {},
   "dependencies": [],
   "conversion": {
@@ -100,9 +177,9 @@
     "schema": "definition-v1",
     "source_yaml": "ml/rag/ml-rag-node-agent.yaml",
     "derived": {
-      "skills": "none",
+      "skills": "wiring (skills/wiring.json)",
       "tools": "platforms.claude_code.tools",
-      "inputs": "none",
+      "inputs": "capability.parameters",
       "outputs": "none (not present in source YAML)",
       "dependencies": "none"
     }
@@ -112,6 +189,6 @@
     "generator_version": "1.0.0",
     "schema": "definition-v1",
     "source": "universal-agents/ml/rag/ml-rag-node-agent.yaml",
-    "checksum": "fd034d54686704d362efdb2c821d960c4ca57c962c8f3ec6878d93a26f476d2e"
+    "checksum": "efb84add2d2516136fe22d7e94740611bf08204442c2ae9ae51a29b4b3b75466"
   }
 }

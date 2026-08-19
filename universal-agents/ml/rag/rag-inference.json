@@ -1,55 +1,83 @@
 {
   "name": "rag-inference",
-  "display_name": "Rag Inference",
+  "display_name": "RAG Inference Tester",
   "category": "ml",
   "subcategory": "rag",
-  "description": "RAG inference server agent Manages RAG inference server.",
-  "version": "1.0.0",
+  "description": "Tests RAG inference quality: chunk relevance, answer faithfulness, retrieval recall, and hallucination checks with pytest.",
+  "version": "2.0.0",
   "tags": [
     "ml",
-    "rag"
+    "rag",
+    "inference",
+    "testing",
+    "pytest"
   ],
-  "author": "Kdesk-Catalog",
+  "author": "Mehul Wagde",
   "license": "MIT",
   "capabilities": [
     {
-      "name": "Ml Rag Inference Server Agent V2",
-      "description": "RAG inference server agent. Manages RAG inference server.",
+      "name": "faithfulness-test",
+      "description": "Assert answers stay grounded in retrieved chunks",
       "commands": [
-        "curl http://localhost:8080/query --data '{\"query\": \"What is machine learning?\"}'",
-        "python inference_server.py --index index --port 8080",
-        "python ingest.py --docs ./documents --output index",
-        "python evaluate_rag.py --index index --test-questions questions.json"
+        "pytest tests/test_faithfulness.py -q",
+        "python -c \"from transformers import pipeline; print('nli pipeline ready')\""
       ],
       "examples": [
-        "python inference_server.py --index index --port 8080",
-        "curl http://localhost:8080/query --data '{\"query\": \"What is machine learning?\"}'",
-        "python ingest.py --docs ./documents --output index",
-        "python evaluate_rag.py --index index --test-questions questions.json"
+        "test_faithfulness.py checks answer-vs-chunk entailment",
+        "NLI labels highlight hallucinated spans"
       ],
       "parameters": [
         {
-          "name": "index",
+          "name": "nli-model",
           "type": "string",
-          "description": "CLI flag --index observed in capability commands"
+          "description": "NLI model id (default cross-encoder)"
+        }
+      ]
+    },
+    {
+      "name": "retrieval-eval",
+      "description": "Evaluate retrieval recall and MRR against a labeled set",
+      "commands": [
+        "python -c \"import json, sys; qs = json.load(open('eval_queries.json')); print(len(qs), 'queries loaded')\"",
+        "python -c \"from sklearn.metrics import ndcg_score; print('ndcg available')\""
+      ],
+      "examples": [
+        "eval_queries.json holds query-expected-chunk pairs",
+        "MRR and NDCG score retrieval quality"
+      ],
+      "parameters": [
+        {
+          "name": "top-k",
+          "type": "integer",
+          "description": "Number of chunks to retrieve (default 5)"
         }
       ]
     }
   ],
   "knowledge": [
     {
-      "title": "rag-inference Documentation",
-      "type": "reference",
-      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
-      "description": "Reference documentation for rag-inference"
+      "title": "RAGAS evaluation docs",
+      "type": "documentation",
+      "source": "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/",
+      "description": "Faithfulness, answer relevancy, and context precision"
+    },
+    {
+      "title": "pytest docs",
+      "type": "documentation",
+      "source": "https://docs.pytest.org/en/stable/",
+      "description": "Test structure and assertions"
     }
   ],
-  "instructions": "You are the RAG inference server expert (v2). Call on this agent to set up and operate the RAG inference server. Core workflow: (1) start the server with 'python inference_server.py --index index --port 8080'; (2) query it with 'curl http://localhost:8080/query --data '\"{\\\"query\\\": \\\"What is machine learning?\\\"}\"''; (3) ingest documents with 'python ingest.py --docs ./documents --output index' to populate the index; (4) evaluate answer quality with 'python evaluate_rag.py --index index --test-questions questions.json'. Key behaviors: confirm the index exists before starting, verify the port is free, and re-run ingest whenever documents change. Output: server status, sample query response, evaluation scores, and recommendations for index and evaluation improvements.",
+  "instructions": "You are the RAG inference tester. You test RAG inference quality: chunk relevance, answer faithfulness, retrieval recall, and hallucination checks with pytest. Workflow: (1) build a labeled eval set of query-expected-chunk pairs; (2) assert retrieval recall and MRR; (3) score faithfulness with an NLI model; (4) gate merges on the eval suite. Debug order: fixture data first, then retrieval config, then the NLI threshold. Use real commands: pytest tests -q, python -c checks. Never tune thresholds to pass a single failing case.",
   "examples": [
-    "python inference_server.py --index index --port 8080",
-    "curl http://localhost:8080/query --data '{\"query\": \"What is machine learning?\"}'",
-    "python ingest.py --docs ./documents --output index",
-    "python evaluate_rag.py --index index --test-questions questions.json"
+    {
+      "input": "Guard the RAG pipeline against answer drift",
+      "output": "Adds faithfulness and recall tests to the eval suite"
+    },
+    {
+      "input": "Why does retrieval miss the top chunk?",
+      "output": "Runs the retrieval eval and compares MRR per query"
+    }
   ],
   "platforms": {
     "claude_code": {
@@ -57,9 +85,7 @@
         "Bash",
         "Read",
         "Write",
-        "Edit",
-        "Glob",
-        "Grep"
+        "Edit"
       ],
       "model": "inherit"
     },
@@ -78,13 +104,13 @@
         "write",
         "edit"
       ],
-      "instructions": "You are a RAG inference server expert. Help users set up RAG inference server."
+      "instructions": "You are a RAG inference tester. Help users test RAG quality."
     },
     "opencode": {
       "plugin": "opencode-rag-inference"
     },
     "generic": {
-      "system_prompt": "You are rag-inference. RAG inference server agent. Manages RAG inference server.",
+      "system_prompt": "You are the RAG inference tester. You test RAG inference quality: chunk relevance, answer faithfulness, retrieval recall, and hallucination checks with pytest. You prefer the shortest safe path and reproduce failures before diagnosing them. Commands are real: `pytest tests -q`, `python -c` eval checks.",
       "available_tools": [
         "bash",
         "read",
@@ -95,26 +121,33 @@
       ]
     }
   },
-  "created_at": "2024-01-01T00:00:00Z",
-  "updated_at": "2024-01-01T00:00:00Z",
+  "created_at": "2025-06-15T00:00:00Z",
+  "updated_at": "2026-08-19T00:00:00Z",
   "id": "rag-inference",
   "type": "agent",
-  "skills": [],
+  "skills": [
+    "python",
+    "refactoring"
+  ],
   "tools": [
     "Bash",
     "Read",
     "Write",
-    "Edit",
-    "Glob",
-    "Grep"
+    "Edit"
   ],
   "inputs": {
     "parameters": [
       {
-        "capability": "Ml Rag Inference Server Agent V2",
-        "name": "index",
+        "capability": "faithfulness-test",
+        "name": "nli-model",
         "type": "string",
-        "description": "CLI flag --index observed in capability commands"
+        "description": "NLI model id (default cross-encoder)"
+      },
+      {
+        "capability": "retrieval-eval",
+        "name": "top-k",
+        "type": "integer",
+        "description": "Number of chunks to retrieve (default 5)"
       }
     ]
   },
@@ -125,7 +158,7 @@
     "schema": "definition-v1",
     "source_yaml": "ml/rag/rag-inference.yaml",
     "derived": {
-      "skills": "none",
+      "skills": "wiring (skills/wiring.json)",
       "tools": "platforms.claude_code.tools",
       "inputs": "capability.parameters",
       "outputs": "none (not present in source YAML)",
@@ -137,6 +170,6 @@
     "generator_version": "1.0.0",
     "schema": "definition-v1",
     "source": "universal-agents/ml/rag/rag-inference.yaml",
-    "checksum": "271bf256c1dd6419f582094d608040284048f548cd62e3bb2f6ed637b0f5ce56"
+    "checksum": "6e52e08751a6620d748237f56fbbe511d8ccf258ab51047eb89aa14cb4d113ec"
   }
 }

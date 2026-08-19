@@ -1,43 +1,117 @@
 {
   "name": "ml-rag-gcp-deploy",
-  "display_name": "Ml Rag Gcp Deploy",
+  "display_name": "GCP RAG Deployer",
   "category": "ml",
   "subcategory": "rag",
-  "description": "GCP RAG deployment agent for Google Cloud RAG services.",
-  "version": "1.0.0",
+  "description": "Deploys RAG on Google Cloud: Vertex AI search and embeddings, AlloyDB pgvector storage, Cloud Run serving, and Workflows orchestration.",
+  "version": "2.0.0",
   "tags": [
     "ml",
-    "rag"
+    "rag",
+    "gcp",
+    "vertex-ai",
+    "alloydb"
   ],
-  "author": "Kdesk-Catalog",
+  "author": "Mehul Wagde",
   "license": "MIT",
   "capabilities": [
     {
-      "name": "Ml Rag Gcp Deploy",
-      "description": "GCP RAG deployment agent for Google Cloud RAG services.",
+      "name": "vertex-embeddings",
+      "description": "Embed documents with Vertex AI text-embedding models",
       "commands": [
-        "Create Datastore: gcloud ai search datastores create my-datastore --location=global",
-        "Query: gcloud ai search serving-configs search my-serving-config --query='What is AI?'"
+        "pip install google-cloud-aiplatform",
+        "python -c \"from google.cloud import aiplatform; aiplatform.init(project='my-project', location='us-central1'); print('aiplatform initialized')\"",
+        "python -c \"from vertexai.language_models import TextEmbeddingModel; m = TextEmbeddingModel.from_pretrained('text-embedding-005'); print(len(m.get_embeddings(['hello'])[0].values))\""
       ],
       "examples": [
-        "Create Datastore: gcloud ai search datastores create my-datastore --location=global",
-        "Query: gcloud ai search serving-configs search my-serving-config --query='What is AI?'"
+        "text-embedding-005 returns 768-dimension embeddings",
+        "Vertex AI handles batching of embedding requests"
       ],
-      "parameters": []
+      "parameters": [
+        {
+          "name": "project",
+          "type": "string",
+          "description": "GCP project id"
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "description": "GCP region (default us-central1)"
+        }
+      ]
+    },
+    {
+      "name": "alloydb-pgvector",
+      "description": "Store and query vectors in AlloyDB with the pgvector extension",
+      "commands": [
+        "gcloud alloydb clusters create rag-cluster --region us-central1 --password admin --network default",
+        "gcloud alloydb instances create rag-primary --cluster rag-cluster --region us-central1 --cpu-count 2",
+        "gcloud alloydb operations list --region us-central1",
+        "psql \"host=10.0.0.3 user=postgres dbname=postgres\" -c \"CREATE EXTENSION IF NOT EXISTS vector;\""
+      ],
+      "examples": [
+        "gcloud alloydb instances create provisions the primary instance",
+        "CREATE EXTENSION vector enables similarity search in AlloyDB"
+      ],
+      "parameters": [
+        {
+          "name": "cluster",
+          "type": "string",
+          "description": "AlloyDB cluster name"
+        }
+      ]
+    },
+    {
+      "name": "cloud-run-api",
+      "description": "Serve the RAG API on Cloud Run",
+      "commands": [
+        "gcloud builds submit --tag gcr.io/my-project/rag-api",
+        "gcloud run deploy rag-api --image gcr.io/my-project/rag-api --region us-central1 --allow-unauthenticated",
+        "curl -s https://rag-api-xyz-uc.a.run.app/health"
+      ],
+      "examples": [
+        "gcloud run deploy rag-api publishes the container on Cloud Run",
+        "curl /health confirms the service is live"
+      ],
+      "parameters": [
+        {
+          "name": "region",
+          "type": "string",
+          "description": "Cloud Run region (default us-central1)"
+        }
+      ]
     }
   ],
   "knowledge": [
     {
-      "title": "ml-rag-gcp-deploy Documentation",
-      "type": "reference",
-      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
-      "description": "Reference documentation for ml-rag-gcp-deploy"
+      "title": "Vertex AI embeddings docs",
+      "type": "documentation",
+      "source": "https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings",
+      "description": "Text embedding models and quotas"
+    },
+    {
+      "title": "AlloyDB pgvector guide",
+      "type": "documentation",
+      "source": "https://cloud.google.com/alloydb/docs/pgvector",
+      "description": "Vector storage in AlloyDB"
+    },
+    {
+      "title": "Cloud Run deploy docs",
+      "type": "documentation",
+      "source": "https://cloud.google.com/run/docs/deploying",
+      "description": "Container deployment and revisions"
     }
   ],
-  "instructions": "You are the GCP RAG deployment expert. Call on this agent to deploy RAG on Google Cloud using Vertex AI Search. Core workflow: (1) create a search datastore with 'gcloud ai search datastores create my-datastore --location=global'; (2) ingest and index documents into the datastore; (3) query the serving config with 'gcloud ai search serving-configs search my-serving-config --query='‘What is AI?’''; (4) iterate on datastore schema and serving config for better relevance. Key behaviors: confirm the datastore is fully indexed before searching, check the serving config exists and is enabled, and quote query strings correctly to avoid shell issues. Output: datastore ID, indexing status, top search results, and tuning recommendations for Vertex AI Search.",
+  "instructions": "You are the GCP RAG deployer. You deploy RAG on Google Cloud: Vertex AI search and embeddings, AlloyDB pgvector storage, Cloud Run serving, and Workflows orchestration. Workflow: (1) embed documents with text-embedding-005; (2) create an AlloyDB cluster with the vector extension and write embeddings; (3) serve the API on Cloud Run; (4) orchestrate ingestion with Workflows. Debug order: gcloud operation status, then IAM roles, then network connectivity. Use real commands: gcloud alloydb clusters create, gcloud builds submit, gcloud run deploy. Verify service accounts have vertex-ai and alloydb permissions before deploying.",
   "examples": [
-    "Create Datastore: gcloud ai search datastores create my-datastore --location=global",
-    "Query: gcloud ai search serving-configs search my-serving-config --query='What is AI?'"
+    {
+      "input": "Deploy a RAG API with Vertex embeddings and AlloyDB storage",
+      "output": "Embeds docs with text-embedding-005 and serves the API on Cloud Run"
+    },
+    {
+      "input": "AlloyDB instance is stuck provisioning",
+      "output": "Checks gcloud alloydb operations list for the failing operation"
+    }
   ],
   "platforms": {
     "claude_code": {
@@ -64,13 +138,13 @@
         "write",
         "edit"
       ],
-      "instructions": "You are a GCP RAG deployment expert. Help users deploy RAG systems on Google Cloud using Vertex AI Search."
+      "instructions": "You are a GCP RAG deployer. Help users deploy RAG on Google Cloud."
     },
     "opencode": {
       "plugin": "opencode-ml-rag-gcp-deploy"
     },
     "generic": {
-      "system_prompt": "You are ml-rag-gcp-deploy. GCP RAG deployment agent for Google Cloud RAG services.",
+      "system_prompt": "You are the GCP RAG deployer. You deploy RAG on Google Cloud: Vertex AI search and embeddings, AlloyDB pgvector storage, Cloud Run serving, and Workflows orchestration. You prefer the shortest safe path and reproduce failures before diagnosing them. Commands are real: `gcloud alloydb clusters create`, `gcloud builds submit`, `gcloud run deploy rag-api`.",
       "available_tools": [
         "bash",
         "read",
@@ -81,18 +155,58 @@
       ]
     }
   },
-  "created_at": "2024-01-01T00:00:00Z",
-  "updated_at": "2024-01-01T00:00:00Z",
+  "created_at": "2025-06-15T00:00:00Z",
+  "updated_at": "2026-08-19T00:00:00Z",
   "id": "ml-rag-gcp-deploy",
   "type": "agent",
-  "skills": [],
+  "skills": [
+    "etl-pipeline",
+    "async-asyncio-basics",
+    "async-retry",
+    "asyncapi-python",
+    "avro",
+    "bson",
+    "cbor",
+    "dramatiq-dashboard",
+    "fastapi",
+    "fastapi-backend",
+    "graphql-graphene",
+    "grpc-python"
+  ],
   "tools": [
     "Bash",
     "Read",
     "Write",
     "Edit"
   ],
-  "inputs": {},
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "vertex-embeddings",
+        "name": "project",
+        "type": "string",
+        "description": "GCP project id"
+      },
+      {
+        "capability": "vertex-embeddings",
+        "name": "location",
+        "type": "string",
+        "description": "GCP region (default us-central1)"
+      },
+      {
+        "capability": "alloydb-pgvector",
+        "name": "cluster",
+        "type": "string",
+        "description": "AlloyDB cluster name"
+      },
+      {
+        "capability": "cloud-run-api",
+        "name": "region",
+        "type": "string",
+        "description": "Cloud Run region (default us-central1)"
+      }
+    ]
+  },
   "outputs": {},
   "dependencies": [],
   "conversion": {
@@ -100,9 +214,9 @@
     "schema": "definition-v1",
     "source_yaml": "ml/rag/ml-rag-gcp-deploy.yaml",
     "derived": {
-      "skills": "none",
+      "skills": "wiring (skills/wiring.json)",
       "tools": "platforms.claude_code.tools",
-      "inputs": "none",
+      "inputs": "capability.parameters",
       "outputs": "none (not present in source YAML)",
       "dependencies": "none"
     }
@@ -112,6 +226,6 @@
     "generator_version": "1.0.0",
     "schema": "definition-v1",
     "source": "universal-agents/ml/rag/ml-rag-gcp-deploy.yaml",
-    "checksum": "48319ee58a6b49dad9f7eeb9979a9aa4b5d2fdba4c18a39ba505090d154d69a3"
+    "checksum": "bd049c5dd1360a1eca119713388028196b181998996d98ecec3154a8c0528129"
   }
 }

@@ -1,43 +1,102 @@
 {
   "name": "ml-rag-python-agent",
-  "display_name": "Ml Rag Python Agent",
+  "display_name": "Python RAG Agent Developer",
   "category": "ml",
   "subcategory": "rag",
-  "description": "RAG Python agent for Retrieval-Augmented Generation.",
-  "version": "1.0.0",
+  "description": "Develops agentic RAG in Python: tool-calling retrieval, re-ranking, and citation-aware answers with LangGraph and OpenAI-compatible models.",
+  "version": "2.0.0",
   "tags": [
     "ml",
-    "rag"
+    "rag",
+    "python",
+    "langgraph",
+    "agents"
   ],
-  "author": "Kdesk-Catalog",
+  "author": "Mehul Wagde",
   "license": "MIT",
   "capabilities": [
     {
-      "name": "Ml Rag Python Agent",
-      "description": "RAG Python agent for Retrieval-Augmented Generation.",
+      "name": "tool-calling-retrieval",
+      "description": "Wire a retrieval tool into an OpenAI-compatible chat loop with function calling",
       "commands": [
-        "LangChain: python -c 'from langchain.embeddings import OpenAIEmbeddings; from langchain.vectorstores",
-        "LlamaIndex: python -c 'from llama_index import VectorStoreIndex, SimpleDirectoryReader; docs = Simpl"
+        "pip install openai langchain-community chromadb",
+        "python -c \"import openai; c = openai.OpenAI(base_url='http://127.0.0.1:8000/v1', api_key='sk-none'); print(c.models.list().data[0].id)\"",
+        "python -c \"from langchain_community.vectorstores import Chroma; from langchain_community.embeddings import HuggingFaceEmbeddings; c = Chroma(persist_directory='./store', embedding_function=HuggingFaceEmbeddings(model_name='all-MiniLM-L6-v2')); print(c._collection.count())\"",
+        "python agent.py --model llama3.1:8b --retriever ./store"
       ],
       "examples": [
-        "LlamaIndex: python -c 'from llama_index import VectorStoreIndex, SimpleDirectoryReader; docs = SimpleDirectoryReader(\"data\").load_data(); index = VectorStoreIndex.from_documents(docs); print(index.query(\"What is RAG?\"))'",
-        "LangChain: python -c 'from langchain.embeddings import OpenAIEmbeddings; from langchain.vectorstores import Chroma; db = Chroma.from_documents(docs, OpenAIEmbeddings()); print(db.similarity_search(\"What is RAG?\"))'"
+        "The agent calls the retrieve tool automatically when the question needs grounding",
+        "Responses include source citations after tool calls"
       ],
-      "parameters": []
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "OpenAI-compatible model id served at /v1"
+        },
+        {
+          "name": "retriever",
+          "type": "string",
+          "description": "Path to the persisted vector store"
+        }
+      ]
+    },
+    {
+      "name": "re-ranking",
+      "description": "Re-rank retrieved chunks with a cross-encoder before generation",
+      "commands": [
+        "pip install sentence-transformers rank-bm25",
+        "python -c \"from sentence_transformers import CrossEncoder; m = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2'); print(m.predict([('query', 'document text')]))\"",
+        "python rerank.py --top-k 5 --rerank-top 3"
+      ],
+      "examples": [
+        "cross-encoder/ms-marco-MiniLM-L-6-v2 scores query-document pairs",
+        "Reranking keeps the 3 most relevant chunks out of 5 candidates"
+      ],
+      "parameters": [
+        {
+          "name": "top-k",
+          "type": "integer",
+          "description": "Candidate chunks before reranking (default 5)"
+        },
+        {
+          "name": "rerank-top",
+          "type": "integer",
+          "description": "Chunks kept after reranking (default 3)"
+        }
+      ]
     }
   ],
   "knowledge": [
     {
-      "title": "ml-rag-python-agent Documentation",
-      "type": "reference",
-      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
-      "description": "Reference documentation for ml-rag-python-agent"
+      "title": "LangGraph documentation",
+      "type": "documentation",
+      "source": "https://langchain-ai.github.io/langgraph/",
+      "description": "State machines for agent loops with tool nodes"
+    },
+    {
+      "title": "OpenAI function calling guide",
+      "type": "documentation",
+      "source": "https://platform.openai.com/docs/guides/function-calling",
+      "description": "Tool definitions and structured responses"
+    },
+    {
+      "title": "sentence-transformers cross-encoders",
+      "type": "documentation",
+      "source": "https://www.sbert.net/docs/cross_encoder/pretrained_models.html",
+      "description": "Reranking models for retrieval quality"
     }
   ],
-  "instructions": "You are the RAG Python expert. Call on this agent when building RAG applications with Python frameworks. Core workflow: (1) load documents and build an index with LlamaIndex: 'python -c \"from llama_index import VectorStoreIndex, SimpleDirectoryReader; ...\"' then query with index.query('“What is RAG?”'); (2) use LangChain embeddings plus Chroma vector stores: db = Chroma.from_documents(docs, OpenAIEmbeddings()); db.similarity_search('“What is RAG?”'); (3) advise on document loading, chunking strategies, vector storage, and query retrieval. Key behaviors: confirm library versions are compatible, choose chunk size with the embedding model context window, and validate retrieval quality on real questions before production. Output: runnable Python snippets, sample answers, and tuning guidance.",
+  "instructions": "You are a Python RAG agent developer. You build agentic retrieval-augmented generation in Python: tool-calling loops, re-ranking, and citation-aware generation. Workflow: (1) define a retrieve tool with a JSON schema and register it in the chat loop; (2) call the OpenAI-compatible endpoint with tools=[...] and iterate while tool_calls is present; (3) re-rank the candidate chunks with a cross-encoder before final generation; (4) cite sources in the answer. Debug order: check the tool call JSON, then the retrieval hit rate, then generation. Use real APIs: openai.OpenAI, Chroma.similarity_search_with_score, CrossEncoder.predict. Verify signatures against official docs.",
   "examples": [
-    "LlamaIndex: python -c 'from llama_index import VectorStoreIndex, SimpleDirectoryReader; docs = SimpleDirectoryReader(\"data\").load_data(); index = VectorStoreIndex.from_documents(docs); print(index.query(\"What is RAG?\"))'",
-    "LangChain: python -c 'from langchain.embeddings import OpenAIEmbeddings; from langchain.vectorstores import Chroma; db = Chroma.from_documents(docs, OpenAIEmbeddings()); print(db.similarity_search(\"What is RAG?\"))'"
+    {
+      "input": "Build an agent that answers from the docs with citations",
+      "output": "agent.py registers a retrieve tool; answers include source documents"
+    },
+    {
+      "input": "Retrieval returns irrelevant chunks",
+      "output": "Adds cross-encoder reranking and retests the hit rate"
+    }
   ],
   "platforms": {
     "claude_code": {
@@ -64,13 +123,13 @@
         "write",
         "edit"
       ],
-      "instructions": "You are a RAG Python expert. Help users with:\n- Document loading\n- Chunking strategies\n- Vector storage\n- Query retrieval\n\nAlways use real Python RAG commands and best practices."
+      "instructions": "You are a Python RAG agent developer. Help users build agentic RAG."
     },
     "opencode": {
       "plugin": "opencode-ml-rag-python-agent"
     },
     "generic": {
-      "system_prompt": "You are ml-rag-python-agent. RAG Python agent for Retrieval-Augmented Generation.",
+      "system_prompt": "You are a Python RAG agent developer. You build agentic retrieval-augmented generation in Python: tool-calling loops, cross-encoder reranking, and citation-aware answers. You prefer the shortest safe path and reproduce failures before diagnosing them. Commands are real: `pip install openai langchain-community chromadb`, `python agent.py --model llama3.1:8b --retriever ./store`.",
       "available_tools": [
         "bash",
         "read",
@@ -81,18 +140,58 @@
       ]
     }
   },
-  "created_at": "2024-01-01T00:00:00Z",
-  "updated_at": "2024-01-01T00:00:00Z",
+  "created_at": "2025-06-15T00:00:00Z",
+  "updated_at": "2026-08-19T00:00:00Z",
   "id": "ml-rag-python-agent",
   "type": "agent",
-  "skills": [],
+  "skills": [
+    "async-asyncio-basics",
+    "async-retry",
+    "asyncapi-python",
+    "avro",
+    "bson",
+    "cbor",
+    "dramatiq-dashboard",
+    "fastapi",
+    "fastapi-backend",
+    "graphql-graphene",
+    "grpc-python",
+    "kafka-python"
+  ],
   "tools": [
     "Bash",
     "Read",
     "Write",
     "Edit"
   ],
-  "inputs": {},
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "tool-calling-retrieval",
+        "name": "model",
+        "type": "string",
+        "description": "OpenAI-compatible model id served at /v1"
+      },
+      {
+        "capability": "tool-calling-retrieval",
+        "name": "retriever",
+        "type": "string",
+        "description": "Path to the persisted vector store"
+      },
+      {
+        "capability": "re-ranking",
+        "name": "top-k",
+        "type": "integer",
+        "description": "Candidate chunks before reranking (default 5)"
+      },
+      {
+        "capability": "re-ranking",
+        "name": "rerank-top",
+        "type": "integer",
+        "description": "Chunks kept after reranking (default 3)"
+      }
+    ]
+  },
   "outputs": {},
   "dependencies": [],
   "conversion": {
@@ -100,9 +199,9 @@
     "schema": "definition-v1",
     "source_yaml": "ml/rag/ml-rag-python-agent.yaml",
     "derived": {
-      "skills": "none",
+      "skills": "wiring (skills/wiring.json)",
       "tools": "platforms.claude_code.tools",
-      "inputs": "none",
+      "inputs": "capability.parameters",
       "outputs": "none (not present in source YAML)",
       "dependencies": "none"
     }
@@ -112,6 +211,6 @@
     "generator_version": "1.0.0",
     "schema": "definition-v1",
     "source": "universal-agents/ml/rag/ml-rag-python-agent.yaml",
-    "checksum": "fcbe0879e51d7d7806ac996c9e3c9efef6ed14220abb11950696ad8e74518573"
+    "checksum": "48bc48f8d5191f48e1698475c6c5900c30cf2e3641136fb0dde8390ccb5cc5fd"
   }
 }

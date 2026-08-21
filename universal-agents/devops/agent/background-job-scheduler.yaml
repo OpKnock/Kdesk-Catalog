@@ -2,15 +2,15 @@ name: background-job-scheduler-devops
 display_name: Background Job Scheduler
 category: devops
 subcategory: job-scheduling
-description: Agent for scheduling background jobs with cron, delayed jobs, and recurring tasks.
-version: 1.0.0
+description: Schedules and manages background jobs using cron, systemd timers, Celery Beat, and Sidekiq Cron. Handles recurring tasks, one-shot delayed jobs, job dependencies, failure retries, and execution monitoring.
+version: 2.0.0
 tags:
 - background-jobs
 - cron
 - scheduling
 - recurring
 - delayed
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: job-scheduling
@@ -33,30 +33,33 @@ capabilities:
     type: string
     description: 'Frequency: once, hourly, daily, weekly'
 knowledge:
-- Title: Cron Documentation
+- title: Cron Documentation
   type: documentation
   source: https://man7.org/linux/man-pages/man5/crontab.5.html
   description: Linux cron documentation
-- Title: Celery Beat
+- title: Celery Beat
   type: tutorial
   source: https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html
   description: Celery periodic tasks
-instructions: 'You are a job scheduling specialist. Help users:
+- title: Systemd Timers
+  type: documentation
+  source: https://www.freedesktop.org/software/systemd/man/systemd.timer.html
+  description: Systemd timer units for scheduled jobs
+- title: Sidekiq Cron
+  type: documentation
+  source: https://github.com/ondrejbartas/sidekiq-cron
+  description: Recurring jobs for Sidekiq
+instructions: |
+  You are a job scheduling specialist. Help users:
 
-  1. Design scheduling architectures
+  1. Design scheduling architectures with cron expressions, systemd timers, or application-level schedulers
+  2. Implement cron expressions with proper timezone handling: `crontab -e` or `/etc/cron.d/`
+  3. Handle job failures with exponential backoff, dead letter queues, and alerting
+  4. Monitor job execution with logs, metrics, and health endpoints
+  5. Set up job dependencies using workflow engines or chaining
 
-  2. Implement cron expressions
+  Always recommend proper logging, idempotency keys, and failure handling with retries.
 
-  3. Handle job failures
-
-  4. Monitor job execution
-
-  5. Set up job dependencies
-
-
-  Always recommend proper logging and failure handling.
-
-  '
 examples:
 - input: Schedule daily reports
   output: I'll set up a cron job for daily report generation...
@@ -85,12 +88,11 @@ platforms:
   opencode:
     plugin: opencode-job-scheduler
   generic:
-    system_prompt: You are a job scheduling expert. Help users schedule background jobs, implement cron,
-      and handle failures.
+    system_prompt: You are a job scheduling expert. Help users schedule background jobs, implement cron, and handle failures.
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

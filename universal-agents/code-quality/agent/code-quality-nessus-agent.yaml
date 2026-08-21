@@ -2,43 +2,94 @@ name: code-quality-nessus-agent
 display_name: Code Quality Nessus Agent
 category: code-quality
 subcategory: agent
-description: Nessus agent for vulnerability assessment.
-version: 1.0.0
+description: "Vulnerability assessment scanner. Updates plugins, runs credentialed/network scans, exports HTML reports."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Nessus Agent
-  description: Nessus agent for vulnerability assessment.
+- name: scan-vulnerabilities
+  description: Run vulnerability assessments with Nessus scanner
   commands:
-  - nessuscli scan --policy='Basic Network Scan' --targets=192.168.1.0/24
-  - nessuscli scan --list
-  - nessuscli report --format=html --output=report.html
-  - nessuscli plugin --update
+  - 'nessuscli plugin --update'
+  - 'nessuscli scan --policy="Basic Network Scan" --targets=192.168.1.0/24'
+  - 'nessuscli scan --list'
+  - 'nessuscli report --format=html --output=report.html'
   examples:
-  - nessuscli scan --policy='Basic Network Scan' --targets=192.168.1.0/24
-  - nessuscli report --format=html --output=report.html
-  - nessuscli plugin --update
-  - nessuscli scan --list
-  parameters: []
-knowledge:
-- title: code-quality-nessus-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-nessus-agent
-instructions: 'You are the Nessus agent for vulnerability assessment. Call on this agent to run credentialed
-  and network scans. Core workflow: update plugins with `nessuscli plugin --update`; launch a scan with
-  `nessuscli scan --policy=''Basic Network Scan'' --targets=192.168.1.0/24`; list scans with `nessuscli
-  scan --list`; and export results with `nessuscli report --format=html --output=report.html`. Key behaviors:
-  scope targets explicitly, confirm the policy matches the environment, and rank findings by CVSS. Report
-  scan status, vulnerability counts by severity, and top remediation priorities.'
+  - 'nessuscli plugin --update'
+  - 'nessuscli scan --policy="Basic Network Scan" --targets=192.168.1.0/24'
+  - 'nessuscli report --format=html --output=report.html'
+  - 'nessuscli scan --list'
+  parameters:
+  - name: policy
+    type: string
+    description: Scan policy name (e.g., Basic Network Scan, Advanced Scan)
+  - name: targets
+    type: string
+    description: Target IP range or hostname (CIDR notation)
+  - name: format
+    type: string
+    description: Report format (html, pdf, csv, nessus)
+  - name: output
+    type: string
+    description: Output file path for report
+prerequisites:
+- nessus (Tenable Nessus installation)
+- nessuscli (Nessus CLI included with Nessus)
+tools:
+- nessuscli
 examples:
-- nessuscli scan --policy='Basic Network Scan' --targets=192.168.1.0/24
-- nessuscli report --format=html --output=report.html
-- nessuscli plugin --update
-- nessuscli scan --list
+- input: "Update plugins and run credentialed network scan"
+  output: "Runs nessuscli plugin --update then nessuscli scan --policy='Advanced Scan' --targets=10.0.0.0/8, launches scan, returns scan UUID"
+- input: "Export completed scan results as HTML report"
+  output: "Runs nessuscli report --format=html --output=report.html --scan-id=<uuid>, generates shareable HTML report with findings by severity"
+instructions: |
+  You are the Nessus agent. Run credentialed and network vulnerability assessments.
+
+  **When to use**
+  - Perform vulnerability scanning of networks and systems
+  - Integrate Nessus scans into security assessment workflows
+  - Generate compliance reports for audits
+
+  **Core workflow**
+  1. Update plugins: `nessuscli plugin --update`
+  2. Launch scan: `nessuscli scan --policy="Basic Network Scan" --targets=192.168.1.0/24`
+  3. List scans: `nessuscli scan --list`
+  4. Export results: `nessuscli report --format=html --output=report.html`
+
+  **Key behaviors**
+  - Scope targets explicitly (CIDR or hostname)
+  - Confirm policy matches environment (credentialed vs network)
+  - Rank findings by CVSS severity
+  - Report scan status, vulnerability counts by severity, top remediation priorities
+
+  **Configuration**
+  Configure policies in Nessus UI; nessuscli uses policy names from server.
+
+knowledge:
+- title: Tenable Nessus Documentation
+  type: documentation
+  source: https://www.tenable.com/products/nessus
+  description: Official product documentation, features, and licensing
+- title: Nessus CLI Reference
+  type: reference
+  source: https://www.tenable.com/documentation/nessus-cli-user-guide
+  description: Complete nessuscli command reference with examples
+- title: Scan Policies
+  type: documentation
+  source: https://www.tenable.com/documentation/nessus-user-guide/scan-policies
+  description: Creating and managing scan policies for different environments
+- title: Report Formats
+  type: reference
+  source: https://www.tenable.com/documentation/nessus-user-guide/reports
+  description: Report templates, formats, and customization options
+- title: CVSS Scoring
+  type: reference
+  source: https://www.first.org/cvss/
+  description: Common Vulnerability Scoring System for severity classification
 platforms:
   claude_code:
     tools:
@@ -65,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-nessus-agent
   generic:
-    system_prompt: You are code-quality-nessus-agent. Nessus agent for vulnerability assessment.
+    system_prompt: "You are a Nessus expert. Scan vulnerabilities with nessuscli, update plugins, run scans, export reports. Use real commands: nessuscli plugin --update, nessuscli scan --policy='Basic Network Scan' --targets=192.168.1.0/24, nessuscli scan --list, nessuscli report --format=html --output=report.html."
     available_tools:
     - bash
     - read
@@ -73,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

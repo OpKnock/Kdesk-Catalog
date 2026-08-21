@@ -2,37 +2,45 @@ name: deepseek-sdk
 display_name: Deepseek Sdk
 category: ml
 subcategory: deployment
-description: DeepSeek SDK deployment agent for ML DeepSeek SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Deepseek Deploy Sdk Agent
   description: DeepSeek SDK deployment agent for ML DeepSeek SDK deployment.
   commands:
   - docker build -t deepseek:latest .
-  - docker push registry.example.com/deepseek:latest
-  - kubectl set image deployment/deepseek deepseek=registry.example.com/deepseek:latest
+  - docker push ghcr.io/deepseek:latest
+  - kubectl set image deployment/deepseek deepseek=ghcr.io/deepseek:latest
   - helm upgrade deepseek ./helm-chart --namespace production
   - kubectl rollout status deployment/deepseek --timeout=300s
-  - python identity.py --agent deepseek-sdk
+  - deepseek --version
   examples:
   - 'Server: python -m deepseek.server --port 8080'
   - 'Docker: docker run -p 8080:8080 deepseek-server'
   parameters: []
 knowledge:
-- title: deepseek-sdk Documentation
+- title: DeepSeek API Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for deepseek-sdk
+  source: https://api-docs.deepseek.com/
+  description: Official documentation for deepseek.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the DeepSeek SDK deployment expert (Ml Deepseek Deploy Sdk Agent). Call on you
   to containerize and deploy the DeepSeek server built from the SDK. Workflow: (1) docker build -t deepseek:latest
-  . and docker push registry.example.com/deepseek:latest; (2) kubectl set image deployment/deepseek deepseek=registry.example.com/deepseek:latest;
+  . and docker push ghcr.io/deepseek:latest; (2) kubectl set image deployment/deepseek deepseek=ghcr.io/deepseek:latest;
   (3) helm upgrade deepseek ./helm-chart --namespace production; (4) kubectl rollout status deployment/deepseek
-  --timeout=300s and python identity.py --agent deepseek-sdk. Validate locally with python -m deepseek.server
+  deepseek --version
   --port 8080 and docker run -p 8080:8080 deepseek-server. Key behaviors: verify tags/namespace and pod
   logs on stall; validate locally before push. Output: image tag, registry, rollout outcome, and local
   validation notes.'
@@ -71,5 +79,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-02-25T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -47,16 +47,16 @@ capabilities:
 - name: authentication-diagnostics
   description: Verify SPF, DKIM, and DMARC records for a domain.
   commands:
-  - dig +short TXT example.com | grep spf
+  - dig +short TXT localhost | grep spf
   - dig +short TXT selector._domainkey.example.com
   - dig +short TXT _dmarc.example.com
-  - opendkim-testkey -d example.com -s default -vvv
-  - spfquery -sender=jane@example.com -ip=203.0.113.9
-  - dig +short MX example.com
+  - opendkim-testkey -d localhost -s default -vvv
+  - spfquery -sender=jane@localhost -ip=203.0.113.9
+  - dig +short MX localhost
   examples:
-  - dig +short TXT example.com | grep spf
+  - dig +short TXT localhost | grep spf
   - dig +short TXT _dmarc.example.com
-  - opendkim-testkey -d example.com -s default -vvv
+  - opendkim-testkey -d localhost -s default -vvv
   parameters:
   - name: domain
     type: string
@@ -67,14 +67,14 @@ capabilities:
 - name: smtp-and-queue
   description: Test SMTP paths and manage the Postfix queue.
   commands:
-  - swaks --to user@example.com --server smtp.example.com --from alerts@example.com
-  - swaks --to user@example.com --tls --auth LOGIN --auth-user apikey --auth-password secret
+  - swaks --to user@localhost --server smtp.example.com --from alerts@localhost
+  - swaks --to user@localhost --tls --auth LOGIN --auth-user apikey --auth-password secret
   - postqueue -p
   - postqueue -f
   - postsuper -d ALL
   - mailq | tail -5
   examples:
-  - swaks --to user@example.com --server smtp.example.com
+  - swaks --to user@localhost --server smtp.example.com
   - postqueue -p
   - postsuper -d ALL
   parameters:

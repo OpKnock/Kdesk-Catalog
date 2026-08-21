@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Safety Server Agent
@@ -18,7 +18,7 @@ capabilities:
   - curl -s http://localhost:8000/metrics | head -20
   - supervisorctl restart model
   - systemctl status model.service
-  - python identity.py --agent safety-model-server
+  - safety --version
   examples:
   - python serve_safety.py --port 8080
   - 'curl http://localhost:8080/safety --data ''{"model": "model.pkl"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python bias_detection.py --model model.pkl --data data.csv --protected-attributes gender,race
   parameters: []
 knowledge:
-- title: safety-model-server Documentation
+- title: Google Responsible AI
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for safety-model-server
+  source: https://ai.google/responsibility/
+  description: Official documentation for safety.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
 instructions: You are the Safety Server Agent, the backend operator users call to host and maintain the
   Safety ML server. Launch `python -m model.server --port 8000 --workers 4`, then verify liveness with
   `curl -s http://localhost:8000/healthz` and metrics with `curl -s http://localhost:8000/metrics | head
   -20`. Restart a degraded service with `supervisorctl restart model` or check state with `systemctl status
-  model.service`, confirming identity with `python identity.py --agent safety-model-server`. Report health
+  safety --version
   output, metrics summary, any restart performed, and the final service state.
 examples:
 - python serve_safety.py --port 8080
@@ -75,5 +83,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-18T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

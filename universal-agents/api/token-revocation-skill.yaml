@@ -2,12 +2,11 @@ name: token-revocation
 display_name: Token Revocation
 category: api
 subcategory: general
-description: 'Hand-crafted token revocation skill: OAuth2 revocation endpoint, Redis jti blacklists, and
-  expiry verification for emergency token invalidation.'
+description: "Invalidate OAuth2 tokens on demand by calling the revocation endpoint and maintaining JWT jti blacklists in Redis. Revokes both access and refresh tokens, extracts jti claims from JWTs for immediate rejection, and verifies revoked tokens return 401 — essential for compromised sessions, global logout, and emergency freezes."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - redis-cli
@@ -15,18 +14,18 @@ capabilities:
 - name: token-revoke
   description: Revoke access and refresh tokens, and enforce blacklists
   commands:
-  - curl -X POST https://idp.example.com/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1&client_secret=$CLIENT_SECRET"
+  - curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1&client_secret=$CLIENT_SECRET"
     -o /dev/null -w '%{http_code}\n'
-  - curl -X POST https://idp.example.com/revoke -d "token=$REFRESH_TOKEN&token_type_hint=refresh_token&client_id=app1"
+  - curl -X POST https://auth.your-app.test/revoke -d "token=$REFRESH_TOKEN&token_type_hint=refresh_token&client_id=app1"
     -o /dev/null -w '%{http_code}\n'
   - redis-cli SET blacklist:abc-jti revoked EX 3600
-  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer revoked-token" https://api.example.com/me'
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer revoked-token" http://localhost:8080/me'
   examples:
-  - curl -X POST https://idp.example.com/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1"
+  - curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1"
     -o /dev/null -w '%{http_code}\n'
   - redis-cli SET blacklist:$(echo -n $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq -r .jti) revoked
     EX 3600
-  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer stale-token" https://api.example.com/me'
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer stale-token" http://localhost:8080/me'
   parameters:
   - name: token
     type: string
@@ -79,13 +78,13 @@ instructions: '# Token Revocation
 
   # Revoke via the IdP
 
-  curl -X POST https://idp.example.com/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1&client_secret=$CLIENT_SECRET"
+  curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1&client_secret=$CLIENT_SECRET"
   -o /dev/null -w ''%{http_code}\n''
 
 
   # Revoke a refresh token too
 
-  curl -X POST https://idp.example.com/revoke -d "token=$REFRESH_TOKEN&token_type_hint=refresh_token&client_id=app1"
+  curl -X POST https://auth.your-app.test/revoke -d "token=$REFRESH_TOKEN&token_type_hint=refresh_token&client_id=app1"
   -o /dev/null -w ''%{http_code}\n''
 
 
@@ -106,7 +105,7 @@ instructions: '# Token Revocation
   ## Blacklist check on every request
 
 
-  - If token is a JWT, look up blacklist:<jti>; 401 when present
+  - If token is a JWT, look up blacklist:demo-jti; 401 when present
 
   - TTL the blacklist at the access token''s remaining lifetime
 
@@ -116,7 +115,7 @@ instructions: '# Token Revocation
 
   ```bash
 
-  curl -X POST https://idp.example.com/revoke -d "token=$ACCESS_TOKEN&client_id=app1" -o /dev/null -w
+  curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&client_id=app1" -o /dev/null -w
   ''%{http_code}\n''   # 200
 
   curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $ACCESS_TOKEN" https://api.example.com/me            #
@@ -166,12 +165,12 @@ platforms:
     plugin: opencode-token-revocation
   generic:
     system_prompt: 'You work Token Revocation hands-on. You do it through token-revoke: Revoke access
-      and refresh tokens, and enforce blacklists. The commands are real, e.g. `curl -X POST https://idp.example.com/revoke
+      and refresh tokens, and enforce blacklists. The commands are real, e.g. `curl -X POST https://auth.your-app.test/revoke
       -d...`. You run and verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

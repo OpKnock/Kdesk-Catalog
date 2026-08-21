@@ -7,32 +7,40 @@ version: 1.0.0
 tags:
 - ml
 - inference
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Llama Cpp Deploy Sdk Agent V2
   description: llama.cpp SDK deployment agent for ML llama.cpp SDK deployment.
   commands:
   - docker build -t llama-cpp:latest .
-  - docker push registry.example.com/llama-cpp:latest
-  - kubectl set image deployment/llama-cpp llama-cpp=registry.example.com/llama-cpp:latest
+  - docker push ghcr.io/llama-cpp:latest
+  - kubectl set image deployment/llama-cpp llama-cpp=ghcr.io/llama-cpp:latest
   - helm upgrade llama-cpp ./helm-chart --namespace production
   - kubectl rollout status deployment/llama-cpp --timeout=300s
-  - python identity.py --agent llama-cpp-sdk
+  - llama-cpp --version
   examples:
   - 'Server: python -m llama_cpp.server --port 8080'
   - 'Docker: docker run -p 8080:8080 llama_cpp-server'
   parameters: []
 knowledge:
-- title: llama-cpp-sdk Documentation
+- title: llama.cpp Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
-  description: Reference documentation for llama-cpp-sdk
+  source: https://github.com/ggerganov/llama.cpp
+  description: Official documentation for llama-cpp.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the llama.cpp SDK deployment expert. Call on this agent to build, containerize,
   and deploy a llama.cpp SDK application to Kubernetes. Core workflow: (1) validate locally with `python
   -m llama_cpp.server --port 8080`; (2) build and push with `docker build -t llama-cpp:latest .` and `docker
-  push registry.example.com/llama-cpp:latest`; (3) update with `kubectl set image deployment/llama-cpp
-  llama-cpp=registry.example.com/llama-cpp:latest` or `helm upgrade llama-cpp ./helm-chart --namespace
+  push ghcr.io/llama-cpp:latest`; (3) update with `kubectl set image deployment/llama-cpp
+  llama-cpp=ghcr.io/llama-cpp:latest` or `helm upgrade llama-cpp ./helm-chart --namespace
   production`; (4) confirm with `kubectl rollout status deployment/llama-cpp --timeout=300s`. Test the
   container with `docker run -p 8080:8080 llama_cpp-server`. Key behaviors: keep tags consistent; if rollout
   fails inspect pod logs; verify the model file is available to the container. Output expectations: report
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-05-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,8 +7,10 @@ description: 'Implement passwordless login with magic links: JWT signing, one-ti
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 prerequisites:
 - npx
 - openssl
@@ -19,12 +21,12 @@ capabilities:
   description: Generate and sign short-lived magic link tokens.
   commands:
   - openssl rand -base64 32
-  - python3 -c "import jwt,datetime; print(jwt.encode({'sub':'alice@example.com','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},
+  - python3 -c "import jwt,datetime; print(jwt.encode({'sub':'alice@myapp.test','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},
     open('private.pem').read(), algorithm='RS256'))"
-  - 'npx jwt-cli encode --secret=dev-secret -P sub=alice@example.com -P exp=... '
+  - 'npx jwt-cli encode --secret=dev-secret -P sub=alice@myapp.test -P exp=... '
   - python3 -c "import secrets; print(secrets.token_urlsafe(32))"
   examples:
-  - python3 -c "import jwt,datetime; print(jwt.encode({'sub':'alice@example.com','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},
+  - python3 -c "import jwt,datetime; print(jwt.encode({'sub':'alice@myapp.test','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},
     open('private.pem').read(), algorithm='RS256'))"
   - openssl rand -base64 32
   - python3 -c "import secrets; print(secrets.token_urlsafe(32))"
@@ -41,15 +43,15 @@ capabilities:
 - name: verify-exchange
   description: 'Exercise the magic link flow: request, verify, and one-time use.'
   commands:
-  - 'curl -s -X POST http://localhost:8080/auth/magic-link -H ''Content-Type: application/json'' -d ''{"email":"alice@example.com"}'''
+  - 'curl -s -X POST http://localhost:8080/auth/magic-link -H ''Content-Type: application/json'' -d ''{"email":"alice@myapp.test"}'''
   - curl -s http://localhost:8080/auth/verify?token=TOKEN
-  - redis-cli SETEX magic:alice@example.com 900 TOKEN
-  - redis-cli GET magic:alice@example.com
+  - redis-cli SETEX magic:alice@myapp.test 900 TOKEN
+  - redis-cli GET magic:alice@myapp.test
   - curl -s http://localhost:8080/auth/verify?token=USED_TOKEN
   examples:
-  - 'curl -s -X POST http://localhost:8080/auth/magic-link -H ''Content-Type: application/json'' -d ''{"email":"alice@example.com"}'''
+  - 'curl -s -X POST http://localhost:8080/auth/magic-link -H ''Content-Type: application/json'' -d ''{"email":"alice@myapp.test"}'''
   - curl -s http://localhost:8080/auth/verify?token=TOKEN
-  - redis-cli SETEX magic:alice@example.com 900 TOKEN
+  - redis-cli SETEX magic:alice@myapp.test 900 TOKEN
   parameters:
   - name: email
     type: string
@@ -76,10 +78,10 @@ instructions: "# Magic Link Authentication\n\nImplement passwordless login with 
   \ login flows.\n- Lowering login friction while keeping security.\n- Replacing emailed passwords with\
   \ expiring links.\n\n## Real commands\n\n```bash\n# Generate a random secret or keypair\nopenssl rand\
   \ -base64 32\nopenssl genrsa -out private.pem 2048\n\n# Issue an RS256 token (15 min TTL)\npython3 -c\
-  \ \"import jwt,datetime; print(jwt.encode({'sub':'alice@example.com','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},\
+  \ \"import jwt,datetime; print(jwt.encode({'sub':'alice@myapp.test','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},\
   \ open('private.pem').read(), algorithm='RS256'))\"\n\n# Request a link (app endpoint)\ncurl -s -X POST\
   \ http://localhost:8080/auth/magic-link \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"email\"\
-  :\"alice@example.com\"}'\n\n# Store a one-time token in Redis (900s TTL)\nredis-cli SETEX magic:alice@example.com\
+  :\"alice@myapp.test\"}'\n\n# Store a one-time token in Redis (900s TTL)\nredis-cli SETEX magic:alice@myapp.test\
   \ 900 TOKEN\n\n# Verify callback\ncurl -s http://localhost:8080/auth/verify?token=TOKEN\n\n# Replay\
   \ protection: second use must fail\ncurl -s http://localhost:8080/auth/verify?token=USED_TOKEN\n```\n\
   \n## Flow example\n\n```text\nPOST /auth/magic-link {email}  ->  generate token, email link\nGET  /auth/verify?token=...\
@@ -125,5 +127,3 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

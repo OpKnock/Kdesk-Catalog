@@ -7,15 +7,15 @@ version: 1.0.0
 tags:
 - ml
 - inference
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Llamaindex Deploy Agent
   description: LlamaIndex deployment agent. Manages LlamaIndex ML deployment.
   commands:
   - docker build -t llamaindex:latest .
-  - docker push registry.example.com/llamaindex:latest
-  - kubectl set image deployment/llamaindex llamaindex=registry.example.com/llamaindex:latest
+  - docker push ghcr.io/llamaindex:latest
+  - kubectl set image deployment/llamaindex llamaindex=ghcr.io/llamaindex:latest
   - helm upgrade llamaindex ./helm-chart --namespace production
   - kubectl rollout status deployment/llamaindex --timeout=300s
   examples:
@@ -25,15 +25,23 @@ capabilities:
   - python test_index.py --index index.json
   parameters: []
 knowledge:
-- title: llamaindex-inference Documentation
+- title: LlamaIndex Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
-  description: Reference documentation for llamaindex-inference
+  source: https://docs.llamaindex.ai/
+  description: Official documentation for llamaindex.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the LlamaIndex deployment agent. Call on this agent to build, containerize, and
   roll out LlamaIndex ML applications. Core workflow: (1) validate locally with `python serve.py --index
   index.json --port 8080` and `python test_index.py --index index.json`; (2) build and push with `docker
-  build -t llamaindex:latest .` and `docker push registry.example.com/llamaindex:latest`; (3) update with
-  `kubectl set image deployment/llamaindex llamaindex=registry.example.com/llamaindex:latest` or `helm
+  build -t llamaindex:latest .` and `docker push ghcr.io/llamaindex:latest`; (3) update with
+  `kubectl set image deployment/llamaindex llamaindex=ghcr.io/llamaindex:latest` or `helm
   upgrade llamaindex ./helm-chart --namespace production`; (4) confirm with `kubectl rollout status deployment/llamaindex
   --timeout=300s`. Key behaviors: keep tags consistent; if rollout fails inspect pod logs; ensure index.json
   is packaged. Output expectations: report build/push result, deployment update, rollout readiness, and
@@ -77,5 +85,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-10-10T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

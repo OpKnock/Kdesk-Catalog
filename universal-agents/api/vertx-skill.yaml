@@ -1,79 +1,20 @@
 name: vertx
 display_name: Vertx
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Build reactive APIs with Eclipse Vert.x: scaffold Maven projects, run verticles with vertx:run,
-  hot-reload, package fat jars, and test endpoints.'
-version: 2.0.0
+description: "Builds reactive APIs with Eclipse Vert.x on the JVM. Scaffolds Maven projects via the official archetype, runs verticles with hot reload, packages executable fat jars, and verifies endpoints with curl."
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- java
-- mvn
-capabilities:
-- name: vertx-project
-  description: Scaffold, run, and package Vert.x applications
-  commands:
-  - mvn archetype:generate -DarchetypeGroupId=io.vertx -DarchetypeArtifactId=vertx-maven-archetype -DarchetypeVersion=4.5.10
-  - mvn compile vertx:run
-  - mvn package
-  - java -jar target/hello-1.0.0-fat.jar
-  - curl -s http://localhost:8080/hello
-  examples:
-  - mvn compile vertx:run -Dvertx.id=main-verticle
-  - mvn clean package -DskipTests
-  - curl -s http://localhost:8080/api/tasks | jq '.length'
-  parameters:
-  - name: groupId
-    type: string
-    description: Maven groupId for the scaffolded project
-  - name: artifactId
-    type: string
-    description: Project artifactId
-  - name: vertx.id
-    type: string
-    description: Verticle ID to run with vertx:run
-knowledge:
-- title: Vert.x Docs
-  type: documentation
-  source: https://vertx.io/docs/
-  description: Core, web, and reactive documentation for all languages
-- title: Vert.x Maven Archetype
-  type: documentation
-  source: https://start.vertx.io/
-  description: Project generator for Vert.x applications
-instructions: "# Vert.x\n\n## What this skill does\nBuild reactive, event-loop-driven APIs with Eclipse\
-  \ Vert.x on the JVM. Covers scaffolding via the official Maven archetype, development mode with hot\
-  \ redeploy, packaging executable fat jars, and verifying endpoints.\n\n## When to use\n- Building high-throughput\
-  \ async APIs in Java/Kotlin\n- Prototyping with Vert.x Web Router\n- Packaging services for deployment\n\
-  \n## Real commands\n```bash\n# Scaffold a new project\nmvn archetype:generate \\\n  -DarchetypeGroupId=io.vertx\
-  \ \\\n  -DarchetypeArtifactId=vertx-maven-archetype \\\n  -DarchetypeVersion=4.5.10\n\n# Development\
-  \ mode with hot reload\nmvn compile vertx:run\n\n# Run a specific verticle\nmvn compile vertx:run -Dvertx.id=main-verticle\n\
-  \n# Package the fat jar\nmvn clean package -DskipTests\n\n# Run the packaged jar\njava -jar target/hello-1.0.0-fat.jar\n\
-  \n# Verify the endpoint\ncurl -s http://localhost:8080/hello\n```\n\n## Minimal MainVerticle.java\n\
-  ```java\npublic class MainVerticle extends AbstractVerticle {\n  @Override\n  public void start(Promise<Void>\
-  \ startPromise) {\n    vertx.createHttpServer()\n      .requestHandler(req -> req.response()\n     \
-  \   .putHeader(\"content-type\", \"application/json\")\n        .end(\"{\\\"status\\\":\\\"ok\\\"}\"\
-  ))\n      .listen(8080, http -> {\n        if (http.succeeded()) startPromise.complete();\n        else\
-  \ startPromise.fail(http.cause());\n      });\n  }\n}\n```\n\n## Best practices\n- Never block the event\
-  \ loop; use `vertx.executeBlocking` for JDBC calls\n- Use Vert.x Web Router with sub-routers per resource\n\
-  - Prefer the service proxy pattern for inter-verticle calls\n- Pin the archetype version in CI builds\n\
-  \n## Testing\n```bash\nmvn compile vertx:run &\nsleep 8\ncurl -s http://localhost:8080/hello -w '\\\
-  n%{http_code}\\n'\n```"
-examples:
-- input: Scaffold a new Vert.x API project
-  output: Generates the Maven project from the Vert.x archetype and explains the generated layout.
-- input: Why is my event loop blocking?
-  output: Reviews handlers for synchronous I/O and suggests executeBlocking or async clients.
+  - api
+  - java
+  - reactive
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -82,21 +23,124 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-vertx
   generic:
-    system_prompt: 'You are the Vertx specialist. You do it through vertx-project: Scaffold, run, and
-      package Vert.x applications. The commands are real, e.g. `mvn archetype:generate -DarchetypeGroupId=io.vertx...`.
-      You run and verify the real CLI commands before you claim anything.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You are the Vertx specialist. You do it through vertx-project: Scaffold, run, and package Vert.x applications. The commands are real, e.g. `mvn archetype:generate -DarchetypeGroupId=io.vertx...`. You run and verify the real CLI commands before you claim anything."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: vertx-project
+    description: Scaffold, run, and package Vert.x applications
+    commands:
+      - 'mvn archetype:generate -DarchetypeGroupId=io.vertx -DarchetypeArtifactId=vertx-maven-archetype -DarchetypeVersion=4.5.10'
+      - 'mvn compile vertx:run'
+      - 'mvn package'
+      - 'java -jar target/hello-1.0.0-fat.jar'
+      - 'curl -s http://localhost:8080/hello'
+    examples:
+      - 'mvn compile vertx:run -Dvertx.id=main-verticle'
+      - 'mvn clean package -DskipTests'
+      - 'curl -s http://localhost:8080/api/tasks | jq ".length"'
+    parameters:
+      - name: groupId
+        type: string
+        description: Maven groupId for the scaffolded project
+      - name: artifactId
+        type: string
+        description: Project artifactId
+      - name: vertx.id
+        type: string
+        description: Verticle ID to run with vertx:run
+prerequisites:
+  - java
+  - mvn
+tools: [mvn, java, curl]
+examples:
+  - input: Scaffold a new Vert.x API project
+    output: Generates the Maven project from the Vert.x archetype and explains the generated layout.
+  - input: Why is my event loop blocking?
+    output: Reviews handlers for synchronous I/O and suggests executeBlocking or async clients.
+instructions: |
+  # Vert.x
+
+  ## What this skill does
+
+  Build reactive, event-loop-driven APIs with Eclipse Vert.x on the JVM. Covers scaffolding via the official Maven archetype, development mode with hot redeploy, packaging executable fat jars, and verifying endpoints.
+
+  ## When to use
+
+  - Building high-throughput async APIs in Java/Kotlin
+  - Prototyping with Vert.x Web Router
+  - Packaging services for deployment
+
+  ## Real commands
+
+  ```bash
+  # Scaffold a new project
+  mvn archetype:generate \
+    -DarchetypeGroupId=io.vertx \
+    -DarchetypeArtifactId=vertx-maven-archetype \
+    -DarchetypeVersion=4.5.10
+
+  # Development mode with hot reload
+  mvn compile vertx:run
+
+  # Run a specific verticle
+  mvn compile vertx:run -Dvertx.id=main-verticle
+
+  # Package the fat jar
+  mvn clean package -DskipTests
+
+  # Run the packaged jar
+  java -jar target/hello-1.0.0-fat.jar
+
+  # Verify the endpoint
+  curl -s http://localhost:8080/hello
+  ```
+
+  ## Minimal MainVerticle.java
+
+  ```java
+  public class MainVerticle extends AbstractVerticle {
+    @Override
+    public void start(Promise<Void> startPromise) {
+      vertx.createHttpServer()
+        .requestHandler(req -> req.response()
+          .putHeader("content-type", "application/json")
+          .end("{\"status\":\"ok\"}"))
+        .listen(8080, http -> {
+          if (http.succeeded()) startPromise.complete();
+          else startPromise.fail(http.cause());
+        });
+    }
+  }
+  ```
+
+  ## Best practices
+
+  - Never block the event loop; use `vertx.executeBlocking` for JDBC calls
+  - Use Vert.x Web Router with sub-routers per resource
+  - Prefer the service proxy pattern for inter-verticle calls
+  - Pin the archetype version in CI builds
+
+  ## Testing
+
+  ```bash
+  mvn compile vertx:run &
+  sleep 8
+  curl -s http://localhost:8080/hello -w '\n%{http_code}\n'
+  ```
+knowledge:
+  - title: Vert.x Docs
+    type: documentation
+    source: https://vertx.io/docs/
+    description: Core, web, and reactive documentation for all languages
+  - title: Vert.x Maven Archetype
+    type: documentation
+    source: https://start.vertx.io/
+    description: Project generator for Vert.x applications
+  - title: Vert.x Web Router
+    type: documentation
+    source: https://vertx.io/docs/vertx-web/java/
+    description: Routing, body parsing, and error handling

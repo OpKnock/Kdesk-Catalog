@@ -1,13 +1,13 @@
 name: ini
-display_name: Ini
+display_name: INI
 category: api
 subcategory: general
-description: 'INI configuration file handling: parsing and editing with Python configparser, shell one-liners
-  for section lookups, and validation of duplicate keys.'
+description: 'Parse and modify INI configuration files with Python configparser and shell tools. Covers
+  section lookups, value extraction, validation, and in-place updates.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - awk
@@ -21,8 +21,7 @@ capabilities:
   - python3 -m configparser app.ini
   - awk -F= '/^\[database\]/{s=1;next} /^\[/{s=0} s && /host/{print $2}' app.ini
   - grep -A5 '^\[database\]' app.ini
-  - 'python3 - <<''EOF''\nimport configparser\nc = configparser.ConfigParser()\nc.read(''app.ini'')\nc[''database''][''port'']
-    = ''5433''\nwith open(''app.ini'', ''w'') as f: c.write(f)\nEOF'
+  - "python3 -c \"import configparser; c=configparser.ConfigParser(); c.read('app.ini'); c['database']['port']='5433'; with open('app.ini','w') as f: c.write(f)\""
   examples:
   - awk -F= '/^host=/{print $2}' config.ini
   - python3 -c "import configparser; c=configparser.ConfigParser(); c.read('app.ini'); print(c.sections())"
@@ -47,23 +46,23 @@ knowledge:
   source: https://en.wikipedia.org/wiki/INI_file
   description: INI file format conventions and variants.
 instructions: "# INI Files\n\nRead and modify INI configuration files safely.\n\n## What this skill does\n\
-  \n- Parses sections and options with Python configparser.\n- Extracts values with shell one-liners for\
-  \ quick checks.\n- Writes back changes preserving structure.\n- Detects duplicate keys and malformed\
-  \ lines.\n\n## When to use\n\n- Configuring legacy tools and services that use INI files.\n- Auditing\
-  \ which settings an app will load.\n- Batch-editing configs across many hosts.\n\n## Real commands\n\
-  \n```bash\n# Read one value\npython3 -c \"import configparser; c=configparser.ConfigParser(); c.read('app.ini');\
-  \ print(c['database']['host'])\"\n\n# Validate the file parses\npython3 -m configparser app.ini\n\n\
-  # List sections\npython3 -c \"import configparser; c=configparser.ConfigParser(); c.read('app.ini');\
-  \ print(c.sections())\"\n\n# Shell one-liner for a section block\ngrep -A5 '^\\[database\\]' app.ini\n\
-  \n# Update a value in place\npython3 - <<'EOF'\nimport configparser\nc = configparser.ConfigParser()\n\
-  c.read('app.ini')\nc['database']['port'] = '5433'\nwith open('app.ini', 'w') as f:\n    c.write(f)\n\
-  EOF\n```\n\n## Example file\n\n```ini\n[server]\nhost = 0.0.0.0\nport = 8080\n\n[database]\nhost = db.internal\n\
-  port = 5432\nuser = app\n```\n\n## Testing\n\n```bash\npython3 -m configparser app.ini && echo \"valid\"\
-  \n```\n\n## Best practices\n\n- Back up the file before in-place writes (`cp app.ini app.ini.bak`).\n\
-  - Use interpolation-aware escaping when values contain % characters.\n- Prefer configparser over regex\
-  \ edits to preserve comments and order.\n- Validate with `python3 -m configparser` in CI before deploy.\n\
-  \n## Example exchange\n\n```\nUser: What port is the app configured to use?\nAgent: python3 -c \"import\
-  \ configparser; c=configparser.ConfigParser(); c.read('app.ini'); print(c['server']['port'])\"\n```"
+50:   \n- Parses sections and options with Python configparser.\n- Extracts values with shell one-liners for\
+51:   \ quick checks.\n- Writes back changes preserving structure.\n- Detects duplicate keys and malformed\
+52:   \ lines.\n\n## When to use\n\n- Configuring legacy tools and services that use INI files.\n- Auditing\
+53:   \ which settings an app will load.\n- Batch-editing configs across many hosts.\n\n## Real commands\n\
+54:   \n```bash\n# Read one value\npython3 -c \"import configparser; c=configparser.ConfigParser(); c.read('app.ini');\
+55:   \ print(c['database']['host'])\"\n\n# Validate the file parses\npython3 -m configparser app.ini\n\n\
+56:   # List sections\npython3 -c \"import configparser; c=configparser.ConfigParser(); c.read('app.ini');\
+57:   \ print(c.sections())\"\n\n# Shell one-liner for a section block\ngrep -A5 '^\\[database\\]' app.ini\n\
+58:   \n# Update a value in place\npython3 - <<'EOF'\nimport configparser\nc = configparser.ConfigParser()\n\
+59:   c.read('app.ini')\nc['database']['port'] = '5433'\nwith open('app.ini', 'w') as f:\n    c.write(f)\n\
+60:   EOF\n```\n\n## Example file\n\n```ini\n[server]\nhost = 0.0.0.0\nport = 8080\n\n[database]\nhost = db.internal\n\
+61:   port = 5432\nuser = app\n```\n\n## Testing\n\n```bash\npython3 -m configparser app.ini && echo \"valid\"\
+62:   \n```\n\n## Best practices\n\n- Back up the file before in-place writes (`cp app.ini app.ini.bak`).\n\
+63:   - Use interpolation-aware escaping when values contain % characters.\n- Prefer configparser over regex\
+64:   \ edits to preserve comments and order.\n- Validate with `python3 -m configparser` in CI before deploy.\n\
+65:   \n## Example exchange\n\n```\nUser: What port is the app configured to use?\nAgent: python3 -c \"import\
+66:   \ configparser; c=configparser.ConfigParser(); c.read('app.ini'); print(c['server']['port'])\"\n```"
 examples:
 - input: Read the database host from app.ini
   output: python3 -c "import configparser; c=configparser.ConfigParser(); c.read('app.ini'); print(c['database']['host'])"
@@ -92,7 +91,7 @@ platforms:
   opencode:
     plugin: opencode-ini
   generic:
-    system_prompt: 'This is your domain: Ini. You do it through ini-parsing: Read, validate, and modify
+    system_prompt: 'This is your domain: INI. You do it through ini-parsing: Read, validate, and modify
       INI files with Python and shell tools. The commands are real, e.g. `python3 -c import configparser;
       c=configparser.ConfigParser(); c.read(app.ini);...`. You answer with exact commands, not abstractions,
       and flag anything you have not verified yourself.'
@@ -101,5 +100,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Optimization Deploy Agent
   description: Optimization deployment agent. Manages Optimization ML deployment.
   commands:
   - docker build -t optimization:latest .
-  - docker push registry.example.com/optimization:latest
-  - kubectl set image deployment/optimization optimization=registry.example.com/optimization:latest
+  - docker push ghcr.io/optimization:latest
+  - kubectl set image deployment/optimization optimization=ghcr.io/optimization:latest
   - helm upgrade optimization ./helm-chart --namespace production
   - kubectl rollout status deployment/optimization --timeout=300s
-  - python identity.py --agent optimization-identity-py
+  - optimization --version
   examples:
   - python serve_optimization.py --port 8080
   - 'curl http://localhost:8080/optimize --data ''{"model": "model.pkl"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python prune.py --model model.pkl --sparsity 0.5
   parameters: []
 knowledge:
-- title: optimization-identity-py Documentation
+- title: Optuna Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for optimization-identity-py
+  source: https://optuna.org/
+  description: Official documentation for optimization.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Optimization ML deployment specialist. Call on this agent to ship a new version of the
-  optimization ML service. Workflow: `docker build -t optimization:latest .`, `docker push registry.example.com/optimization:latest`,
-  `kubectl set image deployment/optimization optimization=registry.example.com/optimization:latest`, `helm
+  optimization ML service. Workflow: `docker build -t optimization:latest .`, `docker push ghcr.io/optimization:latest`,
+  `kubectl set image deployment/optimization optimization=ghcr.io/optimization:latest`, `helm
   upgrade optimization ./helm-chart --namespace production`, then `kubectl rollout status deployment/optimization
-  --timeout=300s`. Confirm context with `python identity.py --agent optimization-identity-py`. Common
+  optimization --version
   failure modes: registry auth errors, ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches;
   check the rollout status first and verify the pushed tag matches before retrying. Verify with platform
   tooling, e.g. `python serve_optimization.py --port 8080` and `curl http://localhost:8080/optimize --data
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-03-19T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

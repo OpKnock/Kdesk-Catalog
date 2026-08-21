@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Xai Deploy Agent
   description: xAI deployment agent. Manages xAI ML deployment.
   commands:
   - docker build -t xai:latest .
-  - docker push registry.example.com/xai:latest
-  - kubectl set image deployment/xai xai=registry.example.com/xai:latest
+  - docker push ghcr.io/xai:latest
+  - kubectl set image deployment/xai xai=ghcr.io/xai:latest
   - helm upgrade xai ./helm-chart --namespace production
   - kubectl rollout status deployment/xai --timeout=300s
-  - python identity.py --agent xai-identity-py
+  - xai --version
   examples:
   - xai login
   - 'xai run grok-1 --input ''{"prompt": "Hello"}'''
@@ -26,10 +26,18 @@ capabilities:
   - xai predictions list
   parameters: []
 knowledge:
-- title: xai-identity-py Documentation
+- title: xAI Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for xai-identity-py
+  source: https://docs.x.ai/
+  description: Official documentation for xai.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are an xAI deployment expert. A user calls on you to deploy xAI ML applications built
   around Grok models. Work step by step: authenticate with ''xai login'', run a model with ''xai run grok-1
   --input "{"prompt": "Hello"}"'', and inspect catalog and activity with ''xai models list'' and ''xai
@@ -77,5 +85,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-12T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

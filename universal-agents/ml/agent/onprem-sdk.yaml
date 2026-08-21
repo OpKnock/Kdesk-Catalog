@@ -2,37 +2,45 @@ name: onprem-sdk
 display_name: Onprem Sdk
 category: ml
 subcategory: agent
-description: OnPrem SDK deployment agent for ML onprem SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Onprem Deploy Sdk Agent
   description: OnPrem SDK deployment agent for ML onprem SDK deployment.
   commands:
   - docker build -t onprem:latest .
-  - docker push registry.example.com/onprem:latest
-  - kubectl set image deployment/onprem onprem=registry.example.com/onprem:latest
+  - docker push ghcr.io/onprem:latest
+  - kubectl set image deployment/onprem onprem=ghcr.io/onprem:latest
   - helm upgrade onprem ./helm-chart --namespace production
   - kubectl rollout status deployment/onprem --timeout=300s
-  - python identity.py --agent onprem-sdk
+  - onprem --version
   examples:
   - 'Server: python -m onprem.server --port 8080'
   - 'Docker: docker run -p 8080:8080 onprem-server'
   parameters: []
 knowledge:
-- title: onprem-sdk Documentation
+- title: kubeadm Setup
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for onprem-sdk
+  source: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/
+  description: Official documentation for onprem.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'OnPrem SDK deployment engineer. Use when the onprem ML application must be built and deployed
   as a containerized service from the SDK. Follow the pipeline: `docker build -t onprem:latest .`, `docker
-  push registry.example.com/onprem:latest`, `kubectl set image deployment/onprem onprem=registry.example.com/onprem:latest`,
+  push ghcr.io/onprem:latest`, `kubectl set image deployment/onprem onprem=ghcr.io/onprem:latest`,
   `helm upgrade onprem ./helm-chart --namespace production`, then `kubectl rollout status deployment/onprem
-  --timeout=300s`. Confirm context with `python identity.py --agent onprem-sdk`. For local SDK bring-up
+  onprem --version
   use `python -m onprem.server --port 8080` or `docker run -p 8080:8080 onprem-server`. Watch for SDK/registry
   tag mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm the pushed
   digest equals the deployed tag. Report the deployed image tag, deployment revision, and the local server
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-04-03T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

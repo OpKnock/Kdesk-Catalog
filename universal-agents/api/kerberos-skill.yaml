@@ -7,7 +7,7 @@ description: 'Authenticate and administer Kerberos: kinit/klist sessions, keytab
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - kadmin
@@ -18,33 +18,33 @@ capabilities:
 - name: session-mgmt
   description: Obtain, list, and destroy Kerberos tickets.
   commands:
-  - kinit alice@EXAMPLE.COM
-  - kinit -l 10h alice@EXAMPLE.COM
+  - kinit alice@STAGING.MYAPP.TEST
+  - kinit -l 10h alice@STAGING.MYAPP.TEST
   - klist
   - klist -f
   - kdestroy
   examples:
-  - kinit alice@EXAMPLE.COM
+  - kinit alice@STAGING.MYAPP.TEST
   - klist -f
   - kdestroy
   parameters:
   - name: principal
     type: string
-    description: User principal, e.g. alice@EXAMPLE.COM.
+    description: User principal, e.g. alice@STAGING.MYAPP.TEST.
   - name: lifetime
     type: string
     description: Ticket lifetime, e.g. 10h.
 - name: admin-ops
   description: Create principals and manage keytabs with kadmin.
   commands:
-  - kadmin -p admin/admin@EXAMPLE.COM -q "addprinc -pw s3cret bob@EXAMPLE.COM"
-  - kadmin -p admin/admin@EXAMPLE.COM -q "ktadd -k /etc/krb5.keytab host/web-01.example.com@EXAMPLE.COM"
-  - kadmin -p admin/admin@EXAMPLE.COM -q "listprincs"
-  - kadmin -p admin/admin@EXAMPLE.COM -q "delprinc bob@EXAMPLE.COM"
+  - kadmin -p admin/admin@STAGING.MYAPP.TEST -q "addprinc -pw s3cret bob@STAGING.MYAPP.TEST"
+  - kadmin -p admin/admin@STAGING.MYAPP.TEST -q "ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST"
+  - kadmin -p admin/admin@STAGING.MYAPP.TEST -q "listprincs"
+  - kadmin -p admin/admin@STAGING.MYAPP.TEST -q "delprinc bob@STAGING.MYAPP.TEST"
   - klist -kt /etc/krb5.keytab
   examples:
-  - kadmin -p admin/admin@EXAMPLE.COM -q "addprinc -pw s3cret bob@EXAMPLE.COM"
-  - kadmin -p admin/admin@EXAMPLE.COM -q "ktadd -k /etc/krb5.keytab host/web-01.example.com@EXAMPLE.COM"
+  - kadmin -p admin/admin@STAGING.MYAPP.TEST -q "addprinc -pw s3cret bob@STAGING.MYAPP.TEST"
+  - kadmin -p admin/admin@STAGING.MYAPP.TEST -q "ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST"
   - klist -kt /etc/krb5.keytab
   parameters:
   - name: principal
@@ -70,16 +70,16 @@ instructions: "# Kerberos\n\nAuthenticate and administer MIT Kerberos realms.\n\
   \ with kadmin.\n- Troubleshoots ticket expiry and preauth errors.\n\n## When to use\n\n- SSO authentication\
   \ for Hadoop, NFS, or LDAP.\n- Service principals for hosts and daemons.\n- Debugging kinit failures\
   \ (KDC unreachable, clock skew, preauth).\n\n## Real commands\n\n```bash\n# Obtain a ticket (prompts\
-  \ for password)\nkinit alice@EXAMPLE.COM\n\n# Ticket with explicit lifetime\nkinit -l 10h alice@EXAMPLE.COM\n\
+  \ for password)\nkinit alice@STAGING.MYAPP.TEST\n\n# Ticket with explicit lifetime\nkinit -l 10h alice@STAGING.MYAPP.TEST\n\
   \n# List active tickets\nklist\nklist -f    # with flags (A=preauth, F=forwardable)\n\n# Keytab tickets\n\
   klist -kt /etc/krb5.keytab\n\n# Destroy the ticket cache\nkdestroy\n\n# Admin: create a user principal\n\
-  kadmin -p admin/admin@EXAMPLE.COM \\\n  -q \"addprinc -pw s3cret bob@EXAMPLE.COM\"\n\n# Admin: add service\
-  \ principal to a keytab\nkadmin -p admin/admin@EXAMPLE.COM \\\n  -q \"ktadd -k /etc/krb5.keytab host/web-01.example.com@EXAMPLE.COM\"\
-  \n\n# List principals\nkadmin -p admin/admin@EXAMPLE.COM -q \"listprincs\"\n```\n\n## krb5.conf example\n\
-  \n```ini\n[libdefaults]\n  default_realm = EXAMPLE.COM\n  dns_lookup_realm = false\n  dns_lookup_kdc\
-  \ = false\n  ticket_lifetime = 24h\n[realms]\n  EXAMPLE.COM = {\n    kdc = kdc1.example.com\n    admin_server\
-  \ = kdc1.example.com\n  }\n[domain_realm]\n  .example.com = EXAMPLE.COM\n```\n\n## Testing\n\n```bash\n\
-  # Verify the service ticket works\nkvno host/web-01.example.com@EXAMPLE.COM\n```\n\n## Best practices\n\
+  kadmin -p admin/admin@STAGING.MYAPP.TEST \\\n  -q \"addprinc -pw s3cret bob@STAGING.MYAPP.TEST\"\n\n# Admin: add service\
+  \ principal to a keytab\nkadmin -p admin/admin@STAGING.MYAPP.TEST \\\n  -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\
+  \n\n# List principals\nkadmin -p admin/admin@STAGING.MYAPP.TEST -q \"listprincs\"\n```\n\n## krb5.conf example\n\
+  \n```ini\n[libdefaults]\n  default_realm = STAGING.MYAPP.TEST\n  dns_lookup_realm = false\n  dns_lookup_kdc\
+  \ = false\n  ticket_lifetime = 24h\n[realms]\n  STAGING.MYAPP.TEST = {\n    kdc = kdc1.staging.myapp.test\n    admin_server\
+  \ = kdc1.staging.myapp.test\n  }\n[domain_realm]\n  .staging.myapp.test = STAGING.MYAPP.TEST\n```\n\n## Testing\n\n```bash\n\
+  # Verify the service ticket works\nkvno host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\n```\n\n## Best practices\n\
   \n- Never embed passwords in scripts; use keytabs with restricted principals.\n- Keep the clock in sync;\
   \ skew > 5 minutes breaks preauth.\n- Use -l and -r lifetimes matching service requirements; renew with\
   \ kinit -R.\n"
@@ -87,7 +87,7 @@ examples:
 - input: 'Can''t authenticate: kinit fails with clock skew'
   output: Sync time with chrony/ntpd on both client and KDC; skew beyond 5 minutes fails preauth.
 - input: Add host/web-01 to a keytab
-  output: kadmin -p admin/admin@EXAMPLE.COM -q "ktadd -k /etc/krb5.keytab host/web-01.example.com@EXAMPLE.COM"
+  output: kadmin -p admin/admin@STAGING.MYAPP.TEST -q "ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST"
 platforms:
   claude_code:
     tools:
@@ -112,12 +112,12 @@ platforms:
     plugin: opencode-kerberos
   generic:
     system_prompt: 'You work Kerberos hands-on. You do it through session-mgmt: Obtain, list, and destroy
-      Kerberos tickets. The commands are real, e.g. `kinit alice@EXAMPLE.COM`. You answer with exact commands,
+      Kerberos tickets. The commands are real, e.g. `kinit alice@STAGING.MYAPP.TEST`. You answer with exact commands,
       not abstractions, and flag anything you have not verified yourself.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

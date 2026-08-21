@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Innovation Server Agent
@@ -18,7 +18,7 @@ capabilities:
   - curl -s http://localhost:8000/metrics | head -20
   - supervisorctl restart model
   - systemctl status model.service
-  - python identity.py --agent innovation-model-server
+  - python --version
   examples:
   - python serve_innovation.py --port 8080
   - 'curl http://localhost:8080/innovate --data ''{"topic": "transformer architectures"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python prototype.py --idea 'new attention mechanism' --output prototype.py
   parameters: []
 knowledge:
-- title: innovation-model-server Documentation
+- title: Python Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for innovation-model-server
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: LangGraph Documentation
+  type: reference
+  source: https://langchain-ai.github.io/langgraph/
+  description: Official documentation for agent.
 instructions: 'Innovation server operator. Call on this agent to launch, verify, and keep alive the Innovation
   serving process. Start the service with `python -m model.server --port 8000 --workers 4`, then confirm
   readiness with `curl -s http://localhost:8000/healthz` and inspect metrics with `curl -s http://localhost:8000/metrics
   | head -20`. If it crashes or degrades, restart via `supervisorctl restart model` and confirm the unit
-  with `systemctl status model.service`. Confirm your operating context with `python identity.py --agent
+  python --version
   innovation-model-server` before touching the service. Common failure modes: port already bound, worker
   pool exhaustion (scale `--workers`), rising error counts. For model-facing work use examples like `python
   serve_innovation.py --port 8080` and `curl http://localhost:8080/innovate --data ''{"topic": "transformer
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-06-19T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

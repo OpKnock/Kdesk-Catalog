@@ -2,12 +2,11 @@ name: real-user-monitoring
 display_name: Real User Monitoring
 category: api
 subcategory: general
-description: 'Real User Monitoring (RUM): web-vitals collection, Grafana Faro setup, and Lighthouse lab
-  checks.'
+description: 'Capture real-user Core Web Vitals with Grafana Faro, run Lighthouse lab audits, and correlate field versus lab performance signals.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - npm
@@ -17,14 +16,14 @@ capabilities:
   description: Instrument web apps for RUM with Faro, measure Core Web Vitals, and run lighthouse audits.
   commands:
   - npm install @grafana/faro-web-sdk @grafana/faro-web-tracing
-  - npx lighthouse https://example.com --output=json --output-path=report.json
-  - npx lighthouse https://example.com --preset=desktop --quiet --output=json
+  - npx lighthouse https://staging.your-app.test --output=json --output-path=report.json
+  - npx lighthouse https://staging.your-app.test --preset=desktop --quiet --output=json
   - curl -s https://cdn.jsdelivr.net/npm/@grafana/faro-web-sdk/dist/core/index.js -o /dev/null -w "%{http_code}\n"
   - npm install web-vitals
   examples:
-  - npx lighthouse https://example.com --output=json --output-path=report.json | jq '.categories.performance.score'
+  - npx lighthouse https://staging.your-app.test --output=json --output-path=report.json | jq '.categories.performance.score'
   - npm install web-vitals
-  - npx lighthouse https://example.com --preset=desktop
+  - npx lighthouse https://staging.your-app.test --preset=desktop
   parameters:
   - name: url
     type: string
@@ -49,9 +48,9 @@ instructions: "# Real User Monitoring\n\nRUM captures how actual browsers experi
   \ Tracks Core Web Vitals\n- Runs lighthouse as a lab baseline\n\n## When to use\n\n- Performance budgets\
   \ and alerting\n- Comparing lab vs field data\n\n## Real commands\n\n```bash\n# Instrument\nnpm install\
   \ @grafana/faro-web-sdk @grafana/faro-web-tracing\nnpm install web-vitals\n\n# Lab check\nnpx lighthouse\
-  \ https://example.com --output=json --output-path=report.json\nnpx lighthouse https://example.com --preset=desktop\
+  \ https://staging.your-app.test --output=json --output-path=report.json\nnpx lighthouse https://staging.your-app.test --preset=desktop\
   \ --quiet\n```\n\n## Faro init\n\n```js\nimport { initializeFaro } from '@grafana/faro-web-sdk';\nimport\
-  \ { TracingInstrumentation } from '@grafana/faro-web-tracing';\n\ninitializeFaro({\n  url: 'https://faro-collector.example.com/collect',\n\
+  \ { TracingInstrumentation } from '@grafana/faro-web-tracing';\n\ninitializeFaro({\n  url: 'https://faro-collector.staging.your-app.test/collect',\n\
   \  app: { name: 'shop-web', version: '1.2.0' },\n  instrumentations: [new TracingInstrumentation()],\n\
   });\n```\n\n## Reading vitals\n\n- LCP under 2.5s, CLS under 0.1, INP under 200ms\n\n## Best practices\n\
   \n- Sample field data at scale (5-10%)\n- Correlate lab (lighthouse) and field (RUM) numbers\n- Alert\
@@ -94,5 +93,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

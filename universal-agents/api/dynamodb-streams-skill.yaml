@@ -2,12 +2,12 @@ name: dynamodb-streams
 display_name: Dynamodb Streams
 category: api
 subcategory: general
-description: 'Process DynamoDB change streams: enable streams, list shards, iterate records with shard
-  iterators, and validate stream view types.'
+description: 'Processes DynamoDB change streams: enables streams, lists shards, iterates records with shard
+  iterators, and validates stream view types.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - aws
@@ -42,94 +42,103 @@ knowledge:
   source: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html
   description: Stream views, shard iteration, ordering, and stream consumers
 instructions: '# DynamoDB Streams
-
-
+ 
+ 
   ## What this skill does
-
-
+ 
+ 
   DynamoDB Streams captures item-level changes (NEW_IMAGE, OLD_IMAGE, KEYS_ONLY, NEW_AND_OLD_IMAGES) in
   time-ordered shards. Consumers iterate shards with shard iterators, mirroring Kinesis-style processing.
-
-
+ 
+ 
   ## When to use
-
-
+ 
+ 
   - Feeding downstream systems (search index, analytics, cache) with table changes
-
+ 
+ 
   - Implementing cross-table replication or audit logs
-
+ 
+ 
   - Building change-driven workflows (send email when order status changes)
-
-
+ 
+ 
   ## Real commands
-
-
+ 
+ 
   ```bash
-
+ 
   # Enable the stream with a view type
-
+ 
   aws dynamodb update-table --table-name Orders --stream-specification StreamEnabled=true,StreamViewType=NEW_AND_OLD_IMAGES
-
-
+ 
+ 
   # Find the stream ARN
-
+ 
   aws dynamodbstreams list-streams --table-name Orders | jq ''.Streams[0].StreamArn''
-
-
+ 
+ 
   # Describe shards
-
+ 
   aws dynamodbstreams describe-stream --stream-arn $ARN | jq ''.StreamDescription.Shards''
-
-
+ 
+ 
   # Get a shard iterator and read records
-
+ 
   ITERATOR=$(aws dynamodbstreams get-shard-iterator --stream-arn $ARN --shard-id $SHARD --shard-iterator-type
   TRIM_HORIZON --query ShardIterator --output text)
-
+ 
   aws dynamodbstreams get-records --shard-iterator "$ITERATOR" | jq ''.Records[] | {eventName, keys: .dynamodb.Keys}''
-
+ 
   ```
-
-
+ 
+ 
   ## View types
-
-
+ 
+ 
   - KEYS_ONLY: only partition/sort keys (cheapest)
-
+ 
+ 
   - NEW_IMAGE: full item after the change
-
+ 
+ 
   - OLD_IMAGE: full item before the change
-
+ 
+ 
   - NEW_AND_OLD_IMAGES: both (most expensive)
-
-
+ 
+ 
   ## Testing
-
-
+ 
+ 
   ```bash
-
+ 
   # Make a change and see it appear in the stream
-
+ 
   aws dynamodb put-item --table-name Orders --item ''{"orderId":{"S":"o-9"}}''
-
+ 
   sleep 5
-
+ 
   # re-get-records with the same iterator to see the INSERT
-
+ 
   ```
-
-
+ 
+ 
   ## Best practices
-
-
+ 
+ 
   - Prefer `TRIM_HORIZON` for backfills, `LATEST` for live consumers.
-
+ 
+ 
   - Shard iterators expire after 15 minutes; refresh on `ExpiredIteratorException`.
-
+ 
+ 
   - Records are at-least-once; make consumers idempotent.
-
+ 
+ 
   - Lambda triggers auto-manage shard iteration; for raw CLI iteration keep a checkpoint in a table.
-
+ 
+ 
   '
 examples:
 - input: Stream order changes to an audit lambda
@@ -170,5 +179,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

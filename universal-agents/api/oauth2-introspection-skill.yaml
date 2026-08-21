@@ -2,27 +2,26 @@ name: oauth2-introspection
 display_name: Oauth2 Introspection
 category: api
 subcategory: general
-description: 'OAuth2 token introspection (RFC 7662): validate access tokens via introspection endpoints
-  and Keycloak setup.'
+description: 'Validates OAuth2 access and refresh tokens against RFC 7662 introspection endpoints. Checks token active status, scopes, and expiration with client credentials authentication.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: token-introspection
   description: Introspect access/refresh tokens against RFC 7662 endpoints to check validity and scopes.
   commands:
-  - curl -X POST https://auth.example.com/introspect -d "token=eyJhbGciOi..." -u client-id:client-secret
-  - curl -X POST https://auth.example.com/introspect -d "token=eyJhbGciOi..." -d "token_type_hint=access_token"
+  - curl -X POST https://auth.your-app.test/introspect -d "token=eyJhbGciOi..." -u client-id:client-secret
+  - curl -X POST https://auth.your-app.test/introspect -d "token=eyJhbGciOi..." -d "token_type_hint=access_token"
     -u client-id:client-secret
   - curl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect -d "token=eyJhbGciOi..."
     -u client-id:client-secret
-  - 'curl -X POST https://auth.example.com/introspect -H "Authorization: Basic $(echo -n client:secret
+  - 'curl -X POST https://auth.your-app.test/introspect -H "Authorization: Basic $(echo -n client:secret
     | base64)" -d "token=xyz"'
   - curl -s http://localhost:8080/realms/myrealm/protocol/openid-connect/certs
   examples:
-  - curl -X POST https://auth.example.com/introspect -d "token=xyz" -d "token_type_hint=access_token"
+  - curl -X POST https://auth.your-app.test/introspect -d "token=xyz" -d "token_type_hint=access_token"
     -u api-client:secret | jq .
   - curl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect -d "token=xyz"
     -u svc:svcsecret | jq '.active,.scope'
@@ -50,10 +49,10 @@ instructions: "# OAuth2 Token Introspection\n\nIntrospection (RFC 7662) lets a r
   \ endpoints with client credentials\n- Reads active/scope/exp fields in responses\n- Tests with Keycloak\
   \ and generic endpoints\n\n## When to use\n\n- Validating opaque (non-JWT) access tokens\n- Checking\
   \ token expiry and scope server-side\n\n## Real commands\n\n```bash\n# Basic introspection\ncurl -X\
-  \ POST https://auth.example.com/introspect \\\n  -d \"token=eyJhbGciOi...\" -u client-id:client-secret\n\
-  \n# With token_type_hint\ncurl -X POST https://auth.example.com/introspect \\\n  -d \"token=eyJhbGciOi...\"\
+  \ POST https://auth.your-app.test/introspect \\\n  -d \"token=eyJhbGciOi...\" -u client-id:client-secret\n\
+  \n# With token_type_hint\ncurl -X POST https://auth.your-app.test/introspect \\\n  -d \"token=eyJhbGciOi...\"\
   \ -d \"token_type_hint=access_token\" -u client-id:client-secret\n\n# Keycloak\ncurl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect\
-  \ \\\n  -d \"token=xyz\" -u svc:svcsecret\n\n# Basic auth header form\ncurl -X POST https://auth.example.com/introspect\
+  \ \\\n  -d \"token=xyz\" -u svc:svcsecret\n\n# Basic auth header form\ncurl -X POST https://auth.your-app.test/introspect\
   \ \\\n  -H \"Authorization: Basic $(echo -n client:secret | base64)\" -d \"token=xyz\"\n```\n\n## Response\
   \ fields\n\n```json\n{ \"active\": true, \"scope\": \"read write\", \"client_id\": \"api\", \"exp\"\
   : 1710000000 }\n```\n\n## Best practices\n\n- `active: false` means reject; never cache long\n- Include\
@@ -90,12 +89,12 @@ platforms:
   generic:
     system_prompt: 'You take the Oauth2 Introspection seat. You do it through token-introspection: Introspect
       access/refresh tokens against RFC 7662 endpoints to check validity and scopes. The commands are
-      real, e.g. `curl -X POST https://auth.example.com/introspect -d token=eyJhbGciOi... -u...`. You
+      real, e.g. `curl -X POST https://auth.your-app.test/introspect -d token=eyJhbGciOi... -u...`. You
       work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

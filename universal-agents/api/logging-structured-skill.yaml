@@ -7,8 +7,10 @@ description: 'Work with structured (JSON) logs: validate lines, filter by level/
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 prerequisites:
 - awk
 - grep
@@ -18,32 +20,32 @@ capabilities:
 - name: jq-filter
   description: Filter and project structured log fields with jq.
   commands:
-  - jq -r 'select(.level=="error") | .ts + " " + .msg' app.log
-  - jq '. | {service, level, duration_ms}' app.log | head -20
-  - jq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' app.log
-  - 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' app.log'
+  - jq -r 'select(.level=="error") | .ts + " " + .msg' checkout-service.log
+  - jq '. | {service, level, duration_ms}' checkout-service.log | head -20
+  - jq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' checkout-service.log
+  - 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' checkout-service.log'
   examples:
-  - jq -r 'select(.level=="error") | .ts + " " + .msg' app.log
-  - jq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' app.log
-  - 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' app.log'
+  - jq -r 'select(.level=="error") | .ts + " " + .msg' checkout-service.log
+  - jq -r 'select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv' checkout-service.log
+  - 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' checkout-service.log'
   parameters:
   - name: file
     type: string
-    description: JSON log file.
+    description: JSON log file (e.g., checkout-service.log).
   - name: filter
     type: string
     description: jq filter expression.
 - name: validate-produce
   description: Validate log lines parse and produce well-formed JSON logs.
   commands:
-  - grep '"level":"error"' app.log | jq -r '.msg'
-  - python3 -m json.tool <(tail -1 app.log)
-  - tail -f app.log | jq -r '[.ts, .level, .msg] | @tsv'
-  - 'awk ''!/^{/ {print "MALFORMED: " $0}'' app.log | head'
+  - grep '"level":"error"' checkout-service.log | jq -r '.msg'
+  - tail -1 checkout-service.log | python3 -m json.tool
+  - tail -f checkout-service.log | jq -r '[.ts, .level, .msg] | @tsv'
+  - 'awk ''!/^{/ {print "MALFORMED: " $0}'' checkout-service.log | head'
   examples:
-  - grep '"level":"error"' app.log | jq -r '.msg'
-  - python3 -m json.tool <(tail -1 app.log)
-  - tail -f app.log | jq -r '[.ts, .level, .msg] | @tsv'
+  - grep '"level":"error"' checkout-service.log | jq -r '.msg'
+  - tail -1 checkout-service.log | python3 -m json.tool
+  - tail -f checkout-service.log | jq -r '[.ts, .level, .msg] | @tsv'
   parameters:
   - name: pattern
     type: string
@@ -90,42 +92,42 @@ instructions: '# Structured Logging
 
   # Error lines with timestamp + message
 
-  jq -r ''select(.level=="error") | .ts + " " + .msg'' app.log
+  jq -r ''select(.level=="error") | .ts + " " + .msg'' checkout-service.log
 
 
   # Project key fields
 
-  jq ''. | {service, level, duration_ms}'' app.log | head -20
+  jq ''. | {service, level, duration_ms}'' checkout-service.log | head -20
 
 
   # Slow requests as TSV
 
-  jq -r ''select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv'' app.log
+  jq -r ''select(.duration_ms > 1000) | [.ts, .service, .msg] | @tsv'' checkout-service.log
 
 
   # Count by service
 
-  jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' app.log
+jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' checkout-service.log
 
 
   # Error messages via grep + jq
 
-  grep ''"level":"error"'' app.log | jq -r ''.msg''
+  grep ''"level":"error"'' checkout-service.log | jq -r ''.msg''
 
 
   # Validate the last line parses
 
-  python3 -m json.tool <(tail -1 app.log)
+  tail -1 checkout-service.log | python3 -m json.tool
 
 
   # Live streaming as TSV
 
-  tail -f app.log | jq -r ''[.ts, .level, .msg] | @tsv''
+  tail -f checkout-service.log | jq -r ''[.ts, .level, .msg] | @tsv''
 
 
   # Find malformed lines
 
-  awk ''!/^{/ {print "MALFORMED: " $0}'' app.log | head
+  awk ''!/^{/ {print "MALFORMED: " $0}'' checkout-service.log | head
 
   ```
 
@@ -162,9 +164,9 @@ instructions: '# Structured Logging
   '
 examples:
 - input: List all errors with timestamps
-  output: jq -r 'select(.level=="error") | .ts + " " + .msg' app.log
+  output: jq -r 'select(.level=="error") | .ts + " " + .msg' checkout-service.log
 - input: Which service logs the most?
-  output: 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' app.log'
+  output: 'jq -s ''group_by(.service) | map({service: .[0].service, count: length})'' checkout-service.log'
 platforms:
   claude_code:
     tools:
@@ -197,5 +199,3 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

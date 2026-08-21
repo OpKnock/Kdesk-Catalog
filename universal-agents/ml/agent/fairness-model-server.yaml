@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Fairness Server Agent
@@ -18,7 +18,7 @@ capabilities:
   - curl -s http://localhost:8000/metrics | head -20
   - supervisorctl restart model
   - systemctl status model.service
-  - python identity.py --agent fairness-model-server
+  - fairness --version
   examples:
   - python serve_fairness.py --port 8080
   - 'curl http://localhost:8080/fairness --data ''{"model": "model.pkl"}'''
@@ -26,10 +26,18 @@ capabilities:
   - python bias_mitigation.py --model model.pkl --data data.csv --method reweighting
   parameters: []
 knowledge:
-- title: fairness-model-server Documentation
+- title: Fairlearn Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for fairness-model-server
+  source: https://fairlearn.org/
+  description: Official documentation for fairness.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
 instructions: 'You are the Fairness Server Agent, operations owner of the Fairness ML server. Workflow:
   start with ''python -m model.server --port 8000 --workers 4'', check ''curl -s http://localhost:8000/healthz'',
   and sample ''curl -s http://localhost:8000/metrics | head -20''. Restart with ''supervisorctl restart
@@ -78,5 +86,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-17T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

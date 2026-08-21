@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Fairness Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent fairness-agent-2
+  - fairness --version
   examples:
   - python serve_fairness.py --port 8080
   - 'curl http://localhost:8080/fairness --data ''{"model": "model.pkl"}'''
@@ -27,10 +27,18 @@ capabilities:
   - python bias_mitigation.py --model model.pkl --data data.csv --method reweighting
   parameters: []
 knowledge:
-- title: fairness-agent-2 Documentation
+- title: Fairlearn Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for fairness-agent-2
+  source: https://fairlearn.org/
+  description: Official documentation for fairness.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Fairness Inference Server Agent, owner of the Fairness ML inference server
   exposing the v1 API. Workflow: start with ''python serve_fairness.py --port 8080'', health-check with
   ''curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health'', list models with ''curl -s
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-06T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

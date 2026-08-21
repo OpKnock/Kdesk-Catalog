@@ -6,7 +6,7 @@ description: 'Web performance analysis: Lighthouse audits, load testing, and req
 version: 2.0.0
 tags:
 - code-quality
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - npx
@@ -15,16 +15,16 @@ capabilities:
 - name: web-performance
   description: Measure page performance with Lighthouse, curl timing, and load tests
   commands:
-  - npx lighthouse https://example.com --output=json --output-path=./lh-report.json
+  - npx lighthouse http://localhost:8080 --output=json --output-path=./lh-report.json
   - 'curl -o /dev/null -s -w ''total: %{time_total}s ttfb: %{time_starttransfer}s
 
     '' https://example.com'
-  - npx lighthouse https://example.com --only-categories=performance --budget-path=budget.json
+  - npx lighthouse http://localhost:8080 --only-categories=performance --budget-path=budget.json
   - wrk -t4 -c100 -d30s http://localhost:3000/
   - k6 run load-test.js
   examples:
-  - npx lighthouse https://example.com --chrome-flags='--headless' --output=html
-  - curl -w '%{http_code} %{time_total}' -o /dev/null https://example.com/api/health
+  - npx lighthouse http://localhost:8080 --chrome-flags='--headless' --output=html
+  - curl -w '%{http_code} %{time_total}' -o /dev/null http://localhost:8080/api/health
   - wrk -t8 -c200 -d60s http://localhost:8080/api --latency
   parameters:
   - name: only-categories
@@ -101,5 +101,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-01-24T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

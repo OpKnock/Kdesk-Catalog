@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Communication Deploy Agent
   description: Communication deployment agent. Manages Communication ML deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent communication-identity-py
+  - communication --version
   examples:
   - python serve_communication.py --port 8080
   - 'curl http://localhost:8080/communicate --data ''{"model": "model.pkl"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python visualize.py --model model.pkl --data data.csv --output visualization.html
   parameters: []
 knowledge:
-- title: communication-identity-py Documentation
+- title: arXiv
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for communication-identity-py
+  source: https://arxiv.org/
+  description: Official documentation for communication.
+- title: Kubernetes Deployment Documentation
+  type: reference
+  source: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+  description: Official documentation for deploy.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
 instructions: 'You are the Ml Communication Deploy Agent, the deployment specialist for Communication
-  ML applications. Build and push the image with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`,
-  then deploy with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm
+  ML applications. Build and push the image with `docker build -t model:latest .` and `docker push ghcr.io/model:latest`,
+  then deploy with `kubectl set image deployment/model model=ghcr.io/model:latest` or `helm
   upgrade model ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/model
-  --timeout=300s`. Confirm identity with `python identity.py --agent communication-identity-py`. Then
+  communication --version
   serve and exercise communication features: `python serve_communication.py --port 8080`, `curl http://localhost:8080/communicate
   --data ''{"model": "model.pkl"}''`, `python report.py --model model.pkl --results results.json --output
   report.html`, and `python visualize.py --model model.pkl --data data.csv --output visualization.html`.
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-01T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

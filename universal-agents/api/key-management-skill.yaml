@@ -7,7 +7,7 @@ description: 'Manage cryptographic keys across local openssl and cloud KMS (AWS 
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - aws
@@ -21,11 +21,11 @@ capabilities:
   - openssl genrsa -out private.pem 2048
   - openssl rsa -in private.pem -pubout -out public.pem
   - openssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem
-  - openssl req -x509 -new -key private.pem -days 365 -out cert.pem -subj '/CN=api.example.com'
+  - openssl req -x509 -new -key private.pem -days 365 -out cert.pem -subj '/CN=api.staging.myapp.test'
   examples:
   - openssl genrsa -out private.pem 2048
   - openssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem
-  - openssl req -x509 -new -key private.pem -days 365 -out cert.pem -subj '/CN=api.example.com'
+  - openssl req -x509 -new -key private.pem -days 365 -out cert.pem -subj '/CN=api.staging.myapp.test'
   parameters:
   - name: bits
     type: integer
@@ -82,7 +82,7 @@ instructions: "# Key Management\n\nGenerate, encrypt, and store keys and secrets
   \n```bash\n# Local RSA keypair\nopenssl genrsa -out private.pem 2048\nopenssl rsa -in private.pem -pubout\
   \ -out public.pem\n\n# EC key for ECDSA JWT signing\nopenssl ecparam -name prime256v1 -genkey -noout\
   \ -out ec-key.pem\n\n# Self-signed cert\nopenssl req -x509 -new -key private.pem -days 365 -out cert.pem\
-  \ \\\n  -subj '/CN=api.example.com'\n\n# AWS KMS encrypt/decrypt\naws kms encrypt --key-id alias/orders-key\
+  \ \\\n  -subj '/CN=api.staging.myapp.test'\n\n# AWS KMS encrypt/decrypt\naws kms encrypt --key-id alias/orders-key\
   \ \\\n  --plaintext fileb://secret.txt --output text --query CiphertextBlob > secret.b64\naws kms decrypt\
   \ --ciphertext-blob fileb://secret.bin \\\n  --query Plaintext --output text | base64 -d > secret.txt\n\
   \n# GCP KMS encrypt/decrypt\ngcloud kms encrypt --location=global --keyring=my-ring --key=my-key \\\n\
@@ -130,5 +130,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

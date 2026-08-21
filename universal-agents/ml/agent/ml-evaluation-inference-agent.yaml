@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Evaluation Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-evaluation-inference-agent
+  - evaluation --version
   examples:
   - python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1
   - python benchmark.py --model model.pkl --dataset benchmark.json
@@ -27,10 +27,18 @@ capabilities:
   - python report.py --results results.json --output report.html
   parameters: []
 knowledge:
-- title: ml-evaluation-inference-agent Documentation
+- title: MLflow LLM Evaluation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-evaluation-inference-agent
+  source: https://mlflow.org/docs/latest/llms/llm-evaluate/
+  description: Official documentation for evaluation.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Evaluation Inference Agent, running evaluation workloads against served models.
   Workflow: validate the serving API: health via ''curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health'',
   models via ''curl -s http://localhost:8080/v1/models | jq -r .data[].id'', predict via ''curl -X POST
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-05-17T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

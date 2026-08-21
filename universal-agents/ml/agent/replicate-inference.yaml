@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Replicate Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "replicate", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent replicate-inference
+  - replicate --version
   examples:
   - replicate login
   - replicate serve --model stability-ai/sdxl:latest
@@ -27,10 +27,18 @@ capabilities:
   - replicate models list
   parameters: []
 knowledge:
-- title: replicate-inference Documentation
+- title: Replicate Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for replicate-inference
+  source: https://replicate.com/docs/
+  description: Official documentation for replicate.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Replicate Inference Server Agent, the expert users call to set up a Replicate-based
   ML inference server. Authenticate with `replicate login`, then serve a model with `replicate serve --model
   stability-ai/sdxl:latest` and hit it via `curl https://my-model.replicate.run/`. Validate the local
@@ -38,7 +46,7 @@ instructions: 'You are the Replicate Inference Server Agent, the expert users ca
   ''{"inputs": "hello"}''`, `curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type:
   application/json'' -d ''{"model": "replicate", "messages": []}''`, list models with `curl -s http://localhost:8080/v1/models
   | jq -r ''.data[].id''`, and health with `curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`;
-  confirm identity with `python identity.py`. Report the served model URL, sample responses, model ids,
+  replicate --version
   and health code.'
 examples:
 - replicate login
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-04-01T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

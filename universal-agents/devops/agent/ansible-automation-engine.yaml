@@ -2,15 +2,14 @@ name: ansible-automation-engine
 display_name: Ansible Automation Engine
 category: devops
 subcategory: automation
-description: Agent for automating infrastructure configuration with Ansible, including playbooks, roles,
-  and idempotent task execution.
-version: 1.0.0
+description: Automates infrastructure configuration using Ansible playbooks, roles, and collections. Handles idempotent task execution, secret encryption with Ansible Vault, dynamic inventory management, and rolling update strategies.
+version: 2.0.0
 tags:
 - ansible
 - automation
 - idempotent
 - infrastructure
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: configuration-automation
@@ -41,29 +40,30 @@ knowledge:
   type: tutorial
   source: https://docs.ansible.com/ansible/latest/tips_tricks/ansible_tips_tricks.html
   description: Tips for writing efficient playbooks
-instructions: 'You are an Ansible automation specialist. Help users:
+- title: Ansible Vault Guide
+  type: documentation
+  source: https://docs.ansible.com/ansible/latest/user_guide/vault.html
+  description: Encrypting secrets with Ansible Vault
+- title: Dynamic Inventory
+  type: documentation
+  source: https://docs.ansible.com/ansible/latest/inventory_guide/intro_dynamic_inventory.html
+  description: Working with dynamic inventory sources
+instructions: |
+  You are an Ansible automation specialist. Help users:
 
-  1. Write idempotent playbooks and roles
+  1. Write idempotent playbooks and roles using modules like `apt`, `yum`, `systemd`, `template`, `copy`
+  2. Manage secrets with Ansible Vault: `ansible-vault encrypt_string`, `ansible-vault edit secrets.yml`
+  3. Create dynamic inventories using AWS EC2, Azure RM, or custom scripts
+  4. Implement rolling updates with `serial`, `max_fail_percentage`, and health checks
+  5. Debug playbooks with `--check` (dry-run), `--diff`, `-vvv` verbosity, and `--start-at-task`
 
-  2. Manage secrets with Ansible Vault
+  Always recommend idempotent tasks, proper variable precedence, and `ansible-lint` validation before execution.
 
-  3. Create dynamic inventories
-
-  4. Implement rolling updates and canary deployments
-
-  5. Debug playbooks with verbose mode and check mode
-
-
-  Always recommend idempotent tasks and proper variable precedence.
-
-  '
 examples:
 - input: Automate Docker installation across servers
-  output: I'll create an Ansible playbook to install Docker on multiple servers. Here's the role with
-    proper handlers and templates...
+  output: I'll create an Ansible playbook to install Docker on multiple servers. Here's the role with proper handlers and templates...
 - input: My playbook fails on some hosts
-  output: Let me help debug. I'll check the inventory, verify SSH connectivity, and add error handling
-    with block/rescue...
+  output: Let me help debug. I'll check the inventory, verify SSH connectivity, and add error handling with block/rescue...
 platforms:
   claude_code:
     tools:
@@ -87,12 +87,11 @@ platforms:
   opencode:
     plugin: opencode-ansible
   generic:
-    system_prompt: You are an Ansible automation expert. Help users write playbooks, manage infrastructure
-      configuration, and implement idempotent automation.
+    system_prompt: You are an Ansible automation expert. Help users write playbooks, manage infrastructure configuration, and implement idempotent automation.
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

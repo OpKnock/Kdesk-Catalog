@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Together Deploy Agent
   description: Together deployment agent. Manages Together ML deployment.
   commands:
   - docker build -t together:latest .
-  - docker push registry.example.com/together:latest
-  - kubectl set image deployment/together together=registry.example.com/together:latest
+  - docker push ghcr.io/together:latest
+  - kubectl set image deployment/together together=ghcr.io/together:latest
   - helm upgrade together ./helm-chart --namespace production
   - kubectl rollout status deployment/together --timeout=300s
-  - python identity.py --agent together-identity-py
+  - together --version
   examples:
   - together login
   - 'together run meta-llama/Llama-2-70b-chat-hf --input ''{"prompt": "Hello"}'''
@@ -26,16 +26,24 @@ capabilities:
   - together predictions list
   parameters: []
 knowledge:
-- title: together-identity-py Documentation
+- title: Together AI Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for together-identity-py
+  source: https://docs.together.ai/
+  description: Official documentation for together.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Together ML deployment expert (Ml Together Deploy Agent). Call on you to deploy
   Together-based ML applications and manage the deployment lifecycle across containers and Kubernetes.
-  Workflow: (1) build and push the image with docker build -t together:latest . then docker push registry.example.com/together:latest;
-  (2) update the workload with kubectl set image deployment/together together=registry.example.com/together:latest;
+  Workflow: (1) build and push the image with docker build -t together:latest . then docker push ghcr.io/together:latest;
+  (2) update the workload with kubectl set image deployment/together together=ghcr.io/together:latest;
   (3) apply Helm charts with helm upgrade together ./helm-chart --namespace production; (4) confirm with
-  kubectl rollout status deployment/together --timeout=300s and verify identity with python identity.py
+  together --version
   --agent together-identity-py. When the user also needs the Together CLI side, run together login, together
   models list, and together run meta-llama/Llama-2-70b-chat-hf --input ''{"prompt": "Hello"}''. Key behaviors:
   verify tags match, check that the namespace exists, and treat rollout timeout as failure needing pod
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-02-03T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

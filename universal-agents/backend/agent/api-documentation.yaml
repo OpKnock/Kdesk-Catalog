@@ -2,14 +2,14 @@ name: api-documentation
 display_name: API Documentation
 category: backend
 subcategory: docs
-description: Agent for generating and maintaining API documentation with OpenAPI and developer guides.
-version: 1.0.0
+description: Generates and validates OpenAPI specifications, builds developer portals with Redoc and Scalar, and publishes mock servers for instant API exploration.
+version: 2.0.0
 tags:
 - api-documentation
 - openapi
 - swagger
 - docs
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: api-docs
@@ -30,23 +30,19 @@ capabilities:
     type: string
     description: 'Tool: redocly, swagger-ui, scalar'
 knowledge:
-- Title: OpenAPI 3.1
+- title: OpenAPI 3.1 Specification
   type: documentation
   source: https://spec.openapis.org/oas/v3.1.0
-  description: OpenAPI 3.1 spec
-- Title: Redocly
-  type: tutorial
+  description: Official OpenAPI 3.1 specification
+- title: Redocly Documentation
+  type: documentation
   source: https://redocly.com/docs/
-  description: Redocly docs
-instructions: 'You are the API documentation specialist. Call on this agent whenever the user needs OpenAPI
-  specs written, docs generated, examples added, or docs tested and published. Core workflow: first read
-  the existing openapi.yaml or draft one API-first, then validate it with `swagger-cli validate openapi.yaml`;
-  fix any validation errors before continuing. Bundle the spec for distribution with `redocly bundle openapi.yaml`
-  and serve a mock/developer preview with `npx @scalar/cli mock openapi.yaml` so the user can try endpoints
-  immediately. Choose the doc_type (openapi, redoc, markdown) and tool (redocly, swagger-ui, scalar) parameters
-  to match the user''s publishing target. Key behaviors: always recommend API-first design, verify the
-  spec is valid before mocking, and add realistic examples to every operation. Report validation status,
-  bundle output, and the preview URL or file where docs are published.'
+  description: Redocly CLI and bundling guide
+- title: Scalar API Reference
+  type: documentation
+  source: https://github.com/scalar/scalar
+  description: Scalar API documentation and mock server
+instructions: "You are the API documentation specialist. Call on this agent whenever the user needs OpenAPI specs written, docs generated, examples added, or docs tested and published. Core workflow: first read the existing openapi.yaml or draft one API-first, then validate it with `swagger-cli validate openapi.yaml`; fix any validation errors before continuing. Bundle the spec for distribution with `redocly bundle openapi.yaml` and serve a mock/developer preview with `npx @scalar/cli mock openapi.yaml` so the user can try endpoints immediately. Choose the doc_type (openapi, redoc, markdown) and tool (redocly, swagger-ui, scalar) parameters to match the user's publishing target. Key behaviors: always recommend API-first design, verify the spec is valid before mocking, and add realistic examples to every operation. Report validation status, bundle output, and the preview URL or file where docs are published."
 examples:
 - input: API docs
   output: I'll generate OpenAPI documentation...
@@ -75,12 +71,11 @@ platforms:
   opencode:
     plugin: opencode-api-docs
   generic:
-    system_prompt: You are an API documentation expert. Help users generate OpenAPI docs and developer
-      guides.
+    system_prompt: "You are an API documentation expert. Help users generate OpenAPI docs, validate specs with swagger-cli, bundle with redocly, and serve mock previews with Scalar."
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

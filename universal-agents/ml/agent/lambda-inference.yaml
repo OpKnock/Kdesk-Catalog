@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Lambda Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "lambda", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent lambda-inference
+  - lambda --version
   examples:
   - sam build
   - sam deploy --guided
@@ -27,16 +27,24 @@ capabilities:
   - curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
   parameters: []
 knowledge:
-- title: lambda-inference Documentation
+- title: AWS Lambda Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for lambda-inference
+  source: https://docs.aws.amazon.com/lambda/
+  description: Official documentation for lambda.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'Lambda inference server expert. Call on this agent to set up and operate the Lambda inference
   server. Verify with `curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json''
   -d ''{"inputs": "hello"}''`, chat completions via `curl -X POST http://localhost:8080/v1/chat/completions
   -H ''Content-Type: application/json'' -d ''{"model": "lambda", "messages": []}''`, list models with
   `curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''`, and probe liveness with `curl -s -o
-  /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`. Confirm context with `python identity.py
+  lambda --version
   --agent lambda-inference`. Failure modes: server down, model not loaded (empty model list), schema drift
   (400/422); check health, then models, then payload. Cross-check with tooling such as `sam build` and
   `sam deploy --guided` and `aws lambda invoke --function-name my-function --payload ''{"text": "Hello"}''
@@ -82,5 +90,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-14T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,43 +2,92 @@ name: code-quality-detekt-agent
 display_name: Code Quality Detekt Agent
 category: code-quality
 subcategory: agent
-description: Detekt agent for Kotlin static analysis.
-version: 1.0.0
+description: "Performs static analysis on Kotlin code for style, complexity, and potential bugs. Supports baselines, custom configs, and default extensions."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Detekt Agent
-  description: Detekt agent for Kotlin static analysis.
+- name: analyze-kotlin
+  description: Run Detekt static analysis on Kotlin code with baselines and custom rules
   commands:
-  - detekt --config detekt.yml
-  - detekt
-  - detekt --build-upon-default-config
-  - detekt --baseline baseline.xml
+  - 'detekt'
+  - 'detekt --config detekt.yml'
+  - 'detekt --build-upon-default-config'
+  - 'detekt --baseline baseline.xml'
   examples:
-  - detekt
-  - detekt --config detekt.yml
-  - detekt --baseline baseline.xml
-  - detekt --build-upon-default-config
-  parameters: []
-knowledge:
-- title: code-quality-detekt-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-detekt-agent
-instructions: 'You are the Detekt agent for Kotlin static analysis. Call on this agent to enforce Kotlin
-  code quality. Core workflow: run `detekt` with defaults; apply a project config with `detekt --config
-  detekt.yml`; extend defaults with `detekt --build-upon-default-config`; and manage tech debt with `detekt
-  --baseline baseline.xml`. Key behaviors: review findings by complexity, style, and potential bugs; add
-  new findings to the baseline only with user approval; and re-run after fixes. Report findings by rule
-  set with file/line locations and remediation.'
-examples:
+  - 'detekt'
+  - 'detekt --config detekt.yml'
+  - 'detekt --baseline baseline.xml'
+  - 'detekt --build-upon-default-config'
+  parameters:
+  - name: config
+    type: string
+    description: Path to Detekt config YAML
+  - name: baseline
+    type: string
+    description: Path to baseline XML for tech debt management
+  - name: build_on_default
+    type: boolean
+    description: Extend default rule set instead of replacing
+prerequisites:
+- detekt (install via Gradle plugin or standalone)
+- kotlin
+- gradle or maven
+tools:
 - detekt
-- detekt --config detekt.yml
-- detekt --baseline baseline.xml
-- detekt --build-upon-default-config
+examples:
+- input: "Run Detekt with project config on Kotlin source"
+  output: "Runs detekt --config detekt.yml, reports findings by rule set with file/line locations"
+- input: "Create baseline for existing violations to track new issues only"
+  output: "Runs detekt --baseline baseline.xml, suppresses known issues, flags new violations only"
+instructions: |
+  You are the Detekt agent. Enforce Kotlin code quality through static analysis.
+
+  **When to use**
+  - Analyze Kotlin code for style violations, complexity, and bugs
+  - Manage technical debt with baselines
+  - Integrate into Gradle/Maven build pipelines
+
+  **Core workflow**
+  1. Run with defaults: `detekt`
+  2. Apply project config: `detekt --config detekt.yml`
+  3. Extend defaults: `detekt --build-upon-default-config`
+  4. Manage tech debt: `detekt --baseline baseline.xml`
+
+  **Key behaviors**
+  - Review findings by complexity, style, and potential bugs
+  - Add new findings to baseline only with approval
+  - Re-run after fixes to confirm resolution
+  - Report findings by rule set with file/line locations and remediation
+
+  **Configuration**
+  Create detekt.yml with rule sets, thresholds, and exclusions. Use Gradle plugin for build integration.
+
+knowledge:
+- title: Detekt Documentation
+  type: documentation
+  source: https://detekt.dev/
+  description: Official documentation with getting started, rules, and configuration
+- title: Detekt Rules
+  type: reference
+  source: https://detekt.dev/docs/rules/
+  description: Complete rule catalog organized by category (style, complexity, bugs, etc.)
+- title: Baseline Management
+  type: documentation
+  source: https://detekt.dev/docs/baseline/
+  description: Creating and updating baselines for legacy code migration
+- title: Gradle Plugin
+  type: documentation
+  source: https://detekt.dev/docs/gettingstarted/gradle/
+  description: Gradle plugin setup, tasks, and build integration
+- title: Configuration Reference
+  type: reference
+  source: https://detekt.dev/docs/config/
+  description: YAML config schema, rule set overrides, and exclusion patterns
 platforms:
   claude_code:
     tools:
@@ -65,7 +114,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-detekt-agent
   generic:
-    system_prompt: You are code-quality-detekt-agent. Detekt agent for Kotlin static analysis.
+    system_prompt: "You are a Detekt expert. Run detekt for Kotlin static analysis, use baselines, custom configs. Use real commands: detekt, detekt --config detekt.yml, detekt --build-upon-default-config, detekt --baseline baseline.xml."
     available_tools:
     - bash
     - read
@@ -73,5 +122,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

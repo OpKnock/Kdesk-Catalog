@@ -6,7 +6,7 @@ description: 'Diagnoses and manages DNS: dig lookups, zone transfers, MX/TXT che
 version: 2.0.0
 tags:
 - infrastructure
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - delv
@@ -17,14 +17,14 @@ capabilities:
 - name: dig
   description: Query DNS records with dig for full detail.
   commands:
-  - dig example.com A
-  - dig example.com MX
-  - dig example.com TXT
-  - dig @8.8.8.8 example.com A +short
-  - dig example.com +trace
+  - dig localhost A
+  - dig localhost MX
+  - dig localhost TXT
+  - dig @8.8.8.8 localhost A +short
+  - dig localhost +trace
   examples:
   - dig www.example.com A +short
-  - dig example.com ANY +noall +answer
+  - dig localhost ANY +noall +answer
   - dig @1.1.1.1 _dmarc.example.com TXT
   parameters:
   - name: server
@@ -39,15 +39,15 @@ capabilities:
 - name: troubleshoot
   description: Cross-check records and test propagation across resolvers.
   commands:
-  - dig @8.8.8.8 example.com A +short && dig @1.1.1.1 example.com A +short
+  - dig @8.8.8.8 localhost A +short && dig @1.1.1.1 localhost A +short
   - host -t CNAME www.example.com
-  - nslookup -type=MX example.com
-  - dig example.com +dnssec
-  - delv @9.9.9.9 example.com A
+  - nslookup -type=MX localhost
+  - dig localhost +dnssec
+  - delv @9.9.9.9 localhost A
   examples:
-  - dig @208.67.222.222 example.com A +short
-  - dig example.com +dnssec +multi | grep -E 'RRSIG|flags'
-  - nslookup -type=SOA example.com
+  - dig @208.67.222.222 localhost A +short
+  - dig localhost +dnssec +multi | grep -E 'RRSIG|flags'
+  - nslookup -type=SOA localhost
   parameters:
   - name: type
     type: string
@@ -221,5 +221,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-06T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

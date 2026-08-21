@@ -1,50 +1,67 @@
 name: vegeta
 display_name: Vegeta
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'HTTP load testing with Vegeta: attack targets at fixed or ramp rates, analyze latency histograms,
-  error rates, and generate HTML plots.'
-version: 2.0.0
+description: "HTTP load testing with Vegeta: attack targets at fixed or ramp rates, analyze latency histograms, error rates, and generate HTML plots."
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- vegeta
+  - api
+  - load-testing
+  - performance
+platforms:
+  claude_code:
+    tools: [Bash, Read, Write, Edit]
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: vegeta.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools: [bash, read, write, edit]
+  opencode:
+    plugin: opencode-vegeta
+  generic:
+    system_prompt: "This is your domain: Vegeta. You do it through load-testing: Run HTTP attacks against API targets and produce reports. The commands are real, e.g. `vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself."
+    available_tools: [bash, read, write, edit]
 capabilities:
-- name: load-testing
-  description: Run HTTP attacks against API targets and produce reports
-  commands:
-  - vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report
-  - vegeta attack -rate=50 -duration=10s -targets=urls.txt | vegeta plot > plot.html
-  - vegeta attack -rate=100 -duration=1m -targets=urls.txt | vegeta encode --to=json > results.json
-  - vegeta attack -rate=0 -max-workers=100 -duration=0 -targets=urls.txt
-  - vegeta report -type=hist[0,100ms,200ms,300ms] results.bin
-  examples:
-  - vegeta attack -targets=targets.txt -rate=200 -duration=2m | vegeta report -type=json > report.json
-  - vegeta encode --to=gob < results.bin > results.gob
-  - vegeta attack -name=soak-test -rate=25 -duration=1h -targets=urls.txt | vegeta report
-  parameters:
-  - name: rate
-    type: integer
-    description: Requests per second; 0 means unlimited
-  - name: duration
-    type: string
-    description: Attack duration e.g. 30s, 5m, 1h
-  - name: targets
-    type: string
-    description: File with HTTP method, URL, headers, and optional body per target
-knowledge:
-- title: Vegeta README
-  type: documentation
-  source: https://github.com/tsenart/vegeta
-  description: Installation, usage, target file format, and report types
-- title: Vegeta pkg.go.dev
-  type: documentation
-  source: https://pkg.go.dev/github.com/tsenart/vegeta/v12/lib
-  description: Go library reference for embedding load tests in code
-instructions: '# Vegeta
-
+  - name: load-testing
+    description: Run HTTP attacks against API targets and produce reports
+    commands:
+      - 'vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report'
+      - 'vegeta attack -rate=50 -duration=10s -targets=urls.txt | vegeta plot > plot.html'
+      - 'vegeta attack -rate=100 -duration=1m -targets=urls.txt | vegeta encode --to=json > results.json'
+      - 'vegeta attack -rate=0 -max-workers=100 -duration=0 -targets=urls.txt'
+      - 'vegeta report -type=hist[0,100ms,200ms,300ms] results.bin'
+    examples:
+      - 'vegeta attack -targets=targets.txt -rate=200 -duration=2m | vegeta report -type=json > report.json'
+      - 'vegeta encode --to=gob < results.bin > results.gob'
+      - 'vegeta attack -name=soak-test -rate=25 -duration=1h -targets=urls.txt | vegeta report'
+    parameters:
+      - name: rate
+        type: integer
+        description: Requests per second; 0 means unlimited
+      - name: duration
+        type: string
+        description: Attack duration e.g. 30s, 5m, 1h
+      - name: targets
+        type: string
+        description: File with HTTP method, URL, headers, and optional body per target
+prerequisites:
+  - vegeta
+tools: [vegeta]
+examples:
+  - input: Load test /v1/users at 200 rps for 1 minute
+    output: Runs vegeta attack with rate=200, duration=1m against a targets file and shows the latency report.
+  - input: Is p95 under 150ms in CI?
+    output: Pipes vegeta output through jq and fails the build if p95 exceeds 150ms.
+instructions: |
+  # Vegeta
 
   ## What this skill does
 
@@ -52,22 +69,16 @@ instructions: '# Vegeta
   for a given duration, streaming binary results that you can summarize as text, JSON, histograms, or
   plots.
 
-
   ## When to use
 
   - Benchmark endpoint latency and throughput
-
   - Run soak tests over long durations
-
   - Assert p95/p99 latency budgets in CI
-
   - Generate HTML plots for performance reviews
-
 
   ## Targets file format
 
   ```
-
   GET https://api.example.com/v1/users
 
   X-API-Key: secret123
@@ -78,117 +89,58 @@ instructions: '# Vegeta
   Content-Type: application/json
 
   {"customer": "alice"}
-
   ```
-
 
   ## Real commands
 
   ```bash
-
   # Basic attack + text report
-
   vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report
 
-
   # Save binary results, report later
-
   vegeta attack -rate=500 -duration=5m -targets=urls.txt > results.bin
-
   vegeta report results.bin
 
-
   # Latency histogram buckets
-
   vegeta report -type=hist[0,50ms,100ms,250ms,500ms] results.bin
 
-
   # JSON report for CI ingestion
-
-  vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report -type=json | jq ''.latencies''
-
+  vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report -type=json | jq ".latencies"
 
   # HTML plot for sharing
-
   vegeta plot results.bin > plot.html
 
-
   # Unlimited-rate attack (burst)
-
   vegeta attack -rate=0 -max-workers=200 -duration=0 -targets=urls.txt -timeout=30s
 
-
   # Convert binary results to JSON for storage
-
   vegeta encode --to=json < results.bin > results.json
-
   ```
-
 
   ## CI integration
 
   ```bash
-
-  vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report -type=json | jq -e ''.latencies.p95
-  < 200''
-
+  vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report -type=json | jq -e ".latencies.p95 < 200"
   ```
-
 
   ## Best practices
 
   - Use distinct targets for GET vs POST since rates apply per-target
-
   - Always warm up before timed runs
-
   - Check the status-codes breakdown, not just latency
-
   - Keep targets in versioned files, never inline
-
 
   ## Testing
 
   ```bash
-
   vegeta attack -targets=targets.txt -rate=10 -duration=5s | vegeta report
-
-  ```'
-examples:
-- input: Load test /v1/users at 200 rps for 1 minute
-  output: Runs vegeta attack with rate=200, duration=1m against a targets file and shows the latency report.
-- input: Is p95 under 150ms in CI?
-  output: Pipes vegeta output through jq and fails the build if p95 exceeds 150ms.
-platforms:
-  claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
-    model: inherit
-  cursor:
-    rule_type: auto
-  github_copilot:
-    prompt_file: vegeta.md
-    extension: github.copilot
-  windsurf:
-    model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
-  opencode:
-    plugin: opencode-vegeta
-  generic:
-    system_prompt: 'This is your domain: Vegeta. You do it through load-testing: Run HTTP attacks against
-      API targets and produce reports. The commands are real, e.g. `vegeta attack -targets=targets.txt
-      -rate=100 -duration=30s | vegeta report`. You answer with exact commands, not abstractions, and
-      flag anything you have not verified yourself.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+  ```
+knowledge:
+  - title: Vegeta README
+    type: documentation
+    source: https://github.com/tsenart/vegeta
+    description: Installation, usage, target file format, and report types
+  - title: Vegeta pkg.go.dev
+    type: documentation
+    source: https://pkg.go.dev/github.com/tsenart/vegeta/v12/lib
+    description: Go library reference for embedding load tests in code

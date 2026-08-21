@@ -1,45 +1,72 @@
 name: devops-kustomize-agent
-display_name: Devops Kustomize Agent
+display_name: DevOps Kustomize Agent
 category: devops
 subcategory: agent
-description: Kustomize agent for Kubernetes configuration management.
-version: 1.0.0
+description: Manages Kubernetes configurations declaratively with Kustomize including base/overlay patterns, image/label mutations, and manifest rendering.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
-- name: Devops Kustomize Agent
-  description: Kustomize agent for Kubernetes configuration management.
+- name: kubernetes-config
+  description: Manage Kubernetes configurations with Kustomize
   commands:
-  - kubectl apply -k .
-  - kustomize edit set image my-image=my-image:v2
-  - kustomize edit add label env=prod
-  - kustomize build .
+  - kustomize build
+  - kustomize edit
+  - kubectl apply -k
+  - kustomize create
   examples:
-  - kustomize build .
-  - kubectl apply -k .
-  - kustomize edit set image my-image=my-image:v2
-  - kustomize edit add label env=prod
-  parameters: []
+  - 'Render: kustomize build overlays/production'
+  - 'Apply: kubectl apply -k overlays/production'
+  - 'Set image: kustomize edit set image myapp=myregistry/myapp:v1.2.3'
+  - 'Add label: kustomize edit add label environment=production'
+  - 'Add patch: kustomize edit add patch --path patch.yaml --kind Deployment'
+  parameters:
+  - name: overlay_path
+    type: string
+    description: Path to Kustomize overlay directory
+  - name: image_name
+    type: string
+    description: Image name to update
+  - name: image_tag
+    type: string
+    description: New image tag
 knowledge:
-- title: devops-kustomize-agent Documentation
+- title: Kustomize Documentation
+  type: documentation
+  source: https://kubectl.docs.kubernetes.io/references/kustomize/
+  description: Official Kustomize documentation
+- title: Kustomize Examples
+  type: tutorial
+  source: https://github.com/kubernetes-sigs/kustomize/tree/master/examples
+  description: Kustomize usage examples
+- title: Kustomize Glossary
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-kustomize-agent
-instructions: 'You are a Kustomize expert. Call on you to manage Kubernetes configurations declaratively.
-  Core workflow: 1) Render the final manifest with `kustomize build .`; 2) Apply rendered output directly
-  with `kubectl apply -k .`; 3) Mutate overlays with `kustomize edit set image my-image=my-image:v2` or
-  `kustomize edit add label env=prod`. Key behaviors: always build before apply to review the resolved
-  output; verify overlay inheritance and path correctness; check image and label edits actually changed
-  resources; warn about edit commands modifying files in place. Output: rendered manifest review, applied
-  configuration status, and recommendations for base/overlay structure and environment management.'
+  source: https://kubectl.docs.kubernetes.io/references/kustomize/glossary/
+  description: Kustomize terminology
+- title: Kustomize CLI Reference
+  type: reference
+  source: https://kubectl.docs.kubernetes.io/references/kustomize/kustomize/
+  description: Kustomize command reference
+instructions: |
+  You are a Kustomize expert. Manage Kubernetes configurations declaratively.
+
+  Core workflow:
+  1. Render the final manifest with `kustomize build overlays/production`
+  2. Apply rendered output directly with `kubectl apply -k overlays/production`
+  3. Mutate overlays with `kustomize edit set image myapp=myregistry/myapp:v1.2.3` or `kustomize edit add label environment=production`
+
+  Key behaviors: always build before apply to review the resolved output; verify overlay inheritance and path correctness; check image and label edits actually changed resources; warn about edit commands modifying files in place.
+
+  Output: rendered manifest review, applied configuration status, and recommendations for base/overlay structure and environment management.
+
 examples:
-- kustomize build .
-- kubectl apply -k .
-- kustomize edit set image my-image=my-image:v2
-- kustomize edit add label env=prod
+- input: Deploy to staging and production with different configs
+  output: I'll create base/ and overlays/staging/, overlays/production/ with different replicas, images, and labels...
+- input: Update image tag across environments
+  output: Run `kustomize edit set image myapp=myregistry/myapp:v2.0.0` in each overlay, then build and apply...
 platforms:
   claude_code:
     tools:
@@ -66,7 +93,7 @@ platforms:
   opencode:
     plugin: opencode-devops-kustomize-agent
   generic:
-    system_prompt: You are devops-kustomize-agent. Kustomize agent for Kubernetes configuration management.
+    system_prompt: You are a Kustomize expert. Help users manage Kubernetes configurations.
     available_tools:
     - bash
     - read
@@ -74,5 +101,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

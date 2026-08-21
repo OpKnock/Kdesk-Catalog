@@ -1,50 +1,77 @@
 name: devops-kubernetes-agent
-display_name: Devops Kubernetes Agent
+display_name: DevOps Kubernetes Agent
 category: devops
 subcategory: agent
-description: Kubernetes agent for container orchestration tasks.
-version: 1.0.0
+description: Orchestrates Kubernetes workloads including deployments, services, ConfigMaps, Secrets, Horizontal Pod Autoscaling, and pod debugging.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
-- name: Devops Kubernetes Agent
-  description: Kubernetes agent for container orchestration tasks.
+- name: kubernetes-orchestration
+  description: Orchestrate Kubernetes workloads and resources
   commands:
-  - 'Apply: kubectl apply -f deployment.yaml'
-  - 'Scale: kubectl scale deployment/myapp --replicas=5'
-  - 'Get: kubectl get pods -n production'
-  - 'Logs: kubectl logs -f deployment/myapp'
+  - kubectl apply
+  - kubectl scale
+  - kubectl get
+  - kubectl logs
+  - kubectl create configmap
+  - kubectl create secret
+  - kubectl autoscale
+  - kubectl describe
   examples:
-  - 'Apply: kubectl apply -f deployment.yaml'
-  - 'Get: kubectl get pods -n production'
-  - 'Logs: kubectl logs -f deployment/myapp'
-  - 'Scale: kubectl scale deployment/myapp --replicas=5'
-  parameters: []
+  - 'Apply: kubectl apply -f deployment.yaml --namespace=production'
+  - 'Scale: kubectl scale deployment/myapp --replicas=5 --namespace=production'
+  - 'Get pods: kubectl get pods -n production -o wide'
+  - 'Logs: kubectl logs -f deployment/myapp --namespace=production --tail=100'
+  - 'ConfigMap: kubectl create configmap app-config --from-file=config.yaml -n production'
+  - 'Secret: kubectl create secret generic app-secret --from-literal=key=value -n production'
+  - 'HPA: kubectl autoscale deployment myapp --min=3 --max=10 --cpu-percent=70 -n production'
+  parameters:
+  - name: namespace
+    type: string
+    description: Kubernetes namespace
+  - name: resource_type
+    type: string
+    description: Resource type (deployment, service, configmap, secret, hpa)
+  - name: replicas
+    type: integer
+    description: Desired replica count
 knowledge:
-- title: devops-kubernetes-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-kubernetes-agent
-instructions: 'You are a Kubernetes expert. Help users with:
+- title: Kubernetes Documentation
+  type: documentation
+  source: https://kubernetes.io/docs/home/
+  description: Official Kubernetes documentation
+- title: Kubernetes Workloads
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/workloads/
+  description: Deployments, Pods, and controllers
+- title: Kubernetes Services
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/services-networking/service/
+  description: Service networking and discovery
+- title: Horizontal Pod Autoscaler
+  type: documentation
+  source: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+  description: HPA configuration and metrics
+instructions: |
+  You are a Kubernetes expert. Orchestrate container workloads.
 
-  - Deployment and Service creation
+  Core tasks:
+  - Deployment and Service creation with proper selectors and ports
+  - ConfigMap and Secret management for configuration and sensitive data
+  - Horizontal Pod Autoscaling with custom metrics
+  - Debugging pod issues with logs, events, and exec
 
-  - ConfigMap and Secret management
+  Always use real kubectl commands and best practices.
 
-  - Horizontal Pod Autoscaling
-
-  - Debugging pod issues
-
-
-  Always use real kubectl commands and best practices.'
 examples:
-- 'Apply: kubectl apply -f deployment.yaml'
-- 'Get: kubectl get pods -n production'
-- 'Logs: kubectl logs -f deployment/myapp'
-- 'Scale: kubectl scale deployment/myapp --replicas=5'
+- input: Deploy my application with ConfigMap and Secret
+  output: I'll create the Deployment, Service, ConfigMap for config.yaml, and Secret for API keys, then apply all...
+- input: Set up autoscaling for my deployment
+  output: Let me configure HPA with `kubectl autoscale deployment myapp --min=3 --max=10 --cpu-percent=70 -n production`...
 platforms:
   claude_code:
     tools:
@@ -80,7 +107,7 @@ platforms:
   opencode:
     plugin: opencode-devops-kubernetes-agent
   generic:
-    system_prompt: You are devops-kubernetes-agent. Kubernetes agent for container orchestration tasks.
+    system_prompt: You are a Kubernetes expert. Help users with deployments, services, ConfigMaps, Secrets, and HPA.
     available_tools:
     - bash
     - read
@@ -88,5 +115,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

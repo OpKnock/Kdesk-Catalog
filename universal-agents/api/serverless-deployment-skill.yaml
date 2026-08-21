@@ -2,49 +2,50 @@ name: serverless-deployment
 display_name: Serverless Deployment
 category: api
 subcategory: general
-description: 'Hand-crafted serverless deployment skill: Serverless Framework create/deploy/invoke/logs
-  lifecycle, AWS SAM build and local invocation, and environment staging.'
+description: "Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams logs for debugging, and supports local emulation via SAM."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - sam
 - serverless
 capabilities:
 - name: serverless-framework
-  description: Deploy and operate serverless functions with Serverless Framework and SAM
+  description: "Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams logs for debugging, and supports local emulation via SAM."
   commands:
   - serverless create --template aws-nodejs --path my-service
+  - serverless deploy --stage staging
   - serverless deploy --stage prod
   - serverless invoke -f hello --stage prod --data '{"name":"Ada"}'
   - serverless logs -f hello -t
   - sam build
-  - sam local invoke HelloWorldFunction
-  examples:
-  - serverless deploy --stage staging
-  - serverless invoke -f hello --stage prod --data '{"name":"Ada"}'
   - sam local invoke HelloWorldFunction --event event.json
+  - sam deploy --guided
+  examples:
+  - serverless create --template aws-nodejs --path my-service
+  - serverless deploy --stage prod
+  - serverless invoke -f hello --stage prod --data '{"name":"Ada"}'
+  - sam build
+  - sam local invoke HelloWorldFunction --event event.json
+  - sam deploy --guided
   parameters:
   - name: stage
     type: string
-    description: 'Deployment stage: dev, staging, prod'
-  - name: function
+    description: Deployment stage (staging, prod)
+  - name: function_name
     type: string
-    description: Function name to invoke or fetch logs for
-  - name: region
+    description: Lambda function name to invoke
+  - name: payload
     type: string
-    description: AWS region, e.g. eu-west-1
+    description: JSON payload for function invocation
 knowledge:
 - title: Serverless Framework docs
   type: documentation
   source: https://www.serverless.com/framework/docs/
-  description: CLI lifecycle, serverless.yml reference
-- title: AWS SAM CLI
-  type: documentation
-  source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html
-  description: sam build, sam local, sam deploy
+  description: "Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams logs for debugging, and supports local emulation via SAM."
 instructions: "# Serverless Deployment\n\nHand-crafted skill for deploying serverless functions safely.\n\
   \n## What this skill does\n\n- Scaffolds services with the Serverless Framework and SAM templates\n\
   - Deploys to named stages and invokes functions for verification\n- Streams function logs for debugging\n\
@@ -100,5 +101,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

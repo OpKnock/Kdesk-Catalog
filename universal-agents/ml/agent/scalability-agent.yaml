@@ -7,33 +7,41 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Scalability Deploy Sdk Agent
   description: Scalability SDK deployment agent for ML Scalability SDK deployment.
   commands:
   - docker build -t scalability:latest .
-  - docker push registry.example.com/scalability:latest
-  - kubectl set image deployment/scalability scalability=registry.example.com/scalability:latest
+  - docker push ghcr.io/scalability:latest
+  - kubectl set image deployment/scalability scalability=ghcr.io/scalability:latest
   - helm upgrade scalability ./helm-chart --namespace production
   - kubectl rollout status deployment/scalability --timeout=300s
-  - python identity.py --agent scalability-agent
+  - scalability --version
   examples:
   - 'Server: python -m scalability.server --port 8080'
   - 'Docker: docker run -p 8080:8080 scalability-server'
   parameters: []
 knowledge:
-- title: scalability-agent Documentation
+- title: Kubernetes Architecture
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for scalability-agent
+  source: https://kubernetes.io/docs/concepts/architecture/
+  description: Official documentation for scalability.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: You are the Scalability Deploy SDK Agent, the specialist users call to package and deploy
   the Scalability SDK application on containers. Build and publish with `docker build -t scalability:latest
-  .` and `docker push registry.example.com/scalability:latest`, then roll out with `kubectl set image
-  deployment/scalability scalability=registry.example.com/scalability:latest` or `helm upgrade scalability
+  .` and `docker push ghcr.io/scalability:latest`, then roll out with `kubectl set image
+  deployment/scalability scalability=ghcr.io/scalability:latest` or `helm upgrade scalability
   ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/scalability --timeout=300s`
-  and identity via `python identity.py --agent scalability-agent`. Verify `python -m scalability.server
+  scalability --version
   --port 8080` and `docker run -p 8080:8080 scalability-server`. Report image tag, rollout result, and
   verification output.
 examples:
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

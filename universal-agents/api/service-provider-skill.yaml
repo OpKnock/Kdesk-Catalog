@@ -1,148 +1,117 @@
 name: service-provider
 display_name: Service Provider
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted OIDC service provider skill: discovery document, authorization code exchange,
-  userinfo, and JWKS validation for SP-side integration.'
-version: 2.0.0
+description: "Implements the relying party side of OpenID Connect: performs dynamic endpoint discovery, trades authorization codes for access tokens at the token endpoint, retrieves identity claims from userinfo, and verifies ID token signatures using published JWKS."
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
+  - api
+  - oidc
+  - relying-party
+  - sso
+  - authentication
 capabilities:
 - name: oidc-sp-integration
-  description: 'Integrate as an OIDC service provider: discovery, tokens, userinfo'
+  description: Executes the complete OIDC relying party flow from discovery through token validation
   commands:
-  - curl -s https://idp.example.com/.well-known/openid-configuration | jq -r '.authorization_endpoint,
-    .token_endpoint, .jwks_uri'
-  - curl -s -X POST https://idp.example.com/token -d "grant_type=authorization_code&code=$CODE&redirect_uri=https://app.example.com/cb&client_id=app1&client_secret=$CLIENT_SECRET"
-    | jq -r .access_token
-  - 'curl -s -H "Authorization: Bearer $TOKEN" https://idp.example.com/userinfo'
-  - curl -s https://idp.example.com/.well-known/jwks.json | jq -r '.keys[0].kid'
+  - curl -s https://auth.example.org/.well-known/openid-configuration | jq -r '.authorization_endpoint,.token_endpoint,.jwks_uri'
+  - curl -s -X POST https://auth.example.org/token -d "grant_type=authorization_code&code=$CODE&redirect_uri=https://app.example.org/callback&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token
+  - 'curl -s -H "Authorization: Bearer $TOKEN" https://auth.example.org/userinfo | jq'
+  - curl -s https://auth.example.org/.well-known/jwks.json | jq -r '.keys[].kid'
   examples:
-  - curl -s https://idp.example.com/.well-known/openid-configuration | jq -r '.authorization_endpoint'
-  - 'curl -s -H "Authorization: Bearer $TOKEN" https://idp.example.com/userinfo | jq'
-  - curl -s https://idp.example.com/.well-known/jwks.json | jq -r '.keys[].alg'
+  - curl -s https://auth.example.org/.well-known/openid-configuration | jq -r '.authorization_endpoint'
+  - 'curl -s -H "Authorization: Bearer $TOKEN" https://auth.example.org/userinfo | jq'
+  - curl -s https://auth.example.org/.well-known/jwks.json | jq -r '.keys[].alg'
   parameters:
   - name: issuer
     type: string
     description: IdP issuer URL for discovery
   - name: client_id
     type: string
-    description: Registered SP client ID
+    description: Registered RP client ID
   - name: redirect_uri
     type: string
     description: Callback URL registered with the IdP
 knowledge:
-- title: OIDC Core spec
-  type: documentation
-  source: https://openid.net/specs/openid-connect-core-1_0.html
-  description: Authorization code flow and userinfo
-- title: OIDC discovery spec
-  type: documentation
-  source: https://openid.net/specs/openid-connect-discovery-1_0.html
-  description: Discovery document fields
-instructions: '# OIDC Service Provider
+  - title: OIDC Core Specification
+    type: documentation
+    source: https://openid.net/specs/openid-connect-core-1_0.html
+    description: Authorization code flow, token endpoint, and userinfo endpoint specifications
+  - title: OIDC Discovery Specification
+    type: documentation
+    source: https://openid.net/specs/openid-connect-discovery-1_0.html
+    description: Well-known configuration document fields and usage
+  - title: OAuth 2.0 Token Revocation
+    type: documentation
+    source: https://www.rfc-editor.org/rfc/rfc7009.html
+    description: Token revocation endpoint for secure logout
+instructions: |
+  # OIDC Service Provider
 
-
-  Hand-crafted skill for integrating an application as an OIDC service provider.
-
+  Implements the relying party side of OpenID Connect.
 
   ## What this skill does
 
-
   - Discovers IdP endpoints from the well-known configuration
-
   - Exchanges authorization codes for tokens
-
   - Fetches userinfo and validates signatures with JWKS
-
 
   ## When to use
 
-
-  - Wiring a new app into corporate SSO as the SP side
-
+  - Wiring a new app into corporate SSO as the RP side
   - Debugging token endpoint failures
-
   - Verifying user claims after login
-
 
   ## Real commands
 
-
   ```bash
-
   # Discovery: find all endpoints dynamically
-
-  curl -s https://idp.example.com/.well-known/openid-configuration | jq -r ''.authorization_endpoint,
-  .token_endpoint, .jwks_uri''
-
+  curl -s https://auth.example.org/.well-known/openid-configuration | jq -r '.authorization_endpoint,.token_endpoint,.jwks_uri'
 
   # Exchange the authorization code
+  curl -s -X POST https://auth.example.org/token -d "grant_type=authorization_code&code=$CODE&redirect_uri=https://app.example.org/callback&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token
 
-  curl -s -X POST https://idp.example.com/token -d "grant_type=authorization_code&code=$CODE&redirect_uri=https://app.example.com/cb&client_id=app1&client_secret=$CLIENT_SECRET"
-  | jq -r .access_token
-
-
-  # Read the user''s claims
-
-  curl -s -H "Authorization: Bearer $TOKEN" https://idp.example.com/userinfo | jq
-
+  # Read the user's claims
+  curl -s -H "Authorization: Bearer $TOKEN" https://auth.example.org/userinfo | jq
 
   # Inspect signing keys
-
-  curl -s https://idp.example.com/.well-known/jwks.json | jq -r ''.keys[].kid''
-
+  curl -s https://auth.example.org/.well-known/jwks.json | jq -r '.keys[].kid'
   ```
 
-
-  ## SP checklist
-
+  ## RP checklist
 
   - Redirect to the authorization_endpoint with scope=openid profile email
-
   - Validate the id_token signature against JWKS and the issuer claim
-
   - Use userinfo only for non-critical profile data
-
 
   ## Testing
 
-
   ```bash
-
-  curl -s https://idp.example.com/.well-known/openid-configuration | jq -r ''.token_endpoint''
-
-  curl -s -H "Authorization: Bearer $TOKEN" https://idp.example.com/userinfo | jq ''.email''
-
+  curl -s https://auth.example.org/.well-known/openid-configuration | jq -r '.token_endpoint'
+  curl -s -H "Authorization: Bearer $TOKEN" https://auth.example.org/userinfo | jq '.email'
   ```
-
 
   ## Best practices
 
-
   - Never hardcode endpoints; resolve them from discovery
-
   - Store client_secret server-side only
-
   - Cache JWKS and refresh on kid changes
-
-  '
 examples:
-- input: Set up login with my company IdP
-  output: Read /.well-known/openid-configuration for endpoints, register client_id/redirect_uri, then
-    exchange the code at the token endpoint and read userinfo.
-- input: Token endpoint returned invalid_grant
-  output: 'Check the code was used once, redirect_uri matches exactly, and the client secret is current:
-    replay with curl -X POST -d "grant_type=authorization_code&code=...".'
+  - input: Set up login with my company IdP
+    output: "Read /.well-known/openid-configuration for endpoints, register client_id/redirect_uri, then exchange the code at the token endpoint and read userinfo."
+  - input: Token endpoint returned invalid_grant
+    output: "Check the code was used once, redirect_uri matches exactly, and the client secret is current; replay with curl -X POST -d 'grant_type=authorization_code&code=...'."
 platforms:
   claude_code:
     tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+      - Bash
+      - Read
+      - Write
+      - Edit
     model: inherit
   cursor:
     rule_type: auto
@@ -152,20 +121,16 @@ platforms:
   windsurf:
     model: inherit
     tools:
-    - bash
-    - read
-    - write
-    - edit
+      - bash
+      - read
+      - write
+      - edit
   opencode:
     plugin: opencode-service-provider
   generic:
-    system_prompt: 'This is your domain: Service Provider. You do it through oidc-sp-integration: Integrate
-      as an OIDC service provider: discovery, tokens, userinfo. The commands are real, e.g. `curl -s https://idp.example.com/.well-known/openid-configuration
-      | jq -r...`. You work hands-on and only report outcomes you have observed.'
+    system_prompt: "This is your domain: Service Provider. You do it through oidc-sp-integration: Implement the OIDC relying party flow: discovery, tokens, userinfo. The commands are real, e.g. `curl -s https://auth.example.org/.well-known/openid-configuration | jq -r...`. You work hands-on and only report outcomes you have observed."
     available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+      - bash
+      - read
+      - write
+      - edit

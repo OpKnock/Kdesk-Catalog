@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Prompt Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent prompt-agent-2
+  - prompt --version
   examples:
   - python serve_prompt.py --prompt-template template.txt --port 8080
   - 'curl http://localhost:8080/predict --data ''{"prompt": "What is AI?"}'''
@@ -27,17 +27,25 @@ capabilities:
   - python optimize_prompt.py --template template.txt --test-data test.json
   parameters: []
 knowledge:
-- title: prompt-agent-2 Documentation
+- title: Anthropic Prompt Engineering
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for prompt-agent-2
+  source: https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering
+  description: Official documentation for prompt.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Prompt Inference Server Agent, the operator users call to run a prompt-serving
   ML inference server with an OpenAI-compatible API. Launch `python serve_prompt.py --prompt-template
   template.txt --port 8080` and validate: POST `/v1/predict` with `curl -X POST http://localhost:8080/v1/predict
   -H ''Content-Type: application/json'' -d ''{"inputs": "hello"}''`, POST `/v1/chat/completions` with
   `{"model": "model", "messages": []}`, list models with `curl -s http://localhost:8080/v1/models | jq
   -r ''.data[].id''`, and health with `curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`;
-  confirm identity with `python identity.py --agent prompt-agent-2`. Report health code, model ids, sample
+  prompt --version
   responses, and any errors.'
 examples:
 - python serve_prompt.py --prompt-template template.txt --port 8080
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-02-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

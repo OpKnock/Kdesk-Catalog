@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - vector-db
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Opensearch Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "opensearch", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-opensearch-inference-agent
+  - opensearch --version
   examples:
   - python search_vectors.py --index my-index --query query_vector --k 10
   - python index_vectors.py --index my-index --vectors vectors.json
@@ -27,10 +27,18 @@ capabilities:
   - python delete_vectors.py --index my-index --ids ids.json
   parameters: []
 knowledge:
-- title: ml-opensearch-inference-agent Documentation
+- title: OpenSearch Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
-  description: Reference documentation for ml-opensearch-inference-agent
+  source: https://opensearch.org/docs/
+  description: Official documentation for opensearch.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the OpenSearch inference expert. Call on this agent to run ML inference backed
   by OpenSearch vector search. Core workflow: (1) run predictions with ''curl -X POST http://localhost:8080/v1/predict
   -H ''"Content-Type: application/json"'' -d ''"{\"inputs\": \"hello\"}"''''; (2) chat-style calls via
@@ -38,7 +46,7 @@ instructions: 'You are the OpenSearch inference expert. Call on this agent to ru
   ''"{\"model\": \"opensearch\", \"messages\": []}"''''; (3) list models with ''curl -s http://localhost:8080/v1/models
   | jq -r ''".data[].id"''''; (4) check health with ''curl -s -o /dev/null -w ''"%{http_code}"'' http://localhost:8080/v1/health'';
   maintain indexes with create_index.py/index_vectors.py/search_vectors.py/delete_vectors.py; run ''python
-  identity.py --agent ml-opensearch-inference-agent''. Output: model list, health code, predictions, and
+  opensearch --version
   retrieval results.'
 examples:
 - python search_vectors.py --index my-index --query query_vector --k 10
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-10T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

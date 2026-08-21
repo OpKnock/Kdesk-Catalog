@@ -2,12 +2,11 @@ name: render
 display_name: Render
 category: api
 subcategory: general
-description: 'Hand-crafted Render deployment skill: render.yaml blueprints, render-cli deploy/logs/secret
-  management, and the Render API for service inspection.'
+description: 'Expert deployment reference covering render.yaml blueprints, CLI handling deploy/logs/secrets, and the platform API that enables service inspection and GitOps workflows.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - render
@@ -16,9 +15,9 @@ capabilities:
   description: Deploy and manage Render.com services with blueprint and CLI
   commands:
   - render login
-  - render deploy <service-id>
-  - render logs <service-id> --tail
-  - render secret list <service-id>
+  - render deploy srv-abc123
+  - render logs srv-abc123 --tail
+  - render secret list srv-abc123
   - 'curl -s https://api.render.com/v1/services -H "Authorization: Bearer $RENDER_API_KEY" | jq ''.[0].name'''
   examples:
   - render deploy srv-abc123
@@ -43,7 +42,7 @@ knowledge:
   type: documentation
   source: https://github.com/render-oss/render-cli
   description: render deploy, logs, secret commands
-instructions: "# Render\n\nHand-crafted skill for deploying services to Render.com.\n\n## What this skill\
+instructions: "# Render\n\nExpert skill for deploying services to Render.com.\n\n## What this skill\
   \ does\n\n- Defines services, databases, and cron jobs in a render.yaml blueprint\n- Deploys and tails\
   \ logs with the official render-cli\n- Manages environment secrets and inspects services via the API\n\
   \n## When to use\n\n- Shipping a web service or API to Render\n- Converting manual dashboard clicks\
@@ -54,7 +53,7 @@ instructions: "# Render\n\nHand-crafted skill for deploying services to Render.c
   \ $RENDER_API_KEY\" | jq -r '.[].serviceDetails.url'\n```\n\n## render.yaml blueprint\n\n```yaml\nservices:\n\
   \  - type: web\n    name: api\n    runtime: node\n    plan: starter\n    region: oregon\n    buildCommand:\
   \ npm ci && npm run build\n    startCommand: node dist/index.js\n    healthCheckPath: /healthz\n   \
-  \ envVars:\n      - key: DATABASE_URL\n        fromDatabase:\n          name: db\n          property:\
+  \ \ envVars:\n      - key: DATABASE_URL\n        fromDatabase:\n          name: db\n          property:\
   \ connectionString\ndatabases:\n  - name: db\n    plan: starter\n    databaseName: app\n```\n\n## Testing\
   \ a deploy\n\n```bash\ncurl -sf https://api.onrender.com/healthz && echo healthy\nrender logs srv-abc123\
   \ --tail\n```\n\n## Best practices\n\n- Keep the startCommand minimal; Render restarts on health check\
@@ -97,5 +96,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

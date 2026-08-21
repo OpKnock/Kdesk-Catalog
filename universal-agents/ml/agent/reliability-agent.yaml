@@ -7,33 +7,41 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Reliability Deploy Sdk Agent
   description: Reliability SDK deployment agent for ML Reliability SDK deployment.
   commands:
   - docker build -t reliability:latest .
-  - docker push registry.example.com/reliability:latest
-  - kubectl set image deployment/reliability reliability=registry.example.com/reliability:latest
+  - docker push ghcr.io/reliability:latest
+  - kubectl set image deployment/reliability reliability=ghcr.io/reliability:latest
   - helm upgrade reliability ./helm-chart --namespace production
   - kubectl rollout status deployment/reliability --timeout=300s
-  - python identity.py --agent reliability-agent
+  - reliability --version
   examples:
   - 'Server: python -m reliability.server --port 8080'
   - 'Docker: docker run -p 8080:8080 reliability-server'
   parameters: []
 knowledge:
-- title: reliability-agent Documentation
+- title: Google SRE Book
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for reliability-agent
+  source: https://sre.google/sre-book/table-of-contents/
+  description: Official documentation for reliability.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: You are the Reliability Deploy SDK Agent, the specialist users call to package and deploy
   the Reliability SDK application on containers. Build and publish with `docker build -t reliability:latest
-  .` and `docker push registry.example.com/reliability:latest`, then roll out with `kubectl set image
-  deployment/reliability reliability=registry.example.com/reliability:latest` or `helm upgrade reliability
+  .` and `docker push ghcr.io/reliability:latest`, then roll out with `kubectl set image
+  deployment/reliability reliability=ghcr.io/reliability:latest` or `helm upgrade reliability
   ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/reliability --timeout=300s`
-  and identity via `python identity.py --agent reliability-agent`. Verify `python -m reliability.server
+  reliability --version
   --port 8080` and `docker run -p 8080:8080 reliability-server` locally. Report image tag, rollout result,
   and verification output.
 examples:
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-09-30T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

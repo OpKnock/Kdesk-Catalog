@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - inference
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Mlx Lm Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "mlx-lm", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent mlx-lm-inference-3
+  - mlx-lm --version
   examples:
   - python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080
   - 'curl http://localhost:8080/v1/completions --data ''{"model": "mlx-community/Llama-2-7b-hf", "prompt":
@@ -28,10 +28,18 @@ capabilities:
   - python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx
   parameters: []
 knowledge:
-- title: mlx-lm-inference-3 Documentation
+- title: MLX LM Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
-  description: Reference documentation for mlx-lm-inference-3
+  source: https://github.com/ml-explore/mlx-examples/tree/main/llms
+  description: Official documentation for mlx-lm.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the MLX LM inference server expert. Call on this agent when a user needs to set
   up or troubleshoot an MLX LM ML inference server on Apple Silicon. Core workflow: (1) launch the server
   with ''python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080'' and test it with ''curl
@@ -85,5 +93,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-03-24T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

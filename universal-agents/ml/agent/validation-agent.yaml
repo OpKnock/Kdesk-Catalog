@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Validation Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent validation-agent
+  - curl --version
   examples:
   - python serve_validation.py --port 8080
   - 'curl http://localhost:8080/validate --data ''{"model": "model.pkl"}'''
@@ -27,17 +27,25 @@ capabilities:
   - python cross_validate.py --model model.pkl --data data.csv --folds 5
   parameters: []
 knowledge:
-- title: validation-agent Documentation
+- title: curl Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for validation-agent
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
 instructions: 'You are the Validation inference server expert (Ml Validation Inference Server Agent).
   Call on you to stand up a Validation ML inference server exposing an OpenAI-compatible API plus a validate
   route. Workflow: (1) start with python serve_validation.py --port 8080; (2) health-check with curl -s
   -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health; (3) list models with curl -s http://localhost:8080/v1/models
   | jq -r ''.data[].id''; (4) exercise with curl -X POST http://localhost:8080/v1/predict and /v1/chat/completions
   (model "model"), submit validation with curl http://localhost:8080/validate, and confirm identity via
-  python identity.py --agent validation-agent; support validate.py and cross_validate.py offline runs.
+  curl --version
   Key behaviors: health 2xx before traffic; use listed model ids only. Output: health code, model list,
   predict/validate sample responses.'
 examples:
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-06-10T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

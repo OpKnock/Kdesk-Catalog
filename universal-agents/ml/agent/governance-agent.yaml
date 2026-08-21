@@ -7,32 +7,40 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Governance Deploy Sdk Agent
   description: Governance SDK deployment agent for ML Governance SDK deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent governance-agent
+  - governance --version
   examples:
   - 'Server: python -m governance.server --port 8080'
   - 'Docker: docker run -p 8080:8080 governance-server'
   parameters: []
 knowledge:
-- title: governance-agent Documentation
+- title: MLflow Model Registry
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for governance-agent
+  source: https://mlflow.org/docs/latest/model-registry.html
+  description: Official documentation for governance.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Governance SDK deployment engineer. Use when the governance ML application must be built
   and deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t model:latest
-  .`, `docker push registry.example.com/model:latest`, `kubectl set image deployment/model model=registry.example.com/model:latest`,
+  .`, `docker push ghcr.io/model:latest`, `kubectl set image deployment/model model=ghcr.io/model:latest`,
   `helm upgrade model ./helm-chart --namespace production`, then `kubectl rollout status deployment/model
-  --timeout=300s`. Confirm context with `python identity.py --agent governance-agent`. For local SDK bring-up
+  governance --version
   use `python -m governance.server --port 8080` or `docker run -p 8080:8080 governance-server`. Watch
   for SDK/registry tag mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm
   the pushed digest equals the deployed tag. Report the deployed image tag, deployment revision, and the
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-14T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

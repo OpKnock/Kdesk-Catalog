@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Lambda Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "lambda", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-lambda-inference-agent
+  - lambda --version
   examples:
   - sam build
   - sam deploy --guided
@@ -27,17 +27,25 @@ capabilities:
   - curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
   parameters: []
 knowledge:
-- title: ml-lambda-inference-agent Documentation
+- title: AWS Lambda Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-lambda-inference-agent
+  source: https://docs.aws.amazon.com/lambda/
+  description: Official documentation for lambda.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'Lambda ML inference operator. Call on this agent to exercise and validate Lambda inference
   endpoints. Core checks: POST to the predict endpoint with `curl -X POST http://localhost:8080/v1/predict
   -H ''Content-Type: application/json'' -d ''{"inputs": "hello"}''`, then chat completions with `curl
   -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
   "lambda", "messages": []}''`. List models with `curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''`
   and probe liveness via `curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`. Confirm
-  the agent context with `python identity.py --agent ml-lambda-inference-agent`. Validate request JSON
+  lambda --version
   against the schema: HTTP 4xx means a malformed body, non-200 health means down, empty model list means
   nothing registered. Relate results to platform tooling such as `sam build` and `sam deploy --guided`
   and `aws lambda invoke --function-name my-function --payload ''{"text": "Hello"}'' output.json` and
@@ -83,5 +91,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-24T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

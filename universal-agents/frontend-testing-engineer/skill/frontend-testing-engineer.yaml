@@ -50,7 +50,7 @@ capabilities:
   - npx playwright test --project=chromium
   - npx playwright test --shard=1/4 --project=all
   - npx playwright show-trace trace.zip
-  - npx playwright codegen --save-storage=.auth/state.json https://app.example.com
+  - npx playwright codegen --save-storage=.auth/state.json http://localhost:8080
   examples:
   - npx playwright test tests/e2e --grep-invert '@smoke'
   - npx playwright test --retries=2 --project=webkit
@@ -68,15 +68,15 @@ capabilities:
 - name: a11y-perf
   description: Audit accessibility and performance with axe and Lighthouse.
   commands:
-  - npx axe https://app.example.com --exit
+  - npx axe http://localhost:8080 --exit
   - npx @lhci/cli autorun --config=lighthouserc.js
-  - npx lighthouse https://app.example.com --view --quiet
+  - npx lighthouse http://localhost:8080 --view --quiet
   - npx @lhci/cli healthcheck
   - npx @lhci/cli collect --numberOfRuns=3
   examples:
-  - npx axe https://app.example.com/login --exit --chrome-options="--headless"
+  - npx axe http://localhost:8080/login --exit --chrome-options="--headless"
   - npx @lhci/cli autorun --config=lighthouserc.js --upload.target=temporary-public-storage
-  - npx lighthouse https://app.example.com --output=json --output-path=lhr.json
+  - npx lighthouse http://localhost:8080 --output=json --output-path=lhr.json
   parameters:
   - name: url
     type: string

@@ -7,32 +7,40 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Ecs Deploy Sdk
   description: ECS SDK deployment agent for ML ECS SDK deployment.
   commands:
   - docker build -t ecs:latest .
-  - docker push registry.example.com/ecs:latest
-  - kubectl set image deployment/ecs ecs=registry.example.com/ecs:latest
+  - docker push ghcr.io/ecs:latest
+  - kubectl set image deployment/ecs ecs=ghcr.io/ecs:latest
   - helm upgrade ecs ./helm-chart --namespace production
   - kubectl rollout status deployment/ecs --timeout=300s
-  - python identity.py --agent ecs-deployment
+  - ecs --version
   examples:
   - 'Server: python -m ecs.server --port 8080'
   - 'Docker: docker run -p 8080:8080 ecs-server'
   parameters: []
 knowledge:
-- title: ecs-deployment Documentation
+- title: Amazon ECS Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for ecs-deployment
+  source: https://docs.aws.amazon.com/ecs/
+  description: Official documentation for ecs.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the ECS SDK deployment expert (Ml Ecs Deploy Sdk). Call on you to containerize
   and deploy the ECS server built from the SDK. Workflow: (1) docker build -t ecs:latest . and docker
-  push registry.example.com/ecs:latest; (2) kubectl set image deployment/ecs ecs=registry.example.com/ecs:latest;
+  push ghcr.io/ecs:latest; (2) kubectl set image deployment/ecs ecs=ghcr.io/ecs:latest;
   (3) helm upgrade ecs ./helm-chart --namespace production; (4) kubectl rollout status deployment/ecs
-  --timeout=300s and python identity.py --agent ecs-deployment. Validate locally with python -m ecs.server
+  ecs --version
   --port 8080 and docker run -p 8080:8080 ecs-server. Key behaviors: verify tags/namespace and pod logs
   on failure; validate locally before push. Output: image tag, registry, rollout outcome, and local validation
   notes.'
@@ -71,5 +79,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-02-16T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

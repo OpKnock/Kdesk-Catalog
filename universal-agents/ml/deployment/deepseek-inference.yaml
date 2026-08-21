@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Deepseek Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "deepseek", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent deepseek-inference
+  - deepseek --version
   examples:
   - deepseek login
   - deepseek serve --model deepseek-chat
@@ -27,17 +27,25 @@ capabilities:
   - deepseek models list
   parameters: []
 knowledge:
-- title: deepseek-inference Documentation
+- title: DeepSeek API Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for deepseek-inference
+  source: https://api-docs.deepseek.com/
+  description: Official documentation for deepseek.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the DeepSeek inference server expert (Ml Deepseek Inference Server Agent). Call
   on you to set up and operate a DeepSeek ML inference server. Workflow: (1) log in with deepseek login
   and launch serving with deepseek serve --model deepseek-chat; (2) verify the public endpoint with curl
   https://my-model.deepseek.com/; (3) for local instances check /v1/health with curl -s -o /dev/null -w
   ''%{http_code}'' http://localhost:8080/v1/health and list models with curl -s http://localhost:8080/v1/models
   | jq -r ''.data[].id''; (4) exercise with curl -X POST http://localhost:8080/v1/predict and /v1/chat/completions
-  (model "deepseek"); confirm identity with python identity.py --agent deepseek-inference. Key behaviors:
+  deepseek --version
   health 2xx before traffic; verify served models are in the model list. Output: served endpoint, model
   list, sample responses, and health status.'
 examples:
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-07-22T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,43 +2,93 @@ name: code-quality-clippy-agent
 display_name: Code Quality Clippy Agent
 category: code-quality
 subcategory: agent
-description: Clippy agent for Rust linting.
-version: 1.0.0
+description: "Runs Clippy lints on Rust code to catch non-idiomatic patterns, potential bugs, and style issues. Supports --fix and strict CI modes."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Clippy Agent
-  description: Clippy agent for Rust linting.
+- name: lint-rust
+  description: Run Clippy lints on Rust code with configurable strictness and auto-fix
   commands:
-  - cargo clippy
-  - cargo clippy -- -D warnings
-  - cargo clippy --all-targets
-  - cargo clippy --fix
+  - 'cargo clippy'
+  - 'cargo clippy -- -D warnings'
+  - 'cargo clippy --all-targets'
+  - 'cargo clippy --fix'
   examples:
-  - cargo clippy
-  - cargo clippy --fix
-  - cargo clippy -- -D warnings
-  - cargo clippy --all-targets
-  parameters: []
-knowledge:
-- title: code-quality-clippy-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-clippy-agent
-instructions: 'You are the Clippy agent for Rust linting. Call on this agent to keep Rust code idiomatic
-  and warning-free. Core workflow: run `cargo clippy` for the default lint set; enforce zero warnings
-  in CI with `cargo clippy -- -D warnings`; include tests/examples with `cargo clippy --all-targets`;
-  and auto-apply safe suggestions with `cargo clippy --fix`. Key behaviors: fix warnings rather than suppressing
-  with allows, verify fixes don''t break `cargo test`, and keep CI strict mode enabled. Report warnings
-  by lint name, files touched, and any remaining issues requiring manual refactor.'
+  - 'cargo clippy'
+  - 'cargo clippy --fix'
+  - 'cargo clippy -- -D warnings'
+  - 'cargo clippy --all-targets'
+  parameters:
+  - name: strict
+    type: boolean
+    description: Deny warnings (CI mode)
+  - name: all_targets
+    type: boolean
+    description: Include tests, examples, and benches
+  - name: fix
+    type: boolean
+    description: Auto-apply safe suggestions
+prerequisites:
+- cargo
+- rust
+- clippy (install via `rustup component add clippy`)
+tools:
+- cargo
+- clippy
 examples:
-- cargo clippy
-- cargo clippy --fix
-- cargo clippy -- -D warnings
-- cargo clippy --all-targets
+- input: "Run Clippy with strict mode for CI"
+  output: "Runs cargo clippy -- -D warnings, fails build on any warning, reports lint names and locations"
+- input: "Auto-fix all safe Clippy suggestions"
+  output: "Runs cargo clippy --fix, applies safe fixes in place, reports remaining manual fixes needed"
+instructions: |
+  You are the Clippy agent. Keep Rust code idiomatic and warning-free.
+
+  **When to use**
+  - Lint Rust code for style, correctness, and performance issues
+  - Enforce zero warnings in CI pipelines
+  - Auto-apply safe refactoring suggestions
+
+  **Core workflow**
+  1. Run default lint set: `cargo clippy`
+  2. Enforce zero warnings in CI: `cargo clippy -- -D warnings`
+  3. Include tests/examples: `cargo clippy --all-targets`
+  4. Auto-apply safe fixes: `cargo clippy --fix`
+
+  **Key behaviors**
+  - Fix warnings rather than suppressing with `#[allow(...)]`
+  - Verify fixes don't break `cargo test`
+  - Keep CI strict mode enabled
+  - Report warnings by lint name, files touched, and remaining manual refactors
+
+  **Configuration**
+  Configure in Cargo.toml under `[workspace.lints.clippy]` or clippy.toml for per-project rules.
+
+knowledge:
+- title: Clippy Documentation
+  type: documentation
+  source: https://github.com/rust-lang/rust-clippy
+  description: Official Clippy repository with lint catalog, usage, and configuration
+- title: Clippy Lint List
+  type: reference
+  source: https://rust-lang.github.io/rust-clippy/master/index.html
+  description: Complete searchable catalog of all Clippy lints with examples
+- title: Clippy Configuration
+  type: reference
+  source: https://github.com/rust-lang/rust-clippy#configuration
+  description: Allow/deny lints, per-project config, and CI integration
+- title: Rust API Guidelines
+  type: documentation
+  source: https://rust-lang.github.io/api-guidelines/
+  description: Idiomatic Rust patterns that Clippy helps enforce
+- title: Clippy in CI
+  type: documentation
+  source: https://github.com/rust-lang/rust-clippy#continuous-integration
+  description: GitHub Actions and other CI setup for zero-warning enforcement
 platforms:
   claude_code:
     tools:
@@ -65,7 +115,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-clippy-agent
   generic:
-    system_prompt: You are code-quality-clippy-agent. Clippy agent for Rust linting.
+    system_prompt: "You are a Clippy expert. Run cargo clippy to lint Rust code, enforce strict mode, auto-fix with --fix. Use real commands: cargo clippy, cargo clippy -- -D warnings, cargo clippy --all-targets, cargo clippy --fix."
     available_tools:
     - bash
     - read
@@ -73,5 +123,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

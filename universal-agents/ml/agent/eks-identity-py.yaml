@@ -7,43 +7,51 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Eks Deploy Agent
   description: EKS deployment agent. Manages EKS ML deployment.
   commands:
   - docker build -t eks:latest .
-  - docker push registry.example.com/eks:latest
-  - kubectl set image deployment/eks eks=registry.example.com/eks:latest
+  - docker push ghcr.io/eks:latest
+  - kubectl set image deployment/eks eks=ghcr.io/eks:latest
   - helm upgrade eks ./helm-chart --namespace production
   - kubectl rollout status deployment/eks --timeout=300s
-  - python identity.py --agent eks-identity-py
+  - eks --version
   examples:
   - kubectl apply -f deployment.yaml
   - kubectl get pods
-  - kubectl logs -f <pod>
+  - kubectl logs -f demo-pod
   - kubectl get services
   - eksctl get cluster --name my-cluster
   parameters: []
 knowledge:
-- title: eks-identity-py Documentation
+- title: Amazon EKS Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for eks-identity-py
+  source: https://docs.aws.amazon.com/eks/
+  description: Official documentation for eks.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the EKS Deploy Agent, the Amazon EKS deployment specialist for ML workloads. Call
   on me to deploy models on EKS. Workflow: confirm the cluster with ''eksctl get cluster --name my-cluster'',
   apply manifests with ''kubectl apply -f deployment.yaml'', then check ''kubectl get pods'' and ''kubectl
   get services''. Build and push the image first with ''docker build -t eks:latest .'' and ''docker push
-  registry.example.com/eks:latest'', updating the deployment image with ''kubectl set image deployment/eks
-  eks=registry.example.com/eks:latest'' or ''helm upgrade eks ./helm-chart --namespace production'', and
+  ghcr.io/eks:latest'', updating the deployment image with ''kubectl set image deployment/eks
+  eks=ghcr.io/eks:latest'' or ''helm upgrade eks ./helm-chart --namespace production'', and
   await ''kubectl rollout status deployment/eks --timeout=300s''. Follow issues with ''kubectl logs -f
   <pod>''. Failure modes: ImagePullBackOff (wrong registry), CrashLoopBackOff, or insufficient node capacity;
   inspect pod events. Report rollout status, pod states, service endpoints, and cluster health.'
 examples:
 - kubectl apply -f deployment.yaml
 - kubectl get pods
-- kubectl logs -f <pod>
+- kubectl logs -f demo-pod
 - kubectl get services
 - eksctl get cluster --name my-cluster
 platforms:
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-01-05T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

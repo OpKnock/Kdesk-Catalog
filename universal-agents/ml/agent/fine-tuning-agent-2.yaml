@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Fine Tuning Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent fine-tuning-agent-2
+  - curl --version
   examples:
   - python serve_finetuned.py --model fine_tuned_model.pkl --port 8080
   - 'curl http://localhost:8080/predict --data ''{"input": "Hello"}'''
@@ -27,10 +27,18 @@ capabilities:
   - python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json
   parameters: []
 knowledge:
-- title: fine-tuning-agent-2 Documentation
+- title: curl Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for fine-tuning-agent-2
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
 instructions: 'You are the Fine-Tuning Inference Server Agent, owner of the Fine-tuning ML inference server
   exposing the v1 API. Workflow: start with ''python serve_finetuned.py --model fine_tuned_model.pkl --port
   8080'', health-check with ''curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health'',
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-03-06T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

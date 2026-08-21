@@ -2,12 +2,11 @@ name: supabase-realtime
 display_name: Supabase Realtime
 category: api
 subcategory: general
-description: 'Hand-crafted Supabase Realtime skill: websocket channel subscription, postgres_changes events,
-  presence, and broadcast via wscat and the client SDKs.'
+description: Subscribe to it channels and postgres changes.
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - supabase
@@ -16,16 +15,16 @@ capabilities:
 - name: supabase-realtime
   description: Subscribe to Supabase Realtime channels and postgres changes
   commands:
-  - wscat -c "wss://<project-ref>.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0"
-  - 'curl -X POST ''https://<project-ref>.supabase.co/rest/v1/orders'' -H "apikey: $SUPABASE_ANON_KEY"
+  - wscat -c "wss://your-project.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0"
+  - 'curl -X POST ''https://your-project.supabase.co/rest/v1/orders'' -H "apikey: $SUPABASE_ANON_KEY"
     -H "Authorization: Bearer $SUPABASE_ANON_KEY" -H ''Content-Type: application/json'' -H ''Prefer: return=representation''
     -d ''{"qty":2}'''
   - supabase db push
-  - 'curl -s ''https://<project-ref>.supabase.co/rest/v1/orders?select=*&order=created_at.desc'' -H "apikey:
+  - 'curl -s ''https://your-project.supabase.co/rest/v1/orders?select=*&order=created_at.desc'' -H "apikey:
     $SUPABASE_ANON_KEY" | jq ''.[0]'''
   examples:
-  - wscat -c "wss://<project-ref>.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0"
-  - 'curl -X POST ''https://<project-ref>.supabase.co/rest/v1/orders'' -H "apikey: $KEY" -H ''Prefer:
+  - wscat -c "wss://your-project.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0"
+  - 'curl -X POST ''https://your-project.supabase.co/rest/v1/orders'' -H "apikey: $KEY" -H ''Prefer:
     return=representation'' -d ''{"qty":2}'''
   - supabase db push
   parameters:
@@ -52,16 +51,16 @@ instructions: "# Supabase Realtime\n\nHand-crafted skill for live data with Supa
   \ to postgres_changes events on tables\n- Triggers and verifies INSERT events end to end\n\n## When\
   \ to use\n\n- Live feeds: orders, chat, presence, leaderboards\n- Debugging why a client does not receive\
   \ row changes\n- Prototyping before writing client SDK code\n\n## Real commands\n\n```bash\n# Raw websocket\
-  \ connection (then send subscribe JSON)\nwscat -c \"wss://<project-ref>.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0\"\
-  \n\n# Trigger an INSERT through PostgREST (fires postgres_changes)\ncurl -X POST 'https://<project-ref>.supabase.co/rest/v1/orders'\
+  \ connection (then send subscribe JSON)\nwscat -c \"wss://your-project.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0\"\
+  \n\n# Trigger an INSERT through PostgREST (fires postgres_changes)\ncurl -X POST 'https://your-project.supabase.co/rest/v1/orders'\
   \ -H \"apikey: $SUPABASE_ANON_KEY\" -H 'Content-Type: application/json' -H 'Prefer: return=representation'\
   \ -d '{\"qty\":2}'\n\n# Migrate schema changes that define the tables\nsupabase db push\n\n# Read back\
-  \ rows\ncurl -s 'https://<project-ref>.supabase.co/rest/v1/orders?select=*&order=created_at.desc' -H\
+  \ rows\ncurl -s 'https://your-project.supabase.co/rest/v1/orders?select=*&order=created_at.desc' -H\
   \ \"apikey: $SUPABASE_ANON_KEY\" | jq '.[0]'\n```\n\n## Subscribe message\n\n```json\n{\n  \"topic\"\
   : \"realtime:orders\",\n  \"event\": \"phx_join\",\n  \"payload\": {\n    \"config\": {\n      \"postgres_changes\"\
   : [{ \"event\": \"INSERT\", \"schema\": \"public\", \"table\": \"orders\" }]\n    }\n  }\n}\n```\n\n\
   ## Testing\n\n```bash\n# Terminal A: wscat to the websocket, send the subscribe message\n# Terminal\
-  \ B: POST an INSERT; watch Terminal A print the change event\ncurl -X POST 'https://<project-ref>.supabase.co/rest/v1/orders'\
+  \ B: POST an INSERT; watch Terminal A print the change event\ncurl -X POST 'https://your-project.supabase.co/rest/v1/orders'\
   \ -H \"apikey: $KEY\" -H 'Prefer: return=representation' -d '{\"qty\":3}'\n```\n\n## Best practices\n\
   \n- Subscribe only to events you need: INSERT vs * changes payload size\n- Use RLS-aware replication\
   \ so users only see allowed rows\n- Prefer the SDK's onPostgresChanges over raw websockets in apps\n"
@@ -96,12 +95,12 @@ platforms:
     plugin: opencode-supabase-realtime
   generic:
     system_prompt: 'You take the Supabase Realtime seat. You do it through supabase-realtime: Subscribe
-      to Supabase Realtime channels and postgres changes. The commands are real, e.g. `wscat -c wss://<project-ref>.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&v...`.
+      to Supabase Realtime channels and postgres changes. The commands are real, e.g. `wscat -c wss://your-project.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&v...`.
       You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

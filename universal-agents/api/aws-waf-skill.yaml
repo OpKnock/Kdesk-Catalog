@@ -2,12 +2,11 @@ name: aws-waf
 display_name: Aws Waf
 category: api
 subcategory: general
-description: Manages AWS WAF web ACLs, rule groups, IP sets, and associations for API Gateway, CloudFront,
-  and ALB protection.
+description: Creates and manages web ACLs with IP sets and rate-based rules, associates them with Application Load Balancers, API Gateway stages, and CloudFront distributions, and inspects sampled requests.
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - aws
@@ -18,14 +17,14 @@ capabilities:
   - aws wafv2 list-web-acls --scope REGIONAL
   - aws wafv2 create-web-acl --name my-acl --scope REGIONAL --default-action Allow={} --visibility-config
     SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl
-  - aws wafv2 get-web-acl --name my-acl --scope REGIONAL --id <acl-id>
-  - aws wafv2 delete-web-acl --name my-acl --scope REGIONAL --id <acl-id> --lock-token <token>
+  - aws wafv2 get-web-acl --name my-acl --scope REGIONAL --id acl123
+  - aws wafv2 delete-web-acl --name my-acl --scope REGIONAL --id acl123 --lock-token TOKEN123
   - aws wafv2 list-web-acls --scope CLOUDFRONT
   examples:
   - aws wafv2 list-web-acls --scope REGIONAL --query 'WebACLs[].{name:Name,id:Id}'
   - aws wafv2 create-web-acl --name my-acl --scope REGIONAL --default-action Allow={} --visibility-config
     SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl --rules file://rules.json
-  - aws wafv2 get-web-acl --name my-acl --scope REGIONAL --id <acl-id> | jq '.WebACL.Rules[].Name'
+  - aws wafv2 get-web-acl --name my-acl --scope REGIONAL --id acl123 | jq '.WebACL.Rules[].Name'
   parameters:
   - name: scope
     type: string
@@ -38,19 +37,19 @@ capabilities:
   commands:
   - aws wafv2 create-ip-set --name blocked-ips --scope REGIONAL --ip-address-version IPV4 --addresses
     203.0.113.0/24
-  - aws wafv2 get-ip-set --name blocked-ips --scope REGIONAL --id <ipset-id>
-  - aws wafv2 update-web-acl --name my-acl --scope REGIONAL --id <acl-id> --default-action Allow={} --visibility-config
+  - aws wafv2 get-ip-set --name blocked-ips --scope REGIONAL --id ipset123
+  - aws wafv2 update-web-acl --name my-acl --scope REGIONAL --id acl123 --default-action Allow={} --visibility-config
     SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl --rules file://rules.json
   - aws wafv2 list-ip-sets --scope REGIONAL
   - aws wafv2 get-rate-based-statement-managed-keys --scope REGIONAL --web-acl-name my-acl --web-acl-id
-    <acl-id>
+    acl123
   examples:
   - aws wafv2 create-ip-set --name blocked-ips --scope REGIONAL --ip-address-version IPV4 --addresses
     203.0.113.0/24 198.51.100.0/24
-  - aws wafv2 update-ip-set --name blocked-ips --scope REGIONAL --id <id> --addresses 203.0.113.0/24 --lock-token
-    <token>
+  - aws wafv2 update-ip-set --name blocked-ips --scope REGIONAL --id acl123 --addresses 203.0.113.0/24 --lock-token
+    TOKEN123
   - aws wafv2 get-rate-based-statement-managed-keys --scope REGIONAL --web-acl-name my-acl --web-acl-id
-    <acl-id> | jq '.ManagedKeysIPV4'
+    acl123 | jq '.ManagedKeysIPV4'
   parameters:
   - name: ip_set_name
     type: string
@@ -64,15 +63,15 @@ capabilities:
 - name: associate
   description: Associate web ACLs with protected resources.
   commands:
-  - aws wafv2 associate-web-acl --web-acl-arn <acl-arn> --resource-arn <alb-or-apigateway-arn>
-  - aws wafv2 disassociate-web-acl --resource-arn <resource-arn>
-  - aws wafv2 get-web-acl-for-resource --resource-arn <resource-arn>
-  - aws wafv2 list-resources-for-web-acl --web-acl-arn <acl-arn>
+  - aws wafv2 associate-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123 --resource-arn arn:aws:elasticloadbalancing:us-east-1:111122223333:loadbalancer/app/api/abc
+  - aws wafv2 disassociate-web-acl --resource-arn arn:aws:apigateway:us-east-1::/restapis/abc123xyz/stages/prod
+  - aws wafv2 get-web-acl-for-resource --resource-arn arn:aws:apigateway:us-east-1::/restapis/abc123xyz/stages/prod
+  - aws wafv2 list-resources-for-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123
   examples:
-  - aws wafv2 associate-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:123456789012:regional/webacl/my-acl/<id>
-    --resource-arn arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/api/abc
-  - aws wafv2 get-web-acl-for-resource --resource-arn arn:aws:apigateway:us-east-1::/restapis/<api-id>/stages/prod
-  - aws wafv2 list-resources-for-web-acl --web-acl-arn <acl-arn>
+  - aws wafv2 associate-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123
+    --resource-arn arn:aws:elasticloadbalancing:us-east-1:111122223333:loadbalancer/app/api/abc
+  - aws wafv2 get-web-acl-for-resource --resource-arn arn:aws:apigateway:us-east-1::/restapis/abc123xyz/stages/prod
+  - aws wafv2 list-resources-for-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123
   parameters:
   - name: resource_arn
     type: string
@@ -124,25 +123,25 @@ instructions: '# AWS WAF
 
   aws wafv2 create-ip-set --name blocked-ips --scope REGIONAL --ip-address-version IPV4 --addresses 203.0.113.0/24
 
-  aws wafv2 update-ip-set --name blocked-ips --scope REGIONAL --id <id> --addresses 203.0.113.0/24 198.51.100.0/24
-  --lock-token <token>
+  aws wafv2 update-ip-set --name blocked-ips --scope REGIONAL --id acl123 --addresses 203.0.113.0/24 198.51.100.0/24
+  --lock-token TOKEN123
 
 
   # Attach rules from a JSON file
 
-  aws wafv2 update-web-acl --name my-acl --scope REGIONAL --id <acl-id> --default-action Allow={} --visibility-config
+  aws wafv2 update-web-acl --name my-acl --scope REGIONAL --id acl123 --default-action Allow={} --visibility-config
   SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl --rules file://rules.json
 
 
   # Associate with an ALB
 
-  aws wafv2 associate-web-acl --web-acl-arn <acl-arn> --resource-arn <alb-arn>
+  aws wafv2 associate-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123 --resource-arn <alb-arn>
 
 
   # See blocked IPs under a rate rule
 
   aws wafv2 get-rate-based-statement-managed-keys --scope REGIONAL --web-acl-name my-acl --web-acl-id
-  <acl-id>
+  acl123
 
   ```
 
@@ -152,7 +151,7 @@ instructions: '# AWS WAF
 
   ```json
 
-  {"Name": "block-abuse", "Priority": 1, "Statement": {"IPSetReferenceStatement": {"ARN": "arn:aws:wafv2:...:ipset/blocked-ips/<id>"}},
+  {"Name": "block-abuse", "Priority": 1, "Statement": {"IPSetReferenceStatement": {"ARN": "arn:aws:wafv2:...:ipset/blocked-ips/acl123"}},
   "Action": {"Block": {}}, "VisibilityConfig": {"SampledRequestsEnabled": true, "CloudWatchMetricsEnabled":
   true, "MetricName": "block-abuse"}}
 
@@ -213,5 +212,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

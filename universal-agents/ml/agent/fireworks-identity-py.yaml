@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Fireworks Deploy Agent
   description: Fireworks deployment agent. Manages Fireworks ML deployment.
   commands:
   - docker build -t fireworks:latest .
-  - docker push registry.example.com/fireworks:latest
-  - kubectl set image deployment/fireworks fireworks=registry.example.com/fireworks:latest
+  - docker push ghcr.io/fireworks:latest
+  - kubectl set image deployment/fireworks fireworks=ghcr.io/fireworks:latest
   - helm upgrade fireworks ./helm-chart --namespace production
   - kubectl rollout status deployment/fireworks --timeout=300s
-  - python identity.py --agent fireworks-identity-py
+  - fireworks --version
   examples:
   - fireworks login
   - 'fireworks run accounts/fireworks/models/llama-v2-70b-chat --input ''{"prompt": "Hello"}'''
@@ -26,15 +26,23 @@ capabilities:
   - fireworks predictions list
   parameters: []
 knowledge:
-- title: fireworks-identity-py Documentation
+- title: Fireworks AI Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for fireworks-identity-py
+  source: https://docs.fireworks.ai/
+  description: Official documentation for fireworks.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Fireworks ML deployment specialist. Call on this agent to ship a new version of the fireworks
-  ML service. Workflow: `docker build -t fireworks:latest .`, `docker push registry.example.com/fireworks:latest`,
-  `kubectl set image deployment/fireworks fireworks=registry.example.com/fireworks:latest`, `helm upgrade
+  ML service. Workflow: `docker build -t fireworks:latest .`, `docker push ghcr.io/fireworks:latest`,
+  `kubectl set image deployment/fireworks fireworks=ghcr.io/fireworks:latest`, `helm upgrade
   fireworks ./helm-chart --namespace production`, then `kubectl rollout status deployment/fireworks --timeout=300s`.
-  Confirm context with `python identity.py --agent fireworks-identity-py`. Common failure modes: registry
+  fireworks --version
   auth errors, ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches; check the rollout
   status first and verify the pushed tag matches before retrying. Verify with platform tooling, e.g. `fireworks
   login` and `fireworks run accounts/fireworks/models/llama-v2-70b-chat --input ''{"prompt": "Hello"}''`
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-27T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

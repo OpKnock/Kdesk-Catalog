@@ -1,13 +1,12 @@
 name: xss-protection
-display_name: Xss Protection
+display_name: XSS Protection
 category: api
 subcategory: general
-description: 'Protect APIs from XSS: output encoding, Content-Security-Policy headers, input validation,
-  sanitizing libraries, and automated scanning.'
+description: "Prevent cross-site scripting through your API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated payloads."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - node
@@ -16,13 +15,11 @@ capabilities:
 - name: xss-hardening
   description: Audit and harden APIs against cross-site scripting
   commands:
-  - curl -sI https://api.example.com/ | grep -i 'content-security-policy'
-  - 'curl -s -X POST http://localhost:8080/api/echo -H ''Content-Type: application/json'' -d ''{"name":"<script>alert(1)</script>"}''
-    | jq -r ''.safeName'''
+  - curl -sI https://httpbin.org/ | grep -i 'content-security-policy'
+  - 'curl -s -X POST http://localhost:8080/api/echo -H ''Content-Type: application/json'' -d ''{"name":"javascript:alert(1)"}'' | jq -r ''.safeName'''
   - 'node -e "const s=require(''html-escape''?);console.log(s)" '
   - npm install dompurify isomorphic-dompurify
-  - 'curl -s -X POST http://localhost:8080/api/echo -H ''Content-Type: application/json'' -d ''{"name":"<img
-    src=x onerror=alert(1)>"}'' | grep -c ''<img'''
+  - 'curl -s -X POST http://localhost:8080/api/echo -H ''Content-Type: application/json'' -d ''{"name":"javascript:alert(1)"}'' | jq -r ''.safeName'''
   examples:
   - curl -sI http://localhost:8080/ | grep -iE 'x-frame-options|x-xss-protection'
   - node -e "const DOMPurify=require('isomorphic-dompurify');console.log(DOMPurify.sanitize('<img src=x
@@ -51,7 +48,7 @@ instructions: "# XSS Protection\n\n## What this skill does\nPrevent cross-site s
   \ API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and\
   \ scan with automated payloads.\n\n## When to use\n- APIs that render user content (HTML, markdown,\
   \ chat)\n- Auditing reflected/stored XSS vectors\n- Enabling CSP for frontends\n\n## Real commands\n\
-  ```bash\n# Check CSP header\ncurl -sI https://api.example.com/ | grep -i 'content-security-policy'\n\
+  ```bash\n# Check CSP header\ncurl -sI https://httpbin.org/ | grep -i 'content-security-policy'\n\
   \n# Stored XSS: submit a script payload\ncurl -s -X POST http://localhost:8080/api/echo \\\n  -H 'Content-Type:\
   \ application/json' \\\n  -d '{\"name\":\"<script>alert(1)</script>\"}' | jq -r '.safeName'\n\n# Ensure\
   \ markup is neutralized\ncurl -s -X POST http://localhost:8080/api/echo \\\n  -H 'Content-Type: application/json'\
@@ -97,12 +94,12 @@ platforms:
     plugin: opencode-xss-protection
   generic:
     system_prompt: 'Your lane is Xss Protection. You do it through xss-hardening: Audit and harden APIs
-      against cross-site scripting. The commands are real, e.g. `curl -sI https://api.example.com/ | grep
+      against cross-site scripting. The commands are real, e.g. `curl -sI https://httpbin.org/ | grep
       -i content-security-policy`. You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

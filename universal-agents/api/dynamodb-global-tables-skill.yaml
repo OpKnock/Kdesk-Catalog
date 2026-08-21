@@ -2,12 +2,12 @@ name: dynamodb-global-tables
 display_name: Dynamodb Global Tables
 category: api
 subcategory: general
-description: 'Multi-region DynamoDB replication with Global Tables: create replication groups, add regions,
-  and verify replica status and latency.'
+description: 'Manages multi-region DynamoDB replication with Global Tables: creates replication groups,
+  adds regions, and verifies replica status and latency.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - aws
@@ -41,89 +41,97 @@ knowledge:
   description: How global tables replicate writes across regions, multi-region strong consistency, and
     replication settings
 instructions: '# DynamoDB Global Tables
-
-
+ 
+ 
   ## What this skill does
-
-
+ 
+ 
   Global Tables replicate DynamoDB tables across AWS regions with multi-region read/write access. Writes
   are propagated within seconds; the service handles conflict resolution with last-writer-wins.
-
-
+ 
+ 
   ## When to use
-
-
+ 
+ 
   - Serving users from multiple regions with low write latency
-
+ 
+ 
   - Building disaster recovery that survives a region failure
-
+ 
+ 
   - Migrating an existing single-region table to multi-region
-
-
+ 
+ 
   ## Real commands
-
-
+ 
+ 
   ```bash
-
+ 
   # Create a global table (all regions must already have an identical replica)
-
+ 
   aws dynamodb create-global-table --global-table-name Orders --replication-group ''RegionNames=us-east-1,eu-west-1''
-
-
+ 
+ 
   # Add a region to an existing global table
-
+ 
   aws dynamodb update-global-table --global-table-name Orders --replication-group-updates ''[{"Create":{"RegionName":"ap-southeast-1"}}]''
-
-
+ 
+ 
   # Inspect replication status
-
+ 
   aws dynamodb describe-global-table --global-table-name Orders | jq ''.GlobalTableDescription.ReplicationGroup''
-
-
+ 
+ 
   # Replication settings per region
-
+ 
   aws dynamodb describe-global-table-settings --global-table-name Orders --region eu-west-1
-
+ 
   ```
-
-
+ 
+ 
   ## Prerequisites checklist
-
-
+ 
+ 
   - Each region must already have the table with the same name, key schema, and point-in-time recovery.
-
+ 
+ 
   - Both tables must have streams enabled or not, consistently.
-
+ 
+ 
   - The replica tables must not have any pre-existing data differences for the feature to work cleanly.
-
-
+ 
+ 
   ## Testing
-
-
+ 
+ 
   ```bash
-
+ 
   # Write in one region, read in another
-
+ 
   aws dynamodb put-item --table-name Orders --item ''{"orderId":{"S":"o-1"}}'' --region us-east-1
-
+ 
   sleep 5
-
+ 
   aws dynamodb get-item --table-name Orders --key ''{"orderId":{"S":"o-1"}}'' --region eu-west-1
-
+ 
   ```
-
-
+ 
+ 
   ## Best practices
-
-
+ 
+ 
   - Enable point-in-time recovery on every replica before creating the global table.
-
+ 
+ 
   - Set `ReplicationStatus` monitoring via describe-global-table to catch stuck replicas.
-
+ 
+ 
   - Use `--query` filters on large replication groups instead of parsing full JSON.
-
+ 
+ 
   - Remember DDL (create-global-table) is free; ongoing replication costs per region for writes.
-
+ 
+ 
   '
 examples:
 - input: Replicate Orders to two regions
@@ -164,5 +172,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,22 +7,22 @@ version: 1.0.0
 tags:
 - security
 - scanning
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Security Cosign Keyless
   description: Cosign keyless signing for CI/CD pipelines.
   commands:
   - 'Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance image:tag'
-  - 'Verify: cosign verify --certificate-identity email@example.com --certificate-oidc-issuer https://iss'
+  - 'Verify: cosign verify --certificate-identity email@localhost --certificate-oidc-issuer https://iss'
   - 'Sign: cosign sign --yes image:tag'
   - 'Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@example.'
   examples:
   - 'Sign: cosign sign --yes image:tag'
-  - 'Verify: cosign verify --certificate-identity email@example.com --certificate-oidc-issuer https://issuer.com
+  - 'Verify: cosign verify --certificate-identity email@localhost --certificate-oidc-issuer https://issuer.com
     image:tag'
   - 'Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance image:tag'
-  - 'Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@example.com
+  - 'Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@localhost
     image:tag'
   parameters:
   - name: certificate-identity
@@ -35,10 +35,14 @@ capabilities:
     type: boolean
     description: CLI flag --yes observed in capability commands
 knowledge:
-- title: security-cosign-keyless Documentation
+- title: Sigstore Keyless Signing
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/security/scanning
-  description: Reference documentation for security-cosign-keyless
+  source: https://docs.sigstore.dev/cosign/keyless/
+  description: Official documentation for cosign-keyless.
+- title: Sigstore cosign Documentation
+  type: reference
+  source: https://docs.sigstore.dev/cosign/
+  description: Official documentation for cosign.
 instructions: 'You are a Cosign keyless signing expert. Help users with:
 
   - Keyless signing
@@ -59,10 +63,10 @@ instructions: 'You are a Cosign keyless signing expert. Help users with:
   Always use real Cosign tools. Never suggest fictional tools.'
 examples:
 - 'Sign: cosign sign --yes image:tag'
-- 'Verify: cosign verify --certificate-identity email@example.com --certificate-oidc-issuer https://issuer.com
+- 'Verify: cosign verify --certificate-identity email@localhost --certificate-oidc-issuer https://issuer.com
   image:tag'
 - 'Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance image:tag'
-- 'Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@example.com
+- 'Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@localhost
   image:tag'
 platforms:
   claude_code:
@@ -113,5 +117,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-26T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

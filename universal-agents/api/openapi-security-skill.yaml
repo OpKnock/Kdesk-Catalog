@@ -2,12 +2,11 @@ name: openapi-security
 display_name: Openapi Security
 category: api
 subcategory: general
-description: 'Define and validate security schemes in OpenAPI: apiKey, bearer JWT, OAuth2 flows, mutual
-  TLS, and security requirement rules.'
+description: 'Authors OpenAPI security schemes including apiKey, HTTP bearer JWT, OAuth2 flows, and mutual TLS. Validates schemes with Spectral, Redocly, and openapi-generator in CI.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - npx
@@ -23,7 +22,7 @@ capabilities:
   - spectral lint openapi.yaml
   - npx @stoplight/spectral-cli lint openapi.yaml -r security.rules.yaml
   - redocly lint openapi.yaml --extends recommended
-  - curl -s https://api.example.com/.well-known/openapi.yaml | openapi-generator-cli validate -i /dev/stdin
+  - curl -s https://api.your-app.test/.well-known/openapi.yaml | openapi-generator-cli validate -i /dev/stdin
   examples:
   - spectral lint openapi.yaml
   - openapi-generator-cli validate -i openapi.yaml
@@ -55,7 +54,7 @@ instructions: "# OpenAPI Security\n\nSecurity schemes describe HOW clients authe
   redocly lint openapi.yaml --extends recommended\n```\n\n## Example schemes\n\n```yaml\ncomponents:\n\
   \  securitySchemes:\n    bearerAuth:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n\
   \    apiKeyHeader:\n      type: apiKey\n      in: header\n      name: X-API-Key\n    oauth:\n      type:\
-  \ oauth2\n      flows:\n        clientCredentials:\n          tokenUrl: https://auth.example.com/token\n\
+  \ oauth2\n      flows:\n        clientCredentials:\n          tokenUrl: https://auth.your-app.test/token\n\
   \          scopes:\n            read: Read access\n            write: Write access\nsecurity:\n  - bearerAuth:\
   \ []\n```\n\n## Per-operation override\n\n```yaml\npaths:\n  /public:\n    get:\n      security: []\n\
   ```\n\n## Best practices\n\n- Always add a global `security` block\n- Test client generation with `openapi-generator-cli\
@@ -98,5 +97,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

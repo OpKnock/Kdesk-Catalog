@@ -2,39 +2,47 @@ name: elasticsearch-sdk
 display_name: Elasticsearch Sdk
 category: ml
 subcategory: vector-db
-description: Elasticsearch SDK deployment agent for ML Elasticsearch SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - vector-db
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Elasticsearch Deploy Sdk Agent V2
   description: Elasticsearch SDK deployment agent for ML Elasticsearch SDK deployment.
   commands:
   - docker build -t elasticsearch:latest .
-  - docker push registry.example.com/elasticsearch:latest
-  - kubectl set image deployment/elasticsearch elasticsearch=registry.example.com/elasticsearch:latest
+  - docker push ghcr.io/elasticsearch:latest
+  - kubectl set image deployment/elasticsearch elasticsearch=ghcr.io/elasticsearch:latest
   - helm upgrade elasticsearch ./helm-chart --namespace production
   - kubectl rollout status deployment/elasticsearch --timeout=300s
-  - python identity.py --agent elasticsearch-sdk
+  - elasticsearch --version
   examples:
   - 'Server: python -m elasticsearch.server --port 8080'
   - 'Docker: docker run -p 8080:8080 elasticsearch-server'
   parameters: []
 knowledge:
-- title: elasticsearch-sdk Documentation
+- title: Elasticsearch Guide
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
-  description: Reference documentation for elasticsearch-sdk
+  source: https://www.elastic.co/guide/en/elasticsearch/reference/current/
+  description: Official documentation for elasticsearch.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Elasticsearch SDK deployment agent. Call on this agent to build, containerize,
   and roll out Elasticsearch SDK services. Core workflow: (1) validate locally with ''python -m elasticsearch.server
   --port 8080'' and smoke-test with ''docker run -p 8080:8080 elasticsearch-server''; (2) package and
-  publish with ''docker build -t elasticsearch:latest .'' then ''docker push registry.example.com/elasticsearch:latest'';
-  (3) promote with ''kubectl set image deployment/elasticsearch elasticsearch=registry.example.com/elasticsearch:latest'';
+  publish with ''docker build -t elasticsearch:latest .'' then ''docker push ghcr.io/elasticsearch:latest'';
+  (3) promote with ''kubectl set image deployment/elasticsearch elasticsearch=ghcr.io/elasticsearch:latest'';
   (4) release via ''helm upgrade elasticsearch ./helm-chart --namespace production'' and verify with ''kubectl
-  rollout status deployment/elasticsearch --timeout=300s''; run ''python identity.py --agent elasticsearch-sdk''.
+  elasticsearch --version
   Output: deployed revision, rollout status, and pipeline errors.'
 examples:
 - 'Server: python -m elasticsearch.server --port 8080'
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-03-17T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,38 +2,46 @@ name: microservices-sdk
 display_name: Microservices Sdk
 category: ml
 subcategory: agent
-description: Microservices SDK deployment agent for ML microservices SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Microservices Deploy Sdk Agent
   description: Microservices SDK deployment agent for ML microservices SDK deployment.
   commands:
   - docker build -t microservices:latest .
-  - docker push registry.example.com/microservices:latest
-  - kubectl set image deployment/microservices microservices=registry.example.com/microservices:latest
+  - docker push ghcr.io/microservices:latest
+  - kubectl set image deployment/microservices microservices=ghcr.io/microservices:latest
   - helm upgrade microservices ./helm-chart --namespace production
   - kubectl rollout status deployment/microservices --timeout=300s
-  - python identity.py --agent microservices-sdk
+  - docker --version
   examples:
   - 'Server: python -m microservices.server --port 8080'
   - 'Docker: docker run -p 8080:8080 microservices-server'
   parameters: []
 knowledge:
-- title: microservices-sdk Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for microservices-sdk
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: 'Microservices SDK deployment engineer. Use when the microservices ML application must be
   built and deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t microservices:latest
-  .`, `docker push registry.example.com/microservices:latest`, `kubectl set image deployment/microservices
-  microservices=registry.example.com/microservices:latest`, `helm upgrade microservices ./helm-chart --namespace
+  .`, `docker push ghcr.io/microservices:latest`, `kubectl set image deployment/microservices
+  microservices=ghcr.io/microservices:latest`, `helm upgrade microservices ./helm-chart --namespace
   production`, then `kubectl rollout status deployment/microservices --timeout=300s`. Confirm context
-  with `python identity.py --agent microservices-sdk`. For local SDK bring-up use `python -m microservices.server
+  docker --version
   --port 8080` or `docker run -p 8080:8080 microservices-server`. Watch for SDK/registry tag mismatch
   and rollout timeouts; if the rollout stalls, inspect pod status and confirm the pushed digest equals
   the deployed tag. Report the deployed image tag, deployment revision, and the local server endpoint
@@ -74,5 +82,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-04-16T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Lambda Deploy Agent
   description: Lambda deployment agent. Manages Lambda ML deployment.
   commands:
   - docker build -t lambda:latest .
-  - docker push registry.example.com/lambda:latest
-  - kubectl set image deployment/lambda lambda=registry.example.com/lambda:latest
+  - docker push ghcr.io/lambda:latest
+  - kubectl set image deployment/lambda lambda=ghcr.io/lambda:latest
   - helm upgrade lambda ./helm-chart --namespace production
   - kubectl rollout status deployment/lambda --timeout=300s
-  - python identity.py --agent lambda-identity-py
+  - lambda --version
   examples:
   - sam build
   - sam deploy --guided
@@ -26,15 +26,23 @@ capabilities:
   - curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
   parameters: []
 knowledge:
-- title: lambda-identity-py Documentation
+- title: AWS Lambda Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for lambda-identity-py
+  source: https://docs.aws.amazon.com/lambda/
+  description: Official documentation for lambda.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Lambda ML deployment specialist. Call on this agent to ship a new version of the lambda
-  ML service. Workflow: `docker build -t lambda:latest .`, `docker push registry.example.com/lambda:latest`,
-  `kubectl set image deployment/lambda lambda=registry.example.com/lambda:latest`, `helm upgrade lambda
+  ML service. Workflow: `docker build -t lambda:latest .`, `docker push ghcr.io/lambda:latest`,
+  `kubectl set image deployment/lambda lambda=ghcr.io/lambda:latest`, `helm upgrade lambda
   ./helm-chart --namespace production`, then `kubectl rollout status deployment/lambda --timeout=300s`.
-  Confirm context with `python identity.py --agent lambda-identity-py`. Common failure modes: registry
+  lambda --version
   auth errors, ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches; check the rollout
   status first and verify the pushed tag matches before retrying. Verify with platform tooling, e.g. `sam
   build` and `sam deploy --guided` and `aws lambda invoke --function-name my-function --payload ''{"text":
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-10T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

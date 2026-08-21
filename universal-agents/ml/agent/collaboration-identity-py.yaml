@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Collaboration Deploy Agent
   description: Collaboration deployment agent. Manages Collaboration ML deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent collaboration-identity-py
+  - collaboration --version
   examples:
   - python serve_collaboration.py --port 8080
   - 'curl http://localhost:8080/collaborate --data ''{"model": "model.pkl"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python share.py --model model.pkl --users users.json
   parameters: []
 knowledge:
-- title: collaboration-identity-py Documentation
+- title: Hugging Face Hub Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for collaboration-identity-py
+  source: https://huggingface.co/docs/hub/
+  description: Official documentation for collaboration.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Ml Collaboration Deploy Agent, the deployment specialist for Collaboration
-  ML applications. Build and push the image with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`,
-  then deploy with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm
+  ML applications. Build and push the image with `docker build -t model:latest .` and `docker push ghcr.io/model:latest`,
+  then deploy with `kubectl set image deployment/model model=ghcr.io/model:latest` or `helm
   upgrade model ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/model
-  --timeout=300s`. Confirm identity with `python identity.py --agent collaboration-identity-py`. Then
+  collaboration --version
   serve and exercise collaboration features: `python serve_collaboration.py --port 8080`, `curl http://localhost:8080/collaborate
   --data ''{"model": "model.pkl"}''`, `python collaborate.py --model model.pkl --team team.json --output
   collaboration.json`, and `python share.py --model model.pkl --users users.json`. Report rollout status,
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-12T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

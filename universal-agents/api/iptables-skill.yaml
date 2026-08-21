@@ -1,5 +1,5 @@
 name: iptables
-display_name: Iptables
+display_name: iptables
 category: api
 subcategory: general
 description: 'Netfilter iptables operations: listing rules, adding/removing accept and drop rules, port
@@ -7,7 +7,7 @@ description: 'Netfilter iptables operations: listing rules, adding/removing acce
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - iptables
@@ -45,24 +45,24 @@ knowledge:
   source: https://www.netfilter.org/documentation/HOWTO/packet-filtering-HOWTO.html
   description: Packet filtering HOWTO explaining filter flow.
 instructions: "# iptables\n\nManage Linux packet filtering with iptables.\n\n## What this skill does\n\
-  \n- Lists rules with counters for traffic visibility.\n- Adds and removes ACCEPT/DROP rules by port\
-  \ and source.\n- Redirects ports with NAT PREROUTING.\n- Persists rulesets across reboots.\n\n## When\
-  \ to use\n\n- Locking down a host's exposed ports.\n- Redirecting local ports during maintenance.\n\
-  - Debugging dropped/blocked traffic.\n\n## Real commands\n\n```bash\n# List with counters\niptables\
-  \ -L -n -v\n\n# Allow SSH from the management subnet\niptables -A INPUT -p tcp --dport 22 -s 10.0.0.0/8\
-  \ -j ACCEPT\n\n# Drop traffic to 8080\niptables -A INPUT -p tcp --dport 8080 -j DROP\n\n# Allow established\
-  \ traffic\niptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT\n\n# Redirect local\
-  \ 80 -> 8080\niptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080\n\n# Remove\
-  \ a rule\niptables -D INPUT -p tcp --dport 8080 -j DROP\n\n# Persist (Debian/Ubuntu)\niptables-save\
-  \ > /etc/iptables/rules.v4\niptables-restore < /etc/iptables/rules.v4\n```\n\n## Policy default\n\n\
-  ```bash\niptables -P INPUT DROP   # then explicitly allow what is needed\niptables -P FORWARD DROP\n\
-  ```\n\n## Testing\n\n```bash\niptables -L INPUT -n --line-numbers\nnc -zv localhost 8080   # should\
-  \ fail when dropped\n```\n\n## Best practices\n\n- Always allow ESTABLISHED,RELATED before specific\
-  \ drops.\n- Number rules with --line-numbers for surgical deletes.\n- Test policy changes in a sandbox;\
-  \ a bad rule can lock you out.\n- Keep a cron/scheduled restore of the saved ruleset as a safety net.\n\
-  \n## Example exchange\n\n```\nUser: Block all traffic to port 8080 except from 10.0.0.0/8.\nAgent: iptables\
-  \ -A INPUT -p tcp --dport 8080 -s 10.0.0.0/8 -j ACCEPT\n       iptables -A INPUT -p tcp --dport 8080\
-  \ -j DROP\n```"
+48:   \n- Lists rules with counters for traffic visibility.\n- Adds and removes ACCEPT/DROP rules by port\
+49:   \ and source.\n- Redirects ports with NAT PREROUTING.\n- Persists rulesets across reboots.\n\n## When\
+50:   \ to use\n\n- Locking down a host's exposed ports.\n- Redirecting local ports during maintenance.\n\
+51:   - Debugging dropped/blocked traffic.\n\n## Real commands\n\n```bash\n# List with counters\niptables\
+52:   \ -L -n -v\n\n# Allow SSH from the management subnet\niptables -A INPUT -p tcp --dport 22 -s 10.0.0.0/8\
+53:   \ -j ACCEPT\n\n# Drop traffic to 8080\niptables -A INPUT -p tcp --dport 8080 -j DROP\n\n# Allow established\
+54:   \ traffic\niptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT\n\n# Redirect local\
+55:   \ 80 -> 8080\niptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080\n\n# Remove\
+56:   \ a rule\niptables -D INPUT -p tcp --dport 8080 -j DROP\n\n# Persist (Debian/Ubuntu)\niptables-save\
+57:   \ > /etc/iptables/rules.v4\niptables-restore < /etc/iptables/rules.v4\n```\n\n## Policy default\n\n\
+58:   ```bash\niptables -P INPUT DROP   # then explicitly allow what is needed\niptables -P FORWARD DROP\n\
+59:   ```\n\n## Testing\n\n```bash\niptables -L INPUT -n --line-numbers\nnc -zv localhost 8080   # should\
+60:   \ fail when dropped\n```\n\n## Best practices\n\n- Always allow ESTABLISHED,RELATED before specific\
+61:   \ drops.\n- Number rules with --line-numbers for surgical deletes.\n- Test policy changes in a sandbox;\
+62:   \ a bad rule can lock you out.\n- Keep a cron/scheduled restore of the saved ruleset as a safety net.\n\
+63:   \n## Example exchange\n\n```\nUser: Block all traffic to port 8080 except from 10.0.0.0/8.\nAgent: iptables\
+64:   \ -A INPUT -p tcp --dport 8080 -s 10.0.0.0/8 -j ACCEPT\n       iptables -A INPUT -p tcp --dport 8080\
+65:   \ -j DROP\n```"
 examples:
 - input: List all rules with counters
   output: iptables -L -n -v
@@ -91,7 +91,7 @@ platforms:
   opencode:
     plugin: opencode-iptables
   generic:
-    system_prompt: 'You are the Iptables specialist. You do it through iptables-rules: Inspect and modify
+    system_prompt: 'You are the iptables specialist. You do it through iptables-rules: Inspect and modify
       iptables rulesets including NAT and persistence. The commands are real, e.g. `iptables -L -n -v`.
       You run and verify the real CLI commands before you claim anything.'
     available_tools:
@@ -99,5 +99,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

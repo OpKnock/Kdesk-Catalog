@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Microservices Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "microservices", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-microservices-inference-agent
+  - curl --version
   examples:
   - kubectl apply -f deployment.yaml
   - kubectl get pods
@@ -27,17 +27,25 @@ capabilities:
   - curl http://my-service:8080/predict
   parameters: []
 knowledge:
-- title: ml-microservices-inference-agent Documentation
+- title: curl Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-microservices-inference-agent
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
 instructions: 'Microservices ML inference operator. Call on this agent to exercise and validate Microservices
   inference endpoints. Core checks: POST to the predict endpoint with `curl -X POST http://localhost:8080/v1/predict
   -H ''Content-Type: application/json'' -d ''{"inputs": "hello"}''`, then chat completions with `curl
   -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
   "microservices", "messages": []}''`. List models with `curl -s http://localhost:8080/v1/models | jq
   -r ''.data[].id''` and probe liveness via `curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`.
-  Confirm the agent context with `python identity.py --agent ml-microservices-inference-agent`. Validate
+  curl --version
   request JSON against the schema: HTTP 4xx means a malformed body, non-200 health means down, empty model
   list means nothing registered. Relate results to platform tooling such as `kubectl apply -f deployment.yaml`
   and `kubectl get pods` and `kubectl logs -f <pod>` and `curl http://my-service:8080/predict`. Report
@@ -82,5 +90,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-03-12T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

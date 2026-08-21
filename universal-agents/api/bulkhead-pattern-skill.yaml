@@ -7,7 +7,7 @@ description: 'Designs bulkhead isolation for services: resource partitioning, th
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - docker
@@ -22,7 +22,7 @@ capabilities:
 - name: capacity-planning
   description: Measure and size bulkhead partitions.
   commands:
-  - ps -o nlwp,pcpu,pmem,rss -p <pid>
+  - ps -o nlwp,pcpu,pmem,rss -p $(pgrep -f my-api)
   - ulimit -n
   - ss -s
   - docker stats --no-stream
@@ -42,8 +42,8 @@ capabilities:
   description: Configure isolated thread pools and connection pools.
   commands:
   - java -XX:+PrintFlagsFinal -version | grep -i threads
-  - jstack <pid> | grep -c 'pool-'
-  - jcmd <pid> Thread.print | grep -A2 'pool-'
+  - jstack $(pgrep -f my-api) | grep -c 'pool-'
+  - jcmd $(pgrep -f my-api) Thread.print | grep -A2 'pool-'
   - curl -s http://localhost:8080/actuator/metrics/executor.active
   examples:
   - jstack $(pgrep -f app.jar) | grep -c '"pool-'
@@ -62,7 +62,7 @@ capabilities:
   - ab -n 5000 -c 200 http://localhost:8080/api/slow
   - curl -s -o /dev/null -w "%{http_code} %{time_total}\n" http://localhost:8080/api/fast
   - watch -n1 'curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api/fast'
-  - top -b -n 3 -p <pid>
+  - top -b -n 3 -p $(pgrep -f my-api)
   examples:
   - ab -n 5000 -c 200 http://localhost:8080/api/slow; curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api/fast
   - watch -n1 'curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api/fast'
@@ -194,12 +194,12 @@ platforms:
     plugin: opencode-bulkhead-pattern
   generic:
     system_prompt: 'You own Bulkhead Pattern end to end. You do it through capacity-planning: Measure
-      and size bulkhead partitions. The commands are real, e.g. `ps -o nlwp,pcpu,pmem,rss -p <pid>`. You
+      and size bulkhead partitions. The commands are real, e.g. `ps -o nlwp,pcpu,pmem,rss -p $(pgrep -f my-api)`. You
       run and verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

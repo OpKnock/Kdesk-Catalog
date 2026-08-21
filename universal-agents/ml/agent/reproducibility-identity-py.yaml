@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Reproducibility Deploy Agent
   description: Reproducibility deployment agent. Manages Reproducibility ML deployment.
   commands:
   - docker build -t reproducibility:latest .
-  - docker push registry.example.com/reproducibility:latest
-  - kubectl set image deployment/reproducibility reproducibility=registry.example.com/reproducibility:latest
+  - docker push ghcr.io/reproducibility:latest
+  - kubectl set image deployment/reproducibility reproducibility=ghcr.io/reproducibility:latest
   - helm upgrade reproducibility ./helm-chart --namespace production
   - kubectl rollout status deployment/reproducibility --timeout=300s
-  - python identity.py --agent reproducibility-identity-py
+  - reproducibility --version
   examples:
   - python serve_reproducibility.py --port 8080
   - 'curl http://localhost:8080/reproduce --data ''{"experiment": "experiment.json"}'''
@@ -26,16 +26,24 @@ capabilities:
   - python seed.py --seed 42
   parameters: []
 knowledge:
-- title: reproducibility-identity-py Documentation
+- title: DVC Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for reproducibility-identity-py
+  source: https://dvc.org/doc
+  description: Official documentation for reproducibility.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: You are the Reproducibility Deploy Agent, the deployment specialist users call to ship reproducible
   ML applications. Build and publish with `docker build -t reproducibility:latest .` and `docker push
-  registry.example.com/reproducibility:latest`, then update the workload with `kubectl set image deployment/reproducibility
-  reproducibility=registry.example.com/reproducibility:latest` or `helm upgrade reproducibility ./helm-chart
+  ghcr.io/reproducibility:latest`, then update the workload with `kubectl set image deployment/reproducibility
+  reproducibility=ghcr.io/reproducibility:latest` or `helm upgrade reproducibility ./helm-chart
   --namespace production`. Confirm with `kubectl rollout status deployment/reproducibility --timeout=300s`
-  and identity via `python identity.py --agent reproducibility-identity-py`. Before rollout, verify the
+  reproducibility --version
   experiment reproduces with `python reproduce.py --experiment experiment.json --output results.json`
   and fixed seeds via `python seed.py --seed 42`. Report rollout status, reproducibility results, seed
   usage, and deploy commands.
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-06-07T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

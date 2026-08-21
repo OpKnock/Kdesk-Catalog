@@ -49,13 +49,13 @@ capabilities:
   description: Measure and gate performance with Lighthouse.
   commands:
   - npx lhci autorun
-  - npx lighthouse https://example.com --only-categories=performance --output=json --output-path=lh.json
-  - npx lhci collect --url=https://example.com --numberOfRuns=3
+  - npx lighthouse http://localhost:8080 --only-categories=performance --output=json --output-path=lh.json
+  - npx lhci collect --url=http://localhost:8080 --numberOfRuns=3
   - npx lhci assert --preset=lighthouse:recommended
   examples:
   - npx lhci autorun
-  - npx lighthouse https://example.com --only-categories=performance --output=json --output-path=lh.json
-  - npx lhci collect --url=https://example.com --numberOfRuns=3
+  - npx lighthouse http://localhost:8080 --only-categories=performance --output=json --output-path=lh.json
+  - npx lhci collect --url=http://localhost:8080 --numberOfRuns=3
   parameters:
   - name: url
     type: string
@@ -87,11 +87,11 @@ capabilities:
   commands:
   - gzip -9 -k dist/index.html
   - brotli -9 -k dist/index.html
-  - 'curl -sI -H ''Accept-Encoding: br'' https://example.com | grep -i ''content-encoding\|cache-control'''
+  - 'curl -sI -H ''Accept-Encoding: br'' http://localhost:8080 | grep -i ''content-encoding\|cache-control'''
   - npx http-server -c-1 dist
   examples:
   - brotli -9 -k dist/index.html
-  - 'curl -sI -H ''Accept-Encoding: br'' https://example.com | grep -i content-encoding'
+  - 'curl -sI -H ''Accept-Encoding: br'' http://localhost:8080 | grep -i content-encoding'
   - gzip -9 -k dist/app.js
   parameters:
   - name: file

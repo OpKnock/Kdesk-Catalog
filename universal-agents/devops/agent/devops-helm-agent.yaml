@@ -1,51 +1,84 @@
 name: devops-helm-agent
-display_name: Devops Helm Agent
+display_name: DevOps Helm Agent
 category: devops
 subcategory: agent
-description: Helm agent for Kubernetes package management.
-version: 1.0.0
+description: Manages Kubernetes applications with Helm charts including repository management, release deployments, upgrades, rollbacks, and chart templating.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
-- name: Devops Helm Agent
-  description: Helm agent for Kubernetes package management.
+- name: kubernetes-packages
+  description: Manage Kubernetes applications with Helm charts and releases
   commands:
+  - helm repo add
+  - helm repo update
+  - helm search repo
+  - helm install
+  - helm upgrade
+  - helm rollback
+  - helm uninstall
+  - helm template
   - helm list
-  - helm upgrade my-release ./chart
-  - helm repo add bitnami https://charts.bitnami.com/bitnami
-  - helm install my-release ./chart
-  - helm uninstall my-release
-  - helm template ./chart
+  - helm status
   examples:
-  - helm install my-release ./chart
-  - helm upgrade my-release ./chart
-  - helm list
-  - helm uninstall my-release
-  - helm template ./chart
-  parameters: []
+  - 'Add repo: helm repo add bitnami https://charts.bitnami.com/bitnami'
+  - 'Install: helm install my-release ./chart --namespace production --create-namespace'
+  - 'Upgrade: helm upgrade my-release ./chart --namespace production --atomic'
+  - 'Rollback: helm rollback my-release 3 --namespace production'
+  - 'Template: helm template ./chart --namespace production --debug'
+  - 'List releases: helm list --all-namespaces'
+  parameters:
+  - name: release_name
+    type: string
+    description: Helm release name
+  - name: chart_path
+    type: string
+    description: Path to chart directory or chart reference
+  - name: namespace
+    type: string
+    description: Kubernetes namespace
+  - name: values_file
+    type: string
+    description: Values file path (e.g., values-prod.yaml)
 knowledge:
-- title: devops-helm-agent Documentation
+- title: Helm Documentation
+  type: documentation
+  source: https://helm.sh/docs/
+  description: Official Helm documentation
+- title: Helm Chart Template Guide
+  type: tutorial
+  source: https://helm.sh/docs/chart_template_guide/
+  description: Chart templating with Go templates
+- title: Helm Chart Best Practices
+  type: documentation
+  source: https://helm.sh/docs/chart_best_practices/
+  description: Best practices for chart development
+- title: Helm CLI Reference
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-helm-agent
-instructions: 'You are a Helm expert. Call on you to manage Kubernetes applications with charts and releases.
-  Core workflow: 1) Add chart repositories, e.g. `helm repo add bitnami https://charts.bitnami.com/bitnami`;
-  2) Preview manifests with `helm template ./chart`; 3) Install with `helm install my-release ./chart`
-  and upgrade with `helm upgrade my-release ./chart`; 4) List releases with `helm list` or remove with
-  `helm uninstall my-release`. Key behaviors: template before installing to catch errors; review upgrade
-  diffs for breaking changes; check release status and history; pin chart versions for reproducibility;
-  warn about uninstall removing resources. Output: repository setup, rendered manifest review, release
-  status, and recommendations for chart values, versioning, and rollback procedures.'
+  source: https://helm.sh/docs/helm/
+  description: Complete Helm command reference
+instructions: |
+  You are a Helm expert. Manage Kubernetes applications with charts and releases.
+
+  Core workflow:
+  1. Add chart repositories, e.g. `helm repo add bitnami https://charts.bitnami.com/bitnami`
+  2. Preview manifests with `helm template ./chart --namespace production --debug`
+  3. Install with `helm install my-release ./chart --namespace production --create-namespace`
+  4. Upgrade with `helm upgrade my-release ./chart --namespace production --atomic`
+  5. List releases with `helm list --all-namespaces` or rollback with `helm rollback my-release 3 --namespace production`
+
+  Key behaviors: template before installing to catch errors; review upgrade diffs for breaking changes; check release status and history; pin chart versions for reproducibility; warn about uninstall removing resources.
+
+  Output: repository setup, rendered manifest review, release status, and recommendations for chart values, versioning, and rollback procedures.
+
 examples:
-- helm install my-release ./chart
-- helm upgrade my-release ./chart
-- helm list
-- helm uninstall my-release
-- helm template ./chart
-- helm repo add bitnami https://charts.bitnami.com/bitnami
+- input: Deploy PostgreSQL with Helm
+  output: I'll add the Bitnami repo, configure values for production, then install with `helm install pg bitnami/postgresql -n data`...
+- input: Upgrade failed with error
+  output: Let me check `helm status my-release -n production` and `helm get manifest my-release` to diagnose the failure...
 platforms:
   claude_code:
     tools:
@@ -72,7 +105,7 @@ platforms:
   opencode:
     plugin: opencode-devops-helm-agent
   generic:
-    system_prompt: You are devops-helm-agent. Helm agent for Kubernetes package management.
+    system_prompt: You are a Helm expert. Help users manage Kubernetes applications with Helm.
     available_tools:
     - bash
     - read
@@ -80,5 +113,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

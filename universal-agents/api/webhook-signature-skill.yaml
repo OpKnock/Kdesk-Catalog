@@ -1,84 +1,20 @@
 name: webhook-signature
 display_name: Webhook Signature
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Sign and verify webhooks with HMAC-SHA256: compute signatures with openssl or node crypto,
-  validate X-Hub-Signature headers, and test tamper detection.'
-version: 2.0.0
+description: "Computes and validates HMAC-SHA256 signatures on webhook payloads using openssl, Node.js crypto, and Python hmac. Sends signed webhooks with X-Hub-Signature-256 headers and verifies incoming signatures with constant-time comparison."
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- node
-- openssl
-- python
-capabilities:
-- name: signature-verification
-  description: Compute and validate webhook HMAC signatures
-  commands:
-  - openssl dgst -sha256 -hmac 'whsec_abc123' -binary payload.json | base64
-  - node -e "const c=require('crypto');const fs=require('fs');const s=c.createHmac('sha256','whsec_abc123').update(fs.readFileSync('payload.json')).digest('hex');console.log('sha256='+s)"
-  - 'curl -s -X POST -H ''X-Hub-Signature-256: sha256=deadbeef'' -d @payload.json http://localhost:8080/webhooks/orders
-    -o /dev/null -w ''%{http_code}'''
-  - 'curl -s -X POST -H ''X-Hub-Signature-256: sha256=<computed>'' -d @payload.json http://localhost:8080/webhooks/orders
-    -o /dev/null -w ''%{http_code}'''
-  - python -c "import hmac,hashlib,json;print(hmac.new(b'whsec_abc123',open('payload.json','rb').read(),hashlib.sha256).hexdigest())"
-  examples:
-  - echo -n '{"event":"test"}' | openssl dgst -sha256 -hmac 'whsec_abc123' -binary | base64
-  - 'curl -s -X POST -H ''Content-Type: application/json'' -H "X-Hub-Signature-256: sha256=$(echo -n ''{"event":"test"}''
-    | openssl dgst -sha256 -hmac ''whsec_abc123'' -binary | base64)" -d ''{"event":"test"}'' http://localhost:8080/webhooks/orders'
-  - node verify.js payload.json sha256=<computed>
-  parameters:
-  - name: secret
-    type: string
-    description: HMAC shared secret (whsec_...)
-  - name: algorithm
-    type: string
-    description: sha256 or sha1 for legacy payloads
-  - name: payload
-    type: string
-    description: Path to the raw payload file
-knowledge:
-- title: GitHub Validating Deliveries
-  type: documentation
-  source: https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries
-  description: HMAC verification algorithm and code samples
-- title: Stripe Webhook Signatures
-  type: documentation
-  source: https://docs.stripe.com/webhooks/signatures
-  description: Timestamped signatures and tolerance windows
-instructions: "# Webhook Signature\n\n## What this skill does\nAdd and verify HMAC-SHA256 signatures on\
-  \ webhook payloads so receivers can authenticate the sender and detect tampering. Covers computing signatures\
-  \ with openssl/node/python and validating `X-Hub-Signature-256`.\n\n## When to use\n- Signing outgoing\
-  \ webhooks for customers\n- Verifying incoming GitHub/Stripe webhooks\n- Auditing signature handling\
-  \ in a receiver\n\n## Real commands\n```bash\n# Compute signature with openssl (base64, GitHub style)\n\
-  openssl dgst -sha256 -hmac 'whsec_abc123' -binary payload.json | base64\n\n# Compute hex signature with\
-  \ node\nnode -e \"const c=require('crypto');const fs=require('fs');\\\nconst s=c.createHmac('sha256','whsec_abc123').update(fs.readFileSync('payload.json')).digest('hex');\\\
-  \nconsole.log('sha256='+s)\"\n\n# Compute hex with python\npython -c \"import hmac,hashlib;print(hmac.new(b'whsec_abc123',open('payload.json','rb').read(),hashlib.sha256).hexdigest())\"\
-  \n\n# Send a signed webhook\ncurl -s -X POST \\\n  -H 'Content-Type: application/json' \\\n  -H \"X-Hub-Signature-256:\
-  \ sha256=$(openssl dgst -sha256 -hmac 'whsec_abc123' -binary payload.json | base64)\" \\\n  -d @payload.json\
-  \ http://localhost:8080/webhooks/orders\n\n# Tampered signature must be rejected (expect 401)\ncurl\
-  \ -s -X POST -H 'X-Hub-Signature-256: sha256=deadbeef' -d @payload.json http://localhost:8080/webhooks/orders\
-  \ -o /dev/null -w '%{http_code}\\n'\n```\n\n## Verification rules\n- Hash the raw request body bytes,\
-  \ not the re-parsed JSON\n- Compare in constant time (crypto.timingSafeEqual / hmac.compare_digest)\n\
-  - Support `sha256=signature` format; drop `sha1=` gracefully\n- Log failures but never include the payload\
-  \ or secret\n\n## Best practices\n- Rotate secrets and support multiple active secrets\n- Include a\
-  \ timestamp when signatures can be replayed\n- Reject requests with missing or malformed signature headers\n\
-  \n## Testing\n```bash\n# Valid signature -> 200/2xx\n# Invalid signature -> 401\n# Missing signature\
-  \ -> 401\n```"
-examples:
-- input: Sign webhooks like GitHub does
-  output: Computes sha256 HMAC of the raw body and sends it as X-Hub-Signature-256.
-- input: Verify an incoming webhook
-  output: Recomputes the HMAC from the raw body and secret, compares constant-time, and accepts or rejects.
+  - api
+  - webhook
+  - security
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -87,22 +23,110 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-webhook-signature
   generic:
-    system_prompt: 'You are the Webhook Signature specialist. You do it through signature-verification:
-      Compute and validate webhook HMAC signatures. The commands are real, e.g. `openssl dgst -sha256
-      -hmac whsec_abc123 -binary payload.json | base64`. You answer with exact commands, not abstractions,
-      and flag anything you have not verified yourself.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You are the Webhook Signature specialist. You do it through signature-verification: Compute and validate webhook HMAC signatures. The commands are real, e.g. `openssl dgst -sha256 -hmac whsec_abc123 -binary payload.json | base64`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: signature-verification
+    description: Compute and validate webhook HMAC signatures
+    commands:
+      - 'openssl dgst -sha256 -hmac "whsec_abc123" -binary payload.json | base64'
+      - 'node -e "const c=require(\"crypto\");const fs=require(\"fs\");const s=c.createHmac(\"sha256\",\"whsec_abc123\").update(fs.readFileSync(\"payload.json\")).digest(\"hex\");console.log(\"sha256=\"+s)"'
+      - 'curl -s -X POST -H "X-Hub-Signature-256: sha256=deadbeef" -d @payload.json http://localhost:8080/webhooks/orders -o /dev/null -w "%{http_code}"'
+      - 'curl -s -X POST -H "X-Hub-Signature-256: sha256=$(openssl dgst -sha256 -hmac \"whsec_abc123\" -binary payload.json | base64)" -d @payload.json http://localhost:8080/webhooks/orders'
+      - 'python -c "import hmac,hashlib;print(hmac.new(b\"whsec_abc123\",open(\"payload.json\",\"rb\").read(),hashlib.sha256).hexdigest())"'
+    examples:
+      - 'echo -n "{\"event\":\"test\"}" | openssl dgst -sha256 -hmac "whsec_abc123" -binary | base64'
+      - 'curl -s -X POST -H "Content-Type: application/json" -H "X-Hub-Signature-256: sha256=$(echo -n "{\"event\":\"test\"}" | openssl dgst -sha256 -hmac "whsec_abc123" -binary | base64)" -d "{\"event\":\"test\"}" http://localhost:8080/webhooks/orders'
+      - 'node verify.js payload.json sha256=<computed>'
+    parameters:
+      - name: secret
+        type: string
+        description: HMAC shared secret (whsec_...)
+      - name: algorithm
+        type: string
+        description: sha256 or sha1 for legacy payloads
+      - name: payload
+        type: string
+        description: Path to the raw payload file
+prerequisites:
+  - node
+  - openssl
+  - python
+tools: [openssl, node, python, curl]
+examples:
+  - input: Sign webhooks like GitHub does
+    output: Computes sha256 HMAC of the raw body and sends it as X-Hub-Signature-256.
+  - input: Verify an incoming webhook
+    output: Recomputes the HMAC from the raw body and secret, compares constant-time, and accepts or rejects.
+instructions: |
+  # Webhook Signature
+
+  ## What this skill does
+
+  Add and verify HMAC-SHA256 signatures on webhook payloads so receivers can authenticate the sender and detect tampering. Covers computing signatures with openssl/node/python and validating `X-Hub-Signature-256`.
+
+  ## When to use
+
+  - Signing outgoing webhooks for customers
+  - Verifying incoming GitHub/Stripe webhooks
+  - Auditing signature handling in a receiver
+
+  ## Real commands
+
+  ```bash
+  # Compute signature with openssl (base64, GitHub style)
+  openssl dgst -sha256 -hmac "whsec_abc123" -binary payload.json | base64
+
+  # Compute hex signature with node
+  node -e "const c=require('crypto');const fs=require('fs');const s=c.createHmac('sha256','whsec_abc123').update(fs.readFileSync('payload.json')).digest('hex');console.log('sha256='+s)"
+
+  # Compute hex with python
+  python -c "import hmac,hashlib;print(hmac.new(b'whsec_abc123',open('payload.json','rb').read(),hashlib.sha256).hexdigest())"
+
+  # Send a signed webhook
+  curl -s -X POST \
+    -H "Content-Type: application/json" \
+    -H "X-Hub-Signature-256: sha256=$(openssl dgst -sha256 -hmac 'whsec_abc123' -binary payload.json | base64)" \
+    -d @payload.json http://localhost:8080/webhooks/orders
+
+  # Tampered signature must be rejected (expect 401)
+  curl -s -X POST -H "X-Hub-Signature-256: sha256=deadbeef" -d @payload.json http://localhost:8080/webhooks/orders -o /dev/null -w "%{http_code}\n"
+  ```
+
+  ## Verification rules
+
+  - Hash the raw request body bytes, not the re-parsed JSON
+  - Compare in constant time (crypto.timingSafeEqual / hmac.compare_digest)
+  - Support `sha256=signature` format; drop `sha1=` gracefully
+  - Log failures but never include the payload or secret
+
+  ## Best practices
+
+  - Rotate secrets and support multiple active secrets
+  - Include a timestamp when signatures can be replayed
+  - Reject requests with missing or malformed signature headers
+
+  ## Testing
+
+  ```bash
+  # Valid signature -> 200/2xx
+  # Invalid signature -> 401
+  # Missing signature -> 401
+  ```
+knowledge:
+  - title: GitHub Validating Deliveries
+    type: documentation
+    source: https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries
+    description: HMAC verification algorithm and code samples
+  - title: Stripe Webhook Signatures
+    type: documentation
+    source: https://docs.stripe.com/webhooks/signatures
+    description: Timestamped signatures and tolerance windows
+  - title: RFC 7519 - JWS
+    type: documentation
+    source: https://datatracker.ietf.org/doc/html/rfc7519
+    description: JSON Web Signature reference

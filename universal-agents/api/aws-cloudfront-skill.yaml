@@ -7,7 +7,7 @@ description: 'Manages AWS CloudFront distributions: creation, cache invalidation
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - aws
@@ -16,16 +16,16 @@ capabilities:
   description: Create and manage CloudFront distributions.
   commands:
   - aws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.com
-  - aws cloudfront get-distribution --id <distribution-id>
+  - aws cloudfront get-distribution --id E2EXAMPLE
   - aws cloudfront list-distributions --query 'DistributionList.Items[].{Id:Id,DomainName:DomainName}'
-  - aws cloudfront update-distribution --id <distribution-id> --distribution-config file://config.json
-  - aws cloudfront delete-distribution --id <distribution-id> --if-match <etag>
+  - aws cloudfront update-distribution --id E2EXAMPLE --distribution-config file://config.json
+  - aws cloudfront delete-distribution --id E2EXAMPLE --if-match ETAG123
   examples:
   - aws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.com --default-root-object
     index.html
   - aws cloudfront list-distributions --query 'DistributionList.Items[].{Id:Id,DomainName:DomainName,Status:Status}'
     --output table
-  - aws cloudfront get-distribution --id <id> | jq '.Distribution.DistributionConfig.DefaultCacheBehavior'
+  - aws cloudfront get-distribution --id E2EXAMPLE | jq '.Distribution.DistributionConfig.DefaultCacheBehavior'
   parameters:
   - name: origin_domain
     type: string
@@ -36,10 +36,10 @@ capabilities:
 - name: invalidation
   description: Invalidate cached objects at edge locations.
   commands:
-  - aws cloudfront create-invalidation --distribution-id <id> --paths "/*"
-  - aws cloudfront create-invalidation --distribution-id <id> --paths "/index.html" "/assets/*"
-  - aws cloudfront list-invalidations --distribution-id <id>
-  - aws cloudfront get-invalidation --distribution-id <id> --id <invalidation-id>
+  - aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/*"
+  - aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/index.html" "/assets/*"
+  - aws cloudfront list-invalidations --distribution-id E2EXAMPLE
+  - aws cloudfront get-invalidation --distribution-id E2EXAMPLE --id INV123
   - curl -sI https://d111111abcdef8.cloudfront.net/index.html | grep -iE 'x-cache|age|via'
   examples:
   - aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/css/*" "/js/*"
@@ -171,5 +171,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

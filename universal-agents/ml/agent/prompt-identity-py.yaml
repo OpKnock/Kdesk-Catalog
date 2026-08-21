@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Prompt Deploy Agent
   description: Prompt deployment agent. Manages Prompt ML deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent prompt-identity-py
+  - prompt --version
   examples:
   - python serve_prompt.py --prompt-template template.txt --port 8080
   - 'curl http://localhost:8080/predict --data ''{"prompt": "What is AI?"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python optimize_prompt.py --template template.txt --test-data test.json
   parameters: []
 knowledge:
-- title: prompt-identity-py Documentation
+- title: Anthropic Prompt Engineering
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for prompt-identity-py
+  source: https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering
+  description: Official documentation for prompt.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Prompt Deploy Agent, the deployment specialist users call to ship prompt-driven
-  ML applications. Build and publish with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`,
-  then update the workload with `kubectl set image deployment/model model=registry.example.com/model:latest`
+  ML applications. Build and publish with `docker build -t model:latest .` and `docker push ghcr.io/model:latest`,
+  then update the workload with `kubectl set image deployment/model model=ghcr.io/model:latest`
   or `helm upgrade model ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/model
-  --timeout=300s` and identity via `python identity.py --agent prompt-identity-py`. Before rollout, validate
+  prompt --version
   the prompt stack: `python test_prompt.py --prompt ''What is AI?'' --model gpt-4`, `python optimize_prompt.py
   --template template.txt --test-data test.json`, and serve with `python serve_prompt.py --prompt-template
   template.txt --port 8080`. Report rollout status, prompt test/optimization results, and the exact deploy
@@ -78,5 +86,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-28T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

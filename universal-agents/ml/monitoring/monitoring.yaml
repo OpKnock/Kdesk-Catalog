@@ -7,31 +7,39 @@ version: 1.0.0
 tags:
 - ml
 - monitoring-deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Monitoring Deploy Sdk
   description: Monitoring SDK deployment agent for ML Monitoring SDK deployment.
   commands:
   - docker build -t ing:latest .
-  - docker push registry.example.com/ing:latest
-  - kubectl set image deployment/ing ing=registry.example.com/ing:latest
+  - docker push ghcr.io/ing:latest
+  - kubectl set image deployment/ing ing=ghcr.io/ing:latest
   - helm upgrade ing ./helm-chart --namespace production
   - kubectl rollout status deployment/ing --timeout=300s
-  - python identity.py --agent monitoring-deployment
+  - monitoring --version
   examples:
   - 'Server: python -m monitoring-deployment.server --port 8080'
   - 'Docker: docker run -p 8080:8080 monitoring-deployment-server'
   parameters: []
 knowledge:
-- title: monitoring-deployment Documentation
+- title: Prometheus Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/monitoring-deployment
-  description: Reference documentation for monitoring-deployment
+  source: https://prometheus.io/docs/introduction/overview/
+  description: Official documentation for monitoring.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Monitoring SDK deployment expert. Call on this agent when a user needs to deploy
   Monitoring applications through the standard container and Kubernetes pipeline. Core workflow: (1) build
-  and push with ''docker build -t ing:latest .'' and ''docker push registry.example.com/ing:latest'';
-  (2) update and upgrade with ''kubectl set image deployment/ing ing=registry.example.com/ing:latest''
+  and push with ''docker build -t ing:latest .'' and ''docker push ghcr.io/ing:latest'';
+  (2) update and upgrade with ''kubectl set image deployment/ing ing=ghcr.io/ing:latest''
   and ''helm upgrade ing ./helm-chart --namespace production''; (3) confirm with ''kubectl rollout status
   deployment/ing --timeout=300s'' and validate with ''Server: python -m monitoring-deployment.server --port
   8080'' or ''Docker: docker run -p 8080:8080 monitoring-deployment-server''. Key behaviors: verify tag
@@ -73,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-09-27T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,7 +7,7 @@ description: 'Implements resilient retry strategies with tenacity (Python) and a
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - node
@@ -43,8 +43,7 @@ capabilities:
   - npm install async-retry
   - npm install --save-dev mocha
   - npx mocha test/retry.test.js
-  - node -e "const retry=require('async-retry'); retry(async()=>{throw new Error('x')},{retries:2}).catch(e=>console.log('gave
-    up', e.message))"
+  - node -e "const retry=require('async-retry'); retry(async()=>{throw new Error('x')},{retries:2}).catch(e=>console.log('gave up', e.message))"
   examples:
   - npm init -y && npm install async-retry
   - node -e "const retry=require('async-retry'); retry(()=>Promise.resolve(42),{retries:3}).then(console.log)"
@@ -80,9 +79,9 @@ instructions: "# Async Retry\n\n## What this skill does\n\nAdds production-grade
   \ install tenacity\nnpm install async-retry\n```\n\n## Python example\n\n```python\nfrom tenacity import\
   \ retry, stop_after_attempt, wait_exponential_jitter\n\n@retry(stop=stop_after_attempt(4), wait=wait_exponential_jitter(initial=0.5,\
   \ max=8))\nasync def fetch():\n    async with aiohttp.ClientSession() as s:\n        async with s.get(\"\
-  https://api.example.com/orders\") as r:\n            r.raise_for_status()\n            return await\
+  https://httpbin.org/status/500\") as r:\n            r.raise_for_status()\n            return await\
   \ r.json()\n```\n\n## Node example\n\n```js\nconst retry = require('async-retry')\nconst fetchOrders\
-  \ = async () => {\n  return retry(async bail => {\n    const res = await fetch('https://api.example.com/orders')\n\
+  \ = async () => {\n  return retry(async bail => {\n    const res = await fetch('https://httpbin.org/status/500')\n\
   \    if (res.status === 404) bail(new Error('not found'))  // do not retry\n    if (!res.ok) throw new\
   \ Error('retryable')\n    return res.json()\n  }, { retries: 3, minTimeout: 200, factor: 2, randomize:\
   \ true })\n}\n```\n\n## Testing\n\n- Mock failures N times then success; assert call count equals N+1\n\
@@ -126,5 +125,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

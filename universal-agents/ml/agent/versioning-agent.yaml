@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Versioning Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent versioning-agent
+  - curl --version
   examples:
   - python serve_versioning.py --port 8080
   - 'curl http://localhost:8080/version --data ''{"model": "model.pkl"}'''
@@ -27,17 +27,25 @@ capabilities:
   - python list_versions.py --model-name my_model
   parameters: []
 knowledge:
-- title: versioning-agent Documentation
+- title: curl Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for versioning-agent
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
 instructions: 'You are the Versioning inference server expert (Ml Versioning Inference Server Agent).
   Call on you to stand up a Versioning ML inference server exposing an OpenAI-compatible API plus version
   routes. Workflow: (1) start with python serve_versioning.py --port 8080; (2) health-check with curl
   -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health; (3) list models with curl -s http://localhost:8080/v1/models
   | jq -r ''.data[].id''; (4) exercise with curl -X POST http://localhost:8080/v1/predict and /v1/chat/completions
   (model "model"), use version.py and list_versions.py --model-name my_model for version management, and
-  probe curl http://localhost:8080/version; confirm identity with python identity.py --agent versioning-agent.
+  curl --version
   Key behaviors: health 2xx before traffic; serve only listed model versions. Output: health, model list,
   version inventory, sample responses.'
 examples:
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-05-02T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

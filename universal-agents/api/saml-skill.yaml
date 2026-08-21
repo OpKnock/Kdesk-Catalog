@@ -2,12 +2,11 @@ name: saml
 display_name: Saml
 category: api
 subcategory: general
-description: 'Hand-crafted SAML 2.0 skill: sign and verify assertions with xmlsec1, base64-decode SAMLResponses,
-  exchange metadata, and wire SP-initiated login.'
+description: 'Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding SAMLResponses, exchanging metadata, and wiring SP-initiated login.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - openssl
@@ -20,12 +19,12 @@ capabilities:
   - xmlsec1 --verify --pubkey-cert-pem sp-cert.pem saml-response.xml
   - xmlsec1 --sign --privkey-pem idp-key.pem --pubkey-pem idp-cert.pem --output signed.xml unsigned-assertion.xml
   - python -c 'import base64; print(base64.b64decode(open("saml-response.b64").read()).decode())'
-  - curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.example.com/acs
+  - curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.your-app.test/acs
   - openssl x509 -in idp-cert.pem -noout -fingerprint -sha256
   examples:
   - python -c 'import base64; print(base64.b64decode(open("saml-response.b64").read()).decode())'
   - xmlsec1 --verify --pubkey-cert-pem sp-cert.pem signed.xml
-  - curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.example.com/acs
+  - curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.your-app.test/acs
   parameters:
   - name: cert_file
     type: string
@@ -46,9 +45,9 @@ knowledge:
   source: https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf
   description: Assertions, protocols, and bindings
 instructions: '# SAML 2.0
-
-
-  Hand-crafted skill for debugging and building SAML 2.0 SSO.
+ 
+ 
+  Expert skill for debugging and building SAML 2.0 SSO.
 
 
   ## What this skill does
@@ -93,7 +92,7 @@ instructions: '# SAML 2.0
 
   # Simulate the ACS POST
 
-  curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.example.com/acs
+  curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.your-app.test/acs
 
 
   # Compare certificates
@@ -174,5 +173,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

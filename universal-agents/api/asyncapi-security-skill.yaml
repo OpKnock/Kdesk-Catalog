@@ -2,12 +2,11 @@ name: asyncapi-security
 display_name: Asyncapi Security
 category: api
 subcategory: general
-description: Models and enforces AsyncAPI security schemes (apiKey, OAuth2, OpenID Connect, mTLS) in documents,
-  generated clients, and broker connections.
+description: Defines and validates authentication mechanisms for event-driven APIs including API keys, OAuth2 flows, OpenID Connect, and mutual TLS across message brokers and generated client code.
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - kafka-topics
@@ -36,18 +35,18 @@ capabilities:
 - name: oauth-broker
   description: Obtain OAuth2 tokens and connect to broker operations secured with OAuth2/OpenID Connect.
   commands:
-  - curl -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d client_id=api-consumer
+  - curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials -d client_id=api-consumer
     -d client_secret=secret -d scope=kafka:read
-  - curl -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN
-  - kafka-topics --bootstrap-server broker.example.com:9093 --command-config client-oauth.properties --list
-  - mosquitto_pub -h mqtt.example.com -p 8883 -u client --pw $TOKEN -t orders/created -m '{"id":1}' --cafile
+  - curl -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN
+  - kafka-topics --bootstrap-server kafka.your-app.test:9093 --command-config client-oauth.properties --list
+  - mosquitto_pub -h mqtt.your-app.test -p 8883 -u client --pw $TOKEN -t orders/created -m '{"id":1}' --cafile
     ca.crt
   examples:
-  - TOKEN=$(curl -s -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d
+  - TOKEN=$(curl -s -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials -d
     client_id=api-consumer -d client_secret=secret -d scope=kafka:read | jq -r .access_token) && echo
     $TOKEN
-  - curl -s -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN | jq '.active'
-  - mosquitto_pub -h mqtt.example.com -p 8883 -u client --pw $TOKEN -t orders/created -m hello
+  - curl -s -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN | jq '.active'
+  - mosquitto_pub -h mqtt.your-app.test -p 8883 -u client --pw $TOKEN -t orders/created -m hello
   parameters:
   - name: token_url
     type: string
@@ -61,17 +60,15 @@ capabilities:
 - name: tls-mtls
   description: Validate and test TLS/mTLS security schemes for broker endpoints.
   commands:
-  - openssl s_client -connect broker.example.com:9093 -showcerts < /dev/null | openssl x509 -noout -subject
-    -issuer
-  - openssl s_client -connect broker.example.com:9093 -cert client.crt -key client.key -CAfile ca.crt
-    < /dev/null 2>&1 | grep -E 'Verify|Protocol'
-  - kafka-topics --bootstrap-server broker.example.com:9093 --command-config client-mtls.properties --list
+  - echo | openssl s_client -connect kafka.your-app.test:9093 -showcerts 2>/dev/null | openssl x509 -noout -subject -issuer
+  - echo | openssl s_client -connect kafka.your-app.test:9093 -cert client.crt -key client.key -CAfile ca.crt 2>&1 | grep -E 'Verify|Protocol'
+  - kafka-topics --bootstrap-server kafka.your-app.test:9093 --command-config client-mtls.properties --list
   - openssl verify -CAfile ca.crt client.crt
   examples:
-  - openssl s_client -connect broker.example.com:9093 -showcerts < /dev/null | openssl x509 -noout -dates
-  - openssl s_client -connect broker.example.com:9093 -cert client.crt -key client.key -CAfile ca.crt
+  - openssl s_client -connect kafka.your-app.test:9093 -showcerts < /dev/null | openssl x509 -noout -dates
+  - openssl s_client -connect kafka.your-app.test:9093 -cert client.crt -key client.key -CAfile ca.crt
     < /dev/null 2>&1 | grep 'Verify return code'
-  - kafka-topics --bootstrap-server broker.example.com:9093 --command-config client-mtls.properties --describe
+  - kafka-topics --bootstrap-server kafka.your-app.test:9093 --command-config client-mtls.properties --describe
     --topic orders
   parameters:
   - name: broker_host
@@ -101,13 +98,13 @@ instructions: "# AsyncAPI Security\n\n## What this skill does\n\nModels and enfo
   \n## When to use\n\n- A spec must declare how channels are authenticated\n- Connecting generated clients\
   \ to OAuth2-secured brokers\n- Validating mTLS handshakes to Kafka/MQTT endpoints\n\n## Real commands\n\
   \n```bash\n# Validate the security schemes in a document\nnpx @asyncapi/cli validate asyncapi.yaml\n\
-  \n# Get a client-credentials token\ncurl -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials\
+  \n# Get a client-credentials token\ncurl -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials\
   \ -d client_id=api-consumer -d client_secret=secret -d scope=kafka:read\n\n# Introspect the token\n\
-  curl -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN | jq '.active'\n\n# mTLS check\
-  \ to the broker\nopenssl s_client -connect broker.example.com:9093 -cert client.crt -key client.key\
+  curl -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN | jq '.active'\n\n# mTLS check\
+  \ to the broker\nopenssl s_client -connect kafka.your-app.test:9093 -cert client.crt -key client.key\
   \ -CAfile ca.crt < /dev/null 2>&1 | grep 'Verify return code'\n```\n\n## Spec example\n\n```yaml\ncomponents:\n\
   \  securitySchemes:\n    oauth:\n      type: oauth2\n      flows:\n        clientCredentials:\n    \
-  \      tokenUrl: https://auth.example.com/oauth2/token\n          scopes:\n            kafka:read: Read\
+  \      tokenUrl: https://auth.your-app.test/oauth2/token\n          scopes:\n            kafka:read: Read\
   \ access\n    mtls:\n      type: mutualTLS\nchannels:\n  orders:\n    address: orders\n    security:\n\
   \      - oauth: [kafka:read]\n```\n\n## Testing\n\n- Validate documents in CI with the AsyncAPI CLI\n\
   - Test broker auth with kafka-topics --command-config\n\n## Best practices\n\n- Apply security at both\
@@ -151,5 +148,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

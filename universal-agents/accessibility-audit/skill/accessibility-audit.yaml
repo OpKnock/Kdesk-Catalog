@@ -2,7 +2,7 @@ name: accessibility-audit
 version: 2.0.0
 type: skill
 category: frontend
-description: Runs automated accessibility audits against web pages with pa11y, axe-core, and Lighthouse,
+description: Run an accessibility scan of a single URL and capture violations in machine-readable format. Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI.
   producing WCAG 2.x violation reports and CI gates. Use when auditing a site or app against WCAG 2.x.
   Don't use for fixing individual accessibility defects or for manual keyboard-navigation testing.
 keywords:
@@ -50,15 +50,15 @@ capabilities:
 - name: audit-page
   description: Run an accessibility scan of a single URL and capture violations in machine-readable format.
   commands:
-  - npx pa11y https://example.com --reporter=json
-  - npx lighthouse https://example.com --output=json --output-path=./lighthouse-report.json
-  - npx axe https://example.com --exit
-  - pa11y --config .pa11yci https://example.com
-  - npx pa11y-ci --sitemap https://example.com/sitemap.xml
+  - npx pa11y http://localhost:8080 --reporter=json
+  - npx lighthouse http://localhost:8080 --output=json --output-path=./lighthouse-report.json
+  - npx axe http://localhost:8080 --exit
+  - pa11y --config .pa11yci http://localhost:8080
+  - npx pa11y-ci --sitemap http://localhost:8080/sitemap.xml
   examples:
-  - npx pa11y --standard WCAG2AA --threshold 5 https://example.com/login
-  - npx lighthouse https://example.com --only-categories=accessibility --output=html --output-path=report.html
-  - pa11y --include-notices https://example.com
+  - npx pa11y --standard WCAG2AA --threshold 5 http://localhost:8080/login
+  - npx lighthouse http://localhost:8080 --only-categories=accessibility --output=html --output-path=report.html
+  - pa11y --include-notices http://localhost:8080
   parameters:
   - name: url
     type: string
@@ -74,10 +74,10 @@ capabilities:
   commands:
   - npm install --save-dev pa11y-ci
   - npx pa11y-ci
-  - pa11y-ci --sitemap https://example.com/sitemap.xml --json > results.json
+  - pa11y-ci --sitemap http://localhost:8080/sitemap.xml --json > results.json
   - npx lhci autorun --config=./lighthouserc.json
   examples:
-  - npx pa11y-ci --sitemap https://example.com/sitemap.xml
+  - npx pa11y-ci --sitemap http://localhost:8080/sitemap.xml
   - npx lhci healthcheck && npx lhci autorun
   - npm install --save-dev @lhci/cli
   parameters:

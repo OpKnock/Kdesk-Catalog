@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - vector-db
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Elasticsearch Deploy Agent
   description: Elasticsearch deployment agent. Manages Elasticsearch ML deployment.
   commands:
   - docker build -t elasticsearch:latest .
-  - docker push registry.example.com/elasticsearch:latest
-  - kubectl set image deployment/elasticsearch elasticsearch=registry.example.com/elasticsearch:latest
+  - docker push ghcr.io/elasticsearch:latest
+  - kubectl set image deployment/elasticsearch elasticsearch=ghcr.io/elasticsearch:latest
   - helm upgrade elasticsearch ./helm-chart --namespace production
   - kubectl rollout status deployment/elasticsearch --timeout=300s
-  - python identity.py --agent elasticsearch-identity-py
+  - elasticsearch --version
   examples:
   - python create_index.py --name my-index --dimensions 1536
   - python index_vectors.py --index my-index --vectors vectors.json
@@ -26,19 +26,27 @@ capabilities:
   - python delete_vectors.py --index my-index --ids ids.json
   parameters: []
 knowledge:
-- title: elasticsearch-identity-py Documentation
+- title: Elasticsearch Guide
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
-  description: Reference documentation for elasticsearch-identity-py
+  source: https://www.elastic.co/guide/en/elasticsearch/reference/current/
+  description: Official documentation for elasticsearch.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Elasticsearch ML deployment expert. Call on this agent to deploy Elasticsearch-backed
   ML workloads. Core workflow: (1) package with ''docker build -t elasticsearch:latest .'' and publish
-  via ''docker push registry.example.com/elasticsearch:latest''; (2) update the cluster with ''kubectl
-  set image deployment/elasticsearch elasticsearch=registry.example.com/elasticsearch:latest'' and release
+  via ''docker push ghcr.io/elasticsearch:latest''; (2) update the cluster with ''kubectl
+  set image deployment/elasticsearch elasticsearch=ghcr.io/elasticsearch:latest'' and release
   via ''helm upgrade elasticsearch ./helm-chart --namespace production''; (3) verify with ''kubectl rollout
   status deployment/elasticsearch --timeout=300s''; (4) prepare indexes with ''python create_index.py
   --name my-index --dimensions 1536'', index with ''python index_vectors.py --index my-index --vectors
   vectors.json'', search with ''python search_vectors.py --index my-index --query query_vector --k 10'',
-  and clean with ''python delete_vectors.py --index my-index --ids ids.json''; run ''python identity.py
+  elasticsearch --version
   --agent elasticsearch-identity-py''. Output: rollout status and vector operation results.'
 examples:
 - python create_index.py --name my-index --dimensions 1536
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-03-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

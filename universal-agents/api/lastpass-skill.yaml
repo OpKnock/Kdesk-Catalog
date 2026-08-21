@@ -7,16 +7,18 @@ description: 'Manage credentials with the LastPass CLI (lpass): login, search en
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 prerequisites:
 - lpass
 capabilities:
 - name: lpass-session
   description: Login, logout, and status of the LastPass CLI.
   commands:
-  - lpass login alice@example.com
-  - lpass login --trust alice@example.com
+  - lpass login alice@myapp.test
+  - lpass login --trust alice@myapp.test
   - lpass status
   - lpass logout
   examples:
@@ -35,14 +37,14 @@ capabilities:
   commands:
   - lpass ls
   - lpass ls -l
-  - lpass show --password example.com
-  - lpass show --username --password --url example.com
-  - lpass generate --no-symbols 24 example.com/root
-  - lpass add --non-interactive --username=bob example.com
+  - lpass show --password github.com
+  - lpass show --username --password --url github.com
+  - lpass generate --no-symbols 24 github.com/root
+  - lpass add --non-interactive --username=bob github.com
   examples:
   - lpass ls -l
-  - lpass show --password example.com
-  - lpass generate --no-symbols 24 example.com/root
+  - lpass show --password github.com
+  - lpass generate --no-symbols 24 github.com/root
   parameters:
   - name: search
     type: string
@@ -163,10 +165,10 @@ instructions: '# LastPass CLI (lpass)
 
   '
 examples:
-- input: Get the password for example.com
-  output: lpass show --password example.com
+- input: Get the password for github.com
+  output: lpass show --password github.com
 - input: Rotate a stored password
-  output: lpass generate --no-symbols 24 example.com/root
+  output: lpass generate --no-symbols 24 github.com/root
 platforms:
   claude_code:
     tools:
@@ -191,12 +193,10 @@ platforms:
     plugin: opencode-lastpass
   generic:
     system_prompt: 'You own Lastpass end to end. You do it through lpass-session: Login, logout, and status
-      of the LastPass CLI. The commands are real, e.g. `lpass login alice@example.com`. You verify each
+      of the LastPass CLI. The commands are real, e.g. `lpass login alice@myapp.test`. You verify each
       step you report and stay honest about what you have not run.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

@@ -7,30 +7,34 @@ version: 1.0.0
 tags:
 - data
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Data Spark Agent
   description: Apache Spark data processing agent. Manages Spark jobs, RDDs, DataFrames, and cluster operations.
   commands:
   - pyspark --master local[*]
-  - spark-submit --class <MainClass> <app.jar>
-  - spark-submit --master yarn --deploy-mode cluster <app.py>
+  - spark-submit --class demo-mainclass demo-app-jar
+  - spark-submit --master yarn --deploy-mode cluster demo-app-py
   - spark-shell --master local[*]
   examples:
-  - spark-submit --master yarn --deploy-mode cluster <app.py>
+  - spark-submit --master yarn --deploy-mode cluster demo-app-py
   - spark-shell --master local[*]
   - pyspark --master local[*]
-  - spark-submit --class <MainClass> <app.jar>
+  - spark-submit --class demo-mainclass demo-app-jar
   parameters:
   - name: master
     type: string
     description: CLI flag --master observed in capability commands
 knowledge:
-- title: data-spark-agent Documentation
+- title: Apache Spark Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/data/agent
-  description: Reference documentation for data-spark-agent
+  source: https://spark.apache.org/docs/latest/
+  description: Official documentation for spark.
+- title: Yarn Documentation
+  type: reference
+  source: https://yarnpkg.com/getting-started
+  description: Official documentation for yarn.
 instructions: 'You are an Apache Spark expert. Call on you for Spark application development, optimization,
   and cluster management. Core workflow: 1) Prototype interactively with `pyspark --master local[*]` or
   `spark-shell --master local[*]`; 2) Submit packaged applications with `spark-submit --class <MainClass>
@@ -41,10 +45,10 @@ instructions: 'You are an Apache Spark expert. Call on you for Spark application
   strategies. Output: submission results, job progress and completion status, performance findings, and
   tuning recommendations (executors, memory, partitioning).'
 examples:
-- spark-submit --master yarn --deploy-mode cluster <app.py>
+- spark-submit --master yarn --deploy-mode cluster demo-app-py
 - spark-shell --master local[*]
 - pyspark --master local[*]
-- spark-submit --class <MainClass> <app.jar>
+- spark-submit --class demo-mainclass demo-app-jar
 platforms:
   claude_code:
     tools:
@@ -81,5 +85,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-03-21T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

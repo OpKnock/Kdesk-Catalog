@@ -45,14 +45,14 @@ capabilities:
 - name: link-headers
   description: Expose pagination metadata in HTTP Link headers
   commands:
-  - curl -sI 'http://api.example.com/users?page=2&limit=10'
-  - curl -s -D- 'http://api.example.com/users?page=2' | grep -i '^link:'
+  - curl -sI 'http://localhost:8080/users?page=2&limit=10'
+  - curl -s -D- 'http://localhost:8080/users?page=2' | grep -i '^link:'
   - npm install parse-link-header
-  - node -e "const parse=require('parse-link-header'); console.log(parse('<https://api.example.com/users?page=3>;
+  - node -e "const parse=require('parse-link-header'); console.log(parse('demo-http-localhost-8080-users-page;
     rel=\"next\"'))"
-  - curl -s -o /dev/null -w '%{http_code}\n' 'http://api.example.com/users?page=9999'
+  - curl -s -o /dev/null -w '%{http_code}\n' 'http://localhost:8080/users?page=9999'
   examples:
-  - 'Link: <...?page=3>; rel="next" is the RFC 8288 wire format'
+  - 'Link: demo-page; rel="next" is the RFC 8288 wire format'
   - parse-link-header turns Link headers into a JS object
   - grep -i '^link:' extracts pagination links from response headers
   parameters:
@@ -68,9 +68,9 @@ capabilities:
 - name: header-validation
   description: Validate Link header output against RFC 8288
   commands:
-  - 'node -e "const h=''<https://api.example.com/users?page=2>; rel=\"next\"''; const m=h.match(/<([^>]+)>;\s*rel=\"(\w+)\"/);
+  - 'node -e "const h=''demo-http-localhost-8080-users-page; rel=\"next\"''; const m=h.match(/demo-]+)>;\s*rel=\"(\w+)\"/);
     console.log(m ? m.slice(1) : ''invalid'')"'
-  - curl -s 'http://api.example.com/users?page=1' -D- -o /dev/null | grep -ci 'link:'
+  - curl -s 'http://localhost:8080/users?page=1' -D- -o /dev/null | grep -ci 'link:'
   examples: []
   parameters: []
 prerequisites:

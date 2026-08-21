@@ -2,11 +2,11 @@ name: push-notification
 display_name: Push Notification
 category: api
 subcategory: general
-description: 'Send push notifications: FCM v1 and legacy HTTP APIs, APNs HTTP/2, tokens, and payload formatting.'
+description: 'Deliver mobile notifications via FCM v1, legacy FCM, and APNs HTTP/2 using curl with OAuth tokens and certificate-based auth.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - gcloud
@@ -16,17 +16,17 @@ capabilities:
   commands:
   - gcloud auth application-default print-access-token
   - 'curl -X POST -H "Authorization: Bearer $FCM_TOKEN" -H "Content-Type: application/json" -d @fcm.json
-    "https://fcm.googleapis.com/v1/projects/my-project/messages:send"'
+    "https://fcm.googleapis.com/v1/projects/my-firebase-project/messages:send"'
   - 'curl -X POST -H "Authorization: key=$FCM_LEGACY_KEY" -H "Content-Type: application/json" -d ''{"to":"DEVICE_TOKEN","notification":{"title":"Hi","body":"Hello"}}''
     https://fcm.googleapis.com/fcm/send'
-  - 'curl -d ''{"aps":{"alert":"Hello","sound":"default"}}'' -H "apns-topic: com.example.app" --cert apns.pem
+  - 'curl -d ''{"aps":{"alert":"Hello","sound":"default"}}'' -H "apns-topic: com.mycompany.myapp" --cert apns.pem
     https://api.push.apple.com/3/device/DEVICE_TOKEN'
   - 'curl -s -X POST -H "Authorization: Bearer $FCM_TOKEN" -H "Content-Type: application/json" -d @fcm.json
-    "https://fcm.googleapis.com/v1/projects/my-project/messages:send" | jq .'
+    "https://fcm.googleapis.com/v1/projects/my-firebase-project/messages:send" | jq .'
   examples:
   - 'curl -X POST -H "Authorization: key=$FCM_LEGACY_KEY" -H "Content-Type: application/json" -d ''{"to":"DEVICE_TOKEN","data":{"type":"order"}}''
     https://fcm.googleapis.com/fcm/send'
-  - 'curl -d ''{"aps":{"alert":"Order shipped"}}'' -H "apns-topic: com.example.app" --cert apns.pem https://api.push.apple.com/3/device/DEVICE_TOKEN'
+  - 'curl -d ''{"aps":{"alert":"Order shipped"}}'' -H "apns-topic: com.mycompany.myapp" --cert apns.pem https://api.push.apple.com/3/device/DEVICE_TOKEN'
   - gcloud auth application-default print-access-token > /tmp/fcm_token
   parameters:
   - name: token
@@ -52,11 +52,11 @@ instructions: "# Push Notifications\n\nSend notifications to iOS and Android dev
   - Pushes to APNs over HTTP/2\n\n## When to use\n\n- Triggering notifications from backend events\n-\
   \ Testing delivery with curl before building\n\n## Real commands\n\n```bash\n# FCM v1: get OAuth token,\
   \ then send\n gcloud auth application-default print-access-token\ncurl -X POST -H \"Authorization: Bearer\
-  \ $FCM_TOKEN\" -H \"Content-Type: application/json\" \\\n  -d @fcm.json \"https://fcm.googleapis.com/v1/projects/my-project/messages:send\"\
+  \ $FCM_TOKEN\" -H \"Content-Type: application/json\" \\\n  -d @fcm.json \"https://fcm.googleapis.com/v1/projects/my-firebase-project/messages:send\"\
   \n\n# FCM legacy\ncurl -X POST -H \"Authorization: key=$FCM_LEGACY_KEY\" -H \"Content-Type: application/json\"\
   \ \\\n  -d '{\"to\":\"DEVICE_TOKEN\",\"notification\":{\"title\":\"Hi\",\"body\":\"Hello\"}}' \\\n \
   \ https://fcm.googleapis.com/fcm/send\n\n# APNs\ncurl -d '{\"aps\":{\"alert\":\"Hello\",\"sound\":\"\
-  default\"}}' \\\n  -H \"apns-topic: com.example.app\" --cert apns.pem \\\n  https://api.push.apple.com/3/device/DEVICE_TOKEN\n\
+  default\"}}' \\\n  -H \"apns-topic: com.mycompany.myapp\" --cert apns.pem \\\n  https://api.push.apple.com/3/device/DEVICE_TOKEN\n\
   ```\n\n## fcm.json (v1)\n\n```json\n{\n  \"message\": {\n    \"token\": \"DEVICE_TOKEN\",\n    \"notification\"\
   : { \"title\": \"Hi\", \"body\": \"Hello\" },\n    \"data\": { \"screen\": \"orders\" }\n  }\n}\n```\n\
   \n## Best practices\n\n- Store device tokens per user and refresh on invalid-token errors\n- Use data\
@@ -98,5 +98,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -1,74 +1,20 @@
 name: warp
 display_name: Warp
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Build HTTP APIs with Warp (Rust): compose filter-based routes, add dependencies via cargo,
-  run the server, and test with cargo test.'
-version: 2.0.0
+description: "Creates HTTP APIs with the Warp web framework in Rust. Uses filter-based routing with combinators, adds warp and tokio dependencies via cargo, runs the server, and tests with cargo test and curl."
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- cargo
-capabilities:
-- name: warp-api
-  description: Create and run Warp-based Rust HTTP services
-  commands:
-  - cargo new my-api
-  - cargo add warp tokio
-  - cargo run
-  - cargo test
-  - curl -s http://localhost:3030/api/health
-  examples:
-  - cargo add warp tokio --features tokio/full
-  - cargo build --release
-  - 'curl -s -X POST http://localhost:3030/items -H ''Content-Type: application/json'' -d ''{"name":"widget"}'''
-  parameters:
-  - name: port
-    type: integer
-    description: Bind port for the warp server (default 3030)
-  - name: features
-    type: string
-    description: Cargo features for tokio, e.g. tokio/full
-knowledge:
-- title: warp docs.rs
-  type: documentation
-  source: https://docs.rs/warp
-  description: Full API reference for filters, extractors, and routing
-- title: warp GitHub
-  type: documentation
-  source: https://github.com/seanmonstar/warp
-  description: 'Examples: JSON, WebSockets, SSE, file serving'
-instructions: "# Warp (Rust)\n\n## What this skill does\nCreate HTTP APIs with the Warp web framework\
-  \ in Rust. Warp is filter-based: you compose routes from path, method, header, and body filters with\
-  \ combinators like `and`, `or`, and `map`.\n\n## When to use\n- Writing typed, safe Rust HTTP services\n\
-  - Building proxy or middleware-style APIs\n- Learning filter composition\n\n## Real commands\n```bash\n\
-  # New binary project\ncargo new my-api\ncd my-api\n\n# Add dependencies\ncargo add warp tokio\ncargo\
-  \ add tokio --features tokio/full\n\n# Run dev server\ncargo run\n\n# Build release\ncargo build --release\n\
-  \n# Test\ncargo test\n\n# Verify\ncurl -s http://localhost:3030/api/health\n```\n\n## Minimal main.rs\n\
-  ```rust\nuse warp::Filter;\n\n#[tokio::main]\nasync fn main() {\n    let health = warp::path!(\"api\"\
-  \ / \"health\")\n        .map(|| warp::reply::json(&serde_json::json!({\"status\": \"ok\"})));\n\n \
-  \   warp::serve(health).run(([127, 0, 0, 1], 3030)).await;\n}\n```\n\n## JSON POST with body\n```rust\n\
-  let create = warp::path!(\"items\")\n    .and(warp::post())\n    .and(warp::body::json())\n    .map(|item:\
-  \ Item| { /* store */ warp::reply::with_status(\"created\", StatusCode::CREATED) });\n```\n\n## Best\
-  \ practices\n- Use `warp::reject` + `warp::recover` for typed error handling\n- Compose small filters\
-  \ instead of one large route\n- Test filters with `warp::test::request()`\n- Enable `tokio/full` for\
-  \ real-world I/O\n\n## Testing\n```rust\n#[tokio::test]\nasync fn test_health() {\n    let res = warp::test::request().path(\"\
-  /api/health\").reply(&health).await;\n    assert_eq!(res.status(), 200);\n}\n```"
-examples:
-- input: Start a Warp API with a health route
-  output: Creates the cargo project, adds warp/tokio, writes the filter, runs cargo run, and verifies
-    with curl.
-- input: Add a POST /items endpoint
-  output: Adds a body-json filter, test for it, and runs cargo test.
+  - api
+  - rust
+  - warp
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -77,21 +23,126 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-warp
   generic:
-    system_prompt: 'You work Warp hands-on. You do it through warp-api: Create and run Warp-based Rust
-      HTTP services. The commands are real, e.g. `cargo new my-api`. You work hands-on and only report
-      outcomes you have observed.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You work Warp hands-on. You do it through warp-api: Create and run Warp-based Rust HTTP services. The commands are real, e.g. `cargo new my-api`. You work hands-on and only report outcomes you have observed."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: warp-api
+    description: Create and run Warp-based Rust HTTP services
+    commands:
+      - 'cargo new my-api'
+      - 'cargo add warp tokio'
+      - 'cargo run'
+      - 'cargo test'
+      - 'curl -s http://localhost:3030/api/health'
+    examples:
+      - 'cargo add warp tokio --features tokio/full'
+      - 'cargo build --release'
+      - 'curl -s -X POST http://localhost:3030/items -H "Content-Type: application/json" -d "{\"name\":\"widget"}"'
+    parameters:
+      - name: port
+        type: integer
+        description: Bind port for the warp server (default 3030)
+      - name: features
+        type: string
+        description: Cargo features for tokio, e.g. tokio/full
+prerequisites:
+  - cargo
+tools: [cargo, curl]
+examples:
+  - input: Start a Warp API with a health route
+    output: Creates the cargo project, adds warp/tokio, writes the filter, runs cargo run, and verifies with curl.
+  - input: Add a POST /items endpoint
+    output: Adds a body-json filter, test for it, and runs cargo test.
+instructions: |
+  # Warp (Rust)
+
+  ## What this skill does
+
+  Create HTTP APIs with the Warp web framework in Rust. Warp is filter-based: you compose routes from path, method, header, and body filters with combinators like `and`, `or`, and `map`.
+
+  ## When to use
+
+  - Writing typed, safe Rust HTTP services
+  - Building proxy or middleware-style APIs
+  - Learning filter composition
+
+  ## Real commands
+
+  ```bash
+  # New binary project
+  cargo new my-api
+  cd my-api
+
+  # Add dependencies
+  cargo add warp tokio
+  cargo add tokio --features tokio/full
+
+  # Run dev server
+  cargo run
+
+  # Build release
+  cargo build --release
+
+  # Test
+  cargo test
+
+  # Verify
+  curl -s http://localhost:3030/api/health
+  ```
+
+  ## Minimal main.rs
+
+  ```rust
+  use warp::Filter;
+
+  #[tokio::main]
+  async fn main() {
+      let health = warp::path!("api" / "health")
+          .map(|| warp::reply::json(&serde_json::json!({"status": "ok"})));
+
+      warp::serve(health).run(([127, 0, 0, 1], 3030)).await;
+  }
+  ```
+
+  ## JSON POST with body
+
+  ```rust
+  let create = warp::path!("items")
+      .and(warp::post())
+      .and(warp::body::json())
+      .map(|item: Item| { /* store */ warp::reply::with_status("created", StatusCode::CREATED) });
+  ```
+
+  ## Best practices
+
+  - Use `warp::reject` + `warp::recover` for typed error handling
+  - Compose small filters instead of one large route
+  - Test filters with `warp::test::request()`
+  - Enable `tokio/full` for real-world I/O
+
+  ## Testing
+
+  ```rust
+  #[tokio::test]
+  async fn test_health() {
+      let res = warp::test::request().path("/api/health").reply(&health).await;
+      assert_eq!(res.status(), 200);
+  }
+  ```
+knowledge:
+  - title: warp docs.rs
+    type: documentation
+    source: https://docs.rs/warp
+    description: Full API reference for filters, extractors, and routing
+  - title: warp GitHub
+    type: documentation
+    source: https://github.com/seanmonstar/warp
+    description: 'JSON, WebSockets, SSE, file serving examples'
+  - title: Tokio docs
+    type: documentation
+    source: https://docs.rs/tokio
+    description: Async runtime for Warp services

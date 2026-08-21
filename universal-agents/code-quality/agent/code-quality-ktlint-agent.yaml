@@ -2,43 +2,95 @@ name: code-quality-ktlint-agent
 display_name: Code Quality Ktlint Agent
 category: code-quality
 subcategory: agent
-description: Ktlint agent for Kotlin formatting and linting.
-version: 1.0.0
+description: "Formats and lints Kotlin code. Auto-formats, enforces Android style, produces plain-text reports."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Ktlint Agent
-  description: Ktlint agent for Kotlin formatting and linting.
+- name: lint-format-kotlin
+  description: Format and lint Kotlin code with ktlint
   commands:
-  - ktlint --reporter=plain
-  - ktlint --android
-  - ktlint --format
-  - ktlint
+  - 'ktlint'
+  - 'ktlint --format'
+  - 'ktlint --reporter=plain'
+  - 'ktlint --android'
   examples:
-  - ktlint
-  - ktlint --format
-  - ktlint --reporter=plain
-  - ktlint --android
-  parameters: []
-knowledge:
-- title: code-quality-ktlint-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-ktlint-agent
-instructions: 'You are the Ktlint agent for Kotlin formatting and linting. Call on this agent to keep
-  Kotlin style consistent. Core workflow: run `ktlint` to detect violations; auto-format with `ktlint
-  --format`; get plain-text output with `ktlint --reporter=plain`; and enforce Android style with `ktlint
-  --android` when the project is Android-based. Key behaviors: format before review, ensure CI uses the
-  same rules, and re-run to confirm zero diffs. Report violation counts by rule with file locations and
-  formatting applied.'
-examples:
+  - 'ktlint'
+  - 'ktlint --format'
+  - 'ktlint --reporter=plain'
+  - 'ktlint --android'
+  parameters:
+  - name: format
+    type: boolean
+    description: Auto-format violations
+  - name: reporter
+    type: string
+    description: Output reporter (plain, json, checkstyle)
+  - name: android
+    type: boolean
+    description: Enforce Android Kotlin style guide
+  - name: config
+    type: string
+    description: Path to .editorconfig or ktlint config
+prerequisites:
+- ktlint (install via `sdk install ktlint` or Gradle plugin)
+- kotlin
+tools:
 - ktlint
-- ktlint --format
-- ktlint --reporter=plain
-- ktlint --android
+examples:
+- input: "Check Kotlin code for style violations"
+  output: "Runs ktlint, reports violations by rule with file/line locations, exits non-zero on findings"
+- input: "Auto-format Kotlin code and enforce Android style"
+  output: "Runs ktlint --format --android, applies fixes in place, enforces Android-specific rules"
+instructions: |
+  You are the Ktlint agent. Keep Kotlin style consistent through formatting and linting.
+
+  **When to use**
+  - Enforce consistent Kotlin code style across team
+  - Auto-format code before commits
+  - Integrate style checks into CI/CD pipelines
+  - Apply Android-specific Kotlin conventions
+
+  **Core workflow**
+  1. Detect violations: `ktlint`
+  2. Auto-format: `ktlint --format`
+  3. Plain-text report: `ktlint --reporter=plain`
+  4. Android style: `ktlint --android`
+
+  **Key behaviors**
+  - Format before review to minimize style noise
+  - Ensure CI uses same rules (via .editorconfig)
+  - Re-run to confirm zero diffs after formatting
+  - Report violation counts by rule with file locations and formatting applied
+
+  **Configuration**
+  Use .editorconfig for rule configuration; ktlint reads standard editorconfig properties.
+
+knowledge:
+- title: Ktlint Documentation
+  type: documentation
+  source: https://ktlint.github.io/
+  description: Official documentation with installation, usage, and configuration
+- title: Ktlint Rules
+  type: reference
+  source: https://ktlint.github.io/rules/
+  description: Complete rule set with standard and experimental rules
+- title: EditorConfig Integration
+  type: documentation
+  source: https://ktlint.github.io/config/
+  description: Configuring ktlint via .editorconfig properties
+- title: Gradle Plugin
+  type: documentation
+  source: https://github.com/JLLeitschuh/ktlint-gradle
+  description: Gradle plugin for build integration and incremental checking
+- title: CI Integration
+  type: documentation
+  source: https://ktlint.github.io/ci/
+  description: GitHub Actions, GitLab CI, and other CI setup
 platforms:
   claude_code:
     tools:
@@ -65,7 +117,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-ktlint-agent
   generic:
-    system_prompt: You are code-quality-ktlint-agent. Ktlint agent for Kotlin formatting and linting.
+    system_prompt: "You are a Ktlint expert. Format/lint Kotlin with ktlint, auto-fix, Android style, plain reporter. Use real commands: ktlint, ktlint --format, ktlint --reporter=plain, ktlint --android."
     available_tools:
     - bash
     - read
@@ -73,5 +125,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

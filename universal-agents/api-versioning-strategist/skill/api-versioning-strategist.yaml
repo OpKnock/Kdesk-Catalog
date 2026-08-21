@@ -51,7 +51,7 @@ capabilities:
     | jq ''.full_name'''
   - curl -s https://api.github.com/repos/octocat/Hello-World | jq '.full_name'
   - npx @redocly/cli lint openapi.yaml
-  - curl -sI https://api.example.com/v2/health | head -1
+  - curl -sI http://localhost:8080/v2/health | head -1
   examples:
   - GitHub uses Accept-header versioning
   - URL versioning is simplest to observe
@@ -69,9 +69,9 @@ capabilities:
 - name: decision-docs
   description: Document versioning decisions
   commands:
-  - curl -s https://api.example.com/docs/versioning | jq '.strategies'
+  - curl -s http://localhost:8080/docs/versioning | jq '.strategies'
   - npx swagger-cli validate openapi.yaml
-  - curl -s -o /dev/null -w '%{http_code}\n' https://api.example.com/v2/health
+  - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/v2/health
   examples: []
   parameters: []
 prerequisites:

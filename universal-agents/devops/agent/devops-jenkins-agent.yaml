@@ -1,45 +1,72 @@
 name: devops-jenkins-agent
-display_name: Devops Jenkins Agent
+display_name: DevOps Jenkins Agent
 category: devops
 subcategory: agent
-description: Jenkins agent for CI/CD pipelines.
-version: 1.0.0
+description: Creates and manages Jenkins CI/CD pipelines using Jenkins CLI, remote API, and Pipeline DSL. Handles job triggering, build monitoring, credential management, and pipeline structure.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
-- name: Devops Jenkins Agent
-  description: Jenkins agent for CI/CD pipelines.
+- name: ci-cd-pipelines
+  description: Create and manage Jenkins pipelines and jobs
   commands:
+  - jenkins-cli
   - jenkins-cli list-jobs
-  - curl -X POST <jenkins-url>/job/<job>/build
-  - java -jar jenkins-cli.jar -s <url> build <job>
-  - jenkins-cli build <job>
+  - jenkins-cli build
+  - jenkins-cli console
+  - curl
   examples:
-  - jenkins-cli build <job>
-  - jenkins-cli list-jobs
-  - java -jar jenkins-cli.jar -s <url> build <job>
-  - curl -X POST <jenkins-url>/job/<job>/build
-  parameters: []
+  - 'List jobs: jenkins-cli -s http://jenkins.example.com list-jobs'
+  - 'Trigger build: jenkins-cli -s http://jenkins.example.com build my-job -p BRANCH=main'
+  - 'View console: jenkins-cli -s http://jenkins.example.com console my-job 42'
+  - 'Remote API: curl -X POST -u user:token http://jenkins.example.com/job/my-job/build'
+  parameters:
+  - name: jenkins_url
+    type: string
+    description: Jenkins server URL (e.g., http://jenkins.example.com)
+  - name: job_name
+    type: string
+    description: Jenkins job name
+  - name: credentials
+    type: string
+    description: User:token or user:password for authentication
 knowledge:
-- title: devops-jenkins-agent Documentation
+- title: Jenkins Documentation
+  type: documentation
+  source: https://www.jenkins.io/doc/
+  description: Official Jenkins documentation
+- title: Jenkins CLI
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-jenkins-agent
-instructions: 'You are a Jenkins expert. Call on you to create and manage CI/CD pipelines and jobs. Core
-  workflow: 1) List existing jobs with `jenkins-cli list-jobs`; 2) Trigger builds with `jenkins-cli build
-  <job>` or via the remote API with `curl -X POST <jenkins-url>/job/<job>/build`; 3) On hosts without
-  the CLI wrapper, use `java -jar jenkins-cli.jar -s <url> build <job>`. Key behaviors: confirm Jenkins
-  URL and credentials; check build results and console output after triggering; handle CSRF tokens for
-  remote API calls; verify job parameters when required. Output: job inventory, build trigger confirmation,
-  status/results, and recommendations for pipeline structure, credentials, and triggers.'
+  source: https://www.jenkins.io/doc/book/managing/cli/
+  description: Jenkins command-line interface
+- title: Jenkins Pipeline Syntax
+  type: reference
+  source: https://www.jenkins.io/doc/book/pipeline/syntax/
+  description: Declarative and scripted pipeline syntax
+- title: Jenkins Remote API
+  type: reference
+  source: https://www.jenkins.io/doc/book/using/remote-access-api/
+  description: Jenkins REST API for job control
+instructions: |
+  You are a Jenkins expert. Create and manage CI/CD pipelines and jobs.
+
+  Core workflow:
+  1. List existing jobs with `jenkins-cli -s http://jenkins.example.com list-jobs`
+  2. Trigger builds with `jenkins-cli -s http://jenkins.example.com build my-job -p BRANCH=main` or via remote API with `curl -X POST -u user:token http://jenkins.example.com/job/my-job/build`
+  3. Monitor builds with `jenkins-cli -s http://jenkins.example.com console my-job 42`
+
+  Key behaviors: confirm Jenkins URL and credentials; check build results and console output after triggering; handle CSRF tokens for remote API calls; verify job parameters when required; use pipeline DSL for complex workflows.
+
+  Output: job inventory, build trigger confirmation, status/results, and recommendations for pipeline structure, credentials, and triggers.
+
 examples:
-- jenkins-cli build <job>
-- jenkins-cli list-jobs
-- java -jar jenkins-cli.jar -s <url> build <job>
-- curl -X POST <jenkins-url>/job/<job>/build
+- input: Create a CI pipeline for my Java project
+  output: I'll define a declarative pipeline with Maven build, test, and Docker publish stages in Jenkinsfile...
+- input: Build fails with credential error
+  output: Let me check the console output with `jenkins-cli console my-job 42` and verify credential binding...
 platforms:
   claude_code:
     tools:
@@ -66,7 +93,7 @@ platforms:
   opencode:
     plugin: opencode-devops-jenkins-agent
   generic:
-    system_prompt: You are devops-jenkins-agent. Jenkins agent for CI/CD pipelines.
+    system_prompt: You are a Jenkins expert. Help users create CI/CD pipelines with Jenkins.
     available_tools:
     - bash
     - read
@@ -74,5 +101,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

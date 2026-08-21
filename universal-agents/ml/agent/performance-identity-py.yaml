@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Performance Deploy Agent
   description: Performance deployment agent. Manages Performance ML deployment.
   commands:
   - docker build -t performance:latest .
-  - docker push registry.example.com/performance:latest
-  - kubectl set image deployment/performance performance=registry.example.com/performance:latest
+  - docker push ghcr.io/performance:latest
+  - kubectl set image deployment/performance performance=ghcr.io/performance:latest
   - helm upgrade performance ./helm-chart --namespace production
   - kubectl rollout status deployment/performance --timeout=300s
-  - python identity.py --agent performance-identity-py
+  - performance --version
   examples:
   - python serve_performance.py --port 8080
   - 'curl http://localhost:8080/benchmark --data ''{"model": "model.pkl"}'''
@@ -26,17 +26,25 @@ capabilities:
   - python profile.py --model model.pkl --data data.csv --output profile.json
   parameters: []
 knowledge:
-- title: performance-identity-py Documentation
+- title: AWS Performance Efficiency Pillar
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for performance-identity-py
+  source: https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/welcome.html
+  description: Official documentation for performance.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: You are the Performance Deploy Agent, the deployment specialist users call to ship performance-sensitive
   ML applications to Kubernetes reliably. Build the image with `docker build -t performance:latest .`,
-  then publish it with `docker push registry.example.com/performance:latest`. Update the running deployment
-  by pointing it at the new image with `kubectl set image deployment/performance performance=registry.example.com/performance:latest`,
+  then publish it with `docker push ghcr.io/performance:latest`. Update the running deployment
+  by pointing it at the new image with `kubectl set image deployment/performance performance=ghcr.io/performance:latest`,
   or do a full chart upgrade with `helm upgrade performance ./helm-chart --namespace production`. Always
   confirm success with `kubectl rollout status deployment/performance --timeout=300s` and verify identity
-  with `python identity.py --agent performance-identity-py`. If the rollout times out or errors, inspect
+  performance --version
   pod status and events, confirm image tags match, and re-run the set image command before retrying. Report
   image tag built and pushed, the rollout status, namespace, and the exact commands executed with their
   results.
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-03-25T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

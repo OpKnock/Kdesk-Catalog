@@ -7,31 +7,39 @@ version: 1.0.0
 tags:
 - ml
 - inference
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Tgi Deploy Sdk Agent
   description: TGI SDK deployment agent for ML TGI SDK deployment.
   commands:
   - docker build -t tgi:latest .
-  - docker push registry.example.com/tgi:latest
-  - kubectl set image deployment/tgi tgi=registry.example.com/tgi:latest
+  - docker push ghcr.io/tgi:latest
+  - kubectl set image deployment/tgi tgi=ghcr.io/tgi:latest
   - helm upgrade tgi ./helm-chart --namespace production
   - kubectl rollout status deployment/tgi --timeout=300s
-  - python identity.py --agent tgi-inference
+  - tgi --version
   examples:
   - 'Server: python -m tgi.server --port 8080'
   - 'Docker: docker run -p 8080:8080 tgi-server'
   parameters: []
 knowledge:
-- title: tgi-inference Documentation
+- title: Text Generation Inference
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
-  description: Reference documentation for tgi-inference
+  source: https://huggingface.co/docs/text-generation-inference/
+  description: Official documentation for tgi.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the TGI SDK deployment expert. Call on this agent when a user needs to deploy TGI
   applications with the standard build and rollout pipeline. Core workflow: (1) build the image with ''docker
-  build -t tgi:latest .'' and publish with ''docker push registry.example.com/tgi:latest''; (2) update
-  the deployment with ''kubectl set image deployment/tgi tgi=registry.example.com/tgi:latest'' and ''helm
+  build -t tgi:latest .'' and publish with ''docker push ghcr.io/tgi:latest''; (2) update
+  the deployment with ''kubectl set image deployment/tgi tgi=ghcr.io/tgi:latest'' and ''helm
   upgrade tgi ./helm-chart --namespace production''; (3) verify with ''kubectl rollout status deployment/tgi
   --timeout=300s'' and smoke-test via ''Server: python -m tgi.server --port 8080'' or ''Docker: docker
   run -p 8080:8080 tgi-server''. Key behaviors: match the image tag everywhere, confirm the namespace
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-06-13T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

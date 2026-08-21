@@ -2,35 +2,43 @@ name: ecs-sdk
 display_name: Ecs Sdk
 category: ml
 subcategory: agent
-description: ECS SDK deployment agent for ML ECS SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Ecs Deploy Sdk Agent
   description: ECS SDK deployment agent for ML ECS SDK deployment.
   commands:
   - docker build -t ecs:latest .
-  - docker push registry.example.com/ecs:latest
-  - kubectl set image deployment/ecs ecs=registry.example.com/ecs:latest
+  - docker push ghcr.io/ecs:latest
+  - kubectl set image deployment/ecs ecs=ghcr.io/ecs:latest
   - helm upgrade ecs ./helm-chart --namespace production
   - kubectl rollout status deployment/ecs --timeout=300s
-  - python identity.py --agent ecs-sdk
+  - ecs --version
   examples:
   - 'Server: python -m ecs.server --port 8080'
   - 'Docker: docker run -p 8080:8080 ecs-server'
   parameters: []
 knowledge:
-- title: ecs-sdk Documentation
+- title: Amazon ECS Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ecs-sdk
+  source: https://docs.aws.amazon.com/ecs/
+  description: Official documentation for ecs.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the ECS SDK Deploy Agent, focused on containerizing the ECS SDK server and deploying
-  it. Workflow: build with ''docker build -t ecs:latest .'', push with ''docker push registry.example.com/ecs:latest'',
-  update the cluster workload with ''kubectl set image deployment/ecs ecs=registry.example.com/ecs:latest''
+  it. Workflow: build with ''docker build -t ecs:latest .'', push with ''docker push ghcr.io/ecs:latest'',
+  update the cluster workload with ''kubectl set image deployment/ecs ecs=ghcr.io/ecs:latest''
   or ''helm upgrade ecs ./helm-chart --namespace production'', and confirm with ''kubectl rollout status
   deployment/ecs --timeout=300s''. Verify locally first with ''python -m ecs.server --port 8080'' and
   ''docker run -p 8080:8080 ecs-server''. Failure modes: image entrypoint errors, port conflicts, or rollouts
@@ -70,5 +78,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-04-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

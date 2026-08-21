@@ -48,14 +48,14 @@ capabilities:
 - name: deprecation-headers
   description: Signal deprecation with standard headers
   commands:
-  - curl -sI https://api.example.com/v1/users | grep -iE '^(deprecation|sunset|link):'
-  - curl -s -D- https://api.example.com/v1/users | grep -i '^link:'
+  - curl -sI http://localhost:8080/v1/users | grep -iE '^(deprecation|sunset|link):'
+  - curl -s -D- http://localhost:8080/v1/users | grep -i '^link:'
   - node -e "const d=new Date(); d.setMonth(d.getMonth()+6); console.log('Sunset:', d.toUTCString())"
-  - curl -s -o /dev/null -w '%{http_code}\n' https://api.example.com/v1/users
+  - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/v1/users
   examples:
   - 'Deprecation: true warns clients of planned removal'
-  - 'Sunset: <date> communicates removal time'
-  - 'Link: <.../changelog>; rel="sunset" points to details'
+  - 'Sunset: 2026-08-19 communicates removal time'
+  - 'Link: demo-changelog; rel="sunset" points to details'
   parameters:
   - name: header
     type: string
@@ -72,7 +72,7 @@ capabilities:
   - git tag -a v1.0.0 -m 'v1 initial release'
   - git tag -a v2.0.0 -m 'v2 GA'
   - git tag -l 'v*' --sort=-v:refname | head -5
-  - curl -s https://api.example.com/changelog | jq '.versions[0]'
+  - curl -s http://localhost:8080/changelog | jq '.versions[0]'
   examples: []
   parameters: []
 prerequisites:

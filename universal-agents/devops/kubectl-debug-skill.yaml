@@ -7,7 +7,7 @@ description: 'Debugs failing Kubernetes workloads: pod inspection, log analysis,
 version: 2.0.0
 tags:
 - devops
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - kubectl
@@ -15,10 +15,10 @@ capabilities:
 - name: pod-diagnostics
   description: Inspect pod state, events, and logs to root-cause failures.
   commands:
-  - kubectl describe pod <pod>
+  - kubectl describe pod demo-pod
   - kubectl get events --sort-by=.lastTimestamp
-  - kubectl logs <pod> --previous
-  - kubectl logs <pod> -c sidecar -f --since=1h
+  - kubectl logs demo-pod --previous
+  - kubectl logs demo-pod -c sidecar -f --since=1h
   - kubectl get pods -o wide
   - kubectl top pod
   examples:
@@ -35,12 +35,12 @@ capabilities:
 - name: interactive-debugging
   description: Exec into pods, run ephemeral debug containers, and forward ports.
   commands:
-  - kubectl exec -it <pod> -- sh
+  - kubectl exec -it demo-pod -- sh
   - kubectl run debug --rm -it --restart=Never --image=busybox -- /bin/sh
-  - kubectl debug node/<node> -it --image=ubuntu
+  - kubectl debug node/demo-node -it --image=ubuntu
   - kubectl port-forward svc/web 8080:80
-  - kubectl debug <pod> -it --copy-to=debug-pod --container=debug
-  - kubectl cp <pod>:/tmp/dump.tar ./dump.tar
+  - kubectl debug demo-pod -it --copy-to=debug-pod --container=debug
+  - kubectl cp demo-pod:/tmp/dump.tar ./dump.tar
   examples:
   - kubectl exec -it web-7d9f8c9d4-xk2pq -- sh
   - kubectl debug node/worker-1 -it --image=ubuntu
@@ -197,5 +197,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-02-12T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -1,51 +1,80 @@
 name: devops-kubectl-agent
-display_name: Devops Kubectl Agent
+display_name: DevOps Kubectl Agent
 category: devops
 subcategory: agent
-description: kubectl agent for Kubernetes management.
-version: 1.0.0
+description: Manages Kubernetes clusters and workloads with kubectl including resource inspection, manifest application, debugging, scaling, and rollout management.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
-- name: Devops Kubectl Agent
-  description: kubectl agent for Kubernetes management.
+- name: kubernetes-management
+  description: Manage Kubernetes clusters and workloads with kubectl
   commands:
-  - kubectl apply -f deployment.yaml
-  - kubectl get pods
-  - kubectl logs <pod>
-  - kubectl get services
-  - kubectl exec -it <pod> -- /bin/bash
-  - kubectl scale deployment <name> --replicas=3
+  - kubectl get
+  - kubectl apply
+  - kubectl logs
+  - kubectl exec
+  - kubectl scale
+  - kubectl rollout
+  - kubectl describe
+  - kubectl port-forward
+  - kubectl top
   examples:
-  - kubectl get pods
-  - kubectl get services
-  - kubectl apply -f deployment.yaml
-  - kubectl logs <pod>
-  - kubectl exec -it <pod> -- /bin/bash
-  parameters: []
+  - "Get pods: kubectl get pods -n production -o wide"
+  - "Apply manifest: kubectl apply -f deployment.yaml --dry-run=client"
+  - "View logs: kubectl logs -f deployment/myapp -n production --tail=100"
+  - "Debug: kubectl exec -it myapp-xyz -n production -- /bin/sh"
+  - "Scale: kubectl scale deployment myapp --replicas=5 -n production"
+  - "Rollout status: kubectl rollout status deployment/myapp -n production"
+  parameters:
+  - name: namespace
+    type: string
+    description: "Kubernetes namespace (default: default)"
+  - name: resource_type
+    type: string
+    description: Resource type (pod, deployment, service, etc.)
+  - name: resource_name
+    type: string
+    description: Resource name
 knowledge:
-- title: devops-kubectl-agent Documentation
+- title: kubectl Documentation
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official kubectl reference
+- title: kubectl Cheat Sheet
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-kubectl-agent
-instructions: 'You are a kubectl expert. Call on you to manage Kubernetes clusters and workloads. Core
-  workflow: 1) Inspect workloads with `kubectl get pods` and `kubectl get services`; 2) Apply manifests
-  with `kubectl apply -f deployment.yaml`; 3) Debug with `kubectl logs <pod>` and `kubectl exec -it <pod>
-  -- /bin/bash`; 4) Scale with `kubectl scale deployment <name> --replicas=3`. Key behaviors: verify namespace
-  and context before acting; check pod status and events for CrashLoop/ImagePull errors; avoid destructive
-  exec in production; confirm apply diffs; watch rollout status after scaling. Output: workload inventory,
-  rollout/scale results, log-based diagnosis, and recommendations for resource limits, probes, and rollout
-  strategies.'
+  source: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+  description: Common kubectl commands
+- title: Kubernetes Debugging
+  type: tutorial
+  source: https://kubernetes.io/docs/tasks/debug/debug-application/
+  description: Debugging applications in Kubernetes
+- title: Kubectl Rollout
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/
+  description: Rollout management commands
+instructions: |
+  You are a kubectl expert. Manage Kubernetes clusters and workloads.
+
+  Core workflow:
+  1. Inspect workloads with `kubectl get pods -n production -o wide` and `kubectl get services`
+  2. Apply manifests with `kubectl apply -f deployment.yaml --dry-run=client` then without dry-run
+  3. Debug with `kubectl logs -f deployment/myapp -n production --tail=100` and `kubectl exec -it myapp-xyz -n production -- /bin/sh`
+  4. Scale with `kubectl scale deployment myapp --replicas=5 -n production`
+  5. Monitor rollouts with `kubectl rollout status deployment/myapp -n production`
+
+  Key behaviors: verify namespace and context before acting; check pod status and events for CrashLoop/ImagePull errors; avoid destructive exec in production; confirm apply diffs; watch rollout status after scaling.
+
+  Output: workload inventory, rollout/scale results, log-based diagnosis, and recommendations for resource limits, probes, and rollout strategies.
+
 examples:
-- kubectl get pods
-- kubectl get services
-- kubectl apply -f deployment.yaml
-- kubectl logs <pod>
-- kubectl exec -it <pod> -- /bin/bash
-- kubectl scale deployment <name> --replicas=3
+- input: Debug a crashing pod
+  output: I'll run `kubectl get pods -n production` to find the pod, then `kubectl logs -f myapp-xyz -n production --previous` to see crash logs...
+- input: Scale deployment to handle load
+  output: Let me check current replicas with `kubectl get deployment myapp -n production`, then scale with `kubectl scale deployment myapp --replicas=10 -n production`...
 platforms:
   claude_code:
     tools:
@@ -72,7 +101,7 @@ platforms:
   opencode:
     plugin: opencode-devops-kubectl-agent
   generic:
-    system_prompt: You are devops-kubectl-agent. kubectl agent for Kubernetes management.
+    system_prompt: "You are a kubectl expert. Help users manage Kubernetes clusters."
     available_tools:
     - bash
     - read
@@ -80,5 +109,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

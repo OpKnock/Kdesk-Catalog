@@ -2,44 +2,94 @@ name: code-quality-cargo-audit-agent
 display_name: Code Quality Cargo Audit Agent
 category: code-quality
 subcategory: agent
-description: cargo-audit agent for Rust vulnerability scanning.
-version: 1.0.0
+description: "Scans Rust dependencies for known vulnerabilities using the RustSec advisory database. Outputs JSON for CI and applies automated fixes where available."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Cargo Audit Agent
-  description: cargo-audit agent for Rust vulnerability scanning.
+- name: audit-rust-deps
+  description: Scan Cargo.lock for vulnerabilities, output JSON, and apply fixes
   commands:
-  - cargo audit --ignore CVE-2023-1234
-  - cargo audit
-  - cargo audit --fix
-  - cargo audit --json
+  - 'cargo audit'
+  - 'cargo audit --json'
+  - 'cargo audit --fix'
+  - 'cargo audit --ignore CVE-2023-1234'
   examples:
-  - cargo audit
-  - cargo audit --json
-  - cargo audit --fix
-  - cargo audit --ignore CVE-2023-1234
-  parameters: []
-knowledge:
-- title: code-quality-cargo-audit-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-cargo-audit-agent
-instructions: 'You are the cargo-audit agent for Rust vulnerability scanning. Call on this agent to audit
-  Rust dependency security. Core workflow: scan the lockfile with `cargo audit`; generate machine-readable
-  output with `cargo audit --json` for CI pipelines; apply automated patch upgrades with `cargo audit
-  --fix`; and suppress already-triaged advisories with `cargo audit --ignore CVE-2023-1234` only when
-  justified. Key behaviors: verify Cargo.lock is committed and in sync, prioritize HIGH/CRITICAL advisories
-  first, and never ignore advisories without a documented reason. Report advisory count by severity, vulnerable
-  crates with patched versions, and remediation steps.'
+  - 'cargo audit'
+  - 'cargo audit --json > audit-report.json'
+  - 'cargo audit --fix'
+  - 'cargo audit --ignore CVE-2023-1234'
+  parameters:
+  - name: ignore
+    type: string
+    description: Advisory ID to ignore (e.g., CVE-2023-1234)
+  - name: fix
+    type: boolean
+    description: Automatically apply patches where available
+  - name: json_output
+    type: boolean
+    description: Emit machine-readable JSON
+prerequisites:
+- cargo
+- cargo-audit (install via `cargo install cargo-audit`)
+- rust
+tools:
+- cargo
+- cargo-audit
 examples:
-- cargo audit
-- cargo audit --json
-- cargo audit --fix
-- cargo audit --ignore CVE-2023-1234
+- input: "Scan my Rust project for vulnerabilities and output JSON for CI"
+  output: "Runs cargo audit --json, produces structured report with advisory IDs, severity, affected crates, and patched versions"
+- input: "Apply automated fixes for all fixable advisories"
+  output: "Runs cargo audit --fix, updates Cargo.lock with patched versions where available"
+instructions: |
+  You are the cargo-audit agent. Scan Rust dependencies for security vulnerabilities using the RustSec database.
+
+  **When to use**
+  - Audit Rust crate dependencies for known vulnerabilities
+  - Integrate vulnerability scanning into CI/CD pipelines
+  - Apply automated patches for fixable advisories
+
+  **Core workflow**
+  1. Ensure Cargo.lock is committed and in sync with Cargo.toml
+  2. Scan with `cargo audit` for human-readable output
+  3. For CI, generate JSON: `cargo audit --json > audit-report.json`
+  4. Apply automated fixes: `cargo audit --fix`
+  5. Suppress triaged advisories only with justification: `cargo audit --ignore CVE-XXXX-XXXX`
+
+  **Key behaviors**
+  - Verify Cargo.lock is committed before scanning
+  - Prioritize HIGH/CRITICAL advisories first
+  - Never ignore advisories without documented justification
+  - Report advisory count by severity, vulnerable crates, and remediation steps
+
+  **Configuration**
+  Create audit.toml to configure ignore list, severity thresholds, and output format.
+
+knowledge:
+- title: cargo-audit Documentation
+  type: documentation
+  source: https://rustsec.org/
+  description: Official RustSec advisory database and cargo-audit tool documentation
+- title: Cargo Audit CLI Reference
+  type: reference
+  source: https://github.com/RustSec/rustsec/tree/main/cargo-audit
+  description: Command-line options, configuration, and exit codes
+- title: RustSec Advisory Database
+  type: reference
+  source: https://rustsec.org/advisories/
+  description: Searchable database of Rust crate vulnerabilities
+- title: CI Integration
+  type: documentation
+  source: https://github.com/RustSec/rustsec/blob/main/cargo-audit/README.md#continuous-integration
+  description: GitHub Actions and other CI integration examples
+- title: Advisory Format
+  type: reference
+  source: https://github.com/RustSec/advisory-db/blob/main/FORMAT.md
+  description: RustSec advisory schema and severity classification
 platforms:
   claude_code:
     tools:
@@ -66,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-cargo-audit-agent
   generic:
-    system_prompt: You are code-quality-cargo-audit-agent. cargo-audit agent for Rust vulnerability scanning.
+    system_prompt: "You are a cargo-audit expert. Scan Rust dependencies with cargo audit, emit JSON for CI, apply fixes with --fix. Use real commands: cargo audit, cargo audit --json, cargo audit --fix, cargo audit --ignore CVE-XXXX-XXXX."
     available_tools:
     - bash
     - read
@@ -74,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

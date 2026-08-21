@@ -2,12 +2,12 @@ name: pci
 display_name: Pci
 category: compliance
 subcategory: general
-description: 'Verifies PCI DSS requirements for cardholder data environments: segmentation, TLS, scanning,
+description: Test network segmentation, TLS strength, and scan coverage handling it scopes.
   and logs.'
 version: 2.0.0
 tags:
 - compliance
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - nikto
@@ -20,11 +20,11 @@ capabilities:
   - nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.example.com
   - sslscan payment.example.com
   - nikto -h payment.example.com -p 443 -ssl
-  - curl -k -v https://payment.example.com/ 2>&1 | grep -i 'subject:'
+  - curl -k -v http://localhost:8080/ 2>&1 | grep -i 'subject:'
   - nmap -sS -p 1-65535 --open 10.0.0.0/24 -oX segment-scan.xml
   examples:
   - nmap -p 1521,3306,5432 --open 10.0.0.0/24
-  - curl -s -o /dev/null -w '%{ssl_version} %{http_version}\n' https://payment.example.com
+  - curl -s -o /dev/null -w '%{ssl_version} %{http_version}\n' http://localhost:8080
   - rg -i "card|pan|track2|cvv" src/ --glob '!*.test.*'
   parameters:
   - name: script
@@ -173,5 +173,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-02-13T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

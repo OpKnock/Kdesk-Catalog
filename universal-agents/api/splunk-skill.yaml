@@ -1,33 +1,34 @@
 name: splunk
 display_name: Splunk
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted Splunk skill: SPL search commands, monitor inputs, the REST search/jobs API,
-  and HTTP Event Collector ingestion for log pipelines.'
-version: 2.0.0
+description: "Drives log analysis and event ingestion in Splunk: runs bounded SPL queries, registers file monitor inputs, and pushes structured events through HTTP Event Collector and REST search endpoints."
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
+  - api
+  - splunk
+  - log-search
+  - spl
+  - hec
 prerequisites:
-- ./splunk
-- splunk
+  - splunk
 capabilities:
 - name: splunk-search-ingest
-  description: Search, ingest, and manage Splunk from the CLI and REST API
+  description: Runs SPL queries, configures data inputs, and pushes events through HEC and REST endpoints
   commands:
   - ./splunk start --accept-license
   - splunk search "index=_internal level=ERROR earliest=-1h | stats count by sourcetype"
   - splunk add monitor /var/log/api.log -index main -sourcetype api_logs
-  - curl -k -u admin:changeme 'https://localhost:8089/services/search/jobs' -d 'search=index=main status>=500
-    earliest=-15m&output_mode=json'
-  - 'curl -k -X POST ''https://localhost:8088/services/collector/event'' -H "Authorization: Splunk $HEC_TOKEN"
-    -d ''{"event":"api started","sourcetype":"api_events"}'''
+  - curl -k -u admin:changeme 'https://localhost:8089/services/search/jobs' -d 'search=index=main status>=500 earliest=-15m&output_mode=json'
+  - 'curl -k -X POST ''https://localhost:8088/services/collector/event'' -H "Authorization: Splunk $HEC_TOKEN" -d ''{"event":"api started","sourcetype":"api_events"}'''
   examples:
   - splunk search "index=_internal ERROR | top sourcetype"
   - splunk add monitor /var/log/api.log -index main -sourcetype api_logs
-  - 'curl -k -X POST ''https://localhost:8088/services/collector/event'' -H "Authorization: Splunk $HEC_TOKEN"
-    -d ''{"event":"test"}'''
+  - 'curl -k -X POST ''https://localhost:8088/services/collector/event'' -H "Authorization: Splunk $HEC_TOKEN" -d ''{"event":"test"}'''
   parameters:
   - name: query
     type: string
@@ -39,125 +40,87 @@ capabilities:
     type: string
     description: Sourcetype label for parsing
 knowledge:
-- title: Splunk docs
-  type: documentation
-  source: https://docs.splunk.com/Documentation
-  description: SPL reference, CLI, and REST API
-- title: HEC docs
-  type: documentation
-  source: https://docs.splunk.com/Documentation/Splunk/latest/Data/AboutHEC
-  description: HTTP Event Collector endpoints and tokens
-instructions: '# Splunk
+  - title: Splunk Documentation
+    type: documentation
+    source: https://docs.splunk.com/Documentation
+    description: Complete SPL reference, CLI usage, and REST API guide
+  - title: HTTP Event Collector Documentation
+    type: documentation
+    source: https://docs.splunk.com/Documentation/Splunk/latest/Data/AboutHEC
+    description: HEC token creation, event formatting, and acknowledgment settings
+  - title: Splunk REST API Reference
+    type: documentation
+    source: https://docs.splunk.com/Documentation/Splunk/latest/RESTREF/RESTprolog
+    description: Search job lifecycle, index operations, and authentication flows
+instructions: |
+  # Splunk
 
-
-  Hand-crafted skill for searching and ingesting logs with Splunk.
-
+  Drives log analysis and event ingestion in Splunk.
 
   ## What this skill does
 
-
   - Runs SPL searches from the CLI with time and stats clauses
-
   - Adds file monitors as data inputs
-
   - Ingests JSON events via HTTP Event Collector and queries via REST
-
 
   ## When to use
 
-
   - Digging into errors across a fleet of hosts
-
   - Onboarding a new application log file
-
   - Automating searches for dashboards and alerts
-
 
   ## Real commands
 
-
   ```bash
-
   # Start the platform (first run)
-
   ./splunk start --accept-license
 
-
   # Search
-
   splunk search "index=_internal level=ERROR earliest=-1h | stats count by sourcetype"
 
-
   # Top error sources
-
   splunk search "index=_internal ERROR | top sourcetype"
 
-
   # Monitor a log file
-
   splunk add monitor /var/log/api.log -index main -sourcetype api_logs
 
-
   # REST: run a search job
-
-  curl -k -u admin:changeme ''https://localhost:8089/services/search/jobs'' -d ''search=index=main status>=500
-  earliest=-15m&output_mode=json''
-
+  curl -k -u admin:changeme 'https://localhost:8089/services/search/jobs' -d 'search=index=main status>=500 earliest=-15m&output_mode=json'
 
   # HEC: push an event
-
-  curl -k -X POST ''https://localhost:8088/services/collector/event'' -H "Authorization: Splunk $HEC_TOKEN"
-  -d ''{"event":"api started","sourcetype":"api_events"}''
-
+  curl -k -X POST 'https://localhost:8088/services/collector/event' -H "Authorization: Splunk $HEC_TOKEN" -d '{"event":"api started","sourcetype":"api_events"}'
   ```
-
 
   ## SPL patterns
 
-
   - index=main sourcetype=access_combined status>=500
-
   - | timechart count by status
-
   - | stats avg(latency) by host
-
 
   ## Testing
 
-
   ```bash
-
-  curl -k -X POST ''https://localhost:8088/services/collector/event'' -H "Authorization: Splunk $HEC_TOKEN"
-  -d ''{"event":"smoke","sourcetype":"api_events"}''
-
+  curl -k -X POST 'https://localhost:8088/services/collector/event' -H "Authorization: Splunk $HEC_TOKEN" -d '{"event":"smoke","sourcetype":"api_events"}'
   splunk search "index=main sourcetype=api_events earliest=-5m"
-
   ```
-
 
   ## Best practices
 
-
   - Always bound searches with earliest/latest
-
   - Give every app its own sourcetype for parsing rules
-
   - Use HEC tokens scoped per index for production ingestion
-
-  '
 examples:
-- input: Which sourcetypes produced the most errors in the last hour?
-  output: splunk search "index=_internal level=ERROR earliest=-1h | stats count by sourcetype".
-- input: Send a JSON event from my app
-  output: 'curl -k -X POST ''https://localhost:8088/services/collector/event'' -H "Authorization: Splunk
-    $HEC_TOKEN" -d ''{"event":{"level":"error","msg":"boom"},"sourcetype":"api_events"}''.'
+  - input: Which sourcetypes produced the most errors in the last hour?
+    output: splunk search "index=_internal level=ERROR earliest=-1h | stats count by sourcetype".
+  - input: Send a JSON event from my app
+    output: 'curl -k -X POST ''https://localhost:8088/services/collector/event'' -H "Authorization: Splunk $HEC_TOKEN" -d ''{"event":{"level":"error","msg":"boom"},"sourcetype":"api_events"}''.'
 platforms:
   claude_code:
     tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+      - Bash
+      - Read
+      - Write
+      - Edit
     model: inherit
   cursor:
     rule_type: auto
@@ -167,20 +130,16 @@ platforms:
   windsurf:
     model: inherit
     tools:
-    - bash
-    - read
-    - write
-    - edit
+      - bash
+      - read
+      - write
+      - edit
   opencode:
     plugin: opencode-splunk
   generic:
-    system_prompt: 'You are the Splunk specialist. You do it through splunk-search-ingest: Search, ingest,
-      and manage Splunk from the CLI and REST API. The commands are real, e.g. `./splunk start --accept-license`.
-      You verify each step you report and stay honest about what you have not run.'
+    system_prompt: "You are the Splunk specialist. You do it through splunk-search-ingest: Search, ingest, and manage Splunk from the CLI and REST API. The commands are real, e.g. `./splunk start --accept-license`. You verify each step you report and stay honest about what you have not run."
     available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+      - bash
+      - read
+      - write
+      - edit

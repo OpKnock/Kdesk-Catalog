@@ -2,12 +2,12 @@ name: soak-testing
 display_name: Soak Testing
 category: api
 subcategory: general
-description: 'Hand-crafted soak testing skill: 24h k6 endurance runs, resource trend watching with kubectl
-  top/free/vmstat, and memory-leak detection for long-running services.'
+description: "Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that short tests miss."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - dstat
@@ -15,36 +15,36 @@ prerequisites:
 - kubectl
 capabilities:
 - name: soak-run
-  description: Run long-duration load tests and watch resource trends
+  description: "Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that short tests miss."
   commands:
   - k6 run --vus 10 --duration 24h soak.js
-  - kubectl top pods -n prod
-  - free -h && vmstat 1 10
+  - k6 run --vus 10 --duration 24h soak.js --out json=soak.json
+  - kubectl top pods -l app=api -n prod
+  - free -h
+  - vmstat 1 10
   - dstat -tcdmn 10
   - kubectl get hpa api
   examples:
+  - k6 run --vus 10 --duration 24h soak.js
   - k6 run --vus 10 --duration 24h soak.js --out json=soak.json
   - kubectl top pods -l app=api -n prod
-  - vmstat 1 10
+  - free -h && vmstat 1 10
+  - kubectl get hpa api
   parameters:
   - name: vus
     type: integer
-    description: Virtual users sustained for the whole run
+    description: Number of virtual users for sustained load
   - name: duration
     type: string
-    description: Run length, e.g. 24h or 48h
-  - name: ramp
+    description: Test duration (e.g., 24h, 48h)
+  - name: script_path
     type: string
-    description: Ramp-up stage before the plateau
+    description: Path to k6 test script
 knowledge:
 - title: k6 soak testing guide
   type: documentation
   source: https://grafana.com/docs/k6/latest/testing-guides/test-types/soak-testing/
-  description: Soak test design and thresholds
-- title: k6 options reference
-  type: documentation
-  source: https://grafana.com/docs/k6/latest/using-k6/k6-options/reference/
-  description: vus, duration, stages options
+  description: "Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that short tests miss."
 instructions: "# Soak Testing\n\nHand-crafted skill for endurance testing long-running services.\n\n##\
   \ What this skill does\n\n- Sustains moderate load for hours to days with k6\n- Watches memory, CPU,\
   \ and connection trends\n- Catches leaks and drift that short tests miss\n\n## When to use\n\n- Before\
@@ -99,5 +99,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

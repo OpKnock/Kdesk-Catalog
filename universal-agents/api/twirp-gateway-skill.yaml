@@ -1,157 +1,21 @@
 name: twirp-gateway
 display_name: Twirp Gateway
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted Twirp gateway skill: exposing Twirp services over HTTP/JSON with grpc-gateway
-  style marshaling, routing, and curl-based testing.'
-version: 2.0.0
+description: "Exposes Twirp RPC services as plain HTTP/JSON endpoints. Generates Go handlers from protobuf definitions, serves methods at /twirp/<Service>/<Method> with JSON marshaling, and validates gateway behavior including error responses via curl."
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- protoc
-- twirp
-capabilities:
-- name: http-gateway
-  description: Serve Twirp RPCs over plain HTTP with JSON
-  commands:
-  - twirp --service=Haberdasher --output=generated types.proto
-  - go build -o server ./cmd/server
-  - 'curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H ''Content-Type: application/json''
-    -d ''{"inches": 12}'''
-  - 'curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H ''Content-Type: application/json''
-    -d ''{"inches": -1}'''
-  - protoc --twirp_out=. --go_out=. --go_opt=paths=source_relative types.proto
-  examples:
-  - 'curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H ''Content-Type: application/json''
-    -d ''{"inches": 12}'''
-  - protoc --twirp_out=. --go_out=. types.proto
-  - 'curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H ''Content-Type: application/json''
-    -d ''{}'''
-  parameters:
-  - name: service
-    type: string
-    description: Service name for codegen
-  - name: path
-    type: string
-    description: RPC path, e.g. /twirp/.../MakeHat
-  - name: body
-    type: string
-    description: JSON request body
-knowledge:
-- title: Twirp docs
-  type: documentation
-  source: https://twitchtv.github.io/twirp/docs/
-  description: Routing, codegen, and client/server guides
-- title: twirp Go repo
-  type: documentation
-  source: https://github.com/twitchtv/twirp
-  description: protoc plugin and examples
-instructions: '# Twirp Gateway
-
-
-  Hand-crafted skill for exposing Twirp RPCs as plain HTTP/JSON APIs.
-
-
-  ## What this skill does
-
-
-  - Generates Twirp handlers from .proto files
-
-  - Serves methods at /twirp/Service/Method with JSON
-
-  - Tests the JSON gateway with curl, including error paths
-
-
-  ## When to use
-
-
-  - Protobuf-defined services without gRPC transport
-
-  - Simple JSON APIs where protobuf is the source of truth
-
-  - Teaching Twirp routing and error behavior
-
-
-  ## Real commands
-
-
-  ```bash
-
-  # Generate code from the proto
-
-  protoc --twirp_out=. --go_out=. --go_opt=paths=source_relative types.proto
-
-  twirp --service=Haberdasher --output=generated types.proto
-
-
-  # Build and run
-
-  go build -o server ./cmd/server
-
-
-  # Call the JSON gateway
-
-  curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H ''Content-Type: application/json''
-  -d ''{"inches": 12}''
-
-
-  # Error path (inches < 0)
-
-  curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H ''Content-Type: application/json''
-  -d ''{"inches": -1}''
-
-  ```
-
-
-  ## Routing
-
-
-  - Path is /twirp/<full.ServiceName>/<Method>
-
-  - Content-Type: application/json (or application/protobuf)
-
-  - Errors come back as {"code": "invalid_argument", "msg": "..."} with non-200 status
-
-
-  ## Testing
-
-
-  ```bash
-
-  curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H ''Content-Type: application/json''
-  -d ''{"inches": 12}''
-
-  curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H ''Content-Type: application/json''
-  -d ''{}''
-
-  ```
-
-
-  ## Best practices
-
-
-  - Keep proto as the single contract; generate clients from it
-
-  - Document twirp error codes in your API guide
-
-  - Enable twirp server hooks to log method latency
-
-  '
-examples:
-- input: Call the MakeHat RPC from curl
-  output: 'POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat with JSON {"inches": 12}
-    returns the hat JSON.'
-- input: What does a Twirp error look like?
-  output: Sending a negative size returns HTTP 400 with {"code":"invalid_argument","msg":"..."}.
+  - api
+  - rpc
+  - go
+  - protobuf
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -160,21 +24,107 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-twirp-gateway
   generic:
-    system_prompt: 'You own Twirp Gateway end to end. You do it through http-gateway: Serve Twirp RPCs
-      over plain HTTP with JSON. The commands are real, e.g. `twirp --service=Haberdasher --output=generated
-      types.proto`. You work hands-on and only report outcomes you have observed.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You own Twirp Gateway end to end. You do it through http-gateway: Serve Twirp RPCs over plain HTTP with JSON. The commands are real, e.g. `twirp --service=Haberdasher --output=generated types.proto`. You work hands-on and only report outcomes you have observed."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: http-gateway
+    description: Serve Twirp RPCs over plain HTTP with JSON
+    commands:
+      - 'twirp --service=Haberdasher --output=generated types.proto'
+      - 'go build -o server ./cmd/server'
+      - 'curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": 12}"'
+      - 'curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": -1}"'
+      - 'protoc --twirp_out=. --go_out=. --go_opt=paths=source_relative types.proto'
+    examples:
+      - 'curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": 12}"'
+      - 'protoc --twirp_out=. --go_out=. types.proto'
+      - 'curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{}"'
+    parameters:
+      - name: service
+        type: string
+        description: Service name for codegen
+      - name: path
+        type: string
+        description: RPC path, e.g. /twirp/.../MakeHat
+      - name: body
+        type: string
+        description: JSON request body
+prerequisites:
+  - protoc
+  - twirp
+  - go
+tools: [protoc, twirp, go, curl]
+examples:
+  - input: Call the MakeHat RPC from curl
+    output: 'POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat with JSON {"inches": 12} returns the hat JSON.'
+  - input: What does a Twirp error look like?
+    output: Sending a negative size returns HTTP 400 with {"code":"invalid_argument","msg":"..."}.
+instructions: |
+  # Twirp Gateway
+
+  Hand-crafted skill for exposing Twirp RPCs as plain HTTP/JSON APIs.
+
+  ## What this skill does
+
+  - Generates Twirp handlers from .proto files
+  - Serves methods at /twirp/Service/Method with JSON
+  - Tests the JSON gateway with curl, including error paths
+
+  ## When to use
+
+  - Protobuf-defined services without gRPC transport
+  - Simple JSON APIs where protobuf is the source of truth
+  - Teaching Twirp routing and error behavior
+
+  ## Real commands
+
+  ```bash
+  # Generate code from the proto
+  protoc --twirp_out=. --go_out=. --go_opt=paths=source_relative types.proto
+  twirp --service=Haberdasher --output=generated types.proto
+
+  # Build and run
+  go build -o server ./cmd/server
+
+  # Call the JSON gateway
+  curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": 12}"
+
+  # Error path (inches < 0)
+  curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": -1}"
+  ```
+
+  ## Routing
+
+  - Path is /twirp/<full.ServiceName>/<Method>
+  - Content-Type: application/json (or application/protobuf)
+  - Errors come back as {"code": "invalid_argument", "msg": "..."} with non-200 status
+
+  ## Testing
+
+  ```bash
+  curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": 12}"
+  curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{}"
+  ```
+
+  ## Best practices
+
+  - Keep proto as the single contract; generate clients from it
+  - Document twirp error codes in your API guide
+  - Enable twirp server hooks to log method latency
+knowledge:
+  - title: Twirp docs
+    type: documentation
+    source: https://twitchtv.github.io/twirp/docs/
+    description: Routing, codegen, and client/server guides
+  - title: twirp Go repo
+    type: documentation
+    source: https://github.com/twitchtv/twirp
+    description: protoc plugin and examples
+  - title: Twirp errors spec
+    type: documentation
+    source: https://twitchtv.github.io/twirp/docs/errors.html
+    description: Error codes and JSON shape

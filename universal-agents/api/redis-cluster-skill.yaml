@@ -2,12 +2,11 @@ name: redis-cluster
 display_name: Redis Cluster
 category: api
 subcategory: general
-description: 'Hand-crafted Redis Cluster skill: build clusters with redis-cli --cluster, inspect slot
-  coverage and node topology, and safely reshard or add replicas.'
+description: 'Operate Redis Cluster topologies: create multi-node clusters, verify slot coverage, reshard, and manage replicas with redis-cli cluster commands.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - redis-cli
@@ -19,7 +18,7 @@ capabilities:
   - redis-cli --cluster create 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004
     127.0.0.1:7005 --cluster-replicas 1
   - redis-cli --cluster add-node 127.0.0.1:7006 127.0.0.1:7000
-  - redis-cli --cluster reshard 127.0.0.1:7000 --cluster-from <source-node-id> --cluster-to <target-node-id>
+  - redis-cli --cluster reshard 127.0.0.1:7000 --cluster-from 8a4f9c --cluster-to 7b2cd1
     --cluster-slots 1000 --cluster-yes
   - redis-cli --cluster check 127.0.0.1:7000
   - redis-cli -p 7000 cluster nodes
@@ -58,7 +57,7 @@ instructions: "# Redis Cluster\n\nHand-crafted skill for operating Redis Cluster
   \ coverage and link status\nredis-cli --cluster check 127.0.0.1:7000\n\n# Cluster-wide stats\nredis-cli\
   \ -c -p 7000 cluster info\n\n# Node table: id, ip:port, flags, slots\nredis-cli -c -p 7000 cluster nodes\n\
   \n# Add a fresh node, then move 1000 slots onto it\nredis-cli --cluster add-node 127.0.0.1:7006 127.0.0.1:7000\n\
-  redis-cli --cluster reshard 127.0.0.1:7000 --cluster-from <src-id> --cluster-to <dst-id> --cluster-slots\
+  redis-cli --cluster reshard 127.0.0.1:7000 --cluster-from 8a4f9c --cluster-to 7b2cd1 --cluster-slots\
   \ 1000 --cluster-yes\n```\n\n## Config example\n\nStart six isolated instances:\n\n```bash\nfor port\
   \ in 7000 7001 7002 7003 7004 7005; do\n  mkdir -p /data/redis/$port\n  redis-server --port $port --cluster-enabled\
   \ yes     --cluster-config-file nodes-$port.conf     --appendonly yes --dir /data/redis/$port --daemonize\
@@ -73,7 +72,7 @@ examples:
     cluster nodes to verify replicas are linked.
 - input: Add a node and move 2000 slots to it
   output: redis-cli --cluster add-node 127.0.0.1:7006 127.0.0.1:7000, then redis-cli --cluster reshard
-    127.0.0.1:7000 --cluster-from <src-id> --cluster-to <dst-id> --cluster-slots 2000 --cluster-yes.
+    127.0.0.1:7000 --cluster-from 8a4f9c --cluster-to 7b2cd1 --cluster-slots 2000 --cluster-yes.
 platforms:
   claude_code:
     tools:
@@ -105,5 +104,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

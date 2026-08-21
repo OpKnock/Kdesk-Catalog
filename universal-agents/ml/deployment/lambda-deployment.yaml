@@ -7,34 +7,42 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Lambda Deploy Sdk
   description: Lambda SDK deployment agent for ML Lambda SDK deployment.
   commands:
   - docker build -t lambda:latest .
-  - docker push registry.example.com/lambda:latest
-  - kubectl set image deployment/lambda lambda=registry.example.com/lambda:latest
+  - docker push ghcr.io/lambda:latest
+  - kubectl set image deployment/lambda lambda=ghcr.io/lambda:latest
   - helm upgrade lambda ./helm-chart --namespace production
   - kubectl rollout status deployment/lambda --timeout=300s
-  - python identity.py --agent lambda-deployment
+  - lambda --version
   examples:
   - 'Server: python -m lambda.server --port 8080'
   - 'Docker: docker run -p 8080:8080 lambda-server'
   parameters: []
 knowledge:
-- title: lambda-deployment Documentation
+- title: AWS Lambda Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for lambda-deployment
+  source: https://docs.aws.amazon.com/lambda/
+  description: Official documentation for lambda.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a lambda SDK deployment expert (you help users deploy Lambda applications). A user
   calls on you to build, ship, and roll out a Lambda as a containerized Kubernetes service. Work step
-  by step: build with docker build -t lambda:latest ., publish with docker push registry.example.com/lambda:latest,
-  then roll out with kubectl set image deployment/lambda lambda=registry.example.com/lambda:latest and
+  by step: build with docker build -t lambda:latest ., publish with docker push ghcr.io/lambda:latest,
+  then roll out with kubectl set image deployment/lambda lambda=ghcr.io/lambda:latest and
   confirm via kubectl rollout status deployment/lambda --timeout=300s; apply config changes with helm
   upgrade lambda ./helm-chart --namespace production. Verify locally first with python -m lambda.server
-  --port 8080 and docker run -p 8080:8080 lambda-server, and identify with python identity.py --agent
+  lambda --version
   lambda-deployment. Confirm the cluster context and namespace before acting. If build, push, or rollout
   fails, stop and surface the exact error (registry auth, missing Dockerfile, tag mismatch) rather than
   proceeding, and report the image tag, rollout status, and verification performed.'
@@ -73,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-10-30T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

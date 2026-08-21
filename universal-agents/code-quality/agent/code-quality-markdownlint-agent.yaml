@@ -2,43 +2,94 @@ name: code-quality-markdownlint-agent
 display_name: Code Quality Markdownlint Agent
 category: code-quality
 subcategory: agent
-description: Markdownlint agent for Markdown linting.
-version: 1.0.0
+description: "Lints Markdown files for consistent style. Fixes violations, uses project config, ignores vendor paths."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Markdownlint Agent
-  description: Markdownlint agent for Markdown linting.
+- name: lint-markdown
+  description: Lint and fix Markdown files for consistent style and structure
   commands:
-  - markdownlint --fix *.md
-  - markdownlint --config .markdownlint.json *.md
-  - markdownlint --ignore node_modules *.md
-  - markdownlint *.md
+  - 'markdownlint *.md'
+  - 'markdownlint --fix *.md'
+  - 'markdownlint --config .markdownlint.json *.md'
+  - 'markdownlint --ignore node_modules *.md'
   examples:
-  - markdownlint *.md
-  - markdownlint --fix *.md
-  - markdownlint --config .markdownlint.json *.md
-  - markdownlint --ignore node_modules *.md
-  parameters: []
-knowledge:
-- title: code-quality-markdownlint-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-markdownlint-agent
-instructions: 'You are the Markdownlint agent for Markdown linting. Call on this agent to enforce consistent
-  Markdown style across docs. Core workflow: lint with `markdownlint *.md`; apply a project config with
-  `markdownlint --config .markdownlint.json *.md`; exclude vendored content with `markdownlint --ignore
-  node_modules *.md`; and auto-fix with `markdownlint --fix *.md`. Key behaviors: check heading structure,
-  list formatting, and link validity; fix issues then re-lint; keep the config in version control. Report
-  violations by rule ID with file/line locations.'
+  - 'markdownlint *.md'
+  - 'markdownlint --fix *.md'
+  - 'markdownlint --config .markdownlint.json *.md'
+  - 'markdownlint --ignore node_modules *.md'
+  parameters:
+  - name: fix
+    type: boolean
+    description: Auto-fix correctable violations
+  - name: config
+    type: string
+    description: Path to markdownlint config JSON
+  - name: ignore
+    type: string
+    description: Glob patterns to exclude
+  - name: files
+    type: string
+    description: 'File glob pattern (default: *.md)'
+prerequisites:
+- markdownlint (install via `npm install -g markdownlint-cli`)
+- nodejs
+tools:
+- markdownlint
 examples:
-- markdownlint *.md
-- markdownlint --fix *.md
-- markdownlint --config .markdownlint.json *.md
-- markdownlint --ignore node_modules *.md
+- input: "Lint all Markdown files and auto-fix violations"
+  output: "Runs markdownlint --fix *.md, applies fixes in place, reports remaining violations by rule ID with file/line"
+- input: "Lint with project config, exclude vendor directories"
+  output: "Runs markdownlint --config .markdownlint.json --ignore node_modules *.md, uses custom rules, skips vendored docs"
+instructions: |
+  You are the Markdownlint agent. Enforce consistent Markdown style across documentation.
+
+  **When to use**
+  - Lint Markdown files in docs, READMEs, and wikis
+  - Auto-fix style violations before commits
+  - Enforce heading structure, list formatting, link validity
+
+  **Core workflow**
+  1. Lint: `markdownlint *.md`
+  2. Project config: `markdownlint --config .markdownlint.json *.md`
+  3. Exclude vendor: `markdownlint --ignore node_modules *.md`
+  4. Auto-fix: `markdownlint --fix *.md`
+
+  **Key behaviors**
+  - Check heading hierarchy, list formatting, link validity
+  - Fix issues then re-lint to confirm
+  - Keep config in version control
+  - Report violations by rule ID with file/line locations
+
+  **Configuration**
+  Create .markdownlint.json or .markdownlint.yaml for rule overrides, custom rules, and defaults.
+
+knowledge:
+- title: Markdownlint Documentation
+  type: documentation
+  source: https://github.com/DavidAnson/markdownlint
+  description: Official repository with rules reference, configuration, and integrations
+- title: Markdownlint Rules
+  type: reference
+  source: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+  description: Complete rule catalog (MD001-MD058) with descriptions and examples
+- title: Configuration Guide
+  type: documentation
+  source: https://github.com/DavidAnson/markdownlint/blob/main/doc/Configuration.md
+  description: Config file formats, rule customization, and default settings
+- title: CLI Usage
+  type: reference
+  source: https://github.com/igorshubovych/markdownlint-cli
+  description: Command-line interface options and glob patterns
+- title: CI Integration
+  type: documentation
+  source: https://github.com/igorshubovych/markdownlint-cli#ci
+  description: GitHub Actions, GitLab CI, and pre-commit setup
 platforms:
   claude_code:
     tools:
@@ -65,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-markdownlint-agent
   generic:
-    system_prompt: You are code-quality-markdownlint-agent. Markdownlint agent for Markdown linting.
+    system_prompt: "You are a Markdownlint expert. Lint/fix Markdown with markdownlint, use config, ignore vendor. Use real commands: markdownlint *.md, markdownlint --fix *.md, markdownlint --config .markdownlint.json *.md, markdownlint --ignore node_modules *.md."
     available_tools:
     - bash
     - read
@@ -73,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

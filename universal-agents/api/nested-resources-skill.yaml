@@ -2,27 +2,25 @@ name: nested-resources
 display_name: Nested Resources
 category: api
 subcategory: general
-description: 'REST API design for nested resources: URI hierarchies, depth rules, collection endpoints,
-  and HATEOAS-style links.'
+description: 'Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination, and RFC 8288 Link headers for client navigation.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: nested-resource-design
   description: 'Design and test nested REST resources: URI structure, sub-resources, and linked navigation.'
   commands:
-  - curl -s https://api.example.com/v1/users/42/posts
-  - curl -s https://api.example.com/v1/users/42/posts/7/comments
-  - curl -sI https://api.example.com/v1/users/42/posts
-  - curl -s https://api.example.com/v1/users/42/posts?page=2&per_page=20
-  - curl -s https://api.example.com/v1/users/42/posts/7 | jq '.links'
+  - 'curl -s https://api.your-app.test/v1/users/42/posts'
+  - 'curl -s https://api.your-app.test/v1/users/42/posts/7/comments'
+  - 'curl -sI https://api.your-app.test/v1/users/42/posts'
+  - 'curl -s https://api.your-app.test/v1/users/42/posts?page=2&per_page=20'
+  - 'curl -s https://api.your-app.test/v1/users/42/posts/7 | jq ''.links'''
   examples:
-  - curl -s https://api.example.com/v1/teams/3/members/5 | jq .
-  - curl -s 'https://api.example.com/v1/users/42/posts?sort=created_at.desc' | jq '.data'
-  - 'curl -sI -X POST -H ''Content-Type: application/json'' -d ''{"title":"t"}'' https://api.example.com/v1/users/42/posts
-    | grep -i location'
+  - 'curl -s https://api.your-app.test/v1/teams/3/members/5 | jq .'
+  - 'curl -s ''https://api.your-app.test/v1/users/42/posts?sort=created_at.desc'' | jq ''.data'''
+  - 'curl -sI -X POST -H ''Content-Type: application/json'' -d ''{"title":"t"}'' https://api.your-app.test/v1/users/42/posts | grep -i location'
   parameters:
   - name: base_url
     type: string
@@ -47,11 +45,11 @@ instructions: "# Nested Resources\n\nNested resources model parent-child relatio
   \ mirror domain relationships\n- Decides when nesting is appropriate vs top-level resources\n- Tests\
   \ endpoints and link relations with curl\n\n## When to use\n\n- Designing a new REST API from scratch\n\
   - Reviewing an API where nesting is inconsistent\n\n## Real commands\n\n```bash\n# Collection under\
-  \ a parent\ncurl -s https://api.example.com/v1/users/42/posts\n\n# Deep nesting (avoid beyond 2 levels)\n\
-  curl -s https://api.example.com/v1/users/42/posts/7/comments\n\n# Pagination on a nested collection\n\
-  curl -s 'https://api.example.com/v1/users/42/posts?page=2&per_page=20'\n\n# Inspect links for navigation\n\
-  curl -s https://api.example.com/v1/users/42/posts/7 | jq '.links'\n\n# Create returns 201 + Location\n\
-  curl -sI -X POST -H 'Content-Type: application/json' \\\n  -d '{\"title\":\"t\"}' https://api.example.com/v1/users/42/posts\
+  \ a parent\ncurl -s https://api.your-app.test/v1/users/42/posts\n\n# Deep nesting (avoid beyond 2 levels)\n\
+  curl -s https://api.your-app.test/v1/users/42/posts/7/comments\n\n# Pagination on a nested collection\n\
+  curl -s 'https://api.your-app.test/v1/users/42/posts?page=2&per_page=20'\n\n# Inspect links for navigation\n\
+  curl -s https://api.your-app.test/v1/users/42/posts/7 | jq '.links'\n\n# Create returns 201 + Location\n\
+  curl -sI -X POST -H 'Content-Type: application/json' \\\n  -d '{\"title\":\"t\"}' https://api.your-app.test/v1/users/42/posts\
   \ | grep -i location\n```\n\n## Design rules\n\n- Nest only genuine compositions (posts belong to user)\n\
   - Never nest more than 2 levels; use query params for filters\n- Reference cross-aggregates by ID (e.g.\
   \ /posts/{id}/author)\n\n## Alternative when flat\n\n```\nGET /posts?author=42\nPOST /posts { \"user_id\"\
@@ -88,12 +86,12 @@ platforms:
   generic:
     system_prompt: 'You are the Nested Resources specialist. You do it through nested-resource-design:
       Design and test nested REST resources: URI structure, sub-resources, and linked navigation. The
-      commands are real, e.g. `curl -s https://api.example.com/v1/users/42/posts`. You run and verify
+      commands are real, e.g. `curl -s https://api.your-app.test/v1/users/42/posts`. You run and verify
       the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

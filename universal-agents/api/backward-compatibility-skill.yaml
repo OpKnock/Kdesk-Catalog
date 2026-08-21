@@ -2,12 +2,11 @@ name: backward-compatibility
 display_name: Backward Compatibility
 category: api
 subcategory: general
-description: 'Maintains backward compatibility for APIs: semantic versioning, additive change discipline,
-  media-type versioning, and diff checks.'
+description: "Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - git
@@ -20,7 +19,7 @@ capabilities:
   - npm version minor
   - npm version major
   - git tag v2.0.0
-  - npx semver --range ">=1.0.0 <2.0.0" 1.5.0
+  - npx semver --range "^1.0.0" 1.5.0
   - git diff v1.0.0 v2.0.0 --stat
   examples:
   - npm version patch -m "release %s"
@@ -36,16 +35,16 @@ capabilities:
 - name: api-versioning
   description: Version APIs via media types or URL prefixes.
   commands:
-  - 'curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.example.com/users'
-  - 'curl -s -H "Accept: application/vnd.myapi.v1+json" https://api.example.com/users'
-  - curl -s https://api.example.com/v2/users?limit=10
-  - curl -s https://api.example.com/v1/users
-  - 'curl -s -H "Api-Version: 2026-01-01" https://api.example.com/users'
+  - 'curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.your-app.test/users'
+  - 'curl -s -H "Accept: application/vnd.myapi.v1+json" https://api.your-app.test/users'
+  - curl -s https://api.your-app.test/v2/users?limit=10
+  - curl -s https://api.your-app.test/v1/users
+  - 'curl -s -H "Api-Version: 2026-01-01" https://api.your-app.test/users'
   examples:
-  - 'curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.example.com/users | jq ''.schema'''
-  - curl -s https://api.example.com/v1/users -o v1.json && curl -s https://api.example.com/v2/users -o
+  - 'curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.your-app.test/users | jq ''.schema'''
+  - curl -s https://api.your-app.test/v1/users -o v1.json && curl -s https://api.your-app.test/v2/users -o
     v2.json && diff v1.json v2.json
-  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Accept: application/vnd.myapi.v99+json" https://api.example.com/users'
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Accept: application/vnd.myapi.v99+json" https://api.your-app.test/users'
   parameters:
   - name: accept_header
     type: string
@@ -95,8 +94,7 @@ instructions: '# Backward Compatibility
   ## What this skill does
 
 
-  Keeps APIs backward compatible: semantic versioning discipline, additive-only changes, media-type/URL
-  versioning, and automated breaking-change detection between OpenAPI specs.
+  Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications.
 
 
   ## When to use
@@ -125,9 +123,9 @@ instructions: '# Backward Compatibility
 
   # Test versioned endpoints
 
-  curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.example.com/users
+  curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.your-app.test/users
 
-  curl -s https://api.example.com/v1/users
+  curl -s https://api.your-app.test/v1/users
 
 
   # Breaking change detection
@@ -203,5 +201,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

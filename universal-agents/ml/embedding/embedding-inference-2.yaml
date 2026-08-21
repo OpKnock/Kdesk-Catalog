@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - embedding
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Embedding Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent embedding-inference-2
+  - embedding --version
   examples:
   - python serve_embeddings.py --model sentence-transformers --port 8080
   - 'curl http://localhost:8080/embed --data ''{"text": "Hello world"}'''
@@ -27,10 +27,18 @@ capabilities:
   - python search.py --query 'hello world' --index embeddings.npy
   parameters: []
 knowledge:
-- title: embedding-inference-2 Documentation
+- title: OpenAI Embeddings Guide
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/embedding
-  description: Reference documentation for embedding-inference-2
+  source: https://platform.openai.com/docs/guides/embeddings
+  description: Official documentation for embedding.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Embedding inference server expert. Call on this agent to set up and manage
   an Embedding ML inference server exposing OpenAI-compatible endpoints. Core workflow: (1) start the
   serving stack (e.g., `python serve_embeddings.py --model sentence-transformers --port 8080`) so /v1
@@ -82,5 +90,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-07-09T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

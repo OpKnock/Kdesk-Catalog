@@ -2,37 +2,45 @@ name: serverless-sdk
 display_name: Serverless Sdk
 category: ml
 subcategory: agent
-description: Serverless SDK deployment agent for ML serverless SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Serverless Deploy Sdk Agent
   description: Serverless SDK deployment agent for ML serverless SDK deployment.
   commands:
   - docker build -t less:latest .
-  - docker push registry.example.com/less:latest
-  - kubectl set image deployment/less less=registry.example.com/less:latest
+  - docker push ghcr.io/less:latest
+  - kubectl set image deployment/less less=ghcr.io/less:latest
   - helm upgrade less ./helm-chart --namespace production
   - kubectl rollout status deployment/less --timeout=300s
-  - python identity.py --agent serverless-sdk
+  - docker --version
   examples:
   - 'Server: python -m serverless.server --port 8080'
   - 'Docker: docker run -p 8080:8080 serverless-server'
   parameters: []
 knowledge:
-- title: serverless-sdk Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for serverless-sdk
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: You are the Serverless Deploy SDK Agent, the specialist users call to deploy the serverless
   SDK server as a containerized service. Build and push with `docker build -t less:latest .` and `docker
-  push registry.example.com/less:latest`, then update the cluster with `kubectl set image deployment/less
-  less=registry.example.com/less:latest` or `helm upgrade less ./helm-chart --namespace production`. Confirm
-  with `kubectl rollout status deployment/less --timeout=300s` and identity via `python identity.py --agent
+  push ghcr.io/less:latest`, then update the cluster with `kubectl set image deployment/less
+  less=ghcr.io/less:latest` or `helm upgrade less ./helm-chart --namespace production`. Confirm
+  docker --version
   serverless-sdk`. Validate locally with `python -m serverless.server --port 8080` and `docker run -p
   8080:8080 serverless-server`. Report pushed image, rollout status, and local verification.
 examples:
@@ -70,5 +78,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-02-19T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,37 +2,45 @@ name: monolith-sdk
 display_name: Monolith Sdk
 category: ml
 subcategory: agent
-description: Monolith SDK deployment agent for ML monolith SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Monolith Deploy Sdk Agent
   description: Monolith SDK deployment agent for ML monolith SDK deployment.
   commands:
   - docker build -t monolith:latest .
-  - docker push registry.example.com/monolith:latest
-  - kubectl set image deployment/monolith monolith=registry.example.com/monolith:latest
+  - docker push ghcr.io/monolith:latest
+  - kubectl set image deployment/monolith monolith=ghcr.io/monolith:latest
   - helm upgrade monolith ./helm-chart --namespace production
   - kubectl rollout status deployment/monolith --timeout=300s
-  - python identity.py --agent monolith-sdk
+  - docker --version
   examples:
   - 'Server: python -m monolith.server --port 8080'
   - 'Docker: docker run -p 8080:8080 monolith-server'
   parameters: []
 knowledge:
-- title: monolith-sdk Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for monolith-sdk
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: 'Monolith SDK deployment engineer. Use when the monolith ML application must be built and
   deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t monolith:latest
-  .`, `docker push registry.example.com/monolith:latest`, `kubectl set image deployment/monolith monolith=registry.example.com/monolith:latest`,
+  .`, `docker push ghcr.io/monolith:latest`, `kubectl set image deployment/monolith monolith=ghcr.io/monolith:latest`,
   `helm upgrade monolith ./helm-chart --namespace production`, then `kubectl rollout status deployment/monolith
-  --timeout=300s`. Confirm context with `python identity.py --agent monolith-sdk`. For local SDK bring-up
+  docker --version
   use `python -m monolith.server --port 8080` or `docker run -p 8080:8080 monolith-server`. Watch for
   SDK/registry tag mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm
   the pushed digest equals the deployed tag. Report the deployed image tag, deployment revision, and the
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-30T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

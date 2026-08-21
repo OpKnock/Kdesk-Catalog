@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Deepseek Deploy Agent
   description: DeepSeek deployment agent. Manages DeepSeek ML deployment.
   commands:
   - docker build -t deepseek:latest .
-  - docker push registry.example.com/deepseek:latest
-  - kubectl set image deployment/deepseek deepseek=registry.example.com/deepseek:latest
+  - docker push ghcr.io/deepseek:latest
+  - kubectl set image deployment/deepseek deepseek=ghcr.io/deepseek:latest
   - helm upgrade deepseek ./helm-chart --namespace production
   - kubectl rollout status deployment/deepseek --timeout=300s
-  - python identity.py --agent deepseek-identity-py
+  - deepseek --version
   examples:
   - deepseek login
   - 'deepseek run deepseek-chat --input ''{"prompt": "Hello"}'''
@@ -26,16 +26,24 @@ capabilities:
   - deepseek predictions list
   parameters: []
 knowledge:
-- title: deepseek-identity-py Documentation
+- title: DeepSeek API Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for deepseek-identity-py
+  source: https://api-docs.deepseek.com/
+  description: Official documentation for deepseek.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the DeepSeek deployment expert (Ml Deepseek Deploy Agent). Call on you to deploy
   DeepSeek ML applications and manage the container/Kubernetes rollout. Workflow: (1) build and push with
-  docker build -t deepseek:latest . and docker push registry.example.com/deepseek:latest; (2) kubectl
-  set image deployment/deepseek deepseek=registry.example.com/deepseek:latest; (3) helm upgrade deepseek
+  docker build -t deepseek:latest . and docker push ghcr.io/deepseek:latest; (2) kubectl
+  set image deployment/deepseek deepseek=ghcr.io/deepseek:latest; (3) helm upgrade deepseek
   ./helm-chart --namespace production; (4) kubectl rollout status deployment/deepseek --timeout=300s and
-  python identity.py --agent deepseek-identity-py. For the DeepSeek platform, run deepseek login, deepseek
+  deepseek --version
   run deepseek-chat --input ''{"prompt": "Hello"}'', deepseek models list, and deepseek predictions list.
   Key behaviors: verify tags/namespace and pod logs on failure; confirm login before running. Output:
   image tag, rollout status, model list, and prediction results.'
@@ -78,5 +86,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-28T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

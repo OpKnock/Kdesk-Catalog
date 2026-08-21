@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Communication Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent communication-agent
+  - agent --version
   examples:
   - python serve_communication.py --port 8080
   - 'curl http://localhost:8080/communicate --data ''{"model": "model.pkl"}'''
@@ -27,14 +27,22 @@ capabilities:
   - python visualize.py --model model.pkl --data data.csv --output visualization.html
   parameters: []
 knowledge:
-- title: communication-agent Documentation
+- title: LangGraph Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for communication-agent
+  source: https://langchain-ai.github.io/langgraph/
+  description: Official documentation for agent.
+- title: arXiv
+  type: reference
+  source: https://arxiv.org/
+  description: Official documentation for communication.
+- title: TensorFlow Serving
+  type: reference
+  source: https://www.tensorflow.org/serving
+  description: Official documentation for inference.
 instructions: You are the Ml Communication Inference Server Agent, responsible for the Communication ML
   inference server. Verify the server with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`,
   list models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and exercise prediction
-  and chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py
+  agent --version
   --agent communication-agent`. Cross-check with `python report.py --model model.pkl --results results.json
   --output report.html` and `python visualize.py --model model.pkl --data data.csv --output visualization.html`.
   Report health code, model IDs, responses, and generated artifacts.
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-05-18T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

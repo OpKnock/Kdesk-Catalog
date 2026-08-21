@@ -7,8 +7,10 @@ description: 'MessagePack binary serialization: encode/decode payloads, integrat
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 prerequisites:
 - json2msgpack
 - msgpack-cli
@@ -19,19 +21,19 @@ capabilities:
   description: Encode JSON to MessagePack, decode MessagePack to JSON, and inspect binary payloads using
     the msgpack-tools utilities.
   commands:
-  - json2msgpack < input.json > output.msgpack
-  - msgpack2json < output.msgpack
-  - msgpack2json -j < output.msgpack
-  - python3 -c "import msgpack,sys; print(msgpack.unpackb(open('output.msgpack','rb').read(), raw=False))"
-  - msgpack-cli decode output.msgpack
+  - cat user-data.json | json2msgpack > user-data.msgpack
+  - cat user-data.msgpack | msgpack2json
+  - cat user-data.msgpack | msgpack2json -j
+  - python3 -c "import msgpack,sys; print(msgpack.unpackb(open('user-data.msgpack','rb').read(), raw=False))"
+  - msgpack-cli decode user-data.msgpack
   examples:
-  - json2msgpack < user.json > user.msgpack
-  - msgpack2json -j < user.msgpack
+  - cat user-data.json | json2msgpack > user-data.msgpack
+  - cat user-data.msgpack | msgpack2json -j
   - python3 -c "import msgpack; print(msgpack.packb({'a':1,'b':[1,2,3]}, use_bin_type=True))"
   parameters:
   - name: input_file
     type: string
-    description: JSON file to encode into MessagePack
+    description: JSON file to encode into MessagePack (e.g., user-data.json)
   - name: pretty
     type: boolean
     description: Pretty-print decoded JSON output
@@ -81,24 +83,24 @@ instructions: '# MessagePack
 
   # Encode JSON file to MessagePack
 
-  json2msgpack < input.json > output.msgpack
+  cat user-data.json | json2msgpack > user-data.msgpack
 
 
   # Decode MessagePack to JSON
 
-  msgpack2json < output.msgpack
+  cat user-data.msgpack | msgpack2json
 
-  msgpack2json -j < output.msgpack   # pretty printed
+  cat user-data.msgpack | msgpack2json -j   # pretty printed
 
 
   # Inspect binary payload with Python
 
-  python3 -c "import msgpack; print(msgpack.unpackb(open(''output.msgpack'',''rb'').read(), raw=False))"
+  python3 -c "import msgpack; print(msgpack.unpackb(open(''user-data.msgpack'',''rb'').read(), raw=False))"
 
 
   # Hex-dump to verify on-the-wire bytes
 
-  xxd output.msgpack
+  xxd user-data.msgpack
 
   ```
 
@@ -140,11 +142,11 @@ instructions: '# MessagePack
 
   ```bash
 
-  json2msgpack < input.json > a.msgpack
+  cat user-data.json | json2msgpack > user-data-roundtrip.msgpack
 
-  msgpack2json -j < a.msgpack > roundtrip.json
+  cat user-data-roundtrip.msgpack | msgpack2json -j > user-data-roundtrip.json
 
-  python3 -c "import json,sys; a=json.load(open(''input.json'')); b=json.load(open(''roundtrip.json''));
+  python3 -c "import json,sys; a=json.load(open(''user-data.json'')); b=json.load(open(''user-data-roundtrip.json''));
   sys.exit(0 if a==b else 1)"
 
   ```
@@ -157,13 +159,13 @@ instructions: '# MessagePack
 
   - Always send `Content-Type: application/msgpack` on HTTP endpoints
 
-  - Never log raw binary; base64-encode first with `base64 output.msgpack`'
+  - Never log raw binary; base64-encode first with `base64 user-data.msgpack`'
 examples:
 - input: My API returns a huge JSON list and latency is high. How do I switch to MessagePack?
   output: 'The agent encodes payloads with `json2msgpack`, updates the HTTP handler to set `Content-Type:
     application/msgpack`, and shows the Python/Go server changes to pack and unpack the body.'
 - input: Decode this binary file I captured from my MQTT topic
-  output: The agent runs `msgpack2json -j < capture.msgpack` and interprets the resulting JSON fields
+  output: The agent runs `msgpack2json -j < captured-topic.msgpack` and interprets the resulting JSON fields
     for the user.
 platforms:
   claude_code:
@@ -190,12 +192,10 @@ platforms:
   generic:
     system_prompt: 'You own Messagepack end to end. You do it through messagepack-encode-decode: Encode
       JSON to MessagePack, decode MessagePack to JSON, and inspect binary payloads using the msgpack-tools
-      utilities. The commands are real, e.g. `json2msgpack < input.json > output.msgpack`. You run and
+      utilities. The commands are real, e.g. `cat user-data.json | json2msgpack > user-data.msgpack`. You run and
       verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

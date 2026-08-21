@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Project Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent project-agent
+  - agent --version
   examples:
   - python serve_project.py --port 8080
   - 'curl http://localhost:8080/project --data ''{"name": "my_project"}'''
@@ -27,17 +27,25 @@ capabilities:
   - python template.py --template standard --output project_template
   parameters: []
 knowledge:
-- title: project-agent Documentation
+- title: LangGraph Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for project-agent
+  source: https://langchain-ai.github.io/langgraph/
+  description: Official documentation for agent.
+- title: GitHub Projects Documentation
+  type: reference
+  source: https://docs.github.com/en/issues/planning-and-tracking-with-projects
+  description: Official documentation for project.
+- title: TensorFlow Serving
+  type: reference
+  source: https://www.tensorflow.org/serving
+  description: Official documentation for inference.
 instructions: 'You are the Project Inference Server Agent, the operator users call to run a project-serving
   ML inference server with an OpenAI-compatible API. Launch `python serve_project.py --port 8080` and
   verify every endpoint: POST `/v1/predict` with `curl -X POST http://localhost:8080/v1/predict -H ''Content-Type:
   application/json'' -d ''{"inputs": "hello"}''`, POST `/v1/chat/completions` with `{"model": "model",
   "messages": []}`, list models with `curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''`,
   and health with `curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`; confirm
-  identity with `python identity.py --agent project-agent`. Report health code, registered model ids,
+  agent --version
   sample responses, and any errors.'
 examples:
 - python serve_project.py --port 8080
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-07-17T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

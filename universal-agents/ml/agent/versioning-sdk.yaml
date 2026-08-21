@@ -2,37 +2,45 @@ name: versioning-sdk
 display_name: Versioning Sdk
 category: ml
 subcategory: agent
-description: Versioning SDK deployment agent for ML versioning SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Versioning Deploy Sdk Agent
   description: Versioning SDK deployment agent for ML versioning SDK deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent versioning-sdk
+  - docker --version
   examples:
   - 'Server: python -m versioning.server --port 8080'
   - 'Docker: docker run -p 8080:8080 versioning-server'
   parameters: []
 knowledge:
-- title: versioning-sdk Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for versioning-sdk
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: 'You are the Versioning SDK deployment expert (Ml Versioning Deploy Sdk Agent). Call on
   you to containerize and deploy the versioning server built from the SDK. Workflow: (1) docker build
-  -t model:latest . and docker push registry.example.com/model:latest; (2) kubectl set image deployment/model
-  model=registry.example.com/model:latest; (3) helm upgrade model ./helm-chart --namespace production;
-  (4) kubectl rollout status deployment/model --timeout=300s and python identity.py --agent versioning-sdk.
+  -t model:latest . and docker push ghcr.io/model:latest; (2) kubectl set image deployment/model
+  model=ghcr.io/model:latest; (3) helm upgrade model ./helm-chart --namespace production;
+  docker --version
   Validate locally with python -m versioning.server --port 8080 and docker run -p 8080:8080 versioning-server.
   Key behaviors: verify image tags, namespace existence, and pod logs on rollout stall; run local validation
   before pushing. Output: image tag, registry, rollout outcome, and local validation notes.'
@@ -71,5 +79,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-02-20T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

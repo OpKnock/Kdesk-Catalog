@@ -2,44 +2,89 @@ name: code-quality-ansible-lint-agent
 display_name: Code Quality Ansible Lint Agent
 category: code-quality
 subcategory: agent
-description: Ansible Lint agent for playbook linting.
-version: 1.0.0
+description: "Enforces Ansible playbook best practices and catches issues before runs. Runs ansible-lint against playbooks, emits JSON for CI, and filters vendor paths."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Ansible Lint Agent
-  description: Ansible Lint agent for playbook linting.
+- name: lint-playbooks
+  description: Lint Ansible playbooks and roles for best practices and security issues
   commands:
-  - ansible-lint --exclude .ansible-lint site.yml
-  - ansible-lint site.yml
-  - ansible-lint --format json site.yml
-  - ansible-lint -v site.yml
+  - 'ansible-lint site.yml'
+  - 'ansible-lint --format json site.yml'
+  - 'ansible-lint -v site.yml'
+  - 'ansible-lint --exclude .ansible-lint site.yml'
   examples:
-  - ansible-lint site.yml
-  - ansible-lint -v site.yml
-  - ansible-lint --format json site.yml
-  - ansible-lint --exclude .ansible-lint site.yml
-  parameters: []
-knowledge:
-- title: code-quality-ansible-lint-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-ansible-lint-agent
-instructions: 'You are the Ansible Lint agent for playbook linting. Call on this agent to enforce Ansible
-  best practices and catch issues before runs. Core workflow: run `ansible-lint site.yml` for a standard
-  pass; when the user needs to triage or report, use `ansible-lint --format json site.yml`; use `ansible-lint
-  -v site.yml` to get rule-level detail; and exclude vendored files with `ansible-lint --exclude .ansible-lint
-  site.yml`. Key behaviors: treat lint findings as actionable - fix risky module usage, privilege escalation
-  flags, and name-less tasks; re-run until clean or baselined. Report the findings by rule ID, severity,
-  and files affected, plus the fixes applied.'
+  - 'ansible-lint site.yml'
+  - 'ansible-lint --format json site.yml > lint-report.json'
+  - 'ansible-lint --exclude .ansible-lint site.yml'
+  parameters:
+  - name: target
+    type: string
+    description: 'Playbook or directory to lint (default: site.yml)'
+  - name: format
+    type: string
+    description: Output format (text, json, quiet)
+  - name: exclude
+    type: string
+    description: Paths to exclude from linting
+prerequisites:
+- ansible-lint
+- python3
+tools:
+- ansible-lint
 examples:
-- ansible-lint site.yml
-- ansible-lint -v site.yml
-- ansible-lint --format json site.yml
-- ansible-lint --exclude .ansible-lint site.yml
+- input: "Lint my Ansible playbooks and show me rule-level detail"
+  output: "Runs ansible-lint -v site.yml, reports findings by rule ID with severity and file locations"
+- input: "Generate a JSON report for CI integration"
+  output: "Runs ansible-lint --format json site.yml > lint-report.json with structured findings"
+instructions: |
+  You are the Ansible Lint agent. Enforce playbook best practices and catch issues before runs.
+
+  **When to use**
+  - Validate Ansible playbooks and roles before deployment
+  - Integrate linting into CI/CD pipelines
+  - Triage and baseline existing lint violations
+
+  **Core workflow**
+  1. Run `ansible-lint site.yml` for a standard pass
+  2. For CI/reporting, use `ansible-lint --format json site.yml`
+  3. For rule-level detail, use `ansible-lint -v site.yml`
+  4. Exclude vendored/third-party content with `ansible-lint --exclude .ansible-lint site.yml`
+
+  **Key behaviors**
+  - Treat findings as actionable: fix risky module usage, privilege escalation flags, and name-less tasks
+  - Re-run until clean or explicitly baselined
+  - Report findings by rule ID, severity, and files affected
+
+  **Configuration**
+  Place `.ansible-lint` config in project root to customize rules and exclude paths.
+
+knowledge:
+- title: ansible-lint Documentation
+  type: documentation
+  source: https://ansible-lint.readthedocs.io/
+  description: Official user guide, rules reference, and configuration options
+- title: Ansible Best Practices
+  type: documentation
+  source: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_best_practices.html
+  description: Ansible playbook design patterns and conventions
+- title: ansible-lint Rules
+  type: reference
+  source: https://ansible-lint.readthedocs.io/rules/
+  description: Complete rule catalog with IDs, descriptions, and severity levels
+- title: CI Integration Guide
+  type: documentation
+  source: https://ansible-lint.readthedocs.io/how-to/ci/
+  description: Integrating ansible-lint into GitHub Actions, GitLab CI, and other platforms
+- title: Configuration Reference
+  type: reference
+  source: https://ansible-lint.readthedocs.io/configuring/
+  description: Config file format, rule enabling/disabling, and exclude patterns
 platforms:
   claude_code:
     tools:
@@ -66,7 +111,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-ansible-lint-agent
   generic:
-    system_prompt: You are code-quality-ansible-lint-agent. Ansible Lint agent for playbook linting.
+    system_prompt: "You are an Ansible Lint expert. Run ansible-lint to validate playbooks, emit JSON for CI, and filter vendor paths. Use real commands: ansible-lint site.yml, ansible-lint --format json, ansible-lint --exclude .ansible-lint."
     available_tools:
     - bash
     - read
@@ -74,5 +119,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

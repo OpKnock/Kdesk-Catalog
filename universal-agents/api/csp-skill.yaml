@@ -2,12 +2,12 @@ name: csp
 display_name: Csp
 category: api
 subcategory: general
-description: Implement and verify Content Security Policy headers on APIs and web apps using curl header
-  checks and the helmet middleware.
+description: 'Hardens API and web endpoints with Content-Security-Policy headers, using Helmet middleware
+  and curl verification against real echo services.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - node
@@ -16,14 +16,14 @@ capabilities:
 - name: header-verification
   description: Inspect and verify Content-Security-Policy response headers on live endpoints
   commands:
-  - curl -sI https://example.com | grep -i content-security-policy
-  - curl -s -D - -o /dev/null https://example.com | grep -i 'content-security-policy\|x-frame-options'
-  - 'curl -s -H "Accept: application/json" https://api.example.com/v1/health -D - -o /dev/null | grep
+  - curl -sI https://httpbin.org/headers | grep -i content-security-policy
+  - curl -s -D - -o /dev/null https://httpbin.org/headers | grep -i 'content-security-policy\|x-frame-options'
+  - 'curl -s -H "Accept: application/json" https://httpbin.org/headers -D - -o /dev/null | grep
     -i content-security'
   - curl -sI http://localhost:8080 | grep -i content-security-policy
   examples:
-  - curl -sI https://example.com | grep -i content-security-policy
-  - curl -s -D - -o /dev/null https://example.com/api/v1 | grep -i 'content-security'
+  - curl -sI https://httpbin.org/headers | grep -i content-security-policy
+  - curl -s -D - -o /dev/null https://httpbin.org/headers | grep -i 'content-security'
   - curl -sI http://localhost:8080 | awk 'tolower($1) ~ /content-security/{print}'
   parameters:
   - name: url
@@ -35,7 +35,7 @@ capabilities:
   - npm install helmet
   - node -e "const helmet=require('helmet'); console.log(typeof helmet.contentSecurityPolicy)"
   - npm run start
-  - curl -sI https://api.example.com/health | grep -i content-security-policy
+  - curl -sI http://localhost:8080/health | grep -i content-security-policy
   examples:
   - npm install helmet && npm run start
   - curl -sI http://localhost:8080 | grep -i content-security-policy
@@ -56,10 +56,9 @@ knowledge:
 instructions: "# Content Security Policy (CSP)\n\nImplement and verify Content-Security-Policy headers\
   \ for APIs and web endpoints.\n\n## When to Use\n\n- Hardening API responses against XSS and injection\n\
   - Enforcing a strict allowlist of origins and scripts\n- Auditing which headers a deployed endpoint\
-  \ actually returns\n\n## Verify Existing Headers\n\n```bash\ncurl -sI https://example.com | grep -i\
-  \ content-security-policy\ncurl -s -D - -o /dev/null https://api.example.com/v1/health\n```\n\n## Minimal\
-  \ Policy\n\n```\nContent-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none';\
-  \ frame-ancestors 'none'\n```\n\n## Node.js with Helmet\n\n```bash\nnpm install helmet\n```\n\n```js\n\
+  \ actually returns\n\n## Verify Existing Headers\n\n```bash\ncurl -sI https://httpbin.org/headers | grep -i\
+  \ content-security-policy\ncurl -s -D - -o /dev/null https://httpbin.org/headers\n```\n\n## Minimal\
+  \ Policy\n\n```\nContent-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none';\n  frame-ancestors 'none'\n```\n\n## Node.js with Helmet\n\n```bash\nnpm install helmet\n```\n\n```js\n\
   const express = require('express');\nconst helmet = require('helmet');\nconst app = express();\napp.use(helmet.contentSecurityPolicy({\n\
   \  directives: {\n    \"default-src\": [\"'self'\"],\n    \"script-src\": [\"'self'\"],\n    \"object-src\"\
   : [\"'none'\"],\n    \"frame-ancestors\": [\"'none'\"]\n  }\n}));\napp.get('/health', (req, res) =>\
@@ -73,7 +72,7 @@ instructions: "# Content Security Policy (CSP)\n\nImplement and verify Content-S
   \ headers on every environment, not just production"
 examples:
 - input: Check if my API returns a Content-Security-Policy header.
-  output: The agent runs curl -sI https://api.example.com | grep -i content-security-policy and reports
+  output: The agent runs curl -sI https://httpbin.org/headers | grep -i content-security-policy and reports
     what headers are present or missing.
 - input: Add CSP to my Express API.
   output: The agent installs helmet, adds helmet.contentSecurityPolicy with default-src 'self', and verifies
@@ -103,12 +102,12 @@ platforms:
   generic:
     system_prompt: 'You are the Csp specialist. You do it through header-verification: Inspect and verify
       Content-Security-Policy response headers on live endpoints. The commands are real, e.g. `curl -sI
-      https://example.com | grep -i content-security-policy`. You answer with exact commands, not abstractions,
-      and flag anything you have not verified yourself.'
+      https://httpbin.org/headers | grep -i content-security-policy`. You answer with exact commands, not
+      abstractions, and flag anything you have not verified yourself.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

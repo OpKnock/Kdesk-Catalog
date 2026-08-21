@@ -7,7 +7,7 @@ description: Tests REST APIs with curl, httpie, and Newman, covering auth, contr
 version: 2.0.0
 tags:
 - testing
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - http
@@ -16,16 +16,16 @@ capabilities:
 - name: curl-testing
   description: Craft and assert on API requests with curl.
   commands:
-  - curl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users
-  - 'curl -s -X POST https://api.example.com/v1/users -H ''Content-Type: application/json'' -d ''{"name":"alice"}'''
-  - curl -s https://api.example.com/v1/users | jq -e '.data | length > 0'
-  - curl -sI https://api.example.com/v1/health
-  - curl -s -u user:pass https://api.example.com/v1/users
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/users
+  - 'curl -s -X POST http://localhost:8080/v1/users -H ''Content-Type: application/json'' -d ''{"name":"alice"}'''
+  - curl -s http://localhost:8080/v1/users | jq -e '.data | length > 0'
+  - curl -sI http://localhost:8080/v1/health
+  - curl -s -u user:pass http://localhost:8080/v1/users
   examples:
-  - curl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users
-  - 'curl -s -X POST https://api.example.com/v1/users -H ''Content-Type: application/json'' -d ''{"name":"alice"}''
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/users
+  - 'curl -s -X POST http://localhost:8080/v1/users -H ''Content-Type: application/json'' -d ''{"name":"alice"}''
     | jq .'
-  - curl -s https://api.example.com/v1/users | jq -e '.data | length > 0'
+  - curl -s http://localhost:8080/v1/users | jq -e '.data | length > 0'
   parameters:
   - name: method
     type: string
@@ -39,15 +39,15 @@ capabilities:
 - name: httpie-testing
   description: Human-friendly API testing with httpie.
   commands:
-  - http GET https://api.example.com/v1/users
-  - http POST https://api.example.com/v1/users name=alice role=admin
-  - http --json POST https://api.example.com/v1/users <<< '{"name":"bob"}'
-  - http -h GET https://api.example.com/v1/users
-  - http GET https://api.example.com/v1/users Authorization:'Bearer $TOKEN'
+  - http GET http://localhost:8080/v1/users
+  - http POST http://localhost:8080/v1/users name=alice role=admin
+  - http --json POST http://localhost:8080/v1/users <<< '{"name":"bob"}'
+  - http -h GET http://localhost:8080/v1/users
+  - http GET http://localhost:8080/v1/users Authorization:'Bearer $TOKEN'
   examples:
-  - http GET https://api.example.com/v1/users
-  - http POST https://api.example.com/v1/users name=alice role=admin
-  - http -h GET https://api.example.com/v1/users
+  - http GET http://localhost:8080/v1/users
+  - http POST http://localhost:8080/v1/users name=alice role=admin
+  - http -h GET http://localhost:8080/v1/users
   parameters:
   - name: url
     type: string
@@ -62,11 +62,11 @@ capabilities:
   - newman run collection.json -e staging.postman_environment.json
   - newman run collection.json -d data.csv
   - newman run collection.json -r html,cli --reporter-html-export report.html
-  - newman run collection.json --env-var baseUrl=https://staging.example.com
+  - newman run collection.json --env-var baseUrl=http://localhost:8080
   examples:
   - newman run collection.json -e staging.env.json
   - newman run collection.json -r html,cli --reporter-html-export report.html
-  - newman run collection.json --env-var baseUrl=https://staging.example.com
+  - newman run collection.json --env-var baseUrl=http://localhost:8080
   parameters:
   - name: collection
     type: string
@@ -141,5 +141,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-05-03T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,29 +7,33 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Seldon Agent
   description: Seldon Core model serving agent. Manages model deployment on Kubernetes.
   commands:
   - kubectl get pods
-  - kubectl logs -f <pod>
-  - seldon-core-build -b <image> -i <dockerfile>
+  - kubectl logs -f demo-pod
+  - seldon-core-build -b demo-image:latest -i demo-dockerfile
   - kubectl get seldondeployments
   - kubectl apply -f seldon-deployment.yaml
   examples:
   - kubectl apply -f seldon-deployment.yaml
   - kubectl get seldondeployments
-  - seldon-core-build -b <image> -i <dockerfile>
+  - seldon-core-build -b demo-image:latest -i demo-dockerfile
   - kubectl get pods
-  - kubectl logs -f <pod>
+  - kubectl logs -f demo-pod
   parameters: []
 knowledge:
-- title: ml-seldon-agent Documentation
+- title: Seldon Core Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for ml-seldon-agent
+  source: https://docs.seldon.io/
+  description: Official documentation for seldon.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a Seldon Core model serving expert. A user calls on you to deploy and operate ML
   models on Kubernetes with Seldon Core. Work step by step: build the serving image with ''seldon-core-build
   -b <image> -i <dockerfile>'', deploy with ''kubectl apply -f seldon-deployment.yaml'', verify with ''kubectl
@@ -41,9 +45,9 @@ instructions: 'You are a Seldon Core model serving expert. A user calls on you t
 examples:
 - kubectl apply -f seldon-deployment.yaml
 - kubectl get seldondeployments
-- seldon-core-build -b <image> -i <dockerfile>
+- seldon-core-build -b demo-image:latest -i demo-dockerfile
 - kubectl get pods
-- kubectl logs -f <pod>
+- kubectl logs -f demo-pod
 platforms:
   claude_code:
     tools:
@@ -79,5 +83,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-14T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,35 +7,43 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Observability Deploy Sdk
   description: Observability SDK deployment agent for ML Observability SDK deployment.
   commands:
   - docker build -t observability:latest .
-  - docker push registry.example.com/observability:latest
-  - kubectl set image deployment/observability observability=registry.example.com/observability:latest
+  - docker push ghcr.io/observability:latest
+  - kubectl set image deployment/observability observability=ghcr.io/observability:latest
   - helm upgrade observability ./helm-chart --namespace production
   - kubectl rollout status deployment/observability --timeout=300s
-  - python identity.py --agent observability-deployment
+  - observability --version
   examples:
   - 'Server: python -m observability.server --port 8080'
   - 'Docker: docker run -p 8080:8080 observability-server'
   parameters: []
 knowledge:
-- title: observability-deployment Documentation
+- title: OpenTelemetry Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for observability-deployment
+  source: https://opentelemetry.io/docs/
+  description: Official documentation for observability.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a observability SDK deployment expert (you help users deploy Observability applications).
   A user calls on you to build, ship, and roll out a observability as a containerized Kubernetes service.
-  Work step by step: build with docker build -t observability:latest ., publish with docker push registry.example.com/observability:latest,
-  then roll out with kubectl set image deployment/observability observability=registry.example.com/observability:latest
+  Work step by step: build with docker build -t observability:latest ., publish with docker push ghcr.io/observability:latest,
+  then roll out with kubectl set image deployment/observability observability=ghcr.io/observability:latest
   and confirm via kubectl rollout status deployment/observability --timeout=300s; apply config changes
   with helm upgrade observability ./helm-chart --namespace production. Verify locally first with python
   -m observability.server --port 8080 and docker run -p 8080:8080 observability-server, and identify with
-  python identity.py --agent observability-deployment. Confirm the cluster context and namespace before
+  observability --version
   acting. If build, push, or rollout fails, stop and surface the exact error (registry auth, missing Dockerfile,
   tag mismatch) rather than proceeding, and report the image tag, rollout status, and verification performed.'
 examples:
@@ -74,5 +82,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-04-22T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

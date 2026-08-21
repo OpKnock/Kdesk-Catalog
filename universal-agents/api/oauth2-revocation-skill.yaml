@@ -2,31 +2,30 @@ name: oauth2-revocation
 display_name: Oauth2 Revocation
 category: api
 subcategory: general
-description: 'OAuth2 token revocation (RFC 7009): revoke access and refresh tokens, handle revocation
-  responses, and Keycloak flows.'
+description: 'Revokes OAuth2 access and refresh tokens against RFC 7009 endpoints. Handles 200 responses for processed revocations and verifies revoked state by attempting token refresh.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: token-revocation
   description: Revoke OAuth2 tokens against RFC 7009 endpoints and verify revoked state.
   commands:
-  - curl -X POST https://auth.example.com/revoke -d "token=eyJhbGciOi..." -u client-id:client-secret
-  - curl -X POST https://auth.example.com/revoke -d "token=eyJhbGciOi..." -d "token_type_hint=refresh_token"
+  - curl -X POST https://auth.your-app.test/revoke -d "token=eyJhbGciOi..." -u client-id:client-secret
+  - curl -X POST https://auth.your-app.test/revoke -d "token=eyJhbGciOi..." -d "token_type_hint=refresh_token"
     -u client-id:client-secret
   - curl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke -d "token=xyz" -u
     svc:svcsecret
-  - curl -i -X POST https://auth.example.com/revoke -d "token=xyz" -u client:secret
+  - curl -i -X POST https://auth.your-app.test/revoke -d "token=xyz" -u client:secret
   - curl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token -d "grant_type=refresh_token"
     -d "refresh_token=xyz" -d "client_id=svc" | jq .
   examples:
-  - curl -X POST https://auth.example.com/revoke -d "token=xyz" -d "token_type_hint=refresh_token" -u
+  - curl -X POST https://auth.your-app.test/revoke -d "token=xyz" -d "token_type_hint=refresh_token" -u
     client:secret
   - curl -i -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke -d "token=xyz"
     -u svc:svcsecret
-  - curl -X POST https://auth.example.com/revoke -d "token=xyz" -u client:secret -w "%{http_code}\n"
+  - curl -X POST https://auth.your-app.test/revoke -d "token=xyz" -u client:secret -w "%{http_code}\n"
   parameters:
   - name: endpoint
     type: string
@@ -50,8 +49,8 @@ instructions: "# OAuth2 Token Revocation\n\nRevocation (RFC 7009) invalidates a 
   \ be used.\n\n## What this skill does\n\n- Revokes access and refresh tokens\n- Handles 200 responses\
   \ (even for unknown tokens)\n- Verifies revocation by attempting refresh\n\n## When to use\n\n- Logout\
   \ flows that must kill server-side sessions\n- Suspending a compromised client's tokens\n\n## Real commands\n\
-  \n```bash\n# Revoke access token\ncurl -X POST https://auth.example.com/revoke \\\n  -d \"token=eyJhbGciOi...\"\
-  \ -u client-id:client-secret\n\n# Revoke refresh token (common for logout)\ncurl -X POST https://auth.example.com/revoke\
+  \n```bash\n# Revoke access token\ncurl -X POST https://auth.your-app.test/revoke \\\n  -d \"token=eyJhbGciOi...\"\
+  \ -u client-id:client-secret\n\n# Revoke refresh token (common for logout)\ncurl -X POST https://auth.your-app.test/revoke\
   \ \\\n  -d \"token=eyJhbGciOi...\" -d \"token_type_hint=refresh_token\" -u client-id:client-secret\n\
   \n# Keycloak\ncurl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke \\\n\
   \  -d \"token=xyz\" -u svc:svcsecret\n\n# Verify: refresh should now fail\ncurl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token\
@@ -90,12 +89,12 @@ platforms:
   generic:
     system_prompt: 'You take the Oauth2 Revocation seat. You do it through token-revocation: Revoke OAuth2
       tokens against RFC 7009 endpoints and verify revoked state. The commands are real, e.g. `curl -X
-      POST https://auth.example.com/revoke -d token=eyJhbGciOi... -u...`. You prefer the shortest safe
+      POST https://auth.your-app.test/revoke -d token=eyJhbGciOi... -u...`. You prefer the shortest safe
       path, and you reproduce failures before diagnosing them.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

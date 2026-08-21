@@ -2,12 +2,12 @@ name: sorting
 display_name: Sorting
 category: api
 subcategory: general
-description: 'Hand-crafted sorting skill: sort data on the command line and in code — sort, sort -h for
-  human sizes, jq sort_by, and SQL ORDER BY for API responses.'
+description: "Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes (4.2K vs 1.3G), JSON arrays with jq sort_by, and SQL results with ORDER BY for API response ordering."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - python
@@ -15,36 +15,35 @@ prerequisites:
 - sqlite3
 capabilities:
 - name: sort-data
-  description: Sort files, JSON, and database results with the right tool
+  description: "Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes (4.2K vs 1.3G), JSON arrays with jq sort_by, and SQL results with ORDER BY for API response ordering."
   commands:
-  - sort -t, -k2 -n sales.csv
-  - du -sh * | sort -h
-  - jq 'sort_by(.price) | reverse' products.json
-  - 'python -c ''data = [3,1,2]; print(sorted(data, key=lambda x: -x))'''
-  - sqlite3 app.db "SELECT name FROM users ORDER BY created_at DESC LIMIT 10;"
+  - sort -k2 -n data.csv
+  - sort -h sizes.txt
+  - jq 'sort_by(.timestamp)' events.json
+  - sqlite3 db.sqlite "SELECT * FROM events ORDER BY timestamp DESC"
   examples:
-  - sort -t, -k2 -n sales.csv
-  - du -sh * | sort -h | tail -5
-  - jq 'sort_by(.price)' products.json
+  - sort -k2 -n data.csv
+  - sort -h sizes.txt
+  - jq 'sort_by(.timestamp)' events.json
+  - sqlite3 db.sqlite "SELECT * FROM events ORDER BY timestamp DESC"
   parameters:
-  - name: field
+  - name: column
     type: integer
-    description: Sort key column for sort -k
-  - name: reverse
-    type: boolean
-    description: Descending order
+    description: Column number to sort by (1-indexed)
   - name: numeric
     type: boolean
-    description: Numeric compare instead of lexicographic
+    description: Enable numeric sort
+  - name: json_field
+    type: string
+    description: JSON field name to sort by
+  - name: sql_column
+    type: string
+    description: SQL column name for ORDER BY
 knowledge:
 - title: GNU sort manual
   type: documentation
   source: https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html
-  description: 'sort flags: -k, -n, -h, -t, -r'
-- title: jq manual (sort functions)
-  type: documentation
-  source: https://jqlang.github.io/jq/manual/#sort-sort_by
-  description: sort_by and friends
+  description: "Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes (4.2K vs 1.3G), JSON arrays with jq sort_by, and SQL results with ORDER BY for API response ordering."
 instructions: '# Sorting
 
 
@@ -185,5 +184,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,27 +7,35 @@ version: 1.0.0
 tags:
 - security
 - scanning
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Security Oauth
   description: OAuth/OIDC agent for authentication and authorization.
   commands:
   - 'Decode: echo $JWT | cut -d ''.'' -f 2 | base64 -d | jq'
-  - 'Token: curl -X POST https://auth.example.com/token -d ''grant_type=authorization_code&code=CODE'''
-  - 'Keys: curl https://auth.example.com/.well-known/jwks.json'
-  - 'Validate: curl -X GET https://auth.example.com/userinfo -H ''Authorization: Bearer TOKEN'''
+  - 'Token: curl -X POST http://localhost:8080/token -d ''grant_type=authorization_code&code=CODE'''
+  - 'Keys: curl http://localhost:8080/.well-known/jwks.json'
+  - 'Validate: curl -X GET http://localhost:8080/userinfo -H ''Authorization: Bearer TOKEN'''
   examples:
-  - 'Token: curl -X POST https://auth.example.com/token -d ''grant_type=authorization_code&code=CODE'''
+  - 'Token: curl -X POST http://localhost:8080/token -d ''grant_type=authorization_code&code=CODE'''
   - 'Decode: echo $JWT | cut -d ''.'' -f 2 | base64 -d | jq'
-  - 'Validate: curl -X GET https://auth.example.com/userinfo -H ''Authorization: Bearer TOKEN'''
-  - 'Keys: curl https://auth.example.com/.well-known/jwks.json'
+  - 'Validate: curl -X GET http://localhost:8080/userinfo -H ''Authorization: Bearer TOKEN'''
+  - 'Keys: curl http://localhost:8080/.well-known/jwks.json'
   parameters: []
 knowledge:
-- title: security-oauth Documentation
+- title: OAuth 2.0 Specification
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/security/scanning
-  description: Reference documentation for security-oauth
+  source: https://oauth.net/2/
+  description: Official documentation for oauth.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
 instructions: 'You are an OAuth/OIDC expert. Help users with:
 
   - OAuth 2.0 flows
@@ -47,10 +55,10 @@ instructions: 'You are an OAuth/OIDC expert. Help users with:
 
   Always use real OAuth tools. Never suggest fictional tools.'
 examples:
-- 'Token: curl -X POST https://auth.example.com/token -d ''grant_type=authorization_code&code=CODE'''
+- 'Token: curl -X POST http://localhost:8080/token -d ''grant_type=authorization_code&code=CODE'''
 - 'Decode: echo $JWT | cut -d ''.'' -f 2 | base64 -d | jq'
-- 'Validate: curl -X GET https://auth.example.com/userinfo -H ''Authorization: Bearer TOKEN'''
-- 'Keys: curl https://auth.example.com/.well-known/jwks.json'
+- 'Validate: curl -X GET http://localhost:8080/userinfo -H ''Authorization: Bearer TOKEN'''
+- 'Keys: curl http://localhost:8080/.well-known/jwks.json'
 platforms:
   claude_code:
     tools:
@@ -100,5 +108,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-30T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

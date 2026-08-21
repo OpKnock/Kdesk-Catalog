@@ -7,8 +7,10 @@ description: 'Advanced load testing scenarios: k6 executors, vegeta histograms, 
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 prerequisites:
 - gatling.sh
 - locust
@@ -38,13 +40,13 @@ capabilities:
 - name: distributed-load
   description: Run distributed load with locust master/workers.
   commands:
-  - locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host https://api.example.com
+  - locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host https://httpbin.org
   - locust -f locustfile.py --master --master-bind-port=5557
-  - locust -f locustfile.py --worker --master-host=10.0.0.5
+  - locust -f locustfile.py --worker --master-host=10.0.0.10
   - k6 run --quiet --summary-trend-stats='avg,p(99.9)' soak.js
   examples:
-  - locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host https://api.example.com
-  - locust -f locustfile.py --worker --master-host=10.0.0.5
+  - locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host https://httpbin.org
+  - locust -f locustfile.py --worker --master-host=10.0.0.10
   - k6 run --quiet --summary-trend-stats='avg,p(99.9)' soak.js
   parameters:
   - name: users
@@ -80,8 +82,8 @@ instructions: "# Load Testing (Advanced Scenarios)\n\nRealistic workload profile
   \ --scenario spike scenarios.js\nk6 run --scenario soak scenarios.js\n\n# Vegeta histogram\nvegeta attack\
   \ -rate=50/1s -duration=2m -targets=targets.txt \\\n  | vegeta report -type=hist[0,50ms,100ms,200ms,500ms]\n\
   \n# Gatling simulation\ngatling.sh -s simulations.SpikeSimulation\n\n# Locust headless\nlocust -f locustfile.py\
-  \ --headless -u 500 -r 50 -t 3m \\\n  --host https://api.example.com\n\n# Distributed: master + workers\n\
-  locust -f locustfile.py --master --master-bind-port=5557\nlocust -f locustfile.py --worker --master-host=10.0.0.5\n\
+  \ --headless -u 500 -r 50 -t 3m \\\n  --host https://httpbin.org\n\n# Distributed: master + workers\n\
+  locust -f locustfile.py --master --master-bind-port=5557\nlocust -f locustfile.py --worker --master-host=10.0.0.10\n\
   \n# k6 with tight trend stats\nk6 run --quiet --summary-trend-stats='avg,p(99.9)' soak.js\n```\n\n##\
   \ k6 scenarios.js example\n\n```js\nexport const options = {\n  scenarios: {\n    spike: {\n      executor:\
   \ 'constant-arrival-rate',\n      duration: '2m',\n      rate: 200,\n      preAllocatedVUs: 50,\n  \
@@ -128,5 +130,3 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

@@ -2,37 +2,45 @@ name: gke-sdk
 display_name: Gke Sdk
 category: ml
 subcategory: agent
-description: GKE SDK deployment agent for ML GKE SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Gke Deploy Sdk Agent
   description: GKE SDK deployment agent for ML GKE SDK deployment.
   commands:
   - docker build -t gke:latest .
-  - docker push registry.example.com/gke:latest
-  - kubectl set image deployment/gke gke=registry.example.com/gke:latest
+  - docker push ghcr.io/gke:latest
+  - kubectl set image deployment/gke gke=ghcr.io/gke:latest
   - helm upgrade gke ./helm-chart --namespace production
   - kubectl rollout status deployment/gke --timeout=300s
-  - python identity.py --agent gke-sdk
+  - gke --version
   examples:
   - 'Server: python -m gke.server --port 8080'
   - 'Docker: docker run -p 8080:8080 gke-server'
   parameters: []
 knowledge:
-- title: gke-sdk Documentation
+- title: Google Kubernetes Engine Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for gke-sdk
+  source: https://cloud.google.com/kubernetes-engine/docs
+  description: Official documentation for gke.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'GKE SDK deployment engineer. Use when the gke ML application must be built and deployed
   as a containerized service from the SDK. Follow the pipeline: `docker build -t gke:latest .`, `docker
-  push registry.example.com/gke:latest`, `kubectl set image deployment/gke gke=registry.example.com/gke:latest`,
+  push ghcr.io/gke:latest`, `kubectl set image deployment/gke gke=ghcr.io/gke:latest`,
   `helm upgrade gke ./helm-chart --namespace production`, then `kubectl rollout status deployment/gke
-  --timeout=300s`. Confirm context with `python identity.py --agent gke-sdk`. For local SDK bring-up use
+  gke --version
   `python -m gke.server --port 8080` or `docker run -p 8080:8080 gke-server`. Watch for SDK/registry tag
   mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm the pushed digest
   equals the deployed tag. Report the deployed image tag, deployment revision, and the local server endpoint
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-04-02T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

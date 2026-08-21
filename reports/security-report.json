@@ -1,14 +1,22 @@
 {
   "schema": "security-report-v2",
-  "generated_at": "2026-08-17T14:01:23Z",
+  "generated_at": "2026-08-21T10:29:26Z",
   "findings": [
+    {
+      "definition": "rag-identity-py",
+      "type": "agent",
+      "field": "capabilities[1].commands",
+      "pattern": "bearer_token",
+      "severity": "MEDIUM",
+      "excerpt": "...secret', algorithms=['HS256']))\" curl -s -H \"Authorization: ***REDACTED***\" http://127.0.0.1:8000/retrieve -d '{\"query\":\"pricing\"}'"
+    },
     {
       "definition": "elastic-logs",
       "type": "skill",
       "field": "instructions",
       "pattern": "password_eq",
       "severity": "MEDIUM",
-      "excerpt": "...https://es.example.com:9200']\n  username: filebeat_writer\n  ***REDACTED***\n```\n\n## Testing\n\n```bash\n# Watch the beat's own output whil..."
+      "excerpt": "...ts: ['http://localhost:9200']\n  username: filebeat_writer\n  ***REDACTED***\n```\n\n## Testing\n\n```bash\n# Watch the beat's own output whil..."
     },
     {
       "definition": "elasticsearch-apm",
@@ -51,10 +59,10 @@
       "excerpt": "...es.allowlists]]\ndescription = \"test fixtures\"\nregexes = ['''***REDACTED***''']\npaths = ['''fixtures/.*''']\n```\n\n## Best Practices\n\n- S..."
     }
   ],
-  "count": 6,
+  "count": 7,
   "definitions_scanned": 2909,
   "severity_counts": {
-    "MEDIUM": 5,
+    "MEDIUM": 6,
     "HIGH": 1
   },
   "exceptions_applied": true,

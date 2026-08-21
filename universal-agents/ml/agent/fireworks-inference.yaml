@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Fireworks Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "fireworks", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent fireworks-inference
+  - fireworks --version
   examples:
   - fireworks login
   - fireworks serve --model accounts/fireworks/models/llama-v2-70b-chat
@@ -27,16 +27,24 @@ capabilities:
   - fireworks models list
   parameters: []
 knowledge:
-- title: fireworks-inference Documentation
+- title: Fireworks AI Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for fireworks-inference
+  source: https://docs.fireworks.ai/
+  description: Official documentation for fireworks.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'Fireworks inference server expert. Call on this agent to set up and operate the Fireworks
   inference server. Verify with `curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json''
   -d ''{"inputs": "hello"}''`, chat completions via `curl -X POST http://localhost:8080/v1/chat/completions
   -H ''Content-Type: application/json'' -d ''{"model": "fireworks", "messages": []}''`, list models with
   `curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''`, and probe liveness with `curl -s -o
-  /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`. Confirm context with `python identity.py
+  fireworks --version
   --agent fireworks-inference`. Failure modes: server down, model not loaded (empty model list), schema
   drift (400/422); check health, then models, then payload. Cross-check with tooling such as `fireworks
   login` and `fireworks serve --model accounts/fireworks/models/llama-v2-70b-chat` and `curl https://my-model.fireworks.ai/`
@@ -83,5 +91,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-12-31T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

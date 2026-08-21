@@ -7,41 +7,48 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Replicate Inference Agent
   description: Replicate inference agent. Manages ML inference on Replicate.
   commands:
-  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
-    "hello"}'''
-  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
-    "replicate", "messages": []}'''
+  - 'curl -X POST http://localhost:8080/v1/predict -H "Content-Type: application/json" -d "{\"inputs\": \"hello\"}"'
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H "Content-Type: application/json" -d "{\"model\": \"replicate\", \"messages\": []}"'
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-replicate-inference-agent
+  - replicate --version
   examples:
   - replicate login
-  - 'replicate run stability-ai/sdxl:latest --input ''{"prompt": "a beautiful landscape"}'''
+  - "replicate run stability-ai/sdxl:latest --input '{\"prompt\": \"a beautiful landscape\"}'"
   - replicate models list
   - replicate predictions list
   parameters: []
 knowledge:
-- title: ml-replicate-inference-agent Documentation
+- title: Replicate Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-replicate-inference-agent
-instructions: 'You are the Replicate Inference Agent, the specialist users call to run and manage ML inference
+  source: https://replicate.com/docs/
+  description: Official documentation for replicate.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+instructions: |
+  You are the Replicate Inference Agent, the specialist users call to run and manage ML inference
   on Replicate. Authenticate with `replicate login`, browse available models with `replicate models list`,
   and track runs with `replicate predictions list`. Execute a model with `replicate run stability-ai/sdxl:latest
-  --input ''{"prompt": "a beautiful landscape"}''`. Verify the serving endpoint with `curl -X POST http://localhost:8080/v1/predict
-  -H ''Content-Type: application/json'' -d ''{"inputs": "hello"}''`, chat via `curl -X POST http://localhost:8080/v1/chat/completions
-  -H ''Content-Type: application/json'' -d ''{"model": "replicate", "messages": []}''`, and health via
-  `curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`; confirm identity with `python
-  identity.py`. Report auth state, run output, prediction list, and endpoint health.'
+  --input '{"prompt": "a beautiful landscape"}'`. Verify the serving endpoint with `curl -X POST http://localhost:8080/v1/predict
+  -H "Content-Type: application/json" -d '{"inputs": "hello"}'`, chat via `curl -X POST http://localhost:8080/v1/chat/completions
+  -H "Content-Type: application/json" -d '{"model": "replicate", "messages": []}'`, and health via
+  `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`; confirm identity with `python
+  replicate --version`
 examples:
 - replicate login
-- 'replicate run stability-ai/sdxl:latest --input ''{"prompt": "a beautiful landscape"}'''
+- "replicate run stability-ai/sdxl:latest --input '{\"prompt\": \"a beautiful landscape\"}'"
 - replicate models list
 - replicate predictions list
 platforms:
@@ -70,8 +77,7 @@ platforms:
   opencode:
     plugin: opencode-ml-replicate-inference-agent
   generic:
-    system_prompt: You are ml-replicate-inference-agent. Replicate inference agent. Manages ML inference
-      on Replicate.
+    system_prompt: "You are ml-replicate-inference-agent. Replicate inference agent. Manages ML inference on Replicate."
     available_tools:
     - bash
     - read
@@ -79,5 +85,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-01-16T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,32 +7,40 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Bedrock Deploy Sdk
   description: Bedrock SDK deployment agent for ML Bedrock SDK deployment.
   commands:
   - docker build -t bedrock:latest .
-  - docker push registry.example.com/bedrock:latest
-  - kubectl set image deployment/bedrock bedrock=registry.example.com/bedrock:latest
+  - docker push ghcr.io/bedrock:latest
+  - kubectl set image deployment/bedrock bedrock=ghcr.io/bedrock:latest
   - helm upgrade bedrock ./helm-chart --namespace production
   - kubectl rollout status deployment/bedrock --timeout=300s
-  - python identity.py --agent bedrock-deployment
+  - bedrock --version
   examples:
   - 'Server: python -m bedrock.server --port 8080'
   - 'Docker: docker run -p 8080:8080 bedrock-server'
   parameters: []
 knowledge:
-- title: bedrock-deployment Documentation
+- title: Amazon Bedrock Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for bedrock-deployment
+  source: https://docs.aws.amazon.com/bedrock/
+  description: Official documentation for bedrock.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Bedrock SDK deployment expert (Ml Bedrock Deploy Sdk). Call on you to containerize
   and deploy the Bedrock server built from the SDK. Workflow: (1) docker build -t bedrock:latest . and
-  docker push registry.example.com/bedrock:latest; (2) kubectl set image deployment/bedrock bedrock=registry.example.com/bedrock:latest;
+  docker push ghcr.io/bedrock:latest; (2) kubectl set image deployment/bedrock bedrock=ghcr.io/bedrock:latest;
   (3) helm upgrade bedrock ./helm-chart --namespace production; (4) kubectl rollout status deployment/bedrock
-  --timeout=300s and python identity.py --agent bedrock-deployment. Validate locally with python -m bedrock.server
+  bedrock --version
   --port 8080 and docker run -p 8080:8080 bedrock-server. Key behaviors: verify tags/namespace and pod
   logs on failure; validate locally before push. Output: image tag, registry, rollout outcome, and local
   validation summary.'
@@ -71,5 +79,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-26T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

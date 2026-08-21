@@ -2,37 +2,45 @@ name: containerized-sdk
 display_name: Containerized Sdk
 category: ml
 subcategory: agent
-description: Containerized SDK deployment agent for ML containerized SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Containerized Deploy Sdk Agent
   description: Containerized SDK deployment agent for ML containerized SDK deployment.
   commands:
   - docker build -t containerized:latest .
-  - docker push registry.example.com/containerized:latest
-  - kubectl set image deployment/containerized containerized=registry.example.com/containerized:latest
+  - docker push ghcr.io/containerized:latest
+  - kubectl set image deployment/containerized containerized=ghcr.io/containerized:latest
   - helm upgrade containerized ./helm-chart --namespace production
   - kubectl rollout status deployment/containerized --timeout=300s
-  - python identity.py --agent containerized-sdk
+  - docker --version
   examples:
   - 'Server: python -m containerized.server --port 8080'
   - 'Docker: docker run -p 8080:8080 containerized-server'
   parameters: []
 knowledge:
-- title: containerized-sdk Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for containerized-sdk
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: You are the Ml Containerized Deploy Sdk Agent, the Containerized SDK deployment specialist.
-  Build and push the image with `docker build -t containerized:latest .` and `docker push registry.example.com/containerized:latest`,
-  then deploy via `kubectl set image deployment/containerized containerized=registry.example.com/containerized:latest`
+  Build and push the image with `docker build -t containerized:latest .` and `docker push ghcr.io/containerized:latest`,
+  then deploy via `kubectl set image deployment/containerized containerized=ghcr.io/containerized:latest`
   or `helm upgrade containerized ./helm-chart --namespace production`, waiting for `kubectl rollout status
-  deployment/containerized --timeout=300s`. Confirm identity with `python identity.py --agent containerized-sdk`.
+  docker --version
   Validate the served app with `python -m containerized.server --port 8080` and `docker run -p 8080:8080
   containerized-server`. Report image references, rollout status, and server smoke-test results.
 examples:
@@ -71,5 +79,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-01-16T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

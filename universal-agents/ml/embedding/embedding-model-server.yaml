@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - embedding
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Embedding Server Agent
@@ -18,7 +18,7 @@ capabilities:
   - curl -s http://localhost:8000/metrics | head -20
   - supervisorctl restart model
   - systemctl status model.service
-  - python identity.py --agent embedding-model-server
+  - embedding --version
   examples:
   - python serve_embeddings.py --model sentence-transformers --port 8080
   - 'curl http://localhost:8080/embed --data ''{"text": "Hello world"}'''
@@ -26,10 +26,18 @@ capabilities:
   - python search.py --query 'hello world' --index embeddings.npy
   parameters: []
 knowledge:
-- title: embedding-model-server Documentation
+- title: OpenAI Embeddings Guide
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/embedding
-  description: Reference documentation for embedding-model-server
+  source: https://platform.openai.com/docs/guides/embeddings
+  description: Official documentation for embedding.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
 instructions: 'You are the Embedding server expert. Call on this agent to operate an Embedding ML server
   in production-like conditions. Core workflow: (1) start with `python -m model.server --port 8000 --workers
   4`; (2) verify liveness with `curl -s http://localhost:8000/healthz` and inspect load with `curl -s
@@ -78,5 +86,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-27T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -1,170 +1,20 @@
 name: user-provisioning
 display_name: User Provisioning
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted user provisioning skill: SCIM 2.0 /users and /groups endpoints, user lifecycle
-  (create, activate, suspend, deactivate), and directory sync.'
-version: 2.0.0
+description: "Manages user and group lifecycle via SCIM 2.0 APIs. Creates, reads, updates, and deactivates users, manages group memberships, filters with SCIM syntax, and integrates with identity providers like Okta and Azure AD."
+author: Mehul Wagde
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-capabilities:
-- name: scim-lifecycle
-  description: Manage user and group lifecycle over SCIM 2.0
-  commands:
-  - 'curl -s -X POST ''https://scim.example.com/v2/Users'' -H ''Content-Type: application/json'' -H ''Authorization:
-    Bearer TOKEN'' -d ''{"schemas":["urn:ietf:params:scim:schemas:core:2.0:User"],"userName":"jdoe@example.com","active":true,"name":{"givenName":"Jane","familyName":"Doe"}}''
-    | jq'
-  - 'curl -s -X PATCH ''https://scim.example.com/v2/Users/123'' -H ''Content-Type: application/json''
-    -H ''Authorization: Bearer TOKEN'' -d ''{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"op":"replace","path":"active","value":false}]}''
-    | jq'
-  - 'curl -s ''https://scim.example.com/v2/Users?filter=userName+eq+%22jdoe%40example.com%22&startIndex=1&count=10''
-    -H ''Authorization: Bearer TOKEN'' | jq'
-  - 'curl -s -X POST ''https://scim.example.com/v2/Groups'' -H ''Content-Type: application/json'' -H ''Authorization:
-    Bearer TOKEN'' -d ''{"schemas":["urn:ietf:params:scim:schemas:core:2.0:Group"],"displayName":"eng","members":[{"value":"123"}]}''
-    | jq'
-  - 'curl -s -X DELETE ''https://scim.example.com/v2/Users/123'' -H ''Authorization: Bearer TOKEN'' -o
-    /dev/null -w ''%{http_code}'''
-  examples:
-  - 'curl -s ''https://scim.example.com/v2/Users?filter=userName+eq+%22jdoe%40example.com%22'' -H ''Authorization:
-    Bearer TOKEN'' | jq'
-  - 'curl -s -X PATCH ''https://scim.example.com/v2/Users/123'' -H ''Content-Type: application/json''
-    -d ''{"Operations":[{"op":"replace","value":{"active":true}}]}'' | jq'
-  - 'curl -s -X POST ''https://scim.example.com/v2/Groups'' -H ''Content-Type: application/json'' -d ''{"displayName":"eng"}''
-    | jq'
-  parameters:
-  - name: endpoint
-    type: string
-    description: SCIM base URL, e.g. /v2/Users
-  - name: userId
-    type: string
-    description: SCIM resource id
-  - name: filter
-    type: string
-    description: SCIM filter like userName eq "x"
-knowledge:
-- title: SCIM 2.0 RFC 7643
-  type: documentation
-  source: https://www.rfc-editor.org/rfc/rfc7643
-  description: User and group schemas
-- title: SCIM 2.0 protocol RFC 7644
-  type: documentation
-  source: https://www.rfc-editor.org/rfc/rfc7644
-  description: CRUD, filter, and patch semantics
-instructions: '# User Provisioning
-
-
-  Hand-crafted skill for SCIM 2.0 user provisioning.
-
-
-  ## What this skill does
-
-
-  - Creates, reads, updates, and deletes users via SCIM
-
-  - Manages group membership for access control
-
-  - Supports the deactivation lifecycle (active flag)
-
-  - Lists and filters users with SCIM filter syntax
-
-
-  ## When to use
-
-
-  - Wiring IdP-to-app provisioning (Okta, Azure AD)
-
-  - Building an internal directory sync client
-
-  - Auditing what a SCIM provider stores
-
-
-  ## Real commands
-
-
-  ```bash
-
-  # Create a user
-
-  curl -s -X POST ''https://scim.example.com/v2/Users'' -H ''Content-Type: application/json'' -H ''Authorization:
-  Bearer TOKEN'' -d ''{"schemas":["urn:ietf:params:scim:schemas:core:2.0:User"],"userName":"jdoe@example.com","active":true,"name":{"givenName":"Jane","familyName":"Doe"}}''
-  | jq
-
-
-  # Deactivate (never delete)
-
-  curl -s -X PATCH ''https://scim.example.com/v2/Users/123'' -H ''Content-Type: application/json'' -d
-  ''{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"op":"replace","path":"active","value":false}]}''
-  | jq
-
-
-  # Filter users
-
-  curl -s ''https://scim.example.com/v2/Users?filter=userName+eq+%22jdoe%40example.com%22&startIndex=1&count=10''
-  -H ''Authorization: Bearer TOKEN'' | jq
-
-
-  # Group with members
-
-  curl -s -X POST ''https://scim.example.com/v2/Groups'' -H ''Content-Type: application/json'' -d ''{"schemas":["urn:ietf:params:scim:schemas:core:2.0:Group"],"displayName":"eng","members":[{"value":"123"}]}''
-  | jq
-
-
-  # Delete (terminal)
-
-  curl -s -X DELETE ''https://scim.example.com/v2/Users/123'' -H ''Authorization: Bearer TOKEN'' -o /dev/null
-  -w ''%{http_code}''
-
-  ```
-
-
-  ## Lifecycle
-
-
-  - create -> active=true
-
-  - suspend/deprovision -> active=false
-
-  - delete only for forgotten-account cleanup
-
-
-  ## Testing
-
-
-  ```bash
-
-  curl -s ''https://scim.example.com/v2/Users?filter=userName+eq+%22jdoe%40example.com%22'' -H ''Authorization:
-  Bearer TOKEN'' | jq ''.totalResults''
-
-  curl -s ''https://scim.example.com/v2/ServiceProviderConfig'' -H ''Authorization: Bearer TOKEN'' | jq
-
-  ```
-
-
-  ## Best practices
-
-
-  - Deactivate instead of delete for compliance history
-
-  - URL-encode filters; use startIndex/count for pagination
-
-  - Test against ServiceProviderConfig before CRUD
-
-  '
-examples:
-- input: Deactivate a departing employee
-  output: PATCH /v2/Users/{id} with Operations replace active=false; keep the account for audit.
-- input: Is this user in the eng group?
-  output: GET /v2/Groups?filter=displayName eq "eng" and check members, or GET /v2/Users?filter=userName
-    eq ...
+  - api
+  - scim
+  - identity
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -173,22 +23,109 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-user-provisioning
   generic:
-    system_prompt: 'This is your domain: User Provisioning. You do it through scim-lifecycle: Manage user
-      and group lifecycle over SCIM 2.0. The commands are real, e.g. `curl -s -X POST https://scim.example.com/v2/Users
-      -H Content-Type: application/json -H...`. You prefer the shortest safe path, and you reproduce failures
-      before diagnosing them.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "This is your domain: User Provisioning. You do it through scim-lifecycle: Manage user and group lifecycle over SCIM 2.0. The commands are real, e.g. `curl -s -X POST http://localhost:8080/scim/v2/Users -H Content-Type: application/json -H...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: scim-lifecycle
+    description: Manage user and group lifecycle over SCIM 2.0
+    commands:
+      - 'curl -s -X POST "http://localhost:8080/scim/v2/Users" -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d "{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:User\"],\"userName\":\"jdoe@company.test\",\"active\":true,\"name\":{\"givenName\":\"Jane\",\"familyName\":\"Doe\"}}" | jq'
+      - 'curl -s -X PATCH "http://localhost:8080/scim/v2/Users/123" -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d "{\"schemas\":[\"urn:ietf:params:scim:api:messages:2.0:PatchOp\"],\"Operations\":[{\"op\":\"replace\",\"path\":\"active\",\"value\":false}]}" | jq'
+      - 'curl -s "http://localhost:8080/scim/v2/Users?filter=userName+eq+%22jdoe%40company.test%22&startIndex=1&count=10" -H "Authorization: Bearer TOKEN" | jq'
+      - 'curl -s -X POST "http://localhost:8080/scim/v2/Groups" -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d "{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:Group\"],\"displayName\":\"eng\",\"members\":[{\"value\":\"123\"}]}" | jq'
+      - 'curl -s -X DELETE "http://localhost:8080/scim/v2/Users/123" -H "Authorization: Bearer TOKEN" -o /dev/null -w "%{http_code}"'
+    examples:
+      - 'curl -s "http://localhost:8080/scim/v2/Users?filter=userName+eq+%22jdoe%40company.test%22" -H "Authorization: Bearer TOKEN" | jq'
+      - 'curl -s -X PATCH "http://localhost:8080/scim/v2/Users/123" -H "Content-Type: application/json" -d "{\"Operations\":[{\"op\":\"replace\",\"value\":{\"active\":true}}]}" | jq'
+      - 'curl -s -X POST "http://localhost:8080/scim/v2/Groups" -H "Content-Type: application/json" -d "{\"displayName\":\"eng\"}" | jq'
+    parameters:
+      - name: endpoint
+        type: string
+        description: SCIM base URL, e.g. /scim/v2/Users
+      - name: userId
+        type: string
+        description: SCIM resource id
+      - name: filter
+        type: string
+        description: SCIM filter like userName eq "x"
+prerequisites:
+  - curl
+  - jq
+tools: [curl, jq]
+examples:
+  - input: Deactivate a departing employee
+    output: PATCH /scim/v2/Users/{id} with Operations replace active=false; keep the account for audit.
+  - input: Is this user in the eng group?
+    output: GET /scim/v2/Groups?filter=displayName eq "eng" and check members, or GET /scim/v2/Users?filter=userName eq ...
+instructions: |
+  # User Provisioning
+
+  Hand-crafted skill for SCIM 2.0 user provisioning.
+
+  ## What this skill does
+
+  - Creates, reads, updates, and deletes users via SCIM
+  - Manages group membership for access control
+  - Supports the deactivation lifecycle (active flag)
+  - Lists and filters users with SCIM filter syntax
+
+  ## When to use
+
+  - Wiring IdP-to-app provisioning (Okta, Azure AD)
+  - Building an internal directory sync client
+  - Auditing what a SCIM provider stores
+
+  ## Real commands
+
+  ```bash
+  # Create a user
+  curl -s -X POST "http://localhost:8080/scim/v2/Users" -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d "{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:User\"],\"userName\":\"jdoe@company.test\",\"active\":true,\"name\":{\"givenName\":\"Jane\",\"familyName\":\"Doe\"}}" | jq
+
+  # Deactivate (never delete)
+  curl -s -X PATCH "http://localhost:8080/scim/v2/Users/123" -H "Content-Type: application/json" -d "{\"schemas\":[\"urn:ietf:params:scim:api:messages:2.0:PatchOp\"],\"Operations\":[{\"op\":\"replace\",\"path\":\"active\",\"value\":false}]}" | jq
+
+  # Filter users
+  curl -s "http://localhost:8080/scim/v2/Users?filter=userName+eq+%22jdoe%40company.test%22&startIndex=1&count=10" -H "Authorization: Bearer TOKEN" | jq
+
+  # Group with members
+  curl -s -X POST "http://localhost:8080/scim/v2/Groups" -H "Content-Type: application/json" -d "{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:Group\"],\"displayName\":\"eng\",\"members\":[{\"value\":\"123\"}]}" | jq
+
+  # Delete (terminal)
+  curl -s -X DELETE "http://localhost:8080/scim/v2/Users/123" -H "Authorization: Bearer TOKEN" -o /dev/null -w "%{http_code}"
+  ```
+
+  ## Lifecycle
+
+  - create -> active=true
+  - suspend/deprovision -> active=false
+  - delete only for forgotten-account cleanup
+
+  ## Testing
+
+  ```bash
+  curl -s "http://localhost:8080/scim/v2/Users?filter=userName+eq+%22jdoe%40company.test%22" -H "Authorization: Bearer TOKEN" | jq ".totalResults"
+  curl -s "http://localhost:8080/scim/v2/ServiceProviderConfig" -H "Authorization: Bearer TOKEN" | jq
+  ```
+
+  ## Best practices
+
+  - Deactivate instead of delete for compliance history
+  - URL-encode filters; use startIndex/count for pagination
+  - Test against ServiceProviderConfig before CRUD
+knowledge:
+  - title: SCIM 2.0 RFC 7643
+    type: documentation
+    source: https://www.rfc-editor.org/rfc/rfc7643
+    description: User and group schemas
+  - title: SCIM 2.0 protocol RFC 7644
+    type: documentation
+    source: https://www.rfc-editor.org/rfc/rfc7644
+    description: CRUD, filter, and patch semantics
+  - title: Okta SCIM guide
+    type: documentation
+    source: https://developer.okta.com/docs/guides/provisioning-users-into-okta/scim/
+    description: Okta-specific SCIM implementation details

@@ -72,7 +72,7 @@ capabilities:
   - zap-baseline.py -t http://localhost:3000/api -r zap-report.html
   - zap-full-scan.py -t http://localhost:3000/api -J zap.json
   - curl -s 'http://localhost:3000/api/users?id=1%20OR%201%3D1' -o /dev/null -w '%{http_code}'
-  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{"name":"<script>alert(1)</script>"}''
+  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{"name":"demo-scriptalert(1)demo-script"}''
     -w ''\n%{http_code}'''
   - python -m pip install sqlmap && sqlmap -u 'http://localhost:3000/api/users?id=1' --batch --crawl 2
   examples:

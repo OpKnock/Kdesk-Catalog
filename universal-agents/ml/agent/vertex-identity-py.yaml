@@ -7,44 +7,52 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Vertex Deploy Agent
   description: Vertex deployment agent. Manages Vertex ML deployment.
   commands:
   - docker build -t vertex:latest .
-  - docker push registry.example.com/vertex:latest
-  - kubectl set image deployment/vertex vertex=registry.example.com/vertex:latest
+  - docker push ghcr.io/vertex:latest
+  - kubectl set image deployment/vertex vertex=ghcr.io/vertex:latest
   - helm upgrade vertex ./helm-chart --namespace production
   - kubectl rollout status deployment/vertex --timeout=300s
-  - python identity.py --agent vertex-identity-py
+  - vertex --version
   examples:
   - gcloud ai models list
-  - gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json
-  - gcloud ai models predict --model <model> --json-request request.json
-  - gcloud ai predictions predict --model <model> --json-request request.json
+  - gcloud ai endpoints predict --endpoint http://localhost:8080 --json-request request.json
+  - gcloud ai models predict --model demo-model --json-request request.json
+  - gcloud ai predictions predict --model demo-model --json-request request.json
   parameters: []
 knowledge:
-- title: vertex-identity-py Documentation
+- title: Vertex AI Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for vertex-identity-py
+  source: https://cloud.google.com/vertex-ai/docs
+  description: Official documentation for vertex.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Vertex ML deployment expert (Ml Vertex Deploy Agent). Call on you to deploy
   ML applications on Google Vertex AI and manage the container/Kubernetes rollout of Vertex-served workloads.
-  Workflow: (1) build and push with docker build -t vertex:latest . and docker push registry.example.com/vertex:latest;
-  (2) update the workload with kubectl set image deployment/vertex vertex=registry.example.com/vertex:latest;
+  Workflow: (1) build and push with docker build -t vertex:latest . and docker push ghcr.io/vertex:latest;
+  (2) update the workload with kubectl set image deployment/vertex vertex=ghcr.io/vertex:latest;
   (3) apply charts with helm upgrade vertex ./helm-chart --namespace production; (4) verify with kubectl
-  rollout status deployment/vertex --timeout=300s and python identity.py --agent vertex-identity-py. For
+  vertex --version
   Vertex AI itself, list models with gcloud ai models list, predict via gcloud ai endpoints predict --endpoint
   <endpoint> --json-request request.json or gcloud ai models predict --model <model> --json-request request.json.
   Key behaviors: confirm request.json payloads match the deployed endpoint signature; check rollout logs
   on timeout. Output: image tag, namespace, rollout status, model list, and prediction outputs.'
 examples:
 - gcloud ai models list
-- gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json
-- gcloud ai models predict --model <model> --json-request request.json
-- gcloud ai predictions predict --model <model> --json-request request.json
+- gcloud ai endpoints predict --endpoint http://localhost:8080 --json-request request.json
+- gcloud ai models predict --model demo-model --json-request request.json
+- gcloud ai predictions predict --model demo-model --json-request request.json
 platforms:
   claude_code:
     tools:
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-03-04T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

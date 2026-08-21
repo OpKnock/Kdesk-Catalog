@@ -2,12 +2,11 @@ name: wget
 display_name: Wget
 category: api
 subcategory: general
-description: 'Download and mirror resources with wget: recursive crawling, resume, authentication, rate
-  limiting, and scripted batch downloads.'
+description: "Download files and mirror websites with GNU wget: single-file downloads with resume, recursive site crawling, full mirroring with link conversion, authenticated requests, and batch downloads from URL lists."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - wget
@@ -15,15 +14,15 @@ capabilities:
 - name: wget-downloads
   description: Fetch, resume, and mirror HTTP resources
   commands:
-  - wget -c https://downloads.example.com/release.tar.gz
-  - wget -r -l 2 -np https://docs.example.com/api/
-  - wget --mirror -p --convert-links -P ./mirror https://example.com
+  - wget -c https://httpbin.org/bytes/1024
+  - wget -r -l 2 -np https://httpbin.org/
+  - wget --mirror -p --convert-links -P ./mirror https://httpbin.org/
   - wget -i urls.txt --limit-rate=1m -q
-  - 'wget --header=''Authorization: Bearer token123'' -O data.json https://api.example.com/v1/export'
+  - 'wget --header=''Authorization: Bearer token123'' -O data.json https://httpbin.org/json'
   examples:
-  - wget -c -t 10 --timeout=30 https://downloads.example.com/big-file.iso
-  - wget -r -A '*.pdf' -np -l 3 https://example.com/docs
-  - wget --user=ci --password=secret https://repo.example.com/artifact.zip
+  - wget -c -t 10 --timeout=30 https://httpbin.org/bytes/1048576
+  - wget -r -A '*.pdf' -np -l 3 https://httpbin.org/
+  - wget --user=ci --password=secret https://httpbin.org/bytes/1024
   parameters:
   - name: recursive
     type: boolean
@@ -68,17 +67,17 @@ instructions: '# wget
 
   # Resume an interrupted download
 
-  wget -c https://downloads.example.com/release.tar.gz
+  wget -c https://httpbin.org/bytes/1024
 
 
   # Recursive crawl (2 levels, no parent)
 
-  wget -r -l 2 -np https://docs.example.com/api/
+  wget -r -l 2 -np https://httpbin.org/
 
 
   # Full mirror with assets and converted links
 
-  wget --mirror -p --convert-links -P ./mirror https://example.com
+  wget --mirror -p --convert-links -P ./mirror https://httpbin.org/
 
 
   # Batch download with bandwidth cap
@@ -88,17 +87,17 @@ instructions: '# wget
 
   # Authenticated API export
 
-  wget --header=''Authorization: Bearer token123'' -O data.json https://api.example.com/v1/export
+  wget --header=''Authorization: Bearer token123'' -O data.json https://httpbin.org/json
 
 
   # Basic auth
 
-  wget --user=ci --password=secret https://repo.example.com/artifact.zip
+  wget --user=ci --password=secret https://httpbin.org/bytes/1024
 
 
   # Retry-tolerant download
 
-  wget -c -t 10 --timeout=30 https://downloads.example.com/big-file.iso
+  wget -c -t 10 --timeout=30 https://httpbin.org/bytes/1048576
 
   ```
 
@@ -133,9 +132,9 @@ instructions: '# wget
 
   ```bash
 
-  wget --spider -S https://example.com 2>&1 | grep -E ''HTTP|Content-Length''
+  wget --spider -S https://httpbin.org/ 2>&1 | grep -E ''HTTP|Content-Length''
 
-  wget -q -O /dev/null -w ''%{http_code}'' https://example.com
+  wget -q -O /dev/null -w ''%{http_code}'' https://httpbin.org/
 
   ```'
 examples:
@@ -174,5 +173,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

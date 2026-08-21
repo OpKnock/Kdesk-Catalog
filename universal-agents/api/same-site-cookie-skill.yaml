@@ -2,12 +2,11 @@ name: same-site-cookie
 display_name: Same Site Cookie
 category: api
 subcategory: general
-description: 'Hand-crafted SameSite cookie skill: Strict/Lax/None semantics, curl header inspection, server-side
-  Set-Cookie configuration, and CSRF impact analysis.'
+description: 'Expert reference covering Strict/Lax/None semantics, curl header inspection, server-side Set-Cookie configuration, and CSRF impact analysis.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - python
@@ -15,14 +14,14 @@ capabilities:
 - name: samesite-config
   description: Configure and verify SameSite cookie attributes on requests
   commands:
-  - 'curl -i -H ''Cookie: session=abc123'' https://app.example.com/me | grep -i ''set-cookie'''
-  - curl -i https://app.example.com/login -X POST -d 'user=ada&pass=secret' | grep -i set-cookie
-  - curl -s -o /dev/null -w '%{http_code}\n' https://app.example.com/me -b 'session=abc123'
+  - 'curl -i -H ''Cookie: session=abc123'' https://app.your-app.test/me | grep -i ''set-cookie'''
+  - curl -i https://app.your-app.test/login -X POST -d 'user=ada&pass=secret' | grep -i set-cookie
+  - curl -s -o /dev/null -w '%{http_code}\n' https://app.your-app.test/me -b 'session=abc123'
   - python -c 'from http.cookies import SimpleCookie; c=SimpleCookie(); c["session"]="abc"; c["session"]["samesite"]="Lax";
     c["session"]["secure"]=True; print(c.output())'
   examples:
-  - curl -i https://app.example.com/me | grep -i set-cookie
-  - curl -s -o /dev/null -w '%{http_code}\n' https://app.example.com/me -b 'session=abc123; SameSite=Strict'
+  - curl -i https://app.your-app.test/me | grep -i set-cookie
+  - curl -s -o /dev/null -w '%{http_code}\n' https://app.your-app.test/me -b 'session=abc123; SameSite=Strict'
   - python -c 'from http.cookies import SimpleCookie; c=SimpleCookie(); c["s"]="1"; c["s"]["samesite"]="None";
     print(c.output())'
   parameters:
@@ -45,9 +44,9 @@ knowledge:
   source: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html
   description: Session cookie attributes and CSRF implications
 instructions: '# SameSite Cookies
-
-
-  Hand-crafted skill for SameSite cookie attributes and CSRF defense.
+ 
+ 
+  Expert skill for SameSite cookie attributes and CSRF defense.
 
 
   ## What this skill does
@@ -77,14 +76,14 @@ instructions: '# SameSite Cookies
 
   # What does the server set?
 
-  curl -i -H ''Cookie: session=abc123'' https://app.example.com/me | grep -i ''set-cookie''
+  curl -i -H ''Cookie: session=abc123'' https://app.your-app.test/me | grep -i ''set-cookie''
 
-  curl -i https://app.example.com/login -X POST -d ''user=ada&pass=secret'' | grep -i set-cookie
+  curl -i https://app.your-app.test/login -X POST -d ''user=ada&pass=secret'' | grep -i set-cookie
 
 
   # Send a cookie manually and check acceptance
 
-  curl -s -o /dev/null -w ''%{http_code}\n'' https://app.example.com/me -b ''session=abc123''
+  curl -s -o /dev/null -w ''%{http_code}\n'' https://app.your-app.test/me -b ''session=abc123''
 
 
   # Model the Set-Cookie header in Python
@@ -131,7 +130,7 @@ instructions: '# SameSite Cookies
 
   ```bash
 
-  curl -i https://app.example.com/me | grep -i set-cookie   # expect samesite=lax; secure
+  curl -i https://app.your-app.test/me | grep -i set-cookie   # expect samesite=lax; secure
 
   ```
 
@@ -151,7 +150,7 @@ examples:
   output: The cookie is probably SameSite=Strict/Lax; cross-site embeds need SameSite=None plus Secure,
     e.g. response.set_cookie(..., samesite="None", secure=True).
 - input: Harden a login cookie
-  output: Set SameSite=Lax, Secure, HttpOnly; verify with curl -i https://app.example.com/me | grep -i
+  output: Set SameSite=Lax, Secure, HttpOnly; verify with curl -i https://app.your-app.test/me | grep -i
     set-cookie.
 platforms:
   claude_code:
@@ -178,12 +177,12 @@ platforms:
   generic:
     system_prompt: 'Your lane is Same Site Cookie. You do it through samesite-config: Configure and verify
       SameSite cookie attributes on requests. The commands are real, e.g. `curl -i -H Cookie: session=abc123
-      https://app.example.com/me | grep -i set-cookie`. You run and verify the real CLI commands before
+      https://app.your-app.test/me | grep -i set-cookie`. You run and verify the real CLI commands before
       you claim anything.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

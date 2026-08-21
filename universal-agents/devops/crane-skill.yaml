@@ -7,7 +7,7 @@ description: 'Manipulates container images and registries with google/crane: cop
 version: 2.0.0
 tags:
 - devops
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - crane
@@ -15,16 +15,16 @@ capabilities:
 - name: registry-operations
   description: Copy, move, tag, and delete images across registries without a full daemon.
   commands:
-  - crane copy nginx:latest registry.example.com/nginx:latest
+  - crane copy nginx:latest ghcr.io/nginx:latest
   - crane move old.example.com/app:v1 new.example.com/app:v1
   - crane tag nginx:latest v1.0.0
-  - crane delete registry.example.com/app:v1
-  - crane ls registry.example.com/app
-  - crane validate --remote registry.example.com/app
+  - crane delete ghcr.io/app:v1
+  - crane ls ghcr.io/app
+  - crane validate --remote ghcr.io/app
   examples:
-  - crane copy nginx:latest registry.example.com/nginx:latest
+  - crane copy nginx:latest ghcr.io/nginx:latest
   - crane tag nginx:latest v1.0.0
-  - crane ls registry.example.com/app
+  - crane ls ghcr.io/app
   parameters:
   - name: src
     type: string
@@ -41,8 +41,8 @@ capabilities:
   - crane manifest nginx:latest | jq .
   - crane digest nginx:latest
   - crane export nginx:latest nginx.tar
-  - crane index ls registry.example.com/app
-  - crane auth login registry.example.com -u user -p pass
+  - crane index ls ghcr.io/app
+  - crane auth login ghcr.io -u user -p pass
   examples:
   - crane digest nginx:latest
   - crane export nginx:latest /tmp/nginx.tar
@@ -102,9 +102,9 @@ instructions: '# crane Registry Tooling
 
   # Copy between registries
 
-  crane copy nginx:latest registry.example.com/nginx:latest
+  crane copy nginx:latest ghcr.io/nginx:latest
 
-  crane copy nginx:latest registry.example.com/nginx:latest -p     # preserve exact tag list
+  crane copy nginx:latest ghcr.io/nginx:latest -p     # preserve exact tag list
 
 
   # Move / tag / delete
@@ -113,7 +113,7 @@ instructions: '# crane Registry Tooling
 
   crane tag nginx:latest v1.0.0
 
-  crane delete registry.example.com/app:v1
+  crane delete ghcr.io/app:v1
 
 
   # Inspect
@@ -122,21 +122,21 @@ instructions: '# crane Registry Tooling
 
   crane digest nginx:latest
 
-  crane ls registry.example.com/app
+  crane ls ghcr.io/app
 
-  crane index ls registry.example.com/app
+  crane index ls ghcr.io/app
 
 
   # Export and validate
 
   crane export nginx:latest /tmp/nginx.tar
 
-  crane validate --remote --tarball /tmp/nginx.tar registry.example.com/app
+  crane validate --remote --tarball /tmp/nginx.tar ghcr.io/app
 
 
   # Auth
 
-  crane auth login registry.example.com -u user -p pass
+  crane auth login ghcr.io -u user -p pass
 
   ```
 
@@ -156,7 +156,7 @@ examples:
   output: Agent writes a script using crane copy for each image, runs crane validate on results, and pins
     digests into deployment manifests
 - input: Check what tags exist for app in our registry
-  output: Agent runs crane ls registry.example.com/app and presents the tag list with commit info
+  output: Agent runs crane ls ghcr.io/app and presents the tag list with commit info
 platforms:
   claude_code:
     tools:
@@ -180,12 +180,12 @@ platforms:
   generic:
     system_prompt: 'You are the crane specialist. You do it through registry-operations: Copy, move, tag,
       and delete images across registries without a full daemon. The commands are real, e.g. `crane copy
-      nginx:latest registry.example.com/nginx:latest`. You answer with exact commands, not abstractions,
+      nginx:latest ghcr.io/nginx:latest`. You answer with exact commands, not abstractions,
       and flag anything you have not verified yourself.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-12-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

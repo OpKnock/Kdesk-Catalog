@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
 - name: Ml Azure Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "azure", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-azure-inference-agent
+  - azure --version
   examples:
   - az ml online-endpoint list
   - az ml online-endpoint invoke --name <endpoint> --request-file request.json
@@ -27,14 +27,22 @@ capabilities:
   - az ml online-deployment list --endpoint-name <endpoint>
   parameters: []
 knowledge:
-- title: ml-azure-inference-agent Documentation
+- title: Azure Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-azure-inference-agent
+  source: https://learn.microsoft.com/azure/
+  description: Official documentation for azure.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: You are the Ml Azure Inference Agent, responsible for ML inference on Azure AI. Verify the
   endpoint with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`, list models
   with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and exercise prediction and chat
-  via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py --agent
+  azure --version
   ml-azure-inference-agent`. Cross-check Azure ML state with `az ml online-endpoint list`, `az ml model
   list`, and invoke with `az ml online-endpoint invoke --name <endpoint> --request-file request.json`.
   Report health code, model IDs, responses, and endpoint-level diagnosis.
@@ -78,5 +86,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-05-07T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,12 +2,12 @@ name: compression
 display_name: Compression
 category: api
 subcategory: general
-description: 'Implement HTTP response compression for APIs: gzip, Brotli, and zstd with curl verification
-  and server config.'
+description: 'Compress API responses to cut bandwidth and latency using gzip, Brotli, and zstd, with
+  curl verification and server configuration.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 prerequisites:
 - brotli
@@ -18,15 +18,15 @@ capabilities:
 - name: compression-verify
   description: Verify compression headers and response size on API endpoints
   commands:
-  - 'curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https://api.example.com/v1/users | grep -i content-encoding'
-  - 'curl -s -H "Accept-Encoding: gzip, br" -o /dev/null -w "%{size_download} bytes\n" https://api.example.com/v1/users'
-  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Accept-Encoding: gzip" https://api.example.com/v1/users'
-  - curl --compressed -s https://api.example.com/v1/users | wc -c
+  - 'curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https://httpbin.org/get | grep -i content-encoding'
+  - 'curl -s -H "Accept-Encoding: gzip, br" -o /dev/null -w "%{size_download} bytes\n" https://httpbin.org/get'
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Accept-Encoding: gzip" https://httpbin.org/get'
+  - curl --compressed -s https://httpbin.org/get | wc -c
   examples:
-  - 'curl -s -H "Accept-Encoding: gzip, br" -D - -o /dev/null https://api.example.com/v1/users | grep
+  - 'curl -s -H "Accept-Encoding: gzip, br" -D - -o /dev/null https://httpbin.org/get | grep
     -i ''content-encoding'''
-  - 'curl -s -o /dev/null -w "%{size_download}\n" -H "Accept-Encoding: gzip" https://api.example.com/v1/users'
-  - 'curl -s -o /dev/null -w "%{size_download}\n" -H "Accept-Encoding: gzip, br, zstd" https://api.example.com/v1/users'
+  - 'curl -s -o /dev/null -w "%{size_download}\n" -H "Accept-Encoding: gzip" https://httpbin.org/get'
+  - 'curl -s -o /dev/null -w "%{size_download}\n" -H "Accept-Encoding: gzip, br, zstd" https://httpbin.org/get'
   parameters:
   - name: url
     type: string
@@ -86,25 +86,25 @@ instructions: '# Compression
   ## Verify Endpoints
 
 
-  ```bash
-
-  curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https://api.example.com/v1/users | grep -i content-encoding
-
-  curl -s -o /dev/null -w "compressed: %{size_download} bytes\n" -H "Accept-Encoding: gzip, br" https://api.example.com/v1/users
-
-  curl --compressed -s https://api.example.com/v1/users | wc -c
-
-  ```
+```bash
+ 
+   curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https://httpbin.org/get | grep -i content-encoding
+ 
+   curl -s -o /dev/null -w "compressed: %{size_download} bytes\n" -H "Accept-Encoding: gzip, br" https://httpbin.org/get
+ 
+   curl --compressed -s https://httpbin.org/get | wc -c
+ 
+   ```
 
 
   Compare with no encoding:
 
 
-  ```bash
-
-  curl -s -o /dev/null -w "uncompressed: %{size_download} bytes\n" https://api.example.com/v1/users
-
-  ```
+```bash
+ 
+   curl -s -o /dev/null -w "uncompressed: %{size_download} bytes\n" https://httpbin.org/get
+ 
+   ```
 
 
   ## CLI Tools
@@ -143,13 +143,13 @@ instructions: '# Compression
   ## Testing
 
 
-  ```bash
-
-  curl -s -o /dev/null -w "gzip: %{size_download}\n" -H "Accept-Encoding: gzip" https://api.example.com/v1/users
-
-  curl -s -o /dev/null -w "br: %{size_download}\n" -H "Accept-Encoding: br" https://api.example.com/v1/users
-
-  ```
+```bash
+ 
+   curl -s -o /dev/null -w "gzip: %{size_download}\n" -H "Accept-Encoding: gzip" https://httpbin.org/get
+ 
+   curl -s -o /dev/null -w "br: %{size_download}\n" -H "Accept-Encoding: br" https://httpbin.org/get
+ 
+   ```
 
 
   ## Best Practices
@@ -198,12 +198,12 @@ platforms:
   generic:
     system_prompt: 'You are the Compression specialist. You do it through compression-verify: Verify compression
       headers and response size on API endpoints. The commands are real, e.g. `curl -s -H Accept-Encoding:
-      gzip -D - -o /dev/null https://api.example.com/v1/users |...`. You answer with exact commands, not
+      gzip -D - -o /dev/null https://httpbin.org/get |...`. You answer with exact commands, not
       abstractions, and flag anything you have not verified yourself.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

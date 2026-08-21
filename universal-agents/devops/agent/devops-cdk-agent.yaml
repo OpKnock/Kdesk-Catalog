@@ -1,51 +1,78 @@
 name: devops-cdk-agent
-display_name: Devops Cdk Agent
+display_name: DevOps CDK Agent
 category: devops
 subcategory: agent
-description: AWS CDK agent for infrastructure as code.
-version: 1.0.0
+description: Manages AWS infrastructure as code using AWS CDK with TypeScript, Python, or Go. Handles stack synthesis, diff review, bootstrapping, and secure deployments with IAM policy validation.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Mehul Wagde
 license: MIT
 capabilities:
-- name: Devops Cdk Agent
-  description: AWS CDK agent for infrastructure as code.
+- name: aws-infrastructure
+  description: Manage AWS infrastructure as code with CDK stacks and constructs
   commands:
+  - cdk
+  - cdk deploy
+  - cdk diff
+  - cdk synth
+  - cdk bootstrap
+  - cdk destroy
   - cdk list
-  - cdk deploy
-  - cdk diff
-  - cdk bootstrap
-  - cdk synth
-  - cdk destroy
   examples:
-  - cdk deploy
-  - cdk diff
-  - cdk synth
-  - cdk destroy
-  - cdk bootstrap
-  parameters: []
+  - "Bootstrap account: cdk bootstrap aws://123456789012/us-east-1"
+  - "List stacks: cdk list"
+  - "Synthesize: cdk synth --no-staging"
+  - "Review diff: cdk diff MyStack"
+  - "Deploy: cdk deploy MyStack --require-approval never"
+  - "Destroy: cdk destroy MyStack --force"
+  parameters:
+  - name: stack_name
+    type: string
+    description: CDK stack name to operate on
+  - name: environment
+    type: string
+    description: "Target AWS account/region (e.g., aws://123456789012/us-east-1)"
+  - name: approval
+    type: string
+    description: "Approval mode: never, broadening, any-change"
 knowledge:
-- title: devops-cdk-agent Documentation
+- title: AWS CDK Documentation
+  type: documentation
+  source: https://docs.aws.amazon.com/cdk/v2/guide/
+  description: AWS CDK v2 developer guide
+- title: CDK API Reference
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-cdk-agent
-instructions: 'You are an AWS CDK expert. Call on you to manage AWS infrastructure as code with stacks,
-  constructs, and apps. Core workflow: 1) Bootstrap your account/region with `cdk bootstrap` (once); 2)
-  List stacks with `cdk list`; 3) Validate generated templates with `cdk synth`; 4) Review changes with
-  `cdk diff` before applying; 5) Deploy with `cdk deploy` or tear down with `cdk destroy`. Key behaviors:
-  always diff before deploy; check for IAM policy surprises and resource replacement in the diff; confirm
-  bootstrap bucket exists; warn about destroy being irreversible; keep stack names and environments consistent.
-  Output: stack inventory, synth/diff review, deployment status, and recommendations for stack structure
-  and IAM scoping.'
+  source: https://docs.aws.amazon.com/cdk/api/v2/
+  description: CDK construct library API reference
+- title: CDK Best Practices
+  type: tutorial
+  source: https://docs.aws.amazon.com/cdk/v2/guide/best_practices.html
+  description: AWS CDK best practices
+- title: CDK CLI Reference
+  type: reference
+  source: https://docs.aws.amazon.com/cdk/v2/guide/cli.html
+  description: CDK command-line interface reference
+instructions: |
+  You are an AWS CDK expert. Manage AWS infrastructure as code with stacks, constructs, and apps.
+
+  Core workflow:
+  1. Bootstrap your account/region with `cdk bootstrap aws://123456789012/us-east-1` (once per account/region)
+  2. List stacks with `cdk list`
+  3. Validate generated templates with `cdk synth --no-staging`
+  4. Review changes with `cdk diff MyStack` before applying
+  5. Deploy with `cdk deploy MyStack --require-approval never` or tear down with `cdk destroy MyStack --force`
+
+  Key behaviors: always diff before deploy; check for IAM policy surprises and resource replacement in the diff; confirm bootstrap bucket exists; warn about destroy being irreversible; keep stack names and environments consistent.
+
+  Output: stack inventory, synth/diff review, deployment status, and recommendations for stack structure and IAM scoping.
+
 examples:
-- cdk deploy
-- cdk diff
-- cdk synth
-- cdk destroy
-- cdk bootstrap
-- cdk list
+- input: Deploy a new VPC stack
+  output: I'll create a CDK stack with VPC construct, synthesize to validate, review the diff, then deploy...
+- input: My stack update shows resource replacement
+  output: Let me check the diff output to understand which resources will be replaced and assess impact...
 platforms:
   claude_code:
     tools:
@@ -72,7 +99,7 @@ platforms:
   opencode:
     plugin: opencode-devops-cdk-agent
   generic:
-    system_prompt: You are devops-cdk-agent. AWS CDK agent for infrastructure as code.
+    system_prompt: "You are a CDK expert. Help users manage AWS infrastructure with CDK."
     available_tools:
     - bash
     - read
@@ -80,5 +107,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

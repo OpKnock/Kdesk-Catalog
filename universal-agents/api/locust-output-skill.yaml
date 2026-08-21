@@ -7,20 +7,22 @@ description: 'Load testing with Locust: HttpUser task files, headless runs, web 
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 prerequisites:
 - locust
 capabilities:
 - name: locust-run
   description: Run locust tests headless or with the web UI.
   commands:
-  - locust -f locustfile.py --headless -u 1000 -r 100 --host https://api.example.com
+  - locust -f locustfile.py --headless -u 1000 -r 100 --host https://httpbin.org
   - locust -f locustfile.py
   - locust -f locustfile.py --web-port 8089
   - locust -f locustfile.py --headless -u 200 -r 20 -t 2m
   examples:
-  - locust -f locustfile.py --headless -u 1000 -r 100 --host https://api.example.com
+  - locust -f locustfile.py --headless -u 1000 -r 100 --host https://httpbin.org
   - locust -f locustfile.py
   - locust -f locustfile.py --headless -u 200 -r 20 -t 2m
   parameters:
@@ -41,11 +43,11 @@ capabilities:
   commands:
   - locust -f locustfile.py --headless -u 500 -r 50 --csv=results --csv-full-history -t 5m
   - locust -f locustfile.py --master --master-bind-port=5557 --csv=dist-results
-  - locust -f locustfile.py --worker --master-host=10.0.0.5
+  - locust -f locustfile.py --worker --master-host=10.0.0.10
   - ls results_*.csv
   examples:
   - locust -f locustfile.py --headless -u 500 -r 50 --csv=results --csv-full-history -t 5m
-  - locust -f locustfile.py --worker --master-host=10.0.0.5
+  - locust -f locustfile.py --worker --master-host=10.0.0.10
   - ls results_*.csv
   parameters:
   - name: csv
@@ -71,11 +73,11 @@ instructions: "# Locust\n\nLoad test with Python-defined user behavior.\n\n## Wh
   \ CSV stats and distributes load with master/workers.\n\n## When to use\n\n- Simulating realistic user\
   \ journeys (login, browse, checkout).\n- Tests that need Python logic in the workload.\n- Distributed\
   \ load generation from many machines.\n\n## Real commands\n\n```bash\n# Headless: 1000 users, spawn\
-  \ 100/s, 10 minutes\nlocust -f locustfile.py --headless -u 1000 -r 100 -t 10m \\\n  --host https://api.example.com\n\
+  \ 100/s, 10 minutes\nlocust -f locustfile.py --headless -u 1000 -r 100 -t 10m \\\n  --host https://httpbin.org\n\
   \n# Web UI mode (http://localhost:8089)\nlocust -f locustfile.py\nlocust -f locustfile.py --web-port\
   \ 8089\n\n# CSV with full history\nlocust -f locustfile.py --headless -u 500 -r 50 \\\n  --csv=results\
   \ --csv-full-history -t 5m\n\n# Distributed\nlocust -f locustfile.py --master --master-bind-port=5557\n\
-  locust -f locustfile.py --worker --master-host=10.0.0.5\n```\n\n## locustfile.py example\n\n```python\n\
+  locust -f locustfile.py --worker --master-host=10.0.0.10\n```\n\n## locustfile.py example\n\n```python\n\
   from locust import HttpUser, task, between\n\nclass CheckoutUser(HttpUser):\n    wait_time = between(1,\
   \ 5)\n\n    @task(3)\n    def browse(self):\n        self.client.get(\"/products\")\n\n    @task(1)\n\
   \    def checkout(self):\n        self.client.post(\"/api/orders\", json={\"product_id\": 7, \"qty\"\
@@ -85,7 +87,7 @@ instructions: "# Locust\n\nLoad test with Python-defined user behavior.\n\n## Wh
   \ master's CPU stays under load.\n"
 examples:
 - input: Simulate 1000 shoppers for 10 minutes
-  output: locust -f locustfile.py --headless -u 1000 -r 100 -t 10m --host https://api.example.com
+  output: locust -f locustfile.py --headless -u 1000 -r 100 -t 10m --host https://httpbin.org
 - input: Save full stats to CSV
   output: locust -f locustfile.py --headless --csv=results --csv-full-history -t 5m
 platforms:
@@ -113,12 +115,10 @@ platforms:
   generic:
     system_prompt: 'You are the Locust Output specialist. You do it through locust-run: Run locust tests
       headless or with the web UI. The commands are real, e.g. `locust -f locustfile.py --headless -u
-      1000 -r 100 --host https://api.example.com`. You run and verify the real CLI commands before you
+      1000 -r 100 --host https://httpbin.org`. You run and verify the real CLI commands before you
       claim anything.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

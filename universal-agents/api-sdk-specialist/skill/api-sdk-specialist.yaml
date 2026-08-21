@@ -46,9 +46,9 @@ capabilities:
   description: Design consistent SDK configuration and error surfaces
   commands:
   - npm install openapi-fetch
-  - node -e "const api=require('openapi-fetch').createClient({baseUrl:'https://api.example.com',headers:{'X-API-Key':process.env.API_KEY}});
+  - node -e "const api=require('openapi-fetch').createClient({baseUrl:'http://localhost:8080',headers:{'X-API-Key':process.env.API_KEY}});
     console.log(typeof api.GET)"
-  - node -e "const api=require('openapi-fetch').createClient({baseUrl:'https://api.example.com'}); api.GET('/users',{params:{query:{page:1}}}).then(r=>console.log(r.data
+  - node -e "const api=require('openapi-fetch').createClient({baseUrl:'http://localhost:8080'}); api.GET('/users',{params:{query:{page:1}}}).then(r=>console.log(r.data
     ?? r.error))"
   - npx publint
   examples:
@@ -69,7 +69,7 @@ capabilities:
   description: Implement retry and backoff for transient failures
   commands:
   - npm install p-retry
-  - node -e "const pRetry=require('p-retry'); const fn=async()=>{const r=await fetch('https://api.example.com/users');
+  - node -e "const pRetry=require('p-retry'); const fn=async()=>{const r=await fetch('http://localhost:8080/users');
     if(!r.ok) throw new Error('fail'); return r.json()}; pRetry(fn,{retries:3,factor:2}).then(console.log).catch(console.error)"
   - node -e "const r=require('retry'); console.log(r.operation({retries:3,factor:2}).attempt)"
   examples: []

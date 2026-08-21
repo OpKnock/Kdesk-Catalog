@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - inference
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Tgi Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "tgi", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent tgi-inference-3
+  - tgi --version
   examples:
   - text-generation-launcher --model-id meta-llama/Llama-2-7b-hf --port 8080
   - 'curl http://localhost:8080/generate --data ''{"inputs": "Hello"}'''
@@ -27,10 +27,18 @@ capabilities:
   - docker run -p 8080:80 ghcr.io/huggingface/text-generation-inference:latest --model-id meta-llama/Llama-2-7b-hf
   parameters: []
 knowledge:
-- title: tgi-inference-3 Documentation
+- title: Text Generation Inference
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
-  description: Reference documentation for tgi-inference-3
+  source: https://huggingface.co/docs/text-generation-inference/
+  description: Official documentation for tgi.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the TGI inference server expert. Call on this agent when a user needs to set up
   or troubleshoot a TGI ML inference server. Core workflow: (1) verify with ''curl -s -o /dev/null -w
   %{http_code} http://localhost:8080/v1/health'' and list models via ''curl -s http://localhost:8080/v1/models
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-01-27T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,31 +2,31 @@ name: device-auth
 display_name: Device Auth
 category: api
 subcategory: general
-description: 'OAuth 2.0 Device Authorization Grant (RFC 8628) flows for input-constrained devices: request
-  device codes, poll tokens, and handle slow-down errors.'
+description: 'Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices:
+  device code request, token polling, and slow-down error handling.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: device-flow
   description: 'Drive the full device code flow with curl: device authorization request, token polling,
     and error handling.'
   commands:
-  - 'curl -X POST https://auth.example.com/oauth/device_authorization -d ''client_id=MY_CLIENT&scope=openid%20profile''
+  - 'curl -X POST https://httpbin.org/anything/oauth/device_authorization -d ''client_id=MY_CLIENT&scope=openid%20profile''
     -H ''Content-Type: application/x-www-form-urlencoded'''
-  - curl -X POST https://auth.example.com/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'
-  - curl -X POST https://auth.example.com/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'
+  - curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'
+  - curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'
     | jq -r '.access_token'
-  - curl -s https://auth.example.com/oauth/device_authorization -d 'client_id=MY_CLIENT' | jq '.verification_uri_complete'
-  - curl -X POST https://auth.example.com/oauth/token -d 'grant_type=refresh_token&refresh_token=REFRESH&client_id=MY_CLIENT'
+  - curl -s https://httpbin.org/anything/oauth/device_authorization -d 'client_id=MY_CLIENT' | jq '.verification_uri_complete'
+  - curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=refresh_token&refresh_token=REFRESH&client_id=MY_CLIENT'
   examples:
-  - curl -s https://auth.example.com/oauth/device_authorization -d 'client_id=MY_CLIENT' | jq '.device_code,
+  - curl -s https://httpbin.org/anything/oauth/device_authorization -d 'client_id=MY_CLIENT' | jq '.device_code,
     .user_code, .verification_uri_complete'
-  - curl -X POST https://auth.example.com/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'
+  - curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'
     | jq
-  - curl -X POST https://auth.example.com/oauth/token -d 'grant_type=refresh_token&refresh_token=REFRESH&client_id=MY_CLIENT'
+  - curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=refresh_token&refresh_token=REFRESH&client_id=MY_CLIENT'
     | jq -r '.access_token'
   parameters:
   - name: client-id
@@ -48,18 +48,18 @@ instructions: "# Device Authorization\n\n## What this skill does\n\nOAuth 2.0 De
   \ a user code and verification URL; the user approves on another device; the client polls for the token.\n\
   \n## When to use\n\n- Adding login to CLIs, TVs, or devices without a browser or keyboard\n- Implementing\
   \ `az login`, `aws sso login` style flows in your own client\n\n## Real commands\n\n```bash\n# Step\
-  \ 1: request a device code\ncurl -s https://auth.example.com/oauth/device_authorization \\\n  -d 'client_id=MY_CLIENT&scope=openid%20profile'\
+  \ 1: request a device code\ncurl -s https://httpbin.org/anything/oauth/device_authorization \\\n  -d 'client_id=MY_CLIENT&scope=openid%20profile'\
   \ | jq '.device_code, .user_code, .verification_uri_complete'\n\n# Step 2: poll for the token (respect\
-  \ the interval!)  \ncurl -X POST https://auth.example.com/oauth/token \\\n  -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'\
-  \ | jq\n\n# Step 3: use and refresh the token\ncurl -X POST https://auth.example.com/oauth/token -d\
+  \ the interval!)  \ncurl -X POST https://httpbin.org/anything/oauth/token \\\n  -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'\
+  \ | jq\n\n# Step 3: use and refresh the token\ncurl -X POST https://httpbin.org/anything/oauth/token -d\
   \ 'grant_type=refresh_token&refresh_token=REFRESH&client_id=MY_CLIENT' | jq -r '.access_token'\n```\n\
   \n## Error handling\n\n```json\n{\"error\": \"slow_down\"}\n{\"error\": \"authorization_pending\"}\n\
   {\"error\": \"access_denied\"}\n{\"error\": \"expired_token\"}\n```\n\n- `authorization_pending`: keep\
   \ polling after the same interval.\n- `slow_down`: increase the interval by 5 seconds before the next\
   \ poll.\n- `expired_token`: the device_code expired; restart the flow.\n\n## Testing\n\n```bash\n# Simulate\
-  \ the full flow locally\ncurl -s https://auth.example.com/oauth/device_authorization -d 'client_id=MY_CLIENT'\
+  \ the full flow locally\ncurl -s https://httpbin.org/anything/oauth/device_authorization -d 'client_id=MY_CLIENT'\
   \ | jq -r '.verification_uri_complete'\n# Open the URL, approve, then poll:\nfor i in $(seq 1 20); do\
-  \ sleep 5; curl -X POST https://auth.example.com/oauth/token -d \"grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT\"\
+  \ sleep 5; curl -X POST https://httpbin.org/anything/oauth/token -d \"grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT\"\
   \ | jq; done\n```\n\n## Best practices\n\n- Never log the device_code or access_token.\n- Use PKCE (code_challenge)\
   \ with confidential-client-capable servers even for public clients.\n- Implement the `interval` and\
   \ `slow_down` backoff exactly as specified.\n"
@@ -95,12 +95,12 @@ platforms:
   generic:
     system_prompt: 'This is your domain: Device Auth. You do it through device-flow: Drive the full device
       code flow with curl: device authorization request, token polling, and error handling. The commands
-      are real, e.g. `curl -X POST https://auth.example.com/oauth/device_authorization -d...`. You prefer
+      are real, e.g. `curl -X POST https://httpbin.org/anything/oauth/device_authorization -d...`. You prefer
       the shortest safe path, and you reproduce failures before diagnosing them.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

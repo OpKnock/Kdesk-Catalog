@@ -2,65 +2,199 @@ name: api-gateway-rate-limiter
 display_name: API Gateway Rate Limiter
 category: api
 subcategory: gateway
-description: Agent for implementing rate limiting at the API gateway level with Redis and distributed
-  counters.
-version: 1.0.0
+description: Implements distributed rate limiting at the API gateway layer using Kong plugins, Envoy filters, Traefik middleware, and Redis-backed counters. Configures tiered limits, custom key extractors, and validates behavior under load.
+version: 2.0.0
 tags:
 - api-gateway
 - rate-limiting
 - redis
 - distributed
-author: Kdesk-Catalog
+- kong
+- envoy
+- traefik
+author: Kdesk
 license: MIT
 capabilities:
-- name: gateway-rate-limiting
-  description: Implement API gateway rate limiting
+- name: kong-rate-limiting
+  description: Configures Kong rate-limiting plugin with local, Redis, and cluster policies.
   commands:
-  - redis-cli
-  - kong
-  - envoy
-  - traefik
+  - 'deck file add-plugin kong.yaml --name=rate-limiting --config.minute=1000 --config.policy=redis --config.redis_host=redis --config.redis_port=6379 --config.fault_tolerant=true'
+  - 'deck file add-plugin kong.yaml --name=rate-limiting --config.hour=10000 --config.policy=cluster --config.hide_client_headers=false'
+  - 'curl -i http://localhost:8000/api/test -H "apikey: test-key"'
   examples:
-  - 'Kong: kong plugin rate-limiting --config.minute=100'
-  - 'Redis: redis-cli EVAL script 2 rate:api 1234'
-  - 'Envoy: local_rate_limit_filter'
+  - 'deck file add-plugin kong.yaml --name=rate-limiting --config.minute=100 --config.policy=redis --config.redis_host=redis --config.redis_port=6379'
+  - 'deck file add-plugin kong.yaml --name=rate-limiting --config.second=10 --config.policy=local --config.limit_by=consumer'
+  - 'curl -i -H "apikey: consumer-123" http://localhost:8000/api/resource'
   parameters:
-  - name: gateway
+  - name: policy
     type: string
-    description: 'Gateway: kong, envoy, traefik, custom'
-  - name: storage
+    description: Rate limiting policy (local, redis, cluster)
+  - name: limit
+    type: number
+    description: Request limit per window
+  - name: window
     type: string
-    description: 'Storage: redis, local, cluster'
+    description: Window size (second, minute, hour, day, month, year)
+  - name: limit_by
+    type: string
+    description: Key to limit by (consumer, credential, ip, service, header)
+- name: envoy-rate-limiting
+  description: Configures Envoy global and local rate limit filters with Redis-backed rate limit service.
+  commands:
+  - 'kubectl apply -f envoy-ratelimit-config.yaml'
+  - 'kubectl apply -f ratelimit-service.yaml'
+  - 'curl -i -H "x-api-key: test" http://localhost:10000/api'
+  examples:
+  - 'kubectl apply -f ./envoy/ratelimit-filter.yaml'
+  - 'kubectl logs -l app=ratelimit -f'
+  - 'hey -n 500 -c 20 -H "x-api-key: client-1" http://localhost:10000/api'
+  parameters:
+  - name: domain
+    type: string
+    description: Rate limit domain identifier
+  - name: descriptor_key
+    type: string
+    description: Request attribute to rate limit on (header, path, remote_address)
+  - name: rate_limit_service
+    type: string
+    description: Rate limit service gRPC endpoint
+- name: traefik-rate-limiting
+  description: Configures Traefik rate limit middleware with in-memory or Redis backend.
+  commands:
+  - 'kubectl apply -f traefik-middleware-ratelimit.yaml'
+  - 'kubectl apply -f traefik-ingressroute.yaml'
+  - 'hey -n 200 -c 10 http://localhost:8080/api'
+  examples:
+  - 'kubectl apply -f ./traefik/middleware-ratelimit.yaml'
+  - 'kubectl apply -f ./traefik/ingressroute-api.yaml'
+  - 'curl -i http://localhost:8080/api/health'
+  parameters:
+  - name: average
+    type: number
+    description: Average requests per second
+  - name: burst
+    type: number
+    description: Burst allowance
+  - name: source_criterion
+    type: string
+    description: Rate limit key source (ip, requestHeader, requestHost)
 knowledge:
-- Title: Kong Rate Limiting
+- title: Kong Rate Limiting Plugin
   type: documentation
-  source: https://docs.konghub.com/hub/kong-inc/rate-limiting/
-  description: Kong rate limiting plugin
-- Title: Envoy Rate Limiting
-  type: tutorial
-  source: https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/local_rate_limit_filter
-  description: Envoy rate limiting
-instructions: 'You are a gateway rate limiting specialist. Help users:
+  source: https://docs.konghq.com/hub/kong-inc/rate-limiting/
+  description: Plugin configuration, policies, and headers
+- title: Envoy Rate Limit Service
+  type: documentation
+  source: https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rate_limit_filter
+  description: Rate limit filter config and gRPC service protocol
+- title: Traefik Rate Limit Middleware
+  type: documentation
+  source: https://doc.traefik.io/traefik/middlewares/ratelimit/
+  description: Middleware configuration and criteria
+- title: Redis Rate Limiting Patterns
+  type: documentation
+  source: https://redis.io/docs/latest/develop/use-cases/rate-limiting/
+  description: Sliding window, token bucket, and fixed window implementations
+- title: Rate Limiting Strategies
+  type: documentation
+  source: https://aws.amazon.com/blogs/architecture/rate-limiting-strategies-for-scalable-apis/
+  description: Token bucket, leaky bucket, fixed/sliding window trade-offs
+instructions: |
+  # API Gateway Rate Limiter
 
-  1. Configure gateway plugins
+  ## What this agent does
 
-  2. Implement distributed counters
+  Designs and operates distributed rate limiting at the gateway edge: configures Kong plugins (local,
+  Redis, cluster policies), Envoy global/local rate limit filters with a rate limit service, and
+  Traefik middleware. Defines tiered limits by consumer, IP, API key, or custom headers. Validates
+  limit enforcement, header propagation (X-RateLimit-Limit, X-RateLimit-Remaining, Retry-After),
+  and 429 responses under load.
 
-  3. Set up tiered limits
+  ## When to use
 
-  4. Handle rate limit responses
+  - Protecting upstream services from traffic spikes
+  - Enforcing per-consumer or per-tenant quotas
+  - Implementing tiered pricing (free/basic/premium limits)
+  - Mitigating abuse and DDoS at the gateway layer
+  - Adding rate limit headers for client-side backoff
 
-  5. Monitor usage patterns
+  ## Real commands
 
+  ```bash
+  # Kong with Redis policy
+  deck file add-plugin kong.yaml --name=rate-limiting \
+    --config.minute=1000 \
+    --config.policy=redis \
+    --config.redis_host=redis \
+    --config.redis_port=6379 \
+    --config.fault_tolerant=true \
+    --config.hide_client_headers=false
+  deck sync --state kong.yaml
 
-  Always recommend proper headers and client communication.
+  # Verify headers
+  curl -i http://localhost:8000/api -H "apikey: consumer-123"
 
-  '
+  # Load test
+  hey -n 2000 -c 50 -H "apikey: consumer-123" http://localhost:8000/api
+
+  # Envoy rate limit filter
+  kubectl apply -f envoy-ratelimit-config.yaml
+  kubectl apply -f ratelimit-service.yaml
+
+  # Traefik middleware
+  kubectl apply -f traefik-middleware-ratelimit.yaml
+  kubectl apply -f traefik-ingressroute.yaml
+  ```
+
+  ## Kong rate-limiting config
+
+  ```yaml
+  plugins:
+  - name: rate-limiting
+    config:
+      minute: 1000
+      hour: 10000
+      policy: redis
+      redis_host: redis
+      redis_port: 6379
+      fault_tolerant: true
+      hide_client_headers: false
+      limit_by: consumer
+  ```
+
+  ## Envoy rate limit config
+
+  ```yaml
+  http_filters:
+  - name: envoy.filters.http.rate_limit
+    typed_config:
+      "@type": type.googleapis.com/envoy.extensions.filters.http.rate_limit.v3.RateLimit
+      domain: api-gateway
+      rate_limit_service:
+        grpc_service:
+          envoy_grpc:
+            cluster_name: ratelimit
+  ```
+
+  ## Testing
+
+  - Drive traffic at 2x limit with `hey` or `k6`, assert 429 rate matches expectation
+  - Verify `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `Retry-After` headers
+  - Test fault tolerance: stop Redis, confirm `fault_tolerant` allows traffic or fails closed
+  - Verify limit_by=consumer works with JWT/authenticated requests
+
+  ## Best practices
+
+  - Return Retry-After with 429 so clients back off correctly
+  - Use Redis policy for multi-instance Kong; local for single-node
+  - Configure fault_tolerant=true to avoid Redis outage blocking all traffic
+  - Combine gateway rate limiting (per-IP) with application rate limiting (per-user)
+  - Monitor limit exhaustion with Prometheus: `rate(kong_rate_limit_exceeded_total[5m])`
 examples:
-- input: Add gateway rate limiting
-  output: I'll configure Kong rate limiting with Redis backend...
-- input: Multi-tenant limits
-  output: I'll implement per-tenant rate limiting...
+- input: Add per-consumer rate limits with Redis backend in Kong
+  output: Configures rate-limiting plugin with policy=redis, limit_by=consumer, minute=1000, validates with deck sync, tests with hey using different apikey headers, confirms X-RateLimit headers and 429 on excess.
+- input: Configure Envoy global rate limiting for Kubernetes ingress
+  output: Deploys rate limit service (envoyproxy/ratelimit), configures EnvoyFilter with rate_limit filter, defines descriptors for x-api-key header, applies to ingress gateway, load tests to verify 429 and headers.
 platforms:
   claude_code:
     tools:
@@ -68,6 +202,8 @@ platforms:
     - Read
     - Write
     - Edit
+    - Glob
+    - Grep
     model: inherit
   cursor:
     rule_type: auto
@@ -82,14 +218,15 @@ platforms:
     - write
     - edit
   opencode:
-    plugin: opencode-gateway-rate-limit
+    plugin: opencode-api-gateway-rate-limiter
   generic:
-    system_prompt: You are an API gateway rate limiting expert. Help users implement distributed rate
-      limiting at the gateway level.
+    system_prompt: You are a gateway rate limiting specialist. You configure Kong, Envoy, and Traefik rate limiting with Redis-backed distributed counters. You validate limit enforcement with load tests, verify headers, and design tiered policies for multi-tenant APIs.
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    - glob
+    - grep
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

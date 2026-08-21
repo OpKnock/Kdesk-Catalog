@@ -69,11 +69,11 @@ capabilities:
   commands:
   - svix login
   - svix application create --name my-app
-  - svix endpoint create --url https://api.example.com/webhooks --event-types issue.created
+  - svix endpoint create --url http://localhost:8080/webhooks --event-types issue.created
   - svix message send --event-type issue.created --payload '{"id":42}' --app my-app
   - svix endpoint list --app my-app
   examples:
-  - svix endpoint create --url https://api.example.com/webhooks --event-types issue.created
+  - svix endpoint create --url http://localhost:8080/webhooks --event-types issue.created
   - svix message send --event-type issue.created --payload '{"id":42}' --app my-app
   parameters:
   - name: event-types
@@ -88,13 +88,13 @@ capabilities:
   commands:
   - 'curl -s -i -X POST https://tunnel.ngrok.io/webhooks -H ''Content-Type: application/json'' -H ''svix-id:
     msg_1'' -H ''svix-signature: v1,<sig>'' -H ''svix-timestamp: 1720000000'' -d ''{"event":"build.failed"}'''
-  - curl -s -o /dev/null -w '%{http_code} %{time_total}s' --retry 3 --retry-delay 2 -X POST https://api.example.com/webhooks
+  - curl -s -o /dev/null -w '%{http_code} %{time_total}s' --retry 3 --retry-delay 2 -X POST http://localhost:8080/webhooks
     -d '{}'
-  - 'curl -s -H ''Authorization: Bearer <token>'' ''https://api.svix.com/api/v1/app/my-app/msg/msg_1/attempt'''
+  - 'curl -s -H ''Authorization: Bearer demo-token'' ''https://api.svix.com/api/v1/app/my-app/msg/msg_1/attempt'''
   examples:
   - 'curl -s -i -X POST https://tunnel.ngrok.io/webhooks -H ''Content-Type: application/json'' -H ''svix-id:
     msg_1'' -H ''svix-signature: v1,<sig>'' -H ''svix-timestamp: 1720000000'' -d ''{"event":"build.failed"}'''
-  - curl -s -o /dev/null -w '%{http_code} %{time_total}s' --retry 3 --retry-delay 2 -X POST https://api.example.com/webhooks
+  - curl -s -o /dev/null -w '%{http_code} %{time_total}s' --retry 3 --retry-delay 2 -X POST http://localhost:8080/webhooks
     -d '{}'
   parameters:
   - name: signature header

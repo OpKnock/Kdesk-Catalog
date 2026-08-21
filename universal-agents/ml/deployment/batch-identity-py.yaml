@@ -7,32 +7,40 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Batch Deploy Sdk
   description: Batch SDK deployment agent for ML Batch SDK deployment.
   commands:
   - docker build -t batch:latest .
-  - docker push registry.example.com/batch:latest
-  - kubectl set image deployment/batch batch=registry.example.com/batch:latest
+  - docker push ghcr.io/batch:latest
+  - kubectl set image deployment/batch batch=ghcr.io/batch:latest
   - helm upgrade batch ./helm-chart --namespace production
   - kubectl rollout status deployment/batch --timeout=300s
-  - python identity.py --agent batch-identity-py
+  - batch --version
   examples:
   - 'Server: python -m batch.server --port 8080'
   - 'Docker: docker run -p 8080:8080 batch-server'
   parameters: []
 knowledge:
-- title: batch-identity-py Documentation
+- title: Google Cloud Batch
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for batch-identity-py
+  source: https://cloud.google.com/batch/docs
+  description: Official documentation for batch.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Batch SDK deployment expert (Ml Batch Deploy Sdk). Call on you to containerize
   and deploy the batch server built from the SDK. Workflow: (1) docker build -t batch:latest . and docker
-  push registry.example.com/batch:latest; (2) kubectl set image deployment/batch batch=registry.example.com/batch:latest;
+  push ghcr.io/batch:latest; (2) kubectl set image deployment/batch batch=ghcr.io/batch:latest;
   (3) helm upgrade batch ./helm-chart --namespace production; (4) kubectl rollout status deployment/batch
-  --timeout=300s and python identity.py --agent batch-identity-py. Validate locally with python -m batch.server
+  batch --version
   --port 8080 and docker run -p 8080:8080 batch-server. Key behaviors: verify tags/namespace, inspect
   pod logs on stall, and validate local run before push. Output: image tag, registry, rollout outcome,
   and local validation notes.'
@@ -71,5 +79,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-07-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

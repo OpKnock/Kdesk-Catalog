@@ -2,48 +2,45 @@ name: sidecar-pattern
 display_name: Sidecar Pattern
 category: api
 subcategory: general
-description: 'Hand-crafted sidecar pattern skill: istio-proxy operations, envoy sidecar config, container
-  inspection, and multi-container pod management with kubectl.'
+description: "Operates sidecar containers in Kubernetes pods. Inspects container lists to confirm sidecar presence, reads sidecar logs and local stats endpoints, and runs standalone Envoy for local proxy configuration iteration."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - envoy
 - kubectl
 capabilities:
 - name: sidecar-ops
-  description: 'Operate sidecar containers: inspect, log, configure, restart'
+  description: "Operates sidecar containers in Kubernetes pods. Inspects container lists to confirm sidecar presence, reads sidecar logs and local stats endpoints, and runs standalone Envoy for local proxy configuration iteration."
   commands:
   - kubectl get pods -l app=api -o jsonpath='{.items[0].spec.containers[*].name}'
-  - kubectl logs pod/api-7d9f -c istio-proxy
-  - kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15090/stats/prometheus | head -5
+  - kubectl logs pod/api-7d9f -c istio-proxy --tail=50
+  - kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15090/stats/prometheus
+  - kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15020/healthz
   - envoy --config-path envoy.yaml
-  - kubectl get pod api-7d9f -o jsonpath='{.spec.containers[*].name}'
   examples:
+  - kubectl get pods -l app=api -o jsonpath='{.items[0].spec.containers[*].name}'
   - kubectl logs pod/api-7d9f -c istio-proxy --tail=50
   - kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15020/healthz
-  - kubectl delete pod api-7d9f
+  - envoy --config-path envoy.yaml
   parameters:
-  - name: pod
+  - name: pod_name
     type: string
-    description: Pod name containing the sidecar
-  - name: container
+    description: Kubernetes pod name containing the sidecar
+  - name: sidecar_name
     type: string
-    description: Sidecar container name, e.g. istio-proxy
+    description: Sidecar container name (e.g., istio-proxy)
   - name: config_path
     type: string
-    description: Envoy config file path for standalone runs
+    description: Path to Envoy config file for local testing
 knowledge:
 - title: Azure sidecar pattern
   type: documentation
   source: https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar
-  description: Sidecar pattern rationale and lifecycle
-- title: Istio proxy docs
-  type: documentation
-  source: https://istio.io/latest/docs/ops/deployment/architecture/
-  description: istio-proxy sidecar responsibilities
+  description: "Operates sidecar containers in Kubernetes pods. Inspects container lists to confirm sidecar presence, reads sidecar logs and local stats endpoints, and runs standalone Envoy for local proxy configuration iteration."
 instructions: "# Sidecar Pattern\n\nHand-crafted skill for operating sidecar containers in Kubernetes.\n\
   \n## What this skill does\n\n- Lists containers inside a pod to confirm the sidecar\n- Reads sidecar\
   \ logs and hits its local stats endpoints\n- Runs standalone envoy with a custom config for local testing\n\
@@ -54,7 +51,7 @@ instructions: "# Sidecar Pattern\n\nHand-crafted skill for operating sidecar con
   kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15090/stats/prometheus | head -5\n\
   \n# Health check endpoint of the sidecar\nkubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15020/healthz\n\
   \n# Standalone envoy for local config iteration\nenvoy --config-path envoy.yaml\n```\n\n## Pod spec\n\
-  \n```yaml\nspec:\n  containers:\n    - name: api\n      image: registry.example.com/api:v2.1\n    -\
+  \n```yaml\nspec:\n  containers:\n    - name: api\n      image: ghcr.io/example/api:v2.1\n    -\
   \ name: istio-proxy\n      image: proxyv2\n```\n\n## Testing\n\n```bash\nkubectl logs pod/api-7d9f -c\
   \ istio-proxy --tail=20\nkubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15090/stats/prometheus\
   \ | grep istio_requests_total | head\n```\n\n## Best practices\n\n- Give every sidecar a name and liveness\
@@ -99,5 +96,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

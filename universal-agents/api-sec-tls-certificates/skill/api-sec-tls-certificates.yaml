@@ -50,7 +50,7 @@ capabilities:
     x509 -noout -subject -dates -issuer
   - echo | openssl s_client -connect api.example.com:443 -tls1_2 -servername api.example.com 2>/dev/null
     | grep -E 'Protocol|Cipher'
-  - curl -sI https://api.example.com | grep -iE 'strict-transport|content-security'
+  - curl -sI http://localhost:8080 | grep -iE 'strict-transport|content-security'
   - npx sslyze api.example.com --certinfo
   examples:
   - openssl s_client extracts certificate details
@@ -72,7 +72,7 @@ capabilities:
   - testssl.sh api.example.com
   - testssl.sh --hints api.example.com
   - testssl.sh --ssl-native api.example.com
-  - curl -s -o /dev/null -w '%{http_code}\n' https://api.example.com/health
+  - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/health
   examples: []
   parameters: []
 prerequisites:

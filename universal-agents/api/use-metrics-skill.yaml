@@ -1,161 +1,20 @@
 name: use-metrics
 display_name: Use Metrics
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted metrics usage skill: Prometheus exposition, counters/gauges/histograms, and
-  PromQL queries for operational use of metrics.'
-version: 2.0.0
+description: "Operates Prometheus metrics day-to-day. Reads exposition format from /metrics endpoints, executes instant and range queries via the HTTP API, reloads configuration, and verifies scrape target health."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-capabilities:
-- name: prometheus-metrics
-  description: Expose, scrape, and query metrics
-  commands:
-  - curl -s localhost:9090/metrics | head -30
-  - curl -s 'localhost:9090/api/v1/query?query=up' | jq
-  - curl -s 'localhost:9090/api/v1/query_range?query=rate(http_requests_total[5m])&start=1700000000&end=1700003600&step=60'
-    | jq
-  - curl -X POST localhost:9090/-/reload
-  - curl -s 'localhost:9090/api/v1/targets' | jq '.data.activeTargets | length'
-  examples:
-  - curl -s 'localhost:9090/api/v1/query?query=rate(http_requests_total[5m])' | jq
-  - curl -s localhost:9090/metrics | head -30
-  - curl -X POST localhost:9090/-/reload
-  parameters:
-  - name: query
-    type: string
-    description: PromQL expression
-  - name: start
-    type: integer
-    description: Start unix time for range queries
-  - name: end
-    type: integer
-    description: End unix time for range queries
-knowledge:
-- title: Prometheus HTTP API
-  type: documentation
-  source: https://prometheus.io/docs/prometheus/latest/querying/api/
-  description: Query and query_range endpoints
-- title: PromQL basics
-  type: documentation
-  source: https://prometheus.io/docs/prometheus/latest/querying/basics/
-  description: Selectors, functions, and aggregation
-instructions: '# Use Metrics
-
-
-  Hand-crafted skill for using Prometheus metrics day to day.
-
-
-  ## What this skill does
-
-
-  - Reads the exposition format off a metrics endpoint
-
-  - Queries live and historical data via the HTTP API
-
-  - Reloads Prometheus config and checks targets
-
-
-  ## When to use
-
-
-  - "Is the service up?" from the CLI
-
-  - Computing error rates and latencies on demand
-
-  - Checking scrape health of exporters
-
-
-  ## Real commands
-
-
-  ```bash
-
-  # Exposition format
-
-  curl -s localhost:9090/metrics | head -30
-
-
-  # Instant query
-
-  curl -s ''localhost:9090/api/v1/query?query=up'' | jq
-
-  curl -s ''localhost:9090/api/v1/query?query=rate(http_requests_total[5m])'' | jq
-
-
-  # Range query for charts
-
-  curl -s ''localhost:9090/api/v1/query_range?query=rate(http_requests_total[5m])&start=1700000000&end=1700003600&step=60''
-  | jq
-
-
-  # Ops
-
-  curl -X POST localhost:9090/-/reload
-
-  curl -s ''localhost:9090/api/v1/targets'' | jq ''.data.activeTargets | length''
-
-  ```
-
-
-  ## Metric types
-
-
-  - counter: http_requests_total, only increases
-
-  - gauge: current queue depth, can go either way
-
-  - histogram: _bucket/_sum/_count for latency distributions
-
-
-  ## Useful PromQL
-
-
-  - up == 0 (down targets)
-
-  - 100 * (1 - sum(rate(http_requests_total{code=~"5.."}[5m])) / sum(rate(http_requests_total[5m])))
-
-  - histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))
-
-
-  ## Testing
-
-
-  ```bash
-
-  curl -s ''localhost:9090/api/v1/query?query=up'' | jq ''.data.result | length''
-
-  curl -X POST localhost:9090/-/reload
-
-  ```
-
-
-  ## Best practices
-
-
-  - Always apply rate() to counters; never raw
-
-  - Use sum by (label) for multi-instance aggregates
-
-  - Check targets before debugging queries
-
-  '
-examples:
-- input: Is every target scraping?
-  output: curl -s localhost:9090/api/v1/query?query=up | jq '.data.result' lists each target and its 1/0
-    state.
-- input: What is the 99th percentile latency?
-  output: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) against
-    the histogram metric.
+  - api
+  - prometheus
+  - observability
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -164,21 +23,114 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-use-metrics
   generic:
-    system_prompt: 'You take the Use Metrics seat. You do it through prometheus-metrics: Expose, scrape,
-      and query metrics. The commands are real, e.g. `curl -s localhost:9090/metrics | head -30`. You
-      answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You take the Use Metrics seat. You do it through prometheus-metrics: Expose, scrape, and query metrics. The commands are real, e.g. `curl -s localhost:9090/metrics | head -30`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: prometheus-metrics
+    description: Expose, scrape, and query metrics
+    commands:
+      - 'curl -s localhost:9090/metrics | head -30'
+      - 'curl -s "localhost:9090/api/v1/query?query=up" | jq'
+      - 'curl -s "localhost:9090/api/v1/query?query=rate(http_requests_total[5m])" | jq'
+      - 'curl -s "localhost:9090/api/v1/query_range?query=rate(http_requests_total[5m])&start=1700000000&end=1700003600&step=60" | jq'
+      - 'curl -X POST localhost:9090/-/reload'
+      - 'curl -s "localhost:9090/api/v1/targets" | jq ".data.activeTargets | length"'
+    examples:
+      - 'curl -s "localhost:9090/api/v1/query?query=rate(http_requests_total[5m])" | jq'
+      - 'curl -s localhost:9090/metrics | head -30'
+      - 'curl -X POST localhost:9090/-/reload'
+    parameters:
+      - name: query
+        type: string
+        description: PromQL expression
+      - name: start
+        type: integer
+        description: Start unix time for range queries
+      - name: end
+        type: integer
+        description: End unix time for range queries
+prerequisites:
+  - curl
+  - jq
+tools: [curl, jq]
+examples:
+  - input: Is every target scraping?
+    output: curl -s localhost:9090/api/v1/query?query=up | jq '.data.result' lists each target and its 1/0 state.
+  - input: What is the 99th percentile latency?
+    output: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) against the histogram metric.
+instructions: |
+  # Use Metrics
+
+  Hand-crafted skill for using Prometheus metrics day to day.
+
+  ## What this skill does
+
+  - Reads the exposition format off a metrics endpoint
+  - Queries live and historical data via the HTTP API
+  - Reloads Prometheus config and checks targets
+
+  ## When to use
+
+  - "Is the service up?" from the CLI
+  - Computing error rates and latencies on demand
+  - Checking scrape health of exporters
+
+  ## Real commands
+
+  ```bash
+  # Exposition format
+  curl -s localhost:9090/metrics | head -30
+
+  # Instant query
+  curl -s "localhost:9090/api/v1/query?query=up" | jq
+  curl -s "localhost:9090/api/v1/query?query=rate(http_requests_total[5m])" | jq
+
+  # Range query for charts
+  curl -s "localhost:9090/api/v1/query_range?query=rate(http_requests_total[5m])&start=1700000000&end=1700003600&step=60" | jq
+
+  # Ops
+  curl -X POST localhost:9090/-/reload
+  curl -s "localhost:9090/api/v1/targets" | jq ".data.activeTargets | length"
+  ```
+
+  ## Metric types
+
+  - counter: http_requests_total, only increases
+  - gauge: current queue depth, can go either way
+  - histogram: _bucket/_sum/_count for latency distributions
+
+  ## Useful PromQL
+
+  - up == 0 (down targets)
+  - 100 * (1 - sum(rate(http_requests_total{code=~"5.."}[5m])) / sum(rate(http_requests_total[5m])))
+  - histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))
+
+  ## Testing
+
+  ```bash
+  curl -s "localhost:9090/api/v1/query?query=up" | jq ".data.result | length"
+  curl -X POST localhost:9090/-/reload
+  ```
+
+  ## Best practices
+
+  - Always apply rate() to counters; never raw
+  - Use sum by (label) for multi-instance aggregates
+  - Check targets before debugging queries
+knowledge:
+  - title: Prometheus HTTP API
+    type: documentation
+    source: https://prometheus.io/docs/prometheus/latest/querying/api/
+    description: Query and query_range endpoints
+  - title: PromQL basics
+    type: documentation
+    source: https://prometheus.io/docs/prometheus/latest/querying/basics/
+    description: Selectors, functions, and aggregation
+  - title: Prometheus best practices
+    type: documentation
+    source: https://prometheus.io/docs/practices/naming/
+    description: Metric naming and labeling conventions

@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Exploration Deploy Agent
   description: Exploration deployment agent. Manages Exploration ML deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent exploration-identity-py
+  - docker --version
   examples:
   - python serve_exploration.py --port 8080
   - 'curl http://localhost:8080/explore --data ''{"data": "data.csv"}'''
@@ -26,13 +26,21 @@ capabilities:
   - python visualize.py --data data.csv --output visualization.html
   parameters: []
 knowledge:
-- title: exploration-identity-py Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for exploration-identity-py
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: 'You are the Exploration Deploy Agent, the deployment specialist for Exploration ML applications.
-  Workflow: build and push with ''docker build -t model:latest .'' and ''docker push registry.example.com/model:latest'',
-  update with ''kubectl set image deployment/model model=registry.example.com/model:latest'' or ''helm
+  Workflow: build and push with ''docker build -t model:latest .'' and ''docker push ghcr.io/model:latest'',
+  update with ''kubectl set image deployment/model model=ghcr.io/model:latest'' or ''helm
   upgrade model ./helm-chart --namespace production'', and await ''kubectl rollout status deployment/model
   --timeout=300s''. Validate locally: serve with ''python serve_exploration.py --port 8080'' and POST
   ''curl http://localhost:8080/explore --data {"data": "data.csv"}''; run ''python explore.py --data data.csv
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-24T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - inference
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Vllm Inference Server Agent V2
@@ -19,7 +19,7 @@ capabilities:
     "vllm", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent vllm-inference-2
+  - vllm --version
   examples:
   - python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --port 8000
   - curl http://localhost:8000/v1/models
@@ -28,10 +28,18 @@ capabilities:
   - python -m vllm.entrypoints.openai.api_server --help
   parameters: []
 knowledge:
-- title: vllm-inference-2 Documentation
+- title: vLLM Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
-  description: Reference documentation for vllm-inference-2
+  source: https://docs.vllm.ai/
+  description: Official documentation for vllm.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the vLLM inference server expert (v2). Call on this agent to set up and operate
   a vLLM inference server. Core workflow: (1) verify the service with ''curl -s -o /dev/null -w %{http_code}
   http://localhost:8080/v1/health'' and list models via ''curl -s http://localhost:8080/v1/models | jq
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-12T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

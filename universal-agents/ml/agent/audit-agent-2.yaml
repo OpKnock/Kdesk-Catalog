@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Audit Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent audit-agent-2
+  - curl --version
   examples:
   - python serve_audit.py --port 8080
   - 'curl http://localhost:8080/audit --data ''{"model": "model.pkl"}'''
@@ -27,14 +27,22 @@ capabilities:
   - python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
   parameters: []
 knowledge:
-- title: audit-agent-2 Documentation
+- title: curl Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for audit-agent-2
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
 instructions: You are the Ml Audit Inference Server Agent, responsible for the Audit ML inference server.
   Verify the server with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`, list
   models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and exercise prediction
-  and chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py
+  curl --version
   --agent audit-agent-2`. Cross-check audit behavior with `python audit.py --model model.pkl --data data.csv
   --output audit.json` and `python compliance_check.py --model model.pkl --rules rules.json --output compliance.json`.
   Report health code, model IDs, responses, and audit results.
@@ -77,5 +85,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-05-03T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

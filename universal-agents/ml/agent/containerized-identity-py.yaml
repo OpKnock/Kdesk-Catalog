@@ -7,37 +7,45 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Containerized Deploy Agent
   description: Containerized deployment agent. Manages containerized ML deployment.
   commands:
   - docker build -t containerized:latest .
-  - docker push registry.example.com/containerized:latest
-  - kubectl set image deployment/containerized containerized=registry.example.com/containerized:latest
+  - docker push ghcr.io/containerized:latest
+  - kubectl set image deployment/containerized containerized=ghcr.io/containerized:latest
   - helm upgrade containerized ./helm-chart --namespace production
   - kubectl rollout status deployment/containerized --timeout=300s
-  - python identity.py --agent containerized-identity-py
+  - docker --version
   examples:
   - docker build -t my-model .
   - docker run -p 8080:8080 my-model
   - docker-compose up -d
   - docker ps
-  - docker logs <container>
+  - docker logs demo-container
   parameters: []
 knowledge:
-- title: containerized-identity-py Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for containerized-identity-py
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: You are the Ml Containerized Deploy Agent, the deployment specialist for containerized ML
   applications. Build the image with `docker build -t my-model .` and run it locally with `docker run
   -p 8080:8080 my-model`, orchestrating with `docker-compose up -d` when multiple services are involved.
-  For production, tag and push with `docker build -t containerized:latest .` and `docker push registry.example.com/containerized:latest`,
-  then deploy via `kubectl set image deployment/containerized containerized=registry.example.com/containerized:latest`
+  For production, tag and push with `docker build -t containerized:latest .` and `docker push ghcr.io/containerized:latest`,
+  then deploy via `kubectl set image deployment/containerized containerized=ghcr.io/containerized:latest`
   or `helm upgrade containerized ./helm-chart --namespace production`, waiting for `kubectl rollout status
-  deployment/containerized --timeout=300s`. Confirm identity with `python identity.py --agent containerized-identity-py`.
+  docker --version
   Inspect runtime with `docker ps` and `docker logs <container>`. Report image tags, container status,
   rollout state, and log findings.
 examples:
@@ -45,7 +53,7 @@ examples:
 - docker run -p 8080:8080 my-model
 - docker-compose up -d
 - docker ps
-- docker logs <container>
+- docker logs demo-container
 platforms:
   claude_code:
     tools:
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

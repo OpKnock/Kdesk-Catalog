@@ -7,7 +7,7 @@ description: 'TLS encryption in transit: test certificates with openssl s_client
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - echo
@@ -16,17 +16,17 @@ capabilities:
 - name: tls-verification
   description: Probe TLS endpoints, inspect certificates and ciphers, and validate chains.
   commands:
-  - echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl
+  - echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl
     x509 -noout -dates -subject -issuer
-  - echo | openssl s_client -connect api.example.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'
-  - echo | openssl s_client -connect api.example.com:443 -verify_return_error 2>&1 | grep -iE 'verify|error'
-  - nmap --script ssl-enum-ciphers -p 443 api.example.com
-  - curl -sI https://api.example.com | grep -i 'strict-transport-security'
+  - echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'
+  - echo | openssl s_client -connect httpbin.org:443 -verify_return_error 2>&1 | grep -iE 'verify|error'
+  - nmap --script ssl-enum-ciphers -p 443 httpbin.org
+  - curl -sI https://httpbin.org | grep -i 'strict-transport-security'
   examples:
-  - echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl
+  - echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl
     x509 -noout -dates -subject -issuer
-  - echo | openssl s_client -connect api.example.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'
-  - curl -sI https://api.example.com | grep -i 'strict-transport-security'
+  - echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'
+  - curl -sI https://httpbin.org | grep -i 'strict-transport-security'
   parameters:
   - name: host
     type: string
@@ -47,13 +47,13 @@ instructions: "# Encryption in Transit\n\n## What this skill does\n\nEncryption 
   \ certificate validity, protocol versions, cipher suites, chain trust, and HSTS.\n\n## When to use\n\
   \n- Diagnosing certificate expiry or chain errors\n- Auditing cipher and TLS version support\n- Verifying\
   \ SNI serves the right certificate\n\n## Real commands\n\n```bash\n# Certificate dates, subject, issuer\n\
-  \ echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl\
+  \ echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl\
   \ x509 -noout -dates -subject -issuer\n\n# TLS version and negotiated cipher\n echo | openssl s_client\
-  \ -connect api.example.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'\n\n# Strict chain validation\n\
-  \ echo | openssl s_client -connect api.example.com:443 -verify_return_error 2>&1 | grep -iE 'verify|error'\n\
-  \n# Enumerate supported ciphers\n nmap --script ssl-enum-ciphers -p 443 api.example.com\n\n# HSTS presence\n\
-  \ curl -sI https://api.example.com | grep -i 'strict-transport-security'\n```\n\n## Chain debugging\n\
-  \n```bash\n# Print the full chain presented by the server\n echo | openssl s_client -connect api.example.com:443\
+  \ -connect api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'\n\n# Strict chain validation\n\
+  \ echo | openssl s_client -connect httpbin.org:443 -verify_return_error 2>&1 | grep -iE 'verify|error'\n\
+  \n# Enumerate supported ciphers\n nmap --script ssl-enum-ciphers -p 443 httpbin.org\n\n# HSTS presence\n\
+  \ curl -sI https://httpbin.org | grep -i 'strict-transport-security'\n```\n\n## Chain debugging\n\
+  \n```bash\n# Print the full chain presented by the server\n echo | openssl s_client -connect httpbin.org:443\
   \ -showcerts 2>/dev/null | grep -E '^\\s+i:|^s:' | head -20\n```\n\n## Hardening config example (nginx)\n\
   \n```nginx\nssl_protocols TLSv1.2 TLSv1.3;\nssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;\n\
   ssl_prefer_server_ciphers off;\nadd_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\"\
@@ -62,7 +62,7 @@ instructions: "# Encryption in Transit\n\n## What this skill does\n\nEncryption 
   \ alerts 30 days out).\n- Always pass `-servername` when testing virtual-hosted endpoints.\n"
 examples:
 - input: Is the certificate about to expire?
-  output: Run echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null
+  output: Run echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null
     | openssl x509 -noout -dates to read the notAfter date.
 - input: Weak ciphers on our endpoint
   output: Run nmap --script ssl-enum-ciphers, then enforce modern suites in the nginx ssl_ciphers line
@@ -92,12 +92,12 @@ platforms:
   generic:
     system_prompt: 'You are the Encryption In Transit specialist. You do it through tls-verification:
       Probe TLS endpoints, inspect certificates and ciphers, and validate chains. The commands are real,
-      e.g. `echo | openssl s_client -connect api.example.com:443 -servername api.example.com...`. You
+      e.g. `echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org...`. You
       work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

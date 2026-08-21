@@ -2,12 +2,12 @@ name: service-mesh
 display_name: Service Mesh
 category: api
 subcategory: general
-description: 'Hand-crafted service mesh skill: Istio install and analyze, proxy-status checks, VirtualService
-  traffic rules, and Linkerd bootstrap for mTLS and observability.'
+description: "Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without application changes."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - istioctl
@@ -15,37 +15,33 @@ prerequisites:
 - linkerd
 capabilities:
 - name: istio-linkerd-mesh
-  description: Install and operate a service mesh with Istio or Linkerd
+  description: "Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without application changes."
   commands:
   - istioctl install --set profile=demo -y
   - istioctl analyze
   - istioctl proxy-status
   - kubectl get virtualservices -A
-  - linkerd check --pre && linkerd install | kubectl apply -f -
+  - linkerd check --pre
+  - linkerd install
   - linkerd check
   examples:
   - istioctl install --set profile=demo -y
   - istioctl analyze
-  - kubectl get virtualservices -A -o yaml
+  - istioctl proxy-status
+  - kubectl get virtualservices -A
+  - linkerd check --pre && linkerd install | kubectl apply -f -
   parameters:
   - name: profile
     type: string
-    description: 'Istio install profile: default, demo, minimal'
+    description: Istio installation profile (demo, default, minimal)
   - name: namespace
     type: string
-    description: Namespace to inspect for mesh resources
-  - name: mesh
-    type: string
-    description: istio or linkerd
+    description: Kubernetes namespace for mesh operations
 knowledge:
 - title: Istio docs
   type: documentation
   source: https://istio.io/latest/docs/
-  description: Install, traffic management, and security
-- title: Linkerd docs
-  type: documentation
-  source: https://linkerd.io/2.15/overview/
-  description: Install, inject, and verify
+  description: "Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without application changes."
 instructions: "# Service Mesh\n\nHand-crafted skill for installing and operating a service mesh.\n\n##\
   \ What this skill does\n\n- Installs Istio or Linkerd into a cluster\n- Verifies proxies are connected\
   \ and sidecars injected\n- Routes traffic with VirtualService rules\n\n## When to use\n\n- Enabling\
@@ -102,5 +98,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

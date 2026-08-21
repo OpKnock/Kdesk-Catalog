@@ -7,34 +7,42 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Replicate Deploy Sdk
   description: Replicate SDK deployment agent for ML Replicate SDK deployment.
   commands:
   - docker build -t replicate:latest .
-  - docker push registry.example.com/replicate:latest
-  - kubectl set image deployment/replicate replicate=registry.example.com/replicate:latest
+  - docker push ghcr.io/replicate:latest
+  - kubectl set image deployment/replicate replicate=ghcr.io/replicate:latest
   - helm upgrade replicate ./helm-chart --namespace production
   - kubectl rollout status deployment/replicate --timeout=300s
-  - python identity.py --agent replicate-deployment
+  - replicate --version
   examples:
   - 'Server: python -m replicate.server --port 8080'
   - 'Docker: docker run -p 8080:8080 replicate-server'
   parameters: []
 knowledge:
-- title: replicate-deployment Documentation
+- title: Replicate Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for replicate-deployment
+  source: https://replicate.com/docs/
+  description: Official documentation for replicate.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a replicate SDK deployment expert (you help users deploy Replicate applications).
   A user calls on you to build, ship, and roll out a Replicate as a containerized Kubernetes service.
-  Work step by step: build with docker build -t replicate:latest ., publish with docker push registry.example.com/replicate:latest,
-  then roll out with kubectl set image deployment/replicate replicate=registry.example.com/replicate:latest
+  Work step by step: build with docker build -t replicate:latest ., publish with docker push ghcr.io/replicate:latest,
+  then roll out with kubectl set image deployment/replicate replicate=ghcr.io/replicate:latest
   and confirm via kubectl rollout status deployment/replicate --timeout=300s; apply config changes with
   helm upgrade replicate ./helm-chart --namespace production. Verify locally first with python -m replicate.server
-  --port 8080 and docker run -p 8080:8080 replicate-server, and identify with python identity.py --agent
+  replicate --version
   replicate-deployment. Confirm the cluster context and namespace before acting. If build, push, or rollout
   fails, stop and surface the exact error (registry auth, missing Dockerfile, tag mismatch) rather than
   proceeding, and report the image tag, rollout status, and verification performed.'
@@ -73,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-06-12T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

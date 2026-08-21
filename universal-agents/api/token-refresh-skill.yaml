@@ -2,12 +2,11 @@ name: token-refresh
 display_name: Token Refresh
 category: api
 subcategory: general
-description: 'Hand-crafted token refresh skill: OAuth2 refresh grant exchange, token rotation behavior,
-  reuse detection, and automated refresh in CLIs and services.'
+description: "Keep OAuth2 access tokens fresh by exchanging refresh tokens at the token endpoint. Handles token rotation where the server issues a new refresh token per exchange, detects reuse rejection with invalid_grant errors, and automates refresh loops for CLIs and background services with configurable TTL thresholds."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - oauth2l
@@ -15,16 +14,16 @@ capabilities:
 - name: oauth-refresh
   description: Refresh access tokens with the OAuth2 refresh grant
   commands:
-  - curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+  - curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
     | jq -r .access_token
-  - curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+  - curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
     -o /dev/null -w '%{http_code}\n'
   - oauth2l header cloud-platform
-  - 'curl -s -H "Authorization: Bearer $NEW_ACCESS_TOKEN" https://api.example.com/me'
+  - 'curl -s -H "Authorization: Bearer $NEW_ACCESS_TOKEN" http://localhost:8080/me'
   examples:
-  - curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+  - curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
     | jq -r .access_token
-  - curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1"
+  - curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1"
     -o /dev/null -w '%{http_code}\n'
   - oauth2l header cloud-platform
   parameters:
@@ -79,7 +78,7 @@ instructions: '# Token Refresh
 
   # Exchange the refresh token for a new access token
 
-  curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+  curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
   | jq -r .access_token
 
 
@@ -90,7 +89,7 @@ instructions: '# Token Refresh
 
   # Reuse detection: second use of a rotated token should 400
 
-  curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1"
+  curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1"
   -o /dev/null -w ''%{http_code}\n''
 
 
@@ -121,7 +120,7 @@ instructions: '# Token Refresh
 
   ```bash
 
-  TOKEN=$(curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$RT&client_id=app1&client_secret=$S"
+  TOKEN=$(curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$RT&client_id=app1&client_secret=$S"
   | jq -r .access_token)
 
   curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/me
@@ -141,7 +140,7 @@ instructions: '# Token Refresh
   '
 examples:
 - input: My access token expired, renew it
-  output: curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+  output: curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
     | jq -r .access_token.
 - input: Refresh suddenly returns invalid_grant
   output: With rotation, a reused token fails; use the latest stored refresh_token or re-run the interactive
@@ -170,12 +169,12 @@ platforms:
     plugin: opencode-token-refresh
   generic:
     system_prompt: 'This is your domain: Token Refresh. You do it through oauth-refresh: Refresh access
-      tokens with the OAuth2 refresh grant. The commands are real, e.g. `curl -s -X POST https://idp.example.com/token
+      tokens with the OAuth2 refresh grant. The commands are real, e.g. `curl -s -X POST https://auth.your-app.test/token
       -d...`. You verify each step you report and stay honest about what you have not run.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

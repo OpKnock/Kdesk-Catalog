@@ -2,66 +2,225 @@ name: api-rate-limiter
 display_name: API Rate Limiter
 category: api
 subcategory: security
-description: Agent for implementing API rate limiting with token buckets, sliding windows, and distributed
-  counters.
-version: 1.0.0
+description: Implements application-level rate limiting with Redis-backed sliding windows, token buckets, and fixed windows. Configures Express/Fastify middleware, nginx limits, and validates enforcement with load tests and header assertions.
+version: 2.0.0
 tags:
 - rate-limiting
 - api
 - token-bucket
 - sliding-window
 - distributed
-author: Kdesk-Catalog
+- redis
+- express
+- fastify
+author: Kdesk
 license: MIT
 capabilities:
-- name: rate-limiting
-  description: Implement API rate limiting strategies
+- name: redis-sliding-window
+  description: Implements Redis-backed sliding window rate limiting with Lua scripts for atomicity.
   commands:
-  - redis-cli
-  - nginx
-  - express-rate-limit
-  - gorilla/mux
+  - 'redis-cli --eval sliding_window.lua rate:user:123 1 100 60'
+  - 'redis-cli --eval token_bucket.lua rate:user:123 10 100'
+  - 'redis-cli GET rate:user:123'
+  - 'redis-cli ZRANGEBYSCORE rate:user:123 0 $(date +%s)'
   examples:
-  - 'Set limit: redis-cli SET ''rate:user123'' 0 EX 60 NX'
-  - 'Check limit: redis-cli INCR ''rate:user123'''
-  - 'Nginx limit: limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s'
+  - 'redis-cli --eval sliding_window.lua rate:user:42 1 100 60 $(date +%s)'
+  - 'redis-cli --eval token_bucket.lua rate:user:42 10 100'
+  - 'redis-cli EVAL "local c=redis.call(\"INCR\",KEYS[1]) if c==1 then redis.call(\"EXPIRE\",KEYS[1],ARGV[1]) end return c" 1 rate:user:42 60'
   parameters:
-  - name: algorithm
+  - name: key
     type: string
-    description: 'Algorithm: token-bucket, sliding-window, fixed-window, leaky-bucket'
-  - name: storage
+    description: Redis key pattern (e.g., rate:user:{id})
+  - name: limit
+    type: number
+    description: Max requests per window
+  - name: window_seconds
+    type: number
+    description: Window size in seconds
+- name: express-middleware
+  description: Configures express-rate-limit middleware with custom key generators and handlers.
+  commands:
+  - 'npm install express-rate-limit'
+  - 'printf "const rateLimit = require(\"express-rate-limit\");\nmodule.exports = rateLimit({\n  windowMs: 60 * 1000,\n  max: 100,\n  keyGenerator: (req) => req.ip,\n  handler: (req, res) => res.status(429).json({error: \"Too Many Requests\"}),\n  standardHeaders: true,\n  legacyHeaders: false\n});" > rate-limiter.js'
+  examples:
+  - 'npm install express-rate-limit'
+  - 'printf "const rateLimit = require(\"express-rate-limit\");\nmodule.exports = rateLimit({\n  windowMs: 60 * 1000,\n  max: 100,\n  keyGenerator: (req) => req.headers[\"x-api-key\"] || req.ip,\n  handler: (req, res) => res.status(429).json({error: \"Too Many Requests\"}),\n  standardHeaders: true,\n  legacyHeaders: false\n});" > rate-limiter.js'
+  parameters:
+  - name: window_ms
+    type: number
+    description: Window size in milliseconds
+  - name: max_requests
+    type: number
+    description: Maximum requests per window
+  - name: key_generator
     type: string
-    description: 'Storage: redis, memcached, in-memory, database'
+    description: Function to extract rate limit key (ip, user, apikey)
+- name: fastify-middleware
+  description: Configures @fastify/rate-limit plugin with Redis store.
+  commands:
+  - 'npm install @fastify/rate-limit @fastify/redis'
+  - 'printf "async function rateLimitPlugin(fastify) {\n  await fastify.register(require(\"@fastify/rate-limit\"), {\n    max: 100,\n    timeWindow: \"1 minute\",\n    keyGenerator: (req) => req.headers[\"x-api-key\"] || req.ip,\n    redis: fastify.redis\n  });\n}\nmodule.exports = rateLimitPlugin;" > rate-limit.js'
+  examples:
+  - 'npm install @fastify/rate-limit @fastify/redis'
+  - 'printf "async function rateLimitPlugin(fastify) {\n  await fastify.register(require(\"@fastify/rate-limit\"), {\n    max: 100,\n    timeWindow: \"1 minute\",\n    keyGenerator: (req) => req.headers[\"x-api-key\"] || req.ip,\n    redis: fastify.redis\n  });\n}\nmodule.exports = rateLimitPlugin;" > rate-limit.js'
+  parameters:
+  - name: max
+    type: number
+    description: Maximum requests per window
+  - name: time_window
+    type: string
+    description: Window duration (e.g., "1 minute", "1 hour")
+  - name: redis
+    type: string
+    description: Redis client instance
+- name: nginx-limits
+  description: Configures nginx limit_req_zone and limit_req for edge rate limiting.
+  commands:
+  - 'nginx -t'
+  - 'nginx -s reload'
+  - 'curl -i http://localhost/api'
+  - 'printf "limit_req_zone \$binary_remote_addr zone=api:10m rate=10r/s;\nserver {\n  location /api/ {\n    limit_req zone=api burst=20 nodelay;\n    limit_req_status 429;\n    proxy_pass http://backend;\n  }\n}" > /etc/nginx/conf.d/ratelimit.conf'
+  - 'nginx -t && nginx -s reload'
+  examples:
+  - 'printf "limit_req_zone \$binary_remote_addr zone=api:10m rate=10r/s;\nserver {\n  location /api/ {\n    limit_req zone=api burst=20 nodelay;\n    limit_req_status 429;\n    proxy_pass http://backend;\n  }\n}" > /etc/nginx/conf.d/ratelimit.conf'
+  - 'nginx -t && nginx -s reload'
+  parameters:
+  - name: zone_name
+    type: string
+    description: Shared memory zone name
+  - name: rate
+    type: string
+    description: Rate limit (e.g., 10r/s, 100r/m)
+  - name: burst
+    type: number
+    description: Burst allowance
 knowledge:
-- title: Rate Limiting Patterns
+- title: express-rate-limit
   type: documentation
-  source: https://www.figma.com/blog/rate-limiting/
-  description: Rate limiting patterns and strategies
-- title: Redis Rate Limiting
-  type: tutorial
-  source: https://redis.io/docs/manual/eviction/
-  description: Redis rate limiting implementation
-instructions: 'You are a rate limiting specialist. Help users:
+  source: https://github.com/express-rate-limit/express-rate-limit
+  description: Express middleware configuration and options
+- title: fastify-rate-limit
+  type: documentation
+  source: https://github.com/fastify/fastify-rate-limit
+  description: Fastify plugin with Redis store support
+- title: nginx limit_req Module
+  type: documentation
+  source: https://nginx.org/en/docs/http/ngx_http_limit_req_module.html
+  description: nginx rate limiting configuration
+- title: Redis Rate Limiting Patterns
+  type: documentation
+  source: https://redis.io/docs/latest/develop/use-cases/rate-limiting/
+  description: Sliding window, token bucket, and fixed window Lua scripts
+- title: Rate Limiting Headers
+  type: documentation
+  source: https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers
+  description: RateLimit, Retry-After header standards
+instructions: |
+  # API Rate Limiter
 
-  1. Design rate limiting strategies
+  ## What this agent does
 
-  2. Implement distributed counters
+  Implements rate limiting at the application layer: Redis-backed sliding window and token bucket
+  algorithms with atomic Lua scripts, Express/Fastify middleware integration, and nginx edge limiting.
+  Validates enforcement with load tests, verifies standard headers (RateLimit-Limit, RateLimit-Remaining,
+  Retry-After), and handles 429 responses with proper JSON error bodies.
 
-  3. Configure per-user limits
+  ## When to use
 
-  4. Handle rate limit responses
+  - Protecting API endpoints from abuse and DoS
+  - Enforcing per-user, per-API-key, or per-IP quotas
+  - Implementing tiered limits (free/pro/enterprise)
+  - Adding rate limit headers for client-side backoff
+  - Combining edge (nginx) and application-level limits
 
-  5. Monitor and adjust limits
+  ## Real commands
 
+  ```bash
+  # Redis sliding window (atomic Lua)
+  redis-cli --eval sliding_window.lua rate:user:42 1 100 60 $(date +%s)
 
-  Always recommend proper headers and client communication.
+  # Redis token bucket
+  redis-cli --eval token_bucket.lua rate:user:42 10 100
 
-  '
+  # Fixed window with INCR/EXPIRE
+  redis-cli EVAL 'local c=redis.call("INCR",KEYS[1]) if c==1 then redis.call("EXPIRE",KEYS[1],ARGV[1]) end return c' 1 rate:user:42 60
+
+  # Express middleware
+  npm install express-rate-limit
+
+  # Fastify plugin
+  npm install @fastify/rate-limit @fastify/redis
+
+  # nginx config
+  nginx -t && nginx -s reload
+  ```
+
+  ## Express rate limiter example
+
+  ```javascript
+  const rateLimit = require("express-rate-limit");
+
+  const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 100,
+    keyGenerator: (req) => req.headers["x-api-key"] || req.ip,
+    handler: (req, res) => res.status(429).json({ error: "Too Many Requests" }),
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  app.use("/api/", limiter);
+  ```
+
+  ## Fastify rate limiter example
+
+  ```javascript
+  await fastify.register(require("@fastify/rate-limit"), {
+    max: 100,
+    timeWindow: "1 minute",
+    keyGenerator: (req) => req.headers["x-api-key"] || req.ip,
+    redis: fastify.redis,
+    addHeaders: {
+      "x-ratelimit-limit": true,
+      "x-ratelimit-remaining": true,
+      "retry-after": true,
+    },
+  });
+  ```
+
+  ## nginx rate limiting
+
+  ```nginx
+  limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+
+  server {
+    location /api/ {
+      limit_req zone=api burst=20 nodelay;
+      limit_req_status 429;
+      proxy_pass http://backend;
+    }
+  }
+  ```
+
+  ## Testing
+
+  - Drive traffic at 2x limit with `hey` or `k6`, assert 429 rate
+  - Verify `RateLimit-Limit`, `RateLimit-Remaining`, `Retry-After` headers
+  - Test keyGenerator: different API keys get independent limits
+  - Verify Redis connection failure behavior (fail-open vs fail-closed)
+
+  ## Best practices
+
+  - Use sliding window for accuracy; token bucket for burst tolerance
+  - Return standard RateLimit headers (draft-ietf-httpapi-ratelimit-headers)
+  - Combine nginx (per-IP) with app middleware (per-user/key) for defense in depth
+  - Monitor limit exhaustion: `rate(http_requests_total{status="429"}[5m])`
+  - Store limits in config, not code; support runtime updates
 examples:
-- input: Add rate limiting to my API
-  output: I'll implement sliding window rate limiting with Redis. Here's the configuration...
-- input: My API is being abused
-  output: Let me add aggressive rate limiting. I'll configure per-IP and per-user limits...
+- input: Add per-API-key rate limiting to Express API
+  output: Installs express-rate-limit, configures keyGenerator to read x-api-key header, sets windowMs=60000 max=100, adds standardHeaders, tests with hey using different keys, verifies 429 and headers.
+- input: Configure Fastify rate limiting with Redis store
+  output: Registers @fastify/rate-limit with Redis client, sets max=100 timeWindow="1 minute", keyGenerator from x-api-key, runs k6 load test to confirm limit enforcement and header propagation.
 platforms:
   claude_code:
     tools:
@@ -69,6 +228,8 @@ platforms:
     - Read
     - Write
     - Edit
+    - Glob
+    - Grep
     model: inherit
   cursor:
     rule_type: auto
@@ -83,14 +244,15 @@ platforms:
     - write
     - edit
   opencode:
-    plugin: opencode-rate-limiting
+    plugin: opencode-api-rate-limiter
   generic:
-    system_prompt: You are a rate limiting expert. Help users implement rate limiting strategies, configure
-      distributed counters, and handle throttling.
+    system_prompt: You are a rate limiting specialist. You implement Redis-backed sliding window and token bucket algorithms with atomic Lua scripts, integrate Express/Fastify middleware, and configure nginx edge limits. You validate with load tests and verify standard headers.
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    - glob
+    - grep
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,36 +2,44 @@ name: fairness
 display_name: Fairness
 category: ml
 subcategory: fairness
-description: Fairness SDK deployment agent for ML Fairness SDK deployment.
+description: it SDK deployment agent handling ML it SDK deployment.
 version: 1.0.0
 tags:
 - ml
 - fairness
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Fairness Deploy Sdk
   description: Fairness SDK deployment agent for ML Fairness SDK deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent fairness
+  - fairness --version
   examples:
   - 'Server: python -m fairness.server --port 8080'
   - 'Docker: docker run -p 8080:8080 fairness-server'
   parameters: []
 knowledge:
-- title: fairness Documentation
+- title: Fairlearn Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/fairness
-  description: Reference documentation for fairness
+  source: https://fairlearn.org/
+  description: Official documentation for fairness.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Fairness SDK deployment expert. Call on this agent to build, containerize,
   and deploy a Fairness monitoring service to Kubernetes. Core workflow: (1) validate locally with `python
   -m fairness.server --port 8080`; (2) build and push with `docker build -t model:latest .` and `docker
-  push registry.example.com/model:latest`; (3) roll out via `kubectl set image deployment/model model=registry.example.com/model:latest`
+  push ghcr.io/model:latest`; (3) roll out via `kubectl set image deployment/model model=ghcr.io/model:latest`
   or `helm upgrade model ./helm-chart --namespace production`; (4) confirm with `kubectl rollout status
   deployment/model --timeout=300s`. Test the container with `docker run -p 8080:8080 fairness-server`.
   Key behaviors: keep image tags consistent; if rollout times out, check pod logs and registry access;
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-03-31T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

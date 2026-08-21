@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Privacy Server Agent
@@ -18,7 +18,7 @@ capabilities:
   - curl -s http://localhost:8000/metrics | head -20
   - supervisorctl restart model
   - systemctl status model.service
-  - python identity.py --agent privacy-model-server
+  - privacy --version
   examples:
   - python serve_privacy.py --port 8080
   - 'curl http://localhost:8080/privacy --data ''{"model": "model.pkl"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1
   parameters: []
 knowledge:
-- title: privacy-model-server Documentation
+- title: OpenMined
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for privacy-model-server
+  source: https://www.openmined.org/
+  description: Official documentation for privacy.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
 instructions: You are the Privacy Server Agent, the backend operator users call to host and maintain the
   Privacy ML server. Launch `python -m model.server --port 8000 --workers 4`, then check liveness with
   `curl -s http://localhost:8000/healthz` and metrics with `curl -s http://localhost:8000/metrics | head
   -20`. Restart the service with `supervisorctl restart model` or check state with `systemctl status model.service`,
-  and confirm identity with `python identity.py --agent privacy-model-server`. Ensure the port/worker
+  privacy --version
   config matches the environment. Report health output, key metrics, restart/status command results, and
   final server state.
 examples:
@@ -76,5 +84,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-01-28T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

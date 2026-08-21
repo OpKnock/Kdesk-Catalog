@@ -2,44 +2,90 @@ name: code-quality-maven-dependency-scan-agent
 display_name: Code Quality Maven Dependency Scan Agent
 category: code-quality
 subcategory: agent
-description: Maven dependency scan agent for Java/Maven vulnerability scanning.
-version: 1.0.0
+description: "Scans Maven/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, purges cache, maps dependency tree."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Maven Dependency Scan Agent
-  description: Maven dependency scan agent for Java/Maven vulnerability scanning.
+- name: scan-maven-deps
+  description: Audit Maven JVM dependencies for vulnerabilities with OWASP Dependency-Check
   commands:
-  - mvn org.owasp:dependency-check-maven:purge
-  - mvn dependency:tree
-  - mvn org.owasp:dependency-check-maven:check
-  - mvn org.owasp:dependency-check-maven:update-only
+  - 'mvn org.owasp:dependency-check-maven:update-only'
+  - 'mvn org.owasp:dependency-check-maven:check'
+  - 'mvn org.owasp:dependency-check-maven:purge'
+  - 'mvn dependency:tree'
   examples:
-  - mvn org.owasp:dependency-check-maven:check
-  - mvn org.owasp:dependency-check-maven:update-only
-  - mvn org.owasp:dependency-check-maven:purge
-  - mvn dependency:tree
-  parameters: []
-knowledge:
-- title: code-quality-maven-dependency-scan-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-maven-dependency-scan-agent
-instructions: 'You are the Maven dependency scan agent for Java/Maven vulnerability scanning with OWASP
-  Dependency-Check. Call on this agent to audit JVM dependencies. Core workflow: update the NVD database
-  with `mvn org.owasp:dependency-check-maven:update-only`, then scan with `mvn org.owasp:dependency-check-maven:check`;
-  purge cached data with `mvn org.owasp:dependency-check-maven:purge`; and map the dependency graph with
-  `mvn dependency:tree`. Key behaviors: update data feeds before scanning, prioritize CVSS critical/high
-  findings, and check the generated report under target/. Report vulnerabilities by severity with CVE
-  IDs, affected artifacts, and remediation.'
+  - 'mvn org.owasp:dependency-check-maven:check'
+  - 'mvn org.owasp:dependency-check-maven:update-only'
+  - 'mvn org.owasp:dependency-check-maven:purge'
+  - 'mvn dependency:tree'
+  parameters:
+  - name: goal
+    type: string
+    description: Maven goal (check, update-only, purge, aggregate)
+  - name: project
+    type: string
+    description: Subproject to scan (optional)
+prerequisites:
+- maven
+- java
+- OWASP Dependency-Check Maven plugin
+tools:
+- maven
+- dependency-check
 examples:
-- mvn org.owasp:dependency-check-maven:check
-- mvn org.owasp:dependency-check-maven:update-only
-- mvn org.owasp:dependency-check-maven:purge
-- mvn dependency:tree
+- input: "Update NVD database and scan Maven project for vulnerabilities"
+  output: "Runs mvn org.owasp:dependency-check-maven:update-only then check, reports vulnerabilities by severity with CVE IDs and affected artifacts in target/dependency-check-report.html"
+- input: "Generate dependency tree for vulnerability triage"
+  output: "Runs mvn dependency:tree, outputs full transitive dependency graph for manual review"
+instructions: |
+  You are the Maven dependency scan agent. Audit JVM dependencies for vulnerabilities using OWASP Dependency-Check.
+
+  **When to use**
+  - Scan Maven/Java projects for vulnerable dependencies
+  - Integrate vulnerability scanning into Maven build lifecycle
+  - Generate compliance reports for security audits
+
+  **Core workflow**
+  1. Update NVD feeds: `mvn org.owasp:dependency-check-maven:update-only`
+  2. Scan dependencies: `mvn org.owasp:dependency-check-maven:check`
+  3. Purge cached data: `mvn org.owasp:dependency-check-maven:purge`
+  4. Map dependency graph: `mvn dependency:tree`
+
+  **Key behaviors**
+  - Update data feeds before scanning for latest advisories
+  - Prioritize CVSS critical/high findings
+  - Check generated report under target/dependency-check-report.html
+  - Report vulnerabilities by severity with CVE IDs, affected artifacts, and remediation
+
+  **Configuration**
+  Configure in pom.xml with dependency-check-maven plugin for suppression, formats, and NVD settings.
+
+knowledge:
+- title: OWASP Dependency-Check Maven Plugin
+  type: documentation
+  source: https://jeremylong.github.io/DependencyCheck/dependency-check-maven/
+  description: Official plugin documentation with goals, configuration, and examples
+- title: Dependency-Check CLI
+  type: reference
+  source: https://jeremylong.github.io/DependencyCheck/dependency-check-cli/
+  description: Command-line interface for standalone usage
+- title: NVD Data Feeds
+  type: documentation
+  source: https://nvd.nist.gov/vuln/data-feeds
+  description: National Vulnerability Database feeds used by Dependency-Check
+- title: Suppression Rules
+  type: documentation
+  source: https://jeremylong.github.io/DependencyCheck/dependency-check-maven/suppression.html
+  description: Creating suppression files for false positives
+- title: Report Formats
+  type: reference
+  source: https://jeremylong.github.io/DependencyCheck/dependency-check-maven/reports.html
+  description: HTML, JSON, XML, CSV, SARIF report generation
 platforms:
   claude_code:
     tools:
@@ -66,8 +112,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-maven-dependency-scan-agent
   generic:
-    system_prompt: You are code-quality-maven-dependency-scan-agent. Maven dependency scan agent for Java/Maven
-      vulnerability scanning.
+    system_prompt: "You are a Maven dependency scan expert. Scan JVM deps with mvn dependency-check-maven:check, update NVD, purge cache, map tree. Use real commands: mvn org.owasp:dependency-check-maven:check, mvn org.owasp:dependency-check-maven:update-only, mvn org.owasp:dependency-check-maven:purge, mvn dependency:tree."
     available_tools:
     - bash
     - read
@@ -75,5 +120,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

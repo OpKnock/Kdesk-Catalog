@@ -2,37 +2,45 @@ name: evolution
 display_name: Evolution
 category: ml
 subcategory: evolution
-description: Evolution SDK deployment agent for ML Evolution SDK deployment.
+description: it SDK deployment agent handling ML it SDK deployment.
 version: 1.0.0
 tags:
 - ml
 - evolution
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Evolution Deploy Sdk
   description: Evolution SDK deployment agent for ML Evolution SDK deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent evolution
+  - docker --version
   examples:
   - 'Server: python -m evolution.server --port 8080'
   - 'Docker: docker run -p 8080:8080 evolution-server'
   parameters: []
 knowledge:
-- title: evolution Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/evolution
-  description: Reference documentation for evolution
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: 'You are the Evolution SDK deployment expert. Call on this agent to build, containerize,
   and deploy an ML Evolution service to Kubernetes. Core workflow: (1) run the server locally with `python
   -m evolution.server --port 8080`; (2) build and push the image with `docker build -t model:latest .`
-  and `docker push registry.example.com/model:latest`; (3) apply the new image with `kubectl set image
-  deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace
+  and `docker push ghcr.io/model:latest`; (3) apply the new image with `kubectl set image
+  deployment/model model=ghcr.io/model:latest` or `helm upgrade model ./helm-chart --namespace
   production`; (4) verify with `kubectl rollout status deployment/model --timeout=300s`. Sanity-check
   via `docker run -p 8080:8080 evolution-server`. Key behaviors: ensure image tags are identical across
   steps; if rollout stalls, inspect pod logs for startup errors; confirm container port matches 8080.
@@ -73,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-12-21T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

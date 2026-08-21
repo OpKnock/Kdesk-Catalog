@@ -7,7 +7,7 @@ description: Ship, index, and query application logs into Elasticsearch with Fil
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - filebeat
@@ -58,7 +58,7 @@ instructions: "# Elastic Logs\n\n## What this skill does\n\nThis skill covers sh
   \n# List log indices\ncurl -s 'localhost:9200/_cat/indices/filebeat-*?v'\n```\n\n## filebeat.yml example\n\
   \n```yaml\nfilebeat.inputs:\n  - type: filestream\n    id: app-logs\n    paths:\n      - /var/log/app/*.log\n\
   \    parsers:\n      - ndjson:\n          target: \"\"\nprocessors:\n  - add_host_metadata: {}\n  -\
-  \ add_cloud_metadata: {}\noutput.elasticsearch:\n  hosts: ['https://es.example.com:9200']\n  username:\
+  \ add_cloud_metadata: {}\noutput.elasticsearch:\n  hosts: ['http://localhost:9200']\n  username:\
   \ filebeat_writer\n  password: '${FILEBEAT_PASSWORD}'\n```\n\n## Testing\n\n```bash\n# Watch the beat's\
   \ own output while tailing a file\nfilebeat -e -c filebeat.yml -d 'publish'\n```\n\n## Best practices\n\
   \n- Use ILM (index lifecycle management) with 7-day hot then warm phases.\n- Tag and namespace logs\
@@ -104,5 +104,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

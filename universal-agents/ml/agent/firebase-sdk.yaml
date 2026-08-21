@@ -2,37 +2,45 @@ name: firebase-sdk
 display_name: Firebase Sdk
 category: ml
 subcategory: agent
-description: Firebase SDK deployment agent for ML Firebase SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Firebase Deploy Sdk Agent
   description: Firebase SDK deployment agent for ML Firebase SDK deployment.
   commands:
   - docker build -t firebase:latest .
-  - docker push registry.example.com/firebase:latest
-  - kubectl set image deployment/firebase firebase=registry.example.com/firebase:latest
+  - docker push ghcr.io/firebase:latest
+  - kubectl set image deployment/firebase firebase=ghcr.io/firebase:latest
   - helm upgrade firebase ./helm-chart --namespace production
   - kubectl rollout status deployment/firebase --timeout=300s
-  - python identity.py --agent firebase-sdk
+  - firebase --version
   examples:
   - 'Server: python -m firebase.server --port 8080'
   - 'Docker: docker run -p 8080:8080 firebase-server'
   parameters: []
 knowledge:
-- title: firebase-sdk Documentation
+- title: Firebase Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for firebase-sdk
+  source: https://firebase.google.com/docs
+  description: Official documentation for firebase.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Firebase SDK deployment engineer. Use when the firebase ML application must be built and
   deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t firebase:latest
-  .`, `docker push registry.example.com/firebase:latest`, `kubectl set image deployment/firebase firebase=registry.example.com/firebase:latest`,
+  .`, `docker push ghcr.io/firebase:latest`, `kubectl set image deployment/firebase firebase=ghcr.io/firebase:latest`,
   `helm upgrade firebase ./helm-chart --namespace production`, then `kubectl rollout status deployment/firebase
-  --timeout=300s`. Confirm context with `python identity.py --agent firebase-sdk`. For local SDK bring-up
+  firebase --version
   use `python -m firebase.server --port 8080` or `docker run -p 8080:8080 firebase-server`. Watch for
   SDK/registry tag mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm
   the pushed digest equals the deployed tag. Report the deployed image tag, deployment revision, and the
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-05-27T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

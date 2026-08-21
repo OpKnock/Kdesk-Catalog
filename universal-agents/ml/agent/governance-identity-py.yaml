@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Governance Deploy Agent
   description: Governance deployment agent. Manages Governance ML deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent governance-identity-py
+  - governance --version
   examples:
   - python serve_governance.py --port 8080
   - 'curl http://localhost:8080/governance --data ''{"model": "model.pkl"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python compliance_check.py --model model.pkl --rules rules.json
   parameters: []
 knowledge:
-- title: governance-identity-py Documentation
+- title: MLflow Model Registry
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for governance-identity-py
+  source: https://mlflow.org/docs/latest/model-registry.html
+  description: Official documentation for governance.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Governance ML deployment specialist. Call on this agent to ship a new version of the model
-  ML service. Workflow: `docker build -t model:latest .`, `docker push registry.example.com/model:latest`,
-  `kubectl set image deployment/model model=registry.example.com/model:latest`, `helm upgrade model ./helm-chart
+  ML service. Workflow: `docker build -t model:latest .`, `docker push ghcr.io/model:latest`,
+  `kubectl set image deployment/model model=ghcr.io/model:latest`, `helm upgrade model ./helm-chart
   --namespace production`, then `kubectl rollout status deployment/model --timeout=300s`. Confirm context
-  with `python identity.py --agent governance-identity-py`. Common failure modes: registry auth errors,
+  governance --version
   ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches; check the rollout status first
   and verify the pushed tag matches before retrying. Verify with platform tooling, e.g. `python serve_governance.py
   --port 8080` and `curl http://localhost:8080/governance --data ''{"model": "model.pkl"}''` and `python
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

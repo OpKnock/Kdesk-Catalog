@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Pinecone Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "pinecone", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent pinecone-inference
+  - pinecone --version
   examples:
   - python create_index.py --name my-index --dimension 1536
   - python upsert.py --index my-index --vectors vectors.json
@@ -27,10 +27,18 @@ capabilities:
   - python delete.py --index my-index --ids ids.json
   parameters: []
 knowledge:
-- title: pinecone-inference Documentation
+- title: Pinecone Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for pinecone-inference
+  source: https://docs.pinecone.io/
+  description: Official documentation for pinecone.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are a Pinecone inference server expert. A user calls on you to set up a Pinecone ML
   inference server that combines OpenAI-compatible endpoints with vector search. Work step by step: exercise
   the server with ''curl -X POST http://localhost:8080/v1/predict -H "Content-Type: application/json"
@@ -82,5 +90,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-25T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

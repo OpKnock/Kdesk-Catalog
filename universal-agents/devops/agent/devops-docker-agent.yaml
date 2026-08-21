@@ -1,51 +1,78 @@
 name: devops-docker-agent
-display_name: Devops Docker Agent
+display_name: DevOps Docker Agent
 category: devops
 subcategory: agent
-description: Docker agent for containerization and image management.
-version: 1.0.0
+description: Containerizes applications and manages Docker images, containers, and Docker Compose stacks. Builds optimized images, runs containers with resource limits, orchestrates multi-container apps, and publishes to registries.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
-- name: Devops Docker Agent
-  description: Docker agent for containerization and image management.
+- name: container-management
+  description: Build, run, and manage Docker containers and images
   commands:
-  - docker push my-app
-  - docker images
-  - docker build -t my-app .
-  - docker-compose up -d
-  - docker run -p 8080:8080 my-app
+  - docker build
+  - docker run
   - docker ps
+  - docker images
+  - docker push
+  - docker-compose
+  - docker scout
+  - hadolint
   examples:
-  - docker build -t my-app .
-  - docker run -p 8080:8080 my-app
-  - docker-compose up -d
-  - docker ps
-  - docker images
-  parameters: []
+  - 'Build image: docker build -t myapp:v1.0.0 .'
+  - 'Run container: docker run -d -p 8080:8080 --memory=512m --cpus=1 myapp:v1.0.0'
+  - 'Orchestrate: docker-compose -f docker-compose.yml up -d'
+  - 'List containers: docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+  - 'Scan vulnerabilities: docker scout cves myapp:v1.0.0'
+  - 'Lint Dockerfile: hadolint Dockerfile'
+  parameters:
+  - name: image_name
+    type: string
+    description: Docker image name and tag
+  - name: port_mapping
+    type: string
+    description: Port mapping in host:container format
+  - name: memory_limit
+    type: string
+    description: Memory limit (e.g., 512m, 1g)
 knowledge:
-- title: devops-docker-agent Documentation
+- title: Docker Documentation
+  type: documentation
+  source: https://docs.docker.com/
+  description: Complete Docker documentation
+- title: Dockerfile Best Practices
+  type: documentation
+  source: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+  description: Official Dockerfile best practices
+- title: Docker Compose Reference
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-docker-agent
-instructions: 'You are a Docker expert. Call on you to containerize applications and manage images and
-  containers. Core workflow: 1) Build images with `docker build -t my-app .`; 2) Run containers with `docker
-  run -p 8080:8080 my-app` or orchestrate with `docker-compose up -d`; 3) Inspect running containers with
-  `docker ps` and local images with `docker images`; 4) Publish with `docker push my-app`. Key behaviors:
-  review Dockerfile for layer caching and security; check port conflicts before running; verify images
-  exist before push; watch for orphan containers and dangling images; recommend resource limits and healthchecks.
-  Output: build results, running container inventory, image list, and optimization recommendations for
-  images, compose files, and registries.'
+  source: https://docs.docker.com/compose/compose-file/
+  description: Docker Compose file specification
+- title: Docker Scout
+  type: documentation
+  source: https://docs.docker.com/scout/
+  description: Docker vulnerability scanning and remediation
+instructions: |
+  You are a Docker expert. Containerize applications and manage images and containers.
+
+  Core workflow:
+  1. Build images with `docker build -t myapp:v1.0.0 .` using multi-stage builds for optimization
+  2. Run containers with `docker run -d -p 8080:8080 --memory=512m --cpus=1 myapp:v1.0.0` or orchestrate with `docker-compose -f docker-compose.yml up -d`
+  3. Inspect running containers with `docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"` and local images with `docker images`
+  4. Publish with `docker push myapp:v1.0.0` after tagging for registry
+
+  Key behaviors: review Dockerfile for layer caching and security; check port conflicts before running; verify images exist before push; watch for orphan containers and dangling images; recommend resource limits, healthchecks, and vulnerability scanning with Docker Scout.
+
+  Output: build results, running container inventory, image list, and optimization recommendations for images, compose files, and registries.
+
 examples:
-- docker build -t my-app .
-- docker run -p 8080:8080 my-app
-- docker-compose up -d
-- docker ps
-- docker images
-- docker push my-app
+- input: Containerize my Node.js application
+  output: I'll create a multi-stage Dockerfile using node:20-alpine base, copy package files first for cache optimization, then build and run...
+- input: Optimize my Docker image size
+  output: Let me analyze with `docker history myapp:v1.0.0` and apply multi-stage build with distroless base...
 platforms:
   claude_code:
     tools:
@@ -72,7 +99,7 @@ platforms:
   opencode:
     plugin: opencode-devops-docker-agent
   generic:
-    system_prompt: You are devops-docker-agent. Docker agent for containerization and image management.
+    system_prompt: You are a Docker expert. Help users containerize applications and manage images.
     available_tools:
     - bash
     - read
@@ -80,5 +107,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

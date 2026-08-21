@@ -7,7 +7,7 @@ description: 'Environment configuration management: load .env files, validate re
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - env
@@ -20,13 +20,12 @@ capabilities:
   commands:
   - node -r dotenv/config index.js
   - node -e "require('dotenv').config(); console.log(process.env.NODE_ENV)"
-  - grep -E '^[A-Z_]+=' .env | sed 's/=.*/=<redacted>/'
+  - grep -E '^[A-Z_]+=' .env | sed 's/=.*/=[REDACTED]/'
   - env | grep -iE '^(DATABASE|API_KEY|PORT)=' | cut -d= -f1
-  - python -c "import os; from dotenv import load_dotenv; load_dotenv(); print(os.getenv('DATABASE_URL',
-    'MISSING'))"
+  - python -c "import os; from dotenv import load_dotenv; load_dotenv(); print(os.getenv('DATABASE_URL', 'MISSING'))"
   examples:
   - node -r dotenv/config index.js
-  - grep -E '^[A-Z_]+=' .env | sed 's/=.*/=<redacted>/'
+  - grep -E '^[A-Z_]+=' .env | sed 's/=.*/=[REDACTED]/'
   - env | grep -iE '^(DATABASE|API_KEY|PORT)=' | cut -d= -f1
   parameters:
   - name: env-file
@@ -97,5 +96,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

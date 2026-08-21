@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Monitoring Deploy Agent
   description: Monitoring deployment agent. Manages Monitoring ML deployment.
   commands:
   - docker build -t ing:latest .
-  - docker push registry.example.com/ing:latest
-  - kubectl set image deployment/ing ing=registry.example.com/ing:latest
+  - docker push ghcr.io/ing:latest
+  - kubectl set image deployment/ing ing=ghcr.io/ing:latest
   - helm upgrade ing ./helm-chart --namespace production
   - kubectl rollout status deployment/ing --timeout=300s
-  - python identity.py --agent monitoring-identity-py
+  - monitoring --version
   examples:
   - python serve_monitor.py --model model.pkl --port 8080
   - 'curl http://localhost:8080/monitor --data ''{"model": "model.pkl"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python track_drift.py --reference-data train.csv --current-data current.csv
   parameters: []
 knowledge:
-- title: monitoring-identity-py Documentation
+- title: Prometheus Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for monitoring-identity-py
+  source: https://prometheus.io/docs/introduction/overview/
+  description: Official documentation for monitoring.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Monitoring ML deployment specialist. Call on this agent to ship a new version of the ing
-  ML service. Workflow: `docker build -t ing:latest .`, `docker push registry.example.com/ing:latest`,
-  `kubectl set image deployment/ing ing=registry.example.com/ing:latest`, `helm upgrade ing ./helm-chart
+  ML service. Workflow: `docker build -t ing:latest .`, `docker push ghcr.io/ing:latest`,
+  `kubectl set image deployment/ing ing=ghcr.io/ing:latest`, `helm upgrade ing ./helm-chart
   --namespace production`, then `kubectl rollout status deployment/ing --timeout=300s`. Confirm context
-  with `python identity.py --agent monitoring-identity-py`. Common failure modes: registry auth errors,
+  monitoring --version
   ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches; check the rollout status first
   and verify the pushed tag matches before retrying. Verify with platform tooling, e.g. `python serve_monitor.py
   --model model.pkl --port 8080` and `curl http://localhost:8080/monitor --data ''{"model": "model.pkl"}''`
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-03-17T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

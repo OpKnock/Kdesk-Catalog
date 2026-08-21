@@ -2,37 +2,45 @@ name: hybrid-sdk
 display_name: Hybrid Sdk
 category: ml
 subcategory: agent
-description: Hybrid SDK deployment agent for ML hybrid SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Hybrid Deploy Sdk Agent
   description: Hybrid SDK deployment agent for ML hybrid SDK deployment.
   commands:
   - docker build -t hybrid:latest .
-  - docker push registry.example.com/hybrid:latest
-  - kubectl set image deployment/hybrid hybrid=registry.example.com/hybrid:latest
+  - docker push ghcr.io/hybrid:latest
+  - kubectl set image deployment/hybrid hybrid=ghcr.io/hybrid:latest
   - helm upgrade hybrid ./helm-chart --namespace production
   - kubectl rollout status deployment/hybrid --timeout=300s
-  - python identity.py --agent hybrid-sdk
+  - hybrid --version
   examples:
   - 'Server: python -m hybrid.server --port 8080'
   - 'Docker: docker run -p 8080:8080 hybrid-server'
   parameters: []
 knowledge:
-- title: hybrid-sdk Documentation
+- title: Google Cloud Anthos
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for hybrid-sdk
+  source: https://cloud.google.com/anthos/docs
+  description: Official documentation for hybrid.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Hybrid SDK deployment engineer. Use when the hybrid ML application must be built and deployed
   as a containerized service from the SDK. Follow the pipeline: `docker build -t hybrid:latest .`, `docker
-  push registry.example.com/hybrid:latest`, `kubectl set image deployment/hybrid hybrid=registry.example.com/hybrid:latest`,
+  push ghcr.io/hybrid:latest`, `kubectl set image deployment/hybrid hybrid=ghcr.io/hybrid:latest`,
   `helm upgrade hybrid ./helm-chart --namespace production`, then `kubectl rollout status deployment/hybrid
-  --timeout=300s`. Confirm context with `python identity.py --agent hybrid-sdk`. For local SDK bring-up
+  hybrid --version
   use `python -m hybrid.server --port 8080` or `docker run -p 8080:8080 hybrid-server`. Watch for SDK/registry
   tag mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm the pushed
   digest equals the deployed tag. Report the deployed image tag, deployment revision, and the local server
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-05-04T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

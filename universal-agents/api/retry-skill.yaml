@@ -2,12 +2,11 @@ name: retry
 display_name: Retry
 category: api
 subcategory: general
-description: 'Hand-crafted shell/job retry skill: GNU timeout, curl retry flags, wait-for-service loops,
-  and systemd/supervisor restart policies for long-running jobs.'
+description: 'Expert reference covering GNU timeout, curl retry flags, wait-for-service loops, and systemd/supervisor restart policies suited to long-running jobs.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - systemctl
@@ -17,13 +16,13 @@ capabilities:
 - name: shell-job-retry
   description: 'Retry and restart shell jobs: timeout guards, readiness waits, service restarts'
   commands:
-  - timeout 30s curl -sf https://api.example.com/health || echo 'timed out'
-  - curl --retry 3 --retry-max-time 60 --fail https://api.example.com/data -o data.json
+  - timeout 30s curl -sf https://api.your-app.test/health || echo 'timed out'
+  - curl --retry 3 --retry-max-time 60 --fail https://api.your-app.test/data -o data.json
   - until nc -z db 5432; do sleep 2; done
   - gh run rerun 1234567890 --failed
   - systemctl edit myservice
   examples:
-  - timeout 30s curl -sf https://api.example.com/health && echo up || echo down
+  - timeout 30s curl -sf https://api.your-app.test/health && echo up || echo down
   - for i in $(seq 1 10); do curl -sf http://localhost:8080/ready && break; sleep 3; done
   - systemctl restart myservice && systemctl status myservice --no-pager
   parameters:
@@ -46,9 +45,9 @@ knowledge:
   source: https://curl.se/docs/manpage.html#--retry
   description: --retry, --retry-delay, --retry-max-time, --retry-connrefused
 instructions: '# Retry (shell & process level)
-
-
-  Hand-crafted skill for retrying shell commands, jobs, and services.
+ 
+ 
+  Expert skill for retrying shell commands, jobs, and services.
 
 
   ## What this skill does
@@ -78,12 +77,12 @@ instructions: '# Retry (shell & process level)
 
   # Hard deadline: kill after 30s
 
-  timeout 30s curl -sf https://api.example.com/health || echo ''timed out''
+  timeout 30s curl -sf https://api.your-app.test/health || echo ''timed out''
 
 
   # Retry 3x within 60s total
 
-  curl --retry 3 --retry-max-time 60 --fail https://api.example.com/data -o data.json
+  curl --retry 3 --retry-max-time 60 --fail https://api.your-app.test/data -o data.json
 
 
   # Wait until a port accepts connections
@@ -143,7 +142,7 @@ instructions: '# Retry (shell & process level)
   '
 examples:
 - input: Download a file that sometimes fails
-  output: curl --retry 3 --retry-max-time 60 --fail https://api.example.com/data -o data.json, or wrap
+  output: curl --retry 3 --retry-max-time 60 --fail https://api.your-app.test/data -o data.json, or wrap
     in timeout 60s if the endpoint can hang.
 - input: My container starts before the DB is ready
   output: 'Add a readiness loop: until nc -z db 5432; do sleep 2; done, or configure a healthcheck in
@@ -173,12 +172,12 @@ platforms:
   generic:
     system_prompt: 'You own Retry end to end. You do it through shell-job-retry: Retry and restart shell
       jobs: timeout guards, readiness waits, service restarts. The commands are real, e.g. `timeout 30s
-      curl -sf https://api.example.com/health || echo timed out`. You run and verify the real CLI commands
+      curl -sf https://api.your-app.test/health || echo timed out`. You run and verify the real CLI commands
       before you claim anything.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

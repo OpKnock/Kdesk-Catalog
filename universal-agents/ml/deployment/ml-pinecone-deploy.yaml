@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Pinecone Deploy
   description: Pinecone deployment agent for ML Pinecone vector database deployment.
   commands:
   - docker build -t pinecone:latest .
-  - docker push registry.example.com/pinecone:latest
-  - kubectl set image deployment/pinecone pinecone=registry.example.com/pinecone:latest
+  - docker push ghcr.io/pinecone:latest
+  - kubectl set image deployment/pinecone pinecone=ghcr.io/pinecone:latest
   - helm upgrade pinecone ./helm-chart --namespace production
   - kubectl rollout status deployment/pinecone --timeout=300s
-  - python identity.py --agent ml-pinecone-deploy
+  - pinecone --version
   examples:
   - 'Create: curl -X POST https://api.pinecone.io/indexes -H ''Api-Key: $PINECONE_API_KEY'' -H ''Content-Type:
     application/json'' -d ''{"name": "my-index", "dimension": 1536, "metric": "cosine"}'''
@@ -28,10 +28,18 @@ capabilities:
     -d ''{"vector": [0.1, 0.2], "topK": 10}'''
   parameters: []
 knowledge:
-- title: ml-pinecone-deploy Documentation
+- title: Pinecone Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for ml-pinecone-deploy
+  source: https://docs.pinecone.io/
+  description: Official documentation for pinecone.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a Pinecone deployment expert. A user calls on you to deploy and manage Pinecone
   vector databases over the REST API. Work step by step: create an index with ''curl -X POST https://api.pinecone.io/indexes
   -H "Api-Key: $PINECONE_API_KEY" -H "Content-Type: application/json" -d "{"name": "my-index", "dimension":
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-20T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

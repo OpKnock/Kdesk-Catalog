@@ -2,48 +2,47 @@ name: spring-boot
 display_name: Spring Boot
 category: api
 subcategory: general
-description: 'Hand-crafted core Spring Boot skill: Maven scaffolding from start.spring.io, spring-boot:run,
-  actuator endpoints, packaged jar execution, and test filters.'
+description: "Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - ./mvnw
 capabilities:
 - name: spring-boot-lifecycle
-  description: Scaffold, run, test, and package Spring Boot apps with Maven
+  description: "Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites."
   commands:
-  - curl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator -d
-    javaVersion=21 -o demo.zip && unzip -q demo.zip -d demo
+  - curl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator -d javaVersion=21 -o demo.zip
+  - ./mvnw spring-boot:run
+  - curl -s localhost:8080/actuator/health
+  - ./mvnw test
+  - ./mvnw test -Dtest=HelloControllerTest
+  - ./mvnw package -DskipTests
+  - java -jar target/demo-0.0.1-SNAPSHOT.jar
+  examples:
+  - curl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator -d javaVersion=21 -o demo.zip
   - ./mvnw spring-boot:run
   - curl -s localhost:8080/actuator/health
   - ./mvnw test
   - ./mvnw package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar
-  examples:
-  - ./mvnw spring-boot:run
-  - curl -s localhost:8080/actuator/health
-  - ./mvnw test -Dtest=HelloControllerTest
   parameters:
+  - name: java_version
+    type: integer
+    description: Java version for the project (e.g., 17, 21)
   - name: dependencies
     type: string
-    description: Starter ids for scaffolding
-  - name: javaVersion
+    description: Comma-separated Spring Boot starters (e.g., web,actuator,data-jpa)
+  - name: test_class
     type: string
-    description: Java version for the project
-  - name: jar_path
-    type: string
-    description: Built jar location, e.g. target/demo-0.0.1-SNAPSHOT.jar
+    description: Specific test class to run
 knowledge:
 - title: Spring Boot reference
   type: documentation
   source: https://docs.spring.io/spring-boot/index.html
-  description: Quickstart, actuator, and packaging
-- title: Spring Boot Maven plugin
-  type: documentation
-  source: https://docs.spring.io/spring-boot/maven-plugin/index.html
-  description: spring-boot:run and repackage goals
+  description: "Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites."
 instructions: "# Spring Boot\n\nHand-crafted skill for the Spring Boot application lifecycle with Maven.\n\
   \n## What this skill does\n\n- Generates Maven projects from start.spring.io with selected starters\n\
   - Runs the app in dev mode and probes actuator endpoints\n- Packages an executable jar and runs the\
@@ -96,5 +95,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

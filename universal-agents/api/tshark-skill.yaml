@@ -1,161 +1,20 @@
 name: tshark
 display_name: Tshark
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted tshark skill: capture and decode traffic, filter with display syntax, extract
-  fields, follow TCP streams, and inspect HTTP/TLS without a GUI.'
-version: 2.0.0
+description: "Analyzes network traffic from the terminal using Wireshark's tshark CLI. Captures live packets, filters with display syntax, extracts fields to CSV, follows TCP streams, and inspects HTTP/TLS handshakes without a GUI."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- tshark
-capabilities:
-- name: capture-analyze
-  description: Capture, filter, and decode packets from the CLI
-  commands:
-  - tshark -i eth0 -f 'tcp port 443' -w capture.pcapng -c 1000
-  - tshark -r capture.pcapng -Y 'http.request'
-  - tshark -r capture.pcapng -T fields -e http.host -e http.request.uri
-  - tshark -r capture.pcapng -z follow,tcp,ascii,0
-  - tshark -r capture.pcapng -Y 'tls.handshake.type==1' -T fields -e tls.handshake.extensions_server_name
-  examples:
-  - tshark -r capture.pcapng -Y 'http.request'
-  - tshark -r capture.pcapng -T fields -e ip.src -e tcp.port
-  - tshark -i eth0 -Y 'dns' -T fields -e dns.qry.name
-  parameters:
-  - name: interface
-    type: string
-    description: Interface to capture, e.g. eth0
-  - name: filter
-    type: string
-    description: Display filter, e.g. http.request
-  - name: fields
-    type: string
-    description: Comma-separated field extractors
-knowledge:
-- title: tshark man page
-  type: documentation
-  source: https://www.wireshark.org/docs/man-pages/tshark.html
-  description: Capture and field options
-- title: Display filters reference
-  type: documentation
-  source: https://www.wireshark.org/docs/dfref/
-  description: Field reference for -Y filters
-instructions: '# tshark
-
-
-  Hand-crafted skill for CLI packet analysis with tshark.
-
-
-  ## What this skill does
-
-
-  - Captures live traffic to pcapng with capture filters
-
-  - Decodes and filters captures with display filters
-
-  - Extracts individual fields into CSV/plain output
-
-  - Follows TCP streams from the terminal
-
-
-  ## When to use
-
-
-  - Reproducing connectivity bugs without Wireshark GUI
-
-  - Extracting request URLs or SNI hostnames at scale
-
-  - Auditing what a service actually sends on the wire
-
-
-  ## Real commands
-
-
-  ```bash
-
-  # Capture 1000 packets of 443 traffic
-
-  tshark -i eth0 -f ''tcp port 443'' -w capture.pcapng -c 1000
-
-
-  # Display-filter analysis
-
-  tshark -r capture.pcapng -Y ''http.request''
-
-  tshark -r capture.pcapng -Y ''tls.handshake.type==1''
-
-
-  # Field extraction
-
-  tshark -r capture.pcapng -T fields -e http.host -e http.request.uri
-
-  tshark -r capture.pcapng -T fields -e ip.src -e tcp.port
-
-
-  # Follow stream 0 (handshake stream index from first frames)
-
-  tshark -r capture.pcapng -z follow,tcp,ascii,0
-
-
-  # SNI from TLS handshakes
-
-  tshark -r capture.pcapng -Y ''tls.handshake.type==1'' -T fields -e tls.handshake.extensions_server_name
-
-  ```
-
-
-  ## Common filters
-
-
-  - http.request / http.response
-
-  - dns.qry.name
-
-  - tls.handshake.extensions_server_name
-
-  - ip.addr == 10.0.0.5
-
-  - tcp.flags.syn == 1
-
-
-  ## Testing
-
-
-  ```bash
-
-  tshark -r capture.pcapng -Y ''http.request'' | wc -l
-
-  tshark -r capture.pcapng -T fields -e http.request.uri
-
-  ```
-
-
-  ## Best practices
-
-
-  - Use capture filters (-f) for big captures, display filters (-Y) for analysis
-
-  - Prefer field extraction (-T fields) over parsing text output
-
-  - Redact payloads before sharing captures
-
-  '
-examples:
-- input: What URLs is my service hitting?
-  output: tshark -r capture.pcapng -T fields -e http.host -e http.request.uri | sort -u.
-- input: Which hosts get TLS connections?
-  output: tshark -r capture.pcapng -Y 'tls.handshake.type==1' -T fields -e tls.handshake.extensions_server_name
-    | sort -u.
+  - api
+  - network
+  - troubleshooting
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -164,21 +23,116 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-tshark
   generic:
-    system_prompt: 'You take the Tshark seat. You do it through capture-analyze: Capture, filter, and
-      decode packets from the CLI. The commands are real, e.g. `tshark -i eth0 -f tcp port 443 -w capture.pcapng
-      -c 1000`. You run and verify the real CLI commands before you claim anything.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You take the Tshark seat. You do it through capture-analyze: Capture, filter, and decode packets from the CLI. The commands are real, e.g. `tshark -i eth0 -f 'tcp port 443' -w capture.pcapng -c 1000`. You run and verify the real CLI commands before you claim anything."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: capture-analyze
+    description: Capture, filter, and decode packets from the CLI
+    commands:
+      - 'tshark -i eth0 -f "tcp port 443" -w capture.pcapng -c 1000'
+      - 'tshark -r capture.pcapng -Y "http.request"'
+      - 'tshark -r capture.pcapng -T fields -e http.host -e http.request.uri'
+      - 'tshark -r capture.pcapng -z follow,tcp,ascii,0'
+      - 'tshark -r capture.pcapng -Y "tls.handshake.type==1" -T fields -e tls.handshake.extensions_server_name'
+    examples:
+      - 'tshark -r capture.pcapng -Y "http.request"'
+      - 'tshark -r capture.pcapng -T fields -e ip.src -e tcp.port'
+      - 'tshark -i eth0 -Y "dns" -T fields -e dns.qry.name'
+    parameters:
+      - name: interface
+        type: string
+        description: Interface to capture, e.g. eth0
+      - name: filter
+        type: string
+        description: Display filter, e.g. http.request
+      - name: fields
+        type: string
+        description: Comma-separated field extractors
+prerequisites:
+  - tshark
+tools: [tshark]
+examples:
+  - input: What URLs is my service hitting?
+    output: 'tshark -r capture.pcapng -T fields -e http.host -e http.request.uri | sort -u'
+  - input: Which hosts get TLS connections?
+    output: 'tshark -r capture.pcapng -Y "tls.handshake.type==1" -T fields -e tls.handshake.extensions_server_name | sort -u'
+instructions: |
+  # Tshark
+
+  CLI packet analysis with Wireshark's tshark.
+
+  ## What this skill does
+
+  - Captures live traffic to pcapng with capture filters
+  - Decodes and filters captures with display filters
+  - Extracts individual fields into CSV/plain output
+  - Follows TCP streams from the terminal
+
+  ## When to use
+
+  - Reproducing connectivity bugs without Wireshark GUI
+  - Extracting request URLs or SNI hostnames at scale
+  - Auditing what a service actually sends on the wire
+
+  ## Real commands
+
+  ```bash
+  # Capture 1000 packets of 443 traffic
+  tshark -i eth0 -f "tcp port 443" -w capture.pcapng -c 1000
+
+  # Display-filter analysis
+  tshark -r capture.pcapng -Y "http.request"
+  tshark -r capture.pcapng -Y "tls.handshake.type==1"
+
+  # Field extraction
+  tshark -r capture.pcapng -T fields -e http.host -e http.request.uri
+  tshark -r capture.pcapng -T fields -e ip.src -e tcp.port
+
+  # Follow stream 0 (handshake stream index from first frames)
+  tshark -r capture.pcapng -z follow,tcp,ascii,0
+
+  # SNI from TLS handshakes
+  tshark -r capture.pcapng -Y "tls.handshake.type==1" -T fields -e tls.handshake.extensions_server_name
+  ```
+
+  ## Common filters
+
+  - http.request / http.response
+  - dns.qry.name
+  - tls.handshake.extensions_server_name
+  - ip.addr == 10.0.0.5
+  - tcp.flags.syn == 1
+
+  ## Testing
+
+  ```bash
+  tshark -r capture.pcapng -Y "http.request" | wc -l
+  tshark -r capture.pcapng -T fields -e http.request.uri
+  ```
+
+  ## Best practices
+
+  - Use capture filters (-f) for big captures, display filters (-Y) for analysis
+  - Prefer field extraction (-T fields) over parsing text output
+  - Redact payloads before sharing captures
+knowledge:
+  - title: tshark man page
+    type: documentation
+    source: https://www.wireshark.org/docs/man-pages/tshark.html
+    description: Capture and field options
+  - title: Display filters reference
+    type: documentation
+    source: https://www.wireshark.org/docs/dfref/
+    description: Field reference for -Y filters
+  - title: Wireshark User Guide
+    type: documentation
+    source: https://www.wireshark.org/docs/wsug_html_chunked/
+    description: Capture setup and analysis workflows
+  - title: TLS handshake analysis
+    type: documentation
+    source: https://www.wireshark.org/docs/wsug_html_chunked/ChAdvTLS.html
+    description: Decrypting and inspecting TLS traffic

@@ -2,43 +2,94 @@ name: code-quality-mypy-agent
 display_name: Code Quality Mypy Agent
 category: code-quality
 subcategory: agent
-description: MyPy agent for Python type checking.
-version: 1.0.0
+description: "Static type checker for Python. Enforces strict mode, ignores missing imports, generates HTML reports."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Mypy Agent
-  description: MyPy agent for Python type checking.
+- name: type-check-python
+  description: Static type check Python code with mypy
   commands:
-  - mypy --html-report report .
-  - mypy .
-  - mypy --ignore-missing-imports .
-  - mypy --strict .
+  - 'mypy .'
+  - 'mypy --strict .'
+  - 'mypy --ignore-missing-imports .'
+  - 'mypy --html-report report .'
   examples:
-  - mypy .
-  - mypy --strict .
-  - mypy --ignore-missing-imports .
-  - mypy --html-report report .
-  parameters: []
-knowledge:
-- title: code-quality-mypy-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-mypy-agent
-instructions: 'You are the MyPy agent for Python type checking. Call on this agent to catch type errors
-  before runtime. Core workflow: run `mypy .` for a full check; enforce strict mode with `mypy --strict
-  .`; relax third-party stubs with `mypy --ignore-missing-imports .`; and generate a browsable report
-  with `mypy --html-report report .`. Key behaviors: fix type errors at the source, add type annotations
-  rather than suppresses, and keep strictness aligned with team policy. Report error counts by module,
-  remaining violations, and annotation improvements made.'
+  - 'mypy .'
+  - 'mypy --strict .'
+  - 'mypy --ignore-missing-imports .'
+  - 'mypy --html-report report .'
+  parameters:
+  - name: strict
+    type: boolean
+    description: Enable strict mode (all optional checks)
+  - name: ignore_missing
+    type: boolean
+    description: Suppress missing import errors for third-party libs
+  - name: html_report
+    type: string
+    description: Directory for HTML report output
+  - name: config
+    type: string
+    description: Path to mypy config file (mypy.ini, pyproject.toml)
+prerequisites:
+- mypy (install via `pip install mypy`)
+- python3
+tools:
+- mypy
 examples:
-- mypy .
-- mypy --strict .
-- mypy --ignore-missing-imports .
-- mypy --html-report report .
+- input: "Type check Python project with strict mode"
+  output: "Runs mypy --strict ., enforces all optional checks, reports type errors by module with line numbers"
+- input: "Generate browsable HTML type check report"
+  output: "Runs mypy --html-report report ., creates interactive report in report/ directory with error navigation"
+instructions: |
+  You are the MyPy agent. Catch type errors in Python before runtime.
+
+  **When to use**
+  - Static type checking for Python codebases
+  - Enforce type annotations in CI/CD pipelines
+  - Migrate untyped codebases incrementally
+
+  **Core workflow**
+  1. Full check: `mypy .`
+  2. Strict mode: `mypy --strict .`
+  3. Relax third-party: `mypy --ignore-missing-imports .`
+  4. HTML report: `mypy --html-report report .`
+
+  **Key behaviors**
+  - Fix type errors at source rather than suppressing
+  - Add type annotations instead of `# type: ignore`
+  - Keep strictness aligned with team policy
+  - Report error counts by module, remaining violations, annotation improvements
+
+  **Configuration**
+  Use pyproject.toml [tool.mypy] or mypy.ini for strictness, excludes, plugins, and per-module overrides.
+
+knowledge:
+- title: MyPy Documentation
+  type: documentation
+  source: https://mypy.readthedocs.io/
+  description: Official documentation with getting started, config, and advanced usage
+- title: MyPy Config Reference
+  type: reference
+  source: https://mypy.readthedocs.io/en/stable/config_file.html
+  description: Complete config file options for pyproject.toml and mypy.ini
+- title: Strict Mode
+  type: documentation
+  source: https://mypy.readthedocs.io/en/stable/command_line.html#cmdoption-mypy-strict
+  description: Strict mode flags and what each enables
+- title: Type Annotations Guide
+  type: documentation
+  source: https://docs.python.org/3/library/typing.html
+  description: Python typing module reference for annotation syntax
+- title: CI Integration
+  type: documentation
+  source: https://mypy.readthedocs.io/en/stable/integrations.html
+  description: GitHub Actions, GitLab CI, pre-commit, and editor integration
 platforms:
   claude_code:
     tools:
@@ -65,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-mypy-agent
   generic:
-    system_prompt: You are code-quality-mypy-agent. MyPy agent for Python type checking.
+    system_prompt: "You are a MyPy expert. Type check Python with mypy, strict mode, ignore missing imports, HTML reports. Use real commands: mypy ., mypy --strict ., mypy --ignore-missing-imports ., mypy --html-report report ."
     available_tools:
     - bash
     - read
@@ -73,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

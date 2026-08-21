@@ -1,49 +1,45 @@
 name: slo-sli
-display_name: Slo Sli
+display_name: SLO SLI
 category: api
 subcategory: general
-description: 'Hand-crafted SLO/SLI skill: compute error budgets from Prometheus rate queries, validate
-  rules with promtool, and design SLIs for availability and latency.'
+description: "Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and latency SLIs over 30-day windows, validates recording rules with promtool, and enables burn-rate alerting."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - promtool
 capabilities:
 - name: slo-computation
-  description: Define SLIs and compute SLO error budgets with Prometheus
+  description: "Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and latency SLIs over 30-day windows, validates recording rules with promtool, and enables burn-rate alerting."
   commands:
   - promtool query instant --url=http://localhost:9090 'rate(http_requests_total{job="api",code=~"5.."}[5m])'
   - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total[1h]))' | jq '.data.result'
+  - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total{job="api",code!~"5.."}[30d])) / sum(rate(http_requests_total{job="api"}[30d]))' | jq '.data.result[0].value[1]'
+  - curl -g 'http://localhost:9090/api/v1/query?query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq '.data.result[0].value[1]'
   - promtool check rules slo.rules.yml
-  - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total{job="api",code!~"5.."}[30d]))
-    / sum(rate(http_requests_total{job="api"}[30d]))' | jq '.data.result[0].value[1]'
   examples:
-  - promtool query instant --url=http://localhost:9090 'sum(rate(http_requests_total{job="api"}[5m]))'
+  - promtool query instant --url=http://localhost:9090 'rate(http_requests_total{job="api",code=~"5.."}[5m])'
+  - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total[1h]))' | jq '.data.result'
+  - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total{job="api",code!~"5.."}[30d])) / sum(rate(http_requests_total{job="api"}[30d]))' | jq '.data.result[0].value[1]'
   - promtool check rules slo.rules.yml
-  - curl -g 'http://localhost:9090/api/v1/query?query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m]))
-    by (le))' | jq '.data.result[0].value[1]'
   parameters:
-  - name: job
+  - name: prometheus_url
     type: string
-    description: Prometheus job label for the service
+    description: Prometheus server URL (e.g., http://localhost:9090)
+  - name: job_name
+    type: string
+    description: Prometheus job label to query
   - name: window
     type: string
-    description: Evaluation window, e.g. 30d
-  - name: slo_target
-    type: float
-    description: Availability target like 0.99
+    description: Time window for SLI calculation (e.g., 30d, 5m)
 knowledge:
 - title: Prometheus HTTP API
   type: documentation
   source: https://prometheus.io/docs/prometheus/latest/querying/api/
-  description: query, query_range, targets endpoints
-- title: Google SRE workbook SLOs
-  type: documentation
-  source: https://sre.google/workbook/implementing-slos/
-  description: SLI selection and error budget design
+  description: "Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and latency SLIs over 30-day windows, validates recording rules with promtool, and enables burn-rate alerting."
 instructions: "# SLO / SLI\n\nHand-crafted skill for defining SLIs and computing SLO error budgets.\n\n\
   ## What this skill does\n\n- Computes availability and latency SLIs from Prometheus counters\n- Evaluates\
   \ error budget burn over 30d windows\n- Validates recording rules with promtool before deploying\n\n\
@@ -100,5 +96,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

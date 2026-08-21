@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Bedrock Deploy Agent
   description: Bedrock deployment agent. Manages Bedrock ML deployment.
   commands:
   - docker build -t bedrock:latest .
-  - docker push registry.example.com/bedrock:latest
-  - kubectl set image deployment/bedrock bedrock=registry.example.com/bedrock:latest
+  - docker push ghcr.io/bedrock:latest
+  - kubectl set image deployment/bedrock bedrock=ghcr.io/bedrock:latest
   - helm upgrade bedrock ./helm-chart --namespace production
   - kubectl rollout status deployment/bedrock --timeout=300s
-  - python identity.py --agent bedrock-identity-py
+  - bedrock --version
   examples:
   - aws bedrock list-foundation-models
   - 'aws bedrock invoke-model --model-id anthropic.claude-v2 --body ''{"prompt": "Hello"}'''
@@ -26,15 +26,23 @@ capabilities:
   - aws bedrock get-foundation-model --model-id anthropic.claude-v2
   parameters: []
 knowledge:
-- title: bedrock-identity-py Documentation
+- title: Amazon Bedrock Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for bedrock-identity-py
+  source: https://docs.aws.amazon.com/bedrock/
+  description: Official documentation for bedrock.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Ml Bedrock Deploy Agent, the deployment specialist for Bedrock ML applications
-  on AWS. Build and push the image with `docker build -t bedrock:latest .` and `docker push registry.example.com/bedrock:latest`,
-  then deploy via `kubectl set image deployment/bedrock bedrock=registry.example.com/bedrock:latest` or
+  on AWS. Build and push the image with `docker build -t bedrock:latest .` and `docker push ghcr.io/bedrock:latest`,
+  then deploy via `kubectl set image deployment/bedrock bedrock=ghcr.io/bedrock:latest` or
   `helm upgrade bedrock ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/bedrock
-  --timeout=300s`. Confirm identity with `python identity.py --agent bedrock-identity-py`. Verify Bedrock
+  bedrock --version
   access with `aws bedrock list-foundation-models` and `aws bedrock get-foundation-model --model-id anthropic.claude-v2`,
   and test with `aws bedrock invoke-model --model-id anthropic.claude-v2 --body ''{"prompt": "Hello"}''`.
   Report rollout status, model availability, and invocation results.'
@@ -77,5 +85,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-09T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -48,11 +48,11 @@ capabilities:
   commands:
   - curl -w "dns:%{time_namelookup}s connect:%{time_connect}s tls:%{time_appconnect}s ttfb:%{time_starttransfer}s
     total:%{time_total}s size:%{size_download}\n" -o /dev/null -s https://api.example.com/v1/items
-  - curl -s -o /dev/null -w '%{http_code} %{time_total} %{speed_download} bytes/s\n' https://api.example.com/
+  - curl -s -o /dev/null -w '%{http_code} %{time_total} %{speed_download} bytes/s\n' http://localhost:8080/
   - 'curl -s -H ''Accept-Encoding: gzip'' -o /dev/null -w ''compressed:%{size_download} raw:%{size_download}_of_%{size_upload}\n''
     https://api.example.com/v1/items'
-  - curl -sI --http2 https://api.example.com/ | head -1
-  - curl -s -o /dev/null -w '%{time_starttransfer}\n' https://api.example.com/v1/items?limit=1000
+  - curl -sI --http2 http://localhost:8080/ | head -1
+  - curl -s -o /dev/null -w '%{time_starttransfer}\n' http://localhost:8080/v1/items?limit=1000
   examples:
   - curl -w with time_appconnect isolates TLS handshake cost
   - TTFB over total shows server processing vs transfer time
@@ -70,10 +70,10 @@ capabilities:
 - name: bottleneck-identification
   description: Compare endpoints and payloads to rank bottlenecks
   commands:
-  - curl -s -o /dev/null -w '%{time_total}\n' https://api.example.com/v1/items/1
-  - curl -s -o /dev/null -w '%{time_total}\n' https://api.example.com/v2/items/1
-  - curl -s https://api.example.com/v1/items | jq '.data | length'
-  - curl -s https://api.example.com/v1/items | wc -c
+  - curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8080/v1/items/1
+  - curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8080/v2/items/1
+  - curl -s http://localhost:8080/v1/items | jq '.data | length'
+  - curl -s http://localhost:8080/v1/items | wc -c
   examples: []
   parameters: []
 prerequisites:

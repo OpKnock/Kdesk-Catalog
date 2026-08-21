@@ -47,7 +47,7 @@ capabilities:
   description: Seed SQLite databases for API tests
   commands:
   - sqlite3 test.db "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT)"
-  - sqlite3 test.db "INSERT INTO users (name, email) VALUES ('alice', 'a@example.com'), ('bob', 'b@example.com')"
+  - sqlite3 test.db "INSERT INTO users (name, email) VALUES ('alice', 'a@localhost'), ('bob', 'b@localhost')"
   - sqlite3 test.db "SELECT COUNT(*) FROM users"
   - node -e "const db=require('better-sqlite3')('test.db'); db.prepare('INSERT INTO users (name,email)
     VALUES (?,?)').run('carol','c@example.com'); console.log(db.prepare('SELECT COUNT(*) c FROM users').get())"

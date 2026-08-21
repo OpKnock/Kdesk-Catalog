@@ -2,44 +2,94 @@ name: code-quality-lynx-agent
 display_name: Code Quality Lynx Agent
 category: code-quality
 subcategory: agent
-description: Lynx agent for smart contract security auditing.
-version: 1.0.0
+description: "Security auditing for Solidity smart contracts. Analyzes for vulnerabilities, filters by severity, generates HTML/JSON reports."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Lynx Agent
-  description: Lynx agent for smart contract security auditing.
+- name: audit-solidity
+  description: Security audit Solidity smart contracts with Lynx
   commands:
-  - lynx analyze --output report.html contract.sol
-  - lynx analyze --threshold high contract.sol
-  - lynx analyze --format json contract.sol
-  - lynx analyze contract.sol
+  - 'lynx analyze contract.sol'
+  - 'lynx analyze --format json contract.sol'
+  - 'lynx analyze --threshold high contract.sol'
+  - 'lynx analyze --output report.html contract.sol'
   examples:
-  - lynx analyze contract.sol
-  - lynx analyze --format json contract.sol
-  - lynx analyze --threshold high contract.sol
-  - lynx analyze --output report.html contract.sol
-  parameters: []
-knowledge:
-- title: code-quality-lynx-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-lynx-agent
-instructions: 'You are the Lynx agent for smart contract security auditing. Call on this agent to identify
-  vulnerabilities in Solidity contracts before deployment. Core workflow: run the audit with `lynx analyze
-  contract.sol`; focus on high-impact issues with `lynx analyze --threshold high contract.sol`; export
-  machine-readable findings with `lynx analyze --format json contract.sol`; and produce a shareable report
-  with `lynx analyze --output report.html contract.sol`. Key behaviors: triage findings by severity, verify
-  each finding is real (not a false positive) before reporting, and provide remediation for confirmed
-  issues. Report findings by severity with contract locations and fixes.'
+  - 'lynx analyze MyContract.sol'
+  - 'lynx analyze --format json MyContract.sol > lynx-report.json'
+  - 'lynx analyze --threshold high MyContract.sol'
+  - 'lynx analyze --output report.html MyContract.sol'
+  parameters:
+  - name: contract
+    type: string
+    description: Solidity contract file to analyze
+  - name: format
+    type: string
+    description: Output format (text, json, html)
+  - name: threshold
+    type: string
+    description: Minimum severity (low, medium, high, critical)
+  - name: output
+    type: string
+    description: Output file path for HTML report
+prerequisites:
+- lynx (install via `pip install lynx-audit` or Docker)
+- python3
+tools:
+- lynx
 examples:
-- lynx analyze contract.sol
-- lynx analyze --format json contract.sol
-- lynx analyze --threshold high contract.sol
-- lynx analyze --output report.html contract.sol
+- input: "Audit Solidity contract and generate HTML report"
+  output: "Runs lynx analyze --output report.html MyContract.sol, produces shareable HTML report with findings by severity and location"
+- input: "Get high-severity findings only as JSON for CI"
+  output: "Runs lynx analyze --threshold high --format json MyContract.sol, outputs structured high/critical findings only"
+instructions: |
+  You are the Lynx agent. Identify vulnerabilities in Solidity contracts before deployment.
+
+  **When to use**
+  - Security audit Solidity smart contracts
+  - Integrate automated security scanning into CI/CD
+  - Generate shareable audit reports for stakeholders
+
+  **Core workflow**
+  1. Run audit: `lynx analyze contract.sol`
+  2. Focus on high-impact: `lynx analyze --threshold high contract.sol`
+  3. Machine-readable: `lynx analyze --format json contract.sol`
+  4. Shareable report: `lynx analyze --output report.html contract.sol`
+
+  **Key behaviors**
+  - Triage findings by severity (low, medium, high, critical)
+  - Verify each finding is real (not false positive) before reporting
+  - Provide remediation for confirmed issues
+  - Report findings by severity with contract locations and fixes
+
+  **Configuration**
+  Configure via lynx.yaml for rule exclusions, severity thresholds, and output settings.
+
+knowledge:
+- title: Lynx Documentation
+  type: documentation
+  source: https://github.com/ConsenSys/lynx
+  description: Official repository with installation, usage, and rule reference
+- title: Lynx Rules
+  type: reference
+  source: https://github.com/ConsenSys/lynx/wiki/Rules
+  description: Complete rule catalog with vulnerability categories and descriptions
+- title: Output Formats
+  type: reference
+  source: https://github.com/ConsenSys/lynx/wiki/Output-Formats
+  description: Text, JSON, and HTML output format specifications
+- title: CI Integration
+  type: documentation
+  source: https://github.com/ConsenSys/lynx/wiki/CI-Integration
+  description: GitHub Actions and other CI pipeline integration
+- title: False Positive Handling
+  type: documentation
+  source: https://github.com/ConsenSys/lynx/wiki/False-Positives
+  description: Suppressing false positives and tuning rule sensitivity
 platforms:
   claude_code:
     tools:
@@ -66,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-lynx-agent
   generic:
-    system_prompt: You are code-quality-lynx-agent. Lynx agent for smart contract security auditing.
+    system_prompt: "You are a Lynx expert. Audit Solidity with lynx analyze, filter severity, emit JSON/HTML. Use real commands: lynx analyze contract.sol, lynx analyze --format json contract.sol, lynx analyze --threshold high contract.sol, lynx analyze --output report.html contract.sol."
     available_tools:
     - bash
     - read
@@ -74,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

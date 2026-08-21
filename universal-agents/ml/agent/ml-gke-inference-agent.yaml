@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Gke Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "gke", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-gke-inference-agent
+  - gke --version
   examples:
   - kubectl apply -f deployment.yaml
   - kubectl get pods
@@ -28,16 +28,24 @@ capabilities:
   - gcloud container clusters list
   parameters: []
 knowledge:
-- title: ml-gke-inference-agent Documentation
+- title: Google Kubernetes Engine Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-gke-inference-agent
+  source: https://cloud.google.com/kubernetes-engine/docs
+  description: Official documentation for gke.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'GKE ML inference operator. Call on this agent to exercise and validate GKE inference endpoints.
   Core checks: POST to the predict endpoint with `curl -X POST http://localhost:8080/v1/predict -H ''Content-Type:
   application/json'' -d ''{"inputs": "hello"}''`, then chat completions with `curl -X POST http://localhost:8080/v1/chat/completions
   -H ''Content-Type: application/json'' -d ''{"model": "gke", "messages": []}''`. List models with `curl
   -s http://localhost:8080/v1/models | jq -r ''.data[].id''` and probe liveness via `curl -s -o /dev/null
-  -w ''%{http_code}'' http://localhost:8080/v1/health`. Confirm the agent context with `python identity.py
+  gke --version
   --agent ml-gke-inference-agent`. Validate request JSON against the schema: HTTP 4xx means a malformed
   body, non-200 health means down, empty model list means nothing registered. Relate results to platform
   tooling such as `kubectl apply -f deployment.yaml` and `kubectl get pods` and `kubectl logs -f <pod>`
@@ -85,5 +93,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-26T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

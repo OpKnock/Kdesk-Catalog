@@ -2,49 +2,46 @@ name: spring-boot-kotlin
 display_name: Spring Boot Kotlin
 category: api
 subcategory: general
-description: 'Hand-crafted Spring Boot + Kotlin skill: start.spring.io scaffolding with Gradle, bootRun,
-  actuator health checks, and Kotlin test runs.'
+description: "Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring.io with selected starters, runs via bootRun, probes actuator health endpoints, and executes Kotlin test classes."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - ./gradlew
 capabilities:
 - name: spring-kotlin-workflow
-  description: Scaffold, run, and test Spring Boot applications in Kotlin
+  description: "Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring.io with selected starters, runs via bootRun, probes actuator health endpoints, and executes Kotlin test classes."
   commands:
-  - curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d dependencies=web,data-jpa,actuator
-    -o demo.zip && unzip demo.zip
+  - curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d dependencies=web,data-jpa,actuator -o demo.zip
   - ./gradlew bootRun
-  - curl -s localhost:8080/actuator/health | jq .status
+  - curl -s localhost:8080/actuator/health
+  - ./gradlew test --tests 'com.example.demo.DemoApplicationTests'
+  - ./gradlew build
+  - java -jar build/libs/demo-0.0.1-SNAPSHOT.jar
+  examples:
+  - curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d dependencies=web,data-jpa,actuator -o demo.zip
+  - ./gradlew bootRun
+  - curl -s localhost:8080/actuator/health
   - ./gradlew test --tests 'com.example.demo.DemoApplicationTests'
   - ./gradlew build && java -jar build/libs/demo-0.0.1-SNAPSHOT.jar
-  examples:
-  - curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d dependencies=web,data-jpa,actuator
-    -o demo.zip && unzip demo.zip
-  - ./gradlew bootRun
-  - curl -s localhost:8080/actuator/health | jq .status
   parameters:
-  - name: language
-    type: string
-    description: kotlin or java for scaffolding
   - name: dependencies
     type: string
-    description: Comma-separated starter ids, e.g. web,data-jpa
-  - name: port
+    description: Comma-separated Spring Boot starters (e.g., web,data-jpa,actuator)
+  - name: test_class
+    type: string
+    description: Fully qualified test class name
+  - name: java_version
     type: integer
-    description: Server port (default 8080)
+    description: Java version for the project (e.g., 17, 21)
 knowledge:
 - title: Spring Boot docs
   type: documentation
   source: https://docs.spring.io/spring-boot/index.html
-  description: Quickstart, starters, and configuration
-- title: start.spring.io API
-  type: documentation
-  source: https://start.spring.io/
-  description: Project generator endpoints and options
+  description: "Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring.io with selected starters, runs via bootRun, probes actuator health endpoints, and executes Kotlin test classes."
 instructions: "# Spring Boot with Kotlin\n\nHand-crafted skill for Spring Boot applications written in\
   \ Kotlin.\n\n## What this skill does\n\n- Generates a Kotlin + Gradle project from start.spring.io\n\
   - Runs the app with bootRun and checks actuator health\n- Runs Kotlin test classes and builds the jar\n\
@@ -100,5 +97,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

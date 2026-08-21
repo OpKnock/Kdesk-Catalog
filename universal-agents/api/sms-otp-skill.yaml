@@ -1,55 +1,44 @@
 name: sms-otp
-display_name: Sms Otp
+display_name: SMS OTP
 category: api
 subcategory: general
-description: 'Hand-crafted SMS OTP skill: Twilio Messages and Verify APIs, TOTP fallback with oathtool,
-  and rate-limited OTP delivery for login flows.'
+description: "Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - oathtool
 - pip
 capabilities:
 - name: sms-otp-delivery
-  description: Send and verify OTPs over SMS with Twilio and TOTP fallback
+  description: "Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios."
   commands:
-  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json"
-    --data-urlencode "To=+15551234567" --data-urlencode "From=+15559876543" --data-urlencode "Body=Your
-    code is 123456"
-  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications"
-    --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
-  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationCheck"
-    --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
-  - oathtool --totp --base32 "JBSWY3DPEHPK3PXP"
-  - pip install twilio
+  - curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
+  - curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationChecks" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
+  - oathtool --base32 --totp "JBSWY3DPEHPK3PXP"
+  - pip install pyotp
   examples:
-  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications"
-    --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
-  - oathtool --totp --base32 "JBSWY3DPEHPK3PXP"
-  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationCheck"
-    --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
+  - curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
+  - curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationChecks" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
+  - oathtool --base32 --totp "JBSWY3DPEHPK3PXP"
   parameters:
-  - name: phone
+  - name: verify_sid
     type: string
-    description: E.164 recipient number
-  - name: channel
+    description: Twilio Verify Service SID
+  - name: phone_number
     type: string
-    description: sms or voice for Verify
-  - name: code
+    description: Destination phone number in E.164 format
+  - name: totp_secret
     type: string
-    description: OTP to check
+    description: Base32-encoded TOTP secret for fallback
 knowledge:
 - title: Twilio Verify API
   type: documentation
   source: https://www.twilio.com/docs/verify/api
-  description: Verification and VerificationCheck endpoints
-- title: RFC 6238 TOTP
-  type: documentation
-  source: https://www.rfc-editor.org/rfc/rfc6238
-  description: Time-based one-time password algorithm
+  description: "Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios."
 instructions: '# SMS OTP
 
 
@@ -183,5 +172,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,7 +7,7 @@ description: 'Serves sites and reverse proxies with Caddy: Caddyfile authoring, 
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - caddy
@@ -22,7 +22,7 @@ capabilities:
   - caddy stop
   examples:
   - caddy file-server --root ./dist --listen :8080 --browse
-  - caddy reverse-proxy --from example.com --to localhost:3000
+  - caddy reverse-proxy --from api.your-app.test --to localhost:3000
   - caddy run --watch --config Caddyfile
   parameters:
   - name: root
@@ -63,7 +63,7 @@ capabilities:
   - caddy list-modules | grep tls
   examples:
   - caddy trust --ca /etc/caddy/ca.crt
-  - caddy cert-manager list --domain example.com
+  - caddy cert-manager list --domain api.your-app.test
   - caddy list-modules | grep -i tls
   parameters:
   - name: domain
@@ -88,13 +88,13 @@ instructions: "# Caddy\n\n## What this skill does\n\nServes sites and proxies wi
   \ file-server --root ./dist --listen :8080\n\n# Reverse proxy\ncaddy reverse-proxy --from localhost:8080\
   \ --to localhost:3000\n\n# Run with a Caddyfile\ncaddy run --config Caddyfile\n\n# Validate before reload\n\
   caddy validate --config Caddyfile\ncaddy reload --config Caddyfile\n\n# Format the Caddyfile\ncaddy\
-  \ fmt --overwrite Caddyfile\n```\n\n## Caddyfile example\n\n```caddy\nexample.com {\n  reverse_proxy\
+  \ fmt --overwrite Caddyfile\n```\n\n## Caddyfile example\n\n```caddy\napi.your-app.test {\n  reverse_proxy\
   \ localhost:3000\n  encode gzip zstd\n  header Cache-Control \"max-age=3600\"\n}\n```\n\n## Testing\n\
   \n- caddy validate catches syntax errors pre-reload\n- curl -sI to verify headers and certs\n\n## Best\
   \ practices\n\n- Use caddy fmt for consistent formatting\n- Keep Caddyfiles in version control; caddy\
   \ reload is zero-downtime\n- Let Caddy manage TLS; don't hand-manage certs unless needed"
 examples:
-- input: Serve our built SPA with HTTPS on example.com
+- input: Serve our built SPA with HTTPS on api.your-app.test
   output: Writes the Caddyfile with file_server, runs caddy validate + caddy run, and confirms automatic
     cert issuance with curl -sI.
 - input: Proxy /api to our Node backend
@@ -130,5 +130,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

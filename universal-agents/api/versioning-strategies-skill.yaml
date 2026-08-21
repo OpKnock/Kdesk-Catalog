@@ -1,154 +1,20 @@
 name: versioning-strategies
 display_name: Versioning Strategies
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: Compare API versioning strategies - semver, date-based, media-type, and negotiated versions
-  - and pick the right one with migration and testing workflows.
-version: 2.0.0
+description: "Evaluates and implements API versioning approaches including semver paths, date-based headers, media-type negotiation, and query parameters. Provides migration workflows and validation enabling selection of the right approach."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-capabilities:
-- name: strategy-selection
-  description: Evaluate and implement versioning strategies with validation
-  commands:
-  - 'curl -s -H ''Accept: application/vnd.example+json;version=3'' https://api.example.com/widgets'
-  - 'curl -s -H ''X-Version: 2024-06-01'' https://api.example.com/widgets | jq ''.version'''
-  - curl -s 'https://api.example.com/widgets?version=3.0' | jq '.data[0]'
-  - 'curl -sI https://api.example.com/widgets -H ''Accept: application/vnd.example+json;version=1'' |
-    grep -i sunset'
-  - curl -s https://api.example.com/v3/widgets -o /dev/null -w '%{time_total}s'
-  examples:
-  - 'curl -s -H ''Accept: application/vnd.example+json;version=2'' https://api.example.com/widgets | jq
-    ''.schema'''
-  - 'curl -s -D - -o /dev/null -H ''Accept-Version: 1'' https://api.example.com/widgets | grep -iE ''^(HTTP|deprecation)'''
-  - curl -s 'https://api.example.com/widgets?version=2' | jq '.version'
-  parameters:
-  - name: version
-    type: string
-    description: Version in Accept-Version header or query param
-  - name: sunset
-    type: string
-    description: Retirement date returned in Sunset header
-knowledge:
-- title: Stripe API Versioning
-  type: documentation
-  source: https://stripe.com/docs/api/versioning
-  description: Date-based versioning and per-account version pinning
-- title: Swagger API Versioning Guide
-  type: documentation
-  source: https://swagger.io/resources/articles/software-versioning-in-swagger/
-  description: How to express versions in OpenAPI documents
-instructions: '# Versioning Strategies
-
-
-  ## What this skill does
-
-  Help teams choose and implement an API versioning strategy. Compares semver paths (/v2), date-based
-  headers (X-Version), media-type negotiation (Accept), and query params, including migration and validation
-  workflows.
-
-
-  ## When to use
-
-  - Selecting a strategy for a new product API
-
-  - Migrating from path versioning to header versioning
-
-  - Auditing an inconsistent versioning scheme
-
-
-  ## Strategy comparison
-
-  | Strategy | Pros | Cons |
-
-  |---|---|---|
-
-  | URI path /v2 | Explicit, cacheable, debuggable | Pollutes URLs |
-
-  | Date header | No URL change, natural timeline | Easy to forget |
-
-  | Media type | Per-resource versions | Complex tooling |
-
-  | Query param | Simple | Poor cache keys |
-
-
-  ## Real commands
-
-  ```bash
-
-  # Media-type negotiation
-
-  curl -s -H ''Accept: application/vnd.example+json;version=3'' https://api.example.com/widgets
-
-
-  # Date-based header
-
-  curl -s -H ''X-Version: 2024-06-01'' https://api.example.com/widgets | jq ''.version''
-
-
-  # Query param
-
-  curl -s ''https://api.example.com/widgets?version=3.0'' | jq ''.data[0]''
-
-
-  # Deprecated version still served?
-
-  curl -sI https://api.example.com/widgets -H ''Accept: application/vnd.example+json;version=1'' | grep
-  -i sunset
-
-
-  # Latency comparison across versions
-
-  curl -s https://api.example.com/v3/widgets -o /dev/null -w ''%{time_total}s\n''
-
-  curl -s ''https://api.example.com/widgets?version=1'' -o /dev/null -w ''%{time_total}s\n''
-
-  ```
-
-
-  ## Migration workflow
-
-  1. Ship the new version alongside the old one
-
-  2. Serve both for at least one deprecation cycle
-
-  3. Emit Deprecation + Sunset headers on the old version
-
-  4. Migrate consumers, then remove the old version
-
-
-  ## Best practices
-
-  - Pick one primary strategy; do not mix path and query versioning
-
-  - For SaaS APIs, prefer date-based headers with per-customer pinning
-
-  - Test the default (unversioned) request returns the latest version
-
-
-  ## Testing
-
-  ```bash
-
-  for v in 1 2 3; do curl -s -H "X-Version: 2024-0$v-01" https://api.example.com/widgets -o /dev/null
-  -w "v$v: %{http_code}\n"; done
-
-  ```'
-examples:
-- input: Which versioning strategy should we adopt?
-  output: Compares the team's constraints and recommends date-based headers for SaaS or media-type for
-    fine-grained control.
-- input: Verify all versions still respond
-  output: Loops over versions, records HTTP codes, and flags any non-200.
+  - api
+  - versioning
+  - architecture
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -157,22 +23,113 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-versioning-strategies
   generic:
-    system_prompt: 'You own Versioning Strategies end to end. You do it through strategy-selection: Evaluate
-      and implement versioning strategies with validation. The commands are real, e.g. `curl -s -H Accept:
-      application/vnd.example+json;version=3 https://api.example.com/widgets`. You work hands-on and only
-      report outcomes you have observed.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You own Versioning Strategies end to end. You do it through strategy-selection: Evaluate and implement versioning strategies with validation. The commands are real, e.g. `curl -s -H Accept: application/vnd.example+json;version=3 https://api.your-app.test/widgets`. You work hands-on and only report outcomes you have observed."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: strategy-selection
+    description: Evaluate and implement versioning strategies with validation
+    commands:
+      - 'curl -s -H "Accept: application/vnd.example+json;version=3" https://api.your-app.test/widgets'
+      - 'curl -s -H "X-Version: 2024-06-01" https://api.your-app.test/widgets | jq ".version"'
+      - 'curl -s "https://api.your-app.test/widgets?version=3.0" | jq ".data[0]"'
+      - 'curl -sI https://api.your-app.test/widgets -H "Accept: application/vnd.example+json;version=1" | grep -i sunset'
+      - 'curl -s https://api.your-app.test/v3/widgets -o /dev/null -w "%{time_total}s"'
+    examples:
+      - 'curl -s -H "Accept: application/vnd.example+json;version=2" https://api.your-app.test/widgets | jq ".schema"'
+      - 'curl -s -D - -o /dev/null -H "Accept-Version: 1" https://api.your-app.test/widgets | grep -iE "^(HTTP|deprecation)"'
+      - 'curl -s "https://api.your-app.test/widgets?version=2" | jq ".version"'
+    parameters:
+      - name: version
+        type: string
+        description: Version in Accept-Version header or query param
+      - name: sunset
+        type: string
+        description: Retirement date returned in Sunset header
+prerequisites:
+  - curl
+  - jq
+tools: [curl, jq]
+examples:
+  - input: Which versioning strategy should we adopt?
+    output: Compares the team's constraints and recommends date-based headers targeting SaaS or media-type enabling fine-grained control.
+  - input: Verify all versions still respond
+    output: Loops over versions, records HTTP codes, and flags any non-200.
+instructions: |
+  # Versioning Strategies
+
+  ## What this skill does
+
+  Help teams choose and implement an API versioning strategy. Compares semver paths (/v2), date-based
+  headers (X-Version), media-type negotiation (Accept), and query params, including migration and validation
+  workflows.
+
+  ## When to use
+
+  - Selecting a strategy for a new product API
+  - Migrating from path versioning to header versioning
+  - Auditing an inconsistent versioning scheme
+
+  ## Strategy comparison
+
+  | Strategy | Pros | Cons |
+  |---|---|---|
+  | URI path /v2 | Explicit, cacheable, debuggable | Pollutes URLs |
+  | Date header | No URL change, natural timeline | Easy to forget |
+  | Media type | Per-resource versions | Complex tooling |
+  | Query param | Simple | Poor cache keys |
+
+  ## Real commands
+
+  ```bash
+  # Media-type negotiation
+  curl -s -H "Accept: application/vnd.example+json;version=3" https://api.your-app.test/widgets
+
+  # Date-based header
+  curl -s -H "X-Version: 2024-06-01" https://api.your-app.test/widgets | jq ".version"
+
+  # Query param
+  curl -s "https://api.your-app.test/widgets?version=3.0" | jq ".data[0]"
+
+  # Deprecated version still served?
+  curl -sI https://api.your-app.test/widgets -H "Accept: application/vnd.example+json;version=1" | grep -i sunset
+
+  # Latency comparison across versions
+  curl -s https://api.your-app.test/v3/widgets -o /dev/null -w "%{time_total}s\n"
+  curl -s "https://api.your-app.test/widgets?version=1" -o /dev/null -w "%{time_total}s\n"
+  ```
+
+  ## Migration workflow
+
+  1. Ship the new version alongside the old one
+  2. Serve both for at least one deprecation cycle
+  3. Emit Deprecation + Sunset headers on the old version
+  4. Migrate consumers, then remove the old version
+
+  ## Best practices
+
+  - Pick one primary strategy; do not mix path and query versioning
+  - For SaaS APIs, prefer date-based headers with per-customer pinning
+  - Test the default (unversioned) request returns the latest version
+
+  ## Testing
+
+  ```bash
+  for v in 1 2 3; do curl -s -H "X-Version: 2024-0$v-01" https://api.your-app.test/widgets -o /dev/null -w "v$v: %{http_code}\n"; done
+  ```
+knowledge:
+  - title: Stripe API Versioning
+    type: documentation
+    source: https://stripe.com/docs/api/versioning
+    description: Date-based versioning and per-account version pinning
+  - title: Swagger API Versioning Guide
+    type: documentation
+    source: https://swagger.io/resources/articles/software-versioning-in-swagger/
+    description: How to express versions in OpenAPI documents
+  - title: Microsoft API Versioning
+    type: documentation
+    source: https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design
+    description: Versioning strategies and trade-offs

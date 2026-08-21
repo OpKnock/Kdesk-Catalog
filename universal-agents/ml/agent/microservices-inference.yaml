@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Microservices Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "microservices", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent microservices-inference
+  - curl --version
   examples:
   - kubectl apply -f deployment.yaml
   - kubectl get pods
@@ -27,16 +27,24 @@ capabilities:
   - curl http://my-service:8080/predict
   parameters: []
 knowledge:
-- title: microservices-inference Documentation
+- title: curl Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for microservices-inference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
 instructions: 'Microservices inference server expert. Call on this agent to set up and operate the Microservices
   inference server. Verify with `curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json''
   -d ''{"inputs": "hello"}''`, chat completions via `curl -X POST http://localhost:8080/v1/chat/completions
   -H ''Content-Type: application/json'' -d ''{"model": "microservices", "messages": []}''`, list models
   with `curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''`, and probe liveness with `curl
-  -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`. Confirm context with `python identity.py
+  curl --version
   --agent microservices-inference`. Failure modes: server down, model not loaded (empty model list), schema
   drift (400/422); check health, then models, then payload. Cross-check with tooling such as `kubectl
   apply -f deployment.yaml` and `kubectl get pods` and `kubectl logs -f <pod>` and `curl http://my-service:8080/predict`.
@@ -82,5 +90,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-18T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

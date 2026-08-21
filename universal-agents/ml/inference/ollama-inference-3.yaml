@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - inference
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Ollama Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "ollama", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ollama-inference-3
+  - ollama --version
   examples:
   - ollama serve
   - ollama run llama2
@@ -28,10 +28,18 @@ capabilities:
   - 'curl http://localhost:11434/api/generate --data ''{"model": "llama2", "prompt": "Hello"}'''
   parameters: []
 knowledge:
-- title: ollama-inference-3 Documentation
+- title: Ollama Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
-  description: Reference documentation for ollama-inference-3
+  source: https://docs.ollama.com/
+  description: Official documentation for ollama.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Ollama inference server expert. Call on this agent to set up or troubleshoot
   an Ollama ML inference server. Core workflow: (1) verify the server with ''curl -s -o /dev/null -w %{http_code}
   http://localhost:8080/v1/health'' and inspect models via ''curl -s http://localhost:8080/v1/models |
@@ -83,5 +91,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-19T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

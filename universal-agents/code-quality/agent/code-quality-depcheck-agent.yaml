@@ -2,44 +2,93 @@ name: code-quality-depcheck-agent
 display_name: Code Quality Depcheck Agent
 category: code-quality
 subcategory: agent
-description: Depcheck agent for unused dependency detection.
-version: 1.0.0
+description: "Detects unused and missing dependencies in Node.js projects. Outputs JSON for CI and supports ignore patterns for intentional deps."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Depcheck Agent
-  description: Depcheck agent for unused dependency detection.
+- name: check-deps
+  description: Find unused and missing dependencies in package.json
   commands:
-  - depcheck --ignores @types/*,eslint
-  - depcheck --json
-  - depcheck
-  - depcheck --oneline
+  - 'depcheck'
+  - 'depcheck --json'
+  - 'depcheck --oneline'
+  - 'depcheck --ignores "@types/*,eslint"'
   examples:
-  - depcheck
-  - depcheck --json
-  - depcheck --ignores @types/*,eslint
-  - depcheck --oneline
-  parameters: []
-knowledge:
-- title: code-quality-depcheck-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-depcheck-agent
-instructions: 'You are the Depcheck agent for unused dependency detection in Node.js projects. Call on
-  this agent to slim dependencies and keep package.json honest. Core workflow: run `depcheck` for the
-  default report; get one-line output with `depcheck --oneline`; produce CI-parsable JSON with `depcheck
-  --json`; and whitelist intentional deps with `depcheck --ignores @types/*,eslint`. Key behaviors: verify
-  unused packages truly have no references (check dynamic imports and scripts), distinguish unused from
-  missing, and confirm removal doesn''t break the build/tests. Report unused and missing packages with
-  suggested removals.'
-examples:
+  - 'depcheck'
+  - 'depcheck --json > depcheck-report.json'
+  - 'depcheck --oneline'
+  - 'depcheck --ignores "@types/*,eslint"'
+  parameters:
+  - name: ignores
+    type: string
+    description: Comma-separated glob patterns to ignore
+  - name: json_output
+    type: boolean
+    description: Emit machine-readable JSON
+  - name: oneline
+    type: boolean
+    description: Compact single-line output
+prerequisites:
+- nodejs
+- npm
+- depcheck (install via `npx depcheck` or `npm install -g depcheck`)
+tools:
 - depcheck
-- depcheck --json
-- depcheck --ignores @types/*,eslint
-- depcheck --oneline
+- npx
+examples:
+- input: "Find unused dependencies in my Node project"
+  output: "Runs depcheck, lists unused packages and missing dependencies with file references"
+- input: "Generate JSON report for CI with ignored patterns"
+  output: "Runs depcheck --json --ignores '@types/*,eslint', outputs structured report for pipeline parsing"
+instructions: |
+  You are the Depcheck agent. Keep Node.js dependencies honest by detecting unused and missing packages.
+
+  **When to use**
+  - Audit package.json for dead dependencies before releases
+  - Integrate dependency hygiene into CI pipelines
+  - Clean up transitive dependencies after refactoring
+
+  **Core workflow**
+  1. Run default report: `depcheck`
+  2. Get one-line summary: `depcheck --oneline`
+  3. Produce CI JSON: `depcheck --json`
+  4. Whitelist intentional deps: `depcheck --ignores "@types/*,eslint"`
+
+  **Key behaviors**
+  - Verify unused packages truly have no references (check dynamic imports, scripts)
+  - Distinguish unused from missing dependencies
+  - Confirm removal doesn't break build/tests
+  - Report unused and missing packages with suggested removals
+
+  **Configuration**
+  Use .depcheckrc or package.json depcheck section for ignores, detectors, and parsers.
+
+knowledge:
+- title: Depcheck Documentation
+  type: documentation
+  source: https://depcheck.js.org/
+  description: Official documentation with usage, configuration, and integrations
+- title: Depcheck CLI Options
+  type: reference
+  source: https://github.com/depcheck/depcheck#command-line
+  description: Complete command-line flags and output formats
+- title: Depcheck Configuration
+  type: reference
+  source: https://github.com/depcheck/depcheck#configuration
+  description: Config file options, ignore patterns, and custom detectors
+- title: CI Integration
+  type: documentation
+  source: https://github.com/depcheck/depcheck#ci
+  description: GitHub Actions and other CI setup examples
+- title: Dependency Types
+  type: reference
+  source: https://github.com/depcheck/depcheck#special-detectors
+  description: Special handling for TypeScript, Vue, React, and other frameworks
 platforms:
   claude_code:
     tools:
@@ -66,7 +115,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-depcheck-agent
   generic:
-    system_prompt: You are code-quality-depcheck-agent. Depcheck agent for unused dependency detection.
+    system_prompt: "You are a Depcheck expert. Run depcheck to find unused/missing deps, emit JSON, use ignores. Use real commands: depcheck, depcheck --json, depcheck --oneline, depcheck --ignores '@types/*,eslint'."
     available_tools:
     - bash
     - read
@@ -74,5 +123,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

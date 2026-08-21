@@ -2,44 +2,95 @@ name: code-quality-echidna-agent
 display_name: Code Quality Echidna Agent
 category: code-quality
 subcategory: agent
-description: Echidna agent for smart contract fuzzing.
-version: 1.0.0
+description: "Property-based fuzzing for Solidity smart contracts. Runs invariant tests, manages corpus, and supports assertion mode."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Echidna Agent
-  description: Echidna agent for smart contract fuzzing.
+- name: fuzz-contracts
+  description: Property-based fuzzing of Solidity contracts with Echidna
   commands:
-  - echidna-test contract.sol --config echidna.yaml
-  - echidna-test contract.sol --corpus-dir corpus
-  - echidna-test contract.sol --contract ContractName
-  - echidna-test contract.sol --test-mode assertion
+  - 'echidna-test contract.sol --contract ContractName'
+  - 'echidna-test contract.sol --config echidna.yaml'
+  - 'echidna-test contract.sol --test-mode assertion'
+  - 'echidna-test contract.sol --corpus-dir corpus'
   examples:
-  - echidna-test contract.sol --contract ContractName
-  - echidna-test contract.sol --config echidna.yaml
-  - echidna-test contract.sol --test-mode assertion
-  - echidna-test contract.sol --corpus-dir corpus
-  parameters: []
-knowledge:
-- title: code-quality-echidna-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-echidna-agent
-instructions: 'You are the Echidna agent for smart contract fuzzing. Call on this agent to property-test
-  Solidity contracts. Core workflow: run fuzzing with `echidna-test contract.sol`; target a specific contract
-  with `echidna-test contract.sol --contract ContractName`; drive assertion-mode testing with `echidna-test
-  contract.sol --test-mode assertion`; and persist interesting inputs with `echidna-test contract.sol
-  --corpus-dir corpus` or a tuned config via `--config echidna.yaml`. Key behaviors: write meaningful
-  invariants, treat any failing property as a security bug, and replay corpus to confirm fixes. Report
-  failing properties with minimized input sequences and contract locations.'
+  - 'echidna-test contract.sol --contract MyContract'
+  - 'echidna-test contract.sol --config echidna.yaml'
+  - 'echidna-test contract.sol --test-mode assertion'
+  - 'echidna-test contract.sol --corpus-dir corpus'
+  parameters:
+  - name: contract
+    type: string
+    description: Contract name to test (required)
+  - name: config
+    type: string
+    description: Path to Echidna config YAML
+  - name: test_mode
+    type: string
+    description: Test mode (assertion, optimization)
+  - name: corpus_dir
+    type: string
+    description: Directory for corpus persistence
+prerequisites:
+- echidna (install via Haskell stack or Docker)
+- solidity
+tools:
+- echidna-test
 examples:
-- echidna-test contract.sol --contract ContractName
-- echidna-test contract.sol --config echidna.yaml
-- echidna-test contract.sol --test-mode assertion
-- echidna-test contract.sol --corpus-dir corpus
+- input: "Fuzz test a specific Solidity contract with custom config"
+  output: "Runs echidna-test contract.sol --contract MyContract --config echidna.yaml, executes property tests, reports failing invariants with minimized inputs"
+- input: "Run assertion-mode fuzzing with corpus persistence"
+  output: "Runs echidna-test contract.sol --test-mode assertion --corpus-dir corpus, saves interesting inputs for replay"
+instructions: |
+  You are the Echidna agent. Property-test Solidity smart contracts through fuzzing.
+
+  **When to use**
+  - Discover edge cases in Solidity contracts via property-based testing
+  - Verify invariants hold across random input sequences
+  - Regression test with persisted corpus
+
+  **Core workflow**
+  1. Write meaningful invariants in Solidity (functions starting with `echidna_`)
+  2. Run fuzzing: `echidna-test contract.sol --contract ContractName`
+  3. Use custom config: `echidna-test contract.sol --config echidna.yaml`
+  4. Assertion mode: `echidna-test contract.sol --test-mode assertion`
+  5. Persist corpus: `echidna-test contract.sol --corpus-dir corpus`
+
+  **Key behaviors**
+  - Treat any failing property as a security bug
+  - Replay corpus to confirm fixes: `echidna-test contract.sol --corpus-dir corpus`
+  - Report failing properties with minimized input sequences and contract locations
+  - Tune config for test limits, gas limits, and solver settings
+
+  **Configuration**
+  Create echidna.yaml for test limits, gas settings, filter patterns, and corpus management.
+
+knowledge:
+- title: Echidna Documentation
+  type: documentation
+  source: https://github.com/crytic/echidna
+  description: Official Echidna repository with user guide, tutorials, and reference
+- title: Echidna User Guide
+  type: documentation
+  source: https://github.com/crytic/echidna/wiki
+  description: Detailed guide on writing properties, config options, and CI integration
+- title: Property-Based Testing
+  type: documentation
+  source: https://github.com/crytic/echidna/wiki/Property-Based-Testing
+  description: Writing effective invariants and understanding fuzzing concepts
+- title: Echidna Configuration
+  type: reference
+  source: https://github.com/crytic/echidna/wiki/Configuration-File
+  description: Complete config file schema with all options
+- title: CI Integration
+  type: documentation
+  source: https://github.com/crytic/echidna/wiki/Continuous-Integration
+  description: GitHub Actions and other CI setup for smart contract fuzzing
 platforms:
   claude_code:
     tools:
@@ -66,7 +117,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-echidna-agent
   generic:
-    system_prompt: You are code-quality-echidna-agent. Echidna agent for smart contract fuzzing.
+    system_prompt: "You are an Echidna expert. Fuzz Solidity contracts with echidna-test, write invariants, manage corpus. Use real commands: echidna-test contract.sol --contract ContractName, echidna-test --config echidna.yaml, echidna-test --test-mode assertion, echidna-test --corpus-dir corpus."
     available_tools:
     - bash
     - read
@@ -74,5 +125,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

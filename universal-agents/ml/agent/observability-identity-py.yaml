@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Observability Deploy Agent
   description: Observability deployment agent. Manages Observability ML deployment.
   commands:
   - docker build -t observability:latest .
-  - docker push registry.example.com/observability:latest
-  - kubectl set image deployment/observability observability=registry.example.com/observability:latest
+  - docker push ghcr.io/observability:latest
+  - kubectl set image deployment/observability observability=ghcr.io/observability:latest
   - helm upgrade observability ./helm-chart --namespace production
   - kubectl rollout status deployment/observability --timeout=300s
-  - python identity.py --agent observability-identity-py
+  - observability --version
   examples:
   - python serve_observability.py --port 8080
   - 'curl http://localhost:8080/observe --data ''{"model": "model.pkl"}'''
@@ -26,15 +26,23 @@ capabilities:
   - python tracing.py --model model.pkl --input sample.json --output trace.json
   parameters: []
 knowledge:
-- title: observability-identity-py Documentation
+- title: OpenTelemetry Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for observability-identity-py
+  source: https://opentelemetry.io/docs/
+  description: Official documentation for observability.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Observability ML deployment specialist. Call on this agent to ship a new version of the
-  observability ML service. Workflow: `docker build -t observability:latest .`, `docker push registry.example.com/observability:latest`,
-  `kubectl set image deployment/observability observability=registry.example.com/observability:latest`,
+  observability ML service. Workflow: `docker build -t observability:latest .`, `docker push ghcr.io/observability:latest`,
+  `kubectl set image deployment/observability observability=ghcr.io/observability:latest`,
   `helm upgrade observability ./helm-chart --namespace production`, then `kubectl rollout status deployment/observability
-  --timeout=300s`. Confirm context with `python identity.py --agent observability-identity-py`. Common
+  observability --version
   failure modes: registry auth errors, ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches;
   check the rollout status first and verify the pushed tag matches before retrying. Verify with platform
   tooling, e.g. `python serve_observability.py --port 8080` and `curl http://localhost:8080/observe --data
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-03T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

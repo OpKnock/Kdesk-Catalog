@@ -2,25 +2,25 @@ name: curl
 display_name: Curl
 category: api
 subcategory: general
-description: 'Test and debug REST APIs with curl: methods, headers, JSON bodies, auth, TLS options, and
-  output formatting.'
+description: 'Tests and debugs REST APIs from the terminal with curl: methods, headers, JSON bodies, auth,
+  TLS options, timing, and output formatting.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: requests
   description: Send HTTP requests with curl covering methods, headers, bodies, and auth
   commands:
-  - curl -i https://api.example.com/v1/users
-  - 'curl -X POST -H "Content-Type: application/json" -d ''{"name":"alice"}'' https://api.example.com/v1/users'
-  - curl -u alice:secret https://api.example.com/v1/me
-  - 'curl -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/users'
+  - curl -i https://httpbin.org/get
+  - 'curl -X POST -H "Content-Type: application/json" -d ''{"name":"alice"}'' https://httpbin.org/post'
+  - curl -u alice:secret https://httpbin.org/basic-auth/alice/secret
+  - 'curl -H "Authorization: Bearer $TOKEN" https://httpbin.org/bearer'
   examples:
-  - 'curl -X PUT -H "Content-Type: application/json" -d ''{"name":"bob"}'' https://api.example.com/v1/users/42'
-  - curl -X DELETE -o /dev/null -w "%{http_code}\n" https://api.example.com/v1/users/42
-  - 'curl -H "Accept: application/vnd.api+json" https://api.example.com/v1/users'
+  - 'curl -X PUT -H "Content-Type: application/json" -d ''{"name":"bob"}'' https://httpbin.org/put'
+  - curl -X DELETE -o /dev/null -w "%{http_code}\n" https://httpbin.org/delete
+  - 'curl -H "Accept: application/vnd.api+json" https://httpbin.org/get'
   parameters:
   - name: method
     type: string
@@ -31,14 +31,14 @@ capabilities:
 - name: debugging
   description: Inspect responses, headers, TLS, timing, and write output to files
   commands:
-  - curl -s -D headers.txt -o response.json https://api.example.com/v1/users
-  - curl -k https://self-signed.example.com
-  - curl -w "status:%{http_code} time:%{time_total}s size:%{size_download}\n" -o /dev/null https://api.example.com/v1/users
-  - curl -v https://api.example.com/v1/users
+  - curl -s -D headers.txt -o response.json https://httpbin.org/get
+  - curl -k https://httpbin.org/get
+  - curl -w "status:%{http_code} time:%{time_total}s size:%{size_download}\n" -o /dev/null https://httpbin.org/get
+  - curl -v https://httpbin.org/get
   examples:
-  - curl -w "%{time_connect} %{time_starttransfer} %{time_total}\n" -o /dev/null https://api.example.com/v1/users
-  - curl -k -v https://localhost:8443/health
-  - curl -s https://api.example.com/v1/users | jq '.data[0]'
+  - curl -w "%{time_connect} %{time_starttransfer} %{time_total}\n" -o /dev/null https://httpbin.org/get
+  - curl -k -v https://httpbin.org/get
+  - curl -s https://httpbin.org/get | jq '.origin'
   parameters:
   - name: output_file
     type: string
@@ -57,17 +57,17 @@ knowledge:
   description: In-depth curl usage guide
 instructions: "# curl\n\nTest and debug APIs from the terminal with curl.\n\n## When to Use\n\n- Quick\
   \ API smoke tests and debugging\n- Reproducing reported issues with exact requests\n- Verifying headers,\
-  \ auth, and TLS behavior\n\n## Basic Requests\n\n```bash\ncurl -i https://api.example.com/v1/users\n\
-  curl -X POST -H \"Content-Type: application/json\" \\\n  -d '{\"name\":\"alice\"}' https://api.example.com/v1/users\n\
-  curl -u alice:secret https://api.example.com/v1/me\ncurl -H \"Authorization: Bearer $TOKEN\" https://api.example.com/v1/users\n\
-  ```\n\n## Inspecting Responses\n\n```bash\ncurl -s -D headers.txt -o response.json https://api.example.com/v1/users\n\
-  curl -w \"status:%{http_code} time:%{time_total}s size:%{size_download}\\n\" \\\n  -o /dev/null https://api.example.com/v1/users\n\
-  curl -v https://api.example.com/v1/users\n```\n\n## TLS and Debugging\n\n```bash\ncurl -k https://self-signed.example.com\n\
-  curl -k -v https://localhost:8443/health\ncurl --cacert ca.pem https://api.example.com\n```\n\n## Data\
+  \ auth, and TLS behavior\n\n## Basic Requests\n\n```bash\ncurl -i https://httpbin.org/get\n\
+  curl -X POST -H \"Content-Type: application/json\" \\\n  -d '{\"name\":\"alice\"}' https://httpbin.org/post\n\
+  curl -u alice:secret https://httpbin.org/basic-auth/alice/secret\ncurl -H \"Authorization: Bearer $TOKEN\" https://httpbin.org/bearer\n\
+  ```\n\n## Inspecting Responses\n\n```bash\ncurl -s -D headers.txt -o response.json https://httpbin.org/get\n\
+  curl -w \"status:%{http_code} time:%{time_total}s size:%{size_download}\\n\" \\\n  -o /dev/null https://httpbin.org/get\n\
+  curl -v https://httpbin.org/get\n```\n\n## TLS and Debugging\n\n```bash\ncurl -k https://httpbin.org/get\n\
+  curl -k -v https://httpbin.org/get\ncurl --cacert ca.pem https://httpbin.org/get\n```\n\n## Data\
   \ Files\n\n```bash\ncurl -X POST -H \"Content-Type: application/json\" --data-binary @payload.json \\\
-  \n  https://api.example.com/v1/users\ncurl -F \"file=@report.pdf\" https://api.example.com/upload\n\
-  ```\n\n## Testing\n\n```bash\ncurl -o /dev/null -w \"%{http_code}\\n\" https://api.example.com/v1/health\n\
-  curl -s https://api.example.com/v1/users | jq '.data | length'\n```\n\n## Best Practices\n\n- Always\
+  \n  https://httpbin.org/post\ncurl -F \"file=@report.pdf\" https://httpbin.org/post\n\
+  ```\n\n## Testing\n\n```bash\ncurl -o /dev/null -w \"%{http_code}\\n\" https://httpbin.org/get\n\
+  curl -s https://httpbin.org/get | jq '.origin'\n```\n\n## Best Practices\n\n- Always\
   \ set Content-Type for bodies\n- Use -w for status codes and timing in scripts\n- Never put credentials\
   \ on the command line history; use env vars\n- Use --data-binary for exact JSON payloads\n- Add -f to\
   \ fail fast on HTTP errors in scripts\n- Read responses with jq for readability"
@@ -102,12 +102,12 @@ platforms:
     plugin: opencode-curl
   generic:
     system_prompt: 'You own Curl end to end. You do it through requests: Send HTTP requests with curl
-      covering methods, headers, bodies, and auth. The commands are real, e.g. `curl -i https://api.example.com/v1/users`.
+      covering methods, headers, bodies, and auth. The commands are real, e.g. `curl -i https://httpbin.org/get`.
       You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

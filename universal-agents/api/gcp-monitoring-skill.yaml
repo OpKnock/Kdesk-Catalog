@@ -7,7 +7,7 @@ description: 'GCP Cloud Monitoring operations: query metric time series, create 
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - gcloud
@@ -19,16 +19,16 @@ capabilities:
     --format='table(metric.labels.response_code, pointCount)'
   - gcloud monitoring time-series list --filter='metric.type="cloudfunctions.googleapis.com/function/execution_times"'
     --format='json' | jq '.timeSeries[0].points[0].value'
-  - gcloud monitoring channels create --display-name=ops-email --type=email --channel-labels=address=oncall@example.com
+  - gcloud monitoring channels create --display-name=ops-email --type=email --channel-labels=address=oncall@localhost
   - gcloud monitoring policies create --display-name='5xx high' --condition-filter='metric.type="run.googleapis.com/request_count"
     AND metric.labels.response_code="500"' --duration=300s
-  - gcloud monitoring uptime-checks create --display-name=orders --resource-type=url --resource-url=https://orders.example.com/health
+  - gcloud monitoring uptime-checks create --display-name=orders --resource-type=url --resource-url=http://localhost:8080/health
     --timeout=5s
   examples:
   - gcloud monitoring time-series list --filter='metric.type="run.googleapis.com/request_count" AND resource.labels.service_name="orders"'
     --format='table(metric.labels.response_code, pointCount)'
-  - gcloud monitoring channels create --display-name=ops-email --type=email --channel-labels=address=oncall@example.com
-  - gcloud monitoring uptime-checks create --display-name=orders --resource-type=url --resource-url=https://orders.example.com/health
+  - gcloud monitoring channels create --display-name=ops-email --type=email --channel-labels=address=oncall@localhost
+  - gcloud monitoring uptime-checks create --display-name=orders --resource-type=url --resource-url=http://localhost:8080/health
     --timeout=5s
   parameters:
   - name: metric-type
@@ -107,5 +107,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-02-23T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

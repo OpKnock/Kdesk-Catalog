@@ -1,46 +1,45 @@
 name: sse-security
-display_name: Sse Security
+display_name: SSE Security
 category: api
 subcategory: general
-description: 'Hand-crafted SSE security skill: authenticate event-stream connections, validate origins,
-  resume after reconnects with Last-Event-ID, and bound stream duration.'
+description: "Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: sse-hardening
-  description: 'Secure Server-Sent Events streams: auth, origin, resume, timeouts'
+  description: "Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration."
   commands:
-  - 'curl -N -H "Authorization: Bearer $TOKEN" -H ''Accept: text/event-stream'' https://events.example.com/stream'
-  - curl -sI https://events.example.com/stream | grep -iE 'content-type|access-control-allow-origin'
-  - curl -N --max-time 30 https://events.example.com/stream | head -20
-  - 'curl -N -H ''Last-Event-ID: 42'' -H ''Accept: text/event-stream'' https://events.example.com/stream'
-  - curl -s -o /dev/null -w '%{http_code}\n' https://events.example.com/stream
+  - 'curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events'
+  - 'curl -N -H "Origin: https://app.example.com" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events'
+  - 'curl -N -H "Last-Event-ID: 42" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events'
+  - 'timeout 30 curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events'
   examples:
-  - 'curl -N -H "Authorization: Bearer $TOKEN" -H ''Accept: text/event-stream'' https://events.example.com/stream'
-  - 'curl -N -H ''Last-Event-ID: 42'' https://events.example.com/stream'
-  - curl -sI https://events.example.com/stream | grep -i content-type
+  - 'curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events'
+  - 'curl -N -H "Origin: https://app.example.com" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events'
+  - 'curl -N -H "Last-Event-ID: 42" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events'
+  - 'timeout 30 curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events'
   parameters:
   - name: token
     type: string
-    description: Bearer token required on the stream connection
+    description: Bearer token for SSE authentication
+  - name: origin
+    type: string
+    description: CORS origin header value
   - name: last_event_id
     type: string
-    description: Resume cursor for reconnects
-  - name: max_time
+    description: Last-Event-ID for reconnection resume
+  - name: max_duration
     type: integer
-    description: Bound for curl reads on the stream
+    description: Maximum stream duration in seconds
 knowledge:
 - title: MDN Using SSE
   type: documentation
   source: https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
-  description: Event stream protocol and Last-Event-ID
-- title: OWASP HTML5 Security Cheat Sheet (SSE)
-  type: documentation
-  source: https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html
-  description: SSE injection and CORS guidance
+  description: "Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration."
 instructions: '# SSE Security
 
 
@@ -172,5 +171,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Pinecone Deploy Agent
   description: Pinecone deployment agent. Manages Pinecone ML deployment.
   commands:
   - docker build -t pinecone:latest .
-  - docker push registry.example.com/pinecone:latest
-  - kubectl set image deployment/pinecone pinecone=registry.example.com/pinecone:latest
+  - docker push ghcr.io/pinecone:latest
+  - kubectl set image deployment/pinecone pinecone=ghcr.io/pinecone:latest
   - helm upgrade pinecone ./helm-chart --namespace production
   - kubectl rollout status deployment/pinecone --timeout=300s
-  - python identity.py --agent pinecone-identity-py
+  - pinecone --version
   examples:
   - python create_index.py --name my-index --dimension 1536
   - python upsert.py --index my-index --vectors vectors.json
@@ -26,10 +26,18 @@ capabilities:
   - python delete.py --index my-index --ids ids.json
   parameters: []
 knowledge:
-- title: pinecone-identity-py Documentation
+- title: Pinecone Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for pinecone-identity-py
+  source: https://docs.pinecone.io/
+  description: Official documentation for pinecone.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a Pinecone deployment expert. A user calls on you to deploy Pinecone ML applications
   with vector indexes as the core. Work step by step: create the index with ''python create_index.py --name
   my-index --dimension 1536'', load vectors with ''python upsert.py --index my-index --vectors vectors.json'',
@@ -78,5 +86,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-05-03T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

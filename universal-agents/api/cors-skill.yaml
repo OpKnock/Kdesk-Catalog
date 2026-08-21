@@ -2,12 +2,12 @@ name: cors
 display_name: Cors
 category: api
 subcategory: general
-description: 'Configure and debug Cross-Origin Resource Sharing for APIs: setting CORS headers, preflight
+description: 'Configure and debug Cross-Origin Resource Sharing: setting CORS headers, preflight
   handling, and origin allowlists.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - node
@@ -16,21 +16,21 @@ capabilities:
 - name: cors-headers
   description: Configure CORS headers on API responses and test them with curl
   commands:
-  - 'curl -i -H "Origin: http://example.com" https://api.example.com/v1/users'
-  - 'curl -s -D - -o /dev/null -H "Origin: http://example.com" https://api.example.com/v1/users | grep
+  - 'curl -i -H "Origin: http://github.com" https://httpbin.org/get'
+  - 'curl -s -D - -o /dev/null -H "Origin: http://github.com" https://httpbin.org/get | grep
     -i access-control'
-  - 'curl -s -o /dev/null -w "%{http_code}" -H "Origin: http://example.com" https://api.example.com/v1/users'
-  - 'curl -sI -H "Origin: http://example.com" https://api.example.com/v1/users'
+  - 'curl -s -o /dev/null -w "%{http_code}" -H "Origin: http://github.com" https://httpbin.org/get'
+  - 'curl -sI -H "Origin: http://github.com" https://httpbin.org/get'
   examples:
   - 'curl -i -H "Origin: http://localhost:3000" http://localhost:8080/api/users'
-  - 'curl -s -D - -o /dev/null -H "Origin: http://example.com" https://api.example.com/v1/users | grep
+  - 'curl -s -D - -o /dev/null -H "Origin: http://github.com" https://httpbin.org/get | grep
     -i access-control'
-  - 'curl -s -D - -o /dev/null -H "Origin: http://evil.com" https://api.example.com/v1/users | grep -i
+  - 'curl -s -D - -o /dev/null -H "Origin: http://untrusted-origin.test" https://httpbin.org/get | grep -i
     access-control'
   parameters:
   - name: origin
     type: string
-    description: Origin header to test, e.g. http://example.com
+    description: Origin header to test, e.g. http://github.com
 - name: express-cors
   description: Configure CORS with the cors npm package and restrict allowed origins
   commands:
@@ -42,7 +42,7 @@ capabilities:
   examples:
   - npm install cors && node server.js
   - 'curl -i -H "Origin: http://localhost:3000" http://localhost:8080/api'
-  - 'curl -s -D - -o /dev/null -H "Origin: http://not-allowed.com" http://localhost:8080/api | grep -i
+  - 'curl -s -D - -o /dev/null -H "Origin: http://blocked-origin.test" http://localhost:8080/api | grep -i
     access-control-allow-origin'
   parameters:
   - name: allowed_origins
@@ -60,17 +60,17 @@ knowledge:
 instructions: "# CORS\n\nConfigure and debug Cross-Origin Resource Sharing for APIs.\n\n## When to Use\n\
   \n- Allowing browser apps on other origins to call your API\n- Handling preflight OPTIONS requests\n\
   - Restricting credentials sharing to trusted origins\n\n## Inspect CORS Headers\n\n```bash\ncurl -i\
-  \ -H \"Origin: http://example.com\" https://api.example.com/v1/users\ncurl -s -D - -o /dev/null -H \"\
-  Origin: http://evil.com\" https://api.example.com/v1/users | grep -i access-control\n```\n\nA correct\
-  \ response includes:\n\n```\nAccess-Control-Allow-Origin: http://example.com\nAccess-Control-Allow-Methods:\
+  \ -H \"Origin: http://github.com\" https://httpbin.org/get\ncurl -s -D - -o /dev/null -H \"\
+  Origin: http://untrusted-origin.test\" https://httpbin.org/get | grep -i access-control\n```\n\nA correct\
+  \ response includes:\n\n```\nAccess-Control-Allow-Origin: http://github.com\nAccess-Control-Allow-Methods:\
   \ GET, POST, PUT, DELETE, OPTIONS\nAccess-Control-Allow-Headers: Content-Type, Authorization\nVary:\
   \ Origin\n```\n\n## Express\n\n```bash\nnpm install cors\n```\n\n```js\nconst cors = require('cors');\n\
-  app.use(cors({\n  origin: ['http://localhost:3000', 'https://app.example.com'],\n  methods: ['GET',\
+  app.use(cors({\n  origin: ['http://localhost:3000', 'https://app.github.com'],\n  methods: ['GET',\
   \ 'POST', 'PUT', 'DELETE'],\n  allowedHeaders: ['Content-Type', 'Authorization'],\n  credentials: true\n\
   }));\n```\n\n```bash\nnode server.js &\ncurl -i -H \"Origin: http://localhost:3000\" http://localhost:8080/api\n\
   ```\n\n## Credentials\n\nWhen `credentials: true`, the Allow-Origin header must echo the exact origin,\
   \ never `*`.\n\n## Testing\n\n```bash\ncurl -i -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\"\
-  \ -H \"Access-Control-Request-Method: POST\"\ncurl -s -D - -o /dev/null -H \"Origin: http://not-allowed.com\"\
+  \ -H \"Access-Control-Request-Method: POST\"\ncurl -s -D - -o /dev/null -H \"Origin: http://blocked-origin.test\"\
   \ http://localhost:8080/api | grep -i access-control-allow-origin\n```\n\n## Best Practices\n\n- Never\
   \ use `Access-Control-Allow-Origin: *` with credentials\n- Set `Vary: Origin` to enable caching\n- Keep\
   \ the allowlist minimal\n- Test both allowed and disallowed origins\n- Handle OPTIONS preflight explicitly\
@@ -106,12 +106,12 @@ platforms:
     plugin: opencode-cors
   generic:
     system_prompt: 'This is your domain: Cors. You do it through cors-headers: Configure CORS headers
-      on API responses and test them with curl. The commands are real, e.g. `curl -i -H Origin: http://example.com
-      https://api.example.com/v1/users`. You work hands-on and only report outcomes you have observed.'
+      on API responses and test them with curl. The commands are real, e.g. `curl -i -H Origin: http://github.com
+      https://httpbin.org/get`. You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

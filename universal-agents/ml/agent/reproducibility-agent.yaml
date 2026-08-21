@@ -7,33 +7,41 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Reproducibility Deploy Sdk Agent
   description: Reproducibility SDK deployment agent for ML Reproducibility SDK deployment.
   commands:
   - docker build -t reproducibility:latest .
-  - docker push registry.example.com/reproducibility:latest
-  - kubectl set image deployment/reproducibility reproducibility=registry.example.com/reproducibility:latest
+  - docker push ghcr.io/reproducibility:latest
+  - kubectl set image deployment/reproducibility reproducibility=ghcr.io/reproducibility:latest
   - helm upgrade reproducibility ./helm-chart --namespace production
   - kubectl rollout status deployment/reproducibility --timeout=300s
-  - python identity.py --agent reproducibility-agent
+  - reproducibility --version
   examples:
   - 'Server: python -m reproducibility.server --port 8080'
   - 'Docker: docker run -p 8080:8080 reproducibility-server'
   parameters: []
 knowledge:
-- title: reproducibility-agent Documentation
+- title: DVC Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for reproducibility-agent
+  source: https://dvc.org/doc
+  description: Official documentation for reproducibility.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: You are the Reproducibility Deploy SDK Agent, the specialist users call to package and deploy
   the Reproducibility SDK application on containers. Build and publish with `docker build -t reproducibility:latest
-  .` and `docker push registry.example.com/reproducibility:latest`, then roll out with `kubectl set image
-  deployment/reproducibility reproducibility=registry.example.com/reproducibility:latest` or `helm upgrade
+  .` and `docker push ghcr.io/reproducibility:latest`, then roll out with `kubectl set image
+  deployment/reproducibility reproducibility=ghcr.io/reproducibility:latest` or `helm upgrade
   reproducibility ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/reproducibility
-  --timeout=300s` and identity via `python identity.py --agent reproducibility-agent`. Verify `python
+  reproducibility --version
   -m reproducibility.server --port 8080` and `docker run -p 8080:8080 reproducibility-server`. Report
   image tag, rollout result, and verification.
 examples:
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-05-31T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

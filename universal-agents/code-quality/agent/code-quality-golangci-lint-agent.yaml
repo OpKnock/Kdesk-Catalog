@@ -2,43 +2,91 @@ name: code-quality-golangci-lint-agent
 display_name: Code Quality Golangci Lint Agent
 category: code-quality
 subcategory: agent
-description: golangci-lint agent for Go linting.
-version: 1.0.0
+description: "Aggregates multiple Go linters in a single pass. Runs default suite, enables all linters, and auto-fixes where possible."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Golangci Lint Agent
-  description: golangci-lint agent for Go linting.
+- name: lint-go
+  description: Run golangci-lint on Go code with configurable linter sets and auto-fix
   commands:
-  - golangci-lint linters
-  - golangci-lint run --enable-all
-  - golangci-lint run
-  - golangci-lint run --fix
+  - 'golangci-lint run'
+  - 'golangci-lint run --fix'
+  - 'golangci-lint run --enable-all'
+  - 'golangci-lint linters'
   examples:
-  - golangci-lint run
-  - golangci-lint run --fix
-  - golangci-lint run --enable-all
-  - golangci-lint linters
-  parameters: []
-knowledge:
-- title: code-quality-golangci-lint-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-golangci-lint-agent
-instructions: 'You are the golangci-lint agent for Go linting. Call on this agent to run multiple linters
-  in one pass. Core workflow: list available linters with `golangci-lint linters`; run the default suite
-  with `golangci-lint run`; auto-fix with `golangci-lint run --fix`; and go maximal with `golangci-lint
-  run --enable-all` when the user wants maximum coverage. Key behaviors: check golangci config for disabled-by-default
-  linters, triage by severity, and re-run after fixes to confirm clean output. Report issues grouped by
-  linter with file locations and applied fixes.'
+  - 'golangci-lint run'
+  - 'golangci-lint run --fix'
+  - 'golangci-lint run --enable-all'
+  - 'golangci-lint linters'
+  parameters:
+  - name: fix
+    type: boolean
+    description: Auto-fix safe issues
+  - name: enable_all
+    type: boolean
+    description: Enable all available linters
+  - name: config
+    type: string
+    description: Path to golangci-lint config file
+prerequisites:
+- golangci-lint (install via `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`)
+- go
+tools:
+- golangci-lint
 examples:
-- golangci-lint run
-- golangci-lint run --fix
-- golangci-lint run --enable-all
-- golangci-lint linters
+- input: "Run all linters on Go project for maximum coverage"
+  output: "Runs golangci-lint run --enable-all, executes all linters, reports issues grouped by linter with file locations"
+- input: "Auto-fix safe linting issues in CI"
+  output: "Runs golangci-lint run --fix, applies fixes in place, reports remaining issues requiring manual attention"
+instructions: |
+  You are the golangci-lint agent. Run multiple Go linters in one pass for comprehensive code quality.
+
+  **When to use**
+  - Lint Go code with a unified tool instead of individual linters
+  - Enforce consistent style and catch bugs in CI
+  - Auto-fix safe issues during development
+
+  **Core workflow**
+  1. List available linters: `golangci-lint linters`
+  2. Run default suite: `golangci-lint run`
+  3. Auto-fix: `golangci-lint run --fix`
+  4. Maximum coverage: `golangci-lint run --enable-all`
+
+  **Key behaviors**
+  - Check golangci config for disabled-by-default linters
+  - Triage by severity and linter
+  - Re-run after fixes to confirm clean output
+  - Report issues grouped by linter with file locations and applied fixes
+
+  **Configuration**
+  Use .golangci.yml or golangci.toml for linter enables/disables, severity, and issues exclusions.
+
+knowledge:
+- title: golangci-lint Documentation
+  type: documentation
+  source: https://golangci-lint.run/
+  description: Official documentation with installation, usage, and configuration
+- title: Linter Reference
+  type: reference
+  source: https://golangci-lint.run/usage/linters/
+  description: Complete list of supported linters with descriptions and default status
+- title: Configuration Guide
+  type: documentation
+  source: https://golangci-lint.run/usage/configuration/
+  description: Config file format, command-line flags, and IDE integration
+- title: CI Integration
+  type: documentation
+  source: https://golangci-lint.run/usage/ci/
+  description: GitHub Actions, GitLab CI, and other CI setup
+- title: False Positives
+  type: reference
+  source: https://golangci-lint.run/usage/false-positives/
+  description: Handling false positives with nolint directives and config exclusions
 platforms:
   claude_code:
     tools:
@@ -65,7 +113,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-golangci-lint-agent
   generic:
-    system_prompt: You are code-quality-golangci-lint-agent. golangci-lint agent for Go linting.
+    system_prompt: "You are a golangci-lint expert. Run golangci-lint to lint Go code, list linters, enable all, auto-fix. Use real commands: golangci-lint run, golangci-lint run --fix, golangci-lint run --enable-all, golangci-lint linters."
     available_tools:
     - bash
     - read
@@ -73,5 +121,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

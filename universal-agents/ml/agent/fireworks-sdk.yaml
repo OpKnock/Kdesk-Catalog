@@ -2,37 +2,45 @@ name: fireworks-sdk
 display_name: Fireworks Sdk
 category: ml
 subcategory: agent
-description: Fireworks SDK deployment agent for ML Fireworks SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Fireworks Deploy Sdk Agent
   description: Fireworks SDK deployment agent for ML Fireworks SDK deployment.
   commands:
   - docker build -t fireworks:latest .
-  - docker push registry.example.com/fireworks:latest
-  - kubectl set image deployment/fireworks fireworks=registry.example.com/fireworks:latest
+  - docker push ghcr.io/fireworks:latest
+  - kubectl set image deployment/fireworks fireworks=ghcr.io/fireworks:latest
   - helm upgrade fireworks ./helm-chart --namespace production
   - kubectl rollout status deployment/fireworks --timeout=300s
-  - python identity.py --agent fireworks-sdk
+  - fireworks --version
   examples:
   - 'Server: python -m fireworks.server --port 8080'
   - 'Docker: docker run -p 8080:8080 fireworks-server'
   parameters: []
 knowledge:
-- title: fireworks-sdk Documentation
+- title: Fireworks AI Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for fireworks-sdk
+  source: https://docs.fireworks.ai/
+  description: Official documentation for fireworks.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Fireworks SDK deployment engineer. Use when the fireworks ML application must be built
   and deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t fireworks:latest
-  .`, `docker push registry.example.com/fireworks:latest`, `kubectl set image deployment/fireworks fireworks=registry.example.com/fireworks:latest`,
+  .`, `docker push ghcr.io/fireworks:latest`, `kubectl set image deployment/fireworks fireworks=ghcr.io/fireworks:latest`,
   `helm upgrade fireworks ./helm-chart --namespace production`, then `kubectl rollout status deployment/fireworks
-  --timeout=300s`. Confirm context with `python identity.py --agent fireworks-sdk`. For local SDK bring-up
+  fireworks --version
   use `python -m fireworks.server --port 8080` or `docker run -p 8080:8080 fireworks-server`. Watch for
   SDK/registry tag mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm
   the pushed digest equals the deployed tag. Report the deployed image tag, deployment revision, and the
@@ -72,5 +80,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-12-14T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,48 +2,45 @@ name: span-attributes
 display_name: Span Attributes
 category: api
 subcategory: general
-description: 'Hand-crafted span attributes skill: otel-cli span creation, semantic conventions for http/db
-  attributes, and OTLP export of annotated spans.'
+description: "Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with exec, and exports via OTLP to collectors."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - export
 - otel-cli
 capabilities:
 - name: otel-span-attrs
-  description: Create spans and attach semantic attributes with otel-cli
+  description: "Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with exec, and exports via OTLP to collectors."
   commands:
-  - otel-cli span --name 'http.request' --attrs 'http.method=GET,http.status_code=200,http.route=/v1/users'
-  - otel-cli span --name 'db.query' --kind client --attrs 'db.system=postgresql,db.statement=SELECT 1'
-  - otel-cli exec --service my-svc --name 'deploy job' -- curl -s https://example.com
-  - export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 && otel-cli span --name 'boot' --attrs "host.name=$(hostname)"
-  - otel-cli span --name 'operation' --start --end
+  - otel-cli span --name "http.request" --endpoint http://localhost:4318 --attrs "http.method=GET,http.route=/api/users,http.status_code=200"
+  - otel-cli span --name "db.query" --endpoint http://localhost:4318 --attrs "db.system=postgresql,db.statement=SELECT * FROM users"
+  - otel-cli exec --name "batch.job" --endpoint http://localhost:4318 -- python etl.py
   examples:
-  - otel-cli span --name 'http.request' --attrs 'http.method=GET,http.status_code=200'
-  - otel-cli exec --service my-svc --name 'db.migrate' -- ./migrate.sh
-  - otel-cli span --name 'cache.get' --kind client --attrs 'db.system=redis,cache.hit=false'
+  - otel-cli span --name "http.request" --endpoint http://localhost:4318 --attrs "http.method=GET,http.route=/api/users,http.status_code=200"
+  - otel-cli span --name "db.query" --endpoint http://localhost:4318 --attrs "db.system=postgresql,db.statement=SELECT * FROM users"
+  - otel-cli exec --name "batch.job" --endpoint http://localhost:4318 -- python etl.py
   parameters:
-  - name: name
+  - name: endpoint
     type: string
-    description: Span name, e.g. http.request
-  - name: attrs
+    description: OTLP collector endpoint (e.g., http://localhost:4318)
+  - name: span_name
     type: string
-    description: Comma-separated key=value semantic attributes
-  - name: service
+    description: Name of the span to create
+  - name: http_method
     type: string
-    description: Service name for the span's resource
+    description: HTTP method for http span attributes
+  - name: db_system
+    type: string
+    description: Database system for db span attributes (e.g., postgresql)
 knowledge:
 - title: OpenTelemetry span API spec
   type: documentation
   source: https://opentelemetry.io/docs/specs/otel/trace/api/
-  description: Span creation, attributes, and events
-- title: otel-cli repo
-  type: documentation
-  source: https://github.com/equinix-labs/otel-cli
-  description: span, exec commands and OTLP export
+  description: "Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with exec, and exports via OTLP to collectors."
 instructions: '# Span Attributes
 
 
@@ -179,5 +176,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

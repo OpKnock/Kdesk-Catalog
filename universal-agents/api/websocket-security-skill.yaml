@@ -1,83 +1,20 @@
 name: websocket-security
 display_name: Websocket Security
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Secure WebSocket connections: origin checks, token-based handshake auth, subprotocol validation,
-  payload limits, and WSS enforcement.'
-version: 2.0.0
+description: "Hardens WebSocket endpoints against hijacking and abuse. Enforces TLS, validates Origin against an allowlist, authenticates during the HTTP handshake, restricts subprotocols, caps payload sizes, and rate-limits connections."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- wscat
-capabilities:
-- name: ws-security
-  description: Harden and audit WebSocket endpoints
-  commands:
-  - 'wscat -c wss://api.example.com/socket -H ''Authorization: Bearer token123'''
-  - 'wscat -c wss://api.example.com/socket -H ''Origin: https://evil.com'''
-  - 'curl -s -X POST http://localhost:8080/socket -H ''Upgrade: websocket'' -H ''Connection: Upgrade''
-    -H ''Sec-WebSocket-Version: 13'' -H ''Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ=='' -o /dev/null -w
-    ''%{http_code}\n'''
-  - wscat -c ws://localhost:8080/socket -x '{"size":"10MB"}'
-  - curl -s http://localhost:8080/socket/status | jq '.authRequired'
-  examples:
-  - 'wscat -c wss://api.example.com/socket -H ''Origin: https://api.example.com'' -H ''Authorization:
-    Bearer token123'''
-  - 'curl -s -X POST http://localhost:8080/socket -H ''Upgrade: websocket'' -H ''Connection: Upgrade''
-    -H ''Sec-WebSocket-Version: 13'' -H ''Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ=='' -H ''Origin: http://localhost''
-    -o /dev/null -w ''%{http_code}'''
-  - wscat -c wss://api.example.com/socket -x '{"hello":1}' --wait 2
-  parameters:
-  - name: origin
-    type: string
-    description: Origin header to validate against the allowlist
-  - name: token
-    type: string
-    description: Bearer token checked during the handshake
-  - name: max_payload
-    type: integer
-    description: Maximum accepted frame size in bytes
-knowledge:
-- title: OWASP WebSocket Cheat Sheet
-  type: documentation
-  source: https://cheatsheetseries.owasp.org/cheatsheets/WebSocket_Security_Cheat_Sheet.html
-  description: Threats and protections for WebSocket connections
-- title: MDN WebSocket API
-  type: documentation
-  source: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
-  description: Client API and protocol details
-instructions: "# WebSocket Security\n\n## What this skill does\nSecure WebSocket endpoints against hijacking,\
-  \ cross-site attacks, and abuse: enforce TLS, validate Origin, authenticate during the handshake, restrict\
-  \ subprotocols, and cap payload sizes.\n\n## When to use\n- Exposing WebSockets to untrusted clients\n\
-  - Auditing an existing socket endpoint\n- Fixing CSWSH (cross-site WebSocket hijacking)\n\n## Real commands\n\
-  ```bash\n# Authenticated connection\nwscat -c wss://api.example.com/socket -H 'Authorization: Bearer\
-  \ token123'\n\n# Malicious origin must be rejected (expect handshake failure)\nwscat -c wss://api.example.com/socket\
-  \ -H 'Origin: https://evil.com'\n\n# Raw upgrade request without proper handshake\ncurl -s -X POST http://localhost:8080/socket\
-  \ \\\n  -H 'Upgrade: websocket' -H 'Connection: Upgrade' \\\n  -H 'Sec-WebSocket-Version: 13' \\\n \
-  \ -H 'Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==' \\\n  -o /dev/null -w '%{http_code}\\n'\n\n# Oversized\
-  \ frame should be rejected\nwscat -c ws://localhost:8080/socket -x '{\"size\":\"10MB\"}'\n```\n\n##\
-  \ Hardening checklist\n- TLS only: reject ws:// in production\n- Validate Origin against a strict allowlist\n\
-  - Authenticate in the HTTP handshake, not after connect\n- Allowlist subprotocols; never echo unknown\
-  \ ones\n- Enforce max frame and message sizes\n- Rate-limit connections per IP and per token\n\n## Best\
-  \ practices\n- Never trust Origin alone; combine with tokens\n- Rotate socket tokens; keep them short-lived\n\
-  - Log auth failures without leaking credentials\n- Close connections that violate limits\n\n## Testing\n\
-  ```bash\nwscat -c ws://localhost:8080/socket -H 'Origin: https://evil.com' 2>&1 | head -3\ncurl -s http://localhost:8080/socket/status\
-  \ | jq '.authRequired'\n```"
-examples:
-- input: Our WebSockets are being hijacked
-  output: Adds Origin allowlist validation and token auth in the handshake, then verifies malicious origins
-    are rejected.
-- input: Audit the socket endpoint
-  output: 'Runs the full probe set: no-TLS, bad origin, no auth, oversized frame, and reports findings.'
+  - api
+  - websocket
+  - security
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -86,22 +23,109 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-websocket-security
   generic:
-    system_prompt: 'You own Websocket Security end to end. You do it through ws-security: Harden and audit
-      WebSocket endpoints. The commands are real, e.g. `wscat -c wss://api.example.com/socket -H Authorization:
-      Bearer token123`. You answer with exact commands, not abstractions, and flag anything you have not
-      verified yourself.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You own Websocket Security end to end. You do it through ws-security: Harden and audit WebSocket endpoints. The commands are real, e.g. `wscat -c wss://api.your-app.test/socket -H Authorization: Bearer token123`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: ws-security
+    description: Harden and audit WebSocket endpoints
+    commands:
+      - 'wscat -c wss://api.your-app.test/socket -H "Authorization: Bearer token123"'
+      - 'wscat -c wss://api.your-app.test/socket -H "Origin: https://evil.com"'
+      - 'curl -s -X POST http://localhost:8080/socket -H "Upgrade: websocket" -H "Connection: Upgrade" -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" -o /dev/null -w "%{http_code}\n"'
+      - 'wscat -c ws://localhost:8080/socket -x "{\"size\":\"10MB"}"'
+      - 'curl -s http://localhost:8080/socket/status | jq ".authRequired"'
+    examples:
+      - 'wscat -c wss://api.your-app.test/socket -H "Origin: https://api.your-app.test" -H "Authorization: Bearer token123"'
+      - 'curl -s -X POST http://localhost:8080/socket -H "Upgrade: websocket" -H "Connection: Upgrade" -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" -H "Origin: http://localhost" -o /dev/null -w "%{http_code}\n"'
+      - 'wscat -c wss://api.your-app.test/socket -x "{\"hello\":1}" --wait 2'
+    parameters:
+      - name: origin
+        type: string
+        description: Origin header to validate against the allowlist
+      - name: token
+        type: string
+        description: Bearer token checked during the handshake
+      - name: max_payload
+        type: integer
+        description: Maximum accepted frame size in bytes
+prerequisites:
+  - wscat
+  - curl
+tools: [wscat, curl, jq]
+examples:
+  - input: Our WebSockets are being hijacked
+    output: Adds Origin allowlist validation and token auth in the handshake, then verifies malicious origins are rejected.
+  - input: Audit the socket endpoint
+    output: "Runs the full probe set: no-TLS, bad origin, no auth, oversized frame, and reports findings."
+instructions: |
+  # WebSocket Security
+
+  ## What this skill does
+
+  Secure WebSocket endpoints against hijacking, cross-site attacks, and abuse: enforce TLS, validate Origin, authenticate during the handshake, restrict subprotocols, and cap payload sizes.
+
+  ## When to use
+
+  - Exposing WebSockets to untrusted clients
+  - Auditing an existing socket endpoint
+  - Fixing CSWSH (cross-site WebSocket hijacking)
+
+  ## Real commands
+
+  ```bash
+  # Authenticated connection
+  wscat -c wss://api.your-app.test/socket -H "Authorization: Bearer token123"
+
+  # Malicious origin must be rejected (expect handshake failure)
+  wscat -c wss://api.your-app.test/socket -H "Origin: https://evil.com"
+
+  # Raw upgrade request without proper handshake
+  curl -s -X POST http://localhost:8080/socket \
+    -H "Upgrade: websocket" -H "Connection: Upgrade" \
+    -H "Sec-WebSocket-Version: 13" \
+    -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" \
+    -o /dev/null -w "%{http_code}\n"
+
+  # Oversized frame should be rejected
+  wscat -c ws://localhost:8080/socket -x "{\"size\":\"10MB"}"
+  ```
+
+  ## Hardening checklist
+
+  - TLS only: reject ws:// in production
+  - Validate Origin against a strict allowlist
+  - Authenticate in the HTTP handshake, not after connect
+  - Allowlist subprotocols; never echo unknown ones
+  - Enforce max frame and message sizes
+  - Rate-limit connections per IP and per token
+
+  ## Best practices
+
+  - Never trust Origin alone; combine with tokens
+  - Rotate socket tokens; keep them short-lived
+  - Log auth failures without leaking credentials
+  - Close connections that violate limits
+
+  ## Testing
+
+  ```bash
+  wscat -c ws://localhost:8080/socket -H "Origin: https://evil.com" 2>&1 | head -3
+  curl -s http://localhost:8080/socket/status | jq ".authRequired"
+  ```
+knowledge:
+  - title: OWASP WebSocket Cheat Sheet
+    type: documentation
+    source: https://cheatsheetseries.owasp.org/cheatsheets/WebSocket_Security_Cheat_Sheet.html
+    description: Threats and protections for WebSocket connections
+  - title: MDN WebSocket API
+    type: documentation
+    source: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
+    description: Client API and protocol details
+  - title: RFC 6455 - WebSocket Protocol
+    type: documentation
+    source: https://datatracker.ietf.org/doc/html/rfc6455
+    description: Protocol specification including handshake

@@ -1,0 +1,89 @@
+{
+  "name": "aws-cloudwatch",
+  "description": "Manages CloudWatch metrics and alarms: metric retrieval, alarm creation, anomaly detection, and dashboard publishing.",
+  "system_prompt": "You are Aws Cloudwatch.\n\nManages CloudWatch metrics and alarms: metric retrieval, alarm creation, anomaly detection, and dashboard publishing.\n\n## Capabilities\n- **metrics**: List, query, and publish metrics.\n- **alarms**: Create and manage CloudWatch alarms.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# AWS CloudWatch\n\n## What this skill does\n\nManages CloudWatch metrics and alarms: listing/querying metric namespaces, computing statistics over time windows, publishing custom metrics, and creating/test alarms.\n\n## When to use\n\n- Verifying an API's error rate or latency trend\n- Creating an alarm for a new service\n- Publishing custom application metrics\n\n## Real commands\n\n```bash\n# Available metrics\naws cloudwatch list-metrics --namespace AWS/ApiGateway\n\n# Query a metric over the last hour\naws cloudwatch get-metric-statistics --namespace AWS/ApiGateway --metric-name 4XXError --start-time $(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) --period 300 --statistics Sum\n\n# Publish a custom metric\naws cloudwatch put-metric-data --namespace Custom --metric-name latency --value 120 --unit Milliseconds\n\n# Create an alarm\naws cloudwatch put-metric-alarm --alarm-name api-5xx --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold\n\n# Check alarm state\naws cloudwatch describe-alarms --state-value ALARM\n```\n\nNote: `eaws` is a typo for `aws`; always use `aws cloudwatch ...`.\n\n## Testing\n\n- Trigger an alarm intentionally with set-alarm-state, then reset to OK\n- Verify period and evaluation-periods match your SLO window\n\n## Best practices\n\n- Use Sum for error counts, Average for utilization\n- Attach SNS actions for actionable alerts\n- Publish custom metrics with consistent units\n\n## Examples\n- aws cloudwatch get-metric-statistics --namespace AWS/ApiGateway --metric-name 5XXError --period 60 --statistics Sum --start-time $(date -u -d '1h ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ)\n- aws cloudwatch put-metric-data --namespace Custom --metric-name order.count --value 42 --timestamp $(date -u +%Y-%m-%dT%H:%M:%SZ)\n- aws cloudwatch list-metrics --namespace AWS/Lambda --query 'Metrics[].MetricName' | sort -u\n- aws cloudwatch put-metric-alarm --alarm-name api-5xx --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold --alarm-actions arn:aws:sns:us-east-1:123456789012:oncall\n- aws cloudwatch describe-alarms --state-value ALARM --query 'MetricAlarms[].AlarmName'\n- aws cloudwatch describe-alarms-for-metric --metric-name 5XXError --namespace AWS/ApiGateway\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "metrics",
+      "description": "List, query, and publish metrics.",
+      "commands": [
+        "aws cloudwatch list-metrics --namespace AWS/ApiGateway",
+        "aws cloudwatch get-metric-statistics --namespace AWS/ApiGateway --metric-name 4XXError --start-time $(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) --period 300 --statistics Sum",
+        "aws cloudwatch put-metric-data --namespace Custom --metric-name latency --value 120 --unit Milliseconds",
+        "aws cloudwatch list-metrics --metric-name CPUUtilization --dimensions Name=InstanceId,Value=i-12345",
+        "aws cloudwatch get-metric-data --metric-data-queries file://queries.json --start-time ... --end-time ..."
+      ],
+      "examples": [
+        "aws cloudwatch get-metric-statistics --namespace AWS/ApiGateway --metric-name 5XXError --period 60 --statistics Sum --start-time $(date -u -d '1h ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ)",
+        "aws cloudwatch put-metric-data --namespace Custom --metric-name order.count --value 42 --timestamp $(date -u +%Y-%m-%dT%H:%M:%SZ)",
+        "aws cloudwatch list-metrics --namespace AWS/Lambda --query 'Metrics[].MetricName' | sort -u"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Metric namespace (AWS/... or Custom)"
+        },
+        {
+          "name": "metric_name",
+          "type": "string",
+          "description": "Metric name"
+        },
+        {
+          "name": "statistics",
+          "type": "string",
+          "description": "Sum, Average, Maximum, Minimum, SampleCount"
+        }
+      ]
+    },
+    {
+      "name": "alarms",
+      "description": "Create and manage CloudWatch alarms.",
+      "commands": [
+        "aws cloudwatch put-metric-alarm --alarm-name api-5xx --alarm-description \"API 5xx errors\" --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold",
+        "aws cloudwatch describe-alarms --state-value ALARM",
+        "aws cloudwatch describe-alarms --alarm-names api-5xx",
+        "aws cloudwatch set-alarm-state --alarm-name api-5xx --state-value ALARM --state-reason \"test\"",
+        "aws cloudwatch delete-alarms --alarm-names api-5xx"
+      ],
+      "examples": [
+        "aws cloudwatch put-metric-alarm --alarm-name api-5xx --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold --alarm-actions arn:aws:sns:us-east-1:123456789012:oncall",
+        "aws cloudwatch describe-alarms --state-value ALARM --query 'MetricAlarms[].AlarmName'",
+        "aws cloudwatch describe-alarms-for-metric --metric-name 5XXError --namespace AWS/ApiGateway"
+      ],
+      "parameters": [
+        {
+          "name": "threshold",
+          "type": "number",
+          "description": "Alarm threshold"
+        },
+        {
+          "name": "period",
+          "type": "number",
+          "description": "Evaluation period in seconds"
+        },
+        {
+          "name": "evaluation_periods",
+          "type": "number",
+          "description": "Consecutive periods before firing"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Did we get 5xx errors in the last hour?",
+      "output": "Runs get-metric-statistics for 5XXError with 60s period over the last hour and sums the datapoints."
+    },
+    {
+      "input": "Alert me when API 5xx exceeds 10 in 3 minutes",
+      "output": "Creates the alarm with period 60, evaluation-periods 3, threshold 10, and an SNS action, then verifies with describe-alarms."
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+---
+name: "1Password"
+description: "Manages secrets with the 1Password CLI (op): sign-in, item CRUD, op:// references, secret injection, and running processes with loaded secrets."
+globs: ["**/*.go", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# 1Password
+
+Manages secrets with the 1Password CLI (op): sign-in, item CRUD, op:// references, secret injection, and running processes with loaded secrets.
+
+## Instructions
+
+# 1Password
+
+## What this skill does
+
+Manages credentials with the 1Password CLI (op): sign-in flows, item CRUD, reading secrets by op:// reference, injecting secrets into templates or process environments, and shell plugins for third-party CLIs.
+
+## When to use
+
+- Fetching a stored password or API key for a script or deploy
+- Creating vault items during automation
+- Injecting secrets into .env files or process environments without echoing them
+
+## Real commands
+
+```bash
+# Authenticate the CLI
+op signin --account my.1password.com
+
+# Create a login item
+op item create --category=login --title=prod-db username=admin password=secret --vault=Infra
+
+# Read a single field by reference
+op read op://Infra/prod-db/password
+
+# Inject into a template file
+op inject -i template.env -o .env
+
+# Run a process with secrets loaded, never printed
+op run -- ./deploy.sh
+```
+
+## Template example
+
+```env
+DB_URL=op://Infra/prod-db/url
+API_KEY=op://Infra/stripe/live-key
+```
+
+## Testing
+
+- Verify items with `op item get <title> --fields username` after creation
+- Test injection by running the target script with `op run` and checking it authenticates
+
+## Best practices
+
+- Never pipe `op read` output into logs; use `op run` when secrets must reach a subprocess
+- Scope with `--account` and `--vault` in scripts to avoid ambiguity
+- Use `--reveal` only on demand; output masks hidden fields by default
+- Grant access via vault permissions, not shared passwords
+
+## Capabilities
+
+### secret-management
+Create, read, and update 1Password items programmatically.
+
+**Commands:**
+- `op signin --account my.1password.com`
+- `op item create --category=login --title=MyLogin username=me password=secret`
+- `op item get MyLogin --fields username,password`
+- `op item edit MyLogin --vault=Personal`
+- `op item delete MyLogin --archive`
+
+**Examples:**
+- op item get MyLogin --fields password --reveal
+- op item create --category=login --title=prod-db --url db.internal username=admin password=$(openssl rand -base64 24)
+- op item list --vault=Infra --format=json
+
+### secret-injection
+Reference secrets by URI and inject into files or process environments without printing them.
+
+**Commands:**
+- `op read op://vault/MyLogin/password`
+- `op inject -i template.env -o .env`
+- `op run --no-masking -- env`
+- `op run -- ./deploy.sh`
+- `op vault list`
+
+**Examples:**
+- op read op://Prod/db-credentials/password
+- op inject -i deploy.tpl -o deploy.env
+- op run -- npm run start:prod

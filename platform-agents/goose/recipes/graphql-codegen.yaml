@@ -1,0 +1,27 @@
+title: Graphql Codegen
+description: 'GraphQL Code Generator: generate TypeScript types, React hooks, and client SDKs from GraphQL
+  schemas and operations.'
+version: 2.0.0
+instructions: "# Graphql Codegen\n\nGraphQL Code Generator: generate TypeScript types, React hooks, and\
+  \ client SDKs from GraphQL schemas and operations.\n\n## Instructions\n\n# GraphQL Codegen\n\n## What\
+  \ this skill does\n\nGraphQL Code Generator turns schemas + operations into typed code: TypeScript types,\
+  \ React hooks, Zod schemas, or full SDKs. It validates queries against the schema at generation time.\n\
+  \n## When to use\n\n- Eliminating handwritten API types in clients\n- Catching stale operations against\
+  \ a changed schema\n- Generating hooks for React/Apollo or SWR\n\n## Real commands\n\n```bash\n# Interactive\
+  \ setup\nnpx graphql-codegen init\n\n# One-shot generation\nnpx graphql-codegen --config codegen.yml\n\
+  \n# Watch mode during development\nnpx graphql-codegen --watch --config codegen.yml\n\n# CI gate: fail\
+  \ if types are stale\nnpx graphql-codegen --check --config codegen.yml\n```\n\n## codegen.yml example\n\
+  \n```yaml\nschema: http://localhost:4000/graphql\ndocuments: './src/**/*.graphql'\ngenerates:\n  ./src/__generated__/graphql.ts:\n\
+  \    plugins:\n      - typescript\n      - typescript-operations\n      - typescript-react-apollo\n\
+  \    config:\n      withHooks: true\n```\n\n## Testing\n\n```bash\n# Run against a local schema and\
+  \ verify output types\nnpx graphql-codegen --config codegen.yml && grep -c 'export type' src/__generated__/graphql.ts\n\
+  ```\n\n## Best practices\n\n- Commit generated files or regenerate in CI; never both silently.\n- Use\
+  \ `--check` in CI to fail on drift.\n- Keep documents colocated with components (*.graphql next to tsx).\n\
+  - Point the schema at a CI-published artifact, not a dev server.\n- Add a custom plugin only when built-in\
+  \ types are insufficient.\n\n## Capabilities\n\n### codegen\nGenerate typed code from GraphQL schemas\
+  \ and operation documents.\n\n**Commands:**\n- `npx graphql-codegen init`\n- `npx graphql-codegen --config\
+  \ codegen.yml`\n- `npx graphql-codegen --watch --config codegen.yml`\n- `npx graphql-codegen --config\
+  \ codegen.yml --verbose`\n- `npx graphql-codegen --check --config codegen.yml`\n\n**Examples:**\n- npx\
+  \ graphql-codegen init && npx graphql-codegen --config codegen.yml\n- npx graphql-codegen --config codegen.yml\n\
+  - npx graphql-codegen --check --config codegen.yml"
+prompt: Act as Graphql Codegen and handle the task per the instructions.

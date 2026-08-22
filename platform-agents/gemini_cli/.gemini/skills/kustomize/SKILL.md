@@ -1,0 +1,124 @@
+---
+name: "kustomize"
+description: "Manage Kubernetes manifests with Kustomize: overlays per environment, image/namespace overrides, and build-to-apply workflows."
+---
+
+# Kustomize
+
+Manage Kubernetes manifests with Kustomize: overlays per environment, image/namespace overrides, and build-to-apply workflows.
+
+## Instructions
+
+# Kustomize
+
+Manage Kubernetes manifests with overlays and patches, no templating needed.
+
+## What this skill does
+
+- Builds final manifests from base + overlays.
+- Overrides images, namespaces, labels, and names.
+- Applies via kubectl -k for GitOps-style flows.
+
+## When to use
+
+- Environment-specific tweaks (dev/staging/prod) of one base.
+- Promoting a manifest set across clusters.
+- Adding site-specific patches without forking manifests.
+
+## Real commands
+
+```bash
+# Build merged output
+kustomize build .
+
+# Build a specific overlay
+kustomize build overlays/prod
+
+# Apply directly
+kubectl apply -k .
+
+# Pipe build into apply (audit trail)
+kustomize build overlays/prod | kubectl apply -f -
+
+# Create a new overlay from base
+kustomize create --resources=../base --namespace=dev
+
+# Edit kustomization.yaml
+kustomize edit set image myapp=myapp:v2.0
+kustomize edit set namespace production
+kustomize edit add label app:myapp --force
+kustomize edit set nameprefix prod-
+```
+
+## Directory layout
+
+```text
+base/
+  deployment.yaml
+  service.yaml
+  kustomization.yaml
+overlays/
+  dev/
+    kustomization.yaml
+  prod/
+    kustomization.yaml
+    prod-patch.yaml
+```
+
+## kustomization.yaml example
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+namespace: production
+images:
+  - name: myapp
+    newTag: v2.0
+patches:
+  - path: prod-patch.yaml
+```
+
+## Testing
+
+```bash
+kustomize build overlays/prod | kubectl apply --dry-run=client -f -
+```
+
+## Best practices
+
+- Keep the base pristine; put all environment changes in overlays.
+- Use configMapGenerator for config auto-naming (rollout on change).
+- Commit the built output only if auditors need it; otherwise build in CI.
+
+## Capabilities
+
+### kustomize-build
+Build and apply kustomized manifests.
+
+**Commands:**
+- `kustomize build .`
+- `kubectl apply -k .`
+- `kustomize build --load-restrictor LoadRestrictionsNone overlays/prod`
+- `kustomize build . | kubectl apply -f -`
+
+**Examples:**
+- kustomize build .
+- kubectl apply -k .
+- kustomize build overlays/prod | kubectl apply -f -
+
+### kustomize-edit
+Edit kustomization.yaml: images, namespaces, and common labels.
+
+**Commands:**
+- `kustomize create --resources=../base`
+- `kustomize edit set image myapp=myapp:v2.0`
+- `kustomize edit set namespace production`
+- `kustomize edit add label app:myapp --force`
+- `kustomize edit set nameprefix prod-`
+
+**Examples:**
+- kustomize create --resources=../base
+- kustomize edit set image myapp=myapp:v2.0
+- kustomize edit set namespace production

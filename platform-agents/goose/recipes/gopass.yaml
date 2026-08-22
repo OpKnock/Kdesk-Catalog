@@ -1,0 +1,29 @@
+title: Gopass
+description: Initialize stores, insert/read secrets, manage recipients, and generate passwords. secrets
+  and recipients, and use templates for structured entries.'
+version: 2.0.0
+instructions: "# Gopass\n\nInitialize stores, insert/read secrets, manage recipients, and generate passwords.\
+  \ secrets and recipients, and use templates for structured entries.'\n\n## Instructions\n\n# gopass\n\
+  \n## What this skill does\n\ngopass is a password manager for teams, storing secrets in git-encrypted\
+  \ stores with GPG. It supports multiple stores, recipients, templates, and structured entries with JSON/yaml\
+  \ values.\n\n## When to use\n\n- Sharing service credentials across a team\n- Keeping secrets in git\
+  \ (encrypted) with a full history\n- Managing machine accounts, API keys, and DB passwords\n\n## Real\
+  \ commands\n\n```bash\n# Initialize (root or named store)\ngopass init\ngopass init --store=team\n\n\
+  # Insert and read secrets\ngopass insert team/db/postgres\ngopass show team/db/postgres\n\n# Generate\
+  \ a strong password\ngopass generate team/aws/access-key 24\n\n# Recipients and sync\ngopass recipients\
+  \ add alice@example.com --store=team\ngopass sync --store=team\n\n# List a tree\n gopass list team/db\n\
+  ```\n\n## Structured secret example\n\n```bash\ngopass insert team/db/postgres\n# paste:\nurl: postgres://db:5432\n\
+  username: app\npassword: s3cret\n```\n\n```bash\n# Read one field\ngopass show team/db/postgres password\n\
+  ```\n\n## Templates\n\n```bash\ngopass templates edit\ngopass templates show db\n```\n\n## Testing\n\
+  \n```bash\n# Round trip and diff on git history\n gopass show team/db/postgres password | wc -c\n cd\
+  \ $(gopass config --format=json | jq -r '.path')\n git log --oneline -3\n```\n\n## Best practices\n\n\
+  - Add every teammate who must read the store as a recipient.\n- Store one credential per entry with\
+  \ structured fields.\n- Use `gopass sync` in CI to keep shared stores converged.\n- Rotate secrets by\
+  \ generating new values, never editing in place blindly.\n- Back up the store git remote; encryption\
+  \ keys are the real risk.\n\n## Capabilities\n\n### gopass-store\nInitialize stores, insert/read secrets,\
+  \ manage recipients, and generate passwords.\n\n**Commands:**\n- `gopass init --store=team`\n- `gopass\
+  \ insert team/db/postgres`\n- `gopass generate team/aws/access-key 24`\n- `gopass show team/db/postgres`\n\
+  - `gopass recipients add alice@localhost --store=team`\n- `gopass list team/db`\n- `gopass sync --store=team`\n\
+  \n**Examples:**\n- gopass generate team/aws/access-key 24\n- gopass show team/db/postgres\n- gopass\
+  \ recipients add alice@localhost --store=team && gopass sync --store=team"
+prompt: Act as Gopass and handle the task per the instructions.

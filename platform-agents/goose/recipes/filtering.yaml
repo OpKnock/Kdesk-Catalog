@@ -1,0 +1,33 @@
+title: Filtering
+description: 'Server-side API filtering: implement query parameter filters, combine with pagination and
+  sorting, and test filter edge cases with jq.'
+version: 2.0.0
+instructions: "# Filtering\n\nServer-side API filtering: implement query parameter filters, combine with\
+  \ pagination and sorting, and test filter edge cases with jq.\n\n## Instructions\n\n# Filtering\n\n\
+  ## What this skill does\n\nFiltering lets clients narrow result sets server-side instead of downloading\
+  \ everything. This skill covers query-parameter filters, operator conventions (eq, gte, in), combining\
+  \ with sort/pagination, and testing them.\n\n## When to use\n\n- Endpoints that return large collections\n\
+  - Dashboards and reporting with many filter dimensions\n- Moving client-side filtering into the API\
+  \ for performance\n\n## Real commands\n\n```bash\n# Equality filter\ncurl -s 'http://localhost:8080/api/orders?status=paid'\
+  \ | jq '.data | length'\n\n# Range operators (gte/lte) and search\ncurl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500'\
+  \ | jq '.data[].total'\ncurl -s 'http://localhost:8080/api/orders?q=alice' | jq '.data | length'\n\n\
+  # Combine with sort + pagination\ncurl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10'\
+  \ | jq '.meta'\n```\n\n## Implementation example\n\n```javascript\nconst OPERATORS = { eq: '=', neq:\
+  \ '!=', gte: '>=', lte: '<=', in: 'IN' }\n\nfunction buildWhere(query) {\n  const clauses = []\n  for\
+  \ (const [key, value] of Object.entries(query)) {\n    const [field, op = 'eq'] = key.split('_')\n \
+  \   if (OPERATORS[op] && field in ORDER_FIELDS) {\n      clauses.push({ field, op: OPERATORS[op], value\
+  \ })\n    }\n  }\n  return clauses\n}\n```\n\n## Edge cases to test\n\n```bash\n# Unknown fields are\
+  \ ignored\ncurl -s 'http://localhost:8080/api/orders?nonexistent=1' | jq '.data | length'\n# Invalid\
+  \ operator is rejected with 400\ncurl -s -o /dev/null -w '%{http_code}\\n' 'http://localhost:8080/api/orders?total_bogus=5'\n\
+  ```\n\n## Best practices\n\n- Whitelist filterable fields; ignore or 400 on anything else.\n- Combine\
+  \ with sort and pagination; document the whole matrix.\n- Index the filterable columns in the database.\n\
+  - Use `contains` (ILIKE) sparingly; it bypasses indexes.\n- Cap `in` lists to a reasonable length (e.g.\
+  \ 100 values).\n\n## Capabilities\n\n### query-filtering\nBuild and test filter query parameters across\
+  \ API data sets.\n\n**Commands:**\n- `curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data\
+  \ | length'`\n- `curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10'\
+  \ | jq '.meta'`\n- `curl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500' | jq '.data[].total'`\n\
+  - `grep -rn 'filter' src/controllers/ | head -10`\n- `curl -s 'http://localhost:8080/api/orders?q=alice'\
+  \ | jq '.data | length'`\n\n**Examples:**\n- curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10'\
+  \ | jq '.meta'\n- curl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500' | jq '.data[].total'\n\
+  - curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'"
+prompt: Act as Filtering and handle the task per the instructions.

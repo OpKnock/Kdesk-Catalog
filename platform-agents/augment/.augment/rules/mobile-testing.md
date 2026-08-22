@@ -1,0 +1,110 @@
+---
+type: agent_requested
+description: "Tests mobile apps with Maestro flows, Appium, Detox, adb, and simctl across iOS and Android devices."
+---
+
+# Mobile Testing
+
+Tests mobile apps with Maestro flows, Appium, Detox, adb, and simctl across iOS and Android devices.
+
+## Instructions
+
+# Mobile Testing
+
+Test real user journeys on devices and simulators.
+
+## When to Use
+
+- E2E coverage for critical mobile flows
+- Regression testing across device sizes/OS versions
+- Reproducing reported crashes
+
+## Maestro flows
+
+```yaml
+appId: com.example.app
+---
+- launchApp
+- tapOn: "Login"
+- inputText: "user@example.com"
+- tapOn: "Continue"
+- assertVisible: "Orders"
+```
+
+```bash
+maestro record login.yaml
+maestro test flows/smoke.yaml
+```
+
+Flows are YAML - readable by QA and engineers alike.
+
+## Emulator/simulator control
+
+```bash
+adb devices
+adb shell input tap 540 960
+xcrun simctl list devices available
+xcrun simctl boot 'iPhone 15'
+```
+
+## Logs on failure
+
+```bash
+adb logcat -s TestRunner -v brief
+xcrun simctl io 'iPhone 15' screenshot screen.png
+```
+
+Capture screenshots automatically in the failure handler.
+
+## Strategy
+
+- Smoke: launch + login + core journey per release.
+- Critical: checkout, sync, auth - every PR.
+- Full suite: nightly on the device matrix.
+
+## Best practices
+
+- Tag flows: critical, slow, broken-on-device.
+- Use env vars for endpoints; never hardcode staging URLs.
+- Keep flows idempotent (reset state first).
+- Test on real devices weekly; simulators miss GPS/perf quirks.
+
+## Testing
+
+```bash
+maestro test flows/ --include-tags=critical
+```
+
+Run the critical set in CI for every merge.
+
+## Capabilities
+
+### maestro
+Author and run declarative mobile UI flows.
+
+**Commands:**
+- `maestro test flows/smoke.yaml`
+- `maestro record flow.yaml`
+- `maestro test --device 2 flows/checkout.yaml`
+- `maestro studio`
+- `maestro test flows/ --exclude-tags=slow`
+
+**Examples:**
+- maestro record --device=emulator-5554 login.yaml
+- maestro test --include-tags=critical flows/
+- maestro test --env APP_URL=https://staging.example.com flows/checkout.yaml
+
+### device-tools
+Control emulators and simulators with adb and simctl.
+
+**Commands:**
+- `adb devices`
+- `adb shell input tap 540 960`
+- `adb shell am start -n com.example.app/.MainActivity`
+- `xcrun simctl list devices available`
+- `xcrun simctl boot 'iPhone 15' && open -a Simulator`
+
+**Examples:**
+- adb install -r app-debug.apk
+- adb logcat -s TestRunner -v brief
+- xcrun simctl io 'iPhone 15' screenshot screen.png

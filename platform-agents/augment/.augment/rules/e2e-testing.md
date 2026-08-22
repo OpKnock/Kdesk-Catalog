@@ -1,0 +1,115 @@
+---
+type: agent_requested
+description: "End-to-end testing across browsers and devices with Playwright, including codegen, tracing, and sharded CI runs."
+---
+
+# e2e-testing
+
+End-to-end testing across browsers and devices with Playwright, including codegen, tracing, and sharded CI runs.
+
+## Instructions
+
+# E2E Testing
+
+Test complete user journeys across real browsers with Playwright.
+
+## What This Skill Does
+
+- Runs E2E suites on Chromium, Firefox, and WebKit
+- Generates tests by recording interactions
+- Captures traces for flake debugging
+- Shards runs across CI workers
+
+## When to Use
+
+- Validating critical user journeys pre-release
+- Cross-browser compatibility checks
+- Regression protection for checkout/payment flows
+
+## Real Commands
+
+```bash
+# Run
+npx playwright test
+npx playwright test --project=chromium
+npx playwright test tests/login.spec.ts --headed
+npx playwright test --grep @smoke
+
+# Debug
+npx playwright codegen https://example.com
+npx playwright test --trace on
+npx playwright show-report
+
+# CI
+npx playwright install --with-deps
+npx playwright test --shard=1/4 --retries=2
+npx playwright test --workers=8
+```
+
+## Sample Spec
+
+```ts
+import { test, expect } from '@playwright/test';
+
+test('user can checkout', async ({ page }) => {
+  await page.goto('/checkout');
+  await page.getByLabel('Email').fill('alice@example.com');
+  await page.getByRole('button', { name: 'Pay' }).click();
+  await expect(page.getByText('Order confirmed')).toBeVisible();
+});
+```
+
+## Best Practices
+
+- Prefer getByRole/getByLabel over CSS selectors
+- Use web-first assertions (toBeVisible) over sleeps
+- Run smoke tags on PRs, full suite on release
+- Shard on CI; retry flakes with trace analysis
+- Test against production-like staging data
+
+## Capabilities
+
+### playwright-e2e
+Run E2E suites across browsers and projects.
+
+**Commands:**
+- `npx playwright test`
+- `npx playwright test --project=chromium`
+- `npx playwright test tests/login.spec.ts`
+- `npx playwright test --headed`
+- `npx playwright test --grep @regression`
+
+**Examples:**
+- npx playwright test --project=chromium
+- npx playwright test tests/login.spec.ts --headed
+- npx playwright test --grep @smoke
+
+### codegen-and-tracing
+Generate tests by recording and debug with traces.
+
+**Commands:**
+- `npx playwright codegen http://localhost:8080`
+- `npx playwright test --trace on`
+- `npx playwright test --debug`
+- `npx playwright show-report`
+- `npx playwright show-trace trace.zip`
+
+**Examples:**
+- npx playwright codegen http://localhost:8080
+- npx playwright test --trace on
+- npx playwright show-report
+
+### install-and-ci
+Install browsers and run sharded CI jobs.
+
+**Commands:**
+- `npx playwright install chromium`
+- `npx playwright install --with-deps`
+- `npx playwright test --shard=1/4`
+- `npx playwright test --workers=8`
+- `npx playwright test --retries=2`
+
+**Examples:**
+- npx playwright install --with-deps
+- npx playwright test --shard=1/4 --retries=2
+- npx playwright test --workers=8

@@ -1,0 +1,93 @@
+# incident-response-automation
+
+Automates incident response: webhook triggers, runbook dispatch via GitHub Actions, and remediation playbooks executed from alerts.
+
+## Instructions
+
+# Incident Response Automation
+
+Automate the mechanical parts of incident response so humans handle judgment.
+
+## When to Use
+
+- Alert routing and runbook execution on page
+- Automated rollback/scaling of known failure modes
+- Post-incident status updates across channels
+
+## Webhook fan-out
+
+Alert -> webhook -> channels + ticketing + runbook:
+
+```bash
+curl -X POST -H 'Content-Type: application/json' -d '{"text":"SEV-1: checkout 500s"}' $SLACK_WEBHOOK_URL
+curl -X POST -H 'Content-Type: application/json' -d '{"summary":"checkout down","priority":"high"}' $PAGERDUTY_V2_URL
+```
+
+## Runbook dispatch
+
+```bash
+gh workflow run runbook.yml -f severity=sev1 -f service=checkout
+gh run watch --exit-status
+```
+
+Runbook steps: gather evidence -> stabilize (rollback/scale) -> verify -> notify.
+
+## A minimal rollback workflow
+
+```yaml
+name: runbook
+on:
+  workflow_dispatch:
+    inputs:
+      severity: { type: choice, options: [sev1, sev2, sev3, sev4] }
+      action: { type: choice, options: [rollback, scale-up, noop] }
+jobs:
+  mitigate:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running ${{ github.event.inputs.action }} for ${{ github.event.inputs.severity }}"
+      - run: curl -s -X POST ${{ secrets.RUNBOOK_HOOK }} -d '{"action":"${{ github.event.inputs.action }}"}'
+```
+
+## Safe automation rules
+
+- Destructive actions always require a human approval step.
+- Every automation logs its action with the incident id.
+- Idempotent remediation: running twice must not double the damage.
+- Keep a dead-man switch: abort automation if it exceeds a time budget.
+
+## Testing
+
+Dry-run the full webhook chain in staging: simulate an alert and verify channel posts, ticket creation, and runbook dispatch order.
+
+## Capabilities
+
+### runbook-dispatch
+Trigger and monitor automated runbooks in CI pipelines.
+
+**Commands:**
+- `gh workflow run runbook.yml -f severity=sev1 -f service=checkout`
+- `gh run watch $(gh run list --workflow=runbook.yml --limit 1 --json databaseId -q '.[0].databaseId')`
+- `gh workflow run mitigate.yml -f incident_id=P12345 -f action=rollback`
+- `gh run list --workflow=runbook.yml --status=in_progress`
+- `gh api repos/{owner}/{repo}/actions/runs/{run_id} | jq '.status'`
+
+**Examples:**
+- gh workflow run runbook.yml -f severity=sev1 -f service=checkout --ref main
+- gh run watch --exit-status
+- gh workflow run mitigate.yml -f incident_id=P12345
+
+### webhooks
+Wire alerts to chat and ticketing systems via webhooks.
+
+**Commands:**
+- `curl -X POST -H 'Content-Type: application/json' -d '{"text":"SEV-1: checkout 500s"}' $SLACK_WEBHOOK_URL`
+- `curl -X POST -H 'Content-Type: application/json' -d '{"summary":"checkout down","priority":"high"}' $PAGERDUTY_V2_URL`
+- `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer $LINEAR_TOKEN' -d '{"teamId":"...","title":"SEV-1 checkout"}' https://api.linear.app/graphql`
+- `curl -s -X POST $WEBHOOK_RECEIVER -d '{"event":"incident.created","id":"P12345"}'`
+- `curl -i -X POST -H 'Content-Type: application/json' -d '{"incident":"P12345","status":"mitigated"}' $RUNBOOK_HOOK`
+
+**Examples:**
+- curl -X POST -H 'Content-Type: application/json' -d '{"text":"Rollback complete for P12345"}' $SLACK_WEBHOOK_URL
+- curl -X POST -d '{}' $PAGERDUTY_V2_URL
+- curl -s -X POST $RUNBOOK_HOOK -d '{"severity":"sev2"}'

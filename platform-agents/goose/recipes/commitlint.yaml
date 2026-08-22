@@ -1,0 +1,28 @@
+title: commitlint
+description: 'Enforces conventional commit message standards with commitlint: configs, hooks, and CI validation.'
+version: 2.0.0
+instructions: "# commitlint\n\nEnforces conventional commit message standards with commitlint: configs,\
+  \ hooks, and CI validation.\n\n## Instructions\n\n# commitlint\n\nValidate commit message conventions.\n\
+  \n## When to Use\n\n- Enforcing Conventional Commits in a repo\n- Generating changelogs from message\
+  \ structure\n- Keeping git history greppable and machine-readable\n- Standardizing scope and type usage\
+  \ across teams\n\n## Format\n\n```\ntype(scope): subject\n\nbody\n\nfooter\n```\n\nTypes: feat, fix,\
+  \ docs, style, refactor, perf, test, build, ci, chore, revert\n\n## Commands\n\n```bash\n# Install\n\
+  npm install --save-dev @commitlint/cli @commitlint/config-conventional\n\n# Lint a commit range\nnpx\
+  \ commitlint --from HEAD~1 --to HEAD\n\n# Lint stdin\necho \"feat: add login\" | npx commitlint\necho\
+  \ \"add stuff\" | npx commitlint   # fails\n\n# Edit hook (pre-commit in hooks scripts)\nnpx commitlint\
+  \ --edit \"$1\"\n\n# Inspect config\nnpx commitlint --print-config\n```\n\n## Config Example\n\n```javascript\n\
+  // commitlint.config.cjs\nmodule.exports = {\n  extends: [\"@commitlint/config-conventional\"],\n  rules:\
+  \ {\n    \"subject-case\": [2, \"never\", [\"sentence-case\", \"start-case\"]],\n    \"type-enum\":\
+  \ [2, \"always\", [\"feat\", \"fix\", \"docs\", \"chore\", \"test\"]],\n  },\n};\n```\n\n## Best Practices\n\
+  \n- Run commitlint --edit in the commit-msg hook\n- Use the conventional preset unless rules are justified\n\
+  - Keep subjects under 100 chars and imperative tense\n- Add scope for the affected module: fix(api):\n\
+  - Run --from HEAD~1 in CI for all pushed commits\n\n## Capabilities\n\n### commitlint-cli\nLint commit\
+  \ messages from stdin or files.\n\n**Commands:**\n- `npx commitlint --from HEAD~1 --to HEAD`\n- `npx\
+  \ commitlint --from HEAD~10`\n- `echo \"feat: add login\" | npx commitlint`\n- `echo \"add stuff\" |\
+  \ npx commitlint`\n\n**Examples:**\n- npx commitlint --from HEAD~1 --to HEAD --verbose\n- npx commitlint\
+  \ --edit \"$1\"\n- echo \"fix(api): handle timeout\" | npx commitlint --verbose\n\n### commitlint-config\n\
+  Configure rules and plugins.\n\n**Commands:**\n- `npm install --save-dev @commitlint/cli @commitlint/config-conventional`\n\
+  - `npx commitlint --init`\n- `npx commitlint --print-config`\n- `npm install --save-dev @commitlint/cz-commitlint`\n\
+  \n**Examples:**\n- npx commitlint --print-config | head -40\n- echo \"module.exports = {extends: [\\\
+  \"@commitlint/config-conventional\\\"]}\" > commitlint.config.cjs"
+prompt: Act as commitlint and handle the task per the instructions.

@@ -1,0 +1,30 @@
+title: firebase
+description: 'Develops Firebase projects with the Firebase CLI: hosting, functions, Firestore, emulators,
+  and deployment.'
+version: 2.0.0
+instructions: "# firebase\n\nDevelops Firebase projects with the Firebase CLI: hosting, functions, Firestore,\
+  \ emulators, and deployment.\n\n## Instructions\n\n# Firebase\n\nDevelop and deploy Firebase apps.\n\
+  \n## When to Use\n\n- Static hosting with CDN (hosting)\n- Serverless functions (Cloud Functions)\n\
+  - NoSQL data with Firestore\n- Local development with the emulator suite\n\n## Commands\n\n```bash\n\
+  # Setup\nnpm install -g firebase-tools\nfirebase login\nfirebase init hosting\nfirebase init functions\n\
+  firebase use --add\n\n# Deploy\nfirebase deploy\nfirebase deploy --only hosting\nfirebase deploy --only\
+  \ functions:api\n\n# Local\nfirebase serve --only hosting\nfirebase emulators:start\nfirebase emulators:exec\
+  \ \"npm test\"\n\n# Firestore\nfirebase firestore:delete --all-collections -y\nfirebase deploy --only\
+  \ firestore:rules\nfirebase firestore:indexes\n```\n\n## Security Rules Example\n\n```\nrules_version\
+  \ = \"2\";\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /users/{uid}\
+  \ {\n      allow read, write: if request.auth != null && request.auth.uid == uid;\n    }\n  }\n}\n```\n\
+  \n## Best Practices\n\n- Develop against emulators before touching the real project\n- Test security\
+  \ rules with the rules emulator\n- Separate staging and production projects\n- Pin firebase-tools versions\
+  \ in CI\n- Deploy functions and hosting independently during rollouts\n- Review generated .firebaserc\
+  \ so deploys target the right project\n\n## Capabilities\n\n### firebase-init\nInitialize and configure\
+  \ Firebase projects.\n\n**Commands:**\n- `npm install -g firebase-tools`\n- `firebase login`\n- `firebase\
+  \ init hosting`\n- `firebase init functions`\n- `firebase use --add`\n\n**Examples:**\n- firebase init\
+  \ --hosting --project myproject\n- firebase projects:list\n- firebase use myproject\n\n### firebase-deploy\n\
+  Deploy hosting and functions.\n\n**Commands:**\n- `firebase deploy`\n- `firebase deploy --only hosting`\n\
+  - `firebase deploy --only functions:api`\n- `firebase serve`\n- `firebase emulators:start`\n\n**Examples:**\n\
+  - firebase deploy --only functions\n- firebase emulators:start --only firestore\n- firebase serve --only\
+  \ hosting\n\n### firestore-ops\nManage Firestore data and rules.\n\n**Commands:**\n- `firebase firestore:delete\
+  \ --all-collections -y`\n- `firebase deploy --only firestore:rules`\n- `firebase emulators:exec \"npm\
+  \ test\"`\n- `firebase firestore:indexes`\n\n**Examples:**\n- firebase firestore:delete users -y\n-\
+  \ firebase emulators:start --import ./seed"
+prompt: Act as firebase and handle the task per the instructions.

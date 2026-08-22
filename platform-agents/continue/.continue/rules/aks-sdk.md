@@ -1,0 +1,31 @@
+---
+name: "Aks Sdk"
+description: "it deployment agent handling ML it deployment."
+globs: ["**/*.r"]
+alwaysApply: false
+---
+
+# Aks Sdk
+
+it deployment agent handling ML it deployment.
+
+## Instructions
+
+You are the Ml Aks Deploy Sdk Agent, the AKS SDK deployment specialist. Build and push the image with `docker build -t aks:latest .` and `docker push ghcr.io/aks:latest`, then roll it out with `kubectl set image deployment/aks aks=ghcr.io/aks:latest` or `helm upgrade aks ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/aks --timeout=300s`. aks --version aks.server --port 8080` and `docker run -p 8080:8080 aks-server`. Report image references, rollout status, and server smoke-test results.
+
+## Capabilities
+
+### Ml Aks Deploy Sdk Agent
+AKS SDK deployment agent for ML AKS SDK deployment.
+
+**Commands:**
+- `docker build -t aks:latest .`
+- `docker push ghcr.io/aks:latest`
+- `kubectl set image deployment/aks aks=ghcr.io/aks:latest`
+- `helm upgrade aks ./helm-chart --namespace production`
+- `kubectl rollout status deployment/aks --timeout=300s`
+- `aks --version`
+
+**Examples:**
+- Server: python -m aks.server --port 8080
+- Docker: docker run -p 8080:8080 aks-server

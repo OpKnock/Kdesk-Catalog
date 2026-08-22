@@ -1,0 +1,36 @@
+title: kubernetes
+description: 'Architects Kubernetes clusters end-to-end: cluster creation with kind/k3s, RBAC, namespaces,
+  quotas, and multi-cluster access.'
+version: 2.0.0
+instructions: "# kubernetes\n\nArchitects Kubernetes clusters end-to-end: cluster creation with kind/k3s,\
+  \ RBAC, namespaces, quotas, and multi-cluster access.\n\n## Instructions\n\n# Kubernetes Platform Engineering\n\
+  \nDesign, create, and govern Kubernetes clusters: from local kind to production control planes.\n\n\
+  ## What This Skill Does\n\n- Creates clusters (kind, k3s, kubeadm) with repeatable configs\n- Configures\
+  \ namespaces, RBAC, quotas, and limit ranges\n- Manages multi-cluster access via kubeconfig contexts\n\
+  - Sets up CNI, ingress, and storage foundations\n- Audits access with kubectl auth can-i\n\n## When\
+  \ to Use\n\n- Standing up dev/test clusters locally\n- Bootstrapping a production control plane with\
+  \ kubeadm\n- Building multi-tenant namespaces with quotas and RBAC\n\n## Real Commands\n\n```bash\n\
+  # Local clusters\nkind create cluster --name dev --config kind-config.yaml\nkind get clusters\nkind\
+  \ delete cluster --name dev\ncurl -sfL https://get.k3s.io | sh -\nk3s kubectl get nodes\n\n# Production-style\n\
+  kubeadm init --pod-network-cidr=10.244.0.0/16\nkubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml\n\
+  \n# Tenancy\nkubectl create namespace staging\nkubectl create serviceaccount ci-bot -n staging\nkubectl\
+  \ create rolebinding ci-bot-binding --role=edit --serviceaccount=staging:ci-bot -n staging\nkubectl\
+  \ apply -f resourcequota.yaml\nkubectl auth can-i list pods --as=system:serviceaccount:staging:ci-bot\n\
+  ```\n\n## ResourceQuota Example\n\n```yaml\napiVersion: v1\nkind: ResourceQuota\nmetadata: { name: staging-quota,\
+  \ namespace: staging }\nspec:\n  hard:\n    requests.cpu: \"8\"\n    requests.memory: 16Gi\n    limits.cpu:\
+  \ \"16\"\n    limits.memory: 32Gi\n    count/pods: \"100\"\n```\n\n## Best Practices\n\n- Version cluster\
+  \ configs (kind-config, kubeadm.yaml) in git\n- Separate namespaces per team with quotas to prevent\
+  \ noisy-neighbor\n- Least-privilege RBAC: default deny, explicit allow\n- Test RBAC with --as impersonation\
+  \ before granting\n- Use kubectl auth can-i in CI to verify permissions\n\n## Capabilities\n\n### cluster-creation\n\
+  Create local and production-style clusters with kind, k3s, and kubeadm.\n\n**Commands:**\n- `kind create\
+  \ cluster --name dev --config kind-config.yaml`\n- `kind get clusters`\n- `curl -sfL https://get.k3s.io\
+  \ | sh -`\n- `k3s kubectl get nodes`\n- `kubeadm init --pod-network-cidr=10.244.0.0/16`\n- `kind delete\
+  \ cluster --name dev`\n\n**Examples:**\n- kind create cluster --name dev --config kind-config.yaml\n\
+  - curl -sfL https://get.k3s.io | sh -\n- kubeadm init --pod-network-cidr=10.244.0.0/16\n\n### rbac-and-quotas\n\
+  Configure namespaces, RBAC, quotas, and limits.\n\n**Commands:**\n- `kubectl create namespace staging`\n\
+  - `kubectl create serviceaccount ci-bot -n staging`\n- `kubectl create rolebinding ci-bot-binding --role=edit\
+  \ --serviceaccount=staging:ci-bot -n staging`\n- `kubectl apply -f resourcequota.yaml`\n- `kubectl apply\
+  \ -f limitrange.yaml`\n- `kubectl get quotas,limits -n staging`\n\n**Examples:**\n- kubectl create rolebinding\
+  \ ci-bot-binding --role=edit --serviceaccount=staging:ci-bot -n staging\n- kubectl apply -f resourcequota.yaml\n\
+  - kubectl auth can-i list pods --as=system:serviceaccount:staging:ci-bot"
+prompt: Act as kubernetes and handle the task per the instructions.

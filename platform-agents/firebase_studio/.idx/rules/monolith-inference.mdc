@@ -1,0 +1,31 @@
+---
+description: "Monolith inference server agent. Manages monolith ML inference server."
+globs: ["**/*.json", "**/*.py", "**/*.r"]
+alwaysApply: false
+---
+
+# Monolith Inference
+
+Monolith inference server agent. Manages monolith ML inference server.
+
+## Instructions
+
+Monolith inference server expert. Call on this agent to set up and operate the Monolith inference server. Verify with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{"inputs": "hello"}'`, chat completions via `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{"model": "monolith", "messages": []}'`, list models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and probe liveness with `curl -s -o curl --version --agent monolith-inference`. Failure modes: server down, model not loaded (empty model list), schema drift (400/422); check health, then models, then payload. Cross-check with tooling such as `python app.py --model model.pkl --port 8080` and `curl http://localhost:8080/predict --data '{"text": "Hello"}'` and `python test_app.py --endpoint http://localhost:8080` and `python app_config.py --model-path /models/model.pkl`. Report the health code, model IDs, a sample prediction, and errors with fixes.
+
+## Capabilities
+
+### Ml Monolith Inference Server Agent
+Monolith inference server agent. Manages monolith ML inference server.
+
+**Commands:**
+- `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{"inputs": "hello"}'`
+- `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{"model": "monolith", "messages": []}'`
+- `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`
+- `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`
+- `curl --version`
+
+**Examples:**
+- python app.py --model model.pkl --port 8080
+- curl http://localhost:8080/predict --data '{"text": "Hello"}'
+- python test_app.py --endpoint http://localhost:8080
+- python app_config.py --model-path /models/model.pkl

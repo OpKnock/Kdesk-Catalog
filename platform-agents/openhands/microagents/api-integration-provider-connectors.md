@@ -1,0 +1,84 @@
+---
+name: "api-integration-provider-connectors"
+description: "Implements third-party API integrations: payment and SMS connectors with webhooks, API keys, and sandbox testing."
+type: knowledge
+triggers: ["api-integration-provider-connectors", "provider-connectors", "webhook-implementation"]
+---
+
+# Api Integration Provider Connectors
+
+Implements third-party API integrations: payment and SMS connectors with webhooks, API keys, and sandbox testing.
+
+## Instructions
+
+# API Integration (Implementation)
+
+Builds working integrations with third-party providers using official CLIs and sandboxes.
+
+## When to Use
+- Adding Stripe, Twilio, or similar providers
+- Setting up local webhook development
+- Migrating from test to live mode
+
+## Real Commands
+
+```bash
+# Stripe setup
+stripe login
+stripe create product --name 'T-Shirt'
+stripe create price --product prod_123 --unit-amount 1999 --currency usd
+
+# Local webhook dev
+ngrok http 3000
+stripe listen --forward-to localhost:3000/webhooks/stripe
+stripe trigger checkout.session.completed
+
+# Twilio
+brew tap twilio/brew && brew install twilio
+twilio login
+twilio api:core:messages:create --from +15017122661 --to +15558675310 --text 'Hello'
+```
+
+## Key Management
+- Store keys in a secret manager, never in code
+- Use test keys in development
+
+## Testing
+Trigger every webhook event in sandbox mode and verify processing end to end.
+
+## Best Practices
+- Verify webhook signatures
+- Respond 2xx fast, process asynchronously
+- Keep idempotency keys on money moves
+
+## Capabilities
+
+### provider-connectors
+Connect payment and messaging providers using their official CLIs and SDKs
+
+**Commands:**
+- `stripe login`
+- `stripe create product --name 'T-Shirt'`
+- `stripe create price --product prod_123 --unit-amount 1999 --currency usd`
+- `stripe payment_intents create --amount 1999 --currency usd`
+- `twilio api:core:messages:create --from +15017122661 --to +15558675310 --text 'Hello from Twilio'`
+
+**Examples:**
+- stripe create price --product prod_123 --unit-amount 1999 --currency usd
+- stripe payment_intents create --amount 1999 --currency usd --automatic-payment-methods[enabled]=true
+- twilio api:core:messages:create --from +15017122661 --to +15558675310 --text 'Order shipped'
+
+### webhook-implementation
+Receive, verify, and process webhooks from providers
+
+**Commands:**
+- `ngrok http 3000`
+- `stripe listen --forward-to localhost:3000/webhooks/stripe`
+- `stripe trigger checkout.session.completed`
+- `curl -s http://localhost:4040/api/tunnels | python -m json.tool`
+- `curl -s -X POST http://localhost:3000/webhooks/health -o /dev/null -w '%{http_code}'`
+
+**Examples:**
+- ngrok http 3000 --subdomain api-dev
+- stripe listen --forward-to localhost:3000/webhooks/stripe --events checkout.session.completed
+- curl -s http://localhost:4040/api/tunnels | python -m json.tool

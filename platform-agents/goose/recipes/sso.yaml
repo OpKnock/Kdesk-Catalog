@@ -1,0 +1,34 @@
+title: Sso
+description: Configure single sign-on with Keycloak by creating realms, registering OIDC clients, and
+  exercising token flows from the terminal. Covers kcadm.sh administration, discovery endpoint usage,
+  and logout wiring so SSO sessions terminate cleanly.
+version: 2.0.0
+instructions: "# Sso\n\nConfigure single sign-on with Keycloak by creating realms, registering OIDC clients,\
+  \ and exercising token flows from the terminal. Covers kcadm.sh administration, discovery endpoint usage,\
+  \ and logout wiring so SSO sessions terminate cleanly.\n\n## Instructions\n\n# SSO with Keycloak\n\n\
+  Hand-crafted skill for single sign-on with Keycloak.\n\n## What this skill does\n\n- Creates realms\
+  \ and clients with kcadm.sh\n- Exercises OIDC token flows against the token endpoint\n- Uses discovery\
+  \ for endpoints and logout wiring\n\n## When to use\n\n- Standing up SSO for internal apps\n- Testing\
+  \ flows before writing app code\n- Auditing clients and their scopes\n\n## Real commands\n\n```bash\n\
+  # Authenticate the admin CLI\nkcadm.sh config credentials --server http://localhost:8080 --realm master\
+  \ --user admin --password admin\n\n# Create a realm\nkcadm.sh create realms -s realm=myrealm -s enabled=true\n\
+  \n# Create a client from JSON\nkcadm.sh create clients -r myrealm -f client.json\n\n# Password grant\
+  \ token\ncurl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token -d 'grant_type=password&client_id=app&username=ada&password=secret'\
+  \ | jq -r .access_token\n\n# Discovery\ncurl -s http://localhost:8080/realms/myrealm/.well-known/openid-configuration\
+  \ | jq -r '.end_session_endpoint'\n```\n\n## client.json\n\n```json\n{\n  \"clientId\": \"app\",\n \
+  \ \"enabled\": true,\n  \"publicClient\": true,\n  \"redirectUris\": [\"http://localhost:3000/cb\"],\n\
+  \  \"directAccessGrantsEnabled\": true\n}\n```\n\n## Testing\n\n```bash\nTOKEN=$(curl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token\
+  \ -d 'grant_type=password&client_id=app&username=ada&password=secret' | jq -r .access_token)\ncurl -s\
+  \ -H \"Authorization: Bearer $TOKEN\" http://localhost:8080/realms/myrealm/protocol/openid-connect/userinfo\
+  \ | jq\n```\n\n## Best practices\n\n- Prefer authorization_code for browser apps; keep secrets server-side\n\
+  - Rotate client secrets and disable direct access grants in prod\n- Wire end_session_endpoint into logout\
+  \ so SSO sessions die too\n\n## Capabilities\n\n### keycloak-sso\nConfigure SSO with Keycloak: realms,\
+  \ clients, token flows\n\n**Commands:**\n- `kcadm.sh config credentials --server http://localhost:8080\
+  \ --realm master --user admin --password admin`\n- `kcadm.sh create realms -s realm=myrealm -s enabled=true`\n\
+  - `kcadm.sh create clients -r myrealm -f client.json`\n- `curl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token\
+  \ -d 'grant_type=password&client_id=app&username=ada&password=secret' | jq -r .access_token`\n- `curl\
+  \ -s http://localhost:8080/realms/myrealm/.well-known/openid-configuration | jq -r '.end_session_endpoint'`\n\
+  \n**Examples:**\n- kcadm.sh config credentials --server http://localhost:8080 --realm master --user\
+  \ admin --password admin\n- kcadm.sh create clients -r myrealm -f client.json\n- curl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token\
+  \ -d 'grant_type=password&client_id=app&username=ada&password=secret' | jq -r .access_token"
+prompt: Act as Sso and handle the task per the instructions.

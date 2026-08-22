@@ -1,0 +1,30 @@
+title: hasura
+description: 'Operates Hasura GraphQL engines: metadata management, migrations, console access, remote
+  schemas, and permissions.'
+version: 2.0.0
+instructions: "# hasura\n\nOperates Hasura GraphQL engines: metadata management, migrations, console access,\
+  \ remote schemas, and permissions.\n\n## Instructions\n\n# Hasura\n\nInstant GraphQL APIs on top of\
+  \ Postgres.\n\n## When to Use\n\n- Auto-generated GraphQL CRUD over existing Postgres\n- Permission-driven\
+  \ multi-tenant data access\n- Composing remote schemas and actions\n- Event-driven data (webhooks, cron)\
+  \ on database events\n\n## Commands\n\n```bash\n# Init and console\nhasura init myproject --endpoint\
+  \ http://localhost:8080\nhasura console\n\n# Migrations\nhasura migrate create init --from-server\n\
+  hasura migrate apply\nhasura migrate status\n\n# Metadata\nhasura metadata export\nhasura metadata apply\n\
+  hasura metadata reload\n\n# Seeds\nhasura seed create users\nhasura seed apply\n\n# Engine health\n\
+  curl -s http://localhost:8080/healthz\n\n# Run SQL via the metadata API\ncurl -X POST http://localhost:8080/v1/query\
+  \ \\\n  -H \"x-hasura-admin-secret: mysecret\" -H \"Content-Type: application/json\" \\\n  -d '{\"type\"\
+  :\"run_sql\",\"args\":{\"sql\":\"SELECT version();\"}}'\n```\n\n## Best Practices\n\n- Manage schema\
+  \ via migrations, metadata via version control\n- Never ship the admin secret in client code\n- Use\
+  \ permissions/roles per consumer instead of one super-user\n- Track Hasura version to plan upgrades\n\
+  - Use remote schemas for non-Postgres data\n- Apply metadata in CI and verify with a schema diff\n\n\
+  ## Capabilities\n\n### hasura-cli\nManage Hasura metadata and migrations.\n\n**Commands:**\n- `hasura\
+  \ init myproject --endpoint http://localhost:8080`\n- `hasura console`\n- `hasura migrate create init\
+  \ --from-server`\n- `hasura migrate apply`\n- `hasura metadata export`\n\n**Examples:**\n- hasura init\
+  \ --endpoint http://localhost:8080 --admin-secret mysecret\n- hasura metadata apply --project myproject\n\
+  - hasura migrate status\n\n### graphql-engine\nQuery the GraphQL engine and manage schema.\n\n**Commands:**\n\
+  - `curl -X POST http://localhost:8080/v1/graphql -H \"x-hasura-admin-secret: mysecret\" -H \"Content-Type:\
+  \ application/json\" -d \"{\\\"query\\\":\\\"{ __schema { types { name } } }\\\"}\"`\n- `curl -X POST\
+  \ http://localhost:8080/v1/query -H \"x-hasura-admin-secret: mysecret\" -H \"Content-Type: application/json\"\
+  \ -d \"{\\\"type\\\":\\\"run_sql\\\",\\\"args\\\":{\\\"sql\\\":\\\"SELECT version();\\\"}}\"`\n- `hasura\
+  \ metadata reload`\n- `hasura seed create users`\n\n**Examples:**\n- curl -s http://localhost:8080/healthz\n\
+  - hasura seed apply"
+prompt: Act as hasura and handle the task per the instructions.

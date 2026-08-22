@@ -1,0 +1,19 @@
+title: Pulsar Python
+description: 'Pulsar clients in Python: producer/consumer code, pulsar-client wheel, and message schemas.'
+version: 2.0.0
+instructions: "# Pulsar Python\n\nPulsar clients in Python: producer/consumer code, pulsar-client wheel,\
+  \ and message schemas.\n\n## Instructions\n\n# Pulsar Python\n\nProduce and consume Pulsar messages\
+  \ in Python with the official client.\n\n## What this skill does\n\n- Installs the client wheel\n- Writes\
+  \ producer and consumer scripts\n- Handles schemas and acking\n\n## When to use\n\n- Data pipelines\
+  \ in Python\n- Quick integrations with Pulsar\n\n## Real commands\n\n```bash\npip install pulsar-client\n\
+  python3 -m pip show pulsar-client\npython3 producer.py\npython3 consumer.py\n```\n\n## Producer\n\n\
+  ```python\nimport pulsar\nclient = pulsar.Client(\"pulsar://localhost:6650\")\nproducer = client.create_producer(\"\
+  my-topic\")\nproducer.send((\"hello\").encode(\"utf-8\"))\nclient.close()\n```\n\n## Consumer\n\n```python\n\
+  consumer = client.subscribe(\"my-topic\", subscription_name=\"worker\")\nwhile True:\n    msg = consumer.receive()\n\
+  \    print(msg.data().decode())\n    consumer.acknowledge(msg)\n```\n\n## Best practices\n\n- Use JsonSchema\
+  \ for structured data\n- Always acknowledge messages after processing\n- Close the client on exit to\
+  \ flush pending\n\n## Capabilities\n\n### pulsar-python-client\nInstall pulsar-client and build Python\
+  \ producers and consumers.\n\n**Commands:**\n- `pip install pulsar-client`\n- `python3 -m pip show pulsar-client`\n\
+  - `python3 producer.py`\n- `python3 consumer.py`\n- `python3 -c \"import pulsar; print(pulsar.__version__)\"\
+  `\n\n**Examples:**\n- python3 producer.py\n- python3 consumer.py\n- pip install pulsar-client==3.2.0"
+prompt: Act as Pulsar Python and handle the task per the instructions.

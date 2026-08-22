@@ -1,0 +1,26 @@
+title: Openapi Security
+description: Authors OpenAPI security schemes including apiKey, HTTP bearer JWT, OAuth2 flows, and mutual
+  TLS. Validates schemes with Spectral, Redocly, and openapi-generator in CI.
+version: 2.0.0
+instructions: "# Openapi Security\n\nAuthors OpenAPI security schemes including apiKey, HTTP bearer JWT,\
+  \ OAuth2 flows, and mutual TLS. Validates schemes with Spectral, Redocly, and openapi-generator in CI.\n\
+  \n## Instructions\n\n# OpenAPI Security\n\nSecurity schemes describe HOW clients authenticate; security\
+  \ requirements describe WHERE.\n\n## What this skill does\n\n- Writes securitySchemes for every auth\
+  \ style\n- Applies security requirements globally or per-operation\n- Validates with linters and generators\n\
+  \n## When to use\n\n- Documenting auth on a new API\n- Catching missing or misapplied security in CI\n\
+  \n## Real commands\n\n```bash\nopenapi-generator-cli validate -i openapi.yaml\nspectral lint openapi.yaml\n\
+  redocly lint openapi.yaml --extends recommended\n```\n\n## Example schemes\n\n```yaml\ncomponents:\n\
+  \  securitySchemes:\n    bearerAuth:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n\
+  \    apiKeyHeader:\n      type: apiKey\n      in: header\n      name: X-API-Key\n    oauth:\n      type:\
+  \ oauth2\n      flows:\n        clientCredentials:\n          tokenUrl: https://auth.your-app.test/token\n\
+  \          scopes:\n            read: Read access\n            write: Write access\nsecurity:\n  - bearerAuth:\
+  \ []\n```\n\n## Per-operation override\n\n```yaml\npaths:\n  /public:\n    get:\n      security: []\n\
+  ```\n\n## Best practices\n\n- Always add a global `security` block\n- Test client generation with `openapi-generator-cli\
+  \ generate`\n- Lint in CI so every PR re-validates schemes\n\n## Capabilities\n\n### openapi-security-schemes\n\
+  Author security schemes and requirements, then lint and validate them with Spectral and openapi-generator.\n\
+  \n**Commands:**\n- `openapi-generator-cli validate -i openapi.yaml`\n- `spectral lint openapi.yaml`\n\
+  - `npx @stoplight/spectral-cli lint openapi.yaml -r security.rules.yaml`\n- `redocly lint openapi.yaml\
+  \ --extends recommended`\n- `curl -s https://api.your-app.test/.well-known/openapi.yaml | openapi-generator-cli\
+  \ validate -i /dev/stdin`\n\n**Examples:**\n- spectral lint openapi.yaml\n- openapi-generator-cli validate\
+  \ -i openapi.yaml\n- redocly lint openapi.yaml"
+prompt: Act as Openapi Security and handle the task per the instructions.

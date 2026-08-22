@@ -1,0 +1,33 @@
+title: Ambassador Pattern
+description: 'Implements the Ambassador pattern: Emissary-ingress (Edge Stack) as API gateway with Mapping
+  CRDs, plus per-pod ambassador sidecars.'
+version: 2.0.0
+instructions: "# Ambassador Pattern\n\nImplements the Ambassador pattern: Emissary-ingress (Edge Stack)\
+  \ as API gateway with Mapping CRDs, plus per-pod ambassador sidecars.\n\n## Instructions\n\n# Ambassador\
+  \ Pattern\n\n## What this skill does\n\nImplements the ambassador (sidecar proxy) architecture: Emissary-ingress\
+  \ as the edge gateway with Mapping CRDs, and per-pod sidecars that handle retries, auth, TLS, and observability\
+  \ for the app container.\n\n## When to use\n\n- A service needs consistent auth/TLS/retry logic without\
+  \ code changes\n- Routing to microservices by hostname/path at the gateway\n- Offloading circuit breaking\
+  \ and tracing to a sidecar\n\n## Real commands\n\n```bash\n# Install Emissary-ingress (Edge Stack)\n\
+  kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes-crds.yaml\nkubectl apply -f\
+  \ https://app.getambassador.io/yaml/edge-stack/latest/aes.yaml\nkubectl get pods -n ambassador\n\n#\
+  \ Inspect mappings\nkubectl get mappings.getambassador.io\nkubectl describe mapping api-mapping\n\n\
+  # Sidecar troubleshooting\nkubectl logs -c ambassador-sidecar my-api-7d9f5c64b9-x4k2n\n```\n\n## Mapping\
+  \ CRD\n\n```yaml\napiVersion: getambassador.io/v3alpha1\nkind: Mapping\nmetadata:\n  name: api-mapping\n\
+  spec:\n  hostname: \"api.your-app.test\"\n  prefix: /v1/\n  service: api-service:8080\n  timeout_ms:\
+  \ 5000\n```\n\n## Testing\n\n- Port-forward the gateway and curl http://localhost:8080/v1/health\n-\
+  \ Verify mapping routing with `kubectl get mapping -o yaml`\n\n## Best practices\n\n- Keep gateway logic\
+  \ in CRDs (git-ops friendly), not imperative config\n- Right-size sidecars with requests/limits\n- Prefer\
+  \ Emissary filters (AuthService/FilterPolicy) over app-level auth\n\n## Capabilities\n\n### edge-stack\n\
+  Install and operate Emissary-ingress and its CRDs.\n\n**Commands:**\n- `kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes-crds.yaml`\n\
+  - `kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes.yaml`\n- `kubectl get mappings.getambassador.io`\n\
+  - `kubectl get pods -n ambassador`\n- `kubectl port-forward svc/edge-stack 8080:80 -n ambassador`\n\n\
+  **Examples:**\n- kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes-crds.yaml\
+  \ && kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes.yaml\n- kubectl get mappings.getambassador.io\
+  \ --namespace=default\n- kubectl describe mapping api-mapping\n\n### sidecar-proxy\nAdd ambassador sidecar\
+  \ containers to pods and debug their traffic.\n\n**Commands:**\n- `kubectl apply -f sidecar-pod.yaml`\n\
+  - `kubectl get pods -l app=my-api`\n- `kubectl logs -c ambassador-sidecar my-api-7d9f5c64b9-x4k2n`\n\
+  - `kubectl exec -it my-api-7d9f5c64b9-x4k2n -c my-api -- curl -s localhost:15001/health`\n- `kubectl\
+  \ describe pod my-api-7d9f5c64b9-x4k2n`\n\n**Examples:**\n- kubectl logs -f -c ambassador-sidecar my-api-7d9f5c64b9-x4k2n\n\
+  - kubectl exec -c my-api my-api-7d9f5c64b9-x4k2n -- env | grep AMBASSADOR\n- kubectl top pod my-api-7d9f5c64b9-x4k2n"
+prompt: Act as Ambassador Pattern and handle the task per the instructions.

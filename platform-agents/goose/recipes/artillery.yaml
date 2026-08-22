@@ -1,0 +1,34 @@
+title: artillery
+description: Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios, and HTML
+  reports.
+version: 2.0.0
+instructions: "# artillery\n\nLoad-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios,\
+  \ and HTML reports.\n\n## Instructions\n\n# Artillery\n\nLoad and performance testing for HTTP, WebSocket,\
+  \ and gRPC.\n\n## What This Skill Does\n\n- Runs quick ad-hoc load tests from the CLI\n- Executes scripted\
+  \ scenarios with phases and arrival rates\n- Uses CSV payloads for realistic user data\n- Generates\
+  \ HTML reports with latency percentiles\n\n## When to Use\n\n- Capacity checks before releases\n- SLO\
+  \ validation under load\n- Testing WebSocket and streaming endpoints\n\n## Real Commands\n\n```bash\n\
+  # Quick test\nnpx artillery quick --count 100 -n 20 https://api.example.com/v1/users\n\n# Scripted run\n\
+  npx artillery run load-test.yml\nnpx artillery run --environment staging load-test.yml\n\n# Reports\n\
+  npx artillery run -o report.json load-test.yml\nnpx artillery report --output perf-report.html report.json\n\
+  \n# Payloads\nnpx artillery run --payload users.csv scenarios.yml\n```\n\n## Sample Script\n\n```yaml\n\
+  config:\n  target: https://api.example.com\n  phases:\n    - duration: 60\n      arrivalRate: 10\n \
+  \     rampTo: 50\nscenarios:\n  - name: browse catalog\n    flow:\n      - get:\n          url: /v1/products\n\
+  \      - think: 2\n      - post:\n          url: /v1/cart\n          json: { productId: \"{{ $randomNumber(1,\
+  \ 100) }}\" }\n```\n\n## Best Practices\n\n- Ramp arrival rate gradually; avoid instant max load\n-\
+  \ Test realistic user flows, not just one endpoint\n- Check percentiles (p95/p99) not just averages\n\
+  - Run against staging with production-like data volumes\n- Keep baseline reports to compare regressions\n\
+  \n## Capabilities\n\n### artillery-load-tests\nQuick and scripted load tests with virtual users.\n\n\
+  **Commands:**\n- `npx artillery quick --count 100 -n 20 http://localhost:8080/v1/users`\n- `npx artillery\
+  \ run load-test.yml`\n- `npx artillery run --environment staging load-test.yml`\n- `npx artillery run\
+  \ -o report.json load-test.yml`\n- `npx artillery run --record load-test.yml`\n\n**Examples:**\n- npx\
+  \ artillery quick --count 100 -n 20 http://localhost:8080/v1/users\n- npx artillery run load-test.yml\n\
+  - npx artillery run -o report.json load-test.yml\n\n### reporting\nGenerate and inspect load-test reports.\n\
+  \n**Commands:**\n- `npx artillery report report.json`\n- `npx artillery report --output perf-report.html\
+  \ report.json`\n- `npx artillery run --output report.json load-test.yml && npx artillery report report.json`\n\
+  \n**Examples:**\n- npx artillery report report.json\n- npx artillery report --output perf-report.html\
+  \ report.json\n\n### scenario-design\nDesign multi-step user flows with variables and phases.\n\n**Commands:**\n\
+  - `npx artillery run -e prod --vars '{\"api\": \"/v1/orders\"}' scenarios.yml`\n- `npx artillery run\
+  \ --payload users.csv scenarios.yml`\n- `npx artillery run --config env.yml scenarios.yml`\n\n**Examples:**\n\
+  - npx artillery run --payload users.csv scenarios.yml\n- npx artillery run -e prod scenarios.yml"
+prompt: Act as artillery and handle the task per the instructions.

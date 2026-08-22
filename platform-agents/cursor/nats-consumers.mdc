@@ -1,0 +1,73 @@
+---
+description: "Manage NATS JetStream consumers: create push/pull consumers, inspect delivery, and handle ack policies."
+globs: ["**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Nats Consumers
+
+Manage NATS JetStream consumers: create push/pull consumers, inspect delivery, and handle ack policies.
+
+## Instructions
+
+# NATS Consumers
+
+JetStream consumers read messages from a stream, tracking delivery and acknowledgements per consumer.
+
+## What this skill does
+
+- Creates push and pull consumers
+- Configures ack policies, max-deliver and backoff
+- Inspects delivery stats and errors
+
+## When to use
+
+- Reliable event processing with redelivery
+- Worker pools pulling batches of messages
+
+## Real commands
+
+```bash
+# Pull consumer with explicit acks and redelivery
+nats consumer add ORDERS NEW --pull --deliver all --ack explicit --max-deliver 5
+
+# Push consumer to a delivery subject
+nats consumer add ORDERS PUSH --push --deliver subject ords.push
+
+# List and inspect
+nats consumer ls ORDERS
+nats consumer info ORDERS NEW
+
+# Delete
+nats consumer rm ORDERS NEW
+```
+
+## Ack policies
+
+- `--ack explicit`: ack each message (default for pull)
+- `--ack all`: ack all up to sequence number
+- `--ack none`: fire-and-forget
+- `--ack at-least-once`: auto-ack on receipt
+
+## Best practices
+
+- Name consumers for their workload (e.g. `email-sender`)
+- Set `--max-deliver` to bound poison messages
+- Monitor `num_ack_pending` and `num_redelivered` in consumer info
+
+## Capabilities
+
+### jetstream-consumers
+Create and manage JetStream consumers with the nats CLI: pull/push modes, ack policies, and inspection.
+
+**Commands:**
+- `nats consumer add ORDERS NEW --pull --deliver all --max-deliver 5 --ack explicit`
+- `nats consumer add ORDERS PUSH --push --deliver subject ords.push`
+- `nats consumer ls ORDERS`
+- `nats consumer info ORDERS NEW`
+- `nats consumer rm ORDERS NEW`
+
+**Examples:**
+- nats consumer add ORDERS WORKER --pull --ack explicit --max-deliver 3 --backoff 5s
+- nats consumer info ORDERS WORKER
+- nats consumer ls ORDERS --names

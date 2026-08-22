@@ -1,0 +1,31 @@
+title: Api Graphql Typed Codegen
+description: 'Advanced GraphQL implementation: codegen-typed resolvers, DataLoader batching, query-cost
+  protection, and persisted operations.'
+version: 2.0.0
+instructions: "# Api Graphql Typed Codegen\n\nAdvanced GraphQL implementation: codegen-typed resolvers,\
+  \ DataLoader batching, query-cost protection, and persisted operations.\n\n## Instructions\n\n# API\
+  \ GraphQL Engineer (Advanced)\n\nLevels up GraphQL services: types, batching, and hardened transports.\n\
+  \n## When to Use\n- Type-safe resolver development\n- Reducing client payload sizes\n- Protecting against\
+  \ unknown queries\n\n## Real Commands\n\n```bash\n# Codegen\nnpm install -D @graphql-codegen/cli @graphql-codegen/typescript\
+  \ @graphql-codegen/typescript-resolvers\nnpx graphql-codegen --config codegen.ts\n\n# Persisted queries\n\
+  npm install @apollo/server-plugin-operation-registry\n\n# Cost protection\nnpm install graphql-query-complexity\n\
+  ```\n\n## Codegen Setup\n\n```yml\nschema: schema.graphql\ngenerates:\n  src/generated/resolvers-types.ts:\n\
+  \    plugins: [typescript, typescript-resolvers]\n```\n\n## Testing\nRun `tsc --noEmit` after codegen\
+  \ to catch type drift.\n\n## Best Practices\n- Commit generated types\n- Enable persisted queries in\
+  \ production\n- Validate query cost before execution\n\n## Capabilities\n\n### typed-codegen\nGenerate\
+  \ TypeScript types from the GraphQL schema\n\n**Commands:**\n- `npm install -D @graphql-codegen/cli\
+  \ @graphql-codegen/typescript @graphql-codegen/typescript-resolvers`\n- `npx graphql-codegen init`\n\
+  - `npx graphql-codegen --config codegen.ts`\n- `node -e \"const c=require('./codegen.yml')||{};console.log('config\
+  \ ok')\" 2>/dev/null || npx graphql-codegen --help`\n- `npx graphql-codegen --watch`\n\n**Examples:**\n\
+  - npx graphql-codegen --config codegen.ts && npx tsc --noEmit\n- npm install -D @graphql-codegen/cli\
+  \ @graphql-codegen/typescript-resolvers\n- npx graphql-codegen --watch\n\n### persisted-queries\nRegister\
+  \ and serve persisted queries for production clients\n\n**Commands:**\n- `npm install @apollo/server-plugin-operation-registry`\n\
+  - `node -e \"const p=require('@apollo/server-plugin-operation-registry');console.log(typeof p.ApolloServerOperationRegistry)\"\
+  `\n- `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"extensions\"\
+  :{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"abc\"}}}' -o /dev/null -w '%{http_code}'`\n- `npm\
+  \ install graphql-persisted-documents`\n- `node -e \"console.log('persisted query: client sends hash,\
+  \ server resolves')\"`\n\n**Examples:**\n- npm install @apollo/server-plugin-operation-registry\n- npm\
+  \ install graphql-persisted-documents\n- curl -s -X POST http://localhost:4000/graphql -H 'Content-Type:\
+  \ application/json' -d '{\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"abc\"}}}'\
+  \ -o /dev/null -w '%{http_code}'"
+prompt: Act as Api Graphql Typed Codegen and handle the task per the instructions.

@@ -1,0 +1,91 @@
+---
+type: agent_requested
+description: "Minify and mangle JS bundles with terser and esbuild. Minify CSS/HTML and apply gzip/brotli handling transfer size. and gzip/brotli compression.'"
+---
+
+# minifier
+
+Minify and mangle JS bundles with terser and esbuild. Minify CSS/HTML and apply gzip/brotli handling transfer size. and gzip/brotli compression.'
+
+## Instructions
+
+# Asset Minification
+
+Shrink JavaScript, CSS, HTML, and images for production delivery.
+
+## What This Skill Does
+
+- Minifies and mangles JS (terser/esbuild/uglify)
+- Compresses CSS (cssnano) and HTML
+- Optimizes SVG (svgo)
+- Applies gzip/brotli transfer encodings
+- Measures before/after sizes
+
+## When to Use
+
+- Build pipeline release steps
+- Reducing bundle size for page speed budgets
+- Preparing static assets for CDN upload
+
+## Real Commands
+
+```bash
+# JavaScript
+terser input.js -o output.min.js
+npx terser input.js --compress --mangle --source-map
+esbuild app.js --minify --bundle --outfile=app.min.js
+esbuild --minify --target=es2020 app.js -o app.min.js
+npx uglifyjs input.js -c -m -o output.min.js
+
+# CSS / HTML / SVG
+npx cssnano styles.css styles.min.css
+npx html-minifier-terser --collapse-whitespace --remove-comments index.html -o index.min.html
+npx svgo -f assets/icons -o assets/icons-min
+
+# Transfer compression
+gzip -9 -k -c bundle.js > bundle.js.gz
+brotli -q 11 -o bundle.js.br bundle.js
+
+# Verify
+ls -lh input.js output.min.js output.min.js.gz
+```
+
+## Best Practices
+
+- Generate source maps in staging builds for debugging
+- Minify at build time, not runtime
+- Precompress with brotli for HTTP servers that support it
+- Check bundle budgets in CI after minification
+- Verify no behavior change: diff runtime tests before/after
+
+## Capabilities
+
+### javascript-minification
+Minify and mangle JS bundles with terser and esbuild.
+
+**Commands:**
+- `terser input.js -o output.min.js`
+- `npx terser input.js --compress --mangle --source-map`
+- `esbuild app.js --minify --bundle --outfile=app.min.js`
+- `esbuild --minify --target=es2020 app.js -o app.min.js`
+- `npx uglifyjs input.js -c -m -o output.min.js`
+
+**Examples:**
+- terser input.js -o output.min.js
+- esbuild app.js --minify --bundle --outfile=app.min.js
+- npx uglifyjs input.js -c -m -o output.min.js
+
+### css-html-and-compression
+Minify CSS/HTML and apply gzip/brotli for transfer size.
+
+**Commands:**
+- `npx cssnano styles.css styles.min.css`
+- `npx html-minifier-terser --collapse-whitespace --remove-comments index.html -o index.min.html`
+- `gzip -9 -k -c bundle.js > bundle.js.gz`
+- `brotli -q 11 -o bundle.js.br bundle.js`
+- `npx svgo -f assets/icons -o assets/icons-min`
+
+**Examples:**
+- npx cssnano styles.css styles.min.css
+- npx html-minifier-terser --collapse-whitespace index.html -o index.min.html
+- brotli -q 11 -o bundle.js.br bundle.js

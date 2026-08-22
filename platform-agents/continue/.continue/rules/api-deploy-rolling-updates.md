@@ -1,0 +1,85 @@
+---
+name: "Api Deploy Rolling Updates"
+description: "Implements standard deployment pipelines: rolling updates with health gates, versioned releases, and staged rollouts."
+globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+alwaysApply: false
+---
+
+# Api Deploy Rolling Updates
+
+Implements standard deployment pipelines: rolling updates with health gates, versioned releases, and staged rollouts.
+
+## Instructions
+
+# API Deploy (Implementation)
+
+Implements standard, repeatable deployment pipelines for APIs.
+
+## When to Use
+- Standardizing deploy steps
+- Adding health-gated updates
+- Rolling out environment-by-environment
+
+## Real Commands
+
+```bash
+# Rolling update
+kubectl rollout restart deployment/api -n prod
+kubectl rollout status deployment/api -n prod --watch
+
+# Check strategy
+kubectl get deployment api -n prod -o yaml | grep -A5 strategy
+
+# Staged rollout
+kubectl apply -f deploy/dev/api.yaml --record
+kubectl apply -f deploy/staging/api.yaml --record
+kubectl rollout status deployment/api -n staging --timeout 120s
+kubectl apply -f deploy/prod/api.yaml --record
+
+# Rollback
+kubectl rollout undo deployment/api -n prod
+```
+
+## Health Gates
+- readinessProbe: /health endpoint
+- livenessProbe: /healthz
+- maxUnavailable: 25%
+
+## Testing
+Watch rollout status during a deploy and verify old pods drain before new ones serve.
+
+## Best Practices
+- Record every apply (`--record`)
+- Promote only after staging gates pass
+
+## Capabilities
+
+### rolling-updates
+Configure rolling updates with readiness and liveness gates
+
+**Commands:**
+- `kubectl rollout restart deployment/api -n prod`
+- `kubectl rollout status deployment/api -n prod --watch`
+- `kubectl set resources deployment/api -n prod --limits=cpu=500m,memory=512Mi`
+- `kubectl get deployment api -n prod -o yaml | grep -A5 strategy`
+- `kubectl rollout undo deployment/api -n prod`
+
+**Examples:**
+- kubectl rollout restart deployment/api -n prod && kubectl rollout status deployment/api -n prod --watch
+- kubectl get deployment api -n prod -o yaml | grep -A5 strategy
+- kubectl rollout undo deployment/api -n prod
+
+### staged-rollout
+Roll out through dev, staging, then production with promotion checks
+
+**Commands:**
+- `kubectl apply -f deploy/dev/api.yaml --record`
+- `kubectl apply -f deploy/staging/api.yaml --record`
+- `kubectl apply -f deploy/prod/api.yaml --record`
+- `kubectl rollout status deployment/api -n staging --timeout 120s`
+- `kubectl describe deployment api -n staging | grep -E 'Replicas|Conditions'`
+
+**Examples:**
+- kubectl apply -f deploy/dev/api.yaml --record && kubectl apply -f deploy/staging/api.yaml --record
+- kubectl rollout status deployment/api -n staging --timeout 120s
+- kubectl describe deployment api -n staging | grep -E 'Replicas|Conditions'

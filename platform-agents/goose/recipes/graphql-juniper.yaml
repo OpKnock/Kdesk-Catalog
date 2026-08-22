@@ -1,0 +1,28 @@
+title: Graphql Juniper
+description: 'GraphQL in Rust with Juniper: define schemas with Rust types and macros, run the server,
+  and test queries.'
+version: 2.0.0
+instructions: "# Graphql Juniper\n\nGraphQL in Rust with Juniper: define schemas with Rust types and macros,\
+  \ run the server, and test queries.\n\n## Instructions\n\n# GraphQL Juniper\n\n## What this skill does\n\
+  \nJuniper brings GraphQL to Rust with derive macros: `#[derive(GraphQLObject)]`, `graphql_object!`,\
+  \ and `graphql_schema!`. Context passes shared state to resolvers; integrations cover Actix and Axum.\n\
+  \n## When to use\n\n- Rust services needing typed GraphQL\n- High-throughput backends that want zero-copy\
+  \ serialization\n- Rust teams already using Actix or Axum\n\n## Real commands\n\n```bash\n# Dependencies\n\
+  cargo add juniper actix-web juniper_actix\n\n# Run, build, test\ncargo run\ncargo build --release\n\
+  cargo test\n\n# Query the server\ncurl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json'\
+  \ -d '{\"query\":\"{ hero { name } }\"}' | jq\n```\n\n## Schema example\n\n```rust\nuse juniper::{graphql_object,\
+  \ EmptyMutation, RootNode};\n\nstruct Hero { name: String }\n\n#[graphql_object]\nimpl Hero {\n    fn\
+  \ name(&self) -> &str { &self.name }\n}\n\nstruct Query;\n\n#[graphql_object]\nimpl Query {\n    fn\
+  \ hero() -> Hero {\n        Hero { name: \"R2-D2\".into() }\n    }\n}\n\ntype Schema = RootNode<'static,\
+  \ Query, EmptyMutation>;\n```\n\n## Testing\n\n```bash\n# Execute a query in a unit test\ncargo test\
+  \ -- --nocapture\n# curl the playground\ncurl -s -X POST http://localhost:8080/graphql -H 'Content-Type:\
+  \ application/json' -d '{\"query\":\"{ __typename }\"}' | jq\n```\n\n## Best practices\n\n- Keep resolvers\
+  \ thin; call service layers.\n- Pass DB pools via Context, not statics.\n- Derive GraphQLObject for\
+  \ pure data types only.\n- Test schema construction at compile time; it fails loudly.\n- Pin juniper_actix\
+  \ to the same minor as actix-web.\n\n## Capabilities\n\n### juniper-development\nBuild Juniper schemas,\
+  \ integrate with Actix/Axum, and run queries.\n\n**Commands:**\n- `cargo add juniper actix-web juniper_actix`\n\
+  - `cargo run`\n- `cargo build --release`\n- `cargo test`\n- `curl -s -X POST http://localhost:8080/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ hero { name } }\"}' | jq`\n\n**Examples:**\n\
+  - cargo add juniper actix-web juniper_actix && cargo run\n- curl -s -X POST http://localhost:8080/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ hero { name } }\"}' | jq\n- cargo test"
+prompt: Act as Graphql Juniper and handle the task per the instructions.

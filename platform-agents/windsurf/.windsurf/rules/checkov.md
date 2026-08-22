@@ -1,0 +1,88 @@
+---
+trigger: glob
+description: "Scan infrastructure files handling policy violations. Generate machine-readable reports. Checkov policy-as-code."
+globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.tf", "**/Dockerfile*"]
+---
+
+# Checkov
+
+Scan infrastructure files handling policy violations. Generate machine-readable reports. Checkov policy-as-code.
+
+## Instructions
+
+# Checkov
+
+Policy-as-code scanning for infrastructure.
+
+## When to Use
+
+- Terraform and CloudFormation misconfiguration checks
+- Kubernetes manifest security
+- Dockerfile best-practice violations
+- Shift-left IaC security in CI
+
+## Commands
+
+```bash
+# Scan a directory
+checkov -d .
+
+# Scan a single file
+checkov -f main.tf
+
+# Limit frameworks
+checkov -d . --framework terraform,kubernetes
+
+# Skip a known check
+checkov -d . --skip-check CKV_AWS_1
+
+# Quiet output (failures only)
+checkov -d . --quiet
+
+# Machine-readable reports
+checkov -d . --output sarif --output-file-path ./reports
+checkov -d . --output junitxml --output-file-path ./reports
+
+# Baseline existing findings
+checkov -d . --create-baseline
+checkov -d . --baseline .checkov.baseline
+```
+
+## Best Practices
+
+- Run checkov in CI on every IaC change
+- Use --baseline to track existing debt without blocking
+- Fail builds on new findings: use --check or sarif severity
+- Scan the plan output, not just the code
+- Customize with skip-check only after documented review
+- Pin the Checkov version in CI
+
+## Capabilities
+
+### checkov-scan
+Scan infrastructure files for policy violations.
+
+**Commands:**
+- `checkov -d .`
+- `checkov -f main.tf`
+- `checkov -d . --framework terraform`
+- `checkov -d . --skip-check CKV_AWS_1`
+- `checkov -d . --quiet`
+
+**Examples:**
+- checkov -d . --framework kubernetes,terraform
+- checkov -f main.tf --compact
+- checkov -d . --output sarif
+
+### checkov-output
+Generate machine-readable reports.
+
+**Commands:**
+- `checkov -d . --output sarif --output-file-path ./reports`
+- `checkov -d . --output junitxml --output-file-path ./reports`
+- `checkov -d . --output json --output-file-path ./reports`
+- `checkov -d . --baseline .checkov.baseline`
+
+**Examples:**
+- checkov -d . --output sarif --output-file-path ./reports --quiet
+- checkov -d . --create-baseline

@@ -1,0 +1,36 @@
+title: testing-pyramid-architect
+description: Architects test strategies across the pyramid with tiered suites, coverage budgets, and CI
+  orchestration.
+version: 2.0.0
+instructions: "# testing-pyramid-architect\n\nArchitects test strategies across the pyramid with tiered\
+  \ suites, coverage budgets, and CI orchestration.\n\n## Instructions\n\n# Testing Pyramid Architecture\n\
+  \nDesign test suites that are fast, trustworthy, and maintainable.\n\n## What This Skill Does\n\n- Defines\
+  \ unit/integration/E2E tiers with tools per tier\n- Sets coverage budgets per tier\n- Orchestrates CI\
+  \ stages for fast feedback\n- Uses smoke tests and sharding to control runtime\n\n## When to Use\n\n\
+  - Redesigning a slow, all-E2E suite\n- Onboarding testing standards for a team\n- Balancing speed and\
+  \ confidence in CI\n\n## Real Commands\n\n```bash\n# Tiers\npytest tests/unit -n 4\npytest tests/integration\
+  \ --cov=src\nnpx jest --testPathPattern=tests/unit\nnpx playwright test tests/e2e --grep @critical\n\
+  \n# Budgets\npytest --cov=src --cov-fail-under=80 tests/unit\nnpx jest --coverage --coverageThreshold='{\"\
+  global\":{\"lines\":80}}'\n\n# CI stages\nnpm run test:unit && npm run test:api\nnpx playwright test\
+  \ tests/e2e --shard=1/4\npytest -m smoke tests/\n```\n\n## Target Distribution\n\n```text\nUnit (60%):\
+  \      jest/pytest/go test - ms feedback\nIntegration (30%): testcontainers/supertest - seconds\nE2E\
+  \ (10%):      playwright/cypress - minutes\n```\n\n## CI Stage Design\n\n```yaml\nstages:\n  unit: \
+  \   pytest -n 4 tests/unit && npx jest tests/unit\n  api:     pytest tests/integration && newman run\
+  \ collection.json\n  e2e:     npx playwright test tests/e2e --shard=1/4\n```\n\n## Best Practices\n\n\
+  - Push tests down the pyramid; E2E is the last resort\n- Budgets per tier prevent coverage theater\n\
+  - Run unit tests on every push; e2e on merge and nightly\n- Shard E2E; keep each stage under 15 minutes\n\
+  - Review the pyramid quarterly as the app evolves\n\n## Capabilities\n\n### tier-strategy\nDefine and\
+  \ enforce tiered test suites.\n\n**Commands:**\n- `pytest tests/unit -n 4`\n- `pytest tests/integration\
+  \ --cov=src`\n- `npx jest --testPathPattern=tests/unit`\n- `npx playwright test tests/e2e --grep @critical`\n\
+  - `mvn verify -Dit.test=*IT`\n\n**Examples:**\n- pytest tests/unit -n 4\n- npx jest --testPathPattern=tests/unit\n\
+  - npx playwright test tests/e2e --grep @critical\n\n### coverage-budgets\nEnforce coverage budgets per\
+  \ tier.\n\n**Commands:**\n- `pytest --cov=src --cov-fail-under=80 tests/unit`\n- `npx jest --coverage\
+  \ --coverageThreshold='{\"global\":{\"lines\":80}}'`\n- `go test -coverprofile=coverage.out ./... &&\
+  \ awk '/total:/{print $3}' coverage.out`\n- `dotnet test --collect:\"XPlat Code Coverage\" --threshold=80`\n\
+  \n**Examples:**\n- pytest --cov=src --cov-fail-under=80 tests/unit\n- npx jest --coverage --coverageThreshold='{\"\
+  global\":{\"lines\":80}}'\n- go test -coverprofile=coverage.out ./...\n\n### ci-orchestration\nOrchestrate\
+  \ tiers across CI stages.\n\n**Commands:**\n- `npm run test:unit && npm run test:api`\n- `pytest tests/unit\
+  \ -m 'not e2e'`\n- `npx playwright test tests/e2e --shard=1/4`\n- `pytest -m smoke tests/`\n- `npx jest\
+  \ --ci --changedSince=main`\n\n**Examples:**\n- npm run test:unit && npm run test:api\n- npx playwright\
+  \ test tests/e2e --shard=1/4\n- pytest -m smoke tests/"
+prompt: Act as testing-pyramid-architect and handle the task per the instructions.

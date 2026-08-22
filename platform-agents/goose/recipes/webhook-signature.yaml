@@ -1,0 +1,41 @@
+title: Webhook Signature
+description: Computes and validates HMAC-SHA256 signatures on webhook payloads using openssl, Node.js
+  crypto, and Python hmac. Sends signed webhooks with X-Hub-Signature-256 headers and verifies incoming
+  signatures with constant-time comparison.
+version: 2.0.0
+instructions: "# Webhook Signature\n\nComputes and validates HMAC-SHA256 signatures on webhook payloads\
+  \ using openssl, Node.js crypto, and Python hmac. Sends signed webhooks with X-Hub-Signature-256 headers\
+  \ and verifies incoming signatures with constant-time comparison.\n\n## Instructions\n\n# Webhook Signature\n\
+  \n## What this skill does\n\nAdd and verify HMAC-SHA256 signatures on webhook payloads so receivers\
+  \ can authenticate the sender and detect tampering. Covers computing signatures with openssl/node/python\
+  \ and validating `X-Hub-Signature-256`.\n\n## When to use\n\n- Signing outgoing webhooks for customers\n\
+  - Verifying incoming GitHub/Stripe webhooks\n- Auditing signature handling in a receiver\n\n## Real\
+  \ commands\n\n```bash\n# Compute signature with openssl (base64, GitHub style)\nopenssl dgst -sha256\
+  \ -hmac \"whsec_abc123\" -binary payload.json | base64\n\n# Compute hex signature with node\nnode -e\
+  \ \"const c=require('crypto');const fs=require('fs');const s=c.createHmac('sha256','whsec_abc123').update(fs.readFileSync('payload.json')).digest('hex');console.log('sha256='+s)\"\
+  \n\n# Compute hex with python\npython -c \"import hmac,hashlib;print(hmac.new(b'whsec_abc123',open('payload.json','rb').read(),hashlib.sha256).hexdigest())\"\
+  \n\n# Send a signed webhook\ncurl -s -X POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"\
+  X-Hub-Signature-256: sha256=$(openssl dgst -sha256 -hmac 'whsec_abc123' -binary payload.json | base64)\"\
+  \ \\\n  -d @payload.json http://localhost:8080/webhooks/orders\n\n# Tampered signature must be rejected\
+  \ (expect 401)\ncurl -s -X POST -H \"X-Hub-Signature-256: sha256=deadbeef\" -d @payload.json http://localhost:8080/webhooks/orders\
+  \ -o /dev/null -w \"%{http_code}\\n\"\n```\n\n## Verification rules\n\n- Hash the raw request body bytes,\
+  \ not the re-parsed JSON\n- Compare in constant time (crypto.timingSafeEqual / hmac.compare_digest)\n\
+  - Support `sha256=signature` format; drop `sha1=` gracefully\n- Log failures but never include the payload\
+  \ or secret\n\n## Best practices\n\n- Rotate secrets and support multiple active secrets\n- Include\
+  \ a timestamp when signatures can be replayed\n- Reject requests with missing or malformed signature\
+  \ headers\n\n## Testing\n\n```bash\n# Valid signature -> 200/2xx\n# Invalid signature -> 401\n# Missing\
+  \ signature -> 401\n```\n\n## Capabilities\n\n### signature-verification\nCompute and validate webhook\
+  \ HMAC signatures\n\n**Commands:**\n- `openssl dgst -sha256 -hmac \"whsec_abc123\" -binary payload.json\
+  \ | base64`\n- `node -e \"const c=require(\\\"crypto\\\");const fs=require(\\\"fs\\\");const s=c.createHmac(\\\
+  \"sha256\\\",\\\"whsec_abc123\\\").update(fs.readFileSync(\\\"payload.json\\\")).digest(\\\"hex\\\"\
+  );console.log(\\\"sha256=\\\"+s)\"`\n- `curl -s -X POST -H \"X-Hub-Signature-256: sha256=deadbeef\"\
+  \ -d @payload.json http://localhost:8080/webhooks/orders -o /dev/null -w \"%{http_code}\"`\n- `curl\
+  \ -s -X POST -H \"X-Hub-Signature-256: sha256=$(openssl dgst -sha256 -hmac \\\"whsec_abc123\\\" -binary\
+  \ payload.json | base64)\" -d @payload.json http://localhost:8080/webhooks/orders`\n- `python -c \"\
+  import hmac,hashlib;print(hmac.new(b\\\"whsec_abc123\\\",open(\\\"payload.json\\\",\\\"rb\\\").read(),hashlib.sha256).hexdigest())\"\
+  `\n\n**Examples:**\n- echo -n \"{\\\"event\\\":\\\"test\\\"}\" | openssl dgst -sha256 -hmac \"whsec_abc123\"\
+  \ -binary | base64\n- curl -s -X POST -H \"Content-Type: application/json\" -H \"X-Hub-Signature-256:\
+  \ sha256=$(echo -n \"{\\\"event\\\":\\\"test\\\"}\" | openssl dgst -sha256 -hmac \"whsec_abc123\" -binary\
+  \ | base64)\" -d \"{\\\"event\\\":\\\"test\\\"}\" http://localhost:8080/webhooks/orders\n- node verify.js\
+  \ payload.json sha256=<computed>"
+prompt: Act as Webhook Signature and handle the task per the instructions.

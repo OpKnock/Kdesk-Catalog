@@ -1,0 +1,26 @@
+title: api-schema-engineer
+description: 'Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test
+  files, and format handling with ajv-cli.'
+version: 2.0.0
+instructions: "# api-schema-engineer\n\nAuthors JSON Schema documents: drafting schema files, ajv compilation\
+  \ and validation, test files, and format handling with ajv-cli.\n\n## Instructions\n\n# API Schema Engineer\n\
+  \nJSON Schema authoring and validation.\n\n## What This Skill Does\n- Writes JSON Schema for API payloads\n\
+  - Validates instances with ajv-cli\n- Maintains schema test suites\n\n## When to Use\n- Defining API\
+  \ request/response contracts\n- Validating configuration files\n- Sharing validation rules across services\n\
+  \n## Real Commands\n\n```bash\nnpm install -g ajv-cli\najv compile -s user.schema.json --strict=false\n\
+  ajv validate -s user.schema.json -d user.json --strict=false\najv test -s user.schema.json -t user.schema.test.json\
+  \ --strict=false\n```\n\n## Schema Example\n\n```json\n{\n  \"type\": \"object\",\n  \"properties\"\
+  : {\n    \"id\": { \"type\": \"integer\" },\n    \"email\": { \"type\": \"string\", \"format\": \"email\"\
+  \ }\n  },\n  \"required\": [\"email\"]\n}\n```\n\n## Testing\n- Maintain positive and negative test\
+  \ files\n- Run ajv test in CI\n- Test formats like email, date-time, uri\n\n## Best Practices\n- Keep\
+  \ schemas in a shared package\n- Reference with $ref instead of duplication\n- Use $defs for reusable\
+  \ components\n\n## Capabilities\n\n### schema-authoring\nWrite and validate JSON Schema files\n\n**Commands:**\n\
+  - `npm install -g ajv-cli`\n- `ajv compile -s user.schema.json --strict=false`\n- `ajv validate -s user.schema.json\
+  \ -d user.json --strict=false`\n- `ajv test -s user.schema.json -t user.schema.test.json --strict=false`\n\
+  - `ajv migrate -s legacy.schema.json -o modern.schema.json`\n\n**Examples:**\n- ajv compile checks schema\
+  \ syntax\n- ajv validate checks a data file against the schema\n- ajv test runs positive/negative test\
+  \ files\n\n### draft-handling\nHandle schema drafts and formats\n\n**Commands:**\n- `ajv validate -s\
+  \ user.schema.json -d bad.json --strict=false 2>&1 | head -5`\n- `node -e \"const Ajv=require('ajv');\
+  \ const addFormats=require('ajv-formats'); const a=new Ajv(); addFormats(a); const v=a.compile({type:'string',format:'email'});\
+  \ console.log(v('x@y.com'), v('nope'))\"`\n- `node -e \"console.log(require('ajv').defaults)\"`"
+prompt: Act as api-schema-engineer and handle the task per the instructions.

@@ -1,0 +1,37 @@
+title: Csp
+description: Hardens API and web endpoints with Content-Security-Policy headers, using Helmet middleware
+  and curl verification against real echo services.
+version: 2.0.0
+instructions: "# Csp\n\nHardens API and web endpoints with Content-Security-Policy headers, using Helmet\
+  \ middleware and curl verification against real echo services.\n\n## Instructions\n\n# Content Security\
+  \ Policy (CSP)\n\nImplement and verify Content-Security-Policy headers for APIs and web endpoints.\n\
+  \n## When to Use\n\n- Hardening API responses against XSS and injection\n- Enforcing a strict allowlist\
+  \ of origins and scripts\n- Auditing which headers a deployed endpoint actually returns\n\n## Verify\
+  \ Existing Headers\n\n```bash\ncurl -sI https://httpbin.org/headers | grep -i content-security-policy\n\
+  curl -s -D - -o /dev/null https://httpbin.org/headers\n```\n\n## Minimal Policy\n\n```\nContent-Security-Policy:\
+  \ default-src 'self'; script-src 'self'; object-src 'none';\n  frame-ancestors 'none'\n```\n\n## Node.js\
+  \ with Helmet\n\n```bash\nnpm install helmet\n```\n\n```js\nconst express = require('express');\nconst\
+  \ helmet = require('helmet');\nconst app = express();\napp.use(helmet.contentSecurityPolicy({\n  directives:\
+  \ {\n    \"default-src\": [\"'self'\"],\n    \"script-src\": [\"'self'\"],\n    \"object-src\": [\"\
+  'none'\"],\n    \"frame-ancestors\": [\"'none'\"]\n  }\n}));\napp.get('/health', (req, res) => res.json({\
+  \ ok: true }));\napp.listen(8080);\n```\n\n```bash\nnode server.js &\ncurl -sI http://localhost:8080/health\
+  \ | grep -i content-security-policy\n```\n\n## Rollout Strategy\n\n```\n# Start with report-only mode\
+  \ to observe violations\nContent-Security-Policy-Report-Only: default-src 'self'\n# Then enforce after\
+  \ reviewing violation reports\nContent-Security-Policy: default-src 'self'\n```\n\n## Testing\n\n```bash\n\
+  curl -s -D - -o /dev/null http://localhost:8080/health | grep -i content-security\n```\n\n## Best Practices\n\
+  \n- Start with report-only mode before enforcing\n- Keep a violation-report-uri to monitor breakage\n\
+  - Avoid unsafe-inline and unsafe-eval in production\n- Use nonces or hashes for inline scripts\n- Verify\
+  \ headers on every environment, not just production\n\n## Capabilities\n\n### header-verification\n\
+  Inspect and verify Content-Security-Policy response headers on live endpoints\n\n**Commands:**\n- `curl\
+  \ -sI https://httpbin.org/headers | grep -i content-security-policy`\n- `curl -s -D - -o /dev/null https://httpbin.org/headers\
+  \ | grep -i 'content-security-policy\\|x-frame-options'`\n- `curl -s -H \"Accept: application/json\"\
+  \ https://httpbin.org/headers -D - -o /dev/null | grep -i content-security`\n- `curl -sI http://localhost:8080\
+  \ | grep -i content-security-policy`\n\n**Examples:**\n- curl -sI https://httpbin.org/headers | grep\
+  \ -i content-security-policy\n- curl -s -D - -o /dev/null https://httpbin.org/headers | grep -i 'content-security'\n\
+  - curl -sI http://localhost:8080 | awk 'tolower($1) ~ /content-security/{print}'\n\n### helmet-config\n\
+  Configure CSP and related security headers with helmet in Node.js\n\n**Commands:**\n- `npm install helmet`\n\
+  - `node -e \"const helmet=require('helmet'); console.log(typeof helmet.contentSecurityPolicy)\"`\n-\
+  \ `npm run start`\n- `curl -sI http://localhost:8080/health | grep -i content-security-policy`\n\n**Examples:**\n\
+  - npm install helmet && npm run start\n- curl -sI http://localhost:8080 | grep -i content-security-policy\n\
+  - npm test"
+prompt: Act as Csp and handle the task per the instructions.

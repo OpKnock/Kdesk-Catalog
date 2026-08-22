@@ -1,0 +1,30 @@
+title: computer-vision
+description: 'Builds computer vision pipelines: image preprocessing with OpenCV, detection with YOLO,
+  and video analysis with ffmpeg.'
+version: 2.0.0
+instructions: "# computer-vision\n\nBuilds computer vision pipelines: image preprocessing with OpenCV,\
+  \ detection with YOLO, and video analysis with ffmpeg.\n\n## Instructions\n\n# Computer Vision\n\nBuilds\
+  \ CV systems: image preprocessing (OpenCV), object detection (YOLO), and video\npipelines (ffmpeg).\n\
+  \n## When to Use\n\n- Preprocessing a dataset before training a detector\n- Running detection on images,\
+  \ video files, or RTSP streams\n- Extracting frames and creating datasets from video\n\n## Real Commands\n\
+  \n```bash\n# Verify the stack\npython -c \"import cv2; print(cv2.__version__)\"\n\n# Extract one frame\
+  \ per second from video\nffmpeg -i input.mp4 -vf \"fps=1\" frames/frame_%04d.jpg\n\n# Resize and normalize\
+  \ a dataset\npython -c \"\nimport cv2, glob\nfor f in glob.glob('raw/*.jpg'):\n    img = cv2.imread(f)\n\
+  \    img = cv2.resize(img, (640, 640))\n    cv2.imwrite('proc/' + f.split('\\\\')[-1], img)\n\"\n\n\
+  # Run YOLO detection\npython detect.py --source images/ --weights best.pt --conf 0.4 --save-txt\n\n\
+  # Export to ONNX for edge deployment\npython export.py --weights best.pt --include onnx\n```\n\n## Dataset\
+  \ Prep\n\n```bash\n# Crop to square and save 100 frames\nffmpeg -i video.mp4 -vf \"crop=640:640:0:0\"\
+  \ -frames:v 100 crop/%05d.jpg\n\n# Augment with flip/rotation\npython augment.py --folder train/ --flip\
+  \ --rotate 10 --brightness 0.2\n```\n\n## Best Practices\n\n- Normalize (resize + RGB) identically for\
+  \ train and inference\n- Use augmentation to avoid overfitting on small datasets\n- Test on edge cases:\
+  \ blur, occlusion, low light\n- Benchmark FPS after quantization/export\n- Keep class balance in the\
+  \ dataset\n\n## Example Response\n\nThe agent produces a preprocessing command sequence, runs detection,\
+  \ and returns\nclass counts, confidence stats, and per-image annotated outputs.\n\n## Capabilities\n\
+  \n### image-processing\nPreprocess images and video with OpenCV and ffmpeg\n\n**Commands:**\n- `python\
+  \ -c \"import cv2; print(cv2.__version__)\"`\n- `python -m pip install opencv-python pillow`\n- `ffmpeg\
+  \ -i input.mp4 -vf \"fps=1\" frames/frame_%04d.jpg`\n- `python -c \"import cv2; img=cv2.imread('a.jpg');\
+  \ cv2.resize(img,(640,640)); cv2.imwrite('r.jpg',img)\"`\n- `ffmpeg -i input.mp4 -vf scale=320:320 -c:v\
+  \ libx264 out.mp4`\n\n**Examples:**\n- ffmpeg -i video.mp4 -vf \"crop=640:640:0:0\" -frames:v 100 crop/%05d.jpg\n\
+  - python augment.py --folder train/ --flip --rotate 10\n- python detect.py --source rtsp://cam:554/stream\
+  \ --save-txt"
+prompt: Act as computer-vision and handle the task per the instructions.

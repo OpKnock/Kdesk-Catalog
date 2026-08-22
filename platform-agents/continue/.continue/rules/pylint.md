@@ -1,0 +1,95 @@
+---
+name: "pylint"
+description: "Lints Python code with Pylint, enforcing style and catching bugs via a configurable rule system."
+globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+alwaysApply: false
+---
+
+# pylint
+
+Lints Python code with Pylint, enforcing style and catching bugs via a configurable rule system.
+
+## Instructions
+
+# Pylint
+
+Checks Python code for errors, style problems, and design smells, scoring each
+module on a 0-10 scale.
+
+## When to Use
+
+- Enforcing style and naming conventions
+- Catching unused imports, undefined vars, and bad redefinitions
+- Gatekeeping merge requests with a minimum score
+
+## Real Commands
+
+```bash
+# Install
+pip install pylint
+
+# Basic run
+pylint src/
+
+# Generate a config file
+pylint --generate-rcfile > .pylintrc
+
+# Use the config with a score gate
+pylint --rcfile=.pylintrc --fail-under=9 src/
+
+# Errors only
+pylint --errors-only src/
+
+# JSON for CI
+pylint --output-format=json src/ > pylint-report.json
+
+# Disable specific checks inline
+pylint --disable=too-many-locals,too-many-branches src/
+```
+
+## Config (.pylintrc)
+
+```ini
+[MESSAGES CONTROL]
+disable=missing-docstring,too-many-arguments,invalid-name
+
+[MASTER]
+fail-under=9
+load-plugins=pylint.extensions.docparams
+```
+
+## CI
+
+```yaml
+- name: Pylint
+  run: pylint --rcfile=.pylintrc --fail-under=9 src/
+```
+
+## Best Practices
+
+- Commit a generated `.pylintrc`; don't rely on defaults
+- Set `fail-under` a bit below a perfect score so regressions fail but noise is allowed
+- Keep `--disable` lists small and reviewed
+- Use `# pylint: disable=...` inline comments sparingly
+
+## Example Response
+
+Reports per-module scores, message counts by category (E/W/R/C), and the worst
+offenders with `file:line` references.
+
+## Capabilities
+
+### pylint-linting
+Run Pylint with custom rc files, score thresholds, and CI formats
+
+**Commands:**
+- `pylint src/`
+- `pylint --rcfile=.pylintrc app tests`
+- `pylint --fail-under=9 src/`
+- `pylint --output-format=json src/ > pylint.json`
+- `pylint --disable=missing-docstring,too-many-arguments src/`
+
+**Examples:**
+- pylint --generate-rcfile > .pylintrc
+- pylint --fail-under=9 --reports=y src/
+- pylint --errors-only src/

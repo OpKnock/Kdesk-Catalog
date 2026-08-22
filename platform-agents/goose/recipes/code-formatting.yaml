@@ -1,0 +1,24 @@
+title: code-formatting
+description: Applies consistent code formatting across languages with prettier, black, gofmt, rustfmt,
+  and formatter configurations.
+version: 2.0.0
+instructions: "# code-formatting\n\nApplies consistent code formatting across languages with prettier,\
+  \ black, gofmt, rustfmt, and formatter configurations.\n\n## Instructions\n\n# Code Formatting\n\nEnforce\
+  \ one formatting style across the repo.\n\n## When to Use\n\n- Every codebase with more than one contributor\n\
+  - Ending style arguments with config, not discussion\n- Pre-commit and CI formatting gates\n- Language-agnostic\
+  \ consistency (configs, markdown, YAML)\n\n## Commands\n\n```bash\n# Prettier (JS/TS/CSS/HTML/MD/JSON)\n\
+  npx prettier --write src/\nnpx prettier --check src/\nnpx prettier --write \"src/**/*.{ts,tsx}\"\n\n\
+  # Python\nblack src/\nblack --check src/\n\n# Go\ngofmt -w ./\ngofmt -l .\n\n# Rust\ncargo fmt --all\n\
+  rustfmt --check src/\n```\n\n## Prettier Config\n\n```json\n{\n  \"semi\": true,\n  \"singleQuote\"\
+  : true,\n  \"tabWidth\": 2,\n  \"printWidth\": 100,\n  \"trailingComma\": \"all\"\n}\n```\n\n## Best\
+  \ Practices\n\n- Commit the formatter config at the repo root\n- Use --check in CI, --write in pre-commit\n\
+  - Let formatters handle style; reviewers handle logic\n- Format generated files with ignore directives\n\
+  - Keep formatter versions pinned to avoid churn\n- Run formatting before linting for stable error lines\n\
+  \n## Capabilities\n\n### prettier-format\nFormat JS/TS/HTML/CSS/MD with Prettier.\n\n**Commands:**\n\
+  - `npx prettier --write src/`\n- `npx prettier --check src/`\n- `npx prettier --write \"src/**/*.{ts,tsx}\"\
+  `\n- `npx prettier --config .prettierrc --write .`\n- `npx prettier --write --single-quote src/`\n\n\
+  **Examples:**\n- npx prettier --check .\n- npx prettier --write . --tab-width 2\n- npx prettier --write\
+  \ --prose-wrap always README.md\n\n### language-formatters\nFormat Python, Go, and Rust.\n\n**Commands:**\n\
+  - `black src/`\n- `gofmt -w ./`\n- `go fmt ./...`\n- `rustfmt --check src/`\n- `cargo fmt --all`\n\n\
+  **Examples:**\n- gofmt -l .\n- rustfmt --edition 2021 src/main.rs\n- cargo fmt --all -- --check"
+prompt: Act as code-formatting and handle the task per the instructions.

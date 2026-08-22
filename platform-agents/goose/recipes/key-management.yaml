@@ -1,0 +1,40 @@
+title: Key Management
+description: 'Manage cryptographic keys across local openssl and cloud KMS (AWS KMS, GCP KMS, HashiCorp
+  Vault): generation, encryption, and secure storage.'
+version: 2.0.0
+instructions: "# Key Management\n\nManage cryptographic keys across local openssl and cloud KMS (AWS KMS,\
+  \ GCP KMS, HashiCorp Vault): generation, encryption, and secure storage.\n\n## Instructions\n\n# Key\
+  \ Management\n\nGenerate, encrypt, and store keys and secrets across local and cloud tooling.\n\n##\
+  \ What this skill does\n\n- Creates RSA/EC key pairs and self-signed certs with openssl.\n- Encrypts/decrypts\
+  \ with AWS KMS and GCP Cloud KMS.\n- Stores secrets in HashiCorp Vault.\n\n## When to use\n\n- Bootstrapping\
+  \ TLS for internal services.\n- Envelope-encrypting secrets before they hit disk or CI logs.\n- Centralizing\
+  \ secrets with versioning and audit (Vault/KMS).\n\n## Real commands\n\n```bash\n# Local RSA keypair\n\
+  openssl genrsa -out private.pem 2048\nopenssl rsa -in private.pem -pubout -out public.pem\n\n# EC key\
+  \ for ECDSA JWT signing\nopenssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem\n\n# Self-signed\
+  \ cert\nopenssl req -x509 -new -key private.pem -days 365 -out cert.pem \\\n  -subj '/CN=api.staging.myapp.test'\n\
+  \n# AWS KMS encrypt/decrypt\naws kms encrypt --key-id alias/orders-key \\\n  --plaintext fileb://secret.txt\
+  \ --output text --query CiphertextBlob > secret.b64\naws kms decrypt --ciphertext-blob fileb://secret.bin\
+  \ \\\n  --query Plaintext --output text | base64 -d > secret.txt\n\n# GCP KMS encrypt/decrypt\ngcloud\
+  \ kms encrypt --location=global --keyring=my-ring --key=my-key \\\n  --plaintext-file=secret.txt --ciphertext-file=secret.enc\n\
+  gcloud kms decrypt --location=global --keyring=my-ring --key=my-key \\\n  --ciphertext-file=secret.enc\
+  \ --plaintext-file=out.txt\n\n# Vault KV\nvault kv put secret/api api_key=supersecret\nvault kv get\
+  \ secret/api\n```\n\n## Testing\n\n```bash\n# Round-trip test: decrypt equals the original\ncmp secret.txt\
+  \ out.txt && echo OK\n```\n\n## Best practices\n\n- Keep private keys out of repos; use KMS/Vault for\
+  \ production secrets.\n- Use KMS envelope encryption: encrypt data keys, not data blobs.\n- Rotate keys\
+  \ on a schedule and disable old versions in KMS.\n\n## Capabilities\n\n### openssl-keys\nGenerate RSA/EC\
+  \ key pairs and certificates locally.\n\n**Commands:**\n- `openssl genrsa -out private.pem 2048`\n-\
+  \ `openssl rsa -in private.pem -pubout -out public.pem`\n- `openssl ecparam -name prime256v1 -genkey\
+  \ -noout -out ec-key.pem`\n- `openssl req -x509 -new -key private.pem -days 365 -out cert.pem -subj\
+  \ '/CN=api.staging.myapp.test'`\n\n**Examples:**\n- openssl genrsa -out private.pem 2048\n- openssl\
+  \ ecparam -name prime256v1 -genkey -noout -out ec-key.pem\n- openssl req -x509 -new -key private.pem\
+  \ -days 365 -out cert.pem -subj '/CN=api.staging.myapp.test'\n\n### cloud-kms\nEncrypt and decrypt data\
+  \ with AWS KMS, GCP KMS, and Vault.\n\n**Commands:**\n- `aws kms encrypt --key-id alias/orders-key --plaintext\
+  \ fileb://secret.txt --output text --query CiphertextBlob > secret.b64`\n- `aws kms decrypt --ciphertext-blob\
+  \ fileb://secret.bin --query Plaintext --output text | base64 -d > secret.txt`\n- `gcloud kms encrypt\
+  \ --location=global --keyring=my-ring --key=my-key --plaintext-file=secret.txt --ciphertext-file=secret.enc`\n\
+  - `gcloud kms decrypt --location=global --keyring=my-ring --key=my-key --ciphertext-file=secret.enc\
+  \ --plaintext-file=out.txt`\n- `vault kv put secret/api api_key=supersecret`\n\n**Examples:**\n- aws\
+  \ kms encrypt --key-id alias/orders-key --plaintext fileb://secret.txt --output text --query CiphertextBlob\
+  \ > secret.b64\n- gcloud kms encrypt --location=global --keyring=my-ring --key=my-key --plaintext-file=secret.txt\
+  \ --ciphertext-file=secret.enc\n- vault kv get secret/api"
+prompt: Act as Key Management and handle the task per the instructions.

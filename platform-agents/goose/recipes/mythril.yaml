@@ -1,0 +1,28 @@
+title: Mythril
+description: Security analysis of Ethereum smart contracts with Mythril, finding reentrancy, overflow,
+  and other EVM vulnerabilities.
+version: 2.0.0
+instructions: "# Mythril\n\nSecurity analysis of Ethereum smart contracts with Mythril, finding reentrancy,\
+  \ overflow, and other EVM vulnerabilities.\n\n## Instructions\n\n# Mythril\n\nSymbolic-execution security\
+  \ analyzer for Ethereum smart contracts. Flags reentrancy,\ninteger over/underflow, and dangerous call\
+  \ patterns.\n\n## When to Use\n\n- Auditing a contract before deployment\n- Analyzing an already-deployed\
+  \ contract on-chain\n- Checking that a fix removed the flagged vulnerability\n\n## Real Commands\n\n\
+  ```bash\n# Install via Docker (recommended)\ndocker pull mythril/myth\n\n# Analyze a source file\ndocker\
+  \ run -v $(pwd):/tmp mythril/myth analyze /tmp/Token.sol\n\n# Analyze with a timeout\nmyth analyze --execution-timeout\
+  \ 120 contracts/Vault.sol\n\n# Analyze a deployed contract\nmyth analyze -a 0xABC123 --rpc https://eth.llamarpc.com\
+  \ --blocks 5\n\n# With custom solc settings\nmyth analyze --solc-json solc.json contracts/\n\n# Control\
+  \ the graph output\nmyth analyze --graph contracts/Counter.sol\n```\n\n## Detector Example Output\n\n\
+  ```\n==== Reentrancy ====\nSWC ID: 107\nSeverity: High\nIn function: withdraw(uint256)\nState variables\
+  \ written after the call:\n  balances[msg.sender]\n```\n\n## Best Practices\n\n- Run on a local fork\
+  \ with `--rpc` against staging, never mainnet with live funds\n- Pair Mythril with Slither and a manual\
+  \ review; no tool is exhaustive\n- Use `--execution-timeout` to bound long analysis runs\n- Re-run after\
+  \ every Solidity change; issues disappear quickly\n\n## Example Response\n\nA reentrancy finding is\
+  \ reported with SWC ID 107, affected function, and the\nstate-variable write that happens after the\
+  \ external call; the agent suggests the\nchecks-effects-interactions fix.\n\n## Capabilities\n\n###\
+  \ smart-contract-analysis\nRun Mythril symbolic-execution analysis against Solidity contracts\n\n**Commands:**\n\
+  - `myth analyze contracts/Token.sol`\n- `myth analyze --execution-timeout 120 contract.sol`\n- `myth\
+  \ analyze -a 0x1234... --rpc https://eth.llamarpc.com --blocks 5`\n- `myth analyze --solc-json solc.json\
+  \ contracts/`\n- `myth analyze --mode diamond --favorites detector-reentrancy contracts/`\n\n**Examples:**\n\
+  - myth analyze --execution-timeout 90 contracts/Vault.sol\n- myth analyze -a 0xdeadbeef --infura-id\
+  \ $INFURA_ID\n- myth analyze --graph contracts/Tok.sol"
+prompt: Act as Mythril and handle the task per the instructions.

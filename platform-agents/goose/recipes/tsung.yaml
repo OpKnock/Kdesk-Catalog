@@ -1,0 +1,30 @@
+title: Tsung
+description: Runs distributed load tests using Tsung's XML scenario engine. Defines multi-phase arrival
+  rates, simulates HTTP/WebSocket/AMQP workloads, aggregates latency and error stats into HTML reports,
+  and scales across multiple load-generator nodes.
+version: 2.0.0
+instructions: "# Tsung\n\nRuns distributed load tests using Tsung's XML scenario engine. Defines multi-phase\
+  \ arrival rates, simulates HTTP/WebSocket/AMQP workloads, aggregates latency and error stats into HTML\
+  \ reports, and scales across multiple load-generator nodes.\n\n## Instructions\n\n# Tsung\n\nDistributed\
+  \ load testing with Tsung.\n\n## What this skill does\n\n- Runs XML-defined load scenarios against services\n\
+  - Simulates ramping phases and multiple request types\n- Aggregates stats into CSV and HTML reports\n\
+  - Scales across multiple load-generator nodes\n\n## When to use\n\n- Load testing HTTP APIs from the\
+  \ CLI\n- WebSocket or AMQP stress scenarios\n- Soak runs with scheduled phases\n\n## Real commands\n\
+  \n```bash\n# Run a scenario\ntsung -f tsung.xml start\n\n# With an explicit log directory\ntsung -f\
+  \ tsung.xml -l /tmp/tsung-reports start\n\n# Check running status\ntsung status\n\n# After the run,\
+  \ inspect the generated report\ngrep -E 'count.*mean' ~/.tsung/log/tsung.log | tail -20\ngrep -E 'http_rc|http_mean'\
+  \ ~/.tsung/log/tsung.log | tail -40\nls ~/.tsung/log/*/report.html\n```\n\n## Minimal scenario\n\n```xml\n\
+  <tsung loglevel=\"notice\">\n  <clients>\n    <client host=\"localhost\" use_controller_vm=\"true\"\
+  />\n  </clients>\n  <servers>\n    <server host=\"http://localhost:8080\" port=\"80\" type=\"tcp\"/>\n\
+  \  </servers>\n  <load>\n    <arrivalphase phase=\"1\" duration=\"60\" unit=\"second\">\n      <users\
+  \ arrivalrate=\"100\" unit=\"second\"/>\n    </arrivalphase>\n  </load>\n  <sessions>\n    <session\
+  \ name=\"health\" probability=\"100\">\n      <request><http url=\"/healthz\" method=\"GET\"/></request>\n\
+  \    </session>\n  </sessions>\n</tsung>\n```\n\n## Best practices\n\n- Start with one controller node,\
+  \ then add clients for scale\n- Use separate sessions per user flow (login, search, checkout)\n- Keep\
+  \ arrivalrate below failure onset; that is your ceiling\n- Collect report.html into CI artifacts\n\n\
+  ## Capabilities\n\n### load-test\nDefine and run Tsung load scenarios\n\n**Commands:**\n- `tsung -f\
+  \ tsung.xml start`\n- `tsung -f tsung.xml -l /tmp/tsung-reports start`\n- `tsung status`\n- `grep -E\
+  \ \"count.*mean\" ~/.tsung/log/tsung.log | tail -20`\n- `grep -E \"http_rc|http_mean\" ~/.tsung/log/tsung.log\
+  \ | tail -40`\n\n**Examples:**\n- tsung -f tsung.xml start\n- tsung -f tsung.xml -l /tmp/tsung-reports\
+  \ start\n- grep \"session average\" ~/.tsung/log/tsung.log | tail -5"
+prompt: Act as Tsung and handle the task per the instructions.

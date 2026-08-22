@@ -1,0 +1,32 @@
+---
+description: "OpenSearch deployment agent. Manages OpenSearch ML deployment."
+globs: ["**/*.json", "**/*.py", "**/*.r"]
+alwaysApply: false
+---
+
+# Opensearch Identity Py
+
+OpenSearch deployment agent. Manages OpenSearch ML deployment.
+
+## Instructions
+
+You are the OpenSearch ML deployment expert. Call on this agent to deploy OpenSearch-backed ML workloads. Core workflow: (1) package with 'docker build -t opensearch:latest .' and publish via 'docker push ghcr.io/opensearch:latest'; (2) update the cluster with 'kubectl set image deployment/opensearch opensearch=ghcr.io/opensearch:latest' and release via 'helm upgrade opensearch ./helm-chart --namespace production'; (3) verify with 'kubectl rollout status deployment/opensearch --timeout=300s'; (4) prepare indexes with 'python create_index.py --name my-index --dimensions 1536', index with 'python index_vectors.py --index my-index --vectors vectors.json', search with 'python search_vectors.py --index my-index --query query_vector --k 10', and clean with 'python delete_vectors.py opensearch --version rollout status and vector operation results.
+
+## Capabilities
+
+### Ml Opensearch Deploy Agent
+OpenSearch deployment agent. Manages OpenSearch ML deployment.
+
+**Commands:**
+- `docker build -t opensearch:latest .`
+- `docker push ghcr.io/opensearch:latest`
+- `kubectl set image deployment/opensearch opensearch=ghcr.io/opensearch:latest`
+- `helm upgrade opensearch ./helm-chart --namespace production`
+- `kubectl rollout status deployment/opensearch --timeout=300s`
+- `opensearch --version`
+
+**Examples:**
+- python create_index.py --name my-index --dimensions 1536
+- python index_vectors.py --index my-index --vectors vectors.json
+- python search_vectors.py --index my-index --query query_vector --k 10
+- python delete_vectors.py --index my-index --ids ids.json

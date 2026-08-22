@@ -1,0 +1,142 @@
+title: Etcd Config
+description: 'etcd cluster configuration and operations: read and write keys, inspect member health, and
+  manage leases and snapshots.'
+version: 2.0.0
+instructions: '# Etcd Config
+
+
+  etcd cluster configuration and operations: read and write keys, inspect member health, and manage leases
+  and snapshots.
+
+
+  ## Instructions
+
+
+  # etcd Config
+
+
+  ## What this skill does
+
+
+  etcd is a distributed key-value store used for service discovery and shared config. This skill covers
+  reading/writing keys, checking member health, managing leases, and taking snapshots.
+
+
+  ## When to use
+
+
+  - Debugging why a service reads stale config
+
+  - Checking cluster quorum after member changes
+
+  - Taking a backup before an upgrade
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Write and read config keys
+
+  etcdctl put /config/database/url postgres://db:5432/app --endpoints=https://etcd-1:2379
+
+  etcdctl get /config --prefix --keys-only
+
+
+  # Health and status
+
+  etcdctl endpoint health --endpoints=https://etcd-1:2379,https://etcd-2:2379
+
+  etcdctl endpoint status --write-out=table --endpoints=https://etcd-1:2379
+
+
+  # Members and leadership
+
+  etcdctl member list --write-out=table
+
+
+  # Backup and lease
+
+  etcdctl snapshot save backup.db
+
+  etcdctl snapshot status backup.db
+
+  etcdctl lease grant 300
+
+  ```
+
+
+  ## Cluster size guidance
+
+
+  - Odd member counts: 3 or 5.
+
+  - 3 members tolerate 1 failure; 5 tolerate 2.
+
+  - Never run 2 members; split-brain risk.
+
+
+  ## Maintenance commands
+
+
+  ```bash
+
+  # Check alarms (e.g. NOSPACE)
+
+  etcdctl alarm list
+
+  # Defragment a member
+
+  etcdctl defrag --endpoints=https://etcd-1:2379
+
+  ```
+
+
+  ## Best practices
+
+
+  - Always use TLS for production endpoints; verify with --cacert.
+
+  - Snapshot before any etcd upgrade and test restore on staging.
+
+  - Keep keys small; etcd is not a blob store.
+
+  - Use leases for ephemeral registration keys (service discovery).
+
+  - Add `--command-timeout` in scripts so hangs don''t block deploys.
+
+
+  ## Capabilities
+
+
+  ### etcd-ops
+
+  Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl.
+
+
+  **Commands:**
+
+  - `etcdctl put /config/database/url postgres://db:5432/app --endpoints=https://etcd-1:2379`
+
+  - `etcdctl get /config --prefix --keys-only`
+
+  - `etcdctl endpoint health --endpoints=https://etcd-1:2379,https://etcd-2:2379`
+
+  - `etcdctl endpoint status --write-out=table --endpoints=https://etcd-1:2379`
+
+  - `etcdctl member list --write-out=table`
+
+  - `etcdctl snapshot save backup.db`
+
+  - `etcdctl lease grant 300`
+
+
+  **Examples:**
+
+  - etcdctl get /config --prefix --keys-only
+
+  - etcdctl endpoint health --endpoints=https://etcd-1:2379,https://etcd-2:2379
+
+  - etcdctl snapshot save backup.db && etcdctl snapshot status backup.db'
+prompt: Act as Etcd Config and handle the task per the instructions.

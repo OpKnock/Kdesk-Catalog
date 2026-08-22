@@ -1,0 +1,26 @@
+title: Mqtt Paho Java
+description: 'Build Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks, persistence and
+  Maven setup.'
+version: 2.0.0
+instructions: "# Mqtt Paho Java\n\nBuild Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks,\
+  \ persistence and Maven setup.\n\n## Instructions\n\n# Paho MQTT Java\n\nThe Eclipse Paho Java client\
+  \ (org.eclipse.paho.client.mqttv3) is the standard MQTT client for JVM apps.\n\n## What this skill does\n\
+  \n- Configures the Maven dependency\n- Writes MqttClient publish/subscribe code\n- Covers persistent\
+  \ sessions and async callbacks\n\n## When to use\n\n- JVM services publishing events to MQTT\n- IoT\
+  \ backends and edge gateways in Java\n\n## Real commands\n\n```bash\n# Verify the dependency resolves\n\
+  mvn dependency:tree -Dincludes=org.eclipse.paho\n\n# Build and run\nmvn compile\nmvn exec:java -Dexec.mainClass=com.example.Publisher\n\
+  mvn package\n```\n\n## Publish code\n\n```java\nMqttClient client = new MqttClient(\"tcp://localhost:1883\"\
+  , \"java-pub\");\nclient.connect();\nclient.publish(\"sensors/temp\", new MqttMessage(\"21.5\".getBytes()));\n\
+  client.disconnect();\n```\n\n## Callbacks for async\n\n```java\nclient.setCallback(new MqttCallback()\
+  \ {\n    public void messageArrived(String topic, MqttMessage m) { /* handle */ }\n    public void connectionLost(Throwable\
+  \ c) { client.reconnect(); }\n    public void deliveryComplete(IMqttDeliveryToken t) { }\n});\n```\n\
+  \n## pom.xml dependency\n\n```xml\n<dependency>\n  <groupId>org.eclipse.paho</groupId>\n  <artifactId>org.eclipse.paho.client.mqttv3</artifactId>\n\
+  \  <version>1.2.5</version>\n</dependency>\n```\n\n## Best practices\n\n- Use `MqttConnectOptions#setCleanSession(false)`\
+  \ for durable subscriptions\n- Reconnect with exponential backoff in connectionLost\n- Match MQTT QoS\
+  \ with your reliability requirements\n\n## Capabilities\n\n### paho-java-client\nAdd the paho.mqttv3\
+  \ dependency, write synchronous/async clients and manage connections in Maven projects.\n\n**Commands:**\n\
+  - `mvn dependency:tree`\n- `mvn compile`\n- `mvn package`\n- `mvn exec:java -Dexec.mainClass=com.example.Publisher`\n\
+  - `curl -s https://repo1.maven.org/maven2/org/eclipse/paho/org.eclipse.paho.client.mqttv3/maven-metadata.xml`\n\
+  \n**Examples:**\n- mvn dependency:tree -Dincludes=org.eclipse.paho\n- mvn package -DskipTests\n- mvn\
+  \ exec:java -Dexec.mainClass=com.example.Subscriber"
+prompt: Act as Mqtt Paho Java and handle the task per the instructions.

@@ -1,0 +1,33 @@
+title: Infracost
+description: Shows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure before you
+  apply, and diffs cost changes in CI.
+version: 2.0.0
+instructions: "# Infracost\n\nShows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure\
+  \ before you apply, and diffs cost changes in CI.\n\n## Instructions\n\n# Infracost\n\nEstimate infrastructure\
+  \ cost from Terraform/Pulumi code before provisioning.\n\n## When to Use\n\n- PR reviews that change\
+  \ resource sizes or add instances\n- Estimating greenfield environments from IaC\n- Budgeting multi-environment\
+  \ (dev/staging/prod) footprints\n\n## Breakdown\n\n```bash\ninfracost breakdown --path . --format table\n\
+  infracost breakdown --path terraform/env/prod --show-skipped\ninfracost breakdown --path . --usage-file\
+  \ usage.yml\n```\n\n## Usage files\n\nResource prices assume default usage; provide real values for\
+  \ accuracy:\n\n```yaml\naws_instance.web:\n  monthly_network_ingress_gb: 120\n  monthly_network_egress_gb:\
+  \ 30\n  operating_system: linux\n```\n\n```bash\ninfracost breakdown --path . --usage-file usage.yml\
+  \ --sync-usage-file\n```\n\n`--sync-usage-file` writes missing resource keys back so you can fill real\
+  \ numbers.\n\n## Diff in CI\n\n```bash\nterraform plan -out tfplan.json\ninfracost diff --path tfplan.json\n\
+  ```\n\nFor GitHub Actions, render a comment:\n\n```bash\ninfracost output --path cost.json --format\
+  \ github-comment >> $GITHUB_OUTPUT\n```\n\n## Best practices\n\n- Fail the build when monthly delta\
+  \ exceeds the team budget (e.g. $500).\n- Always attach a usage file in review environments; defaults\
+  \ mislead.\n- Compare against a baseline to see only the PR's cost impact.\n- Include both IaC cost\
+  \ and idle/overprovisioned cost in monthly reviews.\n\n## Testing\n\n```bash\ninfracost diff --path\
+  \ . --compare-to .infracost/base.json\n```\n\nKeep `.infracost/base.json` refreshed weekly so diffs\
+  \ stay small.\n\n## Capabilities\n\n### breakdown\nGenerate detailed infrastructure cost estimates.\n\
+  \n**Commands:**\n- `infracost breakdown --path .`\n- `infracost breakdown --path . --format json`\n\
+  - `infracost breakdown --path ./terraform --show-skipped`\n- `infracost breakdown --path . --usage-file\
+  \ usage.yml`\n- `infracost breakdown --path . --sync-usage-file`\n\n**Examples:**\n- infracost breakdown\
+  \ --path . --format table\n- infracost breakdown --path terraform/env/prod --show-skipped\n- infracost\
+  \ breakdown --path . --usage-file usage.yml --out-file cost.json\n\n### diff\nShow cost change between\
+  \ plans in CI pull requests.\n\n**Commands:**\n- `infracost diff --path plan.json`\n- `infracost diff\
+  \ --path . --format json`\n- `infracost diff --path . --compare-to .infracost/base.json`\n- `infracost\
+  \ output --path cost.json --format github-comment`\n- `infracost output --path cost.json --format html\
+  \ --out-file cost.html`\n\n**Examples:**\n- infracost diff --path tfplan.json | tee /tmp/cost-diff.txt\n\
+  - infracost diff --path . --format json > diff.json\n- infracost output --path cost.json --format slack-comment"
+prompt: Act as Infracost and handle the task per the instructions.

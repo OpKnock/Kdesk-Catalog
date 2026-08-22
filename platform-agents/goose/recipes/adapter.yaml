@@ -1,0 +1,28 @@
+title: Adapter
+description: 'Implements the Adapter pattern in TypeScript: converting interfaces between incompatible
+  systems with minimal coupling.'
+version: 2.0.0
+instructions: "# Adapter\n\nImplements the Adapter pattern in TypeScript: converting interfaces between\
+  \ incompatible systems with minimal coupling.\n\n## Instructions\n\n# Adapter Pattern\n\nLet incompatible\
+  \ interfaces collaborate without rewriting them.\n\n## When to Use\n\n- Wrapping a third-party SDK behind\
+  \ your own contract\n- Bridging legacy systems with new APIs\n- Keeping domain code independent of vendor\
+  \ types\n\n## Example (TypeScript)\n\n```typescript\ninterface PaymentGateway {\n  charge(amountCents:\
+  \ number): Promise<string>;\n}\n\nclass StripeSDK {\n  createCharge(opts: { amount: number; currency:\
+  \ string }): Promise<{ id: string }> {\n    return Promise.resolve({ id: 'ch_' + Math.random() });\n\
+  \  }\n}\n\nclass StripeAdapter implements PaymentGateway {\n  constructor(private sdk: StripeSDK) {}\n\
+  \  charge(amountCents: number): Promise<string> {\n    return this.sdk.createCharge({ amount: amountCents,\
+  \ currency: 'usd' }).then(c => c.id);\n  }\n}\n```\n\n## Test\n\n```typescript\nimport { test } from\
+  \ 'node:test';\nimport assert from 'node:assert';\n\ntest('adapter maps currency and amounts', async\
+  \ () => {\n  const gateway: PaymentGateway = new StripeAdapter(new StripeSDK());\n  const id = await\
+  \ gateway.charge(199);\n  assert.match(id, /^ch_/);\n});\n```\n\n```bash\nnpx tsc --strict --outDir\
+  \ dist adapter.ts adapter.test.ts\nnode --test dist/*.test.js\n```\n\n## Variants\n\n- Object adapter:\
+  \ composition (shown above).\n- Class adapter: multiple inheritance (language-limited).\n- Prefer object\
+  \ adapters - testable and flexible.\n\n## Best practices\n\n- Keep the adapter thin: translate, don't\
+  \ add business logic.\n- Program against your interface, never the SDK directly.\n- Unit test the adapter\
+  \ with a fake SDK.\n- Name adapters by source: StripeAdapter, LegacyOrderAdapter.\n\n## Testing\n\n\
+  Test that all interface methods translate correctly, including error paths.\n\n## Capabilities\n\n###\
+  \ typescript\nImplement and test Adapter pattern examples.\n\n**Commands:**\n- `npx tsc --strict --outDir\
+  \ dist adapter.ts`\n- `node --test dist/adapter.test.js`\n- `npm init -y && npm install --save-dev typescript\
+  \ @types/node`\n- `npx tsc --watch`\n- `node dist/main.js`\n\n**Examples:**\n- npx tsc --strict adapter.ts\
+  \ main.ts --outDir dist\n- node --test dist/*.test.js\n- npx tsc --noEmit --strict adapter.ts"
+prompt: Act as Adapter and handle the task per the instructions.

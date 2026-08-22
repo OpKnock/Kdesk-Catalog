@@ -1,0 +1,33 @@
+title: Django
+description: 'Builds full-stack web applications with Django: projects, apps, ORM, admin, auth, migrations,
+  and production deployment.'
+version: 2.0.0
+instructions: "# Django\n\nBuilds full-stack web applications with Django: projects, apps, ORM, admin,\
+  \ auth, migrations, and production deployment.\n\n## Instructions\n\n# Django\n\nHigh-level Python web\
+  \ framework.\n\n## When to Use\n\n- CRUD applications with admin interfaces\n- ORM-heavy data models\
+  \ backed by PostgreSQL/MySQL\n- Built-in auth, sessions, and class-based views\n- Projects needing mature\
+  \ ecosystem (DRF, Celery, channels)\n\n## Commands\n\n```bash\n# New project and app\ndjango-admin startproject\
+  \ mysite .\npython manage.py startapp polls\n\n# Dev server\npython manage.py runserver\n\n# Migrations\n\
+  python manage.py makemigrations\npython manage.py migrate\npython manage.py sqlmigrate polls 0001\n\
+  python manage.py showmigrations\n\n# Shell and superuser\npython manage.py shell\npython manage.py createsuperuser\n\
+  \n# Tests\npython manage.py test\npython manage.py test --keepdb\n\n# Static files and checks\npython\
+  \ manage.py collectstatic\npython manage.py check --deploy\n```\n\n## Model Example\n\n```python\n#\
+  \ polls/models.py\nfrom django.db import models\n\nclass Question(models.Model):\n    question_text\
+  \ = models.CharField(max_length=200)\n    pub_date = models.DateTimeField(auto_now_add=True)\n\n   \
+  \ def __str__(self):\n        return self.question_text\n```\n\n## Best Practices\n\n- Put business\
+  \ logic in models/services, keep views thin\n- Use get_object_or_404 and querysets for safety\n- Run\
+  \ check --deploy before shipping to catch insecure settings\n- Set DEBUG=False, SECURE_SSL_REDIRECT,\
+  \ and proper ALLOWED_HOSTS in prod\n- Use collectstatic with a CDN or S3-backed static storage\n- Prefer\
+  \ select_related/prefetch_related to avoid N+1 queries\n\n## Capabilities\n\n### django-project\nScaffold\
+  \ projects and apps, run the dev server.\n\n**Commands:**\n- `django-admin startproject mysite .`\n\
+  - `python manage.py startapp polls`\n- `python manage.py runserver`\n- `python manage.py check`\n- `python\
+  \ manage.py collectstatic`\n\n**Examples:**\n- django-admin startproject config .\n- python manage.py\
+  \ runserver 0.0.0.0:8000\n- python manage.py check --deploy\n\n### django-orm\nCreate and apply migrations,\
+  \ use the ORM shell.\n\n**Commands:**\n- `python manage.py makemigrations`\n- `python manage.py migrate`\n\
+  - `python manage.py sqlmigrate polls 0001`\n- `python manage.py shell`\n- `python manage.py createsuperuser`\n\
+  \n**Examples:**\n- python manage.py makemigrations polls\n- python manage.py migrate --plan\n- python\
+  \ manage.py sqlmigrate polls 0001_initial\n\n### django-testing\nRun the Django test suite.\n\n**Commands:**\n\
+  - `python manage.py test`\n- `python manage.py test polls.tests.TestQuestion`\n- `python manage.py test\
+  \ --keepdb`\n- `python manage.py test --parallel`\n\n**Examples:**\n- python manage.py test polls --verbosity\
+  \ 2\n- python manage.py test --tag=slow"
+prompt: Act as Django and handle the task per the instructions.

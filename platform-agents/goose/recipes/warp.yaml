@@ -1,0 +1,28 @@
+title: Warp
+description: Creates HTTP APIs with the Warp web framework in Rust. Uses filter-based routing with combinators,
+  adds warp and tokio dependencies via cargo, runs the server, and tests with cargo test and curl.
+version: 2.0.0
+instructions: "# Warp\n\nCreates HTTP APIs with the Warp web framework in Rust. Uses filter-based routing\
+  \ with combinators, adds warp and tokio dependencies via cargo, runs the server, and tests with cargo\
+  \ test and curl.\n\n## Instructions\n\n# Warp (Rust)\n\n## What this skill does\n\nCreate HTTP APIs\
+  \ with the Warp web framework in Rust. Warp is filter-based: you compose routes from path, method, header,\
+  \ and body filters with combinators like `and`, `or`, and `map`.\n\n## When to use\n\n- Writing typed,\
+  \ safe Rust HTTP services\n- Building proxy or middleware-style APIs\n- Learning filter composition\n\
+  \n## Real commands\n\n```bash\n# New binary project\ncargo new my-api\ncd my-api\n\n# Add dependencies\n\
+  cargo add warp tokio\ncargo add tokio --features tokio/full\n\n# Run dev server\ncargo run\n\n# Build\
+  \ release\ncargo build --release\n\n# Test\ncargo test\n\n# Verify\ncurl -s http://localhost:3030/api/health\n\
+  ```\n\n## Minimal main.rs\n\n```rust\nuse warp::Filter;\n\n#[tokio::main]\nasync fn main() {\n    let\
+  \ health = warp::path!(\"api\" / \"health\")\n        .map(|| warp::reply::json(&serde_json::json!({\"\
+  status\": \"ok\"})));\n\n    warp::serve(health).run(([127, 0, 0, 1], 3030)).await;\n}\n```\n\n## JSON\
+  \ POST with body\n\n```rust\nlet create = warp::path!(\"items\")\n    .and(warp::post())\n    .and(warp::body::json())\n\
+  \    .map(|item: Item| { /* store */ warp::reply::with_status(\"created\", StatusCode::CREATED) });\n\
+  ```\n\n## Best practices\n\n- Use `warp::reject` + `warp::recover` for typed error handling\n- Compose\
+  \ small filters instead of one large route\n- Test filters with `warp::test::request()`\n- Enable `tokio/full`\
+  \ for real-world I/O\n\n## Testing\n\n```rust\n#[tokio::test]\nasync fn test_health() {\n    let res\
+  \ = warp::test::request().path(\"/api/health\").reply(&health).await;\n    assert_eq!(res.status(),\
+  \ 200);\n}\n```\n\n## Capabilities\n\n### warp-api\nCreate and run Warp-based Rust HTTP services\n\n\
+  **Commands:**\n- `cargo new my-api`\n- `cargo add warp tokio`\n- `cargo run`\n- `cargo test`\n- `curl\
+  \ -s http://localhost:3030/api/health`\n\n**Examples:**\n- cargo add warp tokio --features tokio/full\n\
+  - cargo build --release\n- curl -s -X POST http://localhost:3030/items -H \"Content-Type: application/json\"\
+  \ -d \"{\\\"name\\\":\\\"widget\"}\""
+prompt: Act as Warp and handle the task per the instructions.

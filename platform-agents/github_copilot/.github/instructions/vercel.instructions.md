@@ -1,0 +1,97 @@
+---
+applyTo: "**/*.json **/*.r **/*.sh"
+---
+
+# Vercel
+
+Deploys frontend and serverless functions with Vercel: CLI deploys, project linking, environment variables, and previews.
+
+## Instructions
+
+# Vercel
+
+Deploy frontend apps and serverless functions.
+
+## When to Use
+
+- Next.js, Vite, and static sites
+- Preview deployments for every PR
+- Serverless functions and edge middleware
+- Global CDN with automatic caching
+
+## Commands
+
+```bash
+# Setup
+npm install -g vercel
+vercel login
+vercel link
+
+# Deploy
+vercel            # preview
+vercel --prod     # production
+vercel --prebuilt # use local build output
+
+# Local dev
+vercel dev
+
+# Env vars
+vercel env add API_KEY production
+vercel env add DATABASE_URL preview
+vercel env ls
+vercel env rm API_KEY production
+
+# Inspect
+vercel ls
+vercel project ls
+```
+
+## vercel.json Example
+
+```json
+{
+  "builds": [{ "src": "api/**/*.js", "use": "@vercel/node" }],
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }]
+}
+```
+
+## Best Practices
+
+- Let PRs create preview deployments automatically
+- Scope env vars to production/preview/development
+- Use vercel pull in CI to sync env before builds
+- Verify redirects and rewrites locally with vercel dev
+- Monitor deployment status with vercel ls
+- Pin the CLI version in CI scripts
+
+## Capabilities
+
+### vercel-cli
+Build, deploy, and manage Vercel projects.
+
+**Commands:**
+- `npm install -g vercel`
+- `vercel login`
+- `vercel`
+- `vercel --prod`
+- `vercel dev`
+
+**Examples:**
+- vercel --prod --yes
+- vercel deploy --prebuilt
+- vercel --prod --name myapp
+
+### vercel-config
+Manage environment variables and project settings.
+
+**Commands:**
+- `vercel env add API_KEY production`
+- `vercel env ls`
+- `vercel env rm API_KEY production`
+- `vercel link`
+- `vercel ls`
+
+**Examples:**
+- vercel env add DATABASE_URL preview
+- vercel pull --environment=production
+- vercel project ls

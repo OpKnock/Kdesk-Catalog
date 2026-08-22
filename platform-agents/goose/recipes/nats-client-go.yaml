@@ -1,0 +1,23 @@
+title: Nats Client Go
+description: 'NATS clients in Go with nats.go: connect options, publish/subscribe, request-reply, and
+  connection events.'
+version: 2.0.0
+instructions: "# Nats Client Go\n\nNATS clients in Go with nats.go: connect options, publish/subscribe,\
+  \ request-reply, and connection events.\n\n## Instructions\n\n# NATS Go Client\n\nnats.go is the official\
+  \ Go client for NATS, covering core pub/sub, JetStream and KV.\n\n## What this skill does\n\n- Connects\
+  \ to NATS with options (reconnect, credentials)\n- Publishes/subscribes and does request-reply\n- Uses\
+  \ queue groups for worker distribution\n\n## When to use\n\n- Go microservices with NATS messaging\n\
+  - Replacing HTTP polling with NATS request-reply\n\n## Real commands\n\n```bash\n# Dependency\n go get\
+  \ github.com/nats-io/nats.go\ngo mod tidy\n\n# Run and verify\n go run main.go\ngo vet ./...\ngo test\
+  \ ./...\n```\n\n## Publish / subscribe\n\n```go\nnc, _ := nats.Connect(\"nats://localhost:4222\")\n\
+  nc.Publish(\"orders.created\", []byte(`{\"id\":1}`))\nsub, _ := nc.Subscribe(\"orders.*\", func(m *nats.Msg)\
+  \ {\n    fmt.Printf(\"received: %s\\n\", m.Data)\n})\nsub.Unsubscribe()\n```\n\n## Request-reply\n\n\
+  ```go\nresp, err := nc.Request(\"service.echo\", []byte(\"ping\"), 2*time.Second)\nnc.Subscribe(\"service.echo\"\
+  , func(m *nats.Msg) { m.Respond([]byte(\"pong\")) })\n```\n\n## Queue group\n\n```go\nnc.QueueSubscribe(\"\
+  tasks\", \"workers\", handler)\n```\n\n## Best practices\n\n- Always check errors from Publish/Subscribe\n\
+  - Set `nats.MaxReconnects(-1)` for resilient services\n- Use request-reply timeouts matching SLA\n\n\
+  ## Capabilities\n\n### nats-go-client\nWrite Go NATS clients: connect, pub/sub, request/reply with the\
+  \ nats.go library.\n\n**Commands:**\n- `go get github.com/nats-io/nats.go`\n- `go mod tidy`\n- `go run\
+  \ main.go`\n- `go vet ./...`\n- `go test ./...`\n\n**Examples:**\n- go run main.go\n- go test -run TestRequestReply\
+  \ -v ./...\n- go get github.com/nats-io/nats.go@latest"
+prompt: Act as Nats Client Go and handle the task per the instructions.

@@ -1,0 +1,40 @@
+title: Lightstep Observability
+description: 'Send and query traces and metrics with Lightstep: OpenTelemetry collector configuration,
+  OTLP ingestion, and Lightstep API queries.'
+version: 2.0.0
+instructions: "# Lightstep Observability\n\nSend and query traces and metrics with Lightstep: OpenTelemetry\
+  \ collector configuration, OTLP ingestion, and Lightstep API queries.\n\n## Instructions\n\n# Lightstep\
+  \ Observability\n\nInstrument services with OpenTelemetry and send telemetry to Lightstep.\n\n## What\
+  \ this skill does\n\n- Runs the OTel Collector exporting to Lightstep.\n- Emits OTLP traces/metrics\
+  \ from apps and the CLI.\n- Queries traces and snapshots via the public API.\n\n## When to use\n\n-\
+  \ Distributed tracing across microservices.\n- SLO monitoring on trace-based latency.\n- Onboarding\
+  \ new services to Lightstep.\n\n## Real commands\n\n```bash\n# Run the collector\notelcol-contrib --config\
+  \ otelcol.yaml\n\n# Docker collector with Lightstep export\ndocker run -p 4317:4317 -p 4318:4318 \\\n\
+  \  -e OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \\\n  -e LS_ACCESS_TOKEN=$LS_TOKEN \\\n  otel/opentelemetry-collector-contrib:latest\n\
+  \n# Emit a trace around a command\notel-cli exec --service checkout --name 'postgres.query' \\\n  --\
+  \ curl -s http://localhost:8080/api\n\n# Push protobuf OTLP directly\ncurl -s -X POST http://localhost:4318/v1/traces\
+  \ \\\n  -H 'Content-Type: application/x-protobuf' --data-binary @traces.pb\n\n# Query snapshots (project\
+  \ SLOs)\ncurl -s -H \"Authorization: Bearer $LS_TOKEN\" \\\n  https://api.lightstep.com/public/v0.2/projects/{project}/snapshots\n\
+  \n# Query traces for an operation\ncurl -s -H \"Authorization: Bearer $LS_TOKEN\" \\\n  \"https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.checkout\"\
+  \n```\n\n## otelcol.yaml example\n\n```yaml\nreceivers:\n  otlp:\n    protocols:\n      grpc:\n    \
+  \  http:\nexporters:\n  otlp/lightstep:\n    endpoint: ingest.lightstep.com:443\n    headers:\n    \
+  \  \"lightstep-access-token\": ${LS_ACCESS_TOKEN}\nservice:\n  pipelines:\n    traces:\n      receivers:\
+  \ [otlp]\n      exporters: [otlp/lightstep]\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:4318/metrics\
+  \   # collector is alive\n```\n\n## Best practices\n\n- Send access tokens via env var, never hard-coded\
+  \ configs.\n- Use the same service.name across hosts so traces join correctly.\n- Configure tail sampling\
+  \ for high-volume services to control cost.\n\n## Capabilities\n\n### otel-ingest\nRun the OpenTelemetry\
+  \ Collector and emit OTLP telemetry.\n\n**Commands:**\n- `otelcol-contrib --config otelcol.yaml`\n-\
+  \ `docker run -p 4317:4317 -p 4318:4318 -e OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 -e LS_ACCESS_TOKEN=$LS_TOKEN\
+  \ otel/opentelemetry-collector-contrib:latest`\n- `curl -s -X POST http://localhost:4318/v1/traces -H\
+  \ 'Content-Type: application/x-protobuf' --data-binary @traces.pb`\n- `otel-cli exec --service checkout\
+  \ --name 'postgres.query' -- curl -s http://localhost:8080/api`\n\n**Examples:**\n- otelcol-contrib\
+  \ --config otelcol.yaml\n- curl -s -X POST http://localhost:4318/v1/traces -H 'Content-Type: application/x-protobuf'\
+  \ --data-binary @traces.pb\n- otel-cli exec --service checkout --name 'postgres.query' -- curl -s http://localhost:8080/api\n\
+  \n### lightstep-api\nQuery Lightstep via the public API and the built-in CLI/curl.\n\n**Commands:**\n\
+  - `curl -s -H \"Authorization: Bearer $LS_TOKEN\" https://api.lightstep.com/public/v0.2/projects/{project}/snapshots`\n\
+  - `curl -s -H \"Authorization: Bearer $LS_TOKEN\" \"https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.checkout\"\
+  `\n- `curl -s http://localhost:4318/metrics`\n- `curl -s -X POST http://localhost:4318/v1/metrics -H\
+  \ 'Content-Type: application/x-protobuf' --data-binary @metrics.pb`\n\n**Examples:**\n- curl -s -H \"\
+  Authorization: Bearer $LS_TOKEN\" https://api.lightstep.com/public/v0.2/projects/{project}/snapshots\n\
+  - curl -s http://localhost:4318/metrics\n- curl -s -H \"Authorization: Bearer $LS_TOKEN\" \"https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.checkout\""
+prompt: Act as Lightstep Observability and handle the task per the instructions.

@@ -1,0 +1,26 @@
+title: tfsec
+description: Scans Terraform configurations with tfsec's focused security checks, severity gating, and
+  SARIF/JUnit output.
+version: 2.0.0
+instructions: "# tfsec\n\nScans Terraform configurations with tfsec's focused security checks, severity\
+  \ gating, and SARIF/JUnit output.\n\n## Instructions\n\n# tfsec\n\nTerraform-focused static security\
+  \ scanning.\n\n## What This Skill Does\n\n- Scans Terraform and Terragrunt for known bad patterns\n\
+  - Filters by severity and excludes noisy checks\n- Emits SARIF, JUnit, JSON, CSV, and HTML reports\n\
+  - Supports custom config for team policies\n\n## When to Use\n\n- Terraform module CI gates\n- Pre-apply\
+  \ security review of plan code\n- Auditing existing infrastructure repos\n\n## Real Commands\n\n```bash\n\
+  # Basic scans\ntfsec .\ntfsec ./modules\n\n# Severity and exclusions\ntfsec . --minimum-severity HIGH\n\
+  tfsec . --exclude-check AWS089,AWS096\n\n# Reports\ntfsec . --format sarif --out scan.sarif\ntfsec .\
+  \ --format json --out results.json\ntfsec . --no-colour --format junit --out junit.xml\n\n# Custom config\n\
+  tfsec . --config-file tfsec.yml\n```\n\n## tfsec.yml\n\n```yaml\nminimum_severity: HIGH\nexclude:\n\
+  \  - check: AWS089\n    paths:\n      - modules/legacy/**\n```\n\n## Best Practices\n\n- Gate CI on\
+  \ HIGH+; keep CRITICAL as hard fail\n- Exclude checks per path, not globally\n- Pair with plan-time\
+  \ tools for context-dependent findings\n- Use SARIF for GitHub code scanning annotations\n- Keep tfsec.yml\
+  \ in the repo for team consistency\n\n## Capabilities\n\n### tfsec-scan\nScan directories and files\
+  \ with severity and check filters.\n\n**Commands:**\n- `tfsec .`\n- `tfsec ./modules`\n- `tfsec main.tf`\n\
+  - `tfsec . --minimum-severity CRITICAL`\n- `tfsec . --exclude-check AWS089`\n\n**Examples:**\n- tfsec\
+  \ .\n- tfsec ./modules --minimum-severity HIGH\n- tfsec . --exclude-check AWS089,AWS096\n\n### reporting-and-config\n\
+  Emit CI reports and manage custom configuration.\n\n**Commands:**\n- `tfsec . --format sarif --out scan.sarif`\n\
+  - `tfsec . --format json --out results.json`\n- `tfsec . --config-file tfsec.yml`\n- `tfsec . --concise-output`\n\
+  - `tfsec . --no-colour --format junit --out junit.xml`\n\n**Examples:**\n- tfsec . --format sarif --out\
+  \ scan.sarif\n- tfsec . --config-file tfsec.yml\n- tfsec . --no-colour --format junit --out junit.xml"
+prompt: Act as tfsec and handle the task per the instructions.

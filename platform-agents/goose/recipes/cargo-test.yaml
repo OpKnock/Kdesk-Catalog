@@ -1,0 +1,30 @@
+title: cargo-test
+description: Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and
+  race condition checks.
+version: 2.0.0
+instructions: "# cargo-test\n\nRuns Rust test suites with cargo test, nextest, and coverage tools, including\
+  \ doctests and race condition checks.\n\n## Instructions\n\n# cargo test\n\nTest Rust code with unit,\
+  \ integration, and doc tests.\n\n## What This Skill Does\n\n- Runs the full test matrix (unit, integration,\
+  \ docs)\n- Filters tests by name and shows captured output\n- Measures coverage with tarpaulin or llvm-cov\n\
+  - Speeds up CI with nextest sharding\n\n## When to Use\n\n- Verifying changes before merge\n- Debugging\
+  \ a single failing test\n- Enforcing coverage thresholds\n\n## Real Commands\n\n```bash\n# Basics\n\
+  cargo test\ncargo test my_module::test_name\ncargo test -- --nocapture\ncargo test --release\ncargo\
+  \ test --doc\n\n# Nextest\ncargo nextest run\ncargo nextest run --partition count:2/2\n\n# Coverage\n\
+  cargo tarpaulin --out html\ncargo llvm-cov --open\n\n# Quality\ncargo clippy --all-targets -- -D warnings\n\
+  ```\n\n## Sample Test\n\n```rust\n#[cfg(test)]\nmod tests {\n    #[test]\n    fn parses_numbers() {\n\
+  \        assert_eq!(\"42\".parse::<u32>().unwrap(), 42);\n    }\n\n    #[test]\n    fn rejects_empty()\
+  \ {\n        assert!(\"\".parse::<u32>().is_err());\n    }\n}\n```\n\n## Best Practices\n\n- Use #[test]\
+  \ + assert_eq!/assert! for unit tests\n- Put integration tests in tests/ for public API coverage\n-\
+  \ Run doctests in CI; they rot silently\n- Gate coverage at 80%+ with tarpaulin thresholds\n- Use nextest\
+  \ for fast feedback on large workspaces\n\n## Capabilities\n\n### cargo-testing\nRun unit, integration,\
+  \ and doc tests.\n\n**Commands:**\n- `cargo test`\n- `cargo test my_module::test_name`\n- `cargo test\
+  \ -- --nocapture`\n- `cargo test --release`\n- `cargo test --doc`\n\n**Examples:**\n- cargo test\n-\
+  \ cargo test my_module::test_name -- --nocapture\n- cargo test -- --test-threads=8\n\n### nextest-and-coverage\n\
+  Faster parallel testing and coverage measurement.\n\n**Commands:**\n- `cargo nextest run`\n- `cargo\
+  \ nextest run --partition count:2/2`\n- `cargo tarpaulin --out html`\n- `cargo llvm-cov --open`\n- `cargo\
+  \ nextest run --fail-fast`\n\n**Examples:**\n- cargo nextest run\n- cargo tarpaulin --out html\n- cargo\
+  \ llvm-cov --open\n\n### concurrency-and-vet\nRace detection and lints for tests.\n\n**Commands:**\n\
+  - `cargo test -- --test-threads=1`\n- `RUSTFLAGS='-C target-feature=+crt-static' cargo test`\n- `cargo\
+  \ clippy --all-targets -- -D warnings`\n- `cargo test --features integration`\n\n**Examples:**\n- cargo\
+  \ test -- --test-threads=1\n- cargo clippy --all-targets -- -D warnings\n- cargo test --features integration"
+prompt: Act as cargo-test and handle the task per the instructions.

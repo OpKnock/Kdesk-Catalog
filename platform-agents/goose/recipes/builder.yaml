@@ -1,0 +1,28 @@
+title: Builder
+description: 'Implements the Builder pattern in Python: constructing complex objects step-by-step with
+  fluent APIs.'
+version: 2.0.0
+instructions: "# Builder\n\nImplements the Builder pattern in Python: constructing complex objects step-by-step\
+  \ with fluent APIs.\n\n## Instructions\n\n# Builder Pattern\n\nConstruct complex objects step by step.\n\
+  \n## When to Use\n\n- Objects with many optional parameters\n- Immutable value objects assembled from\
+  \ parts\n- Reducing constructor overloads\n\n## Example (Python)\n\n```python\nfrom dataclasses import\
+  \ dataclass\n\n@dataclass(frozen=True)\nclass Order:\n    sku: str\n    qty: int\n    priority: str\
+  \ = \"normal\"\n    note: str = \"\"\n\nclass OrderBuilder:\n    def __init__(self) -> None:\n     \
+  \   self._sku = \"\"\n        self._qty = 1\n        self._priority = \"normal\"\n        self._note\
+  \ = \"\"\n\n    def with_sku(self, sku: str) -> \"OrderBuilder\":\n        self._sku = sku\n       \
+  \ return self\n\n    def with_qty(self, qty: int) -> \"OrderBuilder\":\n        self._qty = qty\n  \
+  \      return self\n\n    def with_priority(self, priority: str) -> \"OrderBuilder\":\n        self._priority\
+  \ = priority\n        return self\n\n    def build(self) -> Order:\n        return Order(self._sku,\
+  \ self._qty, self._priority, self._note)\n```\n\n## Test\n\n```python\nfrom builder import OrderBuilder\n\
+  \ndef test_builder_defaults():\n    order = OrderBuilder().with_sku(\"A1\").with_qty(2).build()\n  \
+  \  assert order.sku == \"A1\"\n    assert order.qty == 2\n    assert order.priority == \"normal\"\n\
+  ```\n\n```bash\npython -m pytest tests/ -v\n```\n\n## Best practices\n\n- Return self from setters for\
+  \ fluent chaining.\n- Validate in build() - fail fast on missing requireds.\n- Keep the builder mutable,\
+  \ the product immutable.\n- Consider a Director only for standard configurations.\n\n## Testing\n\n\
+  Cover defaults, overrides, and validation errors.\n\n## Capabilities\n\n### python\nImplement and test\
+  \ Builder pattern examples.\n\n**Commands:**\n- `python -m venv .venv && .venv/Scripts/activate`\n-\
+  \ `python -m pip install pytest`\n- `python -m pytest tests/ -v`\n- `python -m pytest tests/test_builder.py\
+  \ -k price`\n- `python -m compileall builder.py`\n\n**Examples:**\n- python -m pytest tests/ -q\n- python\
+  \ -m pytest tests/test_builder.py --maxfail=1\n- python -c 'from builder import OrderBuilder; print(OrderBuilder().with_sku(\"\
+  A1\").with_qty(2).build())'"
+prompt: Act as Builder and handle the task per the instructions.

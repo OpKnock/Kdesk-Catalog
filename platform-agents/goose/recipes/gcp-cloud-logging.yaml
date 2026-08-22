@@ -1,0 +1,32 @@
+title: Gcp Cloud Logging
+description: 'GCP Cloud Logging operations: query logs with gcloud logging read, create log-based metrics,
+  and export logs to storage sinks.'
+version: 2.0.0
+instructions: "# Gcp Cloud Logging\n\nGCP Cloud Logging operations: query logs with gcloud logging read,\
+  \ create log-based metrics, and export logs to storage sinks.\n\n## Instructions\n\n# GCP Cloud Logging\n\
+  \n## What this skill does\n\nCloud Logging aggregates logs from GCP services. gcloud logging read filters\
+  \ and returns entries; metrics turn filters into counters for dashboards; sinks export to Storage/BigQuery.\n\
+  \n## When to use\n\n- Debugging errors across Cloud Run/Functions/VM services\n- Building error-rate\
+  \ metrics for SLOs\n- Archiving logs for compliance\n\n## Real commands\n\n```bash\n# Read recent errors\n\
+  \ gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'\n\
+  \n# Recent request logs\n gcloud logging read 'logName=projects/my-project/logs/requests' --freshness=1d\
+  \ --limit=20\n\n# Stream live\n gcloud logging tail 'severity=ERROR'\n\n# Log-based metric\n gcloud\
+  \ logging metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND httpRequest.status>=500'\n\
+  \n# Export sink\n gcloud logging sinks create archive-errors storage.googleapis.com --log-filter='severity>=ERROR'\n\
+  ```\n\n## Structured logging (Python example)\n\n```python\nimport json, sys\nprint(json.dumps({\"message\"\
+  : \"order failed\", \"severity\": \"ERROR\", \"orderId\": oid}))\n```\n\n## Testing\n\n```bash\n# Trigger\
+  \ an error, then confirm it is searchable\n gcloud logging read 'jsonPayload.orderId=\"1\"' --freshness=10m\
+  \ --limit=5\n```\n\n## Best practices\n\n- Emit structured JSON logs so filters can target fields.\n\
+  - Add `trace` fields to correlate with Cloud Trace.\n- Use log-based metrics for SLO counters instead\
+  \ of scraping logs.\n- Set sink filters tight; archiving everything costs storage.\n- Prefer `--format='table(...)'`\
+  \ for human-readable triage output.\n\n## Capabilities\n\n### gcp-logging\nRead logs, create log-based\
+  \ metrics, and manage exports.\n\n**Commands:**\n- `gcloud logging read 'resource.type=cloud_run_revision\
+  \ AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'`\n- `gcloud\
+  \ logging read 'logName=projects/my-project/logs/requests' --freshness=1d --limit=20`\n- `gcloud logging\
+  \ metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND httpRequest.status>=500'`\n\
+  - `gcloud logging metrics describe 5xx-errors`\n- `gcloud logging sinks create archive-errors storage.googleapis.com\
+  \ --log-filter='severity>=ERROR'`\n- `gcloud logging tail 'severity=ERROR'`\n\n**Examples:**\n- gcloud\
+  \ logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'\n\
+  - gcloud logging metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND\
+  \ httpRequest.status>=500'\n- gcloud logging tail 'severity=ERROR'"
+prompt: Act as Gcp Cloud Logging and handle the task per the instructions.

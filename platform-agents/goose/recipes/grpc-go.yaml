@@ -1,0 +1,33 @@
+title: Grpc Go
+description: 'gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors,
+  streaming RPCs, and vet-clean service wiring.'
+version: 2.0.0
+instructions: "# Grpc Go\n\ngRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels,\
+  \ interceptors, streaming RPCs, and vet-clean service wiring.\n\n## Instructions\n\n# gRPC Go\n\nWrite\
+  \ and run gRPC services in Go using protoc-gen-go-grpc and google.golang.org/grpc.\n\n## What this skill\
+  \ does\n\n- Generates Go gRPC stubs from proto files.\n- Implements unary, server-streaming, client-streaming,\
+  \ and bidi-streaming RPCs.\n- Wires interceptors for logging, auth, and metrics.\n- Runs and debugs\
+  \ servers with grpcurl and reflection.\n\n## When to use\n\n- Building a Go microservice with typed\
+  \ RPC contracts.\n- Adding streaming endpoints (logs, live data, uploads).\n- Writing Go clients for\
+  \ an existing gRPC API.\n\n## Real commands\n\n```bash\n# Install generators\ngo install google.golang.org/protobuf/cmd/protoc-gen-go@latest\n\
+  go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest\n\n# Generate stubs (paths=source_relative\
+  \ keeps package layout)\nprotoc -I . --go_out=paths=source_relative:. --go-grpc_out=paths=source_relative:.\
+  \ helloworld.proto\n\n# Build and run\ngo build ./...\ngo run ./server &\ngo run ./client\n\n# Debug\
+  \ with reflection\ngrpcurl -plaintext localhost:50051 list\n```\n\n## Server skeleton\n\n```go\nlis,\
+  \ _ := net.Listen(\"tcp\", \":50051\")\ns := grpc.NewServer(\n  grpc.ChainUnaryInterceptor(logInterceptor,\
+  \ authInterceptor),\n)\npb.RegisterGreeterServer(s, &server{})\nreflection.Register(s)\ns.Serve(lis)\n\
+  ```\n\n## Client skeleton\n\n```go\nconn, _ := grpc.NewClient(\"localhost:50051\", grpc.WithTransportCredentials(insecure.NewCredentials()))\n\
+  defer conn.Close()\nclient := pb.NewGreeterClient(conn)\nresp, err := client.SayHello(ctx, &pb.HelloRequest{Name:\
+  \ \"Ada\"})\n```\n\n## Testing\n\n```bash\ngo test ./... -race\ngo run ./server &\ngrpcurl -plaintext\
+  \ -d '{\"name\":\"Ada\"}' localhost:50051 helloworld.Greeter/SayHello\n```\n\n## Best practices\n\n\
+  - Use `grpc.NewClient` (not deprecated grpc.Dial) with `WithTransportCredentials`.\n- Set per-call deadlines\
+  \ with context.WithTimeout on the client side.\n- Return `status.Error(codes.X, msg)` instead of plain\
+  \ errors.\n- Register reflection in dev so grpcurl can discover services.\n\n## Example exchange\n\n\
+  ```\nUser: My Go client hangs calling the Greeter.\nAgent: Add a timeout context and check the server\
+  \ address:\n       ctx, cancel := context.WithTimeout(ctx, 5*time.Second)\n       resp, err := client.SayHello(ctx,\
+  \ &pb.HelloRequest{Name: \"Ada\"})\n```\n\n## Capabilities\n\n### go-grpc-server\nBuild and run Go gRPC\
+  \ servers with registration, interceptors, and reflection.\n\n**Commands:**\n- `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest`\n\
+  - `go get google.golang.org/grpc@latest`\n- `protoc -I . --go_out=. --go-grpc_out=. helloworld.proto`\n\
+  - `go run ./server`\n- `go build ./...`\n\n**Examples:**\n- go run ./server & grpcurl -plaintext localhost:50051\
+  \ list\n- go test ./...\n- go vet ./..."
+prompt: Act as Grpc Go and handle the task per the instructions.

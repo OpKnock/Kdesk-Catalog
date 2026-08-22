@@ -1,0 +1,24 @@
+title: api-schema-specialist
+description: 'Reviews and hardens API schemas with spectral: OpenAPI rulesets, custom rules, JSON output
+  for CI, and schema quality gating.'
+version: 2.0.0
+instructions: "# api-schema-specialist\n\nReviews and hardens API schemas with spectral: OpenAPI rulesets,\
+  \ custom rules, JSON output for CI, and schema quality gating.\n\n## Instructions\n\n# API Schema Specialist\n\
+  \nSchema linting and review with spectral.\n\n## What This Skill Does\n- Lints OpenAPI contracts for\
+  \ consistency\n- Enforces custom schema rules\n- Exports reports for CI gating\n\n## When to Use\n-\
+  \ Reviewing schema PRs\n- Enforcing API design standards\n- Auditing legacy specs\n\n## Real Commands\n\
+  \n```bash\nnpx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml\nnpx @stoplight/spectral-cli\
+  \ lint openapi.yaml -f json -o report.json\nnpx @stoplight/spectral-cli lint openapi.yaml --fail-severity=warn\n\
+  ```\n\n## Custom Rule\n\n```yaml\nrules:\n  schemas-need-description:\n    given: $.components.schemas[*]\n\
+  \    severity: error\n    then:\n      field: description\n      function: truthy\n```\n\n## Testing\n\
+  - Fail builds on error-severity violations\n- Review JSON reports for triage\n- Add rules incrementally\n\
+  \n## Best Practices\n- Extend a base ruleset before adding custom rules\n- Document rule intent in comments\n\
+  - Run lint in pre-merge checks\n\n## Capabilities\n\n### spectral-linting\nLint OpenAPI schemas with\
+  \ spectral\n\n**Commands:**\n- `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml`\n- `npx\
+  \ @stoplight/spectral-cli lint openapi.yaml -f json -o report.json`\n- `npx @stoplight/spectral-cli\
+  \ lint openapi.yaml -f junit -o junit.xml`\n- `npx @stoplight/spectral-cli lint openapi.yaml --fail-severity=warn`\n\
+  \n**Examples:**\n- -f json exports machine-readable results\n- --fail-severity=warn makes warnings fail\
+  \ CI\n- -f junit integrates with test reports\n\n### schema-review\nEnforce schema quality rules\n\n\
+  **Commands:**\n- `npx @stoplight/spectral-cli lint openapi.yaml -r quality-rules.yaml`\n- `curl -s http://localhost:3000/openapi.json\
+  \ -o openapi.json`\n- `npx @stoplight/spectral-cli lint openapi.json -r .spectral.yml`"
+prompt: Act as api-schema-specialist and handle the task per the instructions.

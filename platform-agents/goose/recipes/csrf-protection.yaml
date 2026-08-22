@@ -1,0 +1,43 @@
+title: Csrf Protection
+description: Prevents cross-site request forgery on state-changing endpoints via double-submit cookie
+  patterns, SameSite cookies, and curl-based validation.
+version: 2.0.0
+instructions: "# Csrf Protection\n\nPrevents cross-site request forgery on state-changing endpoints via\
+  \ double-submit cookie patterns, SameSite cookies, and curl-based validation.\n\n## Instructions\n\n\
+  # CSRF Protection\n\nPrevent cross-site request forgery on state-changing endpoints.\n\n## When to Use\n\
+  \n- Cookie-based authentication on web APIs\n- Any mutating endpoint reachable from a browser\n- Defense-in-depth\
+  \ alongside SameSite cookies\n\n## Strategy\n\nDouble-submit cookie: server sets a CSRF cookie, client\
+  \ echoes it in a header, server compares both. SameSite=strict/lax cookies block most CSRF automatically.\n\
+  \n## Express with csrf-csrf\n\n```bash\nnpm install csrf-csrf\n```\n\n```js\nconst { doubleCsrf } =\
+  \ require('csrf-csrf');\nconst { invalidCsrfTokenError, generateToken, validateRequest } = doubleCsrf({\n\
+  \  getSecret: () => process.env.CSRF_SECRET,\n  cookieName: 'csrf-token',\n  cookieOptions: { sameSite:\
+  \ 'lax', secure: true, httpOnly: true },\n});\n\napp.get('/csrf-token', (req, res) => {\n  res.json({\
+  \ csrfToken: generateToken(res, req) });\n});\n\napp.post('/transfer', validateRequest, (req, res) =>\
+  \ {\n  // state change only runs with a valid token\n});\n```\n\n## Test with curl\n\n```bash\ncurl\
+  \ -c cookies.txt -X GET http://localhost:8080/csrf-token\nTOKEN=$(grep csrf-token cookies.txt | awk\
+  \ '{print $NF}')\ncurl -b cookies.txt -c cookies.txt -X POST \\\n  -H \"X-CSRF-Token: $TOKEN\" \\\n\
+  \  -d '{\"amount\":10}' http://localhost:8080/transfer\n\n# Without the token this must fail\ncurl -s\
+  \ -b cookies.txt -X POST http://localhost:8080/transfer -o /dev/null -w \"%{http_code}\\n\"\n```\n\n\
+  ## Verify Cookies\n\n```bash\ncurl -s -D - -o /dev/null -X GET http://localhost:8080/health | grep -i\
+  \ 'set-cookie\\|samesite'\n```\n\n## Testing\n\n```bash\n# Tokenless POST must be rejected (403/419)\n\
+  curl -s -b cookies.txt -X POST http://localhost:8080/transfer -o /dev/null -w \"%{http_code}\\ n\"\n\
+  # Valid token must pass\ncurl -b cookies.txt -c cookies.txt -X POST -H \"X-CSRF-Token: $TOKEN\" http://localhost:8080/transfer\
+  \ -o /dev/null -w \"%{http_code}\\n\"\n```\n\n## Best Practices\n\n- Use double-submit or synchronizer\
+  \ token patterns\n- Rotate tokens on login and logout\n- Set SameSite=strict or lax\n- Use secure +\
+  \ httpOnly cookies\n- Never accept tokens from query strings\n- Combine with origin checks (Sec-Fetch-Site)\n\
+  - Test the tokenless request fails every time\n\n## Capabilities\n\n### csrf-tokens\nIssue CSRF tokens\
+  \ and verify double-submit cookie patterns with curl\n\n**Commands:**\n- `curl -c cookies.txt -X GET\
+  \ http://localhost:8080/csrf-token`\n- `curl -b cookies.txt -c cookies.txt -X POST -H \"X-CSRF-Token:\
+  \ $TOKEN\" http://localhost:8080/submit`\n- `curl -b cookies.txt -c cookies.txt -X POST -H \"Content-Type:\
+  \ application/json\" -H \"X-CSRF-Token: $TOKEN\" -d '{\"amount\":10}' http://localhost:8080/transfer`\n\
+  - `curl -s -b cookies.txt -X POST http://localhost:8080/transfer -o /dev/null -w \"%{http_code}\\n\"\
+  `\n\n**Examples:**\n- curl -c cookies.txt -X GET http://localhost:8080/csrf-token && TOKEN=$(grep csrf\
+  \ cookies.txt | awk '{print $NF}') && curl -b cookies.txt -X POST -H \"X-CSRF-Token: $TOKEN\" http://localhost:8080/submit\n\
+  - curl -s -b cookies.txt -X POST http://localhost:8080/transfer -o /dev/null -w \"%{http_code}\\n\"\n\
+  - curl -c cookies.txt -X GET http://localhost:8080/csrf-token | jq '.csrfToken'\n\n### csrf-middleware\n\
+  Configure CSRF protection middleware and SameSite cookies\n\n**Commands:**\n- `npm install csrf-csrf`\n\
+  - `node server.js`\n- `curl -s -D - -o /dev/null -X GET http://localhost:8080/health | grep -i set-cookie`\n\
+  - `curl -s -D - -o /dev/null -X GET http://localhost:8080/health | grep -i 'samesite'`\n\n**Examples:**\n\
+  - npm install csrf-csrf && node server.js\n- curl -s -D - -o /dev/null -X GET http://localhost:8080/health\
+  \ | grep -i set-cookie\n- curl -s -D - -o /dev/null -X GET http://localhost:8080/health | grep -i samesite"
+prompt: Act as Csrf Protection and handle the task per the instructions.

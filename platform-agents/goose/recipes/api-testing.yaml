@@ -1,0 +1,40 @@
+title: api-testing
+description: Tests REST APIs with curl, httpie, and Newman, covering auth, contracts, and response validation
+  from the terminal.
+version: 2.0.0
+instructions: "# api-testing\n\nTests REST APIs with curl, httpie, and Newman, covering auth, contracts,\
+  \ and response validation from the terminal.\n\n## Instructions\n\n# API Testing\n\nTest REST APIs quickly\
+  \ from the terminal with curl, httpie, and Newman.\n\n## What This Skill Does\n\n- Exercises endpoints\
+  \ with status and body assertions\n- Verifies auth, headers, and contract fields\n- Runs Postman collections\
+  \ in CI with data files\n- Generates HTML/CLI reports\n\n## When to Use\n\n- Quick smoke tests of a\
+  \ new endpoint\n- Contract verification before merge\n- CI regression suites for APIs\n\n## Real Commands\n\
+  \n```bash\n# curl\ncurl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users\ncurl -s\
+  \ -X POST https://api.example.com/v1/users -H 'Content-Type: application/json' -d '{\"name\":\"alice\"\
+  }'\ncurl -s https://api.example.com/v1/users | jq -e '.data | length > 0'\n\n# httpie\nhttp GET https://api.example.com/v1/users\n\
+  http POST https://api.example.com/v1/users name=alice role=admin\nhttp -h GET https://api.example.com/v1/users\n\
+  \n# Newman\nnewman run collection.json -e staging.postman_environment.json\nnewman run collection.json\
+  \ -d data.csv -r html,cli --reporter-html-export report.html\n```\n\n## Assertion Pattern (Newman script)\n\
+  \n```js\npm.test(\"returns 201 and user id\", () => {\n  pm.response.to.have.status(201);\n  const body\
+  \ = pm.response.json();\n  pm.expect(body.data.id).to.be.a('string');\n});\n```\n\n## Best Practices\n\
+  \n- Assert status AND schema, not just 200\n- Keep tests independent; create resources in setup scripts\n\
+  - Use environment variables for base URLs and tokens\n- Run collections with data files for data-driven\
+  \ cases\n- Fail CI on HTTP 5xx or schema drift\n\n## Capabilities\n\n### curl-testing\nCraft and assert\
+  \ on API requests with curl.\n\n**Commands:**\n- `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/users`\n\
+  - `curl -s -X POST http://localhost:8080/v1/users -H 'Content-Type: application/json' -d '{\"name\"\
+  :\"alice\"}'`\n- `curl -s http://localhost:8080/v1/users | jq -e '.data | length > 0'`\n- `curl -sI\
+  \ http://localhost:8080/v1/health`\n- `curl -s -u user:pass http://localhost:8080/v1/users`\n\n**Examples:**\n\
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/users\n- curl -s -X POST http://localhost:8080/v1/users\
+  \ -H 'Content-Type: application/json' -d '{\"name\":\"alice\"}' | jq .\n- curl -s http://localhost:8080/v1/users\
+  \ | jq -e '.data | length > 0'\n\n### httpie-testing\nHuman-friendly API testing with httpie.\n\n**Commands:**\n\
+  - `http GET http://localhost:8080/v1/users`\n- `http POST http://localhost:8080/v1/users name=alice\
+  \ role=admin`\n- `http --json POST http://localhost:8080/v1/users <<< '{\"name\":\"bob\"}'`\n- `http\
+  \ -h GET http://localhost:8080/v1/users`\n- `http GET http://localhost:8080/v1/users Authorization:'Bearer\
+  \ $TOKEN'`\n\n**Examples:**\n- http GET http://localhost:8080/v1/users\n- http POST http://localhost:8080/v1/users\
+  \ name=alice role=admin\n- http -h GET http://localhost:8080/v1/users\n\n### newman-collections\nRun\
+  \ Postman collections with assertions in CI.\n\n**Commands:**\n- `newman run api.postman_collection.json`\n\
+  - `newman run collection.json -e staging.postman_environment.json`\n- `newman run collection.json -d\
+  \ data.csv`\n- `newman run collection.json -r html,cli --reporter-html-export report.html`\n- `newman\
+  \ run collection.json --env-var baseUrl=http://localhost:8080`\n\n**Examples:**\n- newman run collection.json\
+  \ -e staging.env.json\n- newman run collection.json -r html,cli --reporter-html-export report.html\n\
+  - newman run collection.json --env-var baseUrl=http://localhost:8080"
+prompt: Act as api-testing and handle the task per the instructions.

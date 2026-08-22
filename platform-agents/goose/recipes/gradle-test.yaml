@@ -1,0 +1,31 @@
+title: gradle-test
+description: Runs JVM test suites with Gradle, including test filtering, caching, parallel execution,
+  and reports.
+version: 2.0.0
+instructions: "# gradle-test\n\nRuns JVM test suites with Gradle, including test filtering, caching, parallel\
+  \ execution, and reports.\n\n## Instructions\n\n# Gradle Test\n\nRun and optimize JVM tests with the\
+  \ Gradle build tool.\n\n## What This Skill Does\n\n- Executes test tasks with class/method filters\n\
+  - Parallelizes and caches test execution\n- Generates JaCoCo coverage reports and gates\n- Watches files\
+  \ for continuous testing\n\n## When to Use\n\n- Running the full suite in CI\n- Debugging a specific\
+  \ test class\n- Speeding up a slow build\n\n## Real Commands\n\n```bash\n# Run all\n./gradlew test\n\
+  \n# Filtered\n./gradlew test --tests \"com.example.OrderServiceTest\"\n./gradlew test --tests \"*Service*\"\
+  \n\n# Speed\n./gradlew test --parallel --build-cache\n./gradlew test --continuous\n\n# Fresh and verbose\n\
+  ./gradlew cleanTest test\n./gradlew test --rerun-tasks\n\n# Coverage\n./gradlew test jacocoTestReport\n\
+  ./gradlew test jacocoTestCoverageVerification\n```\n\n## Test Config (build.gradle)\n\n```groovy\ntest\
+  \ {\n    useJUnitPlatform()\n    maxParallelForks = 4\n    testLogging {\n        events \"passed\"\
+  , \"skipped\", \"failed\"\n    }\n}\njacocoTestCoverageVerification {\n    violationRules {\n      \
+  \  rule { limit { minimum = 0.8 } }\n    }\n}\n```\n\n## Best Practices\n\n- Use --tests patterns for\
+  \ targeted reruns\n- Run with --build-cache in CI\n- Gate on JaCoCo minimum coverage\n- Use --continuous\
+  \ locally for TDD\n- Keep unit tests free of external services\n\n## Capabilities\n\n### gradle-testing\n\
+  Run Gradle test tasks with filters.\n\n**Commands:**\n- `./gradlew test`\n- `./gradlew test --tests\
+  \ \"com.example.OrderServiceTest\"`\n- `./gradlew test --tests \"*Service*\"`\n- `./gradlew test --rerun-tasks`\n\
+  - `./gradlew test --info`\n\n**Examples:**\n- ./gradlew test\n- ./gradlew test --tests \"com.example.OrderServiceTest\"\
+  \n- ./gradlew test --tests \"*Service*\" --rerun-tasks\n\n### parallel-and-cache\nSpeed up builds with\
+  \ parallelism and caching.\n\n**Commands:**\n- `./gradlew test --parallel`\n- `./gradlew test --max-workers=4`\n\
+  - `./gradlew test --build-cache`\n- `./gradlew test --continuous`\n- `./gradlew test --watch-fs`\n\n\
+  **Examples:**\n- ./gradlew test --parallel\n- ./gradlew test --build-cache\n- ./gradlew test --continuous\n\
+  \n### reports-and-coverage\nGenerate test reports and coverage with JaCoCo.\n\n**Commands:**\n- `./gradlew\
+  \ test jacocoTestReport`\n- `./gradlew test --tests \"*Service*\" jacocoTestCoverageVerification`\n\
+  - `./gradlew test --console=plain`\n- `./gradlew cleanTest test`\n\n**Examples:**\n- ./gradlew test\
+  \ jacocoTestReport\n- ./gradlew cleanTest test\n- ./gradlew test --console=plain"
+prompt: Act as gradle-test and handle the task per the instructions.

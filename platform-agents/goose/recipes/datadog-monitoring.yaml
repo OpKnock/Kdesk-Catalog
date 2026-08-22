@@ -1,0 +1,47 @@
+title: Datadog Monitoring
+description: Creates and manages Datadog monitors, dashboards, and synthetic API tests using the Datadog
+  API and datadog-ci CLI for alerting on latency, error rates, and uptime.
+version: 2.0.0
+instructions: "# Datadog Monitoring\n\nCreates and manages Datadog monitors, dashboards, and synthetic\
+  \ API tests using the Datadog API and datadog-ci CLI for alerting on latency, error rates, and uptime.\n\
+  \n## Instructions\n\n# Datadog Monitoring\n\nMonitor API health, latency, and uptime with Datadog monitors\
+  \ and synthetic tests.\n\n## When to Use\n\n- Alerting on API latency, error rates, and uptime\n- Running\
+  \ synthetic API checks in CI and on a schedule\n- Managing monitors as code\n\n## Setup\n\n```bash\n\
+  export DD_API_KEY=\"your-api-key\"\nexport DD_APP_KEY=\"your-application-key\"\nexport DATADOG_SYNTHETICS_API_KEY=\"\
+  $DD_API_KEY\"\nexport DATADOG_SYNTHETICS_APP_KEY=\"$DD_APP_KEY\"\n```\n\n## Monitors\n\n```bash\n# Create\
+  \ a latency monitor\ncurl -X POST \"https://api.datadoghq.com/api/v1/monitor\" \\\n  -H \"Content-Type:\
+  \ application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" \\\n  -d\
+  \ '{\"type\":\"metric alert\",\"query\":\"avg(last_5m):avg:api.request.latency{*} > 500\",\"name\":\"\
+  API latency high\"}'\n\n# List monitors\ncurl -X GET \"https://api.datadoghq.com/api/v1/monitor\" -H\
+  \ \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" | jq '.[].name'\n\n# Mute during\
+  \ maintenance\ncurl -X POST \"https://api.datadoghq.com/api/v1/monitor/123456/mute\" -H \"DD-API-KEY:\
+  \ $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"\n```\n\n## Synthetic Tests\n\n```bash\nnpx @datadog/datadog-ci\
+  \ synthetics run-tests --public-id abc-123-def\nnpx @datadog/datadog-ci synthetics run-tests --files\
+  \ \"./e2e/*.synthetics.json\"\n```\n\n## Testing\n\n```bash\n# Trigger a monitor status check\ncurl\
+  \ -X GET \"https://api.datadoghq.com/api/v1/monitor/123456\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY:\
+  \ $DD_APP_KEY\" | jq '.overall_state'\n```\n\n## Best Practices\n\n- Use terraform-provider-datadog\
+  \ for monitors as code\n- Alert on SLOs, not just raw metrics\n- Mute monitors for planned maintenance\
+  \ windows\n- Add tags such as team:payments to monitors\n- Run synthetics from CI on every deploy\n\n\
+  ## Capabilities\n\n### monitors\nCreate, update, mute, and query Datadog monitors via the API\n\n**Commands:**\n\
+  - `curl -X POST \"https://api.datadoghq.com/api/v1/monitor\" -H \"Content-Type: application/json\" -H\
+  \ \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" -d @monitor.json`\n- `curl -X GET\
+  \ \"https://api.datadoghq.com/api/v1/monitor\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY:\
+  \ $DD_APP_KEY\"`\n- `curl -X POST \"https://api.datadoghq.com/api/v1/monitor/MONITOR_ID/mute\" -H \"\
+  DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"`\n- `curl -X PUT \"https://api.datadoghq.com/api/v1/monitor/MONITOR_ID\"\
+  \ -H \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"\
+  \ -d @monitor.json`\n\n**Examples:**\n- curl -X POST \"https://api.datadoghq.com/api/v1/monitor\" -H\
+  \ \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"\
+  \ -d '{\"type\":\"metric alert\",\"query\":\"avg(last_5m):avg:api.request.latency{*} > 500\",\"name\"\
+  :\"API latency high\"}'\n- curl -X GET \"https://api.datadoghq.com/api/v1/monitor\" -H \"DD-API-KEY:\
+  \ $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" | jq '.[] | select(.name | contains(\"API\"))'\n\
+  - curl -X POST \"https://api.datadoghq.com/api/v1/monitor/123456/mute\" -H \"DD-API-KEY: $DD_API_KEY\"\
+  \ -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"\n\n### synthetics\nRun synthetic API tests from datadog-ci\
+  \ and check results\n\n**Commands:**\n- `npx @datadog/datadog-ci synthetics run-tests --public-id abc-123-def`\n\
+  - `npx @datadog/datadog-ci synthetics run-tests --config synthetics.global.json --files ./e2e/*.synthetics.json`\n\
+  - `curl -X GET \"https://api.datadoghq.com/api/v1/synthetics/tests\" -H \"DD-API-KEY: $DD_API_KEY\"\
+  \ -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"`\n- `npx @datadog/datadog-ci synthetics run-tests --public-id\
+  \ abc-123-def --junit-report junit.xml`\n\n**Examples:**\n- npx @datadog/datadog-ci synthetics run-tests\
+  \ --public-id abc-123-def\n- npx @datadog/datadog-ci synthetics run-tests --files \"./e2e/*.synthetics.json\"\
+  \n- curl -s \"https://api.datadoghq.com/api/v1/synthetics/tests\" -H \"DD-API-KEY: $DD_API_KEY\" -H\
+  \ \"DD-APPLICATION-KEY: $DD_APP_KEY\" | jq '.synthetics[].name'"
+prompt: Act as Datadog Monitoring and handle the task per the instructions.

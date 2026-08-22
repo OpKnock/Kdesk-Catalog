@@ -1,0 +1,30 @@
+title: Circleci
+description: Build, validate, and debug CircleCI pipelines with the circleci CLI, including orbs and local
+  execution.
+version: 2.0.0
+instructions: "# Circleci\n\nBuild, validate, and debug CircleCI pipelines with the circleci CLI, including\
+  \ orbs and local execution.\n\n## Instructions\n\n# CircleCI\n\nBuild and validate CircleCI pipelines\
+  \ from the command line.\n\n## When to Use\n\n- Validating config before pushing\n- Testing config changes\
+  \ locally with Docker\n- Publishing and consuming orbs\n\n## Install\n\n```bash\ncurl -fLSs https://circle.ci/cli\
+  \ | bash\n# macOS\nbrew install circleci\n```\n\n## Validate\n\n```bash\ncircleci config validate\n\
+  circleci config process .circleci/config.yml > processed.yml\n```\n\n## Config Example\n\n```yaml\n\
+  version: 2.1\norbs:\n  go: circleci/go@1.7.3\njobs:\n  build:\n    docker:\n      - image: cimg/go:1.22\n\
+  \    steps:\n      - checkout\n      - go/load-cache\n      - run: go test ./...\n      - go/save-cache\n\
+  workflows:\n  main:\n    jobs:\n      - build\n```\n\n## Local Execution\n\n```bash\ncircleci local\
+  \ execute --job build\n```\n\n## Orbs\n\n```bash\ncircleci orb validate my-orb.yml\ncircleci orb publish\
+  \ my-orb.yml myorg/api-orb@1.0.0\ncircleci orb list myorg\n```\n\n## Testing\n\n```bash\ncircleci config\
+  \ validate .circleci/config.yml\ncircleci config pack .circleci/config | circleci config validate\n\
+  ```\n\n## Best Practices\n\n- Validate config in a pre-commit hook\n- Pin orb versions in production\n\
+  - Use local execute to test jobs that do not need private env vars\n- Keep secrets in project or context\
+  \ env vars, never in config\n- Process config to debug conditional logic and orbs\n\n## Capabilities\n\
+  \n### pipeline-validate\nValidate, process, and inspect CircleCI config files\n\n**Commands:**\n- `circleci\
+  \ config validate`\n- `circleci config validate .circleci/config.yml`\n- `circleci config process .circleci/config.yml\
+  \ > processed.yml`\n- `circleci config pack .circleci/config`\n\n**Examples:**\n- circleci config validate\
+  \ .circleci/config.yml\n- circleci config process .circleci/config.yml | circleci config validate\n\
+  - circleci config pack .circleci/config > .circleci/config.yml\n\n### orbs-and-runs\nManage orbs and\
+  \ run jobs locally with the CircleCI CLI\n\n**Commands:**\n- `circleci orb publish orb.yml myorg/myorb@0.0.1`\n\
+  - `circleci orb validate orb.yml`\n- `circleci orb list myorg`\n- `circleci local execute --job test`\n\
+  - `circleci build --job test`\n\n**Examples:**\n- circleci orb validate my-orb.yml && circleci orb publish\
+  \ my-orb.yml myorg/api-orb@1.0.0\n- circleci local execute --job build\n- circleci orb list myorg |\
+  \ grep api"
+prompt: Act as Circleci and handle the task per the instructions.

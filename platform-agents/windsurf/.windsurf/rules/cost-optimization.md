@@ -1,0 +1,78 @@
+---
+trigger: glob
+description: "Analyzes and reduces cloud and infrastructure costs: cost explorer queries, idle resource detection, and rightsizing."
+globs: ["**/*.go", "**/*.r", "**/*.sh"]
+---
+
+# cost-optimization
+
+Analyzes and reduces cloud and infrastructure costs: cost explorer queries, idle resource detection, and rightsizing.
+
+## Instructions
+
+# Cost Optimization
+
+Finds and eliminates cloud waste: underused compute, oversized storage, and
+services running with no traffic.
+
+## When to Use
+
+- Monthly spend review
+- Before renegotiating commitments or Reserved Instances
+- Identifying orphaned resources after decommissions
+
+## Real Commands
+
+```bash
+# Spend by service this month
+aws ce get-cost-and-usage --time-period Start=$(date +%Y-%m-01) --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE
+
+# 6-month trend
+aws ce get-cost-and-usage --time-period Start=$(date -d '-6 months' +%Y-%m-01) --granularity MONTHLY --metrics UnblendedCost
+
+# Idle instances (low CPU over 7 days)
+aws cloudwatch get-metric-statistics --namespace AWS/EC2 --metric-name CPUUtilization --dimensions Name=InstanceId,Value=i-xxxx --start-time $(date -d '-7 days' -u +%FT%TZ) --end-time $(date -u +%FT%TZ) --period 3600 --statistics Average
+
+# Unattached elastic IPs
+aws ec2 describe-addresses --query 'Addresses[?AssociationId==null].PublicIp'
+
+# Storage inventory
+aws s3 ls --summarize --human-readable s3://bucket
+```
+
+## Container/VM waste checks
+
+```bash
+kubectl top nodes
+kubectl get pods -A --field-selector=status.phase=Running | wc -l
+```
+
+## Best Practices
+
+- Tag resources (env/cost-center) and group cost queries by tags
+- Right-size instances that run < 10% CPU for weeks
+- Schedule dev/staging to stop outside business hours
+- Delete unattached EIPs, unused EBS snapshots, and old ECR images
+- Re-evaluate RIs/SPs quarterly against actual utilization
+
+## Example Response
+
+Produces a spend breakdown by service, a waste list with per-item monthly cost,
+and prioritized recommendations with expected savings.
+
+## Capabilities
+
+### cloud-cost-analysis
+Query AWS cost data and find waste
+
+**Commands:**
+- `aws ce get-cost-and-usage --time-period Start=$(date +%Y-%m-01) --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE`
+- `aws ce get-cost-and-usage --time-period Start=$(date -d '-6 months' +%Y-%m-01) --granularity MONTHLY --metrics UnblendedCost`
+- `aws ec2 describe-instances --filters 'Name=instance-state-name,Values=running' --query 'Reservations[].Instances[].{id:InstanceId,type:InstanceType}'`
+- `aws s3 ls --summarize s3://bucket --human-readable`
+- `aws cloudwatch get-metric-statistics --namespace AWS/EC2 --metric-name CPUUtilization --dimensions Name=InstanceId,Value=i-xxxx --start-time $(date -d '-7 days' -u +%FT%TZ) --end-time $(date -u +%FT%TZ) --period 3600 --statistics Average`
+
+**Examples:**
+- aws ce get-cost-and-usage --time-period Start=2024-01-01 --granularity DAILY --metrics UnblendedCost | jq '.ResultsByTime[].Total.UnblendedCost.Amount'
+- aws ec2 describe-addresses --query 'Addresses[?AssociationId==null].PublicIp'
+- aws cloudwatch get-metric-statistics --namespace AWS/S3 --metric-name BucketSizeBytes --dimensions Name=BucketName,Value=logs

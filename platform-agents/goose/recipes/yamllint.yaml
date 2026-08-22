@@ -1,0 +1,24 @@
+title: yamllint
+description: Validate YAML style and syntax with configurable rules.
+version: 2.0.0
+instructions: "# yamllint\n\nValidate YAML style and syntax with configurable rules.\n\n## Instructions\n\
+  \n# yamllint\n\nLinter for YAML: catches syntax errors, inconsistent indentation, and style\nviolations\
+  \ in configs, CI pipelines, and manifests.\n\n## When to Use\n\n- Validating CI pipeline YAML before\
+  \ push\n- Enforcing consistent YAML style across a repo\n- Checking Kubernetes manifests and compose\
+  \ files\n\n## Real Commands\n\n```bash\n# Install\npip install yamllint\n\n# Check a file\nsudo yamllint\
+  \ docker-compose.yml\n\n# Check a directory with a config\nsudo yamllint -c .yamllint .\n\n# Strict:\
+  \ warnings also fail\nsudo yamllint --strict .github/workflows/\n\n# JSON for CI\nsudo yamllint --format\
+  \ json . > yamllint-report.json\n\n# One-off inline config\nsudo yamllint -d \"{extends: default, rules:\
+  \ {line-length: {max: 120}}}\" k8s/\n\n# Ignore generated files\nsudo yamllint --ignore '*.lock' .\n\
+  ```\n\n## Config (.yamllint)\n\n```yaml\n---\nextends: default\nrules:\n  line-length:\n    max: 120\n\
+  \  document-start: disable\n  truthy: disable\n```\n\n## CI\n\n```yaml\n- name: YAML lint\n  run: yamllint\
+  \ -c .yamllint .\n```\n\n## Best Practices\n\n- Commit `.yamllint` so all CI runs agree\n- Disable rules\
+  \ project-wide instead of adding `# yamllint disable-line` everywhere\n- Run before `kubectl apply`\
+  \ to catch indentation bugs in manifests\n- Use `--strict` only on curated YAML; otherwise it fails\
+  \ on style nits\n\n## Example Response\n\nReturns `file:line:col: level message (rule)` per violation\
+  \ and exits non-zero\non errors (or warnings with --strict).\n\n## Capabilities\n\n### yamllint\nValidate\
+  \ YAML style and syntax with configurable rules\n\n**Commands:**\n- `yamllint config.yaml`\n- `yamllint\
+  \ -c .yamllint src/`\n- `yamllint --strict pipeline.yml`\n- `yamllint --format json .`\n- `yamllint\
+  \ -d \"{extends: default, rules: {line-length: disable}}\" deploy.yml`\n\n**Examples:**\n- yamllint\
+  \ --ignore \"*.generated.yaml\" .\n- yamllint --format github .\n- yamllint --no-warnings k8s/"
+prompt: Act as yamllint and handle the task per the instructions.

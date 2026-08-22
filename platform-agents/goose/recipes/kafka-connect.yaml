@@ -1,0 +1,40 @@
+title: Kafka Connect
+description: 'Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle
+  via the REST API, and status/offset inspection.'
+version: 2.0.0
+instructions: "# Kafka Connect\n\nRun and operate Kafka Connect clusters: standalone and distributed workers,\
+  \ connector lifecycle via the REST API, and status/offset inspection.\n\n## Instructions\n\n# Kafka\
+  \ Connect\n\nRun and manage Kafka Connect for streaming data between Kafka and external systems.\n\n\
+  ## What this skill does\n\n- Starts standalone and distributed Connect workers.\n- Creates, lists, pauses,\
+  \ and deletes connectors via the REST API.\n- Inspects task status, configs, and offset topics.\n\n\
+  ## When to use\n\n- Ingesting DB/file/S3 data into Kafka (source connectors).\n- Sinking Kafka data\
+  \ to Elasticsearch, S3, or JDBC (sink connectors).\n- CDC pipelines with Debezium.\n\n## Real commands\n\
+  \n```bash\n# Distributed worker\nconnect-distributed.sh config/connect-distributed.properties\n\n# Standalone\
+  \ (dev) with one source connector\nconnect-standalone.sh config/connect-standalone.properties \\\n \
+  \ config/connector-file-source.properties\n\n# List connectors\ncurl -s http://localhost:8083/connectors\n\
+  \n# Create a connector from JSON\ncurl -s -X POST http://localhost:8083/connectors \\\n  -H 'Content-Type:\
+  \ application/json' -d @file-source.json\n\n# Check status (task assignment, errors)\ncurl -s http://localhost:8083/connectors/file-source/status\
+  \ | jq .\n\n# List installed connector plugins\ncurl -s http://localhost:8083/connector-plugins | jq\
+  \ '.[].class'\n\n# Delete a connector\ncurl -s -X DELETE http://localhost:8083/connectors/file-source\n\
+  ```\n\n## Connector JSON example\n\n```json\n{\n  \"name\": \"file-source\",\n  \"config\": {\n    \"\
+  connector.class\": \"org.apache.kafka.connect.file.FileStreamSourceConnector\",\n    \"tasks.max\":\
+  \ \"1\",\n    \"topic\": \"orders\",\n    \"file\": \"/data/orders.log\"\n  }\n}\n```\n\n## Testing\n\
+  \n```bash\n# Verify offsets topic exists in distributed mode\nkafka-topics.sh --bootstrap-server localhost:9092\
+  \ --describe --topic connect-offsets\n```\n\n## Best practices\n\n- Use distributed mode in production\
+  \ for rebalancing and failover.\n- Name connectors <source|sink>-<system>-<name>; one connector per\
+  \ logical pipeline.\n- Monitor /connectors/<name>/status in your alerting; tasks fail fast on bad schemas.\n\
+  \n## Capabilities\n\n### worker-runtime\nStart Kafka Connect in standalone or distributed mode.\n\n\
+  **Commands:**\n- `connect-distributed.sh config/connect-distributed.properties`\n- `connect-standalone.sh\
+  \ config/connect-standalone.properties config/connector-file-source.properties`\n- `connect-distributed.sh\
+  \ config/connect-distributed.properties config/worker-log4j.properties`\n- `kafka-topics.sh --bootstrap-server\
+  \ localhost:9092 --describe --topic connect-offsets`\n\n**Examples:**\n- connect-distributed.sh config/connect-distributed.properties\n\
+  - connect-standalone.sh config/connect-standalone.properties config/connector-file-source.properties\n\
+  - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic connect-offsets\n\n### connector-rest\n\
+  Manage connectors through the Connect REST API (port 8083 by default).\n\n**Commands:**\n- `curl -s\
+  \ http://localhost:8083/connectors`\n- `curl -s -X POST http://localhost:8083/connectors -H 'Content-Type:\
+  \ application/json' -d @file-source.json`\n- `curl -s http://localhost:8083/connectors/file-source/status`\n\
+  - `curl -s http://localhost:8083/connector-plugins`\n- `curl -s -X DELETE http://localhost:8083/connectors/file-source`\n\
+  \n**Examples:**\n- curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json'\
+  \ -d @file-source.json\n- curl -s http://localhost:8083/connectors/file-source/status | jq .tasks\n\
+  - curl -s http://localhost:8083/connector-plugins | jq '.[].class'"
+prompt: Act as Kafka Connect and handle the task per the instructions.

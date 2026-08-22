@@ -1,0 +1,29 @@
+title: http4s
+description: 'http4s pure-functional HTTP in Scala: sbt project scaffolding, streaming routes, and running
+  servers with curl verification.'
+version: 2.0.0
+instructions: "# http4s\n\nhttp4s pure-functional HTTP in Scala: sbt project scaffolding, streaming routes,\
+  \ and running servers with curl verification.\n\n## Instructions\n\n# http4s\n\nPure-functional HTTP\
+  \ servers in Scala with http4s.\n\n## What this skill does\n47:   \n- Scaffolds http4s projects with\
+  \ sbt.\n- Writes effectful routes (IO, fs2 streams).\n- Runs servers48:    with Ember and verifies with\
+  \ curl.\n- Tests routes without starting a listener.\n\n## When to use\n49:   \n- A Scala service needs\
+  \ a typed, functional HTTP layer.\n- Streaming responses (SSE, file uploads)50:    fit fs2 well.\n-\
+  \ Teams coming from cats-effect want end-to-end FP.\n\n## Real commands\n\n```bash\n51:   # Scaffold\n\
+  sbt new http4s/http4s.g8 --name=http4s-quickstart\ncd http4s-quickstart\n\n# Run\nsbt run\n52:   # or\
+  \ with a custom port\nsbt \"run --port 9090\"\n\n# Test\nsbt test\n\n# Verify\ncurl -s -X POST http://localhost:8080/hello/World\n\
+  53:   ```\n\n## Route example\n\n```scala\nimport org.http4s.*\nimport org.http4s.dsl.io.*\n\nval routes\
+  \ =54:    HttpRoutes.of[IO] {\n  case GET -> Root =>\n    Ok(\"Hello, http4s!\")\n  case req @ POST\
+  \ -> Root55:    / \"hello\" / name =>\n    Ok(s\"Hello, $name\")\n}\n```\n\n## Server\n\n```scala\n\
+  import org.http4s.ember.server.EmberServerBuilder\n56:   import com.comcast.ip4s.*\n\nEmberServerBuilder\n\
+  \  .default[IO]\n  .withHost(ipv4\"0.0.0.0\")\n  .withPort(port\"57:   8080\")\n  .withHttpApp(routes.orNotFound)\n\
+  \  .build\n  .use(_ => IO.never)\n  .unsafeRunSync()\n```\n58:   \n## Testing\n\n```bash\ncurl -s http://localhost:8080/\n\
+  sbt test\n```\n\n## Best practices\n\n- Keep59:    routes pure: return F[_] responses, never block.\n\
+  - Use http4s-dsl matchers for typed path extraction.\n60:   - Prefer Ember for new projects; blaze for\
+  \ legacy needs.\n- Test with the `http4s-laws`/munit-supertest61:    style rather than booting a server.\n\
+  \n## Example exchange\n\n```\nUser: Serve JSON from an http4s62:    route.\nAgent: Use the json4s/circe\
+  \ entity encoder:\n       case GET -> Root / \"health\" => Ok(Map(\"63:   status\" -> \"ok\").asJson)\n\
+  ```\n\n## Capabilities\n\n### http4s-sbt\nScaffold, build, and run http4s applications with sbt.\n\n\
+  **Commands:**\n- `sbt new http4s/http4s.g8 --name=http4s-quickstart`\n- `sbt run`\n- `sbt test`\n- `curl\
+  \ -s -X POST http://localhost:8080/hello/World`\n- `sbt \"runMain com.example.quickstart.Server\"`\n\
+  \n**Examples:**\n- sbt new http4s/http4s.g8 --name=api\n- sbt \"run --port 9090\"\n- curl -s http://localhost:8080/"
+prompt: Act as http4s and handle the task per the instructions.

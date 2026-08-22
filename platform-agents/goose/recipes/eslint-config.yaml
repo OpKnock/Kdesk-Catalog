@@ -1,0 +1,28 @@
+title: eslint-config
+description: Designs and maintains ESLint flat configs and shareable config packages with rulesets, overrides,
+  and presets.
+version: 2.0.0
+instructions: "# eslint-config\n\nDesigns and maintains ESLint flat configs and shareable config packages\
+  \ with rulesets, overrides, and presets.\n\n## Instructions\n\n# ESLint Config\n\nDesign and maintain\
+  \ ESLint configuration.\n\n## When to Use\n\n- Setting up linting for new or existing JS/TS projects\n\
+  - Building shareable config packages\n- Migrating .eslintrc to flat config\n- Tuning rules for a codebase\n\
+  \n## Flat Config Example\n\n```javascript\n// eslint.config.js\nimport js from \"@eslint/js\";\nimport\
+  \ tseslint from \"typescript-eslint\";\n\nexport default tseslint.config(\n  { ignores: [\"dist/**\"\
+  , \"coverage/**\"] },\n  js.configs.recommended,\n  ...tseslint.configs.recommended,\n  {\n    rules:\
+  \ {\n      semi: [\"error\", \"always\"],\n      \"@typescript-eslint/no-explicit-any\": \"warn\",\n\
+  \    },\n  }\n);\n```\n\n## Commands\n\n```bash\nnpm install --save-dev eslint @eslint/js typescript-eslint\n\
+  \n# Debug what config applies\nnpx eslint --print-config src/main.js\nnpx eslint --debug src/\n\n# Environment\
+  \ info\nnpx eslint --env-info\n\n# Rule experiments\nnpx eslint --rule \"semi: [error, never]\" src/\n\
+  ```\n\n## Best Practices\n\n- Start from recommended presets; add rules deliberately\n- Use overrides\
+  \ for test files (globals, rules)\n- Keep ignores in config, not scattered .eslintignore\n- Test config\
+  \ changes with --print-config in CI\n- Ship shareable configs as packages with semver\n- Run npx eslint\
+  \ --debug to diagnose config merging\n\n## Capabilities\n\n### eslint-config-authoring\nAuthor flat\
+  \ config and legacy config files.\n\n**Commands:**\n- `npm install --save-dev eslint @eslint/js typescript-eslint`\n\
+  - `npx eslint --init`\n- `npx eslint --print-config src/main.js`\n- `npx eslint --debug src/`\n- `npx\
+  \ eslint --env-info`\n\n**Examples:**\n- npx eslint --print-config src/main.js | python -m json.tool\
+  \ | head -60\n- npx eslint --config eslint.config.js src/\n- npm install --save-dev eslint-plugin-react\
+  \ eslint-plugin-react-hooks\n\n### config-testing\nValidate configs and lint output.\n\n**Commands:**\n\
+  - `npx eslint --rule \"semi: [error, never]\" src/`\n- `npx eslint --rulesdir ./custom-rules src/`\n\
+  - `npx eslint --no-eslintrc --env browser src/`\n- `npx eslint --ext .js,.ts src/`\n\n**Examples:**\n\
+  - npx eslint --rule \"quotes: [error, single]\" src/\n- npx eslint --no-eslintrc --config base.js src/"
+prompt: Act as eslint-config and handle the task per the instructions.

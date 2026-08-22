@@ -1,0 +1,38 @@
+title: mobile-react-native
+description: React Native mobile development. Real react-native CLI.
+version: 1.0.0
+instructions: "# mobile-react-native\n\nReact Native mobile development. Real react-native CLI.\n\n##\
+  \ Instructions\n\n# React Native\n\nReact Native mobile development using real CLI.\n\n## When to Use\n\
+  \n- Cross-platform mobile apps\n- iOS and Android development\n\n## Commands\n\n```bash\n# Create project\n\
+  npx react-native init MyApp\n\n# Run iOS\nnpx react-native run-ios\n\n# Run Android\nnpx react-native\
+  \ run-android\n\n# Start Metro\nnpx react-native start\n\n# Build iOS release\ncd ios && xcodebuild\
+  \ -scheme MyApp -configuration Release\n\n# Build Android release\ncd android && ./gradlew assembleRelease\n\
+  \n# Run tests\nnpx jest\n\n# Lint\nnpx eslint src/\n```\n\n## Component\n\n```tsx\n// src/components/UserCard.tsx\n\
+  import React from 'react';\nimport { View, Text, StyleSheet } from 'react-native';\n\ninterface UserCardProps\
+  \ {\n  name: string;\n  email: string;\n}\n\nexport const UserCard = ({ name, email }: UserCardProps)\
+  \ => {\n  return (\n    <View style={styles.card}>\n      <Text style={styles.name}>{name}</Text>\n\
+  \      <Text style={styles.email}>{email}</Text>\n    </View>\n  );\n};\n\nconst styles = StyleSheet.create({\n\
+  \  card: {\n    padding: 16,\n    margin: 8,\n    backgroundColor: '#fff',\n    borderRadius: 8,\n \
+  \   shadowColor: '#000',\n    shadowOffset: { width: 0, height: 2 },\n    shadowOpacity: 0.1,\n    shadowRadius:\
+  \ 4,\n    elevation: 2\n  },\n  name: {\n    fontSize: 18,\n    fontWeight: 'bold'\n  },\n  email: {\n\
+  \    fontSize: 14,\n    color: '#666'\n  }\n});\n```\n\n## Navigation\n\n```tsx\n// src/App.tsx\nimport\
+  \ { NavigationContainer } from '@react-navigation/native';\nimport { createNativeStackNavigator } from\
+  \ '@react-navigation/native-stack';\nimport HomeScreen from './screens/HomeScreen';\nimport DetailScreen\
+  \ from './screens/DetailScreen';\n\nconst Stack = createNativeStackNavigator();\n\nexport default function\
+  \ App() {\n  return (\n    <NavigationContainer>\n      <Stack.Navigator>\n        <Stack.Screen name=\"\
+  Home\" component={HomeScreen} />\n        <Stack.Screen name=\"Detail\" component={DetailScreen} />\n\
+  \      </Stack.Navigator>\n    </NavigationContainer>\n  );\n}\n```\n\n## State Management\n\n```tsx\n\
+  // src/store/authSlice.ts\nimport { createSlice, createAsyncThunk } from '@reduxjs/toolkit';\n\nexport\
+  \ const login = createAsyncThunk(\n  'auth/login',\n  async ({ email, password }) => {\n    const response\
+  \ = await fetch('https://api.example.com/login', {\n      method: 'POST',\n      headers: { 'Content-Type':\
+  \ 'application/json' },\n      body: JSON.stringify({ email, password })\n    });\n    return response.json();\n\
+  \  }\n);\n\nconst authSlice = createSlice({\n  name: 'auth',\n  initialState: { user: null, loading:\
+  \ false },\n  reducers: {},\n  extraReducers: (builder) => {\n    builder\n      .addCase(login.pending,\
+  \ (state) => { state.loading = true; })\n      .addCase(login.fulfilled, (state, action) => {\n    \
+  \    state.loading = false;\n        state.user = action.payload;\n      });\n  }\n});\n```\n\n## Capabilities\n\
+  \n### mobile-react-native\nReact Native mobile development. Real react-native CLI.\n\n**Commands:**\n\
+  - `npx react-native init MyApp`\n- `npx react-native run-ios`\n- `npx react-native run-android`\n- `npx\
+  \ react-native start`\n- `cd ios && xcodebuild -scheme MyApp -configuration Release`\n- `cd android\
+  \ && ./gradlew assembleRelease`\n- `npx jest`\n- `npx eslint src/`\n\n**Examples:**\n- npx react-native\
+  \ init MyApp\n- npx react-native run-ios\n- npx react-native run-android"
+prompt: Act as mobile-react-native and handle the task per the instructions.

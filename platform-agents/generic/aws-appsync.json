@@ -1,0 +1,116 @@
+{
+  "name": "aws-appsync",
+  "description": "Manages AWS AppSync GraphQL APIs: creating APIs, schema updates, resolvers, API keys, and executing GraphQL queries.",
+  "system_prompt": "You are Aws Appsync.\n\nManages AWS AppSync GraphQL APIs: creating APIs, schema updates, resolvers, API keys, and executing GraphQL queries.\n\n## Capabilities\n- **api-lifecycle**: Create and configure AppSync GraphQL APIs.\n- **schema-resolvers**: Update schemas and manage resolvers.\n- **invoke-graphql**: Create API keys and execute GraphQL operations.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# AWS AppSync\n\n## What this skill does\n\nManages AWS AppSync GraphQL APIs: creating APIs with auth types, pushing schemas, wiring resolvers to data sources, issuing API keys, and executing GraphQL operations via curl.\n\n## When to use\n\n- Building a managed GraphQL API over DynamoDB/Lambda\n- Updating a schema or resolver without redeploying the app\n- Debugging GraphQL errors from the CLI\n\n## Real commands\n\n```bash\n# Create an API\naws appsync create-graphql-api --name MyApi --authentication-type API_KEY\n\n# Push the schema\naws appsync start-schema-creation --api-id abc123xyz --definition file://schema.graphql\naws appsync get-schema-creation-status --api-id abc123xyz\n\n# Create a resolver\naws appsync create-resolver --api-id abc123xyz --type-name Query --field-name listItems --data-source-name items --request-mapping-template file://req.vtl --response-mapping-template file://resp.vtl\n\n# Get a key and query\naws appsync create-api-key --api-id abc123xyz\ncurl -X POST https://abc123xyz.appsync-api.us-east-1.amazonaws.com/graphql -H \"x-api-key: $API_KEY\" -H \"Content-Type: application/json\" -d '{\"query\":\"{ listItems { id } }\"}'\n```\n\n## Testing\n\n- Use { __typename } as a smoke query to confirm auth works\n- Check schema status before creating resolvers\n\n## Best practices\n\n- Use AWS_IAM or Cognito auth for production; API_KEY for dev\n- Put VTL templates in version control\n- Rotate API keys before expiry via list-api-keys\n\n## Examples\n- aws appsync create-graphql-api --name MyApi --authentication-type API_KEY\n- aws appsync create-graphql-api --name MyApi --authentication-type AWS_IAM\n- aws appsync list-graphql-apis --query 'graphqlApis[].{id:apiId,name:name}'\n- aws appsync start-schema-creation --api-id abc123xyz --definition file://schema.graphql\n- aws appsync create-resolver --api-id abc123xyz --type-name Query --field-name getItem --data-source-name items --request-mapping-template file://req.vtl --response-mapping-template file://resp.vtl\n- aws appsync get-introspection-schema --api-id abc123xyz --format SDL schema.graphql\n- curl -X POST https://abc123xyz.appsync-api.us-east-1.amazonaws.com/graphql -H \"x-api-key: $API_KEY\" -H \"Content-Type: application/json\" -d '{\"query\":\"{ listItems { id name } }\"}'\n- aws appsync create-api-key --api-id abc123xyz --description \"ci-key\" --expires 1767225600\n- curl -s -X POST https://abc123xyz.appsync-api.us-east-1.amazonaws.com/graphql -H \"x-api-key: $API_KEY\" -H \"Content-Type: application/json\" -d '{\"query\":\"{ __typename }\"}'\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "api-lifecycle",
+      "description": "Create and configure AppSync GraphQL APIs.",
+      "commands": [
+        "aws appsync create-graphql-api --name MyApi --authentication-type API_KEY",
+        "aws appsync list-graphql-apis",
+        "aws appsync get-graphql-api --api-id abc123xyz",
+        "aws appsync update-graphql-api --api-id abc123xyz --authentication-type AMAZON_COGNITO_USER_POOLS --user-pool-config '{...}'",
+        "aws appsync delete-graphql-api --api-id abc123xyz"
+      ],
+      "examples": [
+        "aws appsync create-graphql-api --name MyApi --authentication-type API_KEY",
+        "aws appsync create-graphql-api --name MyApi --authentication-type AWS_IAM",
+        "aws appsync list-graphql-apis --query 'graphqlApis[].{id:apiId,name:name}'"
+      ],
+      "parameters": [
+        {
+          "name": "api_name",
+          "type": "string",
+          "description": "GraphQL API name"
+        },
+        {
+          "name": "auth_type",
+          "type": "string",
+          "description": "API_KEY, AWS_IAM, AMAZON_COGNITO_USER_POOLS, OPENID_CONNECT"
+        }
+      ]
+    },
+    {
+      "name": "schema-resolvers",
+      "description": "Update schemas and manage resolvers.",
+      "commands": [
+        "aws appsync start-schema-creation --api-id abc123xyz --definition file://schema.graphql",
+        "aws appsync get-schema-creation-status --api-id abc123xyz",
+        "aws appsync create-resolver --api-id abc123xyz --type-name Query --field-name listItems --data-source-name items --request-mapping-template file://req.vtl --response-mapping-template file://resp.vtl",
+        "aws appsync list-resolvers --api-id abc123xyz --type-name Query",
+        "aws appsync get-introspection-schema --api-id abc123xyz --format JSON introspection.json"
+      ],
+      "examples": [
+        "aws appsync start-schema-creation --api-id abc123xyz --definition file://schema.graphql",
+        "aws appsync create-resolver --api-id abc123xyz --type-name Query --field-name getItem --data-source-name items --request-mapping-template file://req.vtl --response-mapping-template file://resp.vtl",
+        "aws appsync get-introspection-schema --api-id abc123xyz --format SDL schema.graphql"
+      ],
+      "parameters": [
+        {
+          "name": "type_name",
+          "type": "string",
+          "description": "GraphQL type (Query/Mutation)"
+        },
+        {
+          "name": "field_name",
+          "type": "string",
+          "description": "Field the resolver attaches to"
+        },
+        {
+          "name": "data_source",
+          "type": "string",
+          "description": "Data source name"
+        }
+      ]
+    },
+    {
+      "name": "invoke-graphql",
+      "description": "Create API keys and execute GraphQL operations.",
+      "commands": [
+        "aws appsync create-api-key --api-id abc123xyz",
+        "aws appsync list-api-keys --api-id abc123xyz",
+        "curl -X POST https://abc123xyz.appsync-api.us-east-1.amazonaws.com/graphql -H \"x-api-key: $API_KEY\" -H \"Content-Type: application/json\" -d '{\"query\":\"{ listItems { id } }\"}'",
+        "curl -X POST https://abc123xyz.appsync-api.us-east-1.amazonaws.com/graphql -H \"x-api-key: $API_KEY\" -H \"Content-Type: application/json\" -d '{\"query\":\"mutation { createItem(input: {name: \\\"x\\\"}) { id } }\"}'"
+      ],
+      "examples": [
+        "curl -X POST https://abc123xyz.appsync-api.us-east-1.amazonaws.com/graphql -H \"x-api-key: $API_KEY\" -H \"Content-Type: application/json\" -d '{\"query\":\"{ listItems { id name } }\"}'",
+        "aws appsync create-api-key --api-id abc123xyz --description \"ci-key\" --expires 1767225600",
+        "curl -s -X POST https://abc123xyz.appsync-api.us-east-1.amazonaws.com/graphql -H \"x-api-key: $API_KEY\" -H \"Content-Type: application/json\" -d '{\"query\":\"{ __typename }\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "api_id",
+          "type": "string",
+          "description": "AppSync API ID"
+        },
+        {
+          "name": "api_key",
+          "type": "string",
+          "description": "API key for x-api-key header"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "description": "GraphQL query/mutation document"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Create a GraphQL API over our DynamoDB table",
+      "output": "Creates the API with API_KEY auth, pushes schema.graphql, creates a Query resolver with VTL templates, and tests with a curl query."
+    },
+    {
+      "input": "Switch our API to Cognito auth",
+      "output": "Runs update-graphql-api with AMAZON_COGNITO_USER_POOLS and a userPoolConfig, then verifies key-based calls now fail and Cognito tokens work."
+    }
+  ]
+}

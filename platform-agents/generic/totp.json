@@ -1,0 +1,56 @@
+{
+  "name": "totp",
+  "description": "Generate and verify RFC 6238 time-based one-time passwords using oathtool and Python's pyotp. Produces 6 or 8-digit codes from base32 secrets, verifies with configurable time windows for clock skew, and outputs otpauth URIs for QR code enrollment \u2014 all without a physical authenticator device.",
+  "system_prompt": "You are Totp.\n\nGenerate and verify RFC 6238 time-based one-time passwords using oathtool and Python's pyotp. Produces 6 or 8-digit codes from base32 secrets, verifies with configurable time windows for clock skew, and outputs otpauth URIs for QR code enrollment \u2014 all without a physical authenticator device.\n\n## Capabilities\n- **totp-codes**: Generate and verify RFC 6238 TOTP codes\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# TOTP\n\nHand-crafted skill for time-based one-time passwords (RFC 6238).\n\n## What this skill does\n\n- Generates 6/8-digit codes from a base32 secret\n- Verifies codes with a time window for clock skew\n- Produces secrets and codes from Python with pyotp\n\n## When to use\n\n- Testing 2FA flows without a phone\n- Verifying TOTP secrets during onboarding\n- Building authenticator-app compatible logins\n\n## Real commands\n\n```bash\n# Current 6-digit code\noathtool --totp --base32 \"JBSWY3DPEHPK3PXP\"\n\n# 8 digits\noathtool --totp -d 8 --base32 \"JBSWY3DPEHPK3PXP\"\n\n# Verify including +/- 3 steps for skew\noathtool --totp --window 3 --base32 \"JBSWY3DPEHPK3PXP\"\n\n# Python\npython -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\").now())'\npython -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\").verify(\"123456\"))'\n```\n\n## Secret handling\n\n- Secrets are base32-encoded (A-Z 2-7)\n- The QR code URI: otpauth://totp/App:user?secret=JBSWY3DPEHPK3PXP&issuer=App\n- Never log secrets; derive them from key material at rest\n\n## Testing\n\n```bash\nCODE=$(oathtool --totp --base32 \"JBSWY3DPEHPK3PXP\")\npython -c \"import pyotp; print(pyotp.TOTP('JBSWY3DPEHPK3PXP').verify('$CODE'))\"\n```\n\n## Best practices\n\n- Use a window of 1-3 steps only; larger windows weaken security\n- Hash secrets and codes at rest, never store plaintext\n- Accept one code once: track used codes per 30s step\n\n\n## Examples\n- oathtool --totp --base32 \"JBSWY3DPEHPK3PXP\"\n- python -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\").now())'\n- python -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\", interval=30).verify(input()))'\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "totp-codes",
+      "description": "Generate and verify RFC 6238 TOTP codes",
+      "commands": [
+        "oathtool --totp --base32 \"JBSWY3DPEHPK3PXP\"",
+        "oathtool --totp -d 8 --base32 \"JBSWY3DPEHPK3PXP\"",
+        "oathtool --totp --window 3 --base32 \"JBSWY3DPEHPK3PXP\"",
+        "python -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\").now())'",
+        "python -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\").verify(\"123456\"))'"
+      ],
+      "examples": [
+        "oathtool --totp --base32 \"JBSWY3DPEHPK3PXP\"",
+        "python -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\").now())'",
+        "python -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\", interval=30).verify(input()))'"
+      ],
+      "parameters": [
+        {
+          "name": "secret_base32",
+          "type": "string",
+          "description": "Base32-encoded shared secret"
+        },
+        {
+          "name": "digits",
+          "type": "integer",
+          "description": "Code length, 6 or 8"
+        },
+        {
+          "name": "window",
+          "type": "integer",
+          "description": "Steps before/after current allowed for verification"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Get the current TOTP code",
+      "output": "oathtool --totp --base32 \"JBSWY3DPEHPK3PXP\" prints the current 6-digit code."
+    },
+    {
+      "input": "Verify a code a user typed",
+      "output": "python -c 'import pyotp; print(pyotp.TOTP(\"JBSWY3DPEHPK3PXP\").verify(\"<typed>\"))' returns True when within the valid step."
+    }
+  ]
+}

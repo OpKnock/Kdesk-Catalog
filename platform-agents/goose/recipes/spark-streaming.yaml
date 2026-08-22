@@ -1,0 +1,40 @@
+title: Spark Streaming
+description: Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally
+  or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation
+  parallelism with shuffle partitions.
+version: 2.0.0
+instructions: "# Spark Streaming\n\nRuns Spark Structured Streaming jobs with Kafka sources. Submits streaming\
+  \ applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell,\
+  \ and tunes aggregation parallelism with shuffle partitions.\n\n## Instructions\n\n# Spark Structured\
+  \ Streaming\n\nHand-crafted skill for streaming data pipelines with Spark Structured Streaming.\n\n\
+  ## What this skill does\n\n- Runs streaming jobs with spark-submit against Kafka topics\n- Explores\
+  \ streaming APIs interactively in spark-shell\n- Deploys in cluster mode to YARN or Kubernetes\n\n##\
+  \ When to use\n\n- Aggregating event streams with windowing and watermarks\n- Joining a stream with\
+  \ a lookup table\n- Replacing stateful Kafka consumer microservices\n\n## Real commands\n\n```bash\n\
+  # Local run with the Kafka connector\nspark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1\
+  \ streaming.py\n\n# Cluster mode on Kubernetes\nspark-submit --deploy-mode cluster --master k8s://https://cluster:6443\
+  \ --class com.app.StreamJob app.jar\n\n# Interactive exploration\nspark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1\n\
+  \n# Tune aggregation parallelism\nspark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1\
+  \ --conf spark.sql.shuffle.partitions=200 streaming.py\n\n# Produce test data\nkafka-console-producer\
+  \ --broker-list localhost:9092 --topic events\n```\n\n## Streaming job\n\n```python\nfrom pyspark.sql\
+  \ import SparkSession\nfrom pyspark.sql.functions import from_json, window, col\n\nspark = SparkSession.builder.appName(\"\
+  events\").getOrCreate()\ndf = (\n    spark.readStream.format(\"kafka\")\n    .option(\"kafka.bootstrap.servers\"\
+  , \"localhost:9092\")\n    .option(\"subscribe\", \"events\")\n    .option(\"startingOffsets\", \"earliest\"\
+  )\n    .load()\n)\ncounts = df.groupBy(window(col(\"ts\"), \"1 minute\")).count()\ncounts.writeStream.outputMode(\"\
+  update\").format(\"console\").start().awaitTermination()\n```\n\n## Testing\n\n```bash\nkafka-console-producer\
+  \ --broker-list localhost:9092 --topic events <<< '{\"ts\":\"2026-08-10T10:00:00Z\",\"value\":1}'\n\
+  spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py\n\
+  ```\n\n## Best practices\n\n- Pin the spark-sql-kafka artifact version to your Spark version\n- Use\
+  \ checkpointLocation on durable storage for exactly-once recovery\n- Set startingOffsets=earliest for\
+  \ backfill, latest for production tailing\n\n## Capabilities\n\n### structured-streaming\nRuns Spark\
+  \ Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster\
+  \ mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism\
+  \ with shuffle partitions.\n\n**Commands:**\n- `spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1\
+  \ streaming.py`\n- `spark-submit --deploy-mode cluster --master k8s://https://cluster:6443 --class com.app.StreamJob\
+  \ app.jar`\n- `spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1`\n- `spark-submit\
+  \ --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 --conf spark.sql.shuffle.partitions=200\
+  \ streaming.py`\n- `kafka-console-producer --broker-list localhost:9092 --topic events`\n\n**Examples:**\n\
+  - spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py\n\
+  - spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1\n- kafka-console-producer\
+  \ --broker-list localhost:9092 --topic events"
+prompt: Act as Spark Streaming and handle the task per the instructions.

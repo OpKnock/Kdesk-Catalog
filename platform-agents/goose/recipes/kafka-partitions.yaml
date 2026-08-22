@@ -1,0 +1,44 @@
+title: Kafka Partitions
+description: 'Manage Kafka topic partitions: sizing, expansion via kafka-topics alter, and rebalancing
+  with kafka-reassign-partitions for even data distribution.'
+version: 2.0.0
+instructions: "# Kafka Partitions\n\nManage Kafka topic partitions: sizing, expansion via kafka-topics\
+  \ alter, and rebalancing with kafka-reassign-partitions for even data distribution.\n\n## Instructions\n\
+  \n# Kafka Partitions\n\nSize, expand, and rebalance Kafka topic partitions.\n\n## What this skill does\n\
+  \n- Creates topics with the right partition and replica layout.\n- Increases partitions safely (never\
+  \ decreases).\n- Generates and executes reassignment plans for balanced distribution.\n\n## When to\
+  \ use\n\n- Capacity planning when a topic's throughput grows.\n- Rebalancing after adding brokers to\
+  \ the cluster.\n- Fixing hotspot brokers with uneven partition counts.\n\n## Real commands\n\n```bash\n\
+  # Create with sizing\nkafka-topics.sh --bootstrap-server localhost:9092 --create \\\n  --topic orders\
+  \ --partitions 12 --replication-factor 3\n\n# Expand partitions (can only increase)\nkafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --alter \\\n  --topic orders --partitions 24\n\n# Inspect current\
+  \ layout\nkafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders\n\n# Generate\
+  \ reassignment plan to spread across 4 brokers\ncat > topics.json <<'EOF'\n{\"topics\":[{\"topic\":\"\
+  orders\"}],\"version\":1}\nEOF\nkafka-reassign-partitions.sh --bootstrap-server localhost:9092 \\\n\
+  \  --generate --topics-to-move-json-file topics.json --broker-list \"1,2,3,4\"\n\n# Execute and verify\
+  \ the plan\nkafka-reassign-partitions.sh --bootstrap-server localhost:9092 \\\n  --reassignment-json-file\
+  \ reassignment.json --execute\nkafka-reassign-partitions.sh --bootstrap-server localhost:9092 \\\n \
+  \ --reassignment-json-file reassignment.json --verify\n```\n\n## topics.json / reassignment example\n\
+  \n```json\n{\"topics\":[{\"topic\":\"orders\"}],\"version\":1}\n```\n\n## Testing\n\n```bash\nkafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --describe --topic orders | head -20\n```\n\n## Best practices\n\
+  \n- Partition count is a maximum parallelism ceiling; size for peak, not average.\n- Reassign during\
+  \ low traffic; reassignment moves data across the wire.\n- Always --verify after --execute and watch\
+  \ for throttled leader movement.\n\n## Capabilities\n\n### partition-sizing\nCreate and expand partitions\
+  \ with controlled replica placement.\n\n**Commands:**\n- `kafka-topics.sh --bootstrap-server localhost:9092\
+  \ --create --topic orders --partitions 12 --replication-factor 3`\n- `kafka-topics.sh --bootstrap-server\
+  \ localhost:9092 --alter --topic orders --partitions 24`\n- `kafka-topics.sh --bootstrap-server localhost:9092\
+  \ --describe --topic orders`\n- `kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders\
+  \ --partitions 48 --validate-only`\n\n**Examples:**\n- kafka-topics.sh --bootstrap-server localhost:9092\
+  \ --create --topic orders --partitions 12 --replication-factor 3\n- kafka-topics.sh --bootstrap-server\
+  \ localhost:9092 --alter --topic orders --partitions 24\n- kafka-topics.sh --bootstrap-server localhost:9092\
+  \ --describe --topic orders | grep PartitionCount\n\n### reassignment\nGenerate and execute partition\
+  \ reassignment plans across brokers.\n\n**Commands:**\n- `kafka-reassign-partitions.sh --bootstrap-server\
+  \ localhost:9092 --generate --topics-to-move-json-file topics.json --broker-list \"1,2,3,4\"`\n- `kafka-reassign-partitions.sh\
+  \ --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json --execute`\n- `kafka-reassign-partitions.sh\
+  \ --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json --verify`\n- `kafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --describe --topics-with-overrides`\n\n**Examples:**\n- kafka-reassign-partitions.sh\
+  \ --bootstrap-server localhost:9092 --generate --topics-to-move-json-file topics.json --broker-list\
+  \ \"1,2,3,4\"\n- kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file\
+  \ reassignment.json --execute\n- kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file\
+  \ reassignment.json --verify"
+prompt: Act as Kafka Partitions and handle the task per the instructions.

@@ -1,0 +1,36 @@
+title: Chaos Toolkit
+description: Design and run repeatable chaos experiments with the Chaos Toolkit CLI, including probes,
+  steady-state checks, and Docker/Kubernetes actions.
+version: 2.0.0
+instructions: "# Chaos Toolkit\n\nDesign and run repeatable chaos experiments with the Chaos Toolkit CLI,\
+  \ including probes, steady-state checks, and Docker/Kubernetes actions.\n\n## Instructions\n\n# Chaos\
+  \ Toolkit\n\nRun reproducible chaos engineering experiments.\n\n## When to Use\n\n- Automated resilience\
+  \ testing in CI or on schedules\n- Validating steady-state hypotheses before and after faults\n- Team-wide\
+  \ shareable experiment definitions\n\n## Install\n\n```bash\npip install chaostoolkit chaostoolkit-http\
+  \ chaostoolkit-docker\nchaos --help\n```\n\n## Experiment Manifest\n\n```json\n{\n  \"version\": \"\
+  1.0.0\",\n  \"title\": \"API latency under network delay\",\n  \"description\": \"Inject 100ms latency\
+  \ and verify the API stays healthy\",\n  \"steady-state-hypothesis\": {\n    \"title\": \"API is healthy\"\
+  ,\n    \"probes\": [\n      {\n        \"type\": \"probe\",\n        \"name\": \"health-check\",\n \
+  \       \"provider\": {\n          \"type\": \"http\",\n          \"url\": \"http://localhost:8080/health\"\
+  ,\n          \"expected_status\": 200\n        }\n      }\n    ]\n  },\n  \"method\": [\n    {\n   \
+  \   \"type\": \"action\",\n      \"name\": \"add-latency\",\n      \"provider\": {\n        \"type\"\
+  : \"process\",\n        \"path\": \"tc\",\n        \"arguments\": \"qdisc add dev eth0 root netem delay\
+  \ 100ms\"\n      }\n    }\n  ],\n  \"rollbacks\": [\n    {\n      \"type\": \"action\",\n      \"name\"\
+  : \"remove-latency\",\n      \"provider\": {\n        \"type\": \"process\",\n        \"path\": \"tc\"\
+  ,\n        \"arguments\": \"qdisc del dev eth0 root\"\n      }\n    }\n  ]\n}\n```\n\n## Run\n\n```bash\n\
+  chaos run --dry-run experiment.json\nchaos run experiment.json --rollback-strategy always\nchaos run\
+  \ experiment.json --hypothesis-strategy before-and-after\n```\n\n## Explore\n\n```bash\nchaos init\n\
+  chaos info\n```\n\n## Testing\n\n```bash\n# Force a probe failure to validate the hypothesis logic\n\
+  chaos run --hypothesis-strategy after experiment.json\n```\n\n## Best Practices\n\n- Always define a\
+  \ steady-state hypothesis\n- Always define rollbacks and set --rollback-strategy always\n- Run experiments\
+  \ in staging first\n- Keep experiments in git with versioned manifests\n- Report results from chaos\
+  \ report into CI dashboards\n- Start with small blast radius: one pod, one service\n\n## Capabilities\n\
+  \n### experiment-run\nCreate, validate, and run Chaos Toolkit experiments from JSON manifests\n\n**Commands:**\n\
+  - `chaos init`\n- `chaos run experiment.json`\n- `chaos run --dry-run experiment.json`\n- `chaos --help`\n\
+  \n**Examples:**\n- chaos init && chaos run --dry-run experiment.json\n- chaos run experiments/network-delay.json\
+  \ --rollback-strategy always\n- chaos run experiment.json --hypothesis-strategy before-and-after\n\n\
+  ### extensions\nInstall Chaos Toolkit extension packages for Docker, Kubernetes, HTTP, and other platforms\n\
+  \n**Commands:**\n- `pip install chaostoolkit`\n- `pip install chaostoolkit-kubernetes`\n- `pip install\
+  \ chaostoolkit-docker`\n- `pip install chaostoolkit-http`\n\n**Examples:**\n- pip install chaostoolkit\
+  \ chaostoolkit-kubernetes\n- pip install chaostoolkit-docker chaostoolkit-http\n- chaos info"
+prompt: Act as Chaos Toolkit and handle the task per the instructions.

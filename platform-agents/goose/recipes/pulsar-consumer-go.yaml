@@ -1,0 +1,25 @@
+title: Pulsar Consumer Go
+description: 'Pulsar consumers in Go: consumer creation, subscription modes, message handling and retries
+  with pulsar-client-go.'
+version: 2.0.0
+instructions: "# Pulsar Consumer Go\n\nPulsar consumers in Go: consumer creation, subscription modes,\
+  \ message handling and retries with pulsar-client-go.\n\n## Instructions\n\n# Pulsar Consumer (Go)\n\
+  \nConsume messages from Pulsar topics with the official Go client.\n\n## What this skill does\n\n- Creates\
+  \ consumers with subscription modes\n- Handles ack/negative-ack\n- Processes with redelivery semantics\n\
+  \n## When to use\n\n- Go services consuming Pulsar events\n- Worker pools over shared subscriptions\n\
+  \n## Real commands\n\n```bash\n# Dependency\ngo get github.com/apache/pulsar-client-go/pulsar\ngo mod\
+  \ tidy\n\n# Run and verify\ngo run consumer.go\ngo test ./...\n\n# Quick consume via Pulsar CLI tools\n\
+  bin/pulsar-client consume my-topic -s my-sub -n 5 --subscription-type Shared\n```\n\n## Consumer code\n\
+  \n```go\nclient, _ := pulsar.NewClient(pulsar.ClientOptions{URL: \"pulsar://localhost:6650\"})\ndefer\
+  \ client.Close()\n\nconsumer, _ := client.Subscribe(pulsar.ConsumerOptions{\n    Topic:            \"\
+  my-topic\",\n    SubscriptionName: \"worker\",\n    Type:             pulsar.Shared,\n})\ndefer consumer.Close()\n\
+  \nfor i := 0; i < 10; i++ {\n    msg, err := consumer.Receive(context.Background())\n    if err != nil\
+  \ { break }\n    fmt.Printf(\"%s: %s\\n\", msg.Topic(), string(msg.Payload()))\n    consumer.Ack(msg)\n\
+  }\n```\n\n## Best practices\n\n- Ack or negative-ack every message\n- Use Shared for parallel workers,\
+  \ Failover for ordered hot-standby\n- Set ReceiverQueueSize appropriately per workload\n\n## Capabilities\n\
+  \n### pulsar-go-consumer\nWrite Go Pulsar consumers: subscribe with ack modes, receive messages and\
+  \ handle redelivery.\n\n**Commands:**\n- `go get github.com/apache/pulsar-client-go/pulsar`\n- `go mod\
+  \ tidy`\n- `go run consumer.go`\n- `go test ./...`\n- `bin/pulsar-client consume my-topic -s my-sub\
+  \ -n 5 --subscription-type Shared`\n\n**Examples:**\n- go run consumer.go\n- bin/pulsar-client consume\
+  \ my-topic -s worker -n 10\n- go test -run TestConsumer -v ./..."
+prompt: Act as Pulsar Consumer Go and handle the task per the instructions.

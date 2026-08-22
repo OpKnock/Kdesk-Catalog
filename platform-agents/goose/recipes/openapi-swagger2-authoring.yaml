@@ -1,0 +1,26 @@
+title: Openapi Swagger2 Authoring
+description: Validates, bundles, and upgrades Swagger 2.0 specifications to OpenAPI 3.x using swagger-cli,
+  Redocly, and openapi-generator. Supports legacy API maintenance and migration workflows.
+version: 2.0.0
+instructions: "# Openapi Swagger2 Authoring\n\nValidates, bundles, and upgrades Swagger 2.0 specifications\
+  \ to OpenAPI 3.x using swagger-cli, Redocly, and openapi-generator. Supports legacy API maintenance\
+  \ and migration workflows.\n\n## Instructions\n\n# OpenAPI v2 (Swagger 2.0)\n\nLegacy APIs still run\
+  \ on Swagger 2.0; know how to validate, bundle and upgrade them.\n\n## What this skill does\n\n- Validates\
+  \ v2 documents\n- Bundles multi-file v2 specs\n- Upgrades v2 to OpenAPI 3.x\n\n## When to use\n\n- Maintaining\
+  \ legacy swagger files\n- Migrating tooling to OpenAPI 3\n\n## Real commands\n\n```bash\n# Validate\n\
+  swagger-cli validate swagger.yaml\n\n# Bundle\nnpx swagger-cli bundle swagger.yaml -o bundle.yaml\n\n\
+  # Lint\nnpx @redocly/cli lint swagger.yaml\n\n# Generate\nopenapi-generator-cli generate -g go -i swagger.yaml\
+  \ -o out/\n\n# Upgrade to v3\nnpx @redocly/cli bundle swagger.yaml --upgrade -o openapi.yaml\n```\n\n\
+  ## Key v2 differences\n\n- `swagger: \"2.0\"` instead of openapi version key\n- `host`, `basePath`,\
+  \ `schemes` at root\n- `securityDefinitions` instead of components/securitySchemes\n\n## Example\n\n\
+  ```yaml\nswagger: \"2.0\"\ninfo: { title: Legacy API, version: \"1.0\" }\nhost: api.your-app.test\n\
+  basePath: /v1\nschemes: [https]\npaths:\n  /ping:\n    get:\n      responses:\n        '200': { description:\
+  \ OK }\nsecurityDefinitions:\n  api_key:\n    type: apiKey\n    in: header\n    name: X-Api-Key\n```\n\
+  \n## Best practices\n\n- Validate before upgrading to catch schema issues\n- Upgrade one spec at a time\
+  \ and diff generated clients\n- Keep v2 tooling pinned while migrating\n\n## Capabilities\n\n### swagger2-authoring\n\
+  Validate and bundle Swagger 2.0 specs and convert them to OpenAPI 3.x.\n\n**Commands:**\n- `swagger-cli\
+  \ validate swagger.yaml`\n- `npx swagger-cli bundle swagger.yaml -o bundle.yaml`\n- `openapi-generator-cli\
+  \ generate -g go -i swagger.yaml -o out/`\n- `npx @redocly/cli lint swagger.yaml`\n- `npx @redocly/cli\
+  \ bundle swagger.yaml --upgrade`\n\n**Examples:**\n- swagger-cli validate swagger.yaml\n- openapi-generator-cli\
+  \ generate -g spring -i swagger.yaml -o out/\n- npx @redocly/cli bundle swagger.yaml --upgrade -o openapi.yaml"
+prompt: Act as Openapi Swagger2 Authoring and handle the task per the instructions.

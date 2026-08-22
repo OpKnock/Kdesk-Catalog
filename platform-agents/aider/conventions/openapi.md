@@ -1,0 +1,76 @@
+# Openapi
+
+Authors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications. Supports contract-first development with Redocly, Spectral, and openapi-generator tooling.
+
+## Instructions
+
+# OpenAPI
+
+OpenAPI 3.x is the standard for describing REST APIs: paths, schemas, parameters and security.
+
+## What this skill does
+
+- Validates and lints specs
+- Bundles multi-file specs into one
+- Generates clients and servers
+
+## When to use
+
+- Starting a new API contract
+- Keeping docs in sync with implementation
+
+## Real commands
+
+```bash
+# Validate
+openapi-generator-cli validate -i openapi.yaml
+swagger-cli validate openapi.yaml
+
+# Lint
+redocly lint openapi.yaml --extends recommended
+
+# Bundle
+npx @redocly/cli bundle openapi.yaml -o bundle.yaml
+
+# Generate clients
+openapi-generator-cli generate -g python -i openapi.yaml -o generated/
+openapi-generator-cli generate -g typescript-axios -i openapi.yaml -o out/
+```
+
+## Minimal spec
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Example API
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      responses:
+        '200':
+          description: OK
+```
+
+## Best practices
+
+- Write the spec before the code (contract-first)
+- Keep one spec file per API, reference external $refs
+- Run lint + validate in CI
+
+## Capabilities
+
+### openapi-authoring
+Validate, lint, bundle and generate code from OpenAPI 3.x specifications.
+
+**Commands:**
+- `openapi-generator-cli validate -i openapi.yaml`
+- `redocly lint openapi.yaml`
+- `npx @redocly/cli bundle openapi.yaml -o bundle.yaml`
+- `openapi-generator-cli generate -g python -i openapi.yaml -o generated/`
+- `swagger-cli validate openapi.yaml`
+
+**Examples:**
+- redocly lint openapi.yaml --extends recommended
+- openapi-generator-cli generate -g typescript-axios -i openapi.yaml -o out/
+- npx @redocly/cli bundle openapi.yaml --ext json

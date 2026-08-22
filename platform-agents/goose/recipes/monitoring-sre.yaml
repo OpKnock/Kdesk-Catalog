@@ -1,0 +1,41 @@
+title: Monitoring
+description: Builds monitoring stacks with Prometheus, Grafana, and exporters, querying metrics and alerting
+  on SLO burn.
+version: 2.0.0
+instructions: "# Monitoring\n\nBuilds monitoring stacks with Prometheus, Grafana, and exporters, querying\
+  \ metrics and alerting on SLO burn.\n\n## Instructions\n\n# Monitoring\n\nDesign and operate metrics\
+  \ monitoring with Prometheus and Grafana.\n\n## What This Skill Does\n\n- Configures and validates Prometheus\
+  \ scrape configs\n- Queries metrics and inspects target health\n- Provisions Grafana datasources and\
+  \ dashboards via API\n- Sets up node, blackbox, and kube-state exporters\n\n## When to Use\n\n- Standing\
+  \ up monitoring for a new service\n- Investigating a metrics gap or broken target\n- Building alerting\
+  \ rules from observed data\n\n## Real Commands\n\n```bash\n# Prometheus\npromtool check config prometheus.yml\n\
+  curl -X POST http://localhost:9090/-/reload\ncurl -s 'http://localhost:9090/api/v1/query?query=up' |\
+  \ jq -r '.data.result[] | .labels.job'\ncurl -s 'http://localhost:9090/api/v1/query?query=rate(http_requests_total[5m])'\
+  \ | jq .\n\n# Grafana\ncurl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources\
+  \ \\\n  -d '{\"name\":\"Prom\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\"}'\n\n# Exporters\n\
+  node_exporter --web.listen-address=:9100\ncurl -s 'http://localhost:9115/probe?target=https://example.com&module=http_2xx'\
+  \ | jq .\n```\n\n## Alert Rule Example\n\n```yaml\ngroups:\n  - name: instance-down\n    rules:\n  \
+  \    - alert: InstanceDown\n        expr: up == 0\n        for: 5m\n        labels: { severity: page\
+  \ }\n        annotations: { summary: \"Instance {{ $labels.instance }} down\" }\n```\n\n## Best Practices\n\
+  \n- Scrape the same job from two paths (app + LB) for comparison\n- Alert on SLO burn and anomalies,\
+  \ not raw thresholds\n- Keep dashboard annotations for deploys and incidents\n- Validate configs in\
+  \ CI with promtool check config\n- Watch cardinality: limit label values per metric\n\n## Capabilities\n\
+  \n### prometheus-operations\nQuery, reload, and inspect Prometheus targets.\n\n**Commands:**\n- `promtool\
+  \ check config prometheus.yml`\n- `promtool query 'up' --url=http://localhost:9090`\n- `curl -s http://localhost:9090/api/v1/targets\
+  \ | jq '.data.activeTargets[].labels.job'`\n- `curl -X POST http://localhost:9090/-/reload`\n- `curl\
+  \ -s 'http://localhost:9090/api/v1/query?query=rate(http_requests_total[5m])' | jq .`\n\n**Examples:**\n\
+  - promtool check config prometheus.yml\n- curl -s 'http://localhost:9090/api/v1/query?query=up' | jq\
+  \ -r '.data.result[] | .labels.job'\n- curl -X POST http://localhost:9090/-/reload\n\n### grafana-management\n\
+  Provision dashboards, datasources, and plugins.\n\n**Commands:**\n- `grafana-cli plugins install grafana-piechart-panel`\n\
+  - `grafana-cli admin reset-admin-password newpass`\n- `curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN'\
+  \ http://localhost:3000/api/dashboards/db -d @dashboard.json`\n- `curl -s -H 'Authorization: Bearer\
+  \ $GRAFANA_TOKEN' http://localhost:3000/api/datasources -d '{\"name\":\"Prom\",\"type\":\"prometheus\"\
+  ,\"url\":\"http://prometheus:9090\"}'`\n\n**Examples:**\n- grafana-cli plugins install grafana-piechart-panel\n\
+  - curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources -d '{\"name\"\
+  :\"Prom\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\"}'\n\n### exporter-setup\nCollect\
+  \ host and app metrics with exporters.\n\n**Commands:**\n- `node_exporter --web.listen-address=:9100`\n\
+  - `curl -s localhost:9100/metrics | head -20`\n- `blackbox_exporter --config.file=blackbox.yml`\n- `curl\
+  \ -s 'http://localhost:9115/probe?target=http://localhost:8080&module=http_2xx' | jq .`\n- `kube-state-metrics\
+  \ --port 8080`\n\n**Examples:**\n- node_exporter --web.listen-address=:9100\n- curl -s 'http://localhost:9115/probe?target=http://localhost:8080&module=http_2xx'\
+  \ | jq ."
+prompt: Act as Monitoring and handle the task per the instructions.

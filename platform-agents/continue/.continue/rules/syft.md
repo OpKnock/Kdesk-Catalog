@@ -1,0 +1,90 @@
+---
+name: "syft"
+description: "Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats."
+globs: ["**/*.json", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# syft
+
+Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats.
+
+## Instructions
+
+# Syft
+
+Generate SBOMs from images, filesystems, and binaries.
+
+## What This Skill Does
+
+- Catalogs packages, languages, and licenses from many sources
+- Emits SPDX, CycloneDX, and syft JSON formats
+- Scopes image scans to squashed or all layers
+- Attests SBOMs with cosign for supply-chain integrity
+
+## When to Use
+
+- Generating SBOMs for compliance and vulnerability matching
+- Shipping SBOMs alongside releases
+- Feeding grype or other scanners with an offline SBOM
+
+## Real Commands
+
+```bash
+# Basic SBOMs
+syft alpine:latest
+syft .
+syft /usr/local/bin/app
+
+# Standardized output
+syft alpine:latest -o spdx-json > sbom.spdx.json
+syft alpine:latest -o cyclonedx-json > sbom.cdx.json
+
+# All-layer scanning
+syft nginx:latest --scope all-layers
+
+# Exclusions
+syft . --exclude './vendor/**'
+
+# Attested SBOM
+syft attest --key cosign.key alpine:latest -o cyclonedx-json
+```
+
+## Best Practices
+
+- Generate at build time and store with the artifact
+- Prefer CycloneDX or SPDX for interoperability
+- Use --scope all-layers for runtime-relevant findings
+- Feed the SBOM to grype for vuln matching and re-scan later
+- Attest SBOMs so consumers can verify authenticity
+
+## Capabilities
+
+### sbom-generation
+Generate SBOMs from images, directories, and binaries.
+
+**Commands:**
+- `syft alpine:latest`
+- `syft .`
+- `syft --scope all-layers nginx:latest`
+- `syft /usr/local/bin/app`
+- `syft docker-archive:myimage.tar`
+
+**Examples:**
+- syft alpine:latest -o cyclonedx-json
+- syft . --exclude './vendor/**'
+- syft nginx:latest --scope all-layers
+
+### sbom-output
+Emit SBOMs in standardized formats.
+
+**Commands:**
+- `syft alpine:latest -o spdx-json > sbom.spdx.json`
+- `syft alpine:latest -o cyclonedx-json > sbom.cdx.json`
+- `syft alpine:latest -o syft-json > sbom.syft.json`
+- `syft attest --key cosign.key alpine:latest -o cyclonedx-json`
+
+**Examples:**
+- syft alpine:latest -o spdx-json > sbom.spdx.json
+- syft alpine:latest -o cyclonedx-json > sbom.cdx.json
+- syft attest --key cosign.key alpine:latest

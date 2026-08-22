@@ -1,0 +1,89 @@
+---
+description: "Quarkus application development: CLI scaffolding, extensions, dev mode, testing and packaging."
+globs: ["**/*.java", "**/*.r", "**/*.sh", "**/*.sql"]
+alwaysApply: false
+---
+
+# Quarkus
+
+Quarkus application development: CLI scaffolding, extensions, dev mode, testing and packaging.
+
+## Instructions
+
+# Quarkus
+
+Quarkus is a Kubernetes-native Java stack with fast startup, low RSS, and developer joy.
+
+## What this skill does
+
+- Scaffolds apps with the quarkus CLI
+- Adds extensions for REST, persistence, messaging
+- Runs dev mode and builds artifacts
+
+## When to use
+
+- New Java microservices
+- Serverless/native deployments
+
+## Real commands
+
+```bash
+# Create
+quarkus create app hello-world
+quarkus create app -P io.quarkus.platform:quarkus-bom:3.10.0 hello
+
+# Dev mode
+quarkus dev
+quarkus dev --port 8081
+
+# Extensions
+quarkus ext add resteasy-reactive,resteasy-reactive-jackson
+quarkus ext add hibernate-orm-panache,postgresql-client
+
+# Build and test
+quarkus build
+./mvnw test
+quarkus build --native
+```
+
+## REST endpoint
+
+```java
+@Path("/hello")
+public class HelloResource {
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() { return "Hello Quarkus"; }
+}
+```
+
+## application.properties
+
+```properties
+quarkus.http.port=8080
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/app
+```
+
+## Best practices
+
+- Use dev mode's continuous testing
+- Profile and size before native builds
+- Pin the BOM version in CI
+
+## Capabilities
+
+### quarkus-workflow
+Create, extend, run and test Quarkus apps with the quarkus CLI and Maven.
+
+**Commands:**
+- `quarkus create app hello-world`
+- `quarkus dev`
+- `quarkus ext add resteasy-reactive,resteasy-reactive-jackson`
+- `quarkus build`
+- `./mvnw test`
+
+**Examples:**
+- quarkus create app -P io.quarkus.platform:quarkus-bom:3.10.0 hello
+- quarkus dev --port 8081
+- quarkus build --native

@@ -1,0 +1,32 @@
+title: Twirp
+description: Implements RPC services using the Twirp framework with protobuf contracts. Defines services
+  in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies behavior
+  with curl and Go tests.
+version: 2.0.0
+instructions: "# Twirp\n\nImplements RPC services using the Twirp framework with protobuf contracts. Defines\
+  \ services in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies\
+  \ behavior with curl and Go tests.\n\n## Instructions\n\n# Twirp\n\nHand-crafted skill for the Twirp\
+  \ RPC framework.\n\n## What this skill does\n\n- Defines RPC contracts in proto3\n- Serves methods over\
+  \ HTTP/JSON and protobuf\n- Explains Twirp error codes and how to surface them\n- Verifies behavior\
+  \ with curl and Go tests\n\n## When to use\n\n- Choosing or onboarding onto Twirp\n- Debugging a 404\
+  \ on an RPC route\n- Enforcing error code conventions across services\n\n## Real commands\n\n```bash\n\
+  # Generate code\nprotoc --twirp_out=. --go_out=. types.proto\n\n# Happy path\ncurl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat\
+  \ -H 'Content-Type: application/json' -d '{\"inches\": 12}'\n\n# Inspect the full response for errors\n\
+  curl -i -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H 'Content-Type: application/json'\
+  \ -d '{\"inches\": -1}'\n\n# Run the suite\ngo test ./...\n```\n\n## Route and error rules\n\n- Route:\
+  \ /twirp/<service>/<method>, POST only\n- Errors: {\"code\": \"...\", \"msg\": \"...\", \"meta\": {...}}\
+  \ with proper HTTP status\n- 404 usually means the route or service name is wrong\n\n## Proto contract\n\
+  \n```proto\nsyntax = \"proto3\";\npackage twirp.example;\n\nmessage Size { int32 inches = 1; }\nmessage\
+  \ Hat { int32 inches = 1; string color = 2; }\n\nservice Haberdasher {\n  rpc MakeHat(Size) returns\
+  \ (Hat);\n}\n```\n\n## Testing\n\n```bash\ncurl -i -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat\
+  \ -H 'Content-Type: application/json' -d '{\"inches\": -1}'\ngo test ./...\n```\n\n## Best practices\n\
+  \n- Model errors in the proto contract where possible\n- Use invalid_argument for bad input, internal\
+  \ for bugs\n- Keep routes predictable: service names must match exactly\n\n## Capabilities\n\n### twirp-basics\n\
+  Design contracts, serve RPCs, and debug Twirp errors\n\n**Commands:**\n- `protoc --twirp_out=. --go_out=.\
+  \ types.proto`\n- `curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H \"\
+  Content-Type: application/json\" -d \"{\\\"inches\\\": 12}\"`\n- `curl -i -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat\
+  \ -H \"Content-Type: application/json\" -d \"{\\\"inches\\\": -1}\"`\n- `go test ./...`\n- `protoc --version`\n\
+  \n**Examples:**\n- curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -d \"\
+  {\\\"inches\\\": 12}\" -H \"Content-Type: application/json\"\n- curl -i -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat\
+  \ -d \"{}\" -H \"Content-Type: application/json\"\n- go test ./..."
+prompt: Act as Twirp and handle the task per the instructions.

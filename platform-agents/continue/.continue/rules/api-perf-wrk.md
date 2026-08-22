@@ -1,0 +1,77 @@
+---
+name: "Api Perf Wrk"
+description: "Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing."
+globs: ["**/*.json", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Api Perf Wrk
+
+Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing.
+
+## Instructions
+
+# API Perf v3 - Benchmarking
+
+Raw HTTP benchmarking with wrk/hey/ab.
+
+## What This Skill Does
+- Measures requests/sec and latency percentiles
+- Drives concurrent connections and POST bodies
+- Compares framework and config changes quickly
+
+## When to Use
+- Quick A/B of a config flag
+- Validating a framework or runtime change
+- Establishing a throughput baseline
+
+## Real Commands
+
+```bash
+wrk -t4 -c100 -d30s --latency http://localhost:3000/api
+hey -n 10000 -c 100 -m POST -H 'Content-Type: application/json' -d '{"q":"test"}' http://localhost:3000/search
+ab -n 5000 -c 50 -p post.json -T application/json http://localhost:3000/api
+```
+
+## Reading Results
+- Requests/sec: throughput ceiling
+- Latency Std Dev: jitter in responses
+- Non-2xx responses: capacity-induced failures
+
+## Testing
+- Warm up with a short run before measuring
+- Keep connection counts consistent between A/B runs
+- Compare percentile curves, not just averages
+
+## Best Practices
+- Run benchmarks on dedicated machines to avoid noise
+- Match benchmark traffic shape to production traffic
+- Beware keep-alive (-k) inflating throughput on ab
+
+## Capabilities
+
+### wrk
+Run thread-based HTTP benchmarks with latency histograms
+
+**Commands:**
+- `wrk -t4 -c100 -d30s http://localhost:3000/api`
+- `wrk -t2 -c50 -d20s --latency http://localhost:3000/api`
+- `wrk -s post.lua -t4 -c50 -d30s http://localhost:3000/api`
+
+**Examples:**
+- wrk -t4 -c100 -d30s uses 4 threads and 100 connections for 30s
+- --latency prints a full percentile distribution
+- -s post.lua drives custom request bodies
+
+### hey-ab
+Compare with hey and ApacheBench for POST and header testing
+
+**Commands:**
+- `hey -n 10000 -c 100 -m POST -H 'Content-Type: application/json' -d '{"q":"test"}' http://localhost:3000/search`
+- `hey -n 5000 -c 50 http://localhost:3000/api`
+- `ab -n 5000 -c 50 -p post.json -T application/json http://localhost:3000/api`
+- `ab -n 1000 -c 20 -k http://localhost:3000/api`
+
+**Examples:**
+- -cli --help
+- -api --help

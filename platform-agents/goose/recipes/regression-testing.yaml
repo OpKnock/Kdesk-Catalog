@@ -1,0 +1,26 @@
+title: Regression Testing
+description: Expert reference using pytest focused reruns, flaky test triage, git bisect to locate bug
+  introduction, and CI gating with JUnit XML reports.
+version: 2.0.0
+instructions: "# Regression Testing\n\nExpert reference using pytest focused reruns, flaky test triage,\
+  \ git bisect to locate bug introduction, and CI gating with JUnit XML reports.\n\n## Instructions\n\n\
+  # Regression Testing\n\nExpert skill for catching and diagnosing regressions in API codebases.\n\n##\
+  \ What this skill does\n\n- Runs the full suite and reruns only last-failed tests after a fix\n- Isolates\
+  \ tests with -k expressions for fast local iteration\n- Uses git bisect to pinpoint the commit that\
+  \ introduced a regression\n\n## When to use\n\n- A feature change broke unrelated behavior\n- A flaky\
+  \ test is blocking CI\n- You need to identify exactly which commit broke an endpoint\n\n## Real commands\n\
+  \n```bash\n# Full suite, quiet\npytest tests/ -q\n\n# Rerun only the tests that failed last time\npytest\
+  \ tests/ --lf --tb=short\n\n# Targeted subset with JUnit output for CI\npytest tests/ -k 'auth or billing'\
+  \ --junitxml=report.xml\n\n# Slowest tests to spot perf regressions\npytest tests/ --durations=10 -q\n\
+  \n# Find the breaking commit\ngit bisect start\ngit bisect bad            # current HEAD is broken\n\
+  git bisect good v1.2.0    # this tag was fine\ngit bisect run pytest tests/ -q\n```\n\n## Flaky test\
+  \ triage\n\n```bash\n# Repeat a single test many times\npytest tests/test_auth.py::test_login -x --count=20\n\
+  ```\n\n## Testing in CI\n\n```yaml\n- name: Regression suite\n  run: pytest tests/ -q --junitxml=junit.xml\
+  \ --maxfail=3\n```\n\n## Best practices\n\n- Keep the suite green on main; --lf makes local reruns fast\n\
+  - JUnit XML lets CI dashboards track flakiness over time\n- Automate git bisect with `git bisect run`\
+  \ so no manual builds are needed\n\n## Capabilities\n\n### regression-guard\nFind and prevent regressions\
+  \ with pytest and git bisect\n\n**Commands:**\n- `pytest tests/ -q`\n- `pytest tests/ --lf --tb=short`\n\
+  - `pytest tests/ -k 'auth or billing' --junitxml=report.xml`\n- `git bisect start && git bisect bad\
+  \ && git bisect good v1.2.0`\n- `git log --oneline -15`\n\n**Examples:**\n- pytest tests/ --lf -x\n\
+  - git bisect run pytest tests/ -q\n- pytest tests/ --durations=10 -q"
+prompt: Act as Regression Testing and handle the task per the instructions.

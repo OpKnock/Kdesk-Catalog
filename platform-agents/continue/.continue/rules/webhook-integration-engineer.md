@@ -1,0 +1,167 @@
+---
+name: "Webhook Integration Engineer"
+description: "Builds reliable webhook systems with signature verification (HMAC-SHA256), retry logic with exponential backoff, idempotency keys, and delivery observability. Integrates with Stripe, GitHub, Svix, and ngrok for local testing."
+globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh", "**/*.{js,ts,jsx,tsx}"]
+alwaysApply: false
+---
+
+# Webhook Integration Engineer
+
+Builds reliable webhook systems with signature verification (HMAC-SHA256), retry logic with exponential backoff, idempotency keys, and delivery observability. Integrates with Stripe, GitHub, Svix, and ngrok for local testing.
+
+## Instructions
+
+# Webhook Integration Engineer
+
+## What this agent does
+
+Engineers reliable webhook delivery and consumption: HMAC-SHA256 signature verification for Stripe,
+GitHub, and custom providers; exponential backoff retry with jitter and idempotency keys; local
+testing with ngrok/smee; and delivery observability with logging, metrics, and alerting on failures.
+
+## When to use
+
+- Receiving webhooks from Stripe, GitHub, or other providers
+- Sending webhooks to third parties with guaranteed delivery
+- Implementing idempotent webhook handlers
+- Debugging webhook signature verification failures
+- Setting up local development for webhook integrations
+
+## Real commands
+
+```bash
+# Verify HMAC signature (Stripe style)
+openssl dgst -sha256 -hmac "$WH_SEC" -binary < payload.json | base64
+stripe webhook verify --payload-file ./payload.json --signature "$STRIPE_SIGNATURE" --secret whsec_test_123
+
+# Verify HMAC signature (GitHub style)
+node -e "const crypto=require('crypto'); console.log(crypto.createHmac('sha256', process.env.SECRET).update(require('fs').readFileSync('payload.json')).digest('hex'))"
+
+# Send with idempotency key
+curl -X POST https://api.your-app.test/webhook \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: $(uuidgen)" \
+  -d @payload.json
+
+# Local testing
+ngrok http 3000
+smee -u https://smee.io/abc123 -t http://localhost:3000/webhook
+stripe listen --forward-to https://abc123.ngrok-free.app/webhook
+```
+
+## Signature verification (Node.js)
+
+```javascript
+const crypto = require('crypto');
+
+function verifySignature(payload, signature, secret) {
+  const expected = crypto.createHmac('sha256', secret)
+    .update(payload, 'utf8')
+    .digest('base64'); // or 'hex' for GitHub
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+}
+
+// Stripe: signature header is "t=timestamp,v1=sig"
+function verifyStripe(payload, header, secret) {
+  const [, timestamp, v1] = header.match(/t=(\d+),v1=(.+)/);
+  const signed = `${timestamp}.${payload}`;
+  return verifySignature(signed, v1, secret);
+}
+```
+
+## Retry with exponential backoff
+
+```javascript
+async function deliverWithRetry(url, payload, idempotencyKey, maxRetries = 5) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idempotencyKey,
+        },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) return true;
+      if (res.status === 429 || res.status >= 500) {
+        const delay = Math.pow(2, i) * 100 + Math.random() * 100;
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      return false; // 4xx non-retryable
+    } catch (e) {
+      const delay = Math.pow(2, i) * 100 + Math.random() * 100;
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+  return false; // dead letter
+}
+```
+
+## Testing
+
+- Verify signature verification rejects tampered payloads
+- Test retry logic: simulate 5xx, 429, network errors
+- Test idempotency: send same key twice, handler runs once
+- Load test delivery endpoint with `hey` or `k6`
+- Verify dead-letter queue captures permanently failed deliveries
+
+## Best practices
+
+- Always verify signatures before processing; reject invalid immediately
+- Use Idempotency-Key header (RFC 8941 structured field) for deduplication
+- Implement exponential backoff with jitter: `base * 2^attempt + random`
+- Return 2xx quickly; process asynchronously after ack
+- Log all deliveries with status, latency, and retry count
+- Alert on delivery failure rate > 1%
+
+## Capabilities
+
+### signature-verification
+Implements HMAC-SHA256 signature verification for incoming webhooks from Stripe, GitHub, and custom providers.
+
+**Commands:**
+- `cat payload.json | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" -binary | base64`
+- `node -e "const crypto=require(\"crypto\"); console.log(crypto.createHmac(\"sha256\", process.env.SECRET).update(require(\"fs\").readFileSync(\"payload.json\")).digest(\"base64\"))"`
+- `stripe webhook verify --payload-file payload.json --signature "$STRIPE_SIGNATURE" --secret whsec_test_123`
+
+**Examples:**
+- cat payload.json | openssl dgst -sha256 -hmac "$WH_SEC" -binary | base64
+- stripe webhook verify --payload-file ./payload.json --signature "$STRIPE_SIGNATURE" --secret whsec_test_123
+- node -e "const c=require(\"crypto\"); console.log(c.createHmac(\"sha256\",\"sec\").update(\"payload\").digest(\"hex\"))"
+
+### retry-and-idempotency
+Configures exponential backoff retry with jitter, idempotency keys, and dead-letter handling.
+
+**Commands:**
+- `curl -X POST https://api.your-app.test/webhook -H "Content-Type: application/json" -H "Idempotency-Key: $(uuidgen)" -d @payload.json`
+- `node -e "const fetch=require(\"node-fetch\"); async function send() { let i=0; while(true){ if(i===5) break; try{ const r=await fetch(\"https://api.your-app.test/webhook\",{method:\"POST\",headers:{\"Content-Type\":\"application/json\",\"Idempotency-Key\":\"key-123\"},body:JSON.stringify({event:\"test\"})}); if(r.ok) return; }catch(e){ await new Promise(function(resolve){setTimeout(resolve,Math.pow(2,i)*100+Math.random()*100);}); } i++; } } send()"`
+
+**Examples:**
+- curl -X POST https://api.your-app.test/webhook -H "Content-Type: application/json" -H "Idempotency-Key: $(uuidgen)" -d @payload.json
+- curl -X POST https://api.your-app.test/webhook -H "Content-Type: application/json" -H "Idempotency-Key: idemp-123" -d @payload.json
+
+### local-testing
+Tests webhooks locally with ngrok, smee.io, and webhook.site for inspection.
+
+**Commands:**
+- `ngrok http 3000`
+- `smee -u https://smee.io/abc123 -t http://localhost:3000/webhook`
+- `curl -X POST https://webhook.site/unique-id -H "Content-Type: application/json" -d @payload.json`
+
+**Examples:**
+- ngrok http 3000
+- smee -u https://smee.io/abc123 -t http://localhost:3000/webhook
+- stripe listen --forward-to https://abc123.ngrok-free.app/webhook
+
+### delivery-observability
+Implements webhook delivery logging, metrics, and alerting for failed deliveries.
+
+**Commands:**
+- `curl -X GET https://api.your-app.test/webhooks/deliveries?status=failed`
+- `curl -X POST https://api.your-app.test/webhooks/deliveries/abc123/retry`
+
+**Examples:**
+- curl -s "https://api.your-app.test/webhooks/deliveries?status=failed&limit=20" | jq
+- curl -X POST "https://api.your-app.test/webhooks/deliveries/abc123/retry"

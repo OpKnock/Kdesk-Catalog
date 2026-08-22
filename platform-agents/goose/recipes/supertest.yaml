@@ -1,0 +1,28 @@
+title: Supertest
+description: Write and run HTTP API tests with it and jest.
+version: 2.0.0
+instructions: "# Supertest\n\nWrite and run HTTP API tests with it and jest.\n\n## Instructions\n\n# Supertest\n\
+  \nHand-crafted skill for HTTP-level API testing in Node with supertest.\n\n## What this skill does\n\
+  \n- Attaches supertest to an Express/Fastify app without a live server\n- Chains status, header, and\
+  \ body expectations\n- Runs targeted tests and coverage with jest\n\n## When to use\n\n- Testing Express\
+  \ routes in-process and fast\n- Verifying middleware behavior (auth, validation) at the HTTP layer\n\
+  - Filling the gap between unit tests and E2E suites\n\n## Real commands\n\n```bash\n# Setup\nnpm init\
+  \ -y && npm i -D supertest jest\n\n# Run the whole suite\nnpx jest --verbose\n\n# Run one test by name\n\
+  npx jest tests/api.test.js -t 'should return 200'\n\n# Coverage\nnpx jest --coverage\n\n# One-liner\
+  \ smoke test\nnode -e 'const request = require(\"supertest\"); request(require(\"./app\")).get(\"/health\"\
+  ).expect(200).end(() => console.log(\"ok\"))'\n```\n\n## Test example\n\n```js\nconst request = require(\"\
+  supertest\");\nconst app = require(\"../app\");\n\ndescribe(\"GET /api/users\", () => {\n  it(\"should\
+  \ return 200 with JSON\", async () => {\n    await request(app)\n      .get(\"/api/users\")\n      .set(\"\
+  Accept\", \"application/json\")\n      .expect(\"Content-Type\", /json/)\n      .expect(200)\n     \
+  \ .expect((res) => {\n        expect(Array.isArray(res.body)).toBe(true);\n      });\n  });\n});\n```\n\
+  \n## Testing\n\n```bash\nnpx jest tests/api.test.js -t 'should return 200'\nnpx jest --verbose --watch\n\
+  ```\n\n## Best practices\n\n- Test behaviors users hit, not implementation details\n- Use .set() for\
+  \ headers and .send() for bodies on mutating calls\n- Mock external services (DB, HTTP) so tests stay\
+  \ deterministic\n\n## Capabilities\n\n### supertest-http-tests\nWrite and run HTTP API tests with supertest\
+  \ and jest\n\n**Commands:**\n- `npm init -y && npm i -D supertest jest`\n- `npx jest --verbose`\n- `npx\
+  \ jest tests/api.test.js -t 'should return 200'`\n- `npx jest --coverage`\n- `node -e 'const request\
+  \ = require(\"supertest\"); const app = require(\"./app\"); request(app).get(\"/\").expect(200).end((err,res)\
+  \ => { if (err) throw err; console.log(res.status); })'`\n\n**Examples:**\n- npx jest tests/api.test.js\
+  \ -t 'should return 200'\n- npx jest --verbose\n- node -e 'const request = require(\"supertest\"); request(require(\"\
+  ./app\")).get(\"/health\").expect(200).end(() => console.log(\"ok\"))'"
+prompt: Act as Supertest and handle the task per the instructions.

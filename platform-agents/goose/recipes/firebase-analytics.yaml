@@ -1,0 +1,35 @@
+title: Firebase Analytics
+description: 'Firebase Analytics operations: export events, query event data from BigQuery, manage measurement
+  settings, and debug event flows with the Firebase CLI.'
+version: 2.0.0
+instructions: "# Firebase Analytics\n\nFirebase Analytics operations: export events, query event data\
+  \ from BigQuery, manage measurement settings, and debug event flows with the Firebase CLI.\n\n## Instructions\n\
+  \n# Firebase Analytics\n\n## What this skill does\n\nFirebase Analytics collects app and web events\
+  \ automatically. Power users export raw events to BigQuery and run SQL against `events_*` tables for\
+  \ custom reporting beyond the console.\n\n## When to use\n\n- Verifying events fire correctly after\
+  \ a release\n- Building custom funnels or user cohorts in BigQuery\n- Setting up export before analytics\
+  \ dashboards go live\n\n## Real commands\n\n```bash\n# Project context\nfirebase projects:list\n\n#\
+  \ Trigger/verify the BigQuery export\nfirebase analytics:export\n\n# Top events today from BigQuery\n\
+  bq query --use_legacy_sql=false 'SELECT event_name, COUNT(*) AS cnt FROM `project.analytics_123456.events_*`\
+  \ WHERE _TABLE_SUFFIX = FORMAT_DATE(\"%Y%m%d\", CURRENT_DATE()) GROUP BY event_name ORDER BY cnt DESC\
+  \ LIMIT 20'\n\n# Recent raw events for debugging\nbq query --use_legacy_sql=false 'SELECT event_date,\
+  \ event_timestamp, event_name, user_pseudo_id FROM `project.analytics_123456.events_*` WHERE event_name\
+  \ = \"add_to_cart\" ORDER BY event_timestamp DESC LIMIT 10'\n```\n\n## Common queries\n\n```sql\n--\
+  \ Funnel: view_item -> add_to_cart -> begin_checkout -> purchase\nSELECT\n  COUNTIF(event_name = 'view_item')\
+  \ AS viewed,\n  COUNTIF(event_name = 'add_to_cart') AS added,\n  COUNTIF(event_name = 'begin_checkout')\
+  \ AS checked,\n  COUNTIF(event_name = 'purchase') AS purchased\nFROM `project.analytics_123456.events_*`\n\
+  WHERE _TABLE_SUFFIX >= FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))\n```\n\n## Testing\n\
+  \n```bash\n# Fire a debug event and watch it appear in BigQuery (allow ~10-60 min latency)\nbq query\
+  \ --use_legacy_sql=false 'SELECT COUNT(*) FROM `project.analytics_123456.events_*` WHERE event_name\
+  \ = \"test_event\"'\n```\n\n## Best practices\n\n- Enable BigQuery export at project setup; backfills\
+  \ are manual after that.\n- Always filter on `_TABLE_SUFFIX` (dates) to keep queries cheap.\n- Use `event_timestamp`\
+  \ (microseconds) not event_date for ordering.\n- Check the console's DebugView for real-time validation,\
+  \ BigQuery for reporting.\n\n## Capabilities\n\n### analytics-ops\nManage Firebase Analytics projects,\
+  \ export data, and query events.\n\n**Commands:**\n- `firebase projects:list`\n- `firebase analytics:export`\n\
+  - `bq query --use_legacy_sql=false 'SELECT event_name, COUNT(*) AS cnt FROM `project.analytics_123456.events_*`\
+  \ WHERE _TABLE_SUFFIX = FORMAT_DATE(\"%Y%m%d\", CURRENT_DATE()) GROUP BY event_name ORDER BY cnt DESC\
+  \ LIMIT 20'`\n- `firebase analytics:data:events`\n- `gcloud firebase analytics --help`\n\n**Examples:**\n\
+  - bq query --use_legacy_sql=false 'SELECT event_name, COUNT(*) AS cnt FROM `project.analytics_123456.events_*`\
+  \ WHERE _TABLE_SUFFIX = FORMAT_DATE(\"%Y%m%d\", CURRENT_DATE()) GROUP BY event_name ORDER BY cnt DESC\
+  \ LIMIT 20'\n- firebase analytics:export\n- firebase projects:list"
+prompt: Act as Firebase Analytics and handle the task per the instructions.

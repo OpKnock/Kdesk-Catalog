@@ -1,0 +1,27 @@
+title: Api Webhook Bullmq Queues
+description: 'Builds reliable webhook delivery with queues: BullMQ workers, Redis persistence, dead-letter
+  handling, and delivery monitoring.'
+version: 2.0.0
+instructions: "# Api Webhook Bullmq Queues\n\nBuilds reliable webhook delivery with queues: BullMQ workers,\
+  \ Redis persistence, dead-letter handling, and delivery monitoring.\n\n## Instructions\n\n# API Webhook\
+  \ v4 - Reliability\n\nQueue-backed webhook delivery.\n\n## What This Skill Does\n- Enqueues deliveries\
+  \ as durable jobs\n- Retries with backoff in workers\n- Dead-letters persistent failures\n\n## When\
+  \ to Use\n- High-volume webhook workloads\n- At-least-once delivery needs\n- Surviving worker crashes\n\
+  \n## Real Commands\n\n```bash\nnpm install bullmq ioredis\nnode -e \"const {Queue}=require('bullmq');\
+  \ const q=new Queue('webhook-delivery'); q.add('order.created',{id:1}).then(j=>console.log('job',j.id))\"\
+  \nredis-cli LLEN bull:webhook-delivery:wait\n```\n\n## Worker Example\n\n```js\nconst { Worker } = require('bullmq');\n\
+  new Worker('webhook-delivery', async (job) => {\n  await fetch(job.data.url, { method: 'POST', body:\
+  \ JSON.stringify(job.data) });\n}, { concurrency: 10 });\n```\n\n## Testing\n- Kill workers mid-queue\
+  \ and verify recovery\n- Simulate endpoint failures into dead letters\n- Monitor queue depth during\
+  \ bursts\n\n\n## Best Practices\n- Set job TTLs and max attempts\n- Keep payloads small; reference data\n\
+  - Alert on dead-letter growth\n\n## Capabilities\n\n### bullmq-queues\nQueue webhook deliveries with\
+  \ BullMQ\n\n**Commands:**\n- `npm install bullmq ioredis`\n- `node -e \"const {Queue}=require('bullmq');\
+  \ const q=new Queue('webhook-delivery'); q.add('order.created',{id:1}).then(j=>console.log('job',j.id))\"\
+  `\n- `node -e \"const {Queue}=require('bullmq'); const q=new Queue('webhook-delivery'); q.getJobCounts().then(console.log)\"\
+  `\n- `node worker.js`\n- `redis-cli LLEN bull:webhook-delivery:wait`\n\n**Examples:**\n- Queue.add enqueues\
+  \ a delivery job\n- getJobCounts reports queue state\n- redis-cli LLEN inspects the waiting list\n\n\
+  ### delivery-monitoring\nMonitor retries and dead letters\n\n**Commands:**\n- `node -e \"const {Queue}=require('bullmq');\
+  \ const q=new Queue('webhook-delivery'); q.getFailed().then(jobs=>console.log('failed',jobs.length))\"\
+  `\n- `redis-cli ZCARD bull:webhook-delivery:failed`\n- `npx bull-board`\n- `node -e \"const {Queue}=require('bullmq');\
+  \ const q=new Queue('webhook-delivery'); q.obliterate().then(()=>console.log('cleared'))\"`"
+prompt: Act as Api Webhook Bullmq Queues and handle the task per the instructions.

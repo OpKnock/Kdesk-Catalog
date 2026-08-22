@@ -1,0 +1,27 @@
+title: api-mock-specialist
+description: Generates mock API servers directly from OpenAPI documents using Stoplight Prism, with dynamic
+  examples, validation, and path/query behavior configuration.
+version: 2.0.0
+instructions: "# api-mock-specialist\n\nGenerates mock API servers directly from OpenAPI documents using\
+  \ Stoplight Prism, with dynamic examples, validation, and path/query behavior configuration.\n\n## Instructions\n\
+  \n# API Mock Specialist\n\nMocks APIs from OpenAPI documents with Prism.\n\n## What This Skill Does\n\
+  - Serves any OpenAPI file as a running mock server\n- Returns example or generated responses per operation\n\
+  - Validates incoming requests against schemas\n\n## When to Use\n- Contract-first development where\
+  \ the spec exists before code\n- Providing frontends a spec-accurate backend instantly\n- Demo environments\
+  \ for API products\n\n## Real Commands\n\n```bash\nnpx @stoplight/prism-cli mock openapi.yaml\nnpx @stoplight/prism-cli\
+  \ mock -d -p 4010 openapi.yaml\ncurl -s http://localhost:4010/users | jq .\n```\n\n## Behavior Config\n\
+  \n```yaml\nx-mock-response:\n  headers:\n    X-RateLimit-Remaining: 40\nx-example: null   # forces generation\n\
+  ```\n\nInline annotations in the spec control mock output per operation.\n\n## Testing\n- Hit endpoints\
+  \ and confirm responses conform to schemas\n- Send invalid bodies to observe validation error responses\n\
+  - Test 404 behavior with unlisted resource ids\n\n## Best Practices\n- Keep the mock spec in sync with\
+  \ the real implementation spec\n- Use -d mode when exact examples matter to consumers\n- Point CI contract\
+  \ tests at Prism before the real API exists\n\n## Capabilities\n\n### prism-mocking\nServe an OpenAPI-defined\
+  \ mock API with Prism\n\n**Commands:**\n- `npx @stoplight/prism-cli mock openapi.yaml`\n- `npx @stoplight/prism-cli\
+  \ mock -d -p 4010 openapi.yaml`\n- `npx @stoplight/prism-cli mock openapi.yaml --errors`\n- `curl -s\
+  \ http://localhost:4010/users | jq .`\n- `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:4010/users/999999`\n\
+  \n**Examples:**\n- prism mock -d openapi.yaml uses example values instead of generated ones\n- prism\
+  \ mock -p 4010 openapi.yaml serves the spec on port 4010\n- prism mock --errors returns 500-style dynamic\
+  \ responses for malformed requests\n\n### spec-validation\nValidate the OpenAPI document before mocking\
+  \ it\n\n**Commands:**\n- `npx swagger-cli validate openapi.yaml`\n- `npx @stoplight/prism-cli mock --help`\n\
+  - `curl -s http://localhost:4010/__prism/health`"
+prompt: Act as api-mock-specialist and handle the task per the instructions.

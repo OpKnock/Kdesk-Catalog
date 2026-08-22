@@ -1,0 +1,79 @@
+---
+name: "api-error-handling-engineer"
+description: "Designs and implements error handling: RFC 9457 formats, error catalogs, middleware, and OpenAPI documentation for REST and GraphQL."
+type: knowledge
+triggers: ["api-error-handling-engineer", "error-format-impl", "graphql-errors"]
+---
+
+# api-error-handling-engineer
+
+Designs and implements error handling: RFC 9457 formats, error catalogs, middleware, and OpenAPI documentation for REST and GraphQL.
+
+## Instructions
+
+# API Error Handling Engineer
+
+Designs and implements error handling across REST and GraphQL.
+
+## When to Use
+- New API needs an error contract
+- Mixing REST and GraphQL errors
+- Standardizing validation failures
+
+## Real Commands
+
+```bash
+# Problem details
+node -e "const p={type:'https://api.example/errors/validation',title:'Validation failed',status:422,code:'VALIDATION_1001',errors:[{field:'email',reason:'required'}]};console.log(JSON.stringify(p,null,2))"
+
+# Probe REST
+curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{}' | python -m json.tool
+
+# GraphQL errors
+node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Not authorized',{extensions:{code:'UNAUTHENTICATED'}});console.log(e.extensions)"
+curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ broken }"}' | python -m json.tool
+```
+
+## REST vs GraphQL
+- REST: status + problem details
+- GraphQL: always 200, errors array with extensions.code
+- Keep the same codes across both
+
+## Testing
+Test both valid and invalid inputs and assert shapes.
+
+## Best Practices
+- Document every code in the catalog
+- Never leak internal error details
+
+## Capabilities
+
+### error-format-impl
+Implement RFC 9457 problem details in REST services
+
+**Commands:**
+- `npm install http-errors`
+- `node -e "const h=require('http-errors');const e=h(400,'Bad Request');e.code='VALIDATION_1001';console.log(e.status,e.code)"`
+- `curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{}' | python -m json.tool`
+- `node -e "const p={type:'https://api.example/errors/validation',title:'Validation failed',status:422,code:'VALIDATION_1001',errors:[{field:'email',reason:'required'}]};console.log(JSON.stringify(p,null,2))"`
+- `curl -s http://localhost:3000/api/missing -w '\n%{http_code}'`
+
+**Examples:**
+- node -e "const p={type:'https://api.example/errors/validation',title:'Validation failed',status:422,code:'VALIDATION_1001',errors:[{field:'email',reason:'required'}]};console.log(JSON.stringify(p,null,2))"
+- curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{}' | python -m json.tool
+- curl -s http://localhost:3000/api/missing -w '\n%{http_code}'
+
+### graphql-errors
+Design GraphQL error policies: extensions, codes, and partial results
+
+**Commands:**
+- `node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Not authorized',{extensions:{code:'UNAUTHENTICATED'}});console.log(e.extensions)"`
+- `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ me { id } }"}'`
+- `node -e "console.log('null fields + errors array = partial success')"`
+- `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ broken }"}' | python -m json.tool`
+- `node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Too complex',{extensions:{code:'COMPLEXITY'}});console.log(e.message)"`
+
+**Examples:**
+- node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Not authorized',{extensions:{code:'UNAUTHENTICATED'}});console.log(e.extensions)"
+- curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ broken }"}' | python -m json.tool
+- curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ me { id } }"}'

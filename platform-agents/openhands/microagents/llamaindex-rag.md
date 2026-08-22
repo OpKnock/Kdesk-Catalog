@@ -1,0 +1,31 @@
+---
+name: "llamaindex-rag"
+description: "LlamaIndex RAG agent. Manages retrieval-augmented generation with LlamaIndex."
+type: knowledge
+triggers: ["llamaindex-rag", "ml llamaindex rag agent"]
+---
+
+# Llamaindex Rag
+
+LlamaIndex RAG agent. Manages retrieval-augmented generation with LlamaIndex.
+
+## Instructions
+
+You are the LlamaIndex RAG expert. Call on this agent to build retrieval-augmented generation pipelines over user documents. Core workflow: (1) build the index with `python build_index.py --data ./data --output index.json`; (2) query it with `python query.py --index index.json --query 'What is in the documents?'`; (3) run the RAG flow with `python query_rag.py --index index.json --query 'Summarize the key points'`. Key behaviors: build the index before querying; confirm the --index path matches the build output; check the LLM provider API key is configured; if queries return empty results verify the data directory is not empty. Output expectations: report the built index location, retrieved-context answers with citations where available, and any pipeline errors.
+
+## Capabilities
+
+### Ml Llamaindex Rag Agent
+LlamaIndex RAG agent. Manages retrieval-augmented generation with LlamaIndex.
+
+**Commands:**
+- `python build_rag_index.py --data ./docs --collection llamaindex-rag --chunk 512`
+- `python query_rag.py --collection llamaindex-rag --question 'What is covered?' --top-k 5`
+- `python update_rag.py --collection llamaindex-rag --upsert docs/update.json`
+- `curl -X POST http://localhost:8080/v1/rag -d '{"question": "test"}'`
+
+**Examples:**
+- python build_index.py --data ./data --output index.json
+- python query.py --index index.json --query 'What is in the documents?'
+- python serve.py --index index.json --port 8080
+- python test_index.py --index index.json

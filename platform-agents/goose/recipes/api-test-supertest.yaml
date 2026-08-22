@@ -1,0 +1,24 @@
+title: Api Test Supertest
+description: 'Tests Express APIs with supertest and jest: request assertions, route coverage, snapshot
+  testing, and CI-friendly test configuration.'
+version: 2.0.0
+instructions: "# Api Test Supertest\n\nTests Express APIs with supertest and jest: request assertions,\
+  \ route coverage, snapshot testing, and CI-friendly test configuration.\n\n## Instructions\n\n# API\
+  \ Test v3 - Supertest/Jest\n\nIn-process API testing.\n\n## What This Skill Does\n- Tests routes without\
+  \ binding a port\n- Asserts status, bodies, and headers\n- Reports coverage per route\n\n## When to\
+  \ Use\n- Node/Express API suites\n- Fast unit-style endpoint tests\n- Route regression coverage\n\n\
+  ## Real Commands\n\n```bash\nnpm install -D supertest jest\nnpx jest test/api.test.js --verbose\nnpx\
+  \ jest --coverage --collectCoverageFrom='routes/**/*.js'\n```\n\n## Test Example\n\n```js\nconst request\
+  \ = require('supertest');\nconst app = require('../app');\n\ntest('creates a user', async () => {\n\
+  \  const res = await request(app).post('/api/users').send({ name: 'alice' });\n  expect(res.status).toBe(201);\n\
+  \  expect(res.body.id).toBeDefined();\n});\n```\n\n## Testing\n- Cover success and error paths per route\n\
+  - Use coverage thresholds in CI\n- Keep tests independent with in-memory DBs\n\n\n## Best Practices\n\
+  - Export the app separately from the server\n- Test through the HTTP interface\n- Group tests by route\
+  \ resource\n\n## Capabilities\n\n### supertest\nTest HTTP APIs in-process with supertest\n\n**Commands:**\n\
+  - `npm install -D supertest jest`\n- `npx jest test/api.test.js --verbose`\n- `npx jest --coverage --collectCoverageFrom='routes/**/*.js'`\n\
+  - `npx jest -t 'creates a user'`\n- `npm test`\n\n**Examples:**\n- supertest(app).get('/api/users')\
+  \ mounts the app in-process\n- jest --coverage reports route coverage\n- -t filters to a single test\
+  \ name\n\n### assertion-patterns\nAssert status, body, and headers\n\n**Commands:**\n- `node -e \"const\
+  \ request=require('supertest'); console.log(typeof request)\"`\n- `npx jest test/api.test.js --runInBand`\n\
+  - `npx jest --watch`"
+prompt: Act as Api Test Supertest and handle the task per the instructions.

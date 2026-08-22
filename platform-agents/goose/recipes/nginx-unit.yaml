@@ -1,0 +1,29 @@
+title: Nginx Unit
+description: Configures NGINX Unit via its JSON control API to manage listeners, routes, and application
+  objects supporting PHP, Node.js, Python, and Go apps with zero-downtime reloads.
+version: 2.0.0
+instructions: "# Nginx Unit\n\nConfigures NGINX Unit via its JSON control API to manage listeners, routes,\
+  \ and application objects supporting PHP, Node.js, Python, and Go apps with zero-downtime reloads.\n\
+  \n## Instructions\n\n# NGINX Unit\n\nNGINX Unit is an application server for PHP, Python, Node.js, Go\
+  \ and more, configured entirely over a JSON API.\n\n## What this skill does\n\n- Runs unitd and manages\
+  \ the control API\n- Configures listeners, routes and applications\n- Reloads configs without restarts\n\
+  \n## When to use\n\n- Polyglot workloads behind one runtime\n- Zero-downtime config changes\n\n## Real\
+  \ commands\n\n```bash\n# Start\nunitd\nunitd --no-daemon   # foreground\n\n# Full config\ncurl -X PUT\
+  \ --data-binary @config.json http://127.0.0.1:8080/config\n\n# Add an application object\ncurl -X PUT\
+  \ --data-binary '{\"type\":\"python3\",\"processes\":4,\"path\":\"/srv/app\",\"module\":\"app\"}' \\\
+  \n  http://127.0.0.1:8080/config/applications/web\n\n# Route a listener to it\ncurl -X PUT --data-binary\
+  \ '{\"listeners\":{\"*:8300\":{\"pass\":\"applications/web\"}}}' \\\n  http://127.0.0.1:8080/config\n\
+  \n# Inspect\ncurl -s http://127.0.0.1:8080/config\ncurl -s http://127.0.0.1:8080/status\n```\n\n## config.json\
+  \ example\n\n```json\n{\n  \"listeners\": { \"*:8300\": { \"pass\": \"routes/main\" } },\n  \"routes\"\
+  : { \"main\": [ { \"action\": { \"pass\": \"applications/web\" } } ] },\n  \"applications\": { \"web\"\
+  : { \"type\": \"php\", \"root\": \"/srv/www\" } }\n}\n```\n\n## Best practices\n\n- Apply config as\
+  \ JSON files for auditability\n- Use routes for request routing across apps\n- Check /status for application\
+  \ and request counters\n\n## Capabilities\n\n### nginx-unit-config\nControl NGINX Unit through its JSON\
+  \ control API: configure listeners, routes and application objects.\n\n**Commands:**\n- `unitd --no-daemon`\n\
+  - `curl -X PUT --data-binary @config.json http://127.0.0.1:8080/config`\n- `curl -X PUT --data-binary\
+  \ @app.json http://127.0.0.1:8080/config/applications/web`\n- `curl -X DELETE http://127.0.0.1:8080/config/listeners/127.0.0.1:8300`\n\
+  - `curl -s http://127.0.0.1:8080/status`\n\n**Examples:**\n- curl -X PUT --data-binary '{\"type\":\"\
+  python3\",\"processes\":4,\"path\":\"/srv/app\",\"module\":\"app\"}' http://127.0.0.1:8080/config/applications/web\n\
+  - curl -X PUT --data-binary '{\"listeners\":{\"*:8300\":{\"pass\":\"applications/web\"}}}' http://127.0.0.1:8080/config\n\
+  - curl -s http://127.0.0.1:8080/config"
+prompt: Act as Nginx Unit and handle the task per the instructions.

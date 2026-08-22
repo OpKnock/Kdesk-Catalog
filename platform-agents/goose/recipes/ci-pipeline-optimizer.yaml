@@ -1,0 +1,28 @@
+title: ci-pipeline-optimizer
+description: 'Optimizes CI pipelines: caching, job parallelization, matrix builds, flaky test handling,
+  and cost reduction on GitHub Actions and GitLab CI.'
+version: 2.0.0
+instructions: "# ci-pipeline-optimizer\n\nOptimizes CI pipelines: caching, job parallelization, matrix\
+  \ builds, flaky test handling, and cost reduction on GitHub Actions and GitLab CI.\n\n## Instructions\n\
+  \n# CI Pipeline Optimizer\n\nMake CI fast, reliable, and cheap.\n\n## When to Use\n\n- Pipelines slower\
+  \ than 5 minutes on every push\n- Flaky tests breaking merges\n- High CI costs from repeated work\n\
+  - Matrix builds that run identical work\n\n## Strategies\n\n- Cache dependencies (npm ci cache, pip\
+  \ cache, gradle build cache)\n- Parallelize independent jobs and shard test suites\n- Use matrix builds\
+  \ only for true configuration differences\n- Split build vs test into separate stages/jobs\n- Fix flaky\
+  \ tests instead of re-running them\n\n## Commands\n\n```bash\n# GitHub Actions inspection\ngh workflow\
+  \ run ci.yml\ngh run list --workflow ci.yml --limit 10\ngh run view 1234 --log-failed\ngh cache list\
+  \ --json key,sizeInBytes\ngh cache delete --all\n\n# Caching and parallel tests\nnpm ci --cache .npm\
+  \ --prefer-offline\npytest -n auto\npytest -n 4 --dist=loadscope\nmvn -T 4 test\ngradle --build-cache\
+  \ test\n```\n\n## Caching Example\n\n```yaml\n- uses: actions/cache@v4\n  with:\n    path: ~/.npm\n\
+  \    key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}\n```\n\n## Best Practices\n\n\
+  - Target under 5 minutes for PR checks\n- Shard unit tests by file or by load balance\n- Retry only\
+  \ known flaky tests; quarantine the rest\n- Cache keys must include lockfile hashes\n- Fail fast: lint\
+  \ first, then unit tests, then e2e\n- Cancel superseded runs to save parallel minutes\n\n## Capabilities\n\
+  \n### github-actions\nOptimize GitHub Actions workflows.\n\n**Commands:**\n- `gh workflow run ci.yml`\n\
+  - `gh run list`\n- `gh run view --log-failed 1234`\n- `gh cache list`\n- `gh cache delete --all`\n\n\
+  **Examples:**\n- gh run list --workflow ci.yml --limit 10\n- gh run view 1234 --log-failed | head -100\n\
+  - gh cache list --json key,sizeInBytes\n\n### pipeline-tuning\nCache deps, parallelize, and fix flaky\
+  \ tests.\n\n**Commands:**\n- `npm ci --cache .npm --prefer-offline`\n- `pip cache dir`\n- `pytest -n\
+  \ auto`\n- `pytest --flaky -p no:cacheprovider`\n- `gradle --build-cache test`\n\n**Examples:**\n- npm\
+  \ ci --cache .npm && npm cache verify\n- pytest -n 4 --dist=loadscope\n- mvn -T 4 test"
+prompt: Act as ci-pipeline-optimizer and handle the task per the instructions.

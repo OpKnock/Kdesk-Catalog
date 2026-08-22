@@ -1,0 +1,37 @@
+title: opa
+description: Evaluate Rego queries against data and inputs. Run Rego unit tests, format code, and build
+  bundles. Serve policies over HTTP handling live decisions. workflows.'
+version: 2.0.0
+instructions: "# opa\n\nEvaluate Rego queries against data and inputs. Run Rego unit tests, format code,\
+  \ and build bundles. Serve policies over HTTP handling live decisions. workflows.'\n\n## Instructions\n\
+  \n# OPA\n\nPolicy-as-code with the Open Policy Agent and Rego.\n\n## What This Skill Does\n\n- Evaluates\
+  \ Rego queries against JSON data and inputs\n- Writes and runs unit tests for policies\n- Formats and\
+  \ validates Rego with canonical style\n- Builds deployable bundles and serves decisions over HTTP\n\n\
+  ## When to Use\n\n- Authorization decisions for APIs or infrastructure\n- Validating configs before\
+  \ deployment\n- Building policy bundles for Gatekeeper, Envoy, or custom agents\n\n## Real Commands\n\
+  \n```bash\n# Evaluate\nopa eval -i input.json -d policy.rego 'data.example.allow'\nopa eval --format\
+  \ raw -d policy.rego 'data.example.msg'\n\n# Test\nopa test -v ./policies\nopa test policy_test.rego\
+  \ policy.rego\n\n# Format and validate\nopa fmt -w policies/\nopa fmt --diff policy.rego\nopa check\
+  \ policy.rego\n\n# Build and serve\nopa build -b policies/ -o bundle.tar.gz\nopa run -s -w -b bundle.tar.gz\n\
+  curl -s -X POST -H 'Content-Type: application/json' \\\n  -d '{\"input\": {\"user\": \"alice\", \"action\"\
+  : \"read\"}}' \\\n  http://localhost:8181/v1/data/example/allow\n```\n\n## Sample Policy\n\n```rego\n\
+  package example\n\nimport rego.v1\n\ndefault allow := false\n\nallow if {\n  input.action == \"read\"\
+  \n  input.user in data.authorized_users\n}\n```\n\n## Best Practices\n\n- Format with opa fmt before\
+  \ merging\n- Cover every rule with test_* cases and run opa test in CI\n- Keep bundles small; watch\
+  \ mode for local dev only\n- Version bundles and pin hashes at deploy time\n- Use data-driven configs\
+  \ rather than many hardcoded rules\n\n## Capabilities\n\n### policy-evaluation\nEvaluate Rego queries\
+  \ against data and inputs.\n\n**Commands:**\n- `opa eval 'data.policies.allow'`\n- `opa eval -i input.json\
+  \ -d policies.rego 'data.example.allow'`\n- `opa eval --format pretty 'data.servers[i].id' -d example.rego`\n\
+  - `opa eval -b bundle.tar.gz 'data.main.allow'`\n\n**Examples:**\n- opa eval -i input.json -d policy.rego\
+  \ 'data.example.allow'\n- opa eval --format raw 'data.example.msg' -d policy.rego\n- opa eval 'x :=\
+  \ 5; y := x * 2'\n\n### testing-and-linting\nRun Rego unit tests, format code, and build bundles.\n\n\
+  **Commands:**\n- `opa test policy_test.rego policy.rego`\n- `opa test -v ./policies`\n- `opa fmt -w\
+  \ policy.rego`\n- `opa fmt --diff policy.rego`\n- `opa check policy.rego`\n- `opa build -b policies/\
+  \ -o bundle.tar.gz`\n\n**Examples:**\n- opa test -v ./policies\n- opa fmt -w policies/\n- opa build\
+  \ -b policies/ -o bundle.tar.gz\n\n### server-mode\nServe policies over HTTP for live decisions.\n\n\
+  **Commands:**\n- `opa run --server`\n- `opa run -s -w -b bundle.tar.gz`\n- `curl -s -X POST -H 'Content-Type:\
+  \ application/json' -d '{\"input\": {\"user\": \"alice\"}}' http://localhost:8181/v1/data/example/allow`\n\
+  - `opa run --server --addr 127.0.0.1:9191`\n\n**Examples:**\n- opa run -s -w -b bundle.tar.gz\n- curl\
+  \ -s -X POST http://localhost:8181/v1/data/example/allow -d '{\"input\":{}}'\n- opa run --server --addr\
+  \ 127.0.0.1:9191"
+prompt: Act as opa and handle the task per the instructions.

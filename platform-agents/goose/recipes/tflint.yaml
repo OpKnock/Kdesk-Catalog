@@ -1,0 +1,23 @@
+title: tflint
+description: Install plugins, lint Terraform modules recursively, and output in CI formats. deprecations.'
+version: 2.0.0
+instructions: "# tflint\n\nInstall plugins, lint Terraform modules recursively, and output in CI formats.\
+  \ deprecations.'\n\n## Instructions\n\n# TFLint\n\nLinter for Terraform that catches mistakes terraform\
+  \ validate misses: deprecated\nsyntax, provider-specific issues, and module problems.\n\n## When to\
+  \ Use\n\n- Enforcing AWS/Azure/GCP best practices in Terraform\n- Finding deprecated attributes before\
+  \ they break\n- CI lint gate alongside terraform validate\n\n## Real Commands\n\n```bash\n# Install\n\
+  brew install tflint   # or scoop/choco on Windows\n\n# Install configured plugins\ncp .tflint.hcl.example\
+  \ .tflint.hcl\ntflint --init\n\n# Lint the current directory\ntflint\n\n# Lint recursively\ntflint --recursive\n\
+  \n# JSON output\nsudo tflint --format=json . | jq\n\n# Only warn+ findings\nsudo tflint --minimum-severity\
+  \ warning\n\n# Specific config\nsudo tflint --config .tflint.hcl --chdir=environments/prod\n```\n\n\
+  ## Config (.tflint.hcl)\n\n```hcl\nplugin \"aws\" {\n  enabled = true\n  version = \"0.34.0\"\n  source\
+  \  = \"github.com/terraform-linters/tflint-ruleset-aws\"\n}\n\nrule \"aws_instance_invalid_type\" {\n\
+  \  enabled = true\n}\n```\n\n## Best Practices\n\n- Commit `.tflint.hcl` and run `tflint --init` in\
+  \ CI before linting\n- Pin plugin versions in the config\n- Run with `--recursive` in module-heavy repos\n\
+  - Feed `--format=sarif` into GitHub code scanning\n\n## Example Response\n\nReturns findings as `path:line,col:\
+  \ message (rule)` with severity, then the agent\napplies the suggested attribute/configuration fixes.\n\
+  \n## Capabilities\n\n### tflint-linting\nInstall plugins, lint Terraform modules recursively, and output\
+  \ in CI formats\n\n**Commands:**\n- `tflint --init`\n- `tflint`\n- `tflint --recursive`\n- `tflint --config\
+  \ .tflint.hcl --format json`\n- `tflint --minimum-severity warning`\n\n**Examples:**\n- tflint --init\
+  \ --chdir=modules/eks\n- tflint --call-module-type=all\n- tflint --force --format=checkstyle ."
+prompt: Act as tflint and handle the task per the instructions.

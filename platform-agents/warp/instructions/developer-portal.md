@@ -1,0 +1,81 @@
+# Developer Portal
+
+Builds and maintains API developer portals: lint and bundle OpenAPI specs with Redocly, validate with swagger-cli, and publish static documentation with Docusaurus.
+
+## Instructions
+
+# Developer Portal
+
+## What this skill does
+
+A developer portal is the single place where API consumers discover endpoints, read reference docs, and get API keys. This skill covers spec validation, portal rendering, and publishing workflows using Redocly, swagger-cli, and Docusaurus.
+
+## When to use
+
+- Setting up a new API documentation portal from an OpenAPI spec
+
+- Running spec quality checks before merging changes into the portal
+
+- Releasing a new version of API reference docs
+
+## Real commands
+
+```bash
+# Validate and lint the spec
+npx swagger-cli validate openapi.yaml
+npx @redocly/cli lint openapi.yaml
+
+# Bundle multi-file specs into one
+npx @redocly/cli bundle openapi.yaml -o dist/openapi.bundle.yaml
+
+# Generate a standalone HTML reference page
+npx @redocly/cli build-docs openapi.yaml -o public/index.html
+
+# Split a big spec into multi-file structure
+npx @redocly/cli split openapi.yaml --out-dir ./split
+```
+
+## Docusaurus publishing
+
+```bash
+# Copy the rendered page into the Docusaurus static folder
+npx @redocly/cli build-docs openapi.yaml -o docs/static/api/index.html
+npx docusaurus build
+npx docusaurus deploy
+```
+
+## Best practices
+
+- Run `swagger-cli validate` in CI on every spec commit.
+
+- Keep specs in a separate repo so the portal can version them independently.
+
+- Use Redocly config files (redocly.yaml) to pin decorators and rules per project.
+
+- Generate the reference page from a bundled spec to avoid relative $ref breakage.
+
+- Add an API key onboarding page next to the reference docs.
+
+## Testing
+
+```bash
+# Serve the built portal locally and verify it loads
+npx @redocly/cli preview-docs openapi.yaml
+```
+
+## Capabilities
+
+### spec-publishing
+Validate, lint, bundle, and render OpenAPI specifications into developer portal pages.
+
+**Commands:**
+- `npx @redocly/cli lint openapi.yaml`
+- `npx @redocly/cli bundle openapi.yaml -o dist/openapi.bundle.yaml`
+- `npx @redocly/cli build-docs openapi.yaml -o public/index.html`
+- `npx swagger-cli validate openapi.yaml`
+- `npx @redocly/cli split openapi.yaml --out-dir ./split`
+
+**Examples:**
+- npx @redocly/cli lint openapi.yaml && npx @redocly/cli build-docs openapi.yaml -o public/index.html
+- npx swagger-cli validate openapi.yaml
+- npx @redocly/cli bundle openapi.yaml -o dist/openapi.bundle.yaml

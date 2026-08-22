@@ -1,0 +1,34 @@
+title: Disk Stress Testing
+description: Benchmarks storage subsystems with fio, dd, hdparm, and iostat to measure IOPS, throughput,
+  and latency under load.
+version: 2.0.0
+instructions: "# Disk Stress Testing\n\nBenchmarks storage subsystems with fio, dd, hdparm, and iostat\
+  \ to measure IOPS, throughput, and latency under load.\n\n## Instructions\n\n# Disk Stress Testing\n\
+  \n## What this skill does\n\nDisk stress testing quantifies how a storage subsystem behaves under sustained\
+  \ IO. fio generates controlled workloads (IOPS, throughput, latency), dd does quick raw writes, and\
+  \ iostat/hdparm give live device-level statistics.\n\n## When to use\n\n- Validating new VMs or bare-metal\
+  \ nodes before production cutover\n- Comparing IO performance between storage classes (SSD, NVMe, network\
+  \ storage)\n- Reproducing latency complaints from a busy database\n\n## Real commands\n\n```bash\n#\
+  \ 4k random write IOPS test with O_DIRECT\nfio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite\
+  \ \\\n  --bs=4k --size=4G --numjobs=1 --runtime=60 --time_based --direct=1\n\n# 1M sequential read throughput\n\
+  fio --name=seqread --ioengine=libaio --iodepth=32 --rw=read --bs=1M \\\n  --size=8G --runtime=60 --time_based\
+  \ --direct=1\n\n# Quick raw write + flush\nsudo dd if=/dev/zero of=/tmp/testfile bs=1M count=4096 oflag=direct\
+  \ conv=fdatasync\n\n# Device-level cache/throughput\nsudo hdparm -tT /dev/sda\n\n# Live stats: tps,\
+  \ await, util%\niostat -x 2 5\n```\n\n## Interpreting fio output\n\nLook for the `bw` (MiB/s), `iops`,\
+  \ and `clat` (percentile latencies) lines. For databases, p99 clat below 10 ms for 4k random IO is typical\
+  \ on NVMe; above 50 ms signals a problem.\n\n## Testing checklist\n\n```bash\n# Run before and after\
+  \ any storage change for comparison\nfio --name=bw --ioengine=libaio --direct=1 --rw=read --bs=1M --size=4G\
+  \ --numjobs=4 --runtime=30 --time_based\n```\n\n## Best practices\n\n- Always use `--direct=1` to bypass\
+  \ the page cache and measure real device IO.\n- Run each benchmark 3 times and take the median.\n- Check\
+  \ `iostat -x` `%util` and `await` during the run, not just fio totals.\n- Never benchmark a disk that\
+  \ hosts the OS while it is under production load.\n- Clean up test files (`rm -f /tmp/testfile`) after\
+  \ dd runs.\n\n## Capabilities\n\n### io-benchmark\nRun fio jobs, raw dd writes, and live IO statistics\
+  \ to characterize disk performance and detect degradation.\n\n**Commands:**\n- `fio --name=randwrite\
+  \ --ioengine=libaio --iodepth=16 --rw=randwrite --bs=4k --size=4G --numjobs=1 --runtime=60 --time_based\
+  \ --direct=1`\n- `fio --name=seqread --ioengine=libaio --iodepth=32 --rw=read --bs=1M --size=8G --runtime=60\
+  \ --time_based --direct=1`\n- `dd if=/dev/zero of=/tmp/testfile bs=1M count=4096 oflag=direct conv=fdatasync`\n\
+  - `hdparm -tT /dev/sda`\n- `iostat -x 2 5`\n\n**Examples:**\n- fio --name=randread --ioengine=libaio\
+  \ --iodepth=16 --rw=randread --bs=4k --size=4G --runtime=60 --time_based --direct=1\n- dd if=/dev/zero\
+  \ of=/tmp/testfile bs=1M count=4096 oflag=direct conv=fdatasync && rm -f /tmp/testfile\n- iostat -x\
+  \ 2 5 | grep sda"
+prompt: Act as Disk Stress Testing and handle the task per the instructions.

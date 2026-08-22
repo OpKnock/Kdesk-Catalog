@@ -1,0 +1,30 @@
+title: Fastapi
+description: 'Build async Python APIs with FastAPI: run uvicorn, generate OpenAPI schemas, create Pydantic
+  models, and test endpoints with TestClient.'
+version: 2.0.0
+instructions: "# Fastapi\n\nBuild async Python APIs with FastAPI: run uvicorn, generate OpenAPI schemas,\
+  \ create Pydantic models, and test endpoints with TestClient.\n\n## Instructions\n\n# FastAPI\n\n##\
+  \ What this skill does\n\nFastAPI is a modern async Python framework with automatic OpenAPI generation\
+  \ and Pydantic validation. This skill covers running uvicorn, defining routes/models, exporting schemas,\
+  \ and testing.\n\n## When to use\n\n- Building a new Python REST API\n- Generating client libraries\
+  \ from the auto OpenAPI schema\n- Writing fast async endpoints with type validation\n\n## Real commands\n\
+  \n```bash\n# Install and run\npip install fastapi uvicorn[standard] pydantic\nuvicorn main:app --reload\
+  \ --port 8000\n\n# Production: multiple workers on 0.0.0.0\nuvicorn main:app --host 0.0.0.0 --port 8000\
+  \ --workers 4\n\n# Inspect the auto-generated schema\ncurl -s http://localhost:8000/openapi.json | jq\
+  \ '.paths | keys'\n\n# Tests\npython -m pytest tests/ -v\n```\n\n## Minimal app\n\n```python\nfrom fastapi\
+  \ import FastAPI, HTTPException\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Order(BaseModel):\n\
+  \    id: str\n    amount: float\n\n@app.get(\"/api/orders/{order_id}\")\nasync def get_order(order_id:\
+  \ str) -> Order:\n    order = find(order_id)\n    if not order:\n        raise HTTPException(status_code=404,\
+  \ detail=\"Order not found\")\n    return order\n```\n\n## Testing with TestClient\n\n```python\nfrom\
+  \ fastapi.testclient import TestClient\nfrom main import app\n\nclient = TestClient(app)\n\ndef test_get_missing_order():\n\
+  \    r = client.get(\"/api/orders/nope\")\n    assert r.status_code == 404\n```\n\n## Best practices\n\
+  \n- Use async def for IO-bound routes; plain def for CPU-bound sync ones.\n- Let Pydantic models drive\
+  \ both validation and response docs.\n- Set `responses={404: ...}` on routes for accurate generated\
+  \ docs.\n- Use dependency injection for auth and DB sessions instead of globals.\n- In prod, run with\
+  \ `--workers` behind a process manager, not `--reload`.\n\n## Capabilities\n\n### fastapi-server\nRun,\
+  \ generate schema for, and test FastAPI applications.\n\n**Commands:**\n- `uvicorn main:app --reload\
+  \ --port 8000`\n- `uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4`\n- `curl -s http://localhost:8000/openapi.json\
+  \ | jq '.paths | keys'`\n- `python -m pytest tests/ -v`\n- `pip install fastapi uvicorn[standard] pydantic`\n\
+  \n**Examples:**\n- uvicorn main:app --reload --port 8000\n- curl -s http://localhost:8000/openapi.json\
+  \ | jq '.paths | keys'\n- python -m pytest tests/ -v"
+prompt: Act as Fastapi and handle the task per the instructions.

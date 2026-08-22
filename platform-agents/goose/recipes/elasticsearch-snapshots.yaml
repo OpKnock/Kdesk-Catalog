@@ -1,0 +1,41 @@
+title: Elasticsearch Snapshots
+description: 'Elasticsearch snapshot and restore: register snapshot repositories, create and list snapshots,
+  and restore indices from backups.'
+version: 2.0.0
+instructions: "# Elasticsearch Snapshots\n\nElasticsearch snapshot and restore: register snapshot repositories,\
+  \ create and list snapshots, and restore indices from backups.\n\n## Instructions\n\n# Elasticsearch\
+  \ Snapshots\n\n## What this skill does\n\nSnapshots back up indices to a repository (S3, GCS, Azure,\
+  \ or shared filesystem) with incremental deduplication. Restore brings indices back with optional renaming.\
+  \ This skill covers the whole lifecycle.\n\n## When to use\n\n- Scheduled nightly backups of indices\n\
+  - Restoring a corrupted index or migrating data between clusters\n- Verifying backups are actually restorable\n\
+  \n## Real commands\n\n```bash\n# Register an S3 repository (one-time per cluster)\ncurl -s -X PUT 'localhost:9200/_snapshot/my_backup'\
+  \ -H 'Content-Type: application/json' -d '{\"type\":\"s3\",\"settings\":{\"bucket\":\"es-backups\",\"\
+  region\":\"us-east-1\"}}' | jq\n\n# Take a snapshot of specific indices\ncurl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date\
+  \ +%Y%m%d)' -H 'Content-Type: application/json' -d '{\"indices\":\"orders,users\",\"ignore_unavailable\"\
+  :true}' | jq\n\n# List snapshots and inspect status\ncurl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false'\
+  \ | jq '.snapshots[].snapshot'\ncurl -s 'localhost:9200/_snapshot/my_backup/snap_20240101/_status' |\
+  \ jq '.snapshots[0].stats.incremental'\n\n# Restore with rename to avoid clobbering\ncurl -s -X POST\
+  \ 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H 'Content-Type: application/json' -d\
+  \ '{\"indices\":\"orders\",\"rename_pattern\":\"(.+)\",\"rename_replacement\":\"restored_$1\"}' | jq\n\
+  ```\n\n## SLM policy example\n\n```json\n{\n  \"schedule\": \"0 30 2 * * ?\",\n  \"name\": \"nightly-snap\"\
+  ,\n  \"repository\": \"my_backup\",\n  \"indices\": [\"orders\", \"users\"],\n  \"retention\": {\"count\"\
+  : 14}\n}\n```\n\n## Testing restores\n\n```bash\n# Monthly drill: restore into renamed index and delete\
+  \ after verification\ncurl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H\
+  \ 'Content-Type: application/json' -d '{\"indices\":\"orders\",\"rename_pattern\":\"(.+)\",\"rename_replacement\"\
+  :\"restored_$1\"}' | jq\ncurl -s 'localhost:9200/_cat/indices/restored_orders?v' | jq\n```\n\n## Best\
+  \ practices\n\n- Never restore over a live index; always use rename_pattern.\n- Enable `wait_for_completion=true`\
+  \ in scripts or poll _status.\n- Retain at least 14 daily snapshots and run a restore drill monthly.\n\
+  - Ensure the repo bucket has versioning for extra safety.\n\n## Capabilities\n\n### snapshot-lifecycle\n\
+  Manage snapshot repositories, take snapshots, list them, and restore data.\n\n**Commands:**\n- `curl\
+  \ -s -X PUT 'localhost:9200/_snapshot/my_backup' -H 'Content-Type: application/json' -d '{\"type\":\"\
+  s3\",\"settings\":{\"bucket\":\"es-backups\",\"region\":\"us-east-1\"}}' | jq`\n- `curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date\
+  \ +%Y%m%d)' -H 'Content-Type: application/json' -d '{\"indices\":\"orders,users\",\"ignore_unavailable\"\
+  :true}' | jq`\n- `curl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false' | jq '.snapshots[].snapshot'`\n\
+  - `curl -s 'localhost:9200/_snapshot/my_backup/snap_20240101/_status' | jq '.snapshots[0].stats.incremental'`\n\
+  - `curl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H 'Content-Type: application/json'\
+  \ -d '{\"indices\":\"orders\",\"rename_pattern\":\"(.+)\",\"rename_replacement\":\"restored_$1\"}' |\
+  \ jq`\n\n**Examples:**\n- curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date +%Y%m%d)' -H\
+  \ 'Content-Type: application/json' -d '{\"indices\":\"orders\"}' | jq\n- curl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false'\
+  \ | jq '.snapshots | length'\n- curl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore'\
+  \ -H 'Content-Type: application/json' -d '{\"indices\":\"orders\"}' | jq"
+prompt: Act as Elasticsearch Snapshots and handle the task per the instructions.

@@ -1,0 +1,32 @@
+title: Openid Connect
+description: 'Implements OpenID Connect flows: discovers issuer metadata and JWKS, exchanges authorization
+  codes to obtain tokens, validates ID token signatures, and fetches userinfo claims.'
+version: 2.0.0
+instructions: "# Openid Connect\n\nImplements OpenID Connect flows: discovers issuer metadata and JWKS,\
+  \ exchanges authorization codes to obtain tokens, validates ID token signatures, and fetches userinfo\
+  \ claims.\n\n## Instructions\n\n# OpenID Connect\n\nOIDC builds on OAuth2 by adding an ID token with\
+  \ verified identity claims.\n\n## What this skill does\n\n- Discovers issuer metadata and JWKS\n- Runs\
+  \ the authorization code flow\n- Validates ID tokens and fetches userinfo\n\n## When to use\n\n- SSO\
+  \ for web apps (Keycloak, Okta, Auth0)\n- Verifying JWTs with a public key\n\n## Real commands\n\n```bash\n\
+  # Discovery\ncurl -s https://auth.your-app.test/.well-known/openid-configuration | jq .\ncurl -s https://auth.your-app.test/.well-known/jwks.json\
+  \ | jq '.keys[].alg'\n\n# Token exchange (authorization code flow)\ncurl -X POST https://auth.your-app.test/realms/realm/protocol/openid-connect/token\
+  \ \\\n  -d \"grant_type=authorization_code\" \\\n  -d \"code=AUTH_CODE\" \\\n  -d \"redirect_uri=https://app.your-app.test/callback\"\
+  \ \\\n  -d \"client_id=app\" -d \"client_secret=secret\"\n\n# Service-to-service\ncurl -X POST https://auth.your-app.test/realms/realm/protocol/openid-connect/token\
+  \ \\\n  -d \"grant_type=client_credentials\" -d \"client_id=svc\" -d \"client_secret=secret\"\n\n# Userinfo\n\
+  curl -s https://auth.your-app.test/realms/realm/protocol/openid-connect/userinfo \\\n  -H \"Authorization:\
+  \ Bearer ACCESS_TOKEN\"\n```\n\n## ID token validation\n\n- Verify signature with JWKS keys (`kid` match)\n\
+  - Check `iss`, `aud`, `exp`, `nonce`\n\n## Best practices\n\n- Always validate the signature, not just\
+  \ decode\n- Use PKCE for public clients\n- Cache JWKS and discovery metadata\n\n## Capabilities\n\n\
+  ### oidc-flows\nDiscover OIDC metadata, exchange codes for tokens, validate JWTs against JWKS and call\
+  \ userinfo.\n\n**Commands:**\n- `curl -s https://auth.your-app.test/.well-known/openid-configuration\
+  \ | jq .`\n- `curl -s https://auth.your-app.test/.well-known/jwks.json | jq '.keys[].alg'`\n- `curl\
+  \ -X POST https://auth.your-app.test/realms/realm/protocol/openid-connect/token -d \"grant_type=authorization_code\"\
+  \ -d \"code=AUTH_CODE\" -d \"redirect_uri=https://app.your-app.test/callback\" -d \"client_id=app\"\
+  \ -d \"client_secret=secret\"`\n- `curl -s https://auth.your-app.test/realms/realm/protocol/openid-connect/userinfo\
+  \ -H \"Authorization: Bearer ACCESS_TOKEN\"`\n- `curl -s https://auth.your-app.test/realms/realm/protocol/openid-connect/token\
+  \ -d \"grant_type=client_credentials\" -d \"client_id=svc\" -d \"client_secret=secret\"`\n\n**Examples:**\n\
+  - curl -s https://auth.your-app.test/.well-known/openid-configuration | jq '.issuer,.authorization_endpoint'\n\
+  - curl -s https://auth.your-app.test/realms/realm/protocol/openid-connect/userinfo -H \"Authorization:\
+  \ Bearer $TOKEN\" | jq .\n- curl -X POST https://auth.your-app.test/realms/realm/protocol/openid-connect/token\
+  \ -d \"grant_type=authorization_code\" -d \"code=$CODE\" -d \"redirect_uri=...\" -d \"client_id=app\""
+prompt: Act as Openid Connect and handle the task per the instructions.

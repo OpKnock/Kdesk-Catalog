@@ -1,0 +1,35 @@
+title: Elasticsearch Apm
+description: 'Application performance monitoring with the Elastic APM stack: configure APM Server, instrument
+  Node.js apps, and query traces from the CLI.'
+version: 2.0.0
+instructions: "# Elasticsearch Apm\n\nApplication performance monitoring with the Elastic APM stack: configure\
+  \ APM Server, instrument Node.js apps, and query traces from the CLI.\n\n## Instructions\n\n# Elasticsearch\
+  \ APM\n\n## What this skill does\n\nElastic APM captures transactions, spans, and errors from instrumented\
+  \ services. APM Server (port 8200) receives data from agents and indexes into `apm-*` indices; Kibana\
+  \ visualizes the traces.\n\n## When to use\n\n- Finding slow endpoints and their bottleneck spans\n\
+  - Instrumenting a new service with a minimum of code\n- Verifying APM data flows end to end\n\n## Real\
+  \ commands\n\n```bash\n# Validate config and start the server\napm-server test config -c apm-server.yml\n\
+  apm-server -e -c apm-server.yml\n\n# Health check\ncurl -s http://localhost:8200/ | jq '.version'\n\n\
+  # Node.js agent\nnpm install elastic-apm-node\nnode -r elastic-apm-node/start app.js\n\n# Verify transactions\
+  \ landed in Elasticsearch\ncurl -s 'localhost:9200/apm-*/_search' -H 'Content-Type: application/json'\
+  \ -d '{\"query\":{\"term\":{\"processor.event\":\"transaction\"}},\"size\":3}' | jq '.hits.total'\n\
+  ```\n\n## apm-server.yml example\n\n```yaml\napm-server:\n  host: \"0.0.0.0:8200\"\n  auth:\n    secret_token:\
+  \ '${APM_SECRET_TOKEN}'\noutput.elasticsearch:\n  hosts: ['https://es.example.com:9200']\n  username:\
+  \ apm_server_writer\n  password: '${APM_ES_PASSWORD}'\n```\n\n## Agent config example\n\n```javascript\n\
+  const apm = require('elastic-apm-node').start({\n  serviceName: 'orders-api',\n  serverUrl: 'http://apm.internal:8200',\n\
+  \  secretToken: process.env.APM_SECRET_TOKEN,\n  environment: process.env.NODE_ENV,\n  captureBody:\
+  \ 'errors'\n})\n```\n\n## Testing\n\n```bash\n# Generate traffic and check for spans\ncurl -s http://localhost:8080/api/orders\
+  \ > /dev/null\ncurl -s 'localhost:9200/apm-*/_search' -H 'Content-Type: application/json' -d '{\"query\"\
+  :{\"term\":{\"service.name\":\"orders-api\"}}}' | jq '.hits.total'\n```\n\n## Best practices\n\n- Set\
+  \ a secret token and TLS for the APM intake endpoint.\n- Sample at 10% in prod and use central config\
+  \ to adjust per service.\n- Set `captureBody: 'errors'` to limit sensitive data.\n- Correlate traces\
+  \ with logs by shipping the `trace.id` into log records.\n\n## Capabilities\n\n### apm-instrumentation\n\
+  Configure and run the Elastic APM server and agents, and inspect traces and service status.\n\n**Commands:**\n\
+  - `apm-server -e -c apm-server.yml`\n- `apm-server test config -c apm-server.yml`\n- `curl -s http://localhost:8200/\
+  \ | jq`\n- `npm install elastic-apm-node`\n- `curl -s 'localhost:9200/apm-*/_search' -H 'Content-Type:\
+  \ application/json' -d '{\"query\":{\"term\":{\"processor.event\":\"transaction\"}},\"size\":3}' | jq\
+  \ '.hits.total'`\n\n**Examples:**\n- apm-server test config -c apm-server.yml && apm-server -e -c apm-server.yml\n\
+  - curl -s 'localhost:9200/apm-*/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"range\"\
+  :{\"@timestamp\":{\"gte\":\"now-1h\"}}}}' | jq '.hits.total'\n- curl -s http://localhost:8200/ | jq\
+  \ '.version'"
+prompt: Act as Elasticsearch Apm and handle the task per the instructions.

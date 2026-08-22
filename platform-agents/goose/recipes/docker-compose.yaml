@@ -1,0 +1,32 @@
+title: Docker Compose
+description: 'Manages multi-container local development and orchestration with Docker Compose: lifecycle
+  commands, logs, exec, config validation, and cleanup.'
+version: 2.0.0
+instructions: "# Docker Compose\n\nManages multi-container local development and orchestration with Docker\
+  \ Compose: lifecycle commands, logs, exec, config validation, and cleanup.\n\n## Instructions\n\n# Docker\
+  \ Compose\n\n## What this skill does\n\nDocker Compose defines multi-container apps declaratively in\
+  \ compose.yaml and provides one-command lifecycle management: up, logs, exec, rebuild, and down.\n\n\
+  ## When to use\n\n- Local development with several services (web, db, cache, queue)\n- Reproducible\
+  \ test environments in CI\n- One-command startup for new team members\n\n## Real commands\n\n```bash\n\
+  # Start everything in detached mode\ncd project && docker compose up -d\n\n# Rebuild and start only\
+  \ the web service\n docker compose up -d --build web\n\n# Inspect state and stream logs\ndocker compose\
+  \ ps\ndocker compose logs -f web --tail=100\n\n# Run a command inside a service\ndocker compose exec\
+  \ web sh\n\n# Validate the config without starting anything\ndocker compose config --quiet\ndocker compose\
+  \ config --services\n\n# Full teardown including named volumes\ndocker compose down -v\n```\n\n## compose.yaml\
+  \ example\n\n```yaml\nservices:\n  web:\n    build: .\n    ports: ['8080:8080']\n    environment:\n\
+  \      DATABASE_URL: postgres://app:app@db:5432/app\n    depends_on:\n      db:\n        condition:\
+  \ service_healthy\n  db:\n    image: postgres:16\n    environment:\n      POSTGRES_PASSWORD: app\n \
+  \   healthcheck:\n      test: ['CMD-SHELL', 'pg_isready -U app']\n      interval: 5s\n    volumes:\n\
+  \      - pgdata:/var/lib/postgresql/data\nvolumes:\n  pgdata:\n```\n\n## Testing\n\n```bash\n# Wait\
+  \ for healthy dependencies and hit the app\nuntil docker compose ps db | grep -q healthy; do sleep 1;\
+  \ done\ncurl -s localhost:8080/health | jq\n```\n\n## Best practices\n\n- Pin image versions (postgres:16\
+  \ not postgres:latest) for reproducibility.\n- Use healthchecks + `depends_on.condition` instead of\
+  \ sleep hacks.\n- Keep secrets out of compose files; use .env with `env_file:`.\n- Add `--quiet` config\
+  \ validation to CI.\n- Use `docker compose down -v` only in dev; it destroys data volumes.\n\n## Capabilities\n\
+  \n### compose-lifecycle\nManage Compose projects: start, stop, rebuild, stream logs, exec into services,\
+  \ and validate config.\n\n**Commands:**\n- `docker compose up -d`\n- `docker compose up -d --build web`\n\
+  - `docker compose ps`\n- `docker compose logs -f web --tail=100`\n- `docker compose exec web sh`\n-\
+  \ `docker compose config --services`\n- `docker compose down -v`\n\n**Examples:**\n- docker compose\
+  \ up -d --build web && docker compose logs -f web\n- docker compose config --quiet && docker compose\
+  \ up -d\n- docker compose down -v && docker compose up -d --force-recreate"
+prompt: Act as Docker Compose and handle the task per the instructions.

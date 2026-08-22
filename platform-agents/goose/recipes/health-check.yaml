@@ -1,0 +1,30 @@
+title: Health Check
+description: 'Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status verification,
+  and Kubernetes readiness waits.'
+version: 2.0.0
+instructions: "# Health Check\n\nEndpoint health checking from the CLI: curl -f probes, TCP checks with\
+  \ nc, HTTP status verification, and Kubernetes readiness waits.\n\n## Instructions\n\n# Health Check\n\
+  \nProbe service health from the command line.\n\n## What this skill does\n\n- Checks HTTP health endpoints\
+  \ with curl and wget.\n- Tests TCP reachability with nc.\n- Waits for Kubernetes deployment readiness.\n\
+  - Reports latency and status codes for alerting scripts.\n\n## When to use\n\n- Before restarting a\
+  \ service, confirm it is unhealthy.\n- In CI, gate deploys on health endpoints.\n- Debugging why a load\
+  \ balancer removed a backend.\n\n## Real commands\n\n```bash\n# HTTP probe, fail on non-2xx, print code\n\
+  curl -f -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/healthz\n\n# Simple OK check\ncurl\
+  \ -fsS http://localhost:8080/health && echo OK\n\n# TCP reachability\nnc -zv localhost 8080\nnc -zv\
+  \ -w 3 localhost 5432\n\n# Header inspection\nwget --spider -S http://localhost:8080/health 2>&1 | grep\
+  \ HTTP\n\n# Kubernetes readiness\nkubectl wait --for=condition=Available deployment/web -n default --timeout=60s\n\
+  ```\n\n## CI gate\n\n```bash\nif curl -fsS --max-time 5 http://localhost:8080/health > /dev/null; then\n\
+  \  echo \"healthy\"\nelse\n  echo \"unhealthy\"; exit 1\nfi\n```\n\n## Testing\n\n```bash\n# Latency\
+  \ check\ncurl -s -o /dev/null -w 'dns=%{time_namelookup} connect=%{time_connect} total=%{time_total}\\\
+  n' http://localhost:8080/health\n```\n\n## Best practices\n\n- Always set `--max-time`; never let probes\
+  \ hang.\n- Use `-f` so non-2xx exits non-zero for scripts.\n- Probe the health endpoint, not the homepage.\n\
+  - Distinguish liveness (process up) from readiness (deps ready) in Kubernetes.\n\n## Example exchange\n\
+  \n```\nUser: Is the web service up?\nAgent: curl -fsS http://localhost:8080/health && echo OK\n    \
+  \   # prints OK when the service responds 2xx\n```\n\n## Capabilities\n\n### endpoint-probing\nProbe\
+  \ HTTP and TCP endpoints for availability from scripts and CI.\n\n**Commands:**\n- `curl -f -s -o /dev/null\
+  \ -w '%{http_code}\\n' http://localhost:8080/healthz`\n- `curl -fsS http://localhost:8080/health &&\
+  \ echo OK`\n- `nc -zv localhost 8080`\n- `wget --spider -S http://localhost:8080/health 2>&1 | grep\
+  \ HTTP`\n- `kubectl wait --for=condition=Available deployment/web -n default --timeout=60s`\n\n**Examples:**\n\
+  - curl -fsS --max-time 3 http://localhost:8080/health || exit 1\n- nc -zv -w 3 localhost 5432\n- curl\
+  \ -s -o /dev/null -w '%{time_total}\\n' http://localhost:8080/health"
+prompt: Act as Health Check and handle the task per the instructions.

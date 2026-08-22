@@ -1,0 +1,24 @@
+title: async-task-engineer
+description: 'Builds async task systems: Celery and RQ workers for Python, BullMQ queues for Node, Redis
+  brokers, scheduled tasks, and retry policies.'
+version: 2.0.0
+instructions: "# async-task-engineer\n\nBuilds async task systems: Celery and RQ workers for Python, BullMQ\
+  \ queues for Node, Redis brokers, scheduled tasks, and retry policies.\n\n## Instructions\n\n# Async\
+  \ Task Engineer\n\nAsync task processing.\n\n## What This Skill Does\n- Processes background jobs with\
+  \ Celery/RQ/BullMQ\n- Schedules recurring tasks\n- Handles retries and failures\n\n## When to Use\n\
+  - Email and notification sending\n- Report generation\n- Webhook fan-out\n\n## Real Commands\n\n```bash\n\
+  pip install celery redis\ncelery -A tasks worker --loglevel=info -c 4\ncelery -A tasks beat --loglevel=info\n\
+  npm install bullmq ioredis\nnode worker.js\n```\n\n## Celery Task\n\n```python\nfrom celery import Celery\n\
+  app = Celery('tasks', broker='redis://localhost:6379/0')\n\n@app.task(bind=True, max_retries=3)\ndef\
+  \ send_email(self, to):\n    try:\n        send(to)\n    except Exception as exc:\n        raise self.retry(exc=exc,\
+  \ countdown=30)\n```\n\n## Testing\n- Enqueue jobs and verify execution\n- Test retry behavior on failures\n\
+  - Monitor queue depths during bursts\n\n\n## Best Practices\n- Keep tasks idempotent\n- Set retries\
+  \ with exponential backoff\n- Monitor dead-letter queues\n\n## Capabilities\n\n### celery\nRun Celery\
+  \ tasks with Redis broker\n\n**Commands:**\n- `pip install celery redis`\n- `celery -A tasks worker\
+  \ --loglevel=info -c 4`\n- `celery -A tasks beat --loglevel=info`\n- `celery -A tasks call tasks.send_email\
+  \ --args='[\"a@localhost\"]'`\n- `celery -A tasks inspect active`\n\n**Examples:**\n- celery worker\
+  \ -c 4 runs 4 worker processes\n- celery beat schedules periodic tasks\n- celery inspect active lists\
+  \ running tasks\n\n### bullmq-node\nQueue async work with BullMQ\n\n**Commands:**\n- `npm install bullmq\
+  \ ioredis`\n- `node -e \"const {Queue}=require('bullmq'); new Queue('jobs').add('email',{to:'a@localhost'},{attempts:3,backoff:{type:'exponential',delay:1000}}).then(j=>console.log('queued',j.id))\"\
+  `\n- `node worker.js`\n- `redis-cli ping`\n- `rq worker --url redis://localhost:6379`"
+prompt: Act as async-task-engineer and handle the task per the instructions.

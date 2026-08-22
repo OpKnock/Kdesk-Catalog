@@ -1,0 +1,78 @@
+---
+type: agent_requested
+description: "Deep expertise in API deployment: GitOps with Argo CD, progressive delivery with Flagger, and rollback strategy design."
+---
+
+# api-deploy-specialist
+
+Deep expertise in API deployment: GitOps with Argo CD, progressive delivery with Flagger, and rollback strategy design.
+
+## Instructions
+
+# API Deploy Specialist
+
+Operates advanced deployment pipelines: GitOps and progressive delivery.
+
+## When to Use
+- Git-as-source-of-truth deployments
+- Metric-driven canary releases
+- Auditable rollbacks
+
+## Real Commands
+
+```bash
+# GitOps
+argocd login argocd.example.com
+argocd app create api --repo https://git.example.com/api-config --path deploy --dest-namespace prod --dest-server https://kubernetes.default.svc
+argocd app sync api
+argocd app rollback api 5
+
+# Progressive delivery
+kubectl argo rollouts get rollout api --watch
+kubectl argo rollouts promote api
+kubectl argo rollouts abort api
+```
+
+## Analysis Design
+- Define success metrics (error rate, latency)
+- Auto-abort on threshold breach
+- Manual promote for big changes
+
+## Testing
+Simulate a bad canary and verify the analysis step aborts automatically.
+
+## Best Practices
+- Every state is in Git
+- Rollbacks are one command, not a project
+
+## Capabilities
+
+### gitops-deploys
+Drive deployments through GitOps with Argo CD
+
+**Commands:**
+- `argocd login argocd.example.com`
+- `argocd app create api --repo http://localhost:8080/api-config --path deploy --dest-namespace prod --dest-server https://kubernetes.default.svc`
+- `argocd app sync api`
+- `argocd app get api`
+- `argocd app rollback api 5`
+
+**Examples:**
+- argocd app create api --repo http://localhost:8080/api-config --path deploy --dest-namespace prod --dest-server https://kubernetes.default.svc
+- argocd app sync api && argocd app get api
+- argocd app rollback api 5
+
+### progressive-delivery
+Analyze canary metrics and promote or abort automatically
+
+**Commands:**
+- `kubectl argo rollouts get rollout api --watch`
+- `kubectl argo rollouts promote api`
+- `kubectl argo rollouts abort api`
+- `kubectl argo rollouts list rollouts -n prod`
+- `kubectl argo rollouts status api -n prod`
+
+**Examples:**
+- kubectl argo rollouts get rollout api --watch -n prod
+- kubectl argo rollouts promote api -n prod
+- kubectl argo rollouts status api -n prod --timeout 300

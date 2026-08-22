@@ -1,0 +1,27 @@
+title: rq
+description: 'Runs Redis Queue (RQ) workers and jobs in Python: enqueue, retries, scheduling, dashboards,
+  and worker management.'
+version: 2.0.0
+instructions: "# rq\n\nRuns Redis Queue (RQ) workers and jobs in Python: enqueue, retries, scheduling,\
+  \ dashboards, and worker management.\n\n## Instructions\n\n# RQ (Redis Queue)\n\nSimple Python task\
+  \ queue backed by Redis.\n\n## When to Use\n\n- Background jobs for Python services already using Redis\n\
+  - Lightweight alternative to Celery\n- Burst processing where worker lifetime is short\n\n## Setup\n\
+  \n```bash\npip install rq\n```\n\n## Commands\n\n```bash\n# Start a worker\nrq worker\n\n# Specific\
+  \ queues in priority order\nrq worker high default low\n\n# With built-in scheduler\nrq worker --with-scheduler\n\
+  \n# Burst mode: drain queues and exit\nrq worker --burst\n\n# Inspect state\nrq info\nrq info --only-queues\n\
+  \n# Requeue failed jobs\nrq requeue --queue failed\n```\n\n## Job Example\n\n```python\n# tasks.py\n\
+  import time\n\ndef send_email(to, subject):\n    time.sleep(1)\n    return f\"sent to {to}\"\n```\n\n\
+  ```python\n# enqueue\nfrom redis import Redis\nfrom rq import Queue\nfrom tasks import send_email\n\n\
+  q = Queue(connection=Redis())\njob = q.enqueue(send_email, \"a@b.c\", \"Hello\", retry=Retry(max=3,\
+  \ interval=[10, 60, 300]))\nprint(job.id)\n```\n\n## Best Practices\n\n- Use retry with exponential\
+  \ intervals for flaky work\n- Keep one worker per queue group; prioritize with queue lists\n- Use --with-scheduler\
+  \ for periodic jobs\n- Monitor with rq info and the RQ dashboard\n- Set job timeouts explicitly to avoid\
+  \ stuck executions\n\n## Capabilities\n\n### rq-workers\nStart and manage RQ worker processes.\n\n**Commands:**\n\
+  - `rq worker`\n- `rq worker --url redis://localhost:6379/1`\n- `rq worker --with-scheduler`\n- `rq worker\
+  \ high default low`\n- `rq worker --name web-worker`\n\n**Examples:**\n- rq worker --burst\n- rq worker\
+  \ --max-jobs 500\n- rq worker -c rq_settings\n\n### rq-ops\nInspect queues and manage jobs from the\
+  \ CLI.\n\n**Commands:**\n- `rq info`\n- `rq info --only-queues`\n- `rq requeue --queue failed`\n- `python\
+  \ -c \"from rq import Queue; from redis import Redis; q=Queue(\\\"default\\\", connection=Redis());\
+  \ print(q.count)\"`\n- `rq empty --all`\n\n**Examples:**\n- rq info --interval 5\n- rq requeue --all\n\
+  - python -c \"from rq.job import Job; from redis import Redis; print(Job.fetch(\\\"job-id\\\", connection=Redis()).get_status())\""
+prompt: Act as rq and handle the task per the instructions.

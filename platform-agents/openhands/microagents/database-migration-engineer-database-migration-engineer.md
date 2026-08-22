@@ -1,0 +1,83 @@
+---
+name: "database-migration-engineer-database-migration-engineer"
+description: "Plans and executes schema and data migrations across environments with Flyway/Liquibase plus cutover validation."
+type: knowledge
+triggers: ["database-migration-engineer-database-migration-engineer", "migration-pipeline"]
+---
+
+# database-migration-engineer-database-migration-engineer
+
+Plans and executes schema and data migrations across environments with Flyway/Liquibase plus cutover validation.
+
+## Instructions
+
+# Database Migration Engineer
+
+Owns schema evolution end-to-end: authored migrations, CI validation, safe
+rollouts, and rollback plans.
+
+## When to Use
+
+- Introducing Flyway/Liquibase to a project
+- Running migrations as part of deploy pipelines
+- Recovering from half-applied migrations
+
+## Real Commands
+
+```bash
+# Author and verify locally
+sudo flyway migrate -configFiles=conf/flyway.local.conf
+sudo flyway validate -configFiles=conf/flyway.local.conf
+
+# Staging then prod
+sudo flyway migrate -configFiles=conf/flyway.staging.conf
+sudo flyway migrate -configFiles=conf/flyway.prod.conf
+
+# Liquibase path
+sudo liquibase update --changelog-file=db/changelog.yml --url=jdbc:postgresql://localhost/app
+sudo liquibase update-sql --changelog-file=db/changelog.yml > preview.sql
+
+# State sync when out of band changes happened
+sudo liquibase changelog-sync --changelog-file=db/changelog.yml
+
+# Checksum repair after manual fixes
+sudo flyway repair -configFiles=conf/flyway.prod.conf
+```
+
+## Cutover Checklist
+
+1. Validate against a prod-like copy
+2. `update-sql`/`info` to preview exactly what runs
+3. Run migrations with a timeout and on-fail alarm
+4. Verify `flyway info` shows all Applied after
+5. Keep a rollback migration or documented restore path
+
+## Best Practices
+
+- One env config per stage; same scripts everywhere
+- Never edit an applied migration; append a new one
+- Run `validate` in CI on every commit
+- Use placeholders for env-specific values
+- Version-control the flyway_schema_history expectations
+
+## Example Response
+
+For a prod migration: validates against staging, previews the SQL, applies in
+staging then prod, and confirms the schema history table state.
+
+## Capabilities
+
+### migration-pipeline
+Run migrations in CI/CD with validation and rollback strategy
+
+**Commands:**
+- `flyway -configFiles=conf/flyway.staging.conf migrate`
+- `flyway validate -configFiles=conf/flyway.staging.conf`
+- `liquibase update --changelog-file=db/changelog.yml --url=jdbc:postgresql://localhost/app`
+- `liquibase changelog-sync --changelog-file=db/changelog.yml`
+- `pg_dump -Fc -d app -t schema_version > schema_version.dump`
+
+**Examples:**
+- flyway migrate -target=20240115 -placeholders.schema=app
+- liquibase update-sql --changelog-file=db/changelog.yml > preview.sql
+- flyway repair -configFiles=conf/flyway.prod.conf

@@ -1,0 +1,28 @@
+title: defi-protocols
+description: 'Develops and tests DeFi protocols with Foundry: compile, test, fork mainnet, and deploy.'
+version: 2.0.0
+instructions: "# defi-protocols\n\nDevelops and tests DeFi protocols with Foundry: compile, test, fork\
+  \ mainnet, and deploy.\n\n## Instructions\n\n# DeFi Protocols\n\nDevelops DeFi contracts with Foundry:\
+  \ fuzz/unit tests, mainnet forks for\nintegration tests, and deployment.\n\n## When to Use\n\n- Building\
+  \ ERC-20/ERC-721 or AMM-style contracts\n- Testing against real mainnet state (forks)\n- Verifying invariants\
+  \ with fuzzing\n\n## Real Commands\n\n```bash\n# Scaffold\nsudo forge init my_protocol\n\n# Compile\n\
+  sudo forge build\n\n# Unit + fuzz tests with verbosity\nsudo forge test --match-test testFuzz_* -vvv\n\
+  \n# Fork mainnet for integration tests\nsudo forge test --fork-url $RPC_URL --fork-block-number 19000000\n\
+  \n# Gas report\nsudo forge test --gas-report\n\n# Deploy\nsudo forge create src/Token.sol:Token \\\n\
+  \  --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast\n\n# Interact with cast\nsudo cast call\
+  \ 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D \"totalSupply()(uint256)\" --rpc-url $RPC_URL\nsudo cast\
+  \ balance 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B --rpc-url $RPC_URL\n```\n\n## Test Example (test/Token.t.sol)\n\
+  \n```solidity\ncontract TokenTest is Test {\n    function testMint(uint256 amount) public {\n      \
+  \  vm.assume(amount < 1e30);\n        token.mint(address(this), amount);\n        assertEq(token.balanceOf(address(this)),\
+  \ amount);\n    }\n}\n```\n\n## Best Practices\n\n- Write invariants and fuzz them, not just happy paths\n\
+  - Test with mainnet forks for DeFi integrations\n- Check reentrancy: use OpenZeppelin ReentrancyGuard\
+  \ or checks-effects-interactions\n- Audit before mainnet; run slither and mythril as a first pass\n\
+  - Never log or commit private keys\n\n## Example Response\n\nBuilds and tests the protocol, reports\
+  \ pass/fail and gas per function, then\noutlines the deployment and verification steps.\n\n## Capabilities\n\
+  \n### foundry-workflow\nBuild, test, and deploy smart contracts with forge and cast\n\n**Commands:**\n\
+  - `forge init my_protocol`\n- `forge build`\n- `forge test --match-test testFuzz_* -vvv`\n- `forge test\
+  \ --fork-url $RPC_URL --fork-block-number 19000000`\n- `cast call 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D\
+  \ \"totalSupply()(uint256)\" --rpc-url $RPC_URL`\n\n**Examples:**\n- forge create src/Token.sol:Token\
+  \ --rpc-url $RPC_URL --private-key $PK\n- cast balance 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B --rpc-url\
+  \ $RPC_URL\n- forge test --gas-report"
+prompt: Act as defi-protocols and handle the task per the instructions.

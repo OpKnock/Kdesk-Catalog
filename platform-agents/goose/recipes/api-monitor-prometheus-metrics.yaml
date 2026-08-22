@@ -1,0 +1,29 @@
+title: Api Monitor Prometheus Metrics
+description: 'Monitors API performance with Prometheus and Grafana: exporting metrics, promtool validation,
+  HTTP API queries, and alert rule checking.'
+version: 2.0.0
+instructions: "# Api Monitor Prometheus Metrics\n\nMonitors API performance with Prometheus and Grafana:\
+  \ exporting metrics, promtool validation, HTTP API queries, and alert rule checking.\n\n## Instructions\n\
+  \n# API Monitor v2 - Prometheus/Grafana\n\nMetrics-based API monitoring.\n\n## What This Skill Does\n\
+  - Exports RED metrics (rate, errors, duration) from APIs\n- Queries metrics via the Prometheus HTTP\
+  \ API\n- Validates configs and alert rules with promtool\n\n## When to Use\n- SLO tracking for latency\
+  \ and error budgets\n- Capacity planning from request-rate trends\n- Alerting on error-rate anomalies\n\
+  \n## Real Commands\n\n```bash\npromtool check config prometheus.yml\ncurl -s 'http://localhost:9090/api/v1/query'\
+  \ --data-urlencode 'query=rate(http_requests_total[5m])' | jq '.data.result'\n```\n\n## Scrape Config\n\
+  \n```yaml\nscrape_configs:\n  - job_name: api\n    metrics_path: /metrics\n    static_configs:\n   \
+  \   - targets: ['api:8080']\n```\n\n## Dashboards\n- p95/p99 latency panels from histograms\n- Error\
+  \ ratio = errors / total requests\n- Uptime = 1 - down time / window\n\n## Best Practices\n- Validate\
+  \ config and rules before applying\n- Use recording rules for expensive aggregations\n- Expose /metrics\
+  \ unauthenticated only inside the network\n\n## Capabilities\n\n### prometheus-metrics\nQuery API metrics\
+  \ from the Prometheus HTTP API\n\n**Commands:**\n- `promtool check config prometheus.yml`\n- `curl -s\
+  \ 'http://localhost:9090/api/v1/query' --data-urlencode 'query=rate(http_requests_total[5m])' | jq '.data.result'`\n\
+  - `curl -s 'http://localhost:9090/api/v1/targets' | jq '.data.activeTargets[].health' | sort | uniq\
+  \ -c`\n- `curl -s 'http://localhost:9090/api/v1/query_range' --data-urlencode 'query=histogram_quantile(0.95,\
+  \ sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' --data-urlencode 'start=now-1h' --data-urlencode\
+  \ 'end=now' --data-urlencode 'step=60' | jq '.data.result[0].values[-1]'`\n\n**Examples:**\n- promtool\
+  \ check config validates scrape configs before restart\n- curl localhost:9090/api/v1/targets lists scrape\
+  \ targets and health\n- histogram_quantile computes p95 latency from buckets\n\n### alert-rules\nValidate\
+  \ and test alerting rules for API SLOs\n\n**Commands:**\n- `promtool check rules rules.yml`\n- `promtool\
+  \ test rules test.yml`\n- `curl -s 'http://localhost:9090/api/v1/rules' | jq '.data.groups[0].rules\
+  \ | length'`\n- `grafana-cli plugins install grafana-lokiexplore-app`"
+prompt: Act as Api Monitor Prometheus Metrics and handle the task per the instructions.

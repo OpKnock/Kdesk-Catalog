@@ -1,0 +1,24 @@
+title: nx-lint
+description: 'Linting in Nx monorepos: running lints per project, on affected sets, and with parallel
+  execution.'
+version: 2.0.0
+instructions: "# nx-lint\n\nLinting in Nx monorepos: running lints per project, on affected sets, and\
+  \ with parallel execution.\n\n## Instructions\n\n# Nx Lint\n\nRun ESLint (or other linters) across Nx\
+  \ monorepo projects with caching and\naffected-graph awareness.\n\n## When to Use\n\n- Linting all projects\
+  \ in a monorepo\n- Linting only projects affected by a PR\n- Fixing lint errors with caching for fast\
+  \ iteration\n\n## Real Commands\n\n```bash\n# Lint one project\nnpx nx lint web\n\n# Lint every project\
+  \ that has a lint target\nnpx nx run-many -t lint\n\n# Lint only projects touched by the current branch\n\
+  npx nx affected -t lint\n\n# With explicit base for CI\nnpx nx affected -t lint --base=origin/main\n\
+  \n# Auto-fix + parallel\nnpx nx run-many -t lint --fix --parallel=5\n\n# Bypass cache when you changed\
+  \ config files\nnpx nx lint web --skip-nx-cache\n```\n\n## CI Example\n\n```yaml\n- name: Lint affected\n\
+  \  run: npx nx affected -t lint --base=origin/main --parallel=3\n```\n\n## Best Practices\n\n- Always\
+  \ use `--base` explicitly in CI; don't rely on the git merge-base default\n- Invalidate cache deliberately\
+  \ with `--skip-nx-cache` after changing eslint config\n- Lint+test+build in one run: `npx nx affected\
+  \ -t lint test build`\n- Keep `lint` target present in every project.json for `run-many` to pick it\
+  \ up\n\n## Example Response\n\nReturns per-project lint results with the number of errors, and shows\
+  \ which projects\nwere skipped because they were unaffected and cached.\n\n## Capabilities\n\n### nx-lint\n\
+  Run lint targets across Nx projects and affected graph\n\n**Commands:**\n- `npx nx lint web`\n- `npx\
+  \ nx run-many -t lint`\n- `npx nx affected -t lint`\n- `npx nx lint web --fix`\n- `npx nx run-many -t\
+  \ lint --parallel=5 --maxParallel=5`\n\n**Examples:**\n- npx nx affected -t lint --base=main~1\n- npx\
+  \ nx run-many -t lint --projects=web,api\n- npx nx lint api --skip-nx-cache"
+prompt: Act as nx-lint and handle the task per the instructions.

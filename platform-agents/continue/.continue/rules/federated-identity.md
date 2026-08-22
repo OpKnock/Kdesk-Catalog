@@ -1,0 +1,76 @@
+---
+name: "Federated Identity"
+description: "Federated identity and SSO: configure Keycloak clients and realms, exchange tokens via OIDC, and test IdP-driven login flows."
+globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Federated Identity
+
+Federated identity and SSO: configure Keycloak clients and realms, exchange tokens via OIDC, and test IdP-driven login flows.
+
+## Instructions
+
+# Federated Identity
+
+## What this skill does
+
+Federated identity lets one identity provider (Keycloak, Entra ID, Google) authenticate users across many apps via OIDC/SAML. This skill covers Keycloak realm/client administration and token flows.
+
+## When to use
+
+- Implementing SSO across internal apps
+- Federating users from Google/GitHub as an IdP
+- Verifying token issuance and key rotation
+
+## Real commands
+
+```bash
+# Get an admin token
+curl -s 'http://localhost:8080/realms/master/protocol/openid-connect/token' -d 'grant_type=client_credentials&client_id=admin-cli&client_secret=secret' | jq -r '.access_token'
+
+# Create a realm
+curl -s -X POST 'http://localhost:8080/admin/realms' -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -d '{"realm":"acme","enabled":true}' | jq
+
+# Discover OIDC endpoints
+curl -s 'http://localhost:8080/realms/acme/.well-known/openid-configuration' | jq '.authorization_endpoint, .token_endpoint, .jwks_uri'
+
+# Password grant (test users)
+curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/token' -d 'grant_type=password&client_id=web&username=alice&password=secret' | jq -r '.access_token'
+
+# JWKS for verifying tokens
+curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/certs' | jq '.keys[0].kid'
+```
+
+## Best practices
+
+- Validate tokens via JWKS keys and `iss`/`aud` claims, never blindly.
+- Use the authorization_code flow for browsers; never password grant in production.
+- Configure realm keys with rotation; monitor the `kid` change.
+- Map IdP claims to realm roles at the IdP federation level.
+- Test realm backup/export (`/admin/realms/acme/partial-export`) before big changes.
+
+## Testing
+
+```bash
+# End-to-end: discover -> auth -> introspect
+TOKEN=$(curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/token' -d 'grant_type=password&client_id=web&username=alice&password=secret' | jq -r '.access_token')
+curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/userinfo' -H "Authorization: Bearer $TOKEN" | jq
+```
+
+## Capabilities
+
+### oidc-sso
+Manage Keycloak realms/clients, get tokens via the OIDC flow, and verify user federation.
+
+**Commands:**
+- `curl -s 'http://localhost:8080/realms/master/protocol/openid-connect/token' -d 'grant_type=client_credentials&client_id=admin-cli&client_secret=secret' | jq -r '.access_token'`
+- `curl -s -X POST 'http://localhost:8080/admin/realms' -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -d '{"realm":"acme","enabled":true}' | jq`
+- `curl -s 'http://localhost:8080/realms/acme/.well-known/openid-configuration' | jq '.authorization_endpoint, .token_endpoint, .jwks_uri'`
+- `curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/token' -d 'grant_type=password&client_id=web&username=alice&password=secret' | jq '{access_token: (.access_token | length > 0), refresh_expires_in}'`
+- `curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/certs' | jq '.keys[0].kid'`
+
+**Examples:**
+- curl -s 'http://localhost:8080/realms/acme/.well-known/openid-configuration' | jq '.authorization_endpoint, .token_endpoint, .jwks_uri'
+- curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/token' -d 'grant_type=password&client_id=web&username=alice&password=secret' | jq -r '.access_token'
+- curl -s -X POST 'http://localhost:8080/admin/realms' -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -d '{"realm":"acme","enabled":true}' | jq

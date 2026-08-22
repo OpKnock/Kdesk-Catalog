@@ -1,0 +1,89 @@
+{
+  "name": "grafana-monitoring",
+  "description": "Monitors systems with Grafana: datasource health, alert rules, provisioning as code, and API-driven dashboards.",
+  "system_prompt": "You are grafana-monitoring.\n\nMonitors systems with Grafana: datasource health, alert rules, provisioning as code, and API-driven dashboards.\n\n## Capabilities\n- **api-ops**: Operate Grafana via its HTTP API.\n- **provisioning**: Manage Grafana as code with provisioning files.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Grafana Monitoring\n\nKeep dashboards honest and alerts effective.\n\n## When to Use\n\n- Datasource connectivity issues\n- Rolling out dashboards as code\n- Alert rule audits before incidents\n\n## Health checks\n\n```bash\ncurl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health\ncurl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources | jq '.[] | {name, type, url}'\n```\n\n## Dashboards as code\n\nExport dashboards to JSON, review in git, and apply via API:\n\n```bash\ncurl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db -d @dashboard.json\n```\n\n## Alert rule hygiene\n\n- Every rule has an owner and an actionable summary.\n- Test rules against recorded data before enabling.\n- Review firing alert counts weekly.\n\n```bash\ncurl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/alerts | jq '.[] | {name, state}'\n```\n\n## Annotations for deploys\n\n```bash\ncurl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' -d '{\"text\":\"release v3.2.0\"}' http://localhost:3000/api/annotations\n```\n\n## Best practices\n\n- Use service accounts with folder-scoped permissions.\n- Provision datasources from files in production.\n- Correlate dashboards with alert rules by name convention.\n- Version dashboards in git; diff before apply.\n\n## Testing\n\n```bash\ncurl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health\n```\n\nValidate dashboard JSON with a dry-run before applying to prod.\n\n## Examples\n- curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health | jq '.database'\n- curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/alerts | jq '[.[].state] | group_by(.) | map({state: .[0], count: length})'\n- curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources | jq 'length'\n- curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/datasources -d '{\"name\":\"Prometheus\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\",\"access\":\"proxy\"}'\n- curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/folders | jq 'length'\n- curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db -d @dashboard.json | jq '.status'\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "api-ops",
+      "description": "Operate Grafana via its HTTP API.",
+      "commands": [
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources | jq '.[] | {name, type, url}'",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' 'http://localhost:3000/api/dashboards/uid/my-dash' | jq '.dashboard.title'",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/alerts | jq '.[] | {name, state}'",
+        "curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' -d '{\"text\":\"release v3.2.0\"}' http://localhost:3000/api/annotations"
+      ],
+      "examples": [
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health | jq '.database'",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/alerts | jq '[.[].state] | group_by(.) | map({state: .[0], count: length})'",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources | jq 'length'"
+      ],
+      "parameters": [
+        {
+          "name": "token",
+          "type": "string",
+          "description": "Grafana service account token"
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "API path: /api/health, /api/alerts..."
+        },
+        {
+          "name": "uid",
+          "type": "string",
+          "description": "Dashboard uid"
+        }
+      ]
+    },
+    {
+      "name": "provisioning",
+      "description": "Manage Grafana as code with provisioning files.",
+      "commands": [
+        "curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db -d @dashboard.json",
+        "curl -s -X DELETE -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources/uid/$DS_UID",
+        "curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/datasources -d '{\"name\":\"Loki\",\"type\":\"loki\",\"url\":\"http://loki:3100\",\"access\":\"proxy\"}'",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/folders | jq '.[] | {id, title}'",
+        "curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' -d '{\"title\":\"Team Dashboards\",\"uid\":\"team-dash\"}' http://localhost:3000/api/folders"
+      ],
+      "examples": [
+        "curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/datasources -d '{\"name\":\"Prometheus\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\",\"access\":\"proxy\"}'",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/folders | jq 'length'",
+        "curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db -d @dashboard.json | jq '.status'"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Datasource or folder name"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "Datasource type: prometheus, loki, tempo"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Datasource backend URL"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "The Prometheus datasource is erroring in Grafana.",
+      "output": "Checks datasource health via API, verifies the Prometheus URL is reachable, and re-creates the datasource with correct access mode."
+    },
+    {
+      "input": "Add a release annotation after deploy.",
+      "output": "Posts the annotation with version and commit, and verifies it appears in the dashboard."
+    }
+  ]
+}

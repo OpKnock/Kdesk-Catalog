@@ -1,0 +1,33 @@
+title: Koa
+description: 'Build async web applications with Koa: middleware composition, routers, body parsing, and
+  error handling with the koa ecosystem.'
+version: 2.0.0
+instructions: "# Koa\n\nBuild async web applications with Koa: middleware composition, routers, body parsing,\
+  \ and error handling with the koa ecosystem.\n\n## Instructions\n\n# Koa\n\nBuild async Node.js web\
+  \ apps with Koa's onion-style middleware.\n\n## What this skill does\n\n- Scaffolds Koa projects with\
+  \ router and bodyparser.\n- Implements cascading middleware and error handling.\n- Tests endpoints with\
+  \ curl.\n\n## When to use\n\n- Lightweight APIs that need async-first middleware.\n- Serving as a BFF\
+  \ layer in Node microservice architectures.\n- Learning middleware composition and ctx lifecycle.\n\n\
+  ## Real commands\n\n```bash\n# Scaffold\nnpm init -y\nnpm install koa koa-router koa-bodyparser\n\n\
+  # Run\nnode app.js\n\n# Watch mode\nnode --watch app.js\n\n# Test endpoints\ncurl -i http://localhost:3000/\n\
+  curl -i -X POST http://localhost:3000/api/users \\\n  -H 'Content-Type: application/json' -d '{\"name\"\
+  :\"alice\"}'\ncurl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/not-found\n```\n\n## app.js\
+  \ example\n\n```js\nconst Koa = require('koa');\nconst Router = require('koa-router');\nconst bodyParser\
+  \ = require('koa-bodyparser');\n\nconst app = new Koa();\nconst router = new Router();\n\napp.use(async\
+  \ (ctx, next) => {\n  const start = Date.now();\n  await next();\n  ctx.set('X-Response-Time', String(Date.now()\
+  \ - start));\n});\n\napp.use(bodyParser());\n\nrouter.get('/', ctx => { ctx.body = { ok: true }; });\n\
+  router.post('/api/users', ctx => {\n  ctx.status = 201;\n  ctx.body = { id: 1, ...ctx.request.body };\n\
+  });\n\napp.use(router.routes());\napp.use(router.allowedMethods());\n\napp.listen(3000);\n```\n\n##\
+  \ Testing\n\n```bash\nnode --check app.js   # syntax check\n```\n\n## Best practices\n\n- Keep middleware\
+  \ small and ordered: logger, errors, body, then routes.\n- Set ctx.body before awaiting downstream to\
+  \ avoid double sends.\n- Use koa-jwt for auth and koa-helmet for security headers.\n\n## Capabilities\n\
+  \n### koa-app\nScaffold and run a Koa application with router and bodyparser.\n\n**Commands:**\n- `npm\
+  \ init -y`\n- `npm install koa koa-router koa-bodyparser`\n- `node app.js`\n- `node --watch app.js`\n\
+  - `npm install -D nodemon`\n\n**Examples:**\n- npm init -y && npm install koa koa-router koa-bodyparser\n\
+  - node app.js\n- node --watch app.js\n\n### verify-endpoints\nTest Koa endpoints with curl including\
+  \ JSON bodies and errors.\n\n**Commands:**\n- `curl -i http://localhost:3000/`\n- `curl -i -X POST http://localhost:3000/api/users\
+  \ -H 'Content-Type: application/json' -d '{\"name\":\"alice\"}'`\n- `curl -s -o /dev/null -w '%{http_code}\\\
+  n' http://localhost:3000/not-found`\n- `curl -i http://localhost:3000/api/users/1`\n\n**Examples:**\n\
+  - curl -i http://localhost:3000/\n- curl -i -X POST http://localhost:3000/api/users -H 'Content-Type:\
+  \ application/json' -d '{\"name\":\"alice\"}'\n- curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/not-found"
+prompt: Act as Koa and handle the task per the instructions.

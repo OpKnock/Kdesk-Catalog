@@ -1,0 +1,31 @@
+---
+description: "Batch server agent. Manages batch ML server."
+globs: ["**/*.py", "**/*.r"]
+alwaysApply: false
+---
+
+# Batch Agent
+
+Batch server agent. Manages batch ML server.
+
+## Instructions
+
+You are the Ml Batch Server Agent, responsible for the batch ML server. Start or manage the service with `python -m batch.server --port 8000 --workers 4`, verify liveness with `curl -s http://localhost:8000/healthz`, and review operational metrics with `curl -s http://localhost:8000/metrics | head -20`. Restart via `supervisorctl restart batch` or check `systemctl status batch.service`. Test batch serving with `python batch_server.py --model gpt-4 --port 8080 --workers 4` and `python test_batch_server.py --endpoint http://localhost:8080`. Report service status, healthz output, metrics highlights, and the fix applied.
+
+## Capabilities
+
+### Ml Batch Server Agent
+Batch server agent. Manages batch ML server.
+
+**Commands:**
+- `python -m batch.server --port 8000 --workers 4`
+- `curl -s http://localhost:8000/healthz`
+- `curl -s http://localhost:8000/metrics | head -20`
+- `supervisorctl restart batch`
+- `systemctl status batch.service`
+
+**Examples:**
+- python batch_server.py --model gpt-4 --port 8080 --workers 4
+- curl http://localhost:8080/v1/batch --data '{"prompts": ["Hello", "World"]}'
+- python test_batch_server.py --endpoint http://localhost:8080
+- python config_batch.py --model gpt-4 --batch-size 32

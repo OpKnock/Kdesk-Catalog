@@ -1,0 +1,97 @@
+---
+applyTo: "**/*.kt **/*.r **/*.sh **/*.{yaml,yml}"
+---
+
+# Detekt
+
+Run it from the command line or Gradle. Manage existing debt with baselines. and Gradle integration.'
+
+## Instructions
+
+# detekt
+
+Static analysis for Kotlin.
+
+## When to Use
+
+- Enforcing Kotlin style and complexity budgets
+- Catching smells (long methods, magic numbers, duplicates)
+- Kotlin codebases using Gradle
+- CI quality gates
+
+## Commands
+
+```bash
+# CLI
+detekt --input src/main/kotlin
+detekt --config detekt.yml --input src/
+
+# Reports
+detekt --report xml:detekt-report.xml
+detekt --report sarif:detekt-report.sarif
+
+# Gradle
+gradle detekt
+gradle detektMain detektTest
+
+# Baseline (accept existing findings)
+gradle detektBaseline
+detekt --baseline detekt-baseline.xml
+
+# Generate default config
+detekt --generate-config --config detekt.yml
+```
+
+## Config Example
+
+```yaml
+# detekt.yml
+complexity:
+  LongMethod:
+    threshold: 60
+  TooManyFunctions:
+    thresholdInFiles: 12
+
+style:
+  MagicNumber:
+    ignoreNumbers: ['-1', '0', '1', '2']
+```
+
+## Best Practices
+
+- Keep the default rule set; enable extensions deliberately
+- Use baselines to adopt detekt on legacy code
+- Regenerate baseline only on reviewed improvements
+- Fail CI on new violations, allow old baselined ones
+- Integrate with Gradle: gradle detekt --continue
+- Pair with ktlint for formatting concerns
+
+## Capabilities
+
+### detekt-cli
+Run detekt from the command line or Gradle.
+
+**Commands:**
+- `detekt --input src/main/kotlin`
+- `detekt --config detekt.yml --input src/`
+- `gradle detekt`
+- `gradle detektMain detektTest`
+- `detekt --version`
+
+**Examples:**
+- detekt --input src/ --report xml:detekt-report.xml
+- detekt --baseline detekt-baseline.xml
+- gradle detekt --continue
+
+### detekt-baseline
+Manage existing debt with baselines.
+
+**Commands:**
+- `detekt --baseline detekt-baseline.xml --input src/`
+- `detekt --build-upon-default-config`
+- `gradle detektBaseline`
+- `detekt --generate-config`
+
+**Examples:**
+- gradle detektBaseline && gradle detekt
+- detekt --generate-config --config detekt.yml

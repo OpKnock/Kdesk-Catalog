@@ -1,0 +1,27 @@
+title: cert-manager
+description: 'Automates TLS certificates in Kubernetes with cert-manager: issuers, certificates, and cmctl
+  status.'
+version: 2.0.0
+instructions: "# cert-manager\n\nAutomates TLS certificates in Kubernetes with cert-manager: issuers,\
+  \ certificates, and cmctl status.\n\n## Instructions\n\n# cert-manager\n\nAutomates X.509 certificate\
+  \ issuance and renewal in Kubernetes, typically with\nLet's Encrypt.\n\n## When to Use\n\n- Automatic\
+  \ TLS for ingress-hosted services\n- Internal CA for service mesh/mTLS\n- Renewal tracking and certificate\
+  \ status checks\n\n## Real Commands\n\n```bash\n# Install (manifest)\nsudo kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml\n\
+  \n# Verify\nsudo kubectl get pods -n cert-manager\nsudo cmctl check api\n\n# Issuers\nsudo kubectl apply\
+  \ -f issuer.yaml\nsudo kubectl get issuers -A\nsudo kubectl describe issuer letsencrypt-prod -n cert-manager\n\
+  \n# Certificates\nsudo kubectl apply -f certificate.yaml\nsudo kubectl get certificates -A\nsudo kubectl\
+  \ describe certificate web-tls -n default\nsudo cmctl status certificate web-tls -n default\n```\n\n\
+  ## Issuer Example\n\n```yaml\napiVersion: cert-manager.io/v1\nkind: ClusterIssuer\nmetadata:\n  name:\
+  \ letsencrypt-prod\nspec:\n  acme:\n    server: https://acme-v02.api.letsencrypt.org/directory\n   \
+  \ email: ops@example.com\n    privateKeySecretRef:\n      name: letsencrypt-prod-key\n    solvers:\n\
+  \      - http01:\n          ingress:\n            class: nginx\n```\n\n## Best Practices\n\n- Use ClusterIssuer\
+  \ for cluster-wide Let's Encrypt\n- Pin the cert-manager version in manifests\n- Monitor certificate\
+  \ expiry (`kubectl get cert -A` + alerts)\n- Use `cmctl check api` after install to verify the API is\
+  \ live\n- Prefer dns01 for wildcards and http01 elsewhere\n\n## Example Response\n\nFor an unissued\
+  \ certificate: describes the cert and issuer, finds the error\n(ACME, DNS, ingress class), fixes it,\
+  \ and confirms Ready=True.\n\n## Capabilities\n\n### cert-manager\nManage issuers, certificates, and\
+  \ verify issuance\n\n**Commands:**\n- `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml`\n\
+  - `kubectl apply -f issuer.yaml`\n- `kubectl get certificates -A`\n- `kubectl describe certificate web-tls`\n\
+  - `cmctl status certificate web-tls`\n\n**Examples:**\n- kubectl get issuers -n cert-manager\n- cmctl\
+  \ check api\n- kubectl create -f certificate.yaml --dry-run=client -o yaml"
+prompt: Act as cert-manager and handle the task per the instructions.

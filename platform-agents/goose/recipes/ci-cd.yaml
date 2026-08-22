@@ -1,0 +1,37 @@
+title: ci-cd
+description: Sets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including workflow
+  authoring, secrets handling, and run debugging.
+version: 2.0.0
+instructions: "# ci-cd\n\nSets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including\
+  \ workflow authoring, secrets handling, and run debugging.\n\n## Instructions\n\n# CI/CD Pipeline Engineering\n\
+  \nDesign, author, and debug continuous integration and delivery pipelines for GitHub Actions and GitLab\
+  \ CI.\n\n## What This Skill Does\n\n- Writes valid `.github/workflows/*.yml` and `.gitlab-ci.yml` configs\n\
+  - Validates pipeline syntax locally before pushing\n- Debugs failing runs using the gh and glab CLIs\n\
+  - Manages environment secrets, caches, and artifact passing between jobs\n- Implements caching, matrix\
+  \ builds, and deployment gates\n\n## When to Use\n\n- A user asks to set up CI for a repository\n- A\
+  \ pipeline run fails and needs diagnosis\n- Adding deploy steps, artifact publishing, or test coverage\
+  \ gates\n\n## Real Commands\n\n```bash\n# Validate workflows before pushing (GitHub)\nactionlint .github/workflows/deploy.yml\n\
+  actionlint -shellcheck= /usr/bin/shellcheck -pyflakes= /usr/bin/pyflakes .github/workflows/*.yml\n\n\
+  # Trigger and watch runs (GitHub)\ngh workflow run deploy.yml -f environment=staging --ref main\ngh\
+  \ run list --workflow=deploy.yml --limit 5\ngh run watch 4473148674\ngh run view 4473148674 --log-failed\n\
+  \n# Validate and run (GitLab)\nglab ci lint .gitlab-ci.yml\nglab pipeline run -b main\nglab ci trace\
+  \ 2846210\nglab ci retry 2846210\n```\n\n## Sample Workflow\n\n```yaml\nname: deploy\non:\n  push:\n\
+  \    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n\
+  \      - uses: actions/setup-node@v4\n        with: { node-version: 20, cache: npm }\n      - run: npm\
+  \ ci && npm test\n      - uses: actions/upload-artifact@v4\n        with: { name: dist, path: dist/\
+  \ }\n  deploy:\n    needs: test\n    runs-on: ubuntu-latest\n    environment: staging\n    env:\n  \
+  \    STAGING_TOKEN: ${{ secrets.STAGING_TOKEN }}\n    steps:\n      - run: ./deploy.sh\n```\n\n## Best\
+  \ Practices\n\n- Pin action versions to full SHAs in security-sensitive repos\n- Use `needs` for job\
+  \ ordering and `if:` guards for conditional steps\n- Pass artifacts between jobs with upload/download-artifact\n\
+  - Cache package managers (npm, pip, maven) with `cache` inputs\n- Put long-lived credentials in repository\
+  \ secrets, never in workflow YAML\n- Fail fast: keep each job under ~10 minutes and parallelize with\
+  \ matrix\n\n## Capabilities\n\n### github-actions\nCreate, trigger, and inspect GitHub Actions workflows\
+  \ via the gh CLI and YAML configs.\n\n**Commands:**\n- `gh workflow list`\n- `gh workflow run deploy.yml\
+  \ -f environment=staging`\n- `gh run list --limit 10`\n- `gh run watch 1234567890`\n- `gh run view 1234567890\
+  \ --log-failed`\n- `actionlint .github/workflows/deploy.yml`\n\n**Examples:**\n- gh workflow run release.yml\
+  \ -f version=1.2.3\n- gh run view 4473148674 --log-failed\n- actionlint .github/workflows/*.yml\n\n\
+  ### gitlab-ci\nManage GitLab CI pipelines, runners, and pipeline schedules.\n\n**Commands:**\n- `glab\
+  \ ci status`\n- `glab ci lint .gitlab-ci.yml`\n- `glab pipeline run`\n- `glab ci trace 1234567`\n- `glab\
+  \ runner list`\n- `glab ci retry 1234567`\n\n**Examples:**\n- glab ci lint .gitlab-ci.yml\n- glab pipeline\
+  \ run -b main\n- glab ci trace 2846210"
+prompt: Act as ci-cd and handle the task per the instructions.

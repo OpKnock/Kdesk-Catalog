@@ -1,0 +1,96 @@
+---
+applyTo: "**/*.r **/*.sh **/*.sql"
+---
+
+# Authorization
+
+Configures Kubernetes RBAC roles and bindings with can-i verification, manages AWS IAM policies with permission simulation, and validates role-based access patterns for API endpoints.
+
+## Instructions
+
+# Authorization
+
+## What this skill does
+
+Implements authorization for APIs and platforms: Kubernetes RBAC roles/bindings with can-i verification, AWS IAM policy attachment and permission simulation, and role-based access control design patterns.
+
+## When to use
+
+- A user/team needs least-privilege access on a cluster or AWS account
+- Verifying that a role can (or cannot) perform an action
+- Designing role hierarchies for an API
+
+## Real commands
+
+```bash
+# Kubernetes RBAC
+kubectl create role reader --verb=get,list --resource=pods
+kubectl create rolebinding reader-binding --role=reader --user=jane
+kubectl auth can-i get pods --as=jane
+kubectl auth can-i delete pods --as=jane
+
+# AWS IAM
+aws iam attach-user-policy --user-name deploy-bot --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess
+aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::111122223333:user/deploy-bot --action-names s3:GetObject --resource-arns arn:aws:s3:::my-bucket/*
+
+# API role checks
+curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/admin
+```
+
+## Testing
+
+- Use kubectl auth can-i --as=<user> for every role change
+- Use iam simulate-principal-policy before granting access
+- Probe endpoints as each role and assert status codes
+
+## Best practices
+
+- Least privilege: start deny-all, grant narrowly
+- Use groups over individual users
+- Review policy grants quarterly; revoke stale ones
+
+## Capabilities
+
+### kubernetes-rbac
+Create and test RBAC roles and bindings.
+
+**Commands:**
+- `kubectl create role reader --verb=get,list --resource=pods`
+- `kubectl create rolebinding reader-binding --role=reader --user=jane`
+- `kubectl auth can-i get pods --as=jane`
+- `kubectl auth can-i delete pods --as=jane`
+- `kubectl get role,rolebinding`
+
+**Examples:**
+- kubectl create clusterrole metrics-reader --verb=get --resource=nodes/stats
+- kubectl auth can-i list pods --as=jane --namespace=prod
+- kubectl create rolebinding dev-binding --clusterrole=view --group=devs -n dev
+
+### aws-iam
+Manage IAM policies, roles, and verify effective permissions.
+
+**Commands:**
+- `aws iam attach-user-policy --user-name deploy-bot --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess`
+- `aws iam list-attached-policies --user-name deploy-bot`
+- `aws iam get-policy-version --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess --version-id v1`
+- `aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::111122223333:user/deploy-bot --action-names s3:GetObject --resource-arns arn:aws:s3:::my-bucket/*`
+- `aws iam list-policies --scope Local`
+
+**Examples:**
+- aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::111122223333:user/deploy-bot --action-names s3:PutObject s3:DeleteObject --resource-arns arn:aws:s3:::my-bucket/* | jq '.EvaluationResults[].EvalDecision'
+- aws iam get-account-authorization-details --filter Role | jq '.RoleDetailList[].RoleName'
+- aws iam attach-role-policy --role-name api-role --policy-arn arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+
+### design-patterns
+Design RBAC/ABAC models with verification checks.
+
+**Commands:**
+- `curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $ADMIN" https://api.your-app.test/v1/admin`
+- `curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/admin`
+- `curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/me`
+- `mysql -e "SHOW GRANTS FOR 'app'@'%'"`
+
+**Examples:**
+- curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/other-user-resource
+- mysql -e "SHOW GRANTS FOR 'readonly'@'%'"
+- kubectl auth can-i --list --as=ci-bot

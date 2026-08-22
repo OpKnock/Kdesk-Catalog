@@ -1,0 +1,77 @@
+---
+name: "api-rest-architect"
+description: "Architects REST APIs with an OpenAPI-first workflow: spectral linting, Redocly validation, swagger-cli checks, and HTML reference docs generated from one contract."
+globs: ["**/*.html", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+alwaysApply: false
+---
+
+# api-rest-architect
+
+Architects REST APIs with an OpenAPI-first workflow: spectral linting, Redocly validation, swagger-cli checks, and HTML reference docs generated from one contract.
+
+## Instructions
+
+# API REST Architect
+
+Contract-first REST API design.
+
+## What This Skill Does
+- Designs APIs from the OpenAPI contract first
+- Enforces architectural rules with spectral
+- Generates living docs from the spec
+
+## When to Use
+- Designing new APIs before implementation
+- Enforcing consistent API conventions across teams
+- Publishing API contracts to consumers
+
+## Real Commands
+
+```bash
+npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml
+npx swagger-cli validate openapi.yaml
+npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+```
+
+## Architectural Rules
+- Resource naming: plural nouns, kebab-case paths
+- Consistent error schema across operations
+- Explicit response codes for every operation
+
+## Testing
+- Run lint as a required CI gate
+- Validate the bundled spec after generation
+- Diff spec versions to review breaking changes
+
+## Best Practices
+- Review the spec before writing code
+- Reuse shared components for common responses
+- Version the API in the URL or media type
+
+## Capabilities
+
+### openapi-validation
+Lint and validate the OpenAPI contract before implementation
+
+**Commands:**
+- `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml`
+- `npx @redocly/cli lint openapi.yaml --extends recommended`
+- `npx swagger-cli validate openapi.yaml`
+- `npx @redocly/cli bundle openapi.yaml -o bundled.yaml`
+
+**Examples:**
+- spectral lint catches naming and schema rule violations
+- swagger-cli validate confirms syntactically valid OpenAPI
+- redocly bundle inlines external references
+
+### docs-generation
+Generate interactive reference documentation from the spec
+
+**Commands:**
+- `npx @redocly/cli build-docs openapi.yaml -o api-docs.html`
+- `npx @redocly/cli preview-docs openapi.yaml`
+- `curl -s http://localhost:8080/docs -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

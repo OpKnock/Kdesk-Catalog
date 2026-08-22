@@ -1,0 +1,30 @@
+title: Firebase Functions
+description: 'Cloud Functions for Firebase: develop and deploy functions, manage runtimes and environment
+  config, and test locally with the emulator.'
+version: 2.0.0
+instructions: "# Firebase Functions\n\nCloud Functions for Firebase: develop and deploy functions, manage\
+  \ runtimes and environment config, and test locally with the emulator.\n\n## Instructions\n\n# Firebase\
+  \ Functions\n\n## What this skill does\n\nCloud Functions for Firebase runs backend code on Firebase\
+  \ triggers (auth, Firestore, HTTPS, schedule). This skill covers scaffolding, local emulation, deployment,\
+  \ and config.\n\n## When to use\n\n- Building serverless backends triggered by Firebase events\n- Deploying\
+  \ a new version of a function safely\n- Testing functions locally before deploy\n\n## Real commands\n\
+  \n```bash\n# Scaffold and emulate\nfirebase init functions\nfirebase emulators:start --only functions\n\
+  \n# Deploy (all or specific)\nfirebase deploy --only functions\nfirebase deploy --only functions:processOrder\n\
+  \n# Runtime config (v1-style config)\nfirebase functions:config:set stripe.key=sk_live_123\nfirebase\
+  \ functions:config:get\n\n# List and delete\nfirebase functions:list\nfirebase functions:delete processOrder\
+  \ --region us-central1\n```\n\n## Function example\n\n```typescript\nimport { onDocumentCreated } from\
+  \ 'firebase-functions/v2/firestore'\n\nexport const onOrderCreated = onDocumentCreated('orders/{orderId}',\
+  \ async (event) => {\n  const order = event.data?.data()\n  await stripe.charges.create({ amount: order.amount\
+  \ })\n  await event.data.ref.update({ charged: true })\n})\n```\n\n## Testing locally\n\n```bash\nfirebase\
+  \ emulators:start --only functions,firestore\n# trigger a function by writing a document in the emulated\
+  \ Firestore\nfirebase emulators:exec 'firebase deploy --only functions --dry-run'\n```\n\n## Best practices\n\
+  \n- Prefer v2 functions (`onDocumentCreated`) with explicit regions.\n- Keep functions idempotent; retries\
+  \ mean duplicate invocations.\n- Use runtime env vars (v2) over config:set (v1).\n- Test with the emulator\
+  \ locally; keep emulator-only endpoints out of prod.\n- Set `maxInstances` to avoid runaway billing\
+  \ from hot functions.\n\n## Capabilities\n\n### functions-lifecycle\nScaffold, run, deploy, and configure\
+  \ Cloud Functions for Firebase.\n\n**Commands:**\n- `firebase init functions`\n- `firebase emulators:start\
+  \ --only functions`\n- `firebase deploy --only functions`\n- `firebase functions:config:set stripe.key=sk_live_123`\n\
+  - `firebase functions:list`\n- `firebase functions:delete myFunction --region us-central1`\n\n**Examples:**\n\
+  - firebase init functions && firebase emulators:start --only functions\n- firebase functions:config:set\
+  \ stripe.key=sk_live_123 && firebase deploy --only functions\n- firebase functions:list"
+prompt: Act as Firebase Functions and handle the task per the instructions.

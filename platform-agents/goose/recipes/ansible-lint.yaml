@@ -1,0 +1,25 @@
+title: Ansible Lint
+description: 'Lints Ansible playbooks and roles with ansible-lint: best-practice rules, YAML validation,
+  and CI integration.'
+version: 2.0.0
+instructions: "# Ansible Lint\n\nLints Ansible playbooks and roles with ansible-lint: best-practice rules,\
+  \ YAML validation, and CI integration.\n\n## Instructions\n\n# ansible-lint\n\nLint Ansible playbooks\
+  \ and roles.\n\n## When to Use\n\n- Enforcing best practices across playbook repositories\n- Catching\
+  \ YAML, module, and FQCN mistakes before runs\n- CI gating on infrastructure-as-code changes\n- Keeping\
+  \ roles consistent across the codebase\n\n## Commands\n\n```bash\n# Lint a directory\nansible-lint playbooks/\n\
+  \n# Verbose\nansible-lint playbook.yml -v\n\n# Exclude directories\nansible-lint --exclude=roles/vendor/\n\
+  \n# Custom rules dir\nansible-lint -r custom-rules.yml playbook.yml\n\n# Skip a rule\nansible-lint playbook.yml\
+  \ --skip-list fqcn-builtins\n\n# List rules and tags\nansible-lint --list-rules\nansible-lint --list-tags\n\
+  \n# Auto-fix\nansible-lint --fix playbook.yml\n```\n\n## Config Example\n\n```yaml\n# .ansible-lint\n\
+  exclude_paths:\n  - .cache\n  - roles/vendor\nskip_list:\n  - yaml[line-length]\nwarn_list:\n  - experimental\n\
+  ```\n\n## Best Practices\n\n- Run ansible-lint in CI on every MR\n- Use FQCNs for all modules (ansible.builtin.*)\n\
+  - Add no-changed-when to every command task\n- Keep line length within the yaml rule default\n- Auto-fix\
+  \ with --fix, then review the diff\n- Treat new violations as blockers; manage legacy ones via skip_list\n\
+  \n## Capabilities\n\n### ansible-lint-cli\nRun ansible-lint with rule and config control.\n\n**Commands:**\n\
+  - `ansible-lint playbooks/`\n- `ansible-lint playbook.yml -v`\n- `ansible-lint --exclude=roles/vendor/`\n\
+  - `ansible-lint -r custom-rules.yml playbook.yml`\n- `ansible-lint --offline`\n\n**Examples:**\n- ansible-lint\
+  \ -p playbooks/\n- ansible-lint playbook.yml --skip-list fqcn-builtins\n- ansible-lint --list-tags\n\
+  \n### ansible-lint-config\nManage config and rule selection.\n\n**Commands:**\n- `ansible-lint --generate-ignore-file`\n\
+  - `ansible-lint --list-rules`\n- `ansible-lint --config .ansible-lint`\n- `ansible-lint --fix playbook.yml`\n\
+  \n**Examples:**\n- ansible-lint --list-rules | grep -i \"no-changed-when\"\n- ansible-lint --fix"
+prompt: Act as Ansible Lint and handle the task per the instructions.

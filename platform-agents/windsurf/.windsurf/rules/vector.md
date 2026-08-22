@@ -1,0 +1,97 @@
+---
+trigger: glob
+description: "Operates observability pipelines end-to-end. Defines sources, transforms, and sinks in TOML, validates topology before running, inspects live events with tap and top, and generates scaffold configs targeting common log sources."
+globs: ["**/*.json", "**/*.r", "**/*.sh"]
+---
+
+# Vector
+
+Operates observability pipelines end-to-end. Defines sources, transforms, and sinks in TOML, validates topology before running, inspects live events with tap and top, and generates scaffold configs targeting common log sources.
+
+## Instructions
+
+# Vector
+
+Hand-crafted skill for Vector observability pipelines.
+
+## What this skill does
+
+- Defines sources -> transforms -> sinks in TOML
+- Validates pipeline topology before running
+- Inspects live events with tap and top
+- Scaffolds configs for common sources
+
+## When to use
+
+- Shipping logs from files or Docker to Loki/S3
+- Transforming fields in transit
+- Replacing agent chains (filebeat -> logstash -> ...)
+
+## Real commands
+
+```bash
+# Validate the config without running
+vector validate /etc/vector/vector.toml
+
+# Run the agent
+vector --config /etc/vector/vector.toml
+
+# Live topology health
+vector top --config /etc/vector/vector.toml
+
+# Tail events through a source/component
+vector tap file_logs --config /etc/vector/vector.toml
+
+# Scaffold a config
+vector generate --encoding toml file_nginx_logs/console
+```
+
+## Minimal pipeline
+
+```toml
+[sources.file_logs]
+type = "file"
+include = ["/var/log/nginx/access.log"]
+
+[transforms.parse_json]
+type = "remap"
+inputs = ["file_logs"]
+source = """
+. = parse_json!(.message)
+"""
+
+[sinks.console]
+type = "console"
+inputs = ["parse_json"]
+encoding.codec = "json"
+```
+
+## Testing
+
+```bash
+vector validate /etc/vector/vector.toml
+vector tap file_logs --config /etc/vector/vector.toml
+```
+
+## Best practices
+
+- Validate configs in CI before deploying the agent
+- Name components clearly: file_logs, parse_json, sink_loki
+- Use remap transforms for all parsing, not jq in sinks
+
+## Capabilities
+
+### vector-pipelines
+Build and run Vector observability pipelines
+
+**Commands:**
+- `vector validate /etc/vector/vector.toml`
+- `vector --config /etc/vector/vector.toml`
+- `vector top --config /etc/vector/vector.toml`
+- `vector tap file_logs --config /etc/vector/vector.toml`
+- `vector generate --encoding toml file_nginx_logs/console`
+
+**Examples:**
+- vector validate /etc/vector/vector.toml
+- vector --config /etc/vector/vector.toml
+- vector generate --encoding toml file_nginx_logs/console

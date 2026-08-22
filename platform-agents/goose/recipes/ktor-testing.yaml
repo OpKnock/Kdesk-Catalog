@@ -1,0 +1,30 @@
+title: Ktor Testing
+description: 'Test Ktor applications: testApplication-based integration tests, client requests against
+  routes, and assertions on status/JSON responses.'
+version: 2.0.0
+instructions: "# Ktor Testing\n\nTest Ktor applications: testApplication-based integration tests, client\
+  \ requests against routes, and assertions on status/JSON responses.\n\n## Instructions\n\n# Ktor Testing\n\
+  \nIntegration-test Ktor applications with testApplication.\n\n## What this skill does\n\n- Boots the\
+  \ app in-process with testApplication.\n- Sends real requests through the routing via the test client.\n\
+  - Asserts status codes, headers, and JSON bodies.\n\n## When to use\n\n- Verifying routes and plugins\
+  \ before release.\n- Testing auth, content negotiation, and error pages.\n- Keeping test feedback loops\
+  \ fast (no external server).\n\n## Real commands\n\n```bash\n# Run all tests\n./gradlew test\n\n# Single\
+  \ class\n./gradlew test --tests 'com.example.ApplicationTest'\n\n# Pattern with stacktrace\n./gradlew\
+  \ test --tests '*Auth*' --stacktrace\n\n# Manual smoke against a running app\n./gradlew run &\ncurl\
+  \ -s http://localhost:8080/hello\n```\n\n## Test example\n\n```kotlin\nclass ApplicationTest {\n   \
+  \ @Test\n    fun `GET hello returns 200`() = testApplication {\n        application { module() }\n \
+  \       client.get(\"/hello\").apply {\n            assertEquals(HttpStatusCode.OK, status)\n      \
+  \      assertEquals(\"Hello, world!\", bodyAsText())\n        }\n    }\n\n    @Test\n    fun `unknown\
+  \ route returns 404`() = testApplication {\n        application { module() }\n        assertEquals(HttpStatusCode.NotFound,\
+  \ client.get(\"/nope\").status)\n    }\n}\n```\n\n## Testing\n\n```bash\n./gradlew test --tests 'com.example.ApplicationTest'\n\
+  ```\n\n## Best practices\n\n- Use testApplication per suite; share setup in @BeforeTest.\n- Assert status\
+  \ AND body; status alone hides content regressions.\n- Test auth routes with both valid and invalid\
+  \ credentials.\n\n## Capabilities\n\n### integration-tests\nWrite and run testApplication integration\
+  \ tests for routes.\n\n**Commands:**\n- `./gradlew test`\n- `./gradlew test --tests 'com.example.ApplicationTest'`\n\
+  - `./gradlew test --info`\n- `./gradlew test --tests '*Auth*' --stacktrace`\n\n**Examples:**\n- ./gradlew\
+  \ test\n- ./gradlew test --tests 'com.example.ApplicationTest'\n- ./gradlew test --tests '*Auth*' --stacktrace\n\
+  \n### route-assertions\nDrive routes with test client and assert status and bodies.\n\n**Commands:**\n\
+  - `curl -s http://localhost:8080/hello`\n- `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/hello`\n\
+  - `./gradlew test --tests 'com.example.RoutesTest'`\n\n**Examples:**\n- curl -s http://localhost:8080/hello\n\
+  - ./gradlew test --tests 'com.example.RoutesTest'"
+prompt: Act as Ktor Testing and handle the task per the instructions.

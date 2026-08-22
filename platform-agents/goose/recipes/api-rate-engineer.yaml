@@ -1,0 +1,26 @@
+title: api-rate-engineer
+description: 'Implements API rate limiting with nginx limit_req and limit_conn modules: shared memory
+  zones, burst queues, delayed processing, and 429 responses.'
+version: 2.0.0
+instructions: "# api-rate-engineer\n\nImplements API rate limiting with nginx limit_req and limit_conn\
+  \ modules: shared memory zones, burst queues, delayed processing, and 429 responses.\n\n## Instructions\n\
+  \n# API Rate Engineer\n\nRate limiting with nginx.\n\n## What This Skill Does\n- Limits requests per\
+  \ second per client key\n- Buffers bursts with queues or nodelay policy\n- Limits concurrent connections\
+  \ per IP\n\n## When to Use\n- Protecting APIs behind nginx reverse proxy\n- Throttling heavy endpoints\
+  \ without app changes\n- Defending against single-IP abuse\n\n## Real Commands\n\n```bash\nnginx -t\n\
+  nginx -s reload\nfor i in $(seq 1 30); do curl -s -o /dev/null -w '%{http_code}\\n' http://localhost/api/;\
+  \ done | sort | uniq -c\n```\n\n## Config Example\n\n```nginx\nlimit_req_zone $binary_remote_addr zone=api:10m\
+  \ rate=10r/s;\nserver {\n  location /api/ {\n    limit_req zone=api burst=20 nodelay;\n    limit_req_status\
+  \ 429;\n    proxy_pass http://backend;\n  }\n}\n```\n\n## Testing\n- Fire over-limit bursts and count\
+  \ 429 responses\n- Verify Retry-After headers appear on 429s\n- Confirm normal traffic below the limit\
+  \ is unaffected\n\n## Best Practices\n- Key zones on real client identity, not just IP\n- Use burst+nodelay\
+  \ for interactive APIs\n- Log limit violations to a dedicated access log\n\n## Capabilities\n\n### nginx-limit-req\n\
+  Configure request rate limiting zones in nginx\n\n**Commands:**\n- `nginx -t`\n- `nginx -s reload`\n\
+  - `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost/api/`\n- `for i in $(seq 1 30); do curl\
+  \ -s -o /dev/null -w '%{http_code}\\n' http://localhost/api/; done | sort | uniq -c`\n- `curl -s -D-\
+  \ -o /dev/null http://localhost/api/ | grep -i retry-after`\n\n**Examples:**\n- limit_req_zone $binary_remote_addr\
+  \ zone=api:10m rate=10r/s defines the zone\n- limit_req zone=api burst=20 nodelay applies it to a location\n\
+  - nginx -t validates config before reload\n\n### limit-conn\nCap concurrent connections per client\n\
+  \n**Commands:**\n- `nginx -t -c /etc/nginx/nginx.conf`\n- `curl -s -o /dev/null -w '%{http_code}\\n'\
+  \ http://localhost/api/health`\n- `ab -n 500 -c 100 http://localhost/api/ 2>&1 | grep -i 'non-2xx'`"
+prompt: Act as api-rate-engineer and handle the task per the instructions.

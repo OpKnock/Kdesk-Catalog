@@ -1,0 +1,26 @@
+title: Nftables
+description: Manages firewall rules using nftables to create tables, chains, rules, and sets, and applies
+  persistent configuration files enabling packet filtering.
+version: 2.0.0
+instructions: "# Nftables\n\nManages firewall rules using nftables to create tables, chains, rules, and\
+  \ sets, and applies persistent configuration files enabling packet filtering.\n\n## Instructions\n\n\
+  # nftables\n\nnftables is the modern Linux packet filtering framework, successor to iptables.\n\n##\
+  \ What this skill does\n\n- Creates tables, chains and rules\n- Uses sets for efficient address/port\
+  \ matching\n- Applies persistent rule files\n\n## When to use\n\n- Replacing iptables with nftables\n\
+  - Writing firewall rules for new servers\n\n## Real commands\n\n```bash\n# Inspect current ruleset\n\
+  nft list ruleset\n\n# Table and base chain\nnft add table inet filter\nnft add chain inet filter input\
+  \ '{ type filter hook input priority 0; policy drop; }'\n\n# Rules\nnft add rule inet filter input tcp\
+  \ dport 22 accept\nnft add rule inet filter input tcp dport 443 accept\nnft add rule inet filter input\
+  \ ct state established,related accept\n\n# Delete a rule by handle\nnft -a list chain inet filter input\n\
+  nft delete rule inet filter input handle 3\n\n# Apply config file\nnft -f /etc/nftables.conf\n```\n\n\
+  ## Config file\n\n```nft\n#!/usr/sbin/nft -f\nflush ruleset\n\ntable inet filter {\n  chain input {\n\
+  \    type filter hook input priority 0; policy drop;\n    ct state established,related accept\n    tcp\
+  \ dport 22 accept\n    iif lo accept\n  }\n}\n```\n\n## Best practices\n\n- Always keep a policy that\
+  \ still allows your SSH (or fallback access)\n- Test with `nft -c -f` (check mode) before applying\n\
+  - Persist to /etc/nftables.conf and enable the service\n\n## Capabilities\n\n### nftables-rules\nCreate\
+  \ tables/chains/rules, manage sets and apply nftables config files.\n\n**Commands:**\n- `nft list ruleset`\n\
+  - `nft add table inet filter`\n- `nft add chain inet filter input '{ type filter hook input priority\
+  \ 0; policy drop; }'`\n- `nft add rule inet filter input tcp dport 22 accept`\n- `nft -f /etc/nftables.conf`\n\
+  \n**Examples:**\n- nft add rule inet filter input tcp dport 443 accept\n- nft add set inet filter allowed\
+  \ '{ type ipv4_addr; flags interval; }'\n- nft list ruleset | grep -A5 'chain input'"
+prompt: Act as Nftables and handle the task per the instructions.

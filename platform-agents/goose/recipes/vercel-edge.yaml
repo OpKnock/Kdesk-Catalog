@@ -1,0 +1,26 @@
+title: Vercel Edge
+description: Deploys and manages Vercel edge functions using the Vercel CLI. Handles authentication, local
+  development with vercel dev, environment variables per environment, preview and production deployments,
+  and rollbacks.
+version: 2.0.0
+instructions: "# Vercel Edge\n\nDeploys and manages Vercel edge functions using the Vercel CLI. Handles\
+  \ authentication, local development with vercel dev, environment variables per environment, preview\
+  \ and production deployments, and rollbacks.\n\n## Instructions\n\n# Vercel Edge\n\n## What this skill\
+  \ does\n\nManage Vercel deployments for APIs and edge functions using the Vercel CLI. Covers authentication,\
+  \ local development with `vercel dev`, environment variables, preview vs production deploys, and rollbacks.\n\
+  \n## When to use\n\n- Deploying a Next.js API or standalone edge function\n- Managing per-environment\
+  \ secrets\n- Debugging preview vs production differences\n\n## Real commands\n\n```bash\n# Authenticate\
+  \ and link project\nvercel login\nvercel link\n\n# Local development with functions and env\nvercel\
+  \ dev\n\n# Preview deployment (default)\nvercel deploy\n\n# Production deployment\nvercel deploy --prod\n\
+  \n# Deploy without rebuild (CI scenario)\nvercel deploy --prebuilt --prod\n\n# Environment variables\n\
+  vercel env add DATABASE_URL production\nvercel env pull\n\n# List deployments and rollback\nvercel ls\n\
+  vercel rollback <deployment-url>\n```\n\n## Edge function example (api/hello.ts)\n\n```ts\nexport const\
+  \ config = { runtime: 'edge' };\nexport default function handler(req: Request) {\n  return new Response(JSON.stringify({\
+  \ hello: 'edge' }), {\n    headers: { 'content-type': 'application/json' },\n  });\n}\n```\n\n## Best\
+  \ practices\n\n- Always test with `vercel dev` before deploying\n- Scope env vars per environment (development/preview/production)\n\
+  - Use `--prebuilt` in CI to keep builds reproducible\n- Roll back immediately if production errors spike\
+  \ after deploy\n\n## Testing\n\n```bash\nvercel dev &\ncurl http://localhost:3000/api/hello\n```\n\n\
+  ## Capabilities\n\n### deploy-vercel\nDeploy projects and manage edge functions\n\n**Commands:**\n-\
+  \ `vercel login`\n- `vercel dev`\n- `vercel deploy --prod`\n- `vercel env add DATABASE_URL production`\n\
+  - `vercel ls`\n\n**Examples:**\n- vercel deploy --prebuilt\n- vercel env pull\n- vercel rollback"
+prompt: Act as Vercel Edge and handle the task per the instructions.

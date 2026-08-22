@@ -1,0 +1,81 @@
+---
+name: "api-graphql-engineer"
+description: "Implements GraphQL APIs in production: Apollo Server, resolvers with DataLoader, subscriptions, and auth integration. Use when building GraphQL servers with Apollo Server. Don't use for schema design or governance (see api-graphql-specialist) or REST-to-GraphQL migration (see api-graphql-rest)."
+globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# api-graphql-engineer
+
+Implements GraphQL APIs in production: Apollo Server, resolvers with DataLoader, subscriptions, and auth integration. Use when building GraphQL servers with Apollo Server. Don't use for schema design or governance (see api-graphql-specialist) or REST-to-GraphQL migration (see api-graphql-rest).
+
+## Instructions
+
+# API GraphQL Engineer
+
+Builds production GraphQL APIs: resolvers, batching, subscriptions, and auth.
+
+## When to Use
+- Shipping a real GraphQL service
+- Fixing N+1 in existing resolvers
+- Adding real-time subscriptions
+
+## Real Commands
+
+```bash
+# DataLoader batching
+npm install dataloader
+node -e "const D=require('dataloader');const l=new D(ids=>Promise.all(ids.map(id=>id*2)));Promise.all([l.load(1),l.load(2)]).then(console.log)"
+
+# Subscriptions
+npm install graphql-subscriptions
+node -e "const {PubSub}=require('graphql-subscriptions');const p=new PubSub();console.log(typeof p.publish)"
+
+# JWT on the HTTP layer
+npm install express-jwt
+curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -H 'Authorization: Bearer bad' -d '{"query":"{ me { id } }"}'
+```
+
+## Resolver Pattern
+- Parent arguments for field resolution
+- DataLoader per request context
+- Errors with GraphQLError codes
+
+## Testing
+Benchmark a nested query before and after DataLoader to prove N+1 is gone.
+
+## Best Practices
+- One DataLoader instance per request
+- Validate subscription topics server-side
+
+## Capabilities
+
+### resolver-implementation
+Implement field resolvers with batching and error handling
+
+**Commands:**
+- `npm install dataloader`
+- `node -e "const D=require('dataloader');const l=new D(ids=>Promise.all(ids.map(id=>id*2)));l.load(3).then(console.log)"`
+- `npm install graphql-subscriptions`
+- `node -e "const g=require('graphql-subscriptions');const {PubSub}=g;const p=new PubSub();console.log(typeof p.publish)"`
+- `npm install bcrypt`
+
+**Examples:**
+- node -e "const D=require('dataloader');const l=new D(ids=>Promise.all(ids.map(id=>id*2)));Promise.all([l.load(1),l.load(2)]).then(console.log)"
+- node -e "const g=require('graphql-subscriptions');const {PubSub}=g;const p=new PubSub();p.publish('EVENT',{id:1});console.log('published')"
+- npm install dataloader graphql-subscriptions
+
+### auth-integration
+Protect GraphQL fields with JWT validation and directives
+
+**Commands:**
+- `npm install express-jwt`
+- `node -e "const {expressjwt}=require('express-jwt');const m=expressjwt({secret:'s',algorithms:['HS256']});console.log(typeof m)"`
+- `npm install graphql-directive-auth`
+- `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -H 'Authorization: Bearer bad' -d '{"query":"{ me { id } }"}'`
+- `node -e "const j=require('jsonwebtoken');console.log(j.sign({sub:'u1'},'s',{expiresIn:'1h'}))"`
+
+**Examples:**
+- node -e "const {expressjwt}=require('express-jwt');const m=expressjwt({secret:'s',algorithms:['HS256']});console.log(typeof m)"
+- curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -H 'Authorization: Bearer bad' -d '{"query":"{ me { id } }"}'
+- npm install graphql-directive-auth && npm install express-jwt

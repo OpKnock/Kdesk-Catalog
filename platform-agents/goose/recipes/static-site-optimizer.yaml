@@ -1,0 +1,38 @@
+title: static-site-optimizer
+description: Optimizes static sites for Core Web Vitals with Lighthouse CI, image compression, CSS purging,
+  and asset minification.
+version: 2.0.0
+instructions: "# static-site-optimizer\n\nOptimizes static sites for Core Web Vitals with Lighthouse CI,\
+  \ image compression, CSS purging, and asset minification.\n\n## Instructions\n\n# Static Site Optimization\n\
+  \nMake static sites fast: measure, optimize, and enforce budgets.\n\n## What This Skill Does\n\n- Audits\
+  \ Core Web Vitals with Lighthouse in CI\n- Compresses images and minifies JS/CSS\n- Purges unused CSS\
+  \ and inlines critical CSS\n- Sets compression and caching headers\n\n## When to Use\n\n- Lighthouse\
+  \ scores regress and need diagnosis\n- Setting performance budgets for a redesign\n- Reducing first-load\
+  \ bytes of a marketing site\n\n## Real Commands\n\n```bash\n# Measure\nnpx lhci autorun\nnpx lighthouse\
+  \ https://example.com --only-categories=performance --output=json --output-path=lh.json\n\n# Optimize\
+  \ assets\nnpx imagemin images/**/*.png --out-dir=optimized\nnpx purgecss --css dist/styles.css --content\
+  \ dist/**/*.html --output dist/\nnpx terser src/app.js -c -m -o dist/app.min.js\n\n# Delivery\nbrotli\
+  \ -9 -k dist/index.html\ngzip -9 -k dist/app.js\ncurl -sI -H 'Accept-Encoding: br' https://example.com\
+  \ | grep -i content-encoding\n```\n\n## Budgets (lighthouserc.json)\n\n```json\n{\n  \"ci\": {\n   \
+  \ \"assert\": {\n      \"assertions\": {\n        \"categories:performance\": [\"error\", { \"minScore\"\
+  : 0.9 }],\n        \"largest-contentful-paint\": [\"error\", { \"maxNumericValue\": 2500 }]\n      }\n\
+  \    }\n  }\n}\n```\n\n## Best Practices\n\n- Audit on a warmed cache and a cold cache\n- Serve AVIF/WebP\
+  \ with responsive sizes\n- Preload fonts and critical images; lazy-load below the fold\n- Enable brotli\
+  \ at the CDN; set long cache headers on hashed assets\n- Fail CI on LCP > 2.5s to prevent regressions\n\
+  \n## Capabilities\n\n### performance-audit\nMeasure and gate performance with Lighthouse.\n\n**Commands:**\n\
+  - `npx lhci autorun`\n- `npx lighthouse http://localhost:8080 --only-categories=performance --output=json\
+  \ --output-path=lh.json`\n- `npx lhci collect --url=http://localhost:8080 --numberOfRuns=3`\n- `npx\
+  \ lhci assert --preset=lighthouse:recommended`\n\n**Examples:**\n- npx lhci autorun\n- npx lighthouse\
+  \ http://localhost:8080 --only-categories=performance --output=json --output-path=lh.json\n- npx lhci\
+  \ collect --url=http://localhost:8080 --numberOfRuns=3\n\n### asset-optimization\nCompress images, purge\
+  \ CSS, and minify bundles.\n\n**Commands:**\n- `npx imagemin images/**/*.png --out-dir=optimized`\n\
+  - `npx purgecss --css dist/styles.css --content dist/**/*.html --output dist/`\n- `npx terser src/app.js\
+  \ -c -m -o dist/app.min.js`\n- `npx critters dist/index.html -o dist/index.html`\n- `npx webpack-bundle-analyzer\
+  \ dist/stats.json`\n\n**Examples:**\n- npx imagemin images/hero.png --out-dir=optimized\n- npx purgecss\
+  \ --css dist/styles.css --content dist/**/*.html --output dist/\n- npx terser src/app.js -c -m -o dist/app.min.js\n\
+  \n### delivery-optimization\nCompress responses and inspect headers.\n\n**Commands:**\n- `gzip -9 -k\
+  \ dist/index.html`\n- `brotli -9 -k dist/index.html`\n- `curl -sI -H 'Accept-Encoding: br' http://localhost:8080\
+  \ | grep -i 'content-encoding\\|cache-control'`\n- `npx http-server -c-1 dist`\n\n**Examples:**\n- brotli\
+  \ -9 -k dist/index.html\n- curl -sI -H 'Accept-Encoding: br' http://localhost:8080 | grep -i content-encoding\n\
+  - gzip -9 -k dist/app.js"
+prompt: Act as static-site-optimizer and handle the task per the instructions.

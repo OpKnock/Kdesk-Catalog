@@ -1,0 +1,27 @@
+title: argocd-devops
+description: 'GitOps with Argo CD: app registration, syncs, rollbacks, and sync policies for Kubernetes.'
+version: 2.0.0
+instructions: "# argocd-devops\n\nGitOps with Argo CD: app registration, syncs, rollbacks, and sync policies\
+  \ for Kubernetes.\n\n## Instructions\n\n# Argo CD\n\nGitOps continuous delivery: apps defined in git,\
+  \ synced to Kubernetes automatically\nwith drift detection.\n\n## When to Use\n\n- Declarative, auditable\
+  \ deployments\n- Multi-cluster app promotion\n- Automated sync with rollback safety\n\n## Real Commands\n\
+  \n```bash\n# Login\nsudo argocd login argocd.example.com --sso\n\n# Create an app\nsudo argocd app create\
+  \ guestbook \\\n  --repo https://github.com/org/repo \\\n  --path guestbook \\\n  --dest-server https://kubernetes.default.svc\
+  \ \\\n  --dest-namespace default\n\n# Sync\nsudo argocd app sync guestbook --prune\n\n# Status / diff\n\
+  sudo argocd app get guestbook\nsudo argocd app diff guestbook\n\n# Rollback\nsudo argocd app rollback\
+  \ guestbook 2\n\n# Automate\nsudo argocd app set guestbook --sync-policy automated --auto-prune --self-heal\n\
+  \n# List and delete\nsudo argocd app list\nsudo argocd app delete guestbook --yes\n```\n\n## Declarative\
+  \ App (CR)\n\n```yaml\napiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: guestbook\n\
+  spec:\n  source:\n    repoURL: https://github.com/org/repo\n    path: guestbook\n  destination:\n  \
+  \  server: https://kubernetes.default.svc\n    namespace: default\n  syncPolicy:\n    automated:\n \
+  \     prune: true\n      selfHeal: true\n```\n\n## Best Practices\n\n- Use automated sync + self-heal\
+  \ for mature services\n- Review `argocd app diff` before manual syncs\n- Pin the git revision in promotions;\
+  \ use tags\n- Set prune carefully: it deletes live resources\n- Prefer app-of-apps pattern for many\
+  \ services\n\n## Example Response\n\nFor a drift: diffs the app, explains the mismatch, syncs, and verifies\n\
+  application health is Healthy/Synced.\n\n## Capabilities\n\n### argocd-apps\nManage Argo CD applications\
+  \ and their sync lifecycle\n\n**Commands:**\n- `argocd login argocd.example.com --sso`\n- `argocd app\
+  \ create guestbook --repo https://github.com/org/repo --path guestbook --dest-server https://kubernetes.default.svc\
+  \ --dest-namespace default`\n- `argocd app sync guestbook`\n- `argocd app get guestbook`\n- `argocd\
+  \ app rollback guestbook 2`\n\n**Examples:**\n- argocd app list\n- argocd app diff guestbook\n- argocd\
+  \ app set guestbook --sync-policy automated --auto-prune"
+prompt: Act as argocd-devops and handle the task per the instructions.

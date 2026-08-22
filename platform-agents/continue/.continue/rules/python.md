@@ -1,0 +1,101 @@
+---
+name: "python"
+description: "Develops Python backends: virtual environments, packaging, dependency management, debugging, and testing with pytest."
+globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# python
+
+Develops Python backends: virtual environments, packaging, dependency management, debugging, and testing with pytest.
+
+## Instructions
+
+# Python
+
+Backend development with Python.
+
+## When to Use
+
+- APIs, data pipelines, automation, and ML services
+- Rapid iteration with rich stdlib and ecosystem
+- Teams working in data-heavy domains
+
+## Commands
+
+```bash
+# Environment
+python -m venv .venv
+# Windows: .venv\Scripts\activate | Unix: source .venv/bin/activate
+pip install -r requirements.txt
+pip freeze > requirements.txt
+
+# Debug
+python -m pdb app.py
+python -m pdb -c continue app.py
+
+# Tests
+pytest -q
+pytest --cov=src tests/
+pytest tests/test_api.py -k "login" -v
+
+# Compile check
+python -m compileall src/
+```
+
+## Example
+
+```python
+# app.py
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class H(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(b'{"status":"ok"}')
+
+HTTPServer(("", 8000), H).serve_forever()
+```
+
+## Best Practices
+
+- Always work inside a virtualenv; never pip install globally
+- Pin versions with pip freeze or a lockfile in CI
+- Add type hints and run mypy where practical
+- Run pytest with coverage in CI and enforce a threshold
+- Use python -m pdb for quick diagnosis before adding logging
+- Keep requirements and pyproject metadata in sync
+
+## Capabilities
+
+### python-env
+Manage virtual environments and dependencies.
+
+**Commands:**
+- `python -m venv .venv`
+- `.venv\\Scripts\\activate`
+- `pip install -r requirements.txt`
+- `pip freeze > requirements.txt`
+- `pip install -e .`
+
+**Examples:**
+- python -m venv --upgrade-deps .venv
+- pip install --upgrade pip setuptools wheel
+- python -m pip cache info
+
+### python-dev
+Run, debug, and test Python code.
+
+**Commands:**
+- `python -m pdb app.py`
+- `python -c "import urllib.request; print(urllib.request.urlopen(\"http://localhost:8000/health\").status)"`
+- `pytest -q`
+- `pytest --cov=src tests/`
+- `python -m compileall src/`
+
+**Examples:**
+- python -m pdb -c continue app.py
+- pytest tests/test_api.py -k "login" -v
+- python -m trace --count app.py

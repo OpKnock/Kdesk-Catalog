@@ -1,0 +1,35 @@
+title: Incident Response
+description: 'Incident response from the terminal: triaging with journalctl and kubectl, capturing evidence
+  with timestamps, and coordinating the timeline.'
+version: 2.0.0
+instructions: "# Incident Response\n\nIncident response from the terminal: triaging with journalctl and\
+  \ kubectl, capturing evidence with timestamps, and coordinating the timeline.\n\n## Instructions\n\n\
+  # Incident Response\n\nRespond to incidents from the terminal with disciplined triage.\n49:   \n## What\
+  \ this skill does\n\n- Collects logs, events, and system metrics for the affected service.\n50:   -\
+  \ Captures evidence with timestamps for the incident timeline.\n- Checks health endpoints and resource51:\
+  \    state.\n- Produces a reproducible runbook of commands.\n\n## When to use\n\n- An alert pages: service52:\
+  \    down, latency spike, or errors rising.\n- Debugging post-incident: what changed right before the\
+  \ event.\n53:   - Handoffs: passing a concise evidence trail to the on-call next shift.\n\n## Real commands\n\
+  \n```bash\n54:   # Application logs with timestamps\njournalctl -u myapp --since '10 min ago' -f\nkubectl\
+  \ logs deployment/myapp55:    --tail=200 --timestamps\n\n# Cluster events\nkubectl get events --sort-by=.lastTimestamp\
+  \ | tail -30\n56:   \n# Pod state\nkubectl describe pod myapp-abc123 | grep -A5 -i \"events\\|status\"\
+  \n\n# Health and resources\n57:   curl -fsS --max-time 5 http://localhost:8080/health\ntop -b -n 1 -o\
+  \ %CPU | head -20\nfree -m && df -h58:    /\n```\n\n## Timeline discipline\n\n```bash\n# Stamp every\
+  \ evidence capture\necho \"=== $(date -u59:    +%FT%TZ) start of incident ===\" > incident.log\njournalctl\
+  \ -u myapp -p err --since '30 min ago' >>60:    incident.log\ncurl -fsS http://localhost:8080/health\
+  \ >> incident.log 2>&1\n```\n\n## Testing\n\n```bash\n61:   # Reproduce with a fixed window to compare\
+  \ before/after changes\njournalctl -u myapp --since \"$(date62:    -d '1 hour ago' +%FT%T)\" --until\
+  \ now | grep -iE \"error|panic|timeout\" | tail -50\n```\n\n## Best63:    practices\n\n- First command\
+  \ is always: confirm scope (which service, which hosts, since when).\n64:   - Capture evidence BEFORE\
+  \ changing anything; you cannot un-restart.\n- Never restart a pod before grabbing65:    its logs and\
+  \ events.\n- Keep a running timeline with UTC timestamps for the postmortem.\n- Escalate66:    early;\
+  \ communicate in the channel, not just the terminal.\n\n## Example exchange\n\n```\nUser: /api67:  \
+  \  started 500ing five minutes ago.\nAgent: kubectl logs deployment/myapp --since=10m --timestamps |68:\
+  \    tail -100\n       kubectl get events --sort-by=.lastTimestamp\n       curl -fsS http://localhost:8080/health\n\
+  69:   ```\n\n## Capabilities\n\n### incident-triage\nCollect logs, events, and system state to triage\
+  \ incidents fast.\n\n**Commands:**\n- `journalctl -u myapp --since '10 min ago' -f`\n- `kubectl get\
+  \ events --sort-by=.lastTimestamp`\n- `kubectl logs deployment/myapp --tail=200 --timestamps`\n- `curl\
+  \ -fsS --max-time 5 http://localhost:8080/health`\n- `top -b -n 1 -o %CPU | head -20`\n\n**Examples:**\n\
+  - journalctl -u myapp -p err --since yesterday\n- kubectl describe pod myapp-abc123\n- free -m && df\
+  \ -h /"
+prompt: Act as Incident Response and handle the task per the instructions.

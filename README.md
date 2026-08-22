@@ -25,6 +25,33 @@
 
 ---
 
+## 🎯 Platform Output Formats
+
+Each of the 45 platforms receives agents/skills in its **native format**:
+
+| Platform | Format | Agent Location | Skill Location |
+|----------|--------|----------------|----------------|
+| **Claude Code** | `.md` + frontmatter | `.claude/agents/*.md` | `.claude/skills/<name>/SKILL.md` |
+| **Cursor** | `.mdc` (rules) | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` |
+| **GitHub Copilot** | `.instructions.md` | `.github/instructions/*.instructions.md` | N/A |
+| **Codex CLI** | `.md` | `.agents/*.md` | N/A |
+| **Gemini CLI** | `SKILL.md` | N/A | `.gemini/skills/*/SKILL.md` |
+| **Windsurf** | `.mdc` | `.windsurf/rules/*.mdc` | `.windsurf/rules/*.mdc` |
+| **OpenCode** | Plugin | `.opencode/agents/` | `.opencode/skills/` |
+| **Zed** | `SKILL.md` | N/A | `.agents/skills/*/SKILL.md` |
+| **Cline** | `SKILL.md` | N/A | `.clinerules/skills/*/SKILL.md` |
+| **Goose** | YAML recipes | `.goose/recipes/*.yaml` | N/A |
+| **Codex CLI** | `.md` | `.agents/*.md` | N/A |
+| **Gemini CLI** | `SKILL.md` | N/A | `.gemini/skills/*/SKILL.md` |
+| **Aider** | `.md` conventions | `conventions/*.md` | N/A |
+| **Zed** | `SKILL.md` | N/A | `.agents/skills/*/SKILL.md` |
+| **Amp** | `SKILL.md` | N/A | `.agents/skills/*/SKILL.md` |
+| **And 30+ more...** | Platform-specific | Platform-specific | Platform-specific |
+
+> **Note:** Each platform folder in `platform-agents/` contains its exact native format. Run `python scripts/universal-converter.py --platforms <platform> --quiet` to generate.
+
+---
+
 ## 🚀 Quick Start
 
 ### 1. Clone & Generate

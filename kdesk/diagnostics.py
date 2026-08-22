@@ -1,10 +1,45 @@
 """Diagnostic models for Kdesk Doctor."""
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
 from pathlib import Path
+
+
+# Secret redaction patterns
+SECRET_PATTERNS = [
+    (re.compile(r'(?i)(api[_-]?key|token|password|secret|credential)[\s:=]+[\w\-]+'), '***REDACTED***'),
+    (re.compile(r'(?i)(api[_-]?key|token|password|secret|credential)[\s:=]+\"[\w\-]+\"'), '"***REDACTED***"'),
+    # Only redact very long strings that are likely keys (40+ chars, not file paths)
+    (re.compile(r'(?<![\w\-\.\/])[\w\-]{40,}(?![\w\-\.\/])'), '***REDACTED***'),
+]
+
+def redact_secrets(text: str) -> str:
+    """Redact potential secrets from text."""
+    if not isinstance(text, str):
+        return text
+    result = text
+    for pattern, replacement in SECRET_PATTERNS:
+        result = pattern.sub(replacement, result)
+    return result
+
+def redact_dict_secrets(d: Dict[str, Any]) -> Dict[str, Any]:
+    """Recursively redact secrets from dictionary."""
+    if not isinstance(d, dict):
+        return redact_secrets(d) if isinstance(d, str) else d
+    result = {}
+    for k, v in d.items():
+        if isinstance(v, dict):
+            result[k] = redact_dict_secrets(v)
+        elif isinstance(v, list):
+            result[k] = [redact_dict_secrets(item) if isinstance(item, dict) else redact_secrets(item) if isinstance(item, str) else item for item in v]
+        elif isinstance(v, str):
+            result[k] = redact_secrets(v)
+        else:
+            result[k] = v
+    return result
 
 
 class Severity(str, Enum):
@@ -54,7 +89,7 @@ class Issue:
     fix_data: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        return redact_dict_secrets({
             "id": self.id,
             "severity": self.severity.value,
             "category": self.category.value,
@@ -68,7 +103,7 @@ class Issue:
             "suggested_fix": self.suggested_fix,
             "fixable": self.fixable,
             "fix_data": self.fix_data,
-        }
+        })
 
 
 @dataclass
@@ -134,7 +169,7 @@ class DiagnosticReport:
         return sum(1 for i in self.issues if i.fixable)
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        return redact_dict_secrets({
             "project_root": self.project_root,
             "platform": self.platform,
             "score": self.score,
@@ -160,7 +195,7 @@ class DiagnosticReport:
             "info_count": self.info_count,
             "fixable_count": self.fixable_count,
             "scan_metadata": self.scan_metadata,
-        }
+        })
 
     def to_summary_dict(self) -> Dict[str, Any]:
         """Minimal summary for CLI output."""
@@ -188,14 +223,14 @@ class FixResult:
     new_issues: List[Issue] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        return redact_dict_secrets({
             "issue_id": self.issue_id,
             "success": self.success,
             "message": self.message,
             "backup_path": self.backup_path,
             "validation_passed": self.validation_passed,
             "new_issues": [i.to_dict() for i in self.new_issues],
-        }
+        })
 
 
 @dataclass
@@ -221,7 +256,7 @@ class FixReport:
         return sum(1 for f in self.fixes if f.validation_passed)
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        return redact_dict_secrets({
             "project_root": self.project_root,
             "platform": self.platform,
             "before_score": self.before_score,
@@ -231,4 +266,4 @@ class FixReport:
             "successful": self.successful,
             "failed": self.failed,
             "validation_passed": self.validation_passed,
-        }
+        })

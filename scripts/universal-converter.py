@@ -102,6 +102,11 @@ PLATFORM_SCHEMAS = {
 # WARP.md, config.json registries) - per-item instruction files + manifest.
 # ---------------------------------------------------------------------------
 NEW_SKILL_PLATFORMS: Dict[str, str] = {
+    "claude_code": ".claude/skills",
+    "cursor": ".cursor/rules",
+    "windsurf": ".windsurf/rules",
+    "github_copilot": ".github/instructions",
+    "opencode": ".opencode/skills",
     "codex_cli": ".agents/skills",
     "gemini_cli": ".gemini/skills",
     "antigravity": ".agent/skills",

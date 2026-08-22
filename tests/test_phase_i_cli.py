@@ -23,7 +23,10 @@ def _run(args, cwd):
 
 @pytest.fixture()
 def repo(tmp_path):
-    (tmp_path / "universal-agents").mkdir()
+    import shutil
+    REPO = str(Path(__file__).resolve().parents[1])
+    # Copy the real universal-agents to the temp repo
+    shutil.copytree(Path(REPO) / "universal-agents", tmp_path / "universal-agents")
     (tmp_path / "platform-agents" / "cursor").mkdir(parents=True)
     (tmp_path / "platform-agents" / "cursor" / "review.mdc").write_text(
         "---\ndescription: review\n---\nReview.\n", encoding="utf-8")

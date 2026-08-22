@@ -340,11 +340,130 @@ kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project 
 
 ---
 
+## 🔗 Agent Composition & Chaining
+
+Agents can delegate work to specialized sub-agents:
+
+```yaml
+name: ml-pipeline-orchestrator
+description: Orchestrates end-to-end ML pipelines by delegating to specialists.
+sub_agents:
+  - data-engineer
+  - ml-engineer
+  - model-deployer
+delegation_pattern: sequential   # or parallel | conditional
+```
+
+Workflows automatically emit delegation steps based on the pattern.
+
+---
+
+## 🛒 Skill Marketplace
+
+Publish, search, and install skills from any registry:
+
+```bash
+# Publish a skill
+kdesk skill publish my-skill --version 1.2.0
+
+# Search the marketplace
+kdesk skill search "database migration"
+
+# Install a specific version
+kdesk skill install database-migration@2.1.0
+
+# List available skills
+kdesk skill list
+```
+
+---
+
+## 🧪 Agent Testing Framework
+
+Write unit tests for agents using `AgentTestCase`:
+
+```python
+from tests.test_agent_framework import AgentTestCase, MockToolExecutor
+
+class TestMyAgent(AgentTestCase):
+    def test_agent_has_capabilities(self):
+        self.create_test_agent("my-agent", capabilities=[{
+            "name": "deploy",
+            "description": "Deploy to production",
+            "commands": ["kubectl apply -f manifest.yaml"],
+            "parameters": [{"name": "env", "type": "string"}]
+        }])
+        self.assert_capability_exists("my-agent", "deploy")
+        self.assert_tool_available("my-agent", "kubectl")
+
+    def test_sub_agent_delegation(self):
+        self.create_test_agent("orchestrator", sub_agents=["worker-a"])
+        self.assert_sub_agents("orchestrator", ["worker-a"])
+```
+
+Run with: `pytest tests/test_agent_framework.py -v`
+
+---
+
+## 📋 Policy-as-Code
+
+Enforce quality rules across the catalog:
+
+```bash
+# Run built-in policy checks (12 rules)
+kdesk policy
+
+# Use a custom policy file
+kdesk policy --policy-file policies/custom-rules.yaml
+
+# JSON output for CI
+kdesk policy --format json
+```
+
+Built-in rules include: description length, capability completeness, tool declarations,
+semantic versioning, sub-agent existence, and more.
+
+Custom policy format:
+
+```yaml
+version: "1.0"
+rules:
+  - id: no-hardcoded-secrets
+    name: No Hardcoded Secrets
+    severity: critical
+    condition: "'password' in str(agent.capabilities).lower()"
+    message: Potential secret detected
+    fix_hint: Use environment variables instead
+```
+
+---
+
+## 🕸 Dependency Graph Visualization
+
+Generate an interactive HTML graph of the catalog:
+
+```bash
+# Full catalog (400 nodes)
+python scripts/generate-graph.py --output catalog-graph.html
+
+# Single category
+python scripts/generate-graph.py --category ml --output ml-graph.html
+
+# More nodes for large screens
+python scripts/generate-graph.py --max-nodes 800
+```
+
+Features force-directed layout, search highlighting, tooltips, zoom/pan.
+
+---
+
 ## ✅ Verification Status
 
 - ✅ **Schema validation** — 0 violations across 3,093 files
+- ✅ **Policy engine** — 12 rules, 0 violations
 - ✅ **JSON regeneration** — deterministic with skill wiring
-- ✅ **Tests** — `test_wire_skills.py`, `test_yaml_to_json.py`, `test_marketplaces.py` pass
+- ✅ **All CI checks** — schema, provenance, security, duplicates, license, wiring, quality, graph
+- ✅ **Unit tests** — full pytest suite passes
 
 ---
 

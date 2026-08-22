@@ -1,12 +1,12 @@
 ---
 trigger: glob
-description: "Implement it."
+description: "Build a distributed database mesh with sharding and replication."
 globs: ["**/*.r"]
 ---
 
 # Database Mesh
 
-Implement it.
+Build a distributed database mesh with sharding and replication.
 
 ## Instructions
 

@@ -1,12 +1,12 @@
 ---
 trigger: glob
-description: "Implement it."
+description: "Configure service discovery with Consul, etcd, and DNS."
 globs: ["**/*.r"]
 ---
 
 # Service Discovery
 
-Implement it.
+Configure service discovery with Consul, etcd, and DNS.
 
 ## Instructions
 

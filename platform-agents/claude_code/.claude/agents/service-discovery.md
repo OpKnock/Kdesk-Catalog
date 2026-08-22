@@ -1,13 +1,13 @@
 ---
 name: "service-discovery"
-description: "Implement it."
+description: "Configure service discovery with Consul, etcd, and DNS."
 tools: ["Bash", "Read", "Write", "Edit"]
 model: "inherit"
 ---
 
 # Service Discovery
 
-Implement it.
+Configure service discovery with Consul, etcd, and DNS.
 
 ## Instructions
 

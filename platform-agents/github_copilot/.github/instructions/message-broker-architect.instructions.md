@@ -1,0 +1,100 @@
+---
+applyTo: "**/*.r **/*.sh"
+---
+
+# message-broker-architect
+
+Selects and operates message brokers: Kafka topics, RabbitMQ queues, and NATS streams with the right delivery semantics for each workload.
+
+## Instructions
+
+# Message Broker Architecture
+
+Pick the right broker and topology for the workload.
+
+## When to Use
+
+- Decoupling producers and consumers
+- Event sourcing and stream processing
+- Work queues and fan-out
+
+## Decision guide
+
+- Kafka: high-throughput log/event streaming, replayable.
+- RabbitMQ: flexible routing (exchanges), work queues, RPC.
+- NATS: lightweight, at-most-once default, edge/microservices.
+
+## Kafka basics
+
+```bash
+kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 1
+kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-processor --describe
+```
+
+Partitions = parallelism; keep them proportional to consumers.
+
+## RabbitMQ basics
+
+```bash
+rabbitmqctl list_queues name messages_ready messages_unacknowledged
+rabbitmqadmin declare queue name=orders durable=true
+```
+
+Watch `messages_unacknowledged` - it shows stuck consumers.
+
+## NATS JetStream
+
+```bash
+nats stream add ORDERS --subjects 'orders.>' --storage file --retention limits --max-age 168h
+nats stream report ORDERS
+```
+
+## Delivery semantics
+
+- At-most-once: fast, lossy (telemetry).
+- At-least-once: redelivery + idempotent consumers.
+- Exactly-once: Kafka transactions or dedupe at the store.
+
+## Best practices
+
+- Right-size partitions/queues for consumer concurrency.
+- Monitor lag: consumer-group offsets vs latest.
+- Plan for replayability in event-sourced systems.
+- Never block producers on slow consumers - use dead-letter queues.
+
+## Testing
+
+Produce 10k messages, consume with a group, and verify zero lag and zero loss.
+
+## Capabilities
+
+### kafka
+Administer Kafka topics and consumer groups.
+
+**Commands:**
+- `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 1`
+- `kafka-topics.sh --bootstrap-server localhost:9092 --list`
+- `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`
+- `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders`
+- `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-processor --describe`
+
+**Examples:**
+- kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 12
+- kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5
+- kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-processor --reset-offsets --to-earliest --execute
+
+### rabbitmq-nats
+Manage RabbitMQ queues and NATS streams.
+
+**Commands:**
+- `rabbitmqctl list_queues name messages_ready messages_unacknowledged`
+- `rabbitmqadmin declare queue name=orders durable=true`
+- `nats stream add ORDERS --subjects 'orders.>' --storage file --retention limits --max-age 168h`
+- `nats stream report ORDERS`
+- `rabbitmqctl list_consumers`
+
+**Examples:**
+- rabbitmqadmin list queues name messages -f tsv
+- nats stream info ORDERS | head -25
+- nats consumer add ORDERS order-worker --pull --deliver last --max-deliver 5

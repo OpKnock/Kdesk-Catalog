@@ -1,0 +1,80 @@
+---
+description: "Plans and executes data migrations between databases: dumps, restores, validation, and cutover."
+globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.sql"]
+alwaysApply: false
+---
+
+# data-migration
+
+Plans and executes data migrations between databases: dumps, restores, validation, and cutover.
+
+## Instructions
+
+# Data Migration
+
+Moves data between database systems safely: export, transfer, import, then
+validation and cutover.
+
+## When to Use
+
+- Upgrading database engines or versions
+- Moving to a new hosting provider
+- Consolidating databases
+
+## Real Commands
+
+```bash
+# PostgreSQL custom-format dump
+pg_dump -h oldhost -U app -Fc appdb > appdb.dump
+
+# Parallel restore with ownership stripped
+pg_restore -h newhost -U app -d appdb -j4 --no-owner --clean appdb.dump
+
+# MySQL logical dump
+mysqldump -h oldhost -u root -p --single-transaction appdb > appdb.sql
+mysql -h newhost -u root -p appdb < appdb.sql
+
+# MongoDB
+mongodump --host oldhost --db app --out ./mongo-dump
+mongorestore --host newhost --db app ./mongo-dump/app
+
+# Table-level export
+pg_dump -h oldhost -U app -Fc --table=public.orders appdb > orders.dump
+```
+
+## Validation Checklist
+
+- Row counts match: `pg_restore -l appdb.dump | wc -l` vs restored table count
+- Sample values spot check
+- `pg_dump` with `--schema-only` on a test first
+- Compare checksums: `pg_dump ... | md5sum` on both ends for small dbs
+
+## Best Practices
+
+- Schedule a maintenance window; migrations lock writes
+- Test restore on a staging instance first
+- Keep the old system readable until validation passes
+- Document rollback: keep the dump until the next full backup cycle
+- Run `VACUUM ANALYZE` (PG) or `ANALYZE TABLE` (MySQL) after load
+
+## Example Response
+
+Plans the migration with commands per phase, executes dump/transfer/restore,
+validates counts, and reports the cutover steps with rollback plan.
+
+## Capabilities
+
+### db-dump-restore
+Backup, transfer, and restore data between PostgreSQL, MySQL, and MongoDB
+
+**Commands:**
+- `pg_dump -h oldhost -U app -Fc appdb > appdb.dump`
+- `pg_restore -h newhost -U app -d appdb -j4 --no-owner appdb.dump`
+- `mysqldump -h oldhost -u root -p appdb > appdb.sql`
+- `mysql -h newhost -u root -p appdb < appdb.sql`
+- `mongodump --host oldhost --db app --out ./mongo-dump`
+
+**Examples:**
+- pg_dump -h oldhost -U app -Fc --table=orders appdb > orders.dump
+- mongoimport --host newhost --db app --collection users users.json
+- pg_dumpall -h oldhost -U postgres > all-dbs.sql

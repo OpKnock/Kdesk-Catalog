@@ -1,0 +1,33 @@
+title: Gcp Api Gateway
+description: Create API configs, deploy gateways, and manage keys via gcloud. API keys for access control.'
+version: 2.0.0
+instructions: "# Gcp Api Gateway\n\nCreate API configs, deploy gateways, and manage keys via gcloud. API\
+  \ keys for access control.'\n\n## Instructions\n\n# GCP API Gateway\n\n## What this skill does\n\nGCP\
+  \ API Gateway exposes backend services behind a managed gateway driven by OpenAPI specs. You create\
+  \ an API config from the spec, deploy a gateway, and secure it with API keys.\n\n## When to use\n\n\
+  - Publishing internal Cloud Run/Cloud Functions behind one front door\n- Applying quota and API-key\
+  \ auth without code changes\n- Versioning backends per config\n\n## Real commands\n\n```bash\n# Create\
+  \ the API\n gcloud api-gateway apis create orders-api\n\n# Create a config from the OpenAPI spec\ngcloud\
+  \ api-gateway api-configs create orders-v1 --api=orders-api --openapi-spec=openapi.yaml --display-name=orders-v1\n\
+  \n# Deploy the gateway\n gcloud api-gateway gateways create orders-gw --api=orders-api --api-config=orders-v1\
+  \ --location=us-central1\n\n# Get the hostname\n gcloud api-gateway gateways describe orders-gw --location=us-central1\
+  \ --format='value(defaultHostname)'\n\n# Create an API key\n gcloud services api-keys create --display-name=orders-key\
+  \ --api-target=service=orders-gw\n```\n\n## OpenAPI snippet for gateway\n\n```yaml\nopenapi: 3.0.1\n\
+  info:\n  title: Orders API\n  version: v1\nsecurityDefinitions:\n  api_key:\n    type: apiKey\n    name:\
+  \ key\n    in: query\nx-google-backend:\n  address: https://orders-backend-abc-uc.a.run.app\n```\n\n\
+  ## Testing\n\n```bash\nHOST=$(gcloud api-gateway gateways describe orders-gw --location=us-central1\
+  \ --format='value(defaultHostname)')\ncurl -s \"https://$HOST/v1/orders?key=$API_KEY\" | jq\n```\n\n\
+  ## Best practices\n\n- Name configs by version (orders-v1, orders-v2) and deploy gateways per environment.\n\
+  - Use the `x-google-backend` extension to wire Cloud Run/Functions.\n- Protect the key: query param\
+  \ keys are visible in logs; prefer headers.\n- Set quota per config in the OpenAPI `x-google-quota`\
+  \ extension.\n- Pin the gateway location near your backend.\n\n## Capabilities\n\n### gcp-api-gateway\n\
+  Create API configs, deploy gateways, and manage keys via gcloud.\n\n**Commands:**\n- `gcloud api-gateway\
+  \ apis create orders-api`\n- `gcloud api-gateway api-configs create orders-v1 --api=orders-api --openapi-spec=openapi.yaml\
+  \ --display-name=orders-v1`\n- `gcloud api-gateway gateways create orders-gw --api=orders-api --api-config=orders-v1\
+  \ --location=us-central1`\n- `gcloud api-gateway gateways describe orders-gw --location=us-central1\
+  \ --format='value(defaultHostname)'`\n- `gcloud services api-keys create --display-name=orders-key --api-target=service=orders-gw`\n\
+  \n**Examples:**\n- gcloud api-gateway apis create orders-api && gcloud api-gateway api-configs create\
+  \ orders-v1 --api=orders-api --openapi-spec=openapi.yaml\n- gcloud api-gateway gateways create orders-gw\
+  \ --api=orders-api --api-config=orders-v1 --location=us-central1\n- gcloud api-gateway gateways describe\
+  \ orders-gw --location=us-central1 --format='value(defaultHostname)'"
+prompt: Act as Gcp Api Gateway and handle the task per the instructions.

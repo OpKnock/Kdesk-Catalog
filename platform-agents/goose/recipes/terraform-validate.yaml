@@ -1,0 +1,27 @@
+title: Terraform Validate
+description: 'Validates Terraform configurations: formatting, syntax, and plan validation against real
+  providers.'
+version: 2.0.0
+instructions: "# Terraform Validate\n\nValidates Terraform configurations: formatting, syntax, and plan\
+  \ validation against real providers.\n\n## Instructions\n\n# Terraform Validate\n\nStatic validation\
+  \ of Terraform configurations: syntax, internal consistency, and\nprovider schema correctness.\n\n##\
+  \ When to Use\n\n- CI checks before terraform plan\n- Catching invalid resource references early\n-\
+  \ Verifying fmt compliance without modifying files\n\n## Real Commands\n\n```bash\n# Init without remote\
+  \ backend access (safe in CI)\nterraform init -backend=false\n\n# Core validation\nterraform validate\n\
+  \n# JSON output for CI parsing\nterraform validate -json | jq .valid\n\n# Format check\nterraform fmt\
+  \ -check -recursive\n\n# Apply formatting\nterraform fmt -recursive\n\n# Full plan (requires providers\
+  \ to be initialized)\nterraform plan -detailed-exitcode -out=plan.tfplan\n\n# With environment-specific\
+  \ variables\nterraform plan -var-file=environments/dev.tfvars -input=false\n```\n\n## CI Workflow\n\n\
+  ```yaml\n- name: Validate\n  run: |\n    terraform fmt -check -recursive\n    terraform init -backend=false\n\
+  \    terraform validate\n```\n\n## Notes\n\n- `terraform validate` needs initialized providers unless\
+  \ `-backend=false` is used\n- `-json` output has `valid` and `diagnostics` fields\n- Exit code 2 from\
+  \ `plan -detailed-exitcode` means changes are pending\n\n## Best Practices\n\n- Run `fmt -check` before\
+  \ `validate` so diffs are readable\n- Never run `terraform apply` from CI without a human-approved plan\n\
+  - Use `-input=false` everywhere in automation\n- Validate on the CI agent with the same Terraform version\
+  \ as prod\n\n## Example Response\n\nReturns the validation verdict, any diagnostics with `path:line`\
+  \ (error/warning),\nand the fmt compliance status.\n\n## Capabilities\n\n### terraform-validate\nInit,\
+  \ validate, format-check, and plan Terraform configurations\n\n**Commands:**\n- `terraform init -backend=false`\n\
+  - `terraform validate`\n- `terraform validate -json`\n- `terraform fmt -check -recursive`\n- `terraform\
+  \ plan -detailed-exitcode -out=plan.tfplan`\n\n**Examples:**\n- terraform init -backend=false -upgrade\n\
+  - terraform fmt -recursive\n- terraform plan -var-file=environments/dev.tfvars -input=false"
+prompt: Act as Terraform Validate and handle the task per the instructions.

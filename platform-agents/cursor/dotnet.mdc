@@ -1,0 +1,122 @@
+---
+description: "Develops .NET backend services with the dotnet CLI: projects, EF Core migrations, tests, and publish workflows."
+globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Dotnet
+
+Develops .NET backend services with the dotnet CLI: projects, EF Core migrations, tests, and publish workflows.
+
+## Instructions
+
+# .NET
+
+Backend services with the dotnet CLI and ASP.NET Core.
+
+## When to Use
+
+- REST APIs with ASP.NET Core minimal APIs or controllers
+- Enterprise services needing strong typing and EF Core ORM
+- Cross-platform console tools and workers
+- gRPC services with the built-in gRPC stack
+
+## Commands
+
+```bash
+# Create a Web API project
+dotnet new webapi -n MyApi
+
+# Add to a solution
+dotnet new sln -n App
+dotnet sln add src/MyApi/MyApi.csproj
+
+# Build, run, and watch
+dotnet build
+dotnet run
+dotnet watch run
+
+# Publish
+dotnet publish -c Release -o ./publish
+
+# Add packages
+dotnet add package Newtonsoft.Json
+
+# EF Core migrations
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+dotnet ef migrations list
+
+# Tests
+dotnet test
+dotnet test --filter "FullyQualifiedName~OrderTests"
+
+# Format
+dotnet format
+dotnet format --verify-no-changes
+```
+
+## Minimal API Example
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+
+app.Run();
+```
+
+## Best Practices
+
+- Use minimal APIs for small services, controllers for larger teams
+- Enable nullable reference types and treat warnings as errors in CI
+- Use EF Core migrations for schema and dotnet ef database update in deploys
+- Pin target frameworks and run dotnet format --verify-no-changes in CI
+- Use appsettings per-environment config with user secrets in dev
+
+## Capabilities
+
+### dotnet-cli
+Create, build, and run .NET projects.
+
+**Commands:**
+- `dotnet new webapi -n MyApi`
+- `dotnet run`
+- `dotnet build`
+- `dotnet watch run`
+- `dotnet publish -c Release -o ./publish`
+
+**Examples:**
+- dotnet new sln -n App
+- dotnet watch run --launch-profile https
+- dotnet publish -c Release --self-contained -r win-x64
+
+### dotnet-ef
+Manage Entity Framework Core migrations and schema.
+
+**Commands:**
+- `dotnet ef migrations add InitialCreate`
+- `dotnet ef database update`
+- `dotnet ef migrations remove`
+- `dotnet ef migrations list`
+- `dotnet ef dbcontext info`
+
+**Examples:**
+- dotnet ef migrations add AddUserIndex --context AppDbContext
+- dotnet ef database update --no-build
+- dotnet ef migrations script
+
+### dotnet-testing
+Run tests and format code.
+
+**Commands:**
+- `dotnet test`
+- `dotnet test --filter TestCategory=Unit`
+- `dotnet format`
+- `dotnet add package Newtonsoft.Json`
+
+**Examples:**
+- dotnet test --logger "console;verbosity=detailed"
+- dotnet format --verify-no-changes
+- dotnet test -p:CollectCoverage=true

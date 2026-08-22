@@ -1,0 +1,38 @@
+title: vault
+description: Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit
+  secret engines.
+version: 2.0.0
+instructions: "# vault\n\nManages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault\
+  \ CLI and KV/transit secret engines.\n\n## Instructions\n\n# Vault\n\nCentralized secrets management\
+  \ with dynamic, revocable credentials.\n\n## What This Skill Does\n\n- Stores and reads KV secrets with\
+  \ versioning\n- Writes and tests policies, creates scoped tokens\n- Generates dynamic database credentials\
+  \ with leases\n- Enables audit logging and manages unsealing\n\n## When to Use\n\n- Centralizing application\
+  \ secrets\n- Issuing short-lived credentials instead of static keys\n- Auditing secret access\n\n##\
+  \ Real Commands\n\n```bash\n# KV v2\nvault secrets enable -path=secret kv-v2\nvault kv put secret/myapp\
+  \ db_password=\"hunter2\"\nvault kv get -field=db_password secret/myapp\nvault kv list secret/\n\n#\
+  \ Policies and tokens\nvault policy write app-readonly - <<'EOF'\npath \"secret/data/myapp\" { capabilities\
+  \ = [\"read\"] }\nEOF\nvault token create -policy=app-readonly -ttl=1h\nvault login -method=token\n\n\
+  # Dynamic DB credentials\nvault secrets enable database\nvault write database/roles/readonly db_name=postgres\
+  \ \\\n  creation_statements=\"SELECT username FROM pg_user\" \\\n  default_ttl=1h max_ttl=24h\nvault\
+  \ read database/creds/readonly\n\n# Audit\nvault audit enable file file_path=/var/log/vault-audit.log\n\
+  vault status\n```\n\n## Best Practices\n\n- Use dynamic credentials with short TTLs over static secrets\n\
+  - Scope tokens with least-privilege policies\n- Enable audit logging in production\n- Rotate the root\
+  \ token after init and store unseal keys offline\n- Never commit Vault tokens; inject via agent or sidecar\n\
+  \n## Capabilities\n\n### kv-secrets\nStore, read, and delete secrets in KV engines.\n\n**Commands:**\n\
+  - `vault kv put secret/myapp db_password=\"hunter2\" db_user=\"app\"`\n- `vault kv get secret/myapp`\n\
+  - `vault kv get -field=db_password secret/myapp`\n- `vault kv delete secret/myapp`\n- `vault kv list\
+  \ secret/`\n- `vault secrets enable -path=secret kv-v2`\n\n**Examples:**\n- vault kv put secret/myapp\
+  \ api_key=xyz\n- vault kv get -field=db_password secret/myapp\n- vault kv list secret/\n\n### policies-and-tokens\n\
+  Author policies and create scoped tokens.\n\n**Commands:**\n- `vault policy write app-readonly - <<'EOF'`\n\
+  - `vault policy read app-readonly`\n- `vault token create -policy=app-readonly -ttl=1h`\n- `vault login\
+  \ -method=token`\n- `vault token lookup`\n\n**Examples:**\n- vault token create -policy=app-readonly\
+  \ -ttl=1h\n- vault login -method=token\n- vault policy read app-readonly\n\n### dynamic-secrets\nGenerate\
+  \ dynamic credentials for databases.\n\n**Commands:**\n- `vault secrets enable database`\n- `vault write\
+  \ database/config/postgres connection_url=\"postgresql://root:pass@localhost:5432/postgres\"`\n- `vault\
+  \ read database/creds/readonly`\n- `vault list database/roles`\n- `vault lease renew database/creds/readonly/x`\n\
+  \n**Examples:**\n- vault read database/creds/readonly\n- vault list database/roles\n- vault write database/roles/readonly\
+  \ db_name=postgres\n\n### audit-and-ops\nCheck server status and enable audit logs.\n\n**Commands:**\n\
+  - `vault status`\n- `vault audit enable file file_path=/var/log/vault-audit.log`\n- `vault audit list`\n\
+  - `vault unseal`\n- `vault operator init`\n\n**Examples:**\n- vault status\n- vault audit enable file\
+  \ file_path=/var/log/vault-audit.log\n- vault audit list"
+prompt: Act as vault and handle the task per the instructions.

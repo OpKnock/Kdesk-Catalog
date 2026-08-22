@@ -1,0 +1,30 @@
+title: Axum
+description: 'Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware, and testing
+  with tower.'
+version: 2.0.0
+instructions: "# Axum\n\nBuilds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware,\
+  \ and testing with tower.\n\n## Instructions\n\n# Axum\n\n## What this skill does\n\nBuilds HTTP APIs\
+  \ in Rust with Axum: routing, extractors, shared state, middleware (CORS/tracing), and route testing\
+  \ with tower.\n\n## When to use\n\n- A new Rust REST API with tokio\n- Adding extractors, state, or\
+  \ middleware to an existing app\n- Fast, compile-time-safe routing\n\n## Real commands\n\n```bash\n\
+  cargo new axum-api\ncargo add axum tokio --features tokio/full\ncargo add serde --features derive\n\
+  cargo add tower-http --features cors,trace\n\ncargo run\ncurl -s http://localhost:3000/health\n\ncargo\
+  \ test\ncargo clippy -- -D warnings\ncargo build --release\n```\n\n## Minimal server\n\n```rust\nuse\
+  \ axum::{routing::get, Router};\n\n#[tokio::main]\nasync fn main() {\n    let app = Router::new().route(\"\
+  /health\", get(|| async { \"ok\" }));\n    let listener = tokio::net::TcpListener::bind(\"0.0.0.0:3000\"\
+  ).await.unwrap();\n    axum::serve(listener, app).await.unwrap();\n}\n```\n\n## State + extractors\n\
+  \n```rust\n#[derive(Clone)]\nstruct Db { pool: String }\n\nlet app = Router::new()\n    .route(\"/users/:id\"\
+  , get(get_user))\n    .with_state(Db { pool: \"postgres://db\".into() });\n\nasync fn get_user(State(db):\
+  \ State<Db>, Path(id): Path<u64>) -> String {\n    format!(\"user {id} via {}\", db.pool)\n}\n```\n\n\
+  ## Testing\n\n- Test routers with tower::ServiceExt::oneshot\n- Use `cargo test` and clippy in CI\n\n\
+  ## Best practices\n\n- Share dependencies via state, not globals\n- Use path parameters and typed extractors\
+  \ instead of manual parsing\n- Layer CORS via tower-http, not hand-rolled middleware\n\n## Capabilities\n\
+  \n### project-setup\nCreate an Axum project and add dependencies.\n\n**Commands:**\n- `cargo new axum-api`\n\
+  - `cargo add axum tokio --features tokio/full`\n- `cargo add serde --features derive`\n- `cargo add\
+  \ tower-http --features cors`\n- `cargo build`\n\n**Examples:**\n- cargo new axum-api && cargo add axum\
+  \ tokio --features tokio/full\n- cargo add axum --features multipart,ws\n- cargo add tower-http --features\
+  \ trace,cors\n\n### serve-and-test\nRun the server and test routes with tower ServiceExt.\n\n**Commands:**\n\
+  - `cargo run`\n- `curl -s http://localhost:3000/health`\n- `cargo test`\n- `cargo clippy -- -D warnings`\n\
+  - `cargo build --release`\n\n**Examples:**\n- cargo run && curl -s http://localhost:3000/health\n- cargo\
+  \ test -- --nocapture\n- cargo clippy --all-targets -- -D warnings"
+prompt: Act as Axum and handle the task per the instructions.

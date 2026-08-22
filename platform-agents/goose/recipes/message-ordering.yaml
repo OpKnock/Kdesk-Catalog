@@ -1,0 +1,49 @@
+title: Message Ordering
+description: 'Ensure and verify ordered message delivery in Kafka: single-partition ordering, key-based
+  partitioning, sequence checking, and the pitfalls of partition scaling.'
+version: 2.0.0
+instructions: "# Message Ordering\n\nEnsure and verify ordered message delivery in Kafka: single-partition\
+  \ ordering, key-based partitioning, sequence checking, and the pitfalls of partition scaling.\n\n##\
+  \ Instructions\n\n# Message Ordering\n\nGuarantee and verify ordered delivery in Kafka.\n\n## What this\
+  \ skill does\n\n- Sets up topics with the partition layout that preserves order.\n- Produces keyed records\
+  \ so keys land in one partition.\n- Verifies sequence integrity with consumers and scripts.\n\n## When\
+  \ to use\n\n- Event sourcing where event order matters.\n- State-machine events per entity (order lifecycle).\n\
+  - Auditing whether a pipeline lost or reordered records.\n\n## Real commands\n\n```bash\n# Global ordering:\
+  \ single partition\nkafka-topics.sh --bootstrap-server localhost:9092 \\\n  --create --topic events\
+  \ --partitions 1 --replication-factor 1\n\n# Per-key ordering: partition by key\nkafka-topics.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --create --topic orders --partitions 6 --replication-factor 3\n\n# Produce keyed\
+  \ records (key:value)\nkafka-console-producer.sh --bootstrap-server localhost:9092 \\\n  --topic orders\
+  \ --property parse.key=true --property key.separator=:\n\n# Ordering with retries: keep in-flight requests\
+  \ low\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name orders\
+  \ --alter \\\n  --add-config \"max.in.flight.requests.per.connection=1\"\n\n# Verify: read with keys\n\
+  kafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n  --topic orders --from-beginning \\\
+  \n  --property print.key=true --property print.value=true --max-messages 50\n\n# Verify: sequence check\
+  \ via script\npython3 check_seq.py events\n```\n\n## Producer key example\n\n```bash\n# Same key =>\
+  \ same partition => preserved order per entity\necho \"order-42:created\" | kafka-console-producer.sh\
+  \ --bootstrap-server localhost:9092 --topic orders --property parse.key=true --property key.separator=:\n\
+  echo \"order-42:paid\" | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders\
+  \ --property parse.key=true --property key.separator=:\n```\n\n## Testing\n\n```bash\n# check_seq.py\
+  \ logic: seq must be strictly increasing per (topic, partition, key)\nkafka-console-consumer.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --topic events --from-beginning --max-messages 100 | \\\n  awk -F'[,:]' 'NR>1\
+  \ && $2 <= prev {print \"OUT OF ORDER at \" NR} {prev=$2}'\n```\n\n## Best practices\n\n- Ordering is\
+  \ per partition only: choose partitions=1 or a stable key.\n- Idempotent producers + acks=all avoid\
+  \ duplicates without reordering.\n- Never reorder by retrying with a different key; the partition is\
+  \ the order contract.\n\n## Capabilities\n\n### ordering-setup\nConfigure topics and producers for strict\
+  \ ordering.\n\n**Commands:**\n- `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic\
+  \ events --partitions 1 --replication-factor 1`\n- `kafka-topics.sh --bootstrap-server localhost:9092\
+  \ --create --topic orders --partitions 6 --replication-factor 3`\n- `kafka-console-producer.sh --bootstrap-server\
+  \ localhost:9092 --topic orders --property parse.key=true --property key.separator=:`\n- `kafka-configs.sh\
+  \ --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config \"\
+  max.in.flight.requests.per.connection=1\"`\n\n**Examples:**\n- kafka-topics.sh --bootstrap-server localhost:9092\
+  \ --create --topic events --partitions 1 --replication-factor 1\n- kafka-console-producer.sh --bootstrap-server\
+  \ localhost:9092 --topic orders --property parse.key=true --property key.separator=:\n- kafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 3\n\n\
+  ### ordering-verify\nVerify sequence integrity with consumers and scripts.\n\n**Commands:**\n- `kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 100`\n- `kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic orders --from-beginning --property print.key=true --property\
+  \ print.value=true --max-messages 50`\n- `kafka-consumer-groups.sh --bootstrap-server localhost:9092\
+  \ --describe --group seq-check`\n- `python3 check_seq.py events`\n\n**Examples:**\n- kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 100\n- kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic orders --from-beginning --property print.key=true --property\
+  \ print.value=true --max-messages 50\n- python3 check_seq.py events"
+prompt: Act as Message Ordering and handle the task per the instructions.

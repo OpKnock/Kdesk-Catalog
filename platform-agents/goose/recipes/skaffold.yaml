@@ -1,0 +1,29 @@
+title: skaffold
+description: 'Develops Kubernetes applications with Skaffold: continuous build/sync/deploy loop, profiles,
+  debugging, and CI render pipelines.'
+version: 2.0.0
+instructions: "# skaffold\n\nDevelops Kubernetes applications with Skaffold: continuous build/sync/deploy\
+  \ loop, profiles, debugging, and CI render pipelines.\n\n## Instructions\n\n# Skaffold Development Loop\n\
+  \nIterate on Kubernetes apps locally: watch files, rebuild images, redeploy automatically.\n\n## What\
+  \ This Skill Does\n\n- Runs the dev loop: build, push, deploy, watch\n- Syncs changed files into running\
+  \ containers without rebuilds\n- Port-forwards services for local testing\n- Runs interactive debuggers\
+  \ with skaffold debug\n- Renders final manifests for CI deploy stages\n\n## When to Use\n\n- Local Kubernetes\
+  \ development against a cluster\n- Fast inner loop without writing deploy scripts\n- CI: build artifacts\
+  \ in one stage, deploy in another\n\n## Real Commands\n\n```bash\n# Dev loop\nskaffold dev\nskaffold\
+  \ dev --port-forward\nskaffold dev --profile dev --trigger notify\nskaffold debug\n\n# CI\nskaffold\
+  \ build --file-output artifacts.json\nskaffold deploy -a artifacts.json\nskaffold run\nskaffold render\
+  \ --digest-source=remote > rendered.yaml\nskaffold delete\n```\n\n## skaffold.yaml Sketch\n\n```yaml\n\
+  apiVersion: skaffold/v4beta11\nkind: Config\nbuild:\n  artifacts:\n    - image: myapp\n      context:\
+  \ .\n  tagPolicy:\n    sha256: {}\ndeploy:\n  kubectl:\n    manifests:\n      - k8s/*.yaml\n```\n\n\
+  ## Best Practices\n\n- Use file sync for interpreted languages (Node, Python) to skip rebuilds\n- Keep\
+  \ skaffold.yaml versioned in repo; profiles per env\n- Use build/deploy split in CI for artifact reuse\n\
+  - Use `skaffold debug` for Node/Java/Python debugger integration\n- Add `--kube-context` in multi-cluster\
+  \ environments\n\n## Capabilities\n\n### dev-loop\nRun the watch-loop: auto build, sync, and deploy\
+  \ on file changes.\n\n**Commands:**\n- `skaffold dev`\n- `skaffold dev --port-forward`\n- `skaffold\
+  \ dev --profile dev`\n- `skaffold dev --trigger notify`\n- `skaffold debug`\n\n**Examples:**\n- skaffold\
+  \ dev --port-forward\n- skaffold dev --profile dev\n- skaffold debug\n\n### build-and-deploy\nOne-shot\
+  \ build, render, and deploy for CI pipelines.\n\n**Commands:**\n- `skaffold build`\n- `skaffold build\
+  \ --file-output artifacts.json`\n- `skaffold deploy -a artifacts.json`\n- `skaffold run`\n- `skaffold\
+  \ render --digest-source=remote > rendered.yaml`\n- `skaffold delete`\n\n**Examples:**\n- skaffold build\
+  \ --file-output artifacts.json\n- skaffold deploy -a artifacts.json\n- skaffold render --digest-source=remote"
+prompt: Act as skaffold and handle the task per the instructions.

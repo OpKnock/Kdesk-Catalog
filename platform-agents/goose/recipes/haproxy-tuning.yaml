@@ -1,0 +1,35 @@
+title: Haproxy Tuning
+description: 'HAProxy performance tuning: config validation, runtime stats via the socket, maxconn adjustments,
+  keepalive tuning, and connection limits.'
+version: 2.0.0
+instructions: "# Haproxy Tuning\n\nHAProxy performance tuning: config validation, runtime stats via the\
+  \ socket, maxconn adjustments, keepalive tuning, and connection limits.\n\n## Instructions\n\n# HAProxy\
+  \ Tuning\n\nTune HAProxy for throughput, latency, and connection behavior.\n\n## What this skill does\n\
+  \n- Validates configuration before reloads.\n- Reads live counters (rate, connections, queues) from\
+  \ the runtime socket.\n- Adjusts maxconn, timeouts, and server weights without restarting.\n- Inspects\
+  \ server state for drain/maintenance operations.\n\n## When to use\n\n- Connections queue up behind\
+  \ a backend.\n- Tuning maxconn to match kernel limits and backend capacity.\n- Gradual draining of servers\
+  \ for maintenance.\n\n## Real commands\n\n```bash\n# Validate config without starting\nhaproxy -c -f\
+  \ /etc/haproxy/haproxy.cfg\n\n# Start in daemon mode with PID file\nhaproxy -f /etc/haproxy/haproxy.cfg\
+  \ -D -p /run/haproxy.pid\n\n# Runtime stats\necho 'show info' | socat stdio /var/run/haproxy.sock\n\
+  echo 'show stat' | socat stdio /var/run/haproxy.sock\n\n# Runtime tuning\necho 'set maxconn 6000' |\
+  \ socat stdio /var/run/haproxy.sock\necho 'set timeout client 60s' | socat stdio /var/run/haproxy.sock\n\
+  \n# Drain a backend server\necho 'set server web/web1 state drain' | socat stdio /var/run/haproxy.sock\n\
+  ```\n\n## Tuning directives (haproxy.cfg)\n\n```haproxy\nglobal\n  maxconn 5000\n  tune.bufsize 32768\n\
+  \  tune.maxrewrite 1024\n\ndefaults\n  timeout connect 5s\n  timeout client 30s\n  timeout server 30s\n\
+  \  timeout queue 10s\n  maxconn 1000\n\nbackend web\n  balance roundrobin\n  server web1 10.0.0.11:8080\
+  \ maxconn 500 weight 1\n  server web2 10.0.0.12:8080 maxconn 500 weight 2\n```\n\n## Testing\n\n```bash\n\
+  # Watch connection growth during a load test\nwatch -n 1 \"echo 'show info' | socat stdio /var/run/haproxy.sock\
+  \ | grep -E 'CurrConns|Maxconn'\"\n```\n\n## Best practices\n\n- Raise `ulimit -n` and `net.core.somaxconn`\
+  \ before maxconn.\n- Use `maxconn` per server so one slow backend cannot monopolize the queue.\n- Prefer\
+  \ `timeout queue` over letting clients wait forever.\n- Validate with `haproxy -c` in CI before every\
+  \ deploy.\n\n## Example exchange\n\n```\nUser: Requests queue at 500+ during traffic spikes.\nAgent:\
+  \ Raise maxconn, check backend server maxconn, and add timeout queue:\n       echo 'set maxconn 10000'\
+  \ | socat stdio /var/run/haproxy.sock\n```\n\n## Capabilities\n\n### haproxy-tuning\nValidate, start,\
+  \ and tune HAProxy using config checks and the stats socket.\n\n**Commands:**\n- `haproxy -c -f /etc/haproxy/haproxy.cfg`\n\
+  - `haproxy -f /etc/haproxy/haproxy.cfg -D -p /run/haproxy.pid`\n- `echo 'show info' | socat stdio /var/run/haproxy.sock`\n\
+  - `echo 'show stat' | socat stdio /var/run/haproxy.sock`\n- `echo 'set maxconn 6000' | socat stdio /var/run/haproxy.sock`\n\
+  \n**Examples:**\n- echo 'show servers state' | socat stdio /var/run/haproxy.sock\n- echo 'set timeout\
+  \ client 60s' | socat stdio /var/run/haproxy.sock\n- haproxy -c -f /etc/haproxy/haproxy.cfg -f /etc/haproxy/errors/\
+  \ -d"
+prompt: Act as Haproxy Tuning and handle the task per the instructions.

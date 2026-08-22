@@ -1,0 +1,28 @@
+title: Api Rate Redis
+description: 'Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients,
+  and Dockerized Redis for multi-node consistency.'
+version: 2.0.0
+instructions: "# Api Rate Redis\n\nBuilds distributed rate limiting with Redis: shared counters across\
+  \ instances, ioredis clients, and Dockerized Redis for multi-node consistency.\n\n## Instructions\n\n\
+  # API Rate v2 - Redis Distributed\n\nDistributed rate limiting with Redis.\n\n## What This Skill Does\n\
+  - Shares counters across all API instances\n- Uses atomic INCR with TTL windows\n- Survives instance\
+  \ restarts\n\n## When to Use\n- Multiple instances behind a load balancer\n- Multi-region deployments\
+  \ needing shared limits\n- Migration from in-memory to shared state\n\n## Real Commands\n\n```bash\n\
+  docker run -d -p 6379:6379 --name api-redis redis:7\nredis-cli ping\nredis-cli INCR rate:user:1\nredis-cli\
+  \ EXPIRE rate:user:1 60\n```\n\n## Atomic Middleware Pattern\n\n```js\nconst Redis = require('ioredis');\n\
+  const redis = new Redis({ host: 'redis', port: 6379 });\nasync function consume(key, limit, windowSec)\
+  \ {\n  const count = await redis.incr(key);\n  if (count === 1) await redis.expire(key, windowSec);\n\
+  \  return count <= limit;\n}\n```\n\n## Testing\n- Run two instances and confirm shared enforcement\n\
+  - Kill Redis and verify fail-open/fail-closed policy\n- Check memory with redis-cli --scan --pattern\
+  \ 'rate:*'\n\n## Best Practices\n- Use MULTI or Lua for check-and-set atomicity\n- Namespace keys by\
+  \ environment\n- Set conservative maxmemory with eviction policy\n\n## Capabilities\n\n### redis-setup\n\
+  Run and connect to Redis for shared limit state\n\n**Commands:**\n- `docker run -d -p 6379:6379 --name\
+  \ api-redis redis:7`\n- `redis-cli ping`\n- `redis-cli -u redis://localhost:6379 GET rate:user:1`\n\
+  - `npm install ioredis`\n- `node -e \"const Redis=require('ioredis'); const r=new Redis(); r.incr('rate:user:1').then(v=>{console.log(v);\
+  \ r.quit()})\"`\n\n**Examples:**\n- redis-cli ping verifies connectivity\n- INCR against the shared\
+  \ key counts across instances\n- ioredis client runs Lua-free counter ops from Node\n\n### node-integration\n\
+  Integrate Redis counting into a Node API\n\n**Commands:**\n- `redis-cli INCR rate:user:1 && redis-cli\
+  \ EXPIRE rate:user:1 60`\n- `redis-cli --scan --pattern 'rate:*'`\n- `node -e \"const Redis=require('ioredis');\
+  \ const r=new Redis(); r.multi().incr('k').expire('k',60).exec().then(x=>{console.log(x); r.quit()})\"\
+  `"
+prompt: Act as Api Rate Redis and handle the task per the instructions.

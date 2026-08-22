@@ -1,0 +1,31 @@
+title: Redis Pubsub Python
+description: 'Publish and subscribe to Redis channels from Python using redis-py: pattern subscriptions
+  with non-blocking get_message polling loops.'
+version: 2.0.0
+instructions: "# Redis Pubsub Python\n\nPublish and subscribe to Redis channels from Python using redis-py:\
+  \ pattern subscriptions with non-blocking get_message polling loops.\n\n## Instructions\n\n# Redis Pub/Sub\
+  \ in Python\n\nHand-crafted skill for Redis publish/subscribe with redis-py.\n\n## What this skill does\n\
+  \n- Publishes messages to channels and checks the subscriber count return value\n- Subscribes with non-blocking\
+  \ get_message(timeout=...) polling loops\n- Matches multiple channels with psubscribe glob patterns\n\
+  \n## When to use\n\n- Broadcasting cache-invalidation events to web workers\n- Lightweight event bus\
+  \ between Python services\n- Debugging why a subscriber is not receiving messages\n\n## Real commands\n\
+  \n```bash\n# Install the client\npip install redis\n\n# Publish; prints the number of subscribers that\
+  \ received it\npython -c 'import redis; r=redis.Redis(); print(r.publish(\"news\", \"breaking\"))'\n\
+  \n# Subscribe and poll for up to 3 seconds\npython -c 'import redis; p=redis.Redis().pubsub(); p.subscribe(\"\
+  news\"); print(p.get_message(timeout=3))'\n\n# Pattern subscribe\npython -c 'import redis; p=redis.Redis().pubsub();\
+  \ p.psubscribe(\"orders.*\"); print(p.get_message(timeout=3))'\n\n# CLI counterpart for testing\nredis-cli\
+  \ subscribe news\nredis-cli publish news \"second message\"\n```\n\n## Listener loop\n\n```python\n\
+  import redis\n\nr = redis.Redis()\np = r.pubsub()\np.subscribe(\"news\")\nfor msg in p.listen():\n \
+  \   if msg[\"type\"] == \"message\":\n        print(msg[\"channel\"], msg[\"data\"])\n```\n\n## Testing\n\
+  \n```bash\n# Terminal A: subscriber loop\npython listener.py\n# Terminal B: publisher\nredis-cli publish\
+  \ news \"hello from cli\"\n```\n\n## Best practices\n\n- Call p.close() before process exit to avoid\
+  \ lingering connections\n- Ignore the initial subscribe confirmation message in listen() by type check\n\
+  - Prefer one shared connection pool when many threads publish\n\n## Capabilities\n\n### redis-py-pubsub\n\
+  Publish and subscribe from Python with the redis-py PubSub object\n\n**Commands:**\n- `pip install redis`\n\
+  - `python -c 'import redis; r=redis.Redis(host=\"localhost\", port=6379); print(r.publish(\"news\",\
+  \ \"breaking\"))'`\n- `python -c 'import redis; r=redis.Redis(); p=r.pubsub(); p.subscribe(\"news\"\
+  ); print(p.get_message(timeout=3))'`\n- `redis-cli subscribe news`\n- `redis-cli psubscribe orders.*`\n\
+  \n**Examples:**\n- python -c 'import redis; r=redis.Redis(); print(r.publish(\"news\", \"hello\"))'\n\
+  - python -c 'import redis; p=redis.Redis().pubsub(); p.psubscribe(\"orders.*\"); print(p.get_message(timeout=3))'\n\
+  - redis-cli publish news \"second message\""
+prompt: Act as Redis Pubsub Python and handle the task per the instructions.

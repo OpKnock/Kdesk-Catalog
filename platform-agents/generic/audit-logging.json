@@ -1,0 +1,116 @@
+{
+  "name": "audit-logging",
+  "description": "Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation.",
+  "system_prompt": "You are Audit Logging.\n\nImplements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation.\n\n## Capabilities\n- **auditd**: Configure the Linux audit daemon and its rules.\n- **search-report**: Search audit logs and produce summaries.\n- **app-logging**: Forward application audit events to syslog/journald.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Audit Logging\n\n## What this skill does\n\nImplements tamper-resistant audit logging on Linux: auditd rules for sensitive files and syscalls, event search with ausearch, report generation with aureport, and application event forwarding via logger/journald.\n\n## When to use\n\n- Compliance (SOC2, PCI) requires immutable access logs\n- Tracking who changed /etc/passwd or executed privileged commands\n- Centralizing app security events for forensics\n\n## Real commands\n\n```bash\n# Add a watch rule with a key\nauditctl -w /etc/passwd -p wa -k password_changes\n\n# List active rules\nauditctl -l\n\n# Syscall rules (record every execve)\nauditctl -a always,exit -F arch=b64 -S execve -k exec_events\n\n# Search events by key\nausearch -k password_changes -ts today -i\n\n# Summary report\nureport -au --start today\n```\n\nNote: `ausearch -k password_changes -ts today -i` renders human-readable; `aureport -au` lists authentication events.\n\n## App events\n\n```bash\nlogger -t my-api \"AUDIT user=alice action=delete resource=order/42\"\njournalctl -u my-api --since \"1 hour ago\"\n```\n\n## Testing\n\n- Touch a watched file and confirm an event via ausearch\n- Compare aureport totals against known activity\n\n## Best practices\n\n- Log who/what/when/result for every privileged action\n- Ship audit.log to a remote SIEM; treat local logs as suspect\n- Use rule keys consistently for fast search\n\n## Examples\n- auditctl -w /etc/shadow -p wa -k shadow_changes\n- auditctl -a always,exit -F arch=b64 -S execve -k exec_events\n- augenrules --check\n- ausearch -k password_changes -i | tail -20\n- aureport -au -ts 09:00 -te 17:00\n- ausearch -m AVC -ts today | grep -c denied\n- logger -t my-api \"AUDIT user=alice action=export resource=reports/2026\"\n- journalctl -u my-api -p err -n 100\n- journalctl -t my-api --output=json-pretty\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "auditd",
+      "description": "Configure the Linux audit daemon and its rules.",
+      "commands": [
+        "auditctl -w /etc/passwd -p wa -k password_changes",
+        "auditctl -l",
+        "systemctl restart auditd",
+        "auditctl -D",
+        "augenrules --load"
+      ],
+      "examples": [
+        "auditctl -w /etc/shadow -p wa -k shadow_changes",
+        "auditctl -a always,exit -F arch=b64 -S execve -k exec_events",
+        "augenrules --check"
+      ],
+      "parameters": [
+        {
+          "name": "watch_path",
+          "type": "string",
+          "description": "File or directory to watch"
+        },
+        {
+          "name": "permissions",
+          "type": "string",
+          "description": "Permission filter: r, w, x, a"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Audit rule key (max 32 chars)"
+        }
+      ]
+    },
+    {
+      "name": "search-report",
+      "description": "Search audit logs and produce summaries.",
+      "commands": [
+        "ausearch -k password_changes -ts today",
+        "ausearch -m USER_LOGIN -ts yesterday",
+        "aureport -au --start today",
+        "aureport -l --failed",
+        "ausearch -k exec_events -i"
+      ],
+      "examples": [
+        "ausearch -k password_changes -i | tail -20",
+        "aureport -au -ts 09:00 -te 17:00",
+        "ausearch -m AVC -ts today | grep -c denied"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Rule key to filter by"
+        },
+        {
+          "name": "time_start",
+          "type": "string",
+          "description": "Start time (-ts), e.g. today or 09:00"
+        },
+        {
+          "name": "time_end",
+          "type": "string",
+          "description": "End time (-te)"
+        }
+      ]
+    },
+    {
+      "name": "app-logging",
+      "description": "Forward application audit events to syslog/journald.",
+      "commands": [
+        "logger -t my-api \"AUDIT user=alice action=delete resource=order/42\"",
+        "journalctl -u my-api --since \"1 hour ago\"",
+        "journalctl -t my-api",
+        "tail -f /var/log/audit/audit.log"
+      ],
+      "examples": [
+        "logger -t my-api \"AUDIT user=alice action=export resource=reports/2026\"",
+        "journalctl -u my-api -p err -n 100",
+        "journalctl -t my-api --output=json-pretty"
+      ],
+      "parameters": [
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "Syslog tag (-t) for the application"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "description": "Audit event message"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Track who modifies /etc/passwd",
+      "output": "Adds `auditctl -w /etc/passwd -p wa -k password_changes`, persists via /etc/audit/rules.d/, then queries with `ausearch -k password_changes -i`."
+    },
+    {
+      "input": "Produce an auth report for the compliance review",
+      "output": "Runs `aureport -au --start today` and `aureport -l --failed` to summarize successful and failed logins."
+    }
+  ]
+}

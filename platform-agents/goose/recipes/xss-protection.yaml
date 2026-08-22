@@ -1,0 +1,35 @@
+title: XSS Protection
+description: 'Prevent cross-site scripting through your API responses: set Content-Security-Policy headers,
+  sanitize and encode output, validate inputs, and scan with automated payloads.'
+version: 2.0.0
+instructions: "# XSS Protection\n\nPrevent cross-site scripting through your API responses: set Content-Security-Policy\
+  \ headers, sanitize and encode output, validate inputs, and scan with automated payloads.\n\n## Instructions\n\
+  \n# XSS Protection\n\n## What this skill does\nPrevent cross-site scripting through your API responses:\
+  \ set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated\
+  \ payloads.\n\n## When to use\n- APIs that render user content (HTML, markdown, chat)\n- Auditing reflected/stored\
+  \ XSS vectors\n- Enabling CSP for frontends\n\n## Real commands\n```bash\n# Check CSP header\ncurl -sI\
+  \ https://httpbin.org/ | grep -i 'content-security-policy'\n\n# Stored XSS: submit a script payload\n\
+  curl -s -X POST http://localhost:8080/api/echo \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"\
+  name\":\"<script>alert(1)</script>\"}' | jq -r '.safeName'\n\n# Ensure markup is neutralized\ncurl -s\
+  \ -X POST http://localhost:8080/api/echo \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"name\"\
+  :\"<img src=x onerror=alert(1)>\"}' | grep -c '<img'   # expect 0\n\n# Sanitize server-side with DOMPurify\n\
+  node -e \"const D=require('isomorphic-dompurify');console.log(D.sanitize('<img src=x onerror=alert(1)>'))\"\
+  \n\n# Contextual output encoding in templates\nnode -e \"const e=require('html-escape');console.log(e('<b>x</b>'))\"\
+  \n```\n\n## Sample CSP header\n```http\nContent-Security-Policy: default-src 'self'; script-src 'self';\
+  \ object-src 'none'; frame-ancestors 'none'\n```\n\n## Defenses by layer\n- Input: validate types/lengths;\
+  \ never trust markup\n- Sanitization: allowlist tags/attributes (DOMPurify, bleach)\n- Output: encode\
+  \ per context (HTML attr, JS, URL)\n- Headers: CSP, X-Content-Type-Options: nosniff\n\n## Best practices\n\
+  - Default-deny CSP; loosen only with justification\n- Encode at the boundary, not in the data\n- Escape\
+  \ JSON strings correctly when embedding in HTML\n- Scan all user-input endpoints with payload batteries\n\
+  \n## Testing\n```bash\ncurl -s -X POST http://localhost:8080/api/echo -d '{\"name\":\"<script>alert(1)</script>\"\
+  }' | grep -c script\ncurl -sI http://localhost:8080/ | grep -iE 'content-security-policy|x-frame-options'\n\
+  ```\n\n## Capabilities\n\n### xss-hardening\nAudit and harden APIs against cross-site scripting\n\n\
+  **Commands:**\n- `curl -sI https://httpbin.org/ | grep -i 'content-security-policy'`\n- `curl -s -X\
+  \ POST http://localhost:8080/api/echo -H 'Content-Type: application/json' -d '{\"name\":\"javascript:alert(1)\"\
+  }' | jq -r '.safeName'`\n- `node -e \"const s=require('html-escape'?);console.log(s)\" `\n- `npm install\
+  \ dompurify isomorphic-dompurify`\n- `curl -s -X POST http://localhost:8080/api/echo -H 'Content-Type:\
+  \ application/json' -d '{\"name\":\"javascript:alert(1)\"}' | jq -r '.safeName'`\n\n**Examples:**\n\
+  - curl -sI http://localhost:8080/ | grep -iE 'x-frame-options|x-xss-protection'\n- node -e \"const DOMPurify=require('isomorphic-dompurify');console.log(DOMPurify.sanitize('<img\
+  \ src=x onerror=alert(1)>'))\"\n- curl -s -X POST http://localhost:8080/api/echo -d '{\"name\":\"javascript:alert(1)\"\
+  }' | jq '.safeName'"
+prompt: Act as XSS Protection and handle the task per the instructions.

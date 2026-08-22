@@ -1,0 +1,38 @@
+title: Canary Deployment
+description: 'Implements canary releases on Kubernetes with Argo Rollouts: weighted traffic splitting,
+  analysis, and promotion/rollback.'
+version: 2.0.0
+instructions: "# Canary Deployment\n\nImplements canary releases on Kubernetes with Argo Rollouts: weighted\
+  \ traffic splitting, analysis, and promotion/rollback.\n\n## Instructions\n\n# Canary Deployment\n\n\
+  ## What this skill does\n\nImplements canary releases with Argo Rollouts: weighted traffic steps, pauses\
+  \ for observation, metric analysis gates, and manual promote/abort.\n\n## When to use\n\n- Rolling out\
+  \ a risky change to a small traffic slice\n- Gating promotion on error-rate/latency metrics\n- Fast\
+  \ rollback by aborting the canary\n\n## Real commands\n\n```bash\n# Apply the canary rollout\nkubectl\
+  \ apply -f rollout-canary.yaml\n\n# Watch the rollout\nkubectl argo rollouts get rollout my-api\nkubectl\
+  \ argo rollouts status rollout my-api --timeout 300\n\n# Promote a paused canary\nkubectl argo rollouts\
+  \ promote rollout my-api\n\n# Abort a bad canary\nkubectl argo rollouts abort rollout my-api\n\n# Inspect\
+  \ analysis\nkubectl get analysisrun -l rollout=my-api\n```\n\n## Rollout spec (steps)\n\n```yaml\nstrategy:\n\
+  \  canary:\n    steps:\n      - setWeight: 10\n      - pause: {duration: 60}\n      - analysis:\n  \
+  \        templates:\n            - templateName: error-rate\n      - setWeight: 50\n      - pause: {}\n\
+  ```\n\n## Testing\n\n- Verify traffic split via kubectl get pods/weight annotations\n- Force an analysis\
+  \ failure and confirm abort\n\n## Best practices\n\n- Start at 5-10% weight with a pause for observation\n\
+  - Pair with analysis templates on real metrics\n- Never promote during known incident windows\n\n##\
+  \ Capabilities\n\n### argo-rollouts\nManage canary Rollouts and traffic weights.\n\n**Commands:**\n\
+  - `kubectl argo rollouts get rollout my-api`\n- `kubectl argo rollouts status rollout my-api`\n- `kubectl\
+  \ argo rollouts promote rollout my-api`\n- `kubectl argo rollouts abort rollout my-api`\n- `kubectl\
+  \ get rollout my-api -o yaml`\n\n**Examples:**\n- kubectl argo rollouts get rollout my-api\n- kubectl\
+  \ argo rollouts status rollout my-api --timeout 300\n- kubectl argo rollouts promote rollout my-api\
+  \ --full\n\n### weighted-traffic\nConfigure weighted canary steps.\n\n**Commands:**\n- `kubectl apply\
+  \ -f rollout-canary.yaml`\n- `kubectl patch rollout my-api --type=merge -p '{\"spec\":{\"strategy\"\
+  :{\"canary\":{\"steps\":[{\"setWeight\":10},{\"pause\":{\"duration\":60}}]}}}}'`\n- `kubectl get service\
+  \ my-api -o jsonpath='{.spec.selector}'`\n- `kubectl get pods -l app=my-api -o wide`\n- `kubectl get\
+  \ analysisrun`\n\n**Examples:**\n- kubectl apply -f rollout-canary.yaml && kubectl argo rollouts status\
+  \ rollout my-api\n- kubectl get pods -l app=my-api -o custom-columns=NAME:.metadata.name,READY:.status.conditions[0].status\n\
+  - kubectl get analysisrun -l rollout=my-api\n\n### analysis\nRun metric analysis jobs that gate promotion.\n\
+  \n**Commands:**\n- `kubectl get analysisrun -n app`\n- `kubectl get analysisrun canary-1 --namespace\
+  \ app -o yaml`\n- `kubectl describe analysisrun -l app=my-api | grep -E 'Status|Failed'`\n- `kubectl\
+  \ argo rollouts promote rollout my-api`\n- `kubectl argo rollouts abort rollout my-api`\n\n**Examples:**\n\
+  - kubectl get analysisrun -n app -o custom-columns=NAME:.metadata.name,PHASE:.status.phase\n- kubectl\
+  \ describe analysisrun -l app=my-api | grep -E 'Status|Failed'\n- kubectl argo rollouts abort rollout\
+  \ my-api"
+prompt: Act as Canary Deployment and handle the task per the instructions.

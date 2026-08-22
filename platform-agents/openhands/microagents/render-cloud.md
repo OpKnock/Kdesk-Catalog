@@ -1,0 +1,103 @@
+---
+name: "render-cloud"
+description: "Deploys web services, static sites, and background workers to Render with the CLI and render.yaml infrastructure configs."
+type: knowledge
+triggers: ["render-cloud", "render-cli", "render-infra"]
+---
+
+# Render
+
+Deploys web services, static sites, and background workers to Render with the CLI and render.yaml infrastructure configs.
+
+## Instructions
+
+# Render
+
+Deploy apps on Render.
+
+## When to Use
+
+- Web services from Docker or buildpacks
+- Static sites and SPAs
+- Background workers and cron jobs
+- Managed Postgres and Redis
+
+## render.yaml Example
+
+```yaml
+services:
+  - type: web
+    name: api
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: node dist/server.js
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mydb
+          property: connectionString
+databases:
+  - name: mydb
+    plan: basic
+```
+
+## Commands
+
+```bash
+# Setup
+npm install -g @render/cli
+render login
+
+# Deploy a specific service
+render deploy --service svc_123
+render deploy --service svc_123 --commit main
+
+# List and inspect
+render services list
+render logs --service svc_123
+
+# Blueprints
+render blueprints apply --file render.yaml
+render blueprints list
+render project list
+```
+
+## Best Practices
+
+- Define all services in render.yaml for repeatable environments
+- Use the database property to wire connection strings automatically
+- Set health check paths on every web service
+- Deploy previews from PR branches to a separate service
+- Stream logs with render logs to debug cold starts
+- Promote with blueprints so staging and prod match
+
+## Capabilities
+
+### render-cli
+Deploy and manage services on Render.
+
+**Commands:**
+- `npm install -g @render/cli`
+- `render login`
+- `render deploy --service demo-service-id`
+- `render services list`
+- `render logs --service demo-service-id`
+
+**Examples:**
+- render deploy --service svc_123 --commit main
+- render services list --project prj_abc
+- render blueprints apply
+
+### render-infra
+Manage render.yaml blueprint infrastructure.
+
+**Commands:**
+- `render blueprints apply --file render.yaml`
+- `render blueprints list`
+- `render project list`
+- `render env group list`
+
+**Examples:**
+- render blueprints apply --file render.yaml --detach
+- render blueprints index --file render.yaml

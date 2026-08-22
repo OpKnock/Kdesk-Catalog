@@ -1,0 +1,30 @@
+title: capacity-planning
+description: 'Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware
+  sizing for services.'
+version: 2.0.0
+instructions: "# capacity-planning\n\nPlans infrastructure capacity: load testing, headroom analysis,\
+  \ autoscaling rules, and cost-aware sizing for services.\n\n## Instructions\n\n# Capacity Planning\n\
+  \nSize infrastructure for real load, not guesses.\n\n## When to Use\n\n- Before major launches or traffic\
+  \ campaigns\n- When p95 latency degrades under expected peak\n- Right-sizing costs in cloud budgets\n\
+  - Validating autoscaling rules\n\n## Method\n\n1. Baseline current usage (RPS, p95 latency, CPU, memory)\n\
+  2. Load test 1x, 2x, 5x expected peak\n3. Find the saturation point per instance\n4. Add headroom: 2x\
+  \ peak for steady services\n5. Set autoscaling thresholds from real numbers\n\n## Commands\n\n```bash\n\
+  # Load generation\nab -n 10000 -c 100 http://localhost:8000/api\nwrk -t4 -c200 -d30s http://localhost:8000/api\n\
+  hey -n 5000 -c 50 http://localhost:8000/api\nk6 run --vus 100 --duration 5m load-test.js\n\n# Current\
+  \ utilization\nkubectl top pod -l app=myapp\nkubectl top node\nkubectl get hpa myapp\ndocker stats --no-stream\n\
+  ```\n\n## HPA Example\n\n```yaml\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n\
+  \  name: myapp\nspec:\n  minReplicas: 3\n  maxReplicas: 20\n  metrics:\n    - type: Resource\n     \
+  \ resource:\n        name: cpu\n        target:\n          type: Utilization\n          averageUtilization:\
+  \ 60\n```\n\n## Best Practices\n\n- Test at 2-3x expected peak with realistic request mixes\n- Watch\
+  \ p95 latency, not just throughput\n- Plan for failure of one instance, zone, or region\n- Pre-scale\
+  \ before known events, autoscale during them\n- Revisit numbers quarterly; traffic changes fast\n\n\
+  ## Capabilities\n\n### load-testing\nGenerate load and measure service capacity.\n\n**Commands:**\n\
+  - `ab -n 10000 -c 100 http://localhost:8000/api`\n- `wrk -t4 -c200 -d30s http://localhost:8000/api`\n\
+  - `k6 run load-test.js`\n- `hey -n 5000 -c 50 http://localhost:8000/api`\n\n**Examples:**\n- wrk -t8\
+  \ -c400 -d60s -s latency.lua http://localhost:8000/\n- k6 run --vus 100 --duration 5m load-test.js\n\
+  - ab -n 10000 -c 100 -k http://localhost:8000/api\n\n### sizing-analysis\nAnalyze headroom and set scaling\
+  \ rules.\n\n**Commands:**\n- `kubectl top pod -l app=myapp`\n- `kubectl top node`\n- `kubectl get hpa\
+  \ myapp`\n- `docker stats --no-stream`\n- `psutil: python -c \"import psutil; print(psutil.cpu_percent(interval=1))\"\
+  `\n\n**Examples:**\n- kubectl top pod -l app=myapp --containers\n- kubectl get hpa myapp -o yaml | grep\
+  \ -A5 spec\n- docker stats $(docker ps -q) --no-stream"
+prompt: Act as capacity-planning and handle the task per the instructions.

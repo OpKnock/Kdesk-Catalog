@@ -1,0 +1,33 @@
+title: Graphql Federation
+description: 'Apollo Federation: build supergraph schemas from subgraph services, compose with rover,
+  and operate the gateway/router.'
+version: 2.0.0
+instructions: "# Graphql Federation\n\nApollo Federation: build supergraph schemas from subgraph services,\
+  \ compose with rover, and operate the gateway/router.\n\n## Instructions\n\n# GraphQL Federation\n\n\
+  ## What this skill does\n\nFederation splits one GraphQL API across subgraph services, each owning types\
+  \ it defines. Apollo Router serves the composed supergraph; rover introspects, composes, publishes,\
+  \ and checks subgraphs.\n\n## When to use\n\n- Multiple teams owning different domains behind one graph\n\
+  - Adding a new service to an existing federated graph\n- Composing the supergraph in CI\n\n## Real commands\n\
+  \n```bash\n# Introspect a subgraph\nrover subgraph introspect http://orders:4001/graphql --output subgraph-orders.graphql\n\
+  \n# Publish to the graph registry\nrover subgraph publish my-graph@prod --name orders --schema subgraph-orders.graphql\n\
+  \n# Compose a supergraph locally\nrover supergraph compose --config supergraph.yaml --output supergraph.graphql\n\
+  \n# Check before publish\nrover subgraph check my-graph@prod --name orders --schema subgraph-orders.graphql\n\
+  ```\n\n## supergraph.yaml example\n\n```yaml\nfederation_version: 2\nsubgraphs:\n  orders:\n    routing_url:\
+  \ http://orders:4001/graphql\n    schema:\n      file: ./subgraph-orders.graphql\n  users:\n    routing_url:\
+  \ http://users:4002/graphql\n    schema:\n      file: ./subgraph-users.graphql\n```\n\n## Subgraph directive\
+  \ example\n\n```graphql\ntype Order @key(fields: \"id\") {\n  id: ID!\n  total: Int!\n  buyer: User\n\
+  }\n\nextend type User @key(fields: \"id\") {\n  id: ID! @external\n  orders: [Order!]!\n}\n```\n\n##\
+  \ Testing\n\n```bash\n# Run the router with a local supergraph\nrover dev --supergraph-config supergraph.yaml\n\
+  # query it: curl -X POST localhost:4000/graphql -d '{\"query\":\"{ orders { id total } }\"}'\n```\n\n\
+  ## Best practices\n\n- Run `rover subgraph check` in CI for every subgraph change.\n- Publish schemas\
+  \ to the registry; never hand-compose in prod.\n- Keep cross-subgraph references limited to @key entities.\n\
+  - Version the supergraph with the router deployment.\n- Test local composition with rover dev before\
+  \ publishing.\n\n## Capabilities\n\n### federation-tooling\nCompose subgraph schemas into a supergraph\
+  \ and manage the router with rover.\n\n**Commands:**\n- `rover subgraph introspect http://orders:4001/graphql\
+  \ --output subgraph-orders.graphql`\n- `rover subgraph publish my-graph@prod --name orders --schema\
+  \ subgraph-orders.graphql`\n- `rover supergraph compose --config supergraph.yaml --output supergraph.graphql`\n\
+  - `rover supergraph fetch my-graph@prod --output supergraph.graphql`\n- `rover subgraph check my-graph@prod\
+  \ --name orders --schema subgraph-orders.graphql`\n\n**Examples:**\n- rover subgraph introspect http://orders:4001/graphql\
+  \ --output subgraph-orders.graphql\n- rover supergraph compose --config supergraph.yaml --output supergraph.graphql\n\
+  - rover subgraph check my-graph@prod --name orders --schema subgraph-orders.graphql"
+prompt: Act as Graphql Federation and handle the task per the instructions.

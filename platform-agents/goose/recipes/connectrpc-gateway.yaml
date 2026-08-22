@@ -1,0 +1,34 @@
+title: Connectrpc Gateway
+description: Expose ConnectRPC services as REST/HTTP endpoints using buf-based codegen and the Connect
+  gateway pattern, with real curl and buf commands.
+version: 2.0.0
+instructions: "# Connectrpc Gateway\n\nExpose ConnectRPC services as REST/HTTP endpoints using buf-based\
+  \ codegen and the Connect gateway pattern, with real curl and buf commands.\n\n## Instructions\n\n#\
+  \ ConnectRPC Gateway\n\nExpose a ConnectRPC service as REST/HTTP with annotations and generated stubs.\n\
+  \n## When to Use\n\n- Serving Connect and REST/JSON from the same server\n- Migrating a gRPC backend\
+  \ to a browser-friendly HTTP API\n- Reusing one proto definition for both transports\n\n## Setup\n\n\
+  ```bash\ngo mod init example.com/gateway\ngo get connectrpc.com/connect@latest\ngo get google.golang.org/protobuf@latest\n\
+  ```\n\n## Annotate the Proto\n\n```proto\nimport \"google/api/annotations.proto\";\nservice UserService\
+  \ {\n  rpc GetUser(GetUserRequest) returns (User) {\n    option (google.api.http) = {\n      get: \"\
+  /v1/users/{id}\"\n    };\n  }\n  rpc CreateUser(CreateUserRequest) returns (User) {\n    option (google.api.http)\
+  \ = {\n      post: \"/v1/users\"\n      body: \"*\"\n    };\n  }\n}\n```\n\n## Generate and Run\n\n\
+  ```bash\nbuf generate --path proto --output gen\ngo run ./cmd/server &\n# Connect JSON over POST\ncurl\
+  \ -i -H \"Content-Type: application/json\" \\\n  -d '{\"id\":\"42\"}' \\\n  http://localhost:8080/connect.example.v1.UserService/GetUser\n\
+  # REST route from annotations\ncurl -s http://localhost:8080/v1/users/42 | jq '.name'\n```\n\n## Validation\n\
+  \n```bash\nbuf lint\nbuf breaking --against .git#branch=main\nbuf build -o image.bin\n```\n\n## Testing\n\
+  \n```bash\ncurl -X POST http://localhost:8080/v1/users -H \"Content-Type: application/json\" -d '{\"\
+  name\":\"alice\"}'\ncurl -s http://localhost:8080/v1/users/42 -o /dev/null -w \"%{http_code}\\n\"\n\
+  ```\n\n## Best Practices\n\n- Keep annotations on the proto so both transports share one contract\n\
+  - Run `buf lint` and `buf breaking` in CI\n- Use Connect JSON protocol for browser clients and REST\
+  \ for legacy consumers\n- Version REST paths with /v1, /v2\n\n## Capabilities\n\n### gateway-setup\n\
+  Scaffold a ConnectRPC gateway, generate REST stubs with buf, and serve both Connect and REST on one\
+  \ port\n\n**Commands:**\n- `buf generate --path proto --output gen`\n- `go get connectrpc.com/connect@latest`\n\
+  - `go get google.golang.org/protobuf@latest`\n- `go run ./cmd/server`\n\n**Examples:**\n- buf lint proto\
+  \ && buf generate --path proto --output gen\n- go mod init example.com/gateway && go get connectrpc.com/connect@latest\n\
+  - curl -i -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:8080/connect.example.v1.ExampleService/SayHello\n\
+  \n### rest-routing\nDefine HTTP/JSON routes with google.api.http annotations and validate them with\
+  \ buf\n\n**Commands:**\n- `buf lint`\n- `buf breaking --against .git#branch=main`\n- `curl -X POST http://localhost:8080/v1/users\
+  \ -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}'`\n- `curl -X GET http://localhost:8080/v1/users/42`\n\
+  \n**Examples:**\n- buf lint proto && buf build -o image.bin\n- curl -i -X DELETE http://localhost:8080/v1/users/42\n\
+  - curl -s http://localhost:8080/v1/users/42 | jq '.name'"
+prompt: Act as Connectrpc Gateway and handle the task per the instructions.

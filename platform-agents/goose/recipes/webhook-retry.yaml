@@ -1,0 +1,36 @@
+title: Webhook Retry
+description: Designs retry policies for webhook delivery with exponential backoff and jitter. Uses idempotency
+  keys to make replays safe, manages dead-letter queues, and provides per-delivery retry and replay APIs.
+version: 2.0.0
+instructions: "# Webhook Retry\n\nDesigns retry policies for webhook delivery with exponential backoff\
+  \ and jitter. Uses idempotency keys to make replays safe, manages dead-letter queues, and provides per-delivery\
+  \ retry and replay APIs.\n\n## Instructions\n\n# Webhook Retry\n\n## What this skill does\n\nDesign\
+  \ retry policies for webhook delivery: exponential backoff with jitter, idempotency keys to make replays\
+  \ safe, dead-letter queues, and per-delivery retry/replay APIs.\n\n## When to use\n\n- Subscribers are\
+  \ flaky or rate-limited\n- Making webhook replays safe for consumers\n- Auditing why events are stuck\n\
+  \n## Real commands\n\n```bash\n# curl-level retry for testing\ncurl --retry 3 --retry-delay 2 --retry-all-errors\
+  \ \\\n  -X POST -d \"{\\\"event\\\":\\\"order.created\\\"}\" http://localhost:8080/webhooks/orders\n\
+  \n# Retry a delivery through the API\ncurl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry\
+  \ | jq \".next_retry_at\"\n\n# Dead-letter inspection\ncurl -s \"http://localhost:8080/webhooks/deliveries?status=dead-letter\"\
+  \ | jq \"length\"\n\n# Idempotent event creation\ncurl -s -X POST http://localhost:8080/webhooks/events\
+  \ \\\n  -H \"Idempotency-Key: evt_42\" -d \"{\\\"event\\\":\\\"payment.succeeded\"}\"\n\n# Same key\
+  \ returns the same event, no duplicate deliveries\ncurl -s -X POST http://localhost:8080/webhooks/events\
+  \ \\\n  -H \"Idempotency-Key: evt_42\" -d \"{\\\"event\\\":\\\"payment.succeeded\"}\" | jq \".deliveries\
+  \ | length\"\n\n# Requeue dead letters\ncurl -s -X POST \"http://localhost:8080/webhooks/deliveries?status=dead-letter\"\
+  \ | jq \".requeued\"\n```\n\n## Backoff schedule\n\n```\nattempt 1: 1s\nattempt 2: 5s\nattempt 3: 25s\n\
+  attempt 4: 125s\nattempt 5: 625s  -> dead-letter\n```\nAdd jitter (+/- 20%) to avoid thundering herd.\n\
+  \n## Best practices\n\n- Cap retries at 5-7 attempts, then dead-letter\n- Always require idempotency\
+  \ keys for mutable events\n- Store per-delivery attempt history\n- Requeue dead letters in small batches\n\
+  \n## Testing\n\n```bash\n# Force failures then verify backoff\ncurl -s http://localhost:8080/webhooks/deliveries\
+  \ | jq \".[0] | {attempts, next_retry_at, status}\"\n```\n\n## Capabilities\n\n### retry-policy\nConfigure\
+  \ and test webhook retry and backoff behavior\n\n**Commands:**\n- `curl --retry 3 --retry-delay 2 --retry-all-errors\
+  \ -X POST -d \"{\\\"event\\\":\\\"order.created\\\"}\" http://localhost:8080/webhooks/orders`\n- `curl\
+  \ -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry | jq \".next_retry_at\"`\n\
+  - `curl -s \"http://localhost:8080/webhooks/deliveries?status=dead-letter\" | jq \"length\"`\n- `curl\
+  \ -s -X POST http://localhost:8080/webhooks/events -H \"Idempotency-Key: evt_42\" -d \"{\\\"event\\\"\
+  :\\\"payment.succeeded\"}\"`\n- `curl -s \"http://localhost:8080/webhooks/events/evt_42\" | jq \".deliveries\
+  \ | length\"`\n\n**Examples:**\n- curl --retry 5 --retry-delay 30 --retry-connrefused http://localhost:8080/health\n\
+  - curl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/requeue | jq \".attempts\"\n\
+  - curl -s -X POST \"http://localhost:8080/webhooks/deliveries?status=dead-letter\" -H \"Content-Type:\
+  \ application/json\" -d \"{}\" | jq \".requeued\""
+prompt: Act as Webhook Retry and handle the task per the instructions.

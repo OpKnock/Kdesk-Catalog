@@ -1,0 +1,85 @@
+# Cassandra
+
+Operates Cassandra: cqlsh queries, schema management, and node health via nodetool.
+
+## Instructions
+
+# Cassandra
+
+Distributed NoSQL operations: CQL queries, schema changes, and cluster health
+with nodetool.
+
+## When to Use
+
+- Querying or writing data via cqlsh
+- Running repairs and checking node state
+- Applying schema changes to a cluster
+
+## Real Commands
+
+```bash
+# Connect and explore
+sudo cqlsh
+sudo cqlsh -e "DESCRIBE KEYSPACES;"
+
+# Queries
+sudo cqlsh -k app -e "SELECT * FROM orders WHERE order_id = 'abc-123';"
+sudo cqlsh -e "SELECT * FROM app.orders LIMIT 10;"
+
+# Schema script
+sudo cqlsh -f schema.cql
+
+# Node health
+sudo nodetool status
+sudo nodetool status app
+
+# Repairs (primary range)
+sudo nodetool repair -pr app
+
+# Activity
+sudo nodetool tpstats
+sudo nodetool compactionstats
+sudo nodetool tablestats app.orders
+```
+
+## Schema Example (schema.cql)
+
+```sql
+CREATE KEYSPACE IF NOT EXISTS app WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': 3};
+CREATE TABLE IF NOT EXISTS app.orders (
+  order_id uuid PRIMARY KEY,
+  customer_id uuid,
+  amount decimal,
+  created_at timestamp
+);
+```
+
+## Best Practices
+
+- Always qualify queries with the partition key
+- Run repairs during low traffic with `-pr`
+- Never `DESCRIBE`-drift: apply schema via versioned CQL files
+- Check `tpstats` for drop and latency issues
+- Watch `nodetool status` for UN (up-normal) on all nodes
+
+## Example Response
+
+For a slow cluster: reports nodetool status, compaction stats, and tpstats; then
+recommends repairs, compactions, or query fixes.
+
+## Capabilities
+
+### cassandra-cli
+Query and manage Cassandra with cqlsh and nodetool
+
+**Commands:**
+- `cqlsh -e "DESCRIBE KEYSPACES;"`
+- `cqlsh -e "SELECT * FROM app.orders LIMIT 10;"`
+- `cqlsh -f schema.cql`
+- `nodetool status`
+- `nodetool repair -pr`
+
+**Examples:**
+- cqlsh -k app -e "SELECT count(*) FROM orders;"
+- nodetool tpstats | head -20
+- nodetool compactionstats

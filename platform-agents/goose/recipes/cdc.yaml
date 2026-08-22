@@ -1,0 +1,41 @@
+title: Cdc
+description: 'Implement Change Data Capture with Debezium and Kafka Connect: connectors, topics, and consuming
+  change events.'
+version: 2.0.0
+instructions: "# Cdc\n\nImplement Change Data Capture with Debezium and Kafka Connect: connectors, topics,\
+  \ and consuming change events.\n\n## Instructions\n\n# Change Data Capture (CDC)\n\nStream database\
+  \ changes to Kafka with Debezium and Kafka Connect.\n\n## When to Use\n\n- Feeding search indexes, caches,\
+  \ or analytics from database writes\n- Building event-driven pipelines from existing relational data\n\
+  - Replicating changes without application code changes\n\n## Deploy Debezium Connect\n\n```bash\ndocker\
+  \ run -d --name connect -p 8083:8083 quay.io/debezium/connect:latest\ncurl http://localhost:8083/connectors\n\
+  ```\n\n## Register a Connector\n\n```json\n{\n  \"name\": \"postgres-connector\",\n  \"config\": {\n\
+  \    \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\n    \"database.hostname\"\
+  : \"postgres\",\n    \"database.port\": \"5432\",\n    \"database.user\": \"postgres\",\n    \"database.password\"\
+  : \"postgres\",\n    \"database.dbname\": \"appdb\",\n    \"database.server.name\": \"dbserver\",\n\
+  \    \"table.include.list\": \"public.users\",\n    \"plugin.name\": \"pgoutput\"\n  }\n}\n```\n\n```bash\n\
+  curl -X POST http://localhost:8083/connectors -H \"Content-Type: application/json\" -d @debezium.json\n\
+  curl -s http://localhost:8083/connectors/postgres-connector/status | jq '.connector.state'\n```\n\n\
+  ## Consume Events\n\n```bash\nkafka-topics --bootstrap-server localhost:9092 --list | grep dbserver\n\
+  kafka-console-consumer --bootstrap-server localhost:9092 --topic dbserver.public.users --from-beginning\n\
+  ```\n\nEach record has op (c/u/d), before, after, and source metadata.\n\n## Testing\n\n```bash\n# Insert\
+  \ a row and watch the event\npsql -c \"INSERT INTO users (name) VALUES ('alice');\"\nkafka-console-consumer\
+  \ --bootstrap-server localhost:9092 --topic dbserver.public.users --from-beginning --max-messages 1\n\
+  ```\n\n## Best Practices\n\n- Use logical decoding (pgoutput) for Postgres\n- Include table.include.list\
+  \ to limit capture\n- Handle schema changes with Debezium schema evolution\n- Set IDs and keys on events\
+  \ for exactly-once consumers\n- Monitor connector status in production\n\n## Capabilities\n\n### debezium-connect\n\
+  Deploy Debezium Connect and register source connectors via the Kafka Connect REST API\n\n**Commands:**\n\
+  - `docker run -d --name connect -p 8083:8083 quay.io/debezium/connect:latest`\n- `curl -X POST http://localhost:8083/connectors\
+  \ -H \"Content-Type: application/json\" -d @debezium.json`\n- `curl http://localhost:8083/connectors`\n\
+  - `curl -X DELETE http://localhost:8083/connectors/postgres-connector`\n\n**Examples:**\n- curl -X POST\
+  \ http://localhost:8083/connectors -H \"Content-Type: application/json\" -d @debezium.json\n- curl -s\
+  \ http://localhost:8083/connectors | jq '.connectors'\n- curl -s http://localhost:8083/connectors/postgres-connector/status\
+  \ | jq '.connector.state'\n\n### kafka-streams\nInspect CDC topics and consume change events from Kafka\n\
+  \n**Commands:**\n- `kafka-topics --bootstrap-server localhost:9092 --list`\n- `kafka-topics --bootstrap-server\
+  \ localhost:9092 --describe --topic dbserver.public.users`\n- `kafka-console-consumer --bootstrap-server\
+  \ localhost:9092 --topic dbserver.public.users --from-beginning`\n- `kafka-console-consumer --bootstrap-server\
+  \ localhost:9092 --topic dbserver.public.users --from-beginning --property print.key=true --property\
+  \ key.separator=--`\n\n**Examples:**\n- kafka-topics --bootstrap-server localhost:9092 --list | grep\
+  \ dbserver\n- kafka-console-consumer --bootstrap-server localhost:9092 --topic dbserver.public.users\
+  \ --from-beginning | jq '.payload.op'\n- kafka-console-consumer --bootstrap-server localhost:9092 --topic\
+  \ dbserver.public.users --from-beginning --max-messages 5"
+prompt: Act as Cdc and handle the task per the instructions.

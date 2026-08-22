@@ -1,0 +1,87 @@
+---
+trigger: glob
+description: "Run it scans locally over directories and files with framework selection. Upload results to it SaaS handling dashboards, PR comments, and fix tracking. results for centralized fix tracking."
+globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.tf", "**/*.{yaml,yml}"]
+---
+
+# bridgecrew
+
+Run it scans locally over directories and files with framework selection. Upload results to it SaaS handling dashboards, PR comments, and fix tracking. results for centralized fix tracking.
+
+## Instructions
+
+# Bridgecrew IaC Security
+
+Scan infrastructure-as-code against Bridgecrew/Prisma Cloud policies for misconfigurations.
+
+## What This Skill Does
+
+- Scans Terraform, CloudFormation, Serverless, ARM, and Kubernetes manifests
+- Reports policy violations with fix guidance in multiple formats
+- Integrates with the Bridgecrew SaaS platform for dashboards and PR gatekeeping
+- Excludes false positives per policy or per check
+
+## When to Use
+
+- Pre-deploy IaC review for misconfigurations
+- CI gate that fails on high-severity policy violations
+- Centralized compliance reporting for cloud infrastructure
+
+## Real Commands
+
+```bash
+# Basic directory scan
+bridgecrew --directory .
+
+# Framework-scoped scan with JSON output
+bridgecrew -d terraform/ --framework terraform -o json
+
+# Single-file scan
+bridgecrew -f main.tf -o cli
+
+# Skip a noisy policy and output SARIF for GitHub code scanning
+bridgecrew -d . --skip-check CKV_AWS_79 --output sarif
+
+# Upload to the platform
+bridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra
+
+# Modern engine: checkov with platform key
+checkov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra
+```
+
+## Best Practices
+
+- Run in CI on every PR; fail only on HIGH/CRITICAL to start
+- Keep baseline results reviewed and suppress known-false positives explicitly
+- Scan Kubernetes YAML with the k8s framework as part of the same pipeline
+- Prefer checkov for newer policy features; bridgecrew CLI is legacy
+- Store the API key in CI secrets, never in the repo
+
+## Capabilities
+
+### bridgecrew-scan
+Run Bridgecrew scans locally over directories and files with framework selection.
+
+**Commands:**
+- `bridgecrew --directory .`
+- `bridgecrew -d terraform/ --framework terraform`
+- `bridgecrew -f main.tf -o json`
+- `bridgecrew -d . --skip-check CKV_AWS_79`
+- `bridgecrew -d . --output junitxml`
+
+**Examples:**
+- bridgecrew --directory ./infra --framework terraform --output cli
+- bridgecrew -f serverless.yml --framework serverless
+- bridgecrew -d . --compact
+
+### platform-integration
+Upload results to Bridgecrew SaaS for dashboards, PR comments, and fix tracking.
+
+**Commands:**
+- `bridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra`
+- `checkov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra --repo-branch main`
+- `bridgecrew --bc-api-key $BRIDGECREW_API_KEY --directory . --skip-fixes`
+
+**Examples:**
+- bridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id acme/infra
+- checkov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id acme/infra --download-external-modules

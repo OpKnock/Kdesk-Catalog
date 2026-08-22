@@ -1,0 +1,91 @@
+---
+name: "Prompt Engineering"
+description: "Crafts effective LLM prompts: system/user context design, few-shot examples, structured outputs, and iteration with evals."
+globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+alwaysApply: false
+---
+
+# Prompt Engineering
+
+Crafts effective LLM prompts: system/user context design, few-shot examples, structured outputs, and iteration with evals.
+
+## Instructions
+
+# Prompt Engineering
+
+Design and iterate on LLM prompts systematically.
+
+## When to Use
+
+- Building any feature where model output quality matters
+- Diagnosing inconsistent or off-format model responses
+- Comparing prompt variants or model versions
+- Reducing cost by cutting redundant context
+
+## Structure
+
+- System: role, constraints, and behavior for the whole session
+- Context: facts the model needs (docs, schema, examples)
+- Task: clear instruction with the expected output shape
+- Few-shot: 2-3 concrete examples of input/output pairs
+- Guardrails: what to do when input is out of scope
+
+## Commands
+
+```bash
+# Eval setup
+npx promptfoo init
+npx promptfoo eval -c promptfooconfig.yaml
+npx promptfoo view
+
+# Quick probe of a model
+curl -s https://api.openai.com/v1/chat/completions \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"Name 3 colors"}],"temperature":0}'
+```
+
+## Prompt Example
+
+```
+System: You extract structured fields from invoices. Reply with JSON only.
+User: Invoice #1042, dated 2026-01-15, total $129.99, vendor "Acme Corp"
+Assistant: {"number":"1042","date":"2026-01-15","total":129.99,"vendor":"Acme Corp"}
+```
+
+## Best Practices
+
+- Always test with real negative examples, not just happy paths
+- Keep instructions specific; vague prompts produce vague output
+- Use temperature 0 for extraction, higher only for creative tasks
+- Require structured output (JSON schema) for machine consumption
+- Track prompt versions and eval scores in the repo
+- Trim context ruthlessly; token cost scales with input length
+
+## Capabilities
+
+### prompt-design
+Structure system prompts and few-shot examples.
+
+**Commands:**
+- `npx promptfoo eval -c promptfooconfig.yaml`
+- `npx promptfoo run -c promptfooconfig.yaml`
+- `python -c "from openai import OpenAI; c=OpenAI(); r=c.chat.completions.create(model=\"gpt-4o-mini\", messages=[{\"role\":\"system\",\"content\":\"You are a terse assistant\"},{\"role\":\"user\",\"content\":\"Hi\"}]); print(r.choices[0].message.content)"`
+
+**Examples:**
+- npx promptfoo init
+- npx promptfoo eval --no-cache
+- curl -s https://api.openai.com/v1/chat/completions -H "Authorization: Bearer $OPENAI_API_KEY" -H "Content-Type: application/json" -d "{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"Name 3 colors\"}],\"temperature\":0}"
+
+### prompt-eval
+Evaluate prompt variants with automated test cases.
+
+**Commands:**
+- `npx promptfoo eval`
+- `npx promptfoo view`
+- `npx promptfoo share`
+- `python -m venv .venv && .venv/bin/pip install openai`
+
+**Examples:**
+- npx promptfoo eval -c eval.yaml --max-concurrency 8
+- npx promptfoo view --port 3000

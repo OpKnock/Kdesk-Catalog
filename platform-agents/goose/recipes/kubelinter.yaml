@@ -1,0 +1,28 @@
+title: Kubelinter
+description: 'Lints Kubernetes manifests with KubeLinter: security, best-practice, and reliability checks
+  with config-driven rules.'
+version: 2.0.0
+instructions: "# Kubelinter\n\nLints Kubernetes manifests with KubeLinter: security, best-practice, and\
+  \ reliability checks with config-driven rules.\n\n## Instructions\n\n# KubeLinter\n\nLint Kubernetes\
+  \ YAML for security and reliability.\n\n## When to Use\n\n- Scanning manifests before apply or deploy\n\
+  - CI gates on configuration drift\n- Enforcing security defaults (non-root, read-only fs)\n- Auditing\
+  \ existing cluster manifests\n\n## Commands\n\n```bash\n# Lint a file or directory\nkubelinter lint\
+  \ deploy.yaml\nkubelinter lint k8s/\n\n# Custom config\nkubelinter lint --config .kubelinter.yaml deploy.yaml\n\
+  \n# Fail on warnings\nkubelinter lint --fail-on warning deploy.yaml\n\n# Reports\nkubelinter lint --format\
+  \ json -o report.json k8s/\nkubelinter lint --format sarif -o report.sarif k8s/\n\n# Check selection\n\
+  kubelinter lint --list-checks\nkubelinter lint --disable-checks privileged-containers deploy.yaml\n\
+  kubelinter lint --only-checks no-read-only-root-fs deploy.yaml\n```\n\n## Config Example\n\n```yaml\n\
+  # .kubelinter.yaml\nchecks:\n  addAllBuiltIn: true\n  doNotAutoAddDefaults: false\n  exclude:\n    -\
+  \ privileged-containers\n```\n\n## Best Practices\n\n- Run kubelinter in CI before every deploy\n- Enable\
+  \ run-as-non-root and no-read-only-root-fs checks\n- Use --fail-on error for blockers, warning for review\n\
+  - Generate SARIF for GitHub Code Scanning\n- Keep the config in the repo for consistency\n- Review default\
+  \ checks before disabling any\n\n## Capabilities\n\n### kubelinter-scan\nScan manifests and directories.\n\
+  \n**Commands:**\n- `kubelinter lint deploy.yaml`\n- `kubelinter lint k8s/`\n- `kubelinter lint --config\
+  \ .kubelinter.yaml deploy.yaml`\n- `kubelinter lint --fail-on warning deploy.yaml`\n- `kubelinter lint\
+  \ --format json -o report.json k8s/`\n\n**Examples:**\n- kubelinter lint --fail-on error k8s/\n- kubelinter\
+  \ lint --format sarif -o report.sarif k8s/\n- kubelinter lint --default-checks k8s/\n\n### kubelinter-config\n\
+  Customize checks and policies.\n\n**Commands:**\n- `kubelinter lint --list-checks`\n- `kubelinter lint\
+  \ --disable-checks privileged-containers deploy.yaml`\n- `kubelinter lint --only-checks no-read-only-root-fs\
+  \ deploy.yaml`\n- `kubelinter version`\n\n**Examples:**\n- kubelinter lint --list-checks | grep -i \"\
+  privileged\"\n- kubelinter lint --only-checks run-as-non-root deploy.yaml"
+prompt: Act as Kubelinter and handle the task per the instructions.

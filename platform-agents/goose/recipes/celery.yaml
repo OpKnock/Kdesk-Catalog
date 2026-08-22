@@ -1,0 +1,33 @@
+title: celery
+description: 'Configures and operates Celery distributed task queues: workers, beat scheduler, result
+  backends, routing, and monitoring.'
+version: 2.0.0
+instructions: "# celery\n\nConfigures and operates Celery distributed task queues: workers, beat scheduler,\
+  \ result backends, routing, and monitoring.\n\n## Instructions\n\n# Celery\n\nDistributed task queue\
+  \ for Python.\n\n## When to Use\n\n- Long-running or I/O-heavy work triggered by web requests\n- Periodic\
+  \ jobs via beat\n- Retryable processing against flaky external services\n- Fan-out jobs across many\
+  \ workers\n\n## Setup\n\n```bash\npip install celery[redis]\n```\n\n## Commands\n\n```bash\n# Start\
+  \ a worker\ncelery -A proj worker --loglevel=info\n\n# Multi-queue worker\ncelery -A proj worker --concurrency=4\
+  \ -Q high,default\n\n# Periodic scheduler\ncelery -A proj beat --loglevel=info\n\n# Check worker health\n\
+  celery -A proj status\ncelery -A proj inspect active\ncelery -A proj inspect stats\n\n# Clear pending\
+  \ tasks\ncelery -A proj purge -f\n\n# Graceful shutdown\ncelery -A proj control shutdown\n\n# Call a\
+  \ task from the CLI\ncelery -A proj call tasks.add --args=\"[2,2]\"\n```\n\n## Config\n\n```python\n\
+  # celery.py\nfrom celery import Celery\napp = Celery(\"proj\", broker=\"redis://localhost:6379/0\",\n\
+  \             backend=\"redis://localhost:6379/1\")\napp.conf.task_routes = {\"tasks.send_email\": {\"\
+  queue\": \"email\"}}\napp.conf.beat_schedule = {\n    \"cleanup-every-10m\": {\n        \"task\": \"\
+  tasks.cleanup\",\n        \"schedule\": 600.0,\n    }\n}\n```\n\n## Task Example\n\n```python\n@shared_task(bind=True,\
+  \ max_retries=3, default_retry_delay=60)\ndef send_email(self, to):\n    try:\n        send(to)\n  \
+  \  except TemporaryFailure as exc:\n        raise self.retry(exc=exc)\n```\n\n## Best Practices\n\n\
+  - Keep tasks idempotent and small\n- Use task_routes to separate critical and background queues\n- Always\
+  \ bound tasks with max_retries for network-dependent work\n- Use inspect and flower for production monitoring\n\
+  - Use acks_late for at-least-once delivery semantics\n\n## Capabilities\n\n### celery-workers\nStart\
+  \ and manage Celery worker processes.\n\n**Commands:**\n- `celery -A proj worker --loglevel=info`\n\
+  - `celery -A proj worker --concurrency=4 -Q high,default`\n- `celery -A proj purge -f`\n- `celery -A\
+  \ proj status`\n- `celery -A proj control shutdown`\n\n**Examples:**\n- celery -A proj worker --loglevel=debug\
+  \ --traceback\n- celery -A proj worker --hostname=w1@%h --concurrency=8\n- celery -A proj inspect stats\n\
+  \n### celery-beat\nSchedule periodic tasks with the beat scheduler.\n\n**Commands:**\n- `celery -A proj\
+  \ beat --loglevel=info`\n- `celery -A proj beat --schedule /var/lib/celerybeat-schedule`\n- `celery\
+  \ -A proj call tasks.add --args=\"[2,2]\"`\n- `celery -A proj inspect scheduled`\n\n**Examples:**\n\
+  - celery -A proj beat --loglevel=info --pidfile=/tmp/beat.pid\n- celery -A proj call tasks.send_digest\
+  \ --kwargs=\"{\\\"user_id\\\": 7}\""
+prompt: Act as celery and handle the task per the instructions.

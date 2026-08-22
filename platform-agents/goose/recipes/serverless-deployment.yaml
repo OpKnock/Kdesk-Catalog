@@ -1,0 +1,34 @@
+title: Serverless Deployment
+description: Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds
+  services, deploys to named stages, invokes functions with test payloads, streams logs for debugging,
+  and supports local emulation via SAM.
+version: 2.0.0
+instructions: "# Serverless Deployment\n\nDeploys and operates serverless functions using Serverless Framework\
+  \ and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams\
+  \ logs for debugging, and supports local emulation via SAM.\n\n## Instructions\n\n# Serverless Deployment\n\
+  \nHand-crafted skill for deploying serverless functions safely.\n\n## What this skill does\n\n- Scaffolds\
+  \ services with the Serverless Framework and SAM templates\n- Deploys to named stages and invokes functions\
+  \ for verification\n- Streams function logs for debugging\n\n## When to use\n\n- Shipping a function-based\
+  \ service to production\n- Reproducing an invocation locally before deploy\n- Promoting from staging\
+  \ to prod with one command\n\n## Real commands\n\n```bash\n# Scaffold\nserverless create --template\
+  \ aws-nodejs --path my-service\ncd my-service && npm install\n\n# Deploy per stage\nserverless deploy\
+  \ --stage staging\nserverless deploy --stage prod\n\n# Invoke with a payload\nserverless invoke -f hello\
+  \ --stage prod --data '{\"name\":\"Ada\"}'\n\n# Tail logs\nserverless logs -f hello -t\n\n# AWS SAM\
+  \ equivalents\nsam build\nsam local invoke HelloWorldFunction --event event.json\nsam deploy --guided\n\
+  ```\n\n## serverless.yml\n\n```yaml\nservice: my-service\nprovider:\n  name: aws\n  runtime: nodejs20.x\n\
+  \  region: eu-west-1\nfunctions:\n  hello:\n    handler: handler.hello\n    events:\n      - httpApi:\n\
+  \          path: /hello\n          method: get\n```\n\n## Testing\n\n```bash\nserverless deploy --stage\
+  \ staging\nserverless invoke -f hello --stage staging --data '{\"name\":\"test\"}'\nserverless logs\
+  \ -f hello --stage staging\n```\n\n## Best practices\n\n- Deploy to staging, smoke-test, then promote\
+  \ to prod\n- Pin the runtime and region in serverless.yml\n- Keep functions small; delegate heavy work\
+  \ to queues\n\n## Capabilities\n\n### serverless-framework\nDeploys and operates serverless functions\
+  \ using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions\
+  \ with test payloads, streams logs for debugging, and supports local emulation via SAM.\n\n**Commands:**\n\
+  - `serverless create --template aws-nodejs --path my-service`\n- `serverless deploy --stage staging`\n\
+  - `serverless deploy --stage prod`\n- `serverless invoke -f hello --stage prod --data '{\"name\":\"\
+  Ada\"}'`\n- `serverless logs -f hello -t`\n- `sam build`\n- `sam local invoke HelloWorldFunction --event\
+  \ event.json`\n- `sam deploy --guided`\n\n**Examples:**\n- serverless create --template aws-nodejs --path\
+  \ my-service\n- serverless deploy --stage prod\n- serverless invoke -f hello --stage prod --data '{\"\
+  name\":\"Ada\"}'\n- sam build\n- sam local invoke HelloWorldFunction --event event.json\n- sam deploy\
+  \ --guided"
+prompt: Act as Serverless Deployment and handle the task per the instructions.

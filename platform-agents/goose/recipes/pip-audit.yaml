@@ -1,0 +1,24 @@
+title: Pip Audit
+description: Audits Python environments and requirements files for known vulnerabilities with pip-audit.
+version: 2.0.0
+instructions: "# Pip Audit\n\nAudits Python environments and requirements files for known vulnerabilities\
+  \ with pip-audit.\n\n## Instructions\n\n# pip Audit\n\nAudits Python packages for known vulnerabilities\
+  \ using the OSV database, covering\ninstalled environments, requirements files, and lock files.\n\n\
+  ## When to Use\n\n- Pre-release check of a Python app\n- Scanning a requirements.txt before a Docker\
+  \ build\n- CI security gate for Python projects\n\n## Real Commands\n\n```bash\n# Install\npip install\
+  \ pip-audit\n\n# Audit the current environment\npip-audit\n\n# Audit a requirements file\npip-audit\
+  \ -r requirements.txt\n\n# Audit only direct deps, skip editable installs\npip-audit -l --skip-editable\
+  \ --no-deps\n\n# JSON output for CI\npip-audit -r requirements.txt --format json > audit.json\n\n# Auto-fix\
+  \ by upgrading (review with --dry-run first)\npip-audit --fix -r requirements.txt --dry-run\npip-audit\
+  \ --fix -r requirements.txt\n```\n\n## Exit Codes\n\n- `0` no vulnerabilities, `1` vulnerabilities found,\
+  \ `2` audit failed\n\n## CI\n\n```yaml\n- name: pip audit\n  run: pip-audit -r requirements.txt --no-deps\n\
+  ```\n\n## Best Practices\n\n- Use `--no-deps -r requirements.txt` in CI for speed and determinism\n\
+  - Audit the lock file used by the deployment (constraints.txt / pip-tools output)\n- Prefer `--fix`\
+  \ with `--dry-run` first, then run tests\n- Pin pip-audit itself in CI\n\n## Example Response\n\nLists\
+  \ each vulnerable package as `pkg==ver` with CVE ID, severity, and the patched\nversion; then proposes\
+  \ the upgrade command.\n\n## Capabilities\n\n### pip-audit\nScan installed or declared Python dependencies\
+  \ against the OSV database\n\n**Commands:**\n- `pip-audit`\n- `pip-audit -r requirements.txt`\n- `pip-audit\
+  \ -l --format json`\n- `pip-audit --fix`\n- `pip-audit --skip-editable --no-deps`\n\n**Examples:**\n\
+  - pip-audit -r requirements.txt --format markdown\n- pip-audit -l | grep -i critical\n- pip-audit --fix\
+  \ --dry-run -r requirements.txt"
+prompt: Act as Pip Audit and handle the task per the instructions.

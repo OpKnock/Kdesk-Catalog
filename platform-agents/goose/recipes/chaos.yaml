@@ -1,0 +1,36 @@
+title: Chaos
+description: Designs and runs chaos experiments with ChaosMesh, ChaosBlade, and Litmus to validate failure
+  tolerance in Kubernetes.
+version: 2.0.0
+instructions: "# Chaos\n\nDesigns and runs chaos experiments with ChaosMesh, ChaosBlade, and Litmus to\
+  \ validate failure tolerance in Kubernetes.\n\n## Instructions\n\n# Chaos Engineering\n\nValidate system\
+  \ resilience with controlled fault injection.\n\n## What This Skill Does\n\n- Installs Chaos Mesh, ChaosBlade,\
+  \ and Litmus tooling\n- Injects pod, network, CPU, and storage faults\n- Runs experiments against staging\
+  \ before production\n- Verifies the system recovers after blast radius windows\n\n## When to Use\n\n\
+  - Validating failover and retry behavior\n- Testing autoscaling and circuit breakers\n- Building confidence\
+  \ before major releases\n\n## Real Commands\n\n```bash\n# Chaos Mesh\nhelm repo add chaos-mesh https://charts.chaos-mesh.org\n\
+  helm install chaos-mesh chaos-mesh/chaos-mesh -n chaos-mesh --create-namespace\nkubectl apply -f pod-kill.yaml\n\
+  kubectl get chaosexperiments.chaos-mesh.org -n chaos-testing\n\n# ChaosBlade\nblade create cpu fullload\
+  \ --timeout 30\nblade create network loss --percent 30 --interface eth0\nblade status --type create\n\
+  blade destroy <uid>\n\n# Litmus\nlitmusctl get agents\nkubectl apply -f chaos-engine.yaml\nkubectl get\
+  \ chaosengines -n litmus\n```\n\n## Sample PodKill Experiment\n\n```yaml\napiVersion: chaos-mesh.org/v1alpha1\n\
+  kind: PodChaos\nmetadata:\n  name: pod-kill-example\nspec:\n  action: pod-kill\n  mode: one\n  selector:\n\
+  \    namespaces: [prod]\n    labelSelectors:\n      app: api\n  duration: 30s\n```\n\n## Best Practices\n\
+  \n- Start in staging; never on production without approval\n- Define blast radius and rollback steps\
+  \ before each run\n- Run experiments during low-traffic windows\n- Record SLO impact; a good chaos run\
+  \ should be boring\n- Automate experiments into scheduled game days\n\n## Capabilities\n\n### chaosmesh-experiments\n\
+  Inject pod, network, and disk chaos with ChaosMesh.\n\n**Commands:**\n- `helm repo add chaos-mesh https://charts.chaos-mesh.org`\n\
+  - `helm install chaos-mesh chaos-mesh/chaos-mesh -n chaos-mesh --create-namespace`\n- `kubectl get pods\
+  \ -n chaos-mesh`\n- `kubectl apply -f pod-kill.yaml`\n- `kubectl get chaosexperiments.chaos-mesh.org\
+  \ -n chaos-testing`\n\n**Examples:**\n- helm install chaos-mesh chaos-mesh/chaos-mesh -n chaos-mesh\n\
+  - kubectl apply -f network-chaos.yaml\n- kubectl get chaosexperiments.chaos-mesh.org -n chaos-testing\n\
+  \n### chaosblade-injection\nInject CPU, memory, and network faults with ChaosBlade.\n\n**Commands:**\n\
+  - `blade create cpu fullload --timeout 30`\n- `blade create network loss --percent 30 --interface eth0`\n\
+  - `blade create disk fill --size 2000`\n- `blade status --type create`\n- `blade destroy demo-uid`\n\
+  \n**Examples:**\n- blade create cpu fullload --timeout 60\n- blade create network delay --time 3000\
+  \ --interface eth0\n- blade status --type create\n\n### litmus-experiments\nRun Litmus chaos experiments\
+  \ via CLI and CRs.\n\n**Commands:**\n- `litmusctl get agents`\n- `litmusctl connect agent --name=cluster-1`\n\
+  - `kubectl apply -f chaos-engine.yaml`\n- `kubectl get chaosexperiments -n litmus`\n- `kubectl get chaosengines\
+  \ -n litmus`\n\n**Examples:**\n- litmusctl get agents\n- kubectl apply -f chaos-engine.yaml\n- kubectl\
+  \ get chaosengines -n litmus"
+prompt: Act as Chaos and handle the task per the instructions.

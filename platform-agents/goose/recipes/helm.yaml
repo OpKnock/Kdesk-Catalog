@@ -1,0 +1,33 @@
+title: helm
+description: 'Packages, installs, and manages Kubernetes applications with Helm: charts, repos, releases,
+  values, linting, and rollbacks.'
+version: 2.0.0
+instructions: "# helm\n\nPackages, installs, and manages Kubernetes applications with Helm: charts, repos,\
+  \ releases, values, linting, and rollbacks.\n\n## Instructions\n\n# Helm Package Management\n\nPackage\
+  \ and deploy Kubernetes apps with Helm charts and releases.\n\n## What This Skill Does\n\n- Creates,\
+  \ lints, and packages charts\n- Installs and upgrades releases with values files\n- Manages chart repositories\
+  \ and dependencies\n- Rolls back failed releases\n- Renders manifests with helm template for review\n\
+  \n## When to Use\n\n- Deploying a third-party app from a public chart (nginx, postgres, kafka)\n- Releasing\
+  \ your own application as a chart\n- Debugging why a rendered manifest differs from expectations\n\n\
+  ## Real Commands\n\n```bash\n# Repos and search\nhelm repo add bitnami https://charts.bitnami.com/bitnami\n\
+  helm repo update\nhelm search repo bitnami/nginx --versions\n\n# Install / upgrade\nhelm install myapp\
+  \ bitnami/nginx --namespace app --create-namespace\nhelm upgrade --install myapp ./chart --values prod.yaml\
+  \ --set image.tag=1.2.0\nhelm list -A\nhelm status myapp\n\n# Safety\nhelm template myapp ./chart --debug\
+  \ | less\nhelm lint ./chart\nhelm diff upgrade myapp ./chart --values prod.yaml    # with helm-diff\
+  \ plugin\nhelm rollback myapp 2\nhelm uninstall myapp\n```\n\n## Chart Structure\n\n```\nmychart/\n\
+  \  Chart.yaml          # apiVersion, name, version, dependencies\n  values.yaml         # defaults\n\
+  \  templates/\n    deployment.yaml\n    service.yaml\n    _helpers.tpl      # named templates\n  charts/\
+  \             # vendored dependencies\n```\n\n## Best Practices\n\n- Always run `helm lint` and `helm\
+  \ template` before install\n- Store values per environment (dev.yaml, prod.yaml), never edit defaults\
+  \ inline\n- Use `--atomic` on upgrades so failures auto-rollback\n- Pin chart versions with `--version`;\
+  \ use OCI registries when possible\n- Verify with `helm list` and `helm status` after any operation\n\
+  \n## Capabilities\n\n### releases\nInstall, upgrade, rollback, and uninstall chart releases.\n\n**Commands:**\n\
+  - `helm install myapp ./chart`\n- `helm upgrade --install myapp ./chart --values prod.yaml --namespace\
+  \ app`\n- `helm list -A`\n- `helm status myapp`\n- `helm rollback myapp 2`\n- `helm uninstall myapp`\n\
+  \n**Examples:**\n- helm upgrade --install myapp ./chart --values prod.yaml\n- helm rollback myapp 2\n\
+  - helm status myapp\n\n### chart-development\nCreate, lint, template, and package charts, plus manage\
+  \ repos.\n\n**Commands:**\n- `helm create mychart`\n- `helm lint ./mychart`\n- `helm template myapp\
+  \ ./mychart --debug`\n- `helm package ./mychart --version 1.2.0`\n- `helm repo add bitnami https://charts.bitnami.com/bitnami`\n\
+  - `helm search repo bitnami/nginx`\n- `helm dependency update ./mychart`\n\n**Examples:**\n- helm create\
+  \ mychart\n- helm template myapp ./mychart --debug\n- helm package ./mychart --version 1.2.0"
+prompt: Act as helm and handle the task per the instructions.

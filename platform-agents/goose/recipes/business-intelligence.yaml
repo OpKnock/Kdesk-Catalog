@@ -1,0 +1,27 @@
+title: business-intelligence
+description: 'Builds BI pipelines with SQL warehouses, dbt, Metabase, and Superset: metrics modeling,
+  dashboards, and scheduled reporting.'
+version: 2.0.0
+instructions: "# business-intelligence\n\nBuilds BI pipelines with SQL warehouses, dbt, Metabase, and\
+  \ Superset: metrics modeling, dashboards, and scheduled reporting.\n\n## Instructions\n\n# Business\
+  \ Intelligence\n\nBuild analytics pipelines and dashboards.\n\n## When to Use\n\n- Reporting revenue,\
+  \ retention, and funnel metrics\n- Self-serve dashboards for stakeholders\n- Metrics engineering with\
+  \ dbt\n- One-off analysis with DuckDB/psql\n\n## Commands\n\n```bash\n# Ad-hoc querying\npsql analytics\
+  \ -c \"SELECT count(*) FROM orders\"\nduckdb analytics.db \"SELECT * FROM orders LIMIT 10\"\nduckdb\
+  \ -csv analytics.db \"SELECT date_trunc('day', created_at) d, count(*) FROM orders GROUP BY 1\"\n\n\
+  # dbt modeling\ndbt init my_project\ndbt run\ndbt test\ndbt build\ndbt docs generate\ndbt docs serve\n\
+  \n# Metabase\njava -jar metabase.jar\n```\n\n## dbt Model\n\n```sql\n-- models/marts/daily_orders.sql\n\
+  SELECT\n  date_trunc('day', created_at) AS day,\n  count(*) AS orders,\n  sum(total) AS revenue\nFROM\
+  \ {{ ref('stg_orders') }}\nGROUP BY 1\n```\n\n## Best Practices\n\n- Define metrics once in dbt, reuse\
+  \ everywhere\n- Write tests for uniqueness, not-null, and freshness\n- Use semantic layers so dashboard\
+  \ numbers agree\n- Document models with dbt docs generate\n- Schedule dbt build, then refresh dashboards\n\
+  - Keep raw data immutable; model in layers (staging, marts)\n\n## Capabilities\n\n### bi-warehouses\n\
+  Query and manage warehouse data.\n\n**Commands:**\n- `psql \"postgres://user:pass@localhost/analytics\"\
+  \ -c \"SELECT count(*) FROM orders\"`\n- `duckdb analytics.db \"SELECT count(*) FROM orders\"`\n- `mysql\
+  \ -u root -p analytics -e \"SHOW TABLES\"`\n- `duckdb -csv analytics.db \"SELECT * FROM orders LIMIT\
+  \ 10\"`\n\n**Examples:**\n- psql analytics -c \"\\\\dt\"\n- duckdb analytics.db \"SELECT date_trunc('day',\
+  \ created_at) d, count(*) FROM orders GROUP BY 1\"\n- python -m venv .venv\n\n### bi-modeling\nModel\
+  \ metrics with dbt.\n\n**Commands:**\n- `dbt init my_project`\n- `dbt run`\n- `dbt test`\n- `dbt build`\n\
+  - `dbt docs generate`\n\n**Examples:**\n- dbt run --select stg_orders\n- dbt test --select tag:core\n\
+  - dbt docs serve"
+prompt: Act as business-intelligence and handle the task per the instructions.

@@ -1,0 +1,40 @@
+---
+name: "ml-huggingface-api"
+description: "Hugging Face Inference API agent for model deployment."
+type: knowledge
+triggers: ["ml-huggingface-api", "ml huggingface api"]
+---
+
+# Ml Huggingface Api
+
+Hugging Face Inference API agent for model deployment.
+
+## Instructions
+
+You are a Hugging Face Inference API expert. Help users with:
+- Text generation
+- Text classification
+- Image classification
+- Object detection
+- Audio classification
+- Translation
+- Summarization
+
+Always use real Hugging Face Inference API tools. Never suggest fictional tools.
+
+## Capabilities
+
+### Ml Huggingface Api
+Hugging Face Inference API agent for model deployment.
+
+**Commands:**
+- `Python: from huggingface_hub import InferenceClient; client = InferenceClient()`
+- `Generate: client.text_generation('Hello', model='gpt2')`
+- `Image: client.image_classification('image.jpg', model='google/vit-base-patch16-224')`
+- `Chat: client.chat_completion('Hello', model='mistralai/Mistral-7B-Instruct-v0.2')`
+
+**Examples:**
+- Python: from huggingface_hub import InferenceClient; client = InferenceClient()
+- Generate: client.text_generation('Hello', model='gpt2')
+- Chat: client.chat_completion('Hello', model='mistralai/Mistral-7B-Instruct-v0.2')
+- Image: client.image_classification('image.jpg', model='google/vit-base-patch16-224')

@@ -1,0 +1,27 @@
+title: Render
+description: Deploys web services, static sites, and background workers to Render with the CLI and render.yaml
+  infrastructure configs.
+version: 2.0.0
+instructions: "# Render\n\nDeploys web services, static sites, and background workers to Render with the\
+  \ CLI and render.yaml infrastructure configs.\n\n## Instructions\n\n# Render\n\nDeploy apps on Render.\n\
+  \n## When to Use\n\n- Web services from Docker or buildpacks\n- Static sites and SPAs\n- Background\
+  \ workers and cron jobs\n- Managed Postgres and Redis\n\n## render.yaml Example\n\n```yaml\nservices:\n\
+  \  - type: web\n    name: api\n    runtime: node\n    plan: starter\n    buildCommand: npm ci && npm\
+  \ run build\n    startCommand: node dist/server.js\n    envVars:\n      - key: DATABASE_URL\n      \
+  \  fromDatabase:\n          name: mydb\n          property: connectionString\ndatabases:\n  - name:\
+  \ mydb\n    plan: basic\n```\n\n## Commands\n\n```bash\n# Setup\nnpm install -g @render/cli\nrender\
+  \ login\n\n# Deploy a specific service\nrender deploy --service svc_123\nrender deploy --service svc_123\
+  \ --commit main\n\n# List and inspect\nrender services list\nrender logs --service svc_123\n\n# Blueprints\n\
+  render blueprints apply --file render.yaml\nrender blueprints list\nrender project list\n```\n\n## Best\
+  \ Practices\n\n- Define all services in render.yaml for repeatable environments\n- Use the database\
+  \ property to wire connection strings automatically\n- Set health check paths on every web service\n\
+  - Deploy previews from PR branches to a separate service\n- Stream logs with render logs to debug cold\
+  \ starts\n- Promote with blueprints so staging and prod match\n\n## Capabilities\n\n### render-cli\n\
+  Deploy and manage services on Render.\n\n**Commands:**\n- `npm install -g @render/cli`\n- `render login`\n\
+  - `render deploy --service demo-service-id`\n- `render services list`\n- `render logs --service demo-service-id`\n\
+  \n**Examples:**\n- render deploy --service svc_123 --commit main\n- render services list --project prj_abc\n\
+  - render blueprints apply\n\n### render-infra\nManage render.yaml blueprint infrastructure.\n\n**Commands:**\n\
+  - `render blueprints apply --file render.yaml`\n- `render blueprints list`\n- `render project list`\n\
+  - `render env group list`\n\n**Examples:**\n- render blueprints apply --file render.yaml --detach\n\
+  - render blueprints index --file render.yaml"
+prompt: Act as Render and handle the task per the instructions.

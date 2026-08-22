@@ -1,0 +1,94 @@
+---
+description: "Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability."
+globs: ["**/*.json", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Honeycomb Observability
+
+Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability.
+
+## Instructions
+
+# Honeycomb Observability
+
+Query and instrument with Honeycomb from the CLI.
+
+## What this skill does
+
+- Logs into Honeycomb from the CLI and lists datasets.
+- Runs ad-hoc queries against live data (time ranges, breakdowns, calculations).
+- Posts raw events for testing ingestion.
+- Wires OpenTelemetry exporters to Honeycomb.
+
+## When to use
+
+- Investigating a latency spike with a quick query.
+- Verifying a service is sending telemetry to the right dataset.
+- Bootstrapping OTLP config for new services.
+
+## Real commands
+
+```bash
+# Authenticate
+honeycomb auth login
+
+# List datasets
+honeycomb dataset list
+
+# Run a query: count of events per app.name in the last hour
+honeycomb query run --dataset myservice '{
+  "time_range": 3600,
+  "breakdowns": ["app.name"],
+  "calculations": [{"op": "COUNT"}]
+}'
+
+# Post a test event
+honeycomb events post --dataset myservice --json '{"name":"GET /api","duration_ms":42}'
+```
+
+## OTLP wiring
+
+```bash
+export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io
+export OTEL_EXPORTER_OTLP_HEADERS="x-honeycomb-team=$HONEYCOMB_API_KEY"
+export OTEL_SERVICE_NAME=myservice
+```
+
+## Testing
+
+```bash
+honeycomb events post --dataset myservice --json '{"check":"pipeline"}' \
+  && honeycomb query run --dataset myservice '{"time_range": 300, "calculations": [{"op": "COUNT"}]}'
+```
+
+## Best practices
+
+- Set a meaningful service name for every service so breakdowns work.
+- Keep dataset names consistent with service names.
+- Use derived columns for slow queries instead of heavy breakdowns.
+- Store the API key in the honeycomb CLI keyring, not in code.
+
+## Example exchange
+
+```
+User: Which app version is generating 500s right now?
+Agent: honeycomb query run --dataset myservice '{"time_range": 900, "breakdowns": ["app.version"], "calculations": [{"op":"COUNT","field":"*"}]}'
+```
+
+## Capabilities
+
+### honeycomb-ops
+Manage datasets, run queries, and send events with the Honeycomb CLI.
+
+**Commands:**
+- `honeycomb auth login`
+- `honeycomb dataset list`
+- `honeycomb query run --dataset myservice '{"time_range": 3600, "breakdowns": ["app.name"], "calculations": [{"op": "COUNT"}]}'`
+- `honeycomb events post --dataset myservice --json '{"name":"GET /api","duration_ms":42}'`
+- `honeycomb --version`
+
+**Examples:**
+- honeycomb query run --dataset myservice '{"time_range": 900, "order": [{"op": "COUNT"}]}'
+- honeycomb dataset create frontend
+- export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io

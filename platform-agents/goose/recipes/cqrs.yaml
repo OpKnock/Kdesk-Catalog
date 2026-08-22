@@ -1,0 +1,43 @@
+title: Cqrs
+description: 'Implement Command Query Responsibility Segregation with EventStoreDB: append events, project
+  read models, and query them.'
+version: 2.0.0
+instructions: "# Cqrs\n\nImplement Command Query Responsibility Segregation with EventStoreDB: append\
+  \ events, project read models, and query them.\n\n## Instructions\n\n# CQRS\n\nSeparate writes (commands)\
+  \ from reads (queries) with event sourcing.\n\n## When to Use\n\n- Read-heavy APIs where the write model\
+  \ is not query-friendly\n- Event-driven systems with audit requirements\n- Scaling reads independently\
+  \ from writes\n\n## Start EventStoreDB\n\n```bash\ndocker run -d --name eventstore -p 2113:2113 eventstore/eventstore:latest\
+  \ --insecure\n```\n\n## Append Events (Commands)\n\n```bash\ncurl -X POST http://localhost:2113/streams/order-1\
+  \ \\\n  -H \"Content-Type: application/json\" \\\n  -H \"ES-EventType: OrderPlaced\" \\\n  -H \"ES-EventId:\
+  \ $(uuidgen)\" \\\n  -d '{\"data\":{\"amount\":100}}'\n```\n\nUse ES-ExpectedVersion for optimistic\
+  \ concurrency on commands.\n\n## Read Events (Queries)\n\n```bash\ncurl http://localhost:2113/streams/order-1\
+  \ -H \"Accept: application/json\" | jq '.entries[].eventType'\ncurl http://localhost:2113/streams/order-1\
+  \ -H \"Accept: application/json\" | jq '.entries[].data'\n```\n\n## Projections (Read Models)\n\n```json\n\
+  {\n  \"name\": \"order-totals\",\n  \"type\": \"JS\",\n  \"enabled\": true,\n  \"query\": \"fromAll().when({\
+  \ OrderPlaced: function(s, e) { s.total = (s.total || 0) + e.data.amount; return s; } })\"\n}\n```\n\
+  \n```bash\ncurl -X POST http://localhost:2113/projections/continuous \\\n  -H \"Content-Type: application/json\"\
+  \ -H \"ES-ExpectedVersion: -1\" -d @projection.json\ncurl http://localhost:2113/projection/order-totals/state\
+  \ -H \"Accept: application/json\"\n```\n\n## Testing\n\n```bash\ncurl -s -o /dev/null -w \"%{http_code}\\\
+  n\" http://localhost:2113/streams/order-1\ncurl -s http://localhost:2113/streams/order-1 -H \"Accept:\
+  \ application/json\" | jq '.entries | length'\n```\n\n## Best Practices\n\n- Never store mutable state\
+  \ as the source of truth; events are\n- Use ES-ExpectedVersion to prevent write conflicts\n- Build read\
+  \ models via projections or materialized views\n- Query the read model, never the event store\n- Version\
+  \ events for schema evolution\n\n## Capabilities\n\n### eventstore\nRun EventStoreDB and append/read\
+  \ events via its HTTP API\n\n**Commands:**\n- `docker run -d --name eventstore -p 2113:2113 eventstore/eventstore:latest\
+  \ --insecure`\n- `curl -X POST http://localhost:2113/streams/order-1 -H \"Content-Type: application/json\"\
+  \ -H \"ES-EventType: OrderPlaced\" -H \"ES-EventId: $(uuidgen)\" -d '{\"data\":{\"amount\":100}}'`\n\
+  - `curl http://localhost:2113/streams/order-1 -H \"Accept: application/json\"`\n- `curl -X POST http://localhost:2113/streams/order-1\
+  \ -H \"Content-Type: application/json\" -H \"ES-ExpectedVersion: 0\" -H \"ES-EventType: OrderPaid\"\
+  \ -H \"ES-EventId: $(uuidgen)\" -d '{\"data\":{\"paid\":true}}'`\n\n**Examples:**\n- curl -X POST http://localhost:2113/streams/order-1\
+  \ -H \"Content-Type: application/json\" -H \"ES-EventType: OrderPlaced\" -H \"ES-EventId: $(uuidgen)\"\
+  \ -d '{\"data\":{\"amount\":100}}'\n- curl http://localhost:2113/streams/order-1 -H \"Accept: application/json\"\
+  \ | jq '.entries[].eventType'\n- curl -s http://localhost:2113/streams/order-1 -H \"Accept: application/vnd.eventstore.atom+json\"\
+  \ | jq '.entries | length'\n\n### read-models\nProject events into queryable read models and consume\
+  \ streams\n\n**Commands:**\n- `curl http://localhost:2113/streams/order-1 -H \"Accept: application/json\"\
+  \ | jq '.entries[].data'`\n- `curl -X POST http://localhost:2113/projections/continuous -H \"Content-Type:\
+  \ application/json\" -H \"ES-ExpectedVersion: -1\" -d @projection.json`\n- `curl http://localhost:2113/projection/order-totals/state\
+  \ -H \"Accept: application/json\"`\n- `curl http://localhost:2113/streams/order-1/-1/backward/10 -H\
+  \ \"Accept: application/json\"`\n\n**Examples:**\n- curl http://localhost:2113/projection/order-totals/state\
+  \ -H \"Accept: application/json\" | jq '.total'\n- curl http://localhost:2113/streams/order-1 -H \"\
+  Accept: application/json\" | jq '.entries[].data'\n- curl -s -o /dev/null -w \"%{http_code}\" http://localhost:2113/streams/order-1"
+prompt: Act as Cqrs and handle the task per the instructions.

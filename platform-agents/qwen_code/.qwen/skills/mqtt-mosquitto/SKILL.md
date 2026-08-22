@@ -1,0 +1,80 @@
+---
+name: "mqtt-mosquitto"
+description: "Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS listeners."
+---
+
+# Mqtt Mosquitto
+
+Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS listeners.
+
+## Instructions
+
+# Mosquitto
+
+Mosquitto is the reference open-source MQTT broker, ideal for small/medium deployments and local dev.
+
+## What this skill does
+
+- Starts and configures the mosquitto daemon
+- Publishes/subscribes with the command-line clients
+- Manages password files and TLS listeners
+
+## When to use
+
+- Local MQTT development and testing
+- Small production deployments
+- Teaching/verifying MQTT semantics
+
+## Real commands
+
+```bash
+# Run broker with config
+mosquitto -c /etc/mosquitto/mosquitto.conf
+
+# Pub/sub basics
+mosquitto_pub -h localhost -t sensors/temp -m "21.5"
+mosquitto_sub -h localhost -t 'sensors/#' -v
+
+# QoS 1 + retained
+mosquitto_pub -h localhost -t test -m "keep" -r -q 1
+
+# Password file
+mosquitto_passwd -c /etc/mosquitto/passwd myuser
+
+# TLS publish
+mosquitto_pub -h broker.example.com -p 8883 --cafile ca.crt -t secure/topic -m hi
+```
+
+## Config essentials
+
+```conf
+listener 1883
+allow_anonymous false
+password_file /etc/mosquitto/passwd
+listener 8883
+certfile /etc/mosquitto/certs/server.crt
+keyfile /etc/mosquitto/certs/server.key
+```
+
+## Best practices
+
+- Always disable `allow_anonymous` in production
+- Use `$SYS/#` to verify broker health
+- Test QoS 2 delivery with `mosquitto_sub -q 2`
+
+## Capabilities
+
+### mosquitto-operations
+Run the mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, retained messages and TLS.
+
+**Commands:**
+- `mosquitto -c /etc/mosquitto/mosquitto.conf`
+- `mosquitto_pub -h localhost -t sensors/temp -m "21.5"`
+- `mosquitto_sub -h localhost -t 'sensors/#' -v`
+- `mosquitto_passwd -c /etc/mosquitto/passwd myuser`
+- `mosquitto_pub -h localhost -t test -m "keep" -r -q 1`
+
+**Examples:**
+- mosquitto_sub -t '$SYS/#' -v
+- mosquitto_pub -h broker.example.com -p 8883 --cafile ca.crt -t secure/topic -m hi
+- mosquitto_sub -q 2 -t 'orders/+' -v

@@ -1,0 +1,86 @@
+---
+applyTo: "**/*.html **/*.json **/*.r **/*.sh"
+---
+
+# kube-hunter
+
+Probes Kubernetes clusters for exploitable attack surfaces with kube-hunter active and passive scans.
+
+## Instructions
+
+# kube-hunter
+
+Penetration-test your Kubernetes cluster's attack surface.
+
+## What This Skill Does
+
+- Discovers clusters on local interfaces, remotes, or CIDRs
+- Runs passive checks for known misconfigurations
+- Runs active hunts for exposed API, dashboard, or RBAC issues
+- Reports vulnerabilities with severity and remediation
+
+## When to Use
+
+- Pre-launch security assessment of a cluster
+- Checking whether admin interfaces are exposed externally
+- Recurring attack-surface audits
+
+## Real Commands
+
+```bash
+# Discover from the local network
+kube-hunter
+kube-hunter --interface eth0
+
+# Scan a remote API server
+kube-hunter --remote k8s-api.example.com:6443
+
+# Scan a subnet
+kube-hunter --cidr 10.0.0.0/24
+
+# Active hunting (tests exploits, use with care)
+kube-hunter --active --remote 10.0.0.5:6443
+
+# Reporting
+kube-hunter --report report.html
+kube-hunter --report findings.json --format json
+```
+
+## Best Practices
+
+- Run active hunts only against test clusters or with authorization
+- Pair with kube-bench (static CIS) for complementary coverage
+- Re-run after networking or RBAC changes
+- Treat findings as attack-surface candidates, not proof of compromise
+- Automate passive scans weekly; active scans on release cadence
+
+## Capabilities
+
+### cluster-hunting
+Scan clusters locally, remotely, or across CIDR ranges.
+
+**Commands:**
+- `kube-hunter`
+- `kube-hunter --remote 10.0.0.5:6443`
+- `kube-hunter --cidr 10.0.0.0/24`
+- `kube-hunter --active`
+- `kube-hunter --interface eth0`
+
+**Examples:**
+- kube-hunter --remote k8s-api.example.com:6443
+- kube-hunter --cidr 192.168.1.0/24
+- kube-hunter --active --remote 10.0.0.5:6443
+
+### reporting
+Capture findings to reports and logs.
+
+**Commands:**
+- `kube-hunter --report report.json --format json`
+- `kube-hunter --report report.html --format html`
+- `kube-hunter --log /tmp/kube-hunter.log`
+- `kube-hunter --active --report report.html`
+
+**Examples:**
+- kube-hunter --report report.html
+- kube-hunter --report findings.json --format json
+- kube-hunter --active --report report.html

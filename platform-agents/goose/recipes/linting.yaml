@@ -1,0 +1,27 @@
+title: linting
+description: Generic linting skill that sets up and runs ESLint across JS/TS projects, fixing problems
+  and wiring checks into CI.
+version: 2.0.0
+instructions: "# linting\n\nGeneric linting skill that sets up and runs ESLint across JS/TS projects,\
+  \ fixing problems and wiring checks into CI.\n\n## Instructions\n\n# Linting\n\nGeneral-purpose linting\
+  \ skill centered on ESLint for JavaScript/TypeScript projects,\ncovering setup, auto-fix, rulesets,\
+  \ and CI wiring.\n\n## When to Use\n\n- Setting up linting from scratch in a JS/TS project\n- Applying\
+  \ auto-fixes to a codebase with thousands of violations\n- Adding TypeScript-aware lint rules\n- Making\
+  \ linting a blocking gate in CI\n\n## Real Commands\n\n```bash\n# Initialize ESLint interactively\n\
+  npm init @eslint/config\n\n# Lint a directory\nnpx eslint src/\n\n# Auto-fix everything possible\nnpx\
+  \ eslint --fix .\n\n# Strict gate: no warnings allowed\nnpx eslint --ext .js,.ts --max-warnings 0\n\n\
+  # Cache results for speed on big repos\nnpx eslint --cache --cache-location node_modules/.cache/eslint\n\
+  \n# Machine-readable output\nnpx eslint --format json --output-file eslint-report.json .\n```\n\n##\
+  \ Example Config (eslint.config.js)\n\n```js\nexport default [\n  { ignores: [\"dist/\", \"coverage/\"\
+  ] },\n  ...js.configs.recommended,\n  ...tseslint.configs.recommended,\n  {\n    rules: {\n      \"\
+  no-unused-vars\": \"error\",\n      \"@typescript-eslint/no-explicit-any\": \"warn\"\n    }\n  }\n];\n\
+  ```\n\n## CI Gate\n\n```yaml\n- name: Lint\n  run: npx eslint . --max-warnings 0\n```\n\n## Best Practices\n\
+  \n- Use `--max-warnings 0` in CI so warnings can't accumulate\n- Turn on `--cache` locally for speed,\
+  \ but allow cache to be written in CI\n- Prefer flat config (`eslint.config.js`) over deprecated `.eslintrc`\n\
+  - Run `--fix` first, then review the remaining errors manually\n\n## Capabilities\n\n### eslint-linting\n\
+  Configure ESLint, run checks, auto-fix, and integrate with CI for JavaScript and TypeScript\n\n**Commands:**\n\
+  - `npx eslint src/`\n- `npx eslint --fix .`\n- `npx eslint --ext .js,.jsx,.ts,.tsx --max-warnings 0`\n\
+  - `npx eslint --cache --report-unused-disable-directives`\n- `npx eslint --format json --output-file\
+  \ eslint-report.json src/`\n\n**Examples:**\n- npx eslint src/ --rule 'no-console: error'\n- npx eslint\
+  \ . --fix --ext .ts --quiet\n- npx eslint --print-config src/index.ts | jq '.rules[\"no-console\"]'"
+prompt: Act as linting and handle the task per the instructions.

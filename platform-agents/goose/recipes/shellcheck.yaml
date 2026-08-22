@@ -1,0 +1,26 @@
+title: shellcheck
+description: Finds bugs and portability issues in shell scripts with ShellCheck, including CI and JSON
+  output.
+version: 2.0.0
+instructions: "# shellcheck\n\nFinds bugs and portability issues in shell scripts with ShellCheck, including\
+  \ CI and JSON output.\n\n## Instructions\n\n# ShellCheck\n\nStatic analysis for shell scripts: quoting\
+  \ bugs, unportable syntax, and undefined\nvariable misuse.\n\n## When to Use\n\n- Reviewing CI scripts,\
+  \ deploy scripts, and init scripts\n- Enforcing shell hygiene across a repo\n- Catching quote bugs that\
+  \ fail only at runtime\n\n## Real Commands\n\n```bash\n# Install (apt/brew)\nsudo apt install shellcheck\n\
+  \n# Check one script\nshellcheck deploy.sh\n\n# Follow sourced files with -x\nshellcheck -x scripts/*.sh\n\
+  \n# Only warnings and above\nshellcheck --severity=warning scripts/\n\n# Ignore specific codes (e.g.\
+  \ SC2086 unquoted vars you accept)\nshellcheck -e SC2086,SC1091 scripts/start.sh\n\n# JSON output for\
+  \ dashboards\nshellcheck --format=json scripts/ > shellcheck-report.json\n\n# gcc-format for editor\
+  \ integration\nshellcheck --format=gcc scripts/*.sh\n```\n\n## CI\n\n```yaml\n- name: ShellCheck\n \
+  \ run: shellcheck --severity=warning --exclude=SC1091 scripts/*.sh\n```\n\n## Best Practices\n\n- Always\
+  \ quote variable expansions (`\"$var\"`) - SC2086\n- Use `[[ ]]` instead of `[ ]` in bash scripts\n\
+  - Add `set -euo pipefail` at the top of every script\n- Exclude codes with a comment, never silently:\
+  \ `# shellcheck disable=SC2154`\n- Run on the CI platform shell, not just locally\n\n## Example Response\n\
+  \nLists findings as `file:line:col: severity: message [SC-code]` with the explanation\nlink, then the\
+  \ agent applies the suggested fix and re-runs until clean.\n\n## Capabilities\n\n### shellcheck\nAnalyze\
+  \ shell scripts with severity levels, excludes, and CI formats\n\n**Commands:**\n- `shellcheck script.sh`\n\
+  - `shellcheck -x scripts/*.sh`\n- `shellcheck --severity=warning scripts/`\n- `shellcheck --format=json\
+  \ script.sh > sc.json`\n- `shellcheck -e SC2086,SC1091 deploy.sh`\n\n**Examples:**\n- find . -name '*.sh'\
+  \ -exec shellcheck {} +\n- shellcheck --shell=bash --external-sources setup.sh\n- shellcheck --exclude=SC2317\
+  \ --format=gcc ci.sh"
+prompt: Act as shellcheck and handle the task per the instructions.

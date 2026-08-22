@@ -1,0 +1,34 @@
+title: httprouter
+description: 'Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping,
+  and benchmark-grade request dispatch.'
+version: 2.0.0
+instructions: "# httprouter\n\nGo httprouter: radix-tree routing with typed path params, method handlers,\
+  \ middleware wrapping, and benchmark-grade request dispatch.\n\n## Instructions\n\n# httprouter\n\n\
+  High-performance radix-tree routing for Go.\n\n## What this skill does\n45:   \n- Registers typed routes\
+  \ with :param path segments.\n- Dispatches by HTTP method automatically.\n46:   - Wraps handlers with\
+  \ middleware the standard library way.\n- Serves 404/405 with method-specific handling.\n47:   \n##\
+  \ When to use\n\n- A Go service needs fast routing without framework weight.\n- You want explicit48:\
+  \    path parameters instead of string parsing.\n- Serving REST endpoints with clean method separation.\n\
+  49:   \n## Real commands\n\n```bash\n# Install\ngo get github.com/julienschmidt/httprouter@latest\n\n\
+  # Build,50:    vet, test\ngo build -o app .\ngo vet ./...\ngo test ./...\n\n# Run and hit a param route\n\
+  go run .51:    &\ncurl -X GET http://localhost:8080/users/42\n```\n\n## Router setup\n\n```go\npackage\
+  \ main\n\nimport52:    (\n    \"fmt\"\n    \"net/http\"\n    \"github.com/julienschmidt/httprouter\"\
+  \n)\n\nfunc Hello(w http.ResponseWriter,53:    r *http.Request, ps httprouter.Params) {\n    fmt.Fprintf(w,\
+  \ \"hello, %s!\", ps.ByName(\"name\"))\n54:   }\n\nfunc main() {\n    router := httprouter.New()\n \
+  \   router.GET(\"/hello/:name\", Hello)\n    router.POST(\"55:   /users\", CreateUser)\n    router.PUT(\"\
+  /users/:id\", UpdateUser)\n    router.DELETE(\"/users/:id\"56:   , DeleteUser)\n    http.ListenAndServe(\"\
+  :8080\", router)\n}\n```\n\n## Middleware wrapper\n\n```go\n57:   func logging(next httprouter.Handle)\
+  \ httprouter.Handle {\n    return func(w http.ResponseWriter, r *http.Request,58:    ps httprouter.Params)\
+  \ {\n        log.Printf(\"%s %s\", r.Method, r.URL.Path)\n        next(w, r, ps)\n59:       }\n}\n\n\
+  router.GET(\"/users/:id\", logging(GetUser))\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:8080/hello/world\n\
+  60:   go test -bench=. -benchmem ./...\n```\n\n## Best practices\n\n- Path params are matched in a single61:\
+  \    segment; use `:name` not `*` for required parts.\n- Wrap handlers with standard `func(http.Handler,62:\
+  \    ...) http.Handler` style for reuse.\n- Set `router.RedirectTrailingSlash = true` consciously; it\
+  \ can63:    surprise clients.\n- Keep handlers httprouter.Handle-typed to use Params without globals.\n\
+  \n## Example64:    exchange\n\n```\nUser: Add a GET /users/:id route.\nAgent: router.GET(\"/users/:id\"\
+  , func(w, r, ps)65:    { id := ps.ByName(\"id\") ... })\n```\n\n## Capabilities\n\n### httprouter-routing\n\
+  Build typed HTTP routes with httprouter and wrap handlers with middleware.\n\n**Commands:**\n- `go get\
+  \ github.com/julienschmidt/httprouter@latest`\n- `go build -o app .`\n- `go test ./...`\n- `go vet ./...`\n\
+  - `curl -X GET http://localhost:8080/users/42`\n\n**Examples:**\n- go run . & curl -s http://localhost:8080/hello/world\n\
+  - go test -bench=. -benchmem ./...\n- curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/users/42"
+prompt: Act as httprouter and handle the task per the instructions.

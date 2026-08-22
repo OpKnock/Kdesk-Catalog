@@ -1,0 +1,67 @@
+title: kafka-cli
+description: Kafka CLI commands. Real kafka CLI.
+version: 1.0.0
+instructions: "# kafka-cli\n\nKafka CLI commands. Real kafka CLI.\n\n## Instructions\n\n# Kafka CLI\n\n\
+  Kafka CLI commands using real CLI.\n\n## When to Use\n\n- Kafka operations\n- Message streaming\n- Topic\
+  \ management\n\n## Commands\n\n```bash\n# Install\nbrew install kafka  # macOS\n\n# Create topic\nkafka-topics\
+  \ --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092\n\
+  \n# List topics\nkafka-topics --list --bootstrap-server localhost:9092\n\n# Describe topic\nkafka-topics\
+  \ --describe --topic mytopic --bootstrap-server localhost:9092\n\n# Delete topic\nkafka-topics --delete\
+  \ --topic mytopic --bootstrap-server localhost:9092\n\n# Produce\nkafka-console-producer --topic mytopic\
+  \ --bootstrap-server localhost:9092\n\n# Consume\nkafka-console-consumer --topic mytopic --from-beginning\
+  \ --bootstrap-server localhost:9092\n\n# Consumer groups\nkafka-consumer-groups --list --bootstrap-server\
+  \ localhost:9092\n\n# Describe group\nkafka-consumer-groups --describe --group mygroup --bootstrap-server\
+  \ localhost:9092\n```\n\n## Topic Operations\n\n```bash\n# Create topic\nkafka-topics --create --topic\
+  \ mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092\n\n# List topics\n\
+  kafka-topics --list --bootstrap-server localhost:9092\n\n# Describe topic\nkafka-topics --describe --topic\
+  \ mytopic --bootstrap-server localhost:9092\n\n# Delete topic\nkafka-topics --delete --topic mytopic\
+  \ --bootstrap-server localhost:9092\n\n# Alter topic\nkafka-topics --alter --topic mytopic --partitions\
+  \ 6 --bootstrap-server localhost:9092\n\n# Config\nkafka-topics --alter --topic mytopic --config retention.ms=86400000\
+  \ --bootstrap-server localhost:9092\n```\n\n## Producer\n\n```bash\n# Produce\nkafka-console-producer\
+  \ --topic mytopic --bootstrap-server localhost:9092\n\n# Produce with key\nkafka-console-producer --topic\
+  \ mytopic --property parse.key=true --property key.separator=: --bootstrap-server localhost:9092\n\n\
+  # Produce from file\nkafka-console-producer --topic mytopic --bootstrap-server localhost:9092 < messages.txt\n\
+  ```\n\n## Consumer\n\n```bash\n# Consume\nkafka-console-consumer --topic mytopic --from-beginning --bootstrap-server\
+  \ localhost:9092\n\n# Consume with key\nkafka-console-consumer --topic mytopic --property print.key=true\
+  \ --property key.separator=: --from-beginning --bootstrap-server localhost:9092\n\n# Consume with group\n\
+  kafka-console-consumer --topic mytopic --group mygroup --from-beginning --bootstrap-server localhost:9092\n\
+  \n# Consume with max messages\nkafka-console-consumer --topic mytopic --max-messages 10 --bootstrap-server\
+  \ localhost:9092\n```\n\n## Consumer Groups\n\n```bash\n# List groups\nkafka-consumer-groups --list\
+  \ --bootstrap-server localhost:9092\n\n# Describe group\nkafka-consumer-groups --describe --group mygroup\
+  \ --bootstrap-server localhost:9092\n\n# Reset offset\nkafka-consumer-groups --group mygroup --topic\
+  \ mytopic --reset-offsets --to-earliest --execute --bootstrap-server localhost:9092\n\n# Delete group\n\
+  kafka-consumer-groups --delete --group mygroup --bootstrap-server localhost:9092\n```\n\n## Examples\n\
+  \n```bash\n# Create topic\nkafka-topics --create --topic mytopic --partitions 3 --replication-factor\
+  \ 1 --bootstrap-server localhost:9092\n\n# Produce\nkafka-console-producer --topic mytopic --bootstrap-server\
+  \ localhost:9092\n\n# Consume\nkafka-console-consumer --topic mytopic --from-beginning --bootstrap-server\
+  \ localhost:9092\n```\n\n## CI/CD\n\n```yaml\n# GitHub Actions\n- name: Kafka CLI\n  run: |\n    kafka-topics\
+  \ --list --bootstrap-server localhost:9092\n\n# GitLab CI\nkafka:\n  stage: test\n  script:\n    - kafka-topics\
+  \ --list --bootstrap-server localhost:9092\n```\n\n## Capabilities\n\n### kafka-cli\nKafka CLI commands.\
+  \ Real kafka CLI.\n\n**Commands:**\n- `brew install kafka`\n- `kafka-topics --create --topic mytopic\
+  \ --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092`\n- `kafka-topics --list --bootstrap-server\
+  \ localhost:9092`\n- `kafka-topics --describe --topic mytopic --bootstrap-server localhost:9092`\n-\
+  \ `kafka-topics --delete --topic mytopic --bootstrap-server localhost:9092`\n- `kafka-console-producer\
+  \ --topic mytopic --bootstrap-server localhost:9092`\n- `kafka-console-consumer --topic mytopic --from-beginning\
+  \ --bootstrap-server localhost:9092`\n- `kafka-consumer-groups --list --bootstrap-server localhost:9092`\n\
+  - `kafka-consumer-groups --describe --group mygroup --bootstrap-server localhost:9092`\n- `kafka-topics\
+  \ --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092`\n\
+  - `kafka-topics --list --bootstrap-server localhost:9092`\n- `kafka-topics --describe --topic mytopic\
+  \ --bootstrap-server localhost:9092`\n- `kafka-topics --delete --topic mytopic --bootstrap-server localhost:9092`\n\
+  - `kafka-topics --alter --topic mytopic --partitions 6 --bootstrap-server localhost:9092`\n- `kafka-topics\
+  \ --alter --topic mytopic --config retention.ms=86400000 --bootstrap-server localhost:9092`\n- `kafka-console-producer\
+  \ --topic mytopic --bootstrap-server localhost:9092`\n- `kafka-console-producer --topic mytopic --property\
+  \ parse.key=true --property key.separator=: --bootstrap-server localhost:9092`\n- `kafka-console-producer\
+  \ --topic mytopic --bootstrap-server localhost:9092 < messages.txt`\n- `kafka-console-consumer --topic\
+  \ mytopic --from-beginning --bootstrap-server localhost:9092`\n- `kafka-console-consumer --topic mytopic\
+  \ --property print.key=true --property key.separator=: --from-beginning --bootstrap-server localhost:9092`\n\
+  - `kafka-console-consumer --topic mytopic --group mygroup --from-beginning --bootstrap-server localhost:9092`\n\
+  - `kafka-console-consumer --topic mytopic --max-messages 10 --bootstrap-server localhost:9092`\n- `kafka-consumer-groups\
+  \ --list --bootstrap-server localhost:9092`\n- `kafka-consumer-groups --describe --group mygroup --bootstrap-server\
+  \ localhost:9092`\n- `kafka-consumer-groups --group mygroup --topic mytopic --reset-offsets --to-earliest\
+  \ --execute --bootstrap-server localhost:9092`\n- `kafka-consumer-groups --delete --group mygroup --bootstrap-server\
+  \ localhost:9092`\n- `kafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server\
+  \ localhost:9092`\n- `kafka-console-producer --topic mytopic --bootstrap-server localhost:9092`\n- `kafka-console-consumer\
+  \ --topic mytopic --from-beginning --bootstrap-server localhost:9092`\n\n**Examples:**\n- brew install\
+  \ kafka\n- kafka-topics --create --topic mytopic --partitions 3 --replication-factor 1 --bootstrap-server\
+  \ localhost:9092\n- kafka-topics --list --bootstrap-server localhost:9092"
+prompt: Act as kafka-cli and handle the task per the instructions.

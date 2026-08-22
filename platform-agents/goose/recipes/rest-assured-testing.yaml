@@ -1,0 +1,36 @@
+title: rest-assured-testing
+description: REST Assured Java API testing. Real REST Assured CLI.
+version: 1.0.0
+instructions: "# rest-assured-testing\n\nREST Assured Java API testing. Real REST Assured CLI.\n\n## Instructions\n\
+  \n# REST Assured\n\nREST Assured Java API testing using real CLI.\n\n## When to Use\n\n- Java API testing\n\
+  - REST endpoint validation\n- JSON/XML validation\n- Schema validation\n\n## Commands\n\n```bash\n#\
+  \ Run with Maven\nmvn test -Dtest=UsersApiTest\n\n# Run with Gradle\n./gradlew test --tests \"com.example.UsersApiTest\"\
+  \n```\n\n## Dependencies\n\n```xml\n<!-- pom.xml -->\n<dependency>\n    <groupId>io.rest-assured</groupId>\n\
+  \    <artifactId>rest-assured</artifactId>\n    <version>5.4.0</version>\n    <scope>test</scope>\n\
+  </dependency>\n<dependency>\n    <groupId>io.rest-assured</groupId>\n    <artifactId>json-schema-validator</artifactId>\n\
+  \    <version>5.4.0</version>\n    <scope>test</scope>\n</dependency>\n```\n\n```kotlin\n// build.gradle.kts\n\
+  testImplementation(\"io.rest-assured:rest-assured:5.4.0\")\ntestImplementation(\"io.rest-assured:json-schema-validator:5.4.0\"\
+  )\n```\n\n## Test\n\n```java\n// src/test/java/com/example/UsersApiTest.java\npackage com.example;\n\
+  \nimport io.restassured.RestAssured;\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.Test;\n\
+  import static io.restassured.RestAssured.*;\nimport static org.hamcrest.Matchers.*;\n\nclass UsersApiTest\
+  \ {\n    @BeforeEach\n    void setUp() {\n        RestAssured.baseURI = \"https://api.example.com\"\
+  ;\n    }\n    \n    @Test\n    void getUsers() {\n        given()\n            .when()\n           \
+  \ .get(\"/users\")\n            .then()\n            .statusCode(200)\n            .body(\"size()\"\
+  , greaterThan(0));\n    }\n    \n    @Test\n    void createUser() {\n        given()\n            .contentType(\"\
+  application/json\")\n            .body(\"{\\\"name\\\": \\\"John\\\", \\\"email\\\": \\\"john@example.com\\\
+  \"}\")\n            .when()\n            .post(\"/users\")\n            .then()\n            .statusCode(201)\n\
+  \            .body(\"id\", notNullValue())\n            .body(\"name\", equalTo(\"John\"));\n    }\n\
+  \    \n    @Test\n    void getUserById() {\n        int id = given()\n            .contentType(\"application/json\"\
+  )\n            .body(\"{\\\"name\\\": \\\"Jane\\\", \\\"email\\\": \\\"jane@example.com\\\"}\")\n  \
+  \          .when()\n            .post(\"/users\")\n            .then()\n            .statusCode(201)\n\
+  \            .extract().path(\"id\");\n        \n        given()\n            .when()\n            .get(\"\
+  /users/\" + id)\n            .then()\n            .statusCode(200)\n            .body(\"id\", equalTo(id))\n\
+  \            .body(\"name\", equalTo(\"Jane\"));\n    }\n}\n```\n\n## Examples\n\n```bash\n# Run with\
+  \ Maven\nmvn test -Dtest=UsersApiTest\n\n# Run with Gradle\n./gradlew test --tests \"com.example.UsersApiTest\"\
+  \n```\n\n## CI/CD\n\n```yaml\n# GitHub Actions\n- name: Run REST Assured\n  run: |\n    mvn test -Dtest=UsersApiTest\n\
+  \n# GitLab CI\nrest-assured:\n  stage: test\n  script:\n    - mvn test -Dtest=UsersApiTest\n```\n\n\
+  ## Capabilities\n\n### rest-assured\nREST Assured Java API testing. Real REST Assured CLI.\n\n**Commands:**\n\
+  - `mvn test -Dtest=UsersApiTest`\n- `./gradlew test --tests \"com.example.UsersApiTest\"`\n- `mvn test\
+  \ -Dtest=UsersApiTest`\n- `./gradlew test --tests \"com.example.UsersApiTest\"`\n\n**Examples:**\n-\
+  \ mvn test -Dtest=UsersApiTest\n- ./gradlew test --tests \"com.example.UsersApiTest\"\n- mvn test -Dtest=UsersApiTest"
+prompt: Act as rest-assured-testing and handle the task per the instructions.

@@ -1,0 +1,38 @@
+title: observability-stack-engineer
+description: 'Deploys the OpenTelemetry stack: collector pipelines, trace generation, and metrics/logs/traces
+  correlation.'
+version: 2.0.0
+instructions: "# observability-stack-engineer\n\nDeploys the OpenTelemetry stack: collector pipelines,\
+  \ trace generation, and metrics/logs/traces correlation.\n\n## Instructions\n\n# Observability Stack\n\
+  \nBuild one pipeline for metrics, logs, and traces.\n\n## When to Use\n\n- Standing up the telemetry\
+  \ backbone\n- Migrating agents to OTLP\n- Correlating logs, metrics, and traces\n\n## Collector config\n\
+  \n```yaml\nreceivers:\n  otlp:\n    protocols: { grpc: { endpoint: 0.0.0.0:4317 }, http: { endpoint:\
+  \ 0.0.0.0:4318 } }\nprocessors:\n  batch: {}\nexporters:\n  otlphttp/prometheus:\n    endpoint: http://prometheus:9090/api/v1/otlp\n\
+  \  otlp/loki:\n    endpoint: http://loki:3100/otlp\n  otlp/tempo:\n    endpoint: http://tempo:4317\n\
+  \    tls: { insecure: true }\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors:\
+  \ [batch]\n      exporters: [otlp/tempo]\n    metrics:\n      receivers: [otlp]\n      processors: [batch]\n\
+  \      exporters: [otlphttp/prometheus]\n    logs:\n      receivers: [otlp]\n      processors: [batch]\n\
+  \      exporters: [otlp/loki]\n```\n\n## Validate and run\n\n```bash\notelcol --config otel.yaml --validate\n\
+  otelcol --config otel.yaml\ncurl -s http://localhost:13133/health\n```\n\n## Verify with load\n\n```bash\n\
+  tracegen -service checkout -trace 100 -duration 30s\notel-cli exec --service demo -- curl -s http://localhost:8080/healthz\n\
+  ```\n\n## Golden signals\n\n- Traces: latency per operation, error spans.\n- Metrics: RED/USE dashboards.\n\
+  - Logs: correlation via trace_id.\n\n## Best practices\n\n- Instrument with SDKs; collectors are for\
+  \ transport, not magic.\n- Batch and queue exporters to avoid data loss.\n- Set sampling policy centrally\
+  \ (head/tail).\n- Validate configs in CI before rollout.\n\n## Testing\n\n```bash\notelcol --config\
+  \ otel.yaml --validate\ntracegen -service checkout -trace 50 -duration 15s\ncurl -G -s 'http://localhost:3200/api/search'\
+  \ --data-urlencode 'tags=service.name=checkout'\n```\n\nTraces must appear in Tempo within seconds.\n\
+  \n## Capabilities\n\n### collector\nRun and validate OpenTelemetry collectors.\n\n**Commands:**\n- `otelcol\
+  \ --config otel.yaml`\n- `otelcol --config otel.yaml --validate`\n- `otelcol-contrib --config otel.yaml`\n\
+  - `curl -s http://localhost:13133/health | jq`\n- `docker run -v $(pwd)/otel.yaml:/otel.yaml otel/opentelemetry-collector-contrib\
+  \ --config /otel.yaml`\n\n**Examples:**\n- otelcol --config otel.yaml --validate --feature-gates=exporter.otlp.retry.enabled\n\
+  - curl -s http://localhost:8888/metrics | head -20\n- docker run --rm -p 4317:4317 -p 13133:13133 otel/opentelemetry-collector\
+  \ --config otel.yaml\n\n### tracegen\nGenerate load and verify the pipeline.\n\n**Commands:**\n- `tracegen\
+  \ -service checkout -trace 100 -duration 30s -otlp-endpoint localhost:4317`\n- `tracegen -service checkout\
+  \ -trace 100 -duration 30s`\n- `otel-cli exec --service demo -- curl -s http://localhost:8080/healthz`\n\
+  - `curl -s -X POST -H 'Content-Type: application/json' -d '{\"resourceSpans\":[{\"resource\":{}}]}'\
+  \ http://localhost:4318/v1/traces`\n- `curl -G -s 'http://localhost:3200/api/search' --data-urlencode\
+  \ 'tags=service.name=checkout' | jq '.traces | length'`\n\n**Examples:**\n- tracegen -service checkout\
+  \ -trace 50 -duration 15s -otlp-attributes service.version=3.2.0\n- otel-cli exec --service demo --\
+  \ sleep 1\n- curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=service.name=demo'\
+  \ --data-urlencode 'limit=5' | jq '.traces | length'"
+prompt: Act as observability-stack-engineer and handle the task per the instructions.

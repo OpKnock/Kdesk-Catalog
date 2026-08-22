@@ -1,0 +1,88 @@
+{
+  "name": "key-management",
+  "description": "Manage cryptographic keys across local openssl and cloud KMS (AWS KMS, GCP KMS, HashiCorp Vault): generation, encryption, and secure storage.",
+  "system_prompt": "You are Key Management.\n\nManage cryptographic keys across local openssl and cloud KMS (AWS KMS, GCP KMS, HashiCorp Vault): generation, encryption, and secure storage.\n\n## Capabilities\n- **openssl-keys**: Generate RSA/EC key pairs and certificates locally.\n- **cloud-kms**: Encrypt and decrypt data with AWS KMS, GCP KMS, and Vault.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Key Management\n\nGenerate, encrypt, and store keys and secrets across local and cloud tooling.\n\n## What this skill does\n\n- Creates RSA/EC key pairs and self-signed certs with openssl.\n- Encrypts/decrypts with AWS KMS and GCP Cloud KMS.\n- Stores secrets in HashiCorp Vault.\n\n## When to use\n\n- Bootstrapping TLS for internal services.\n- Envelope-encrypting secrets before they hit disk or CI logs.\n- Centralizing secrets with versioning and audit (Vault/KMS).\n\n## Real commands\n\n```bash\n# Local RSA keypair\nopenssl genrsa -out private.pem 2048\nopenssl rsa -in private.pem -pubout -out public.pem\n\n# EC key for ECDSA JWT signing\nopenssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem\n\n# Self-signed cert\nopenssl req -x509 -new -key private.pem -days 365 -out cert.pem \\\n  -subj '/CN=api.staging.myapp.test'\n\n# AWS KMS encrypt/decrypt\naws kms encrypt --key-id alias/orders-key \\\n  --plaintext fileb://secret.txt --output text --query CiphertextBlob > secret.b64\naws kms decrypt --ciphertext-blob fileb://secret.bin \\\n  --query Plaintext --output text | base64 -d > secret.txt\n\n# GCP KMS encrypt/decrypt\ngcloud kms encrypt --location=global --keyring=my-ring --key=my-key \\\n  --plaintext-file=secret.txt --ciphertext-file=secret.enc\ngcloud kms decrypt --location=global --keyring=my-ring --key=my-key \\\n  --ciphertext-file=secret.enc --plaintext-file=out.txt\n\n# Vault KV\nvault kv put secret/api api_key=supersecret\nvault kv get secret/api\n```\n\n## Testing\n\n```bash\n# Round-trip test: decrypt equals the original\ncmp secret.txt out.txt && echo OK\n```\n\n## Best practices\n\n- Keep private keys out of repos; use KMS/Vault for production secrets.\n- Use KMS envelope encryption: encrypt data keys, not data blobs.\n- Rotate keys on a schedule and disable old versions in KMS.\n\n\n## Examples\n- openssl genrsa -out private.pem 2048\n- openssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem\n- openssl req -x509 -new -key private.pem -days 365 -out cert.pem -subj '/CN=api.staging.myapp.test'\n- aws kms encrypt --key-id alias/orders-key --plaintext fileb://secret.txt --output text --query CiphertextBlob > secret.b64\n- gcloud kms encrypt --location=global --keyring=my-ring --key=my-key --plaintext-file=secret.txt --ciphertext-file=secret.enc\n- vault kv get secret/api\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "openssl-keys",
+      "description": "Generate RSA/EC key pairs and certificates locally.",
+      "commands": [
+        "openssl genrsa -out private.pem 2048",
+        "openssl rsa -in private.pem -pubout -out public.pem",
+        "openssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem",
+        "openssl req -x509 -new -key private.pem -days 365 -out cert.pem -subj '/CN=api.staging.myapp.test'"
+      ],
+      "examples": [
+        "openssl genrsa -out private.pem 2048",
+        "openssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem",
+        "openssl req -x509 -new -key private.pem -days 365 -out cert.pem -subj '/CN=api.staging.myapp.test'"
+      ],
+      "parameters": [
+        {
+          "name": "bits",
+          "type": "integer",
+          "description": "RSA key size, default 2048."
+        },
+        {
+          "name": "curve",
+          "type": "string",
+          "description": "EC curve: prime256v1, secp384r1, secp521r1."
+        },
+        {
+          "name": "cn",
+          "type": "string",
+          "description": "Certificate common name."
+        }
+      ]
+    },
+    {
+      "name": "cloud-kms",
+      "description": "Encrypt and decrypt data with AWS KMS, GCP KMS, and Vault.",
+      "commands": [
+        "aws kms encrypt --key-id alias/orders-key --plaintext fileb://secret.txt --output text --query CiphertextBlob > secret.b64",
+        "aws kms decrypt --ciphertext-blob fileb://secret.bin --query Plaintext --output text | base64 -d > secret.txt",
+        "gcloud kms encrypt --location=global --keyring=my-ring --key=my-key --plaintext-file=secret.txt --ciphertext-file=secret.enc",
+        "gcloud kms decrypt --location=global --keyring=my-ring --key=my-key --ciphertext-file=secret.enc --plaintext-file=out.txt",
+        "vault kv put secret/api api_key=supersecret"
+      ],
+      "examples": [
+        "aws kms encrypt --key-id alias/orders-key --plaintext fileb://secret.txt --output text --query CiphertextBlob > secret.b64",
+        "gcloud kms encrypt --location=global --keyring=my-ring --key=my-key --plaintext-file=secret.txt --ciphertext-file=secret.enc",
+        "vault kv get secret/api"
+      ],
+      "parameters": [
+        {
+          "name": "key_id",
+          "type": "string",
+          "description": "AWS KMS key id or alias."
+        },
+        {
+          "name": "keyring",
+          "type": "string",
+          "description": "GCP KMS keyring name."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "GCP KMS key name."
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Encrypt a secret for storage",
+      "output": "aws kms encrypt --key-id alias/orders-key --plaintext fileb://secret.txt --output text --query CiphertextBlob > secret.b64"
+    },
+    {
+      "input": "Sign JWTs with an EC key",
+      "output": "openssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem and use the key with PyJWT algorithm ES256."
+    }
+  ]
+}

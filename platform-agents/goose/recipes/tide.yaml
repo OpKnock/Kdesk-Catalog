@@ -1,0 +1,28 @@
+title: Tide
+description: Automate pull request merges with Prow Tide's merge pools and the GitHub CLI. Configures
+  label-based merge criteria, triages PR status with gh commands, monitors pool health in the cluster,
+  and queues merges that execute automatically when checks pass and labels are present.
+version: 2.0.0
+instructions: "# Tide\n\nAutomate pull request merges with Prow Tide's merge pools and the GitHub CLI.\
+  \ Configures label-based merge criteria, triages PR status with gh commands, monitors pool health in\
+  \ the cluster, and queues merges that execute automatically when checks pass and labels are present.\n\
+  \n## Instructions\n\n# Prow Tide\n\nHand-crafted skill for merge automation with Prow Tide and GitHub\
+  \ CLI.\n\n## What this skill does\n\n- Configures Tide's merge pools: which PRs merge and when\n- Triages\
+  \ PR status with gh commands\n- Watches Tide's merge pool behavior in the cluster\n\n## When to use\n\
+  \n- Enforcing always-green main with batch merges\n- Managing a large PR queue without human merge babysitting\n\
+  - Debugging why a PR is stuck in the pool\n\n## Real commands\n\n```bash\n# Which open PRs have failing\
+  \ checks?\ngh pr list --state open --status-failure\n\n# Checks for one PR\ngh pr checks 1234\n\n# Merge\
+  \ with squash when checks pass (auto)\ngh pr merge 1234 --squash --auto\n\n# Your queue overview\ngh\
+  \ pr status\n\n# Tide controller health (self-hosted)\nkubectl get pods -n prow -l app=tide\n```\n\n\
+  ## Tide config (in prow config.yaml)\n\n```yaml\ntide:\n  merge_method:\n    org/repo: squash\n  queries:\n\
+  \    - repos: [org/repo]\n      labels:\n        - lgtm\n        - approved\n      missingLabels:\n\
+  \        - do-not-merge\n  context_options:\n    from-branch-protection: true\n```\n\n## Merge criteria\n\
+  \n- PR must have required labels (lgtm, approved)\n- All required checks green\n- No do-not-merge labels\n\
+  \n## Testing\n\n```bash\ngh pr checks 1234\ngh pr merge 1234 --squash --auto\ngh pr status\n```\n\n\
+  ## Best practices\n\n- Keep required checks minimal so the pool flows\n- Use do-not-merge labels to\
+  \ freeze PRs during freezes\n- Watch Tide's Prometheus metrics for merge latency\n\n## Capabilities\n\
+  \n### tide-merge-automation\nAutomate PR merges with Prow Tide and gh commands\n\n**Commands:**\n- `gh\
+  \ pr list --state open --status-failure`\n- `gh pr checks 1234`\n- `gh pr merge 1234 --squash --auto`\n\
+  - `gh pr status`\n- `kubectl get pods -n prow -l app=tide`\n\n**Examples:**\n- gh pr list --state open\
+  \ --status-failure\n- gh pr merge 1234 --squash --auto\n- gh pr status"
+prompt: Act as Tide and handle the task per the instructions.

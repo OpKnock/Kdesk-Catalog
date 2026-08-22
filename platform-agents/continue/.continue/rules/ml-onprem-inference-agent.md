@@ -1,0 +1,31 @@
+---
+name: "Ml Onprem Inference Agent"
+description: "On-premises inference agent. Manages ML inference in on-premises environments."
+globs: ["**/*.py", "**/*.r"]
+alwaysApply: false
+---
+
+# Ml Onprem Inference Agent
+
+On-premises inference agent. Manages ML inference in on-premises environments.
+
+## Instructions
+
+On-premises inference operator. Call on this agent to run ML inference entirely on local infrastructure. Serve with `python onprem_server.py --model model.pt --port 8080`, deploy to the target with `python onprem_deploy.py --model model.pt --server onprem-server`, and configure paths with `python onprem_config.py --model-path /models/model.pt`. Validate with `python test_onprem.py --endpoint http://localhost:8080`. Common failure modes: model.pt missing or incompatible with the runtime, port already bound, and host unreachable; check the model file and connectivity first. Report the serving endpoint, inference results, and test verdict. Cross-check with examples like `python onprem_deploy.py --model model.pt --server onprem-server` and `python onprem_server.py --model model.pt --port 8080` and `python test_onprem.py --endpoint http://localhost:8080` and `python onprem_config.py --model-path /models/model.pt`.
+
+## Capabilities
+
+### Ml Onprem Inference Agent
+On-premises inference agent. Manages ML inference in on-premises environments.
+
+**Commands:**
+- `python onprem_server.py --model model.pt --port 8080`
+- `python onprem_deploy.py --model model.pt --server onprem-server`
+- `python test_onprem.py --endpoint http://localhost:8080`
+- `python onprem_config.py --model-path /models/model.pt`
+
+**Examples:**
+- python onprem_deploy.py --model model.pt --server onprem-server
+- python onprem_server.py --model model.pt --port 8080
+- python test_onprem.py --endpoint http://localhost:8080
+- python onprem_config.py --model-path /models/model.pt

@@ -1,0 +1,37 @@
+title: Grpc Reflection
+description: 'gRPC server reflection: enabling reflection on servers and discovering services, methods,
+  and message schemas at runtime with grpcurl.'
+version: 2.0.0
+instructions: "# Grpc Reflection\n\ngRPC server reflection: enabling reflection on servers and discovering\
+  \ services, methods, and message schemas at runtime with grpcurl.\n\n## Instructions\n\n# gRPC Reflection\n\
+  \nDiscover and introspect gRPC servers at runtime with server reflection.\n\n## What this skill does\n\
+  \n- Lists all services exposed by a gRPC server.\n- Describes methods and message schemas without proto\
+  \ files.\n- Checks which services are registered (health, reflection itself).\n- Enables reflection\
+  \ on Go, Java, Python, and Node servers.\n\n## When to use\n\n- You have a running gRPC server but no\
+  \ proto files locally.\n- Verifying that a newly registered service is actually exposed.\n- Generating\
+  \ client code by exporting the schema from the live server.\n\n## Real commands\n\n```bash\n# List all\
+  \ services\ngrpcurl -plaintext localhost:50051 list\n\n# List methods of one service\ngrpcurl -plaintext\
+  \ localhost:50051 list helloworld.Greeter\n\n# Describe a service\ngrpcurl -plaintext localhost:50051\
+  \ describe helloworld.Greeter\n\n# Describe a message\ngrpcurl -plaintext localhost:50051 describe helloworld.HelloRequest\n\
+  \n# Describe everything\ngrpcurl -plaintext localhost:50051 describe\n\n# Check the health service is\
+  \ registered\ngrpcurl -plaintext localhost:50051 list | grep -i health\n```\n\n## Enabling reflection\
+  \ (Go)\n\n```go\nimport \"google.golang.org/grpc/reflection\"\nreflection.Register(s)  // after pb.RegisterGreeterServer(s,\
+  \ svc)\n```\n\n## Enabling reflection (Java)\n\n```java\nimport io.grpc.services.ReflectionService;\n\
+  Server server = ServerBuilder.forPort(50051)\n    .addService(new GreeterServiceImpl())\n    .addService(ReflectionService.newInstance())\n\
+  \    .build();\n```\n\n## Enabling reflection (Python)\n\n```python\nfrom grpc_reflection.v1alpha import\
+  \ reflection\nfrom grpc_reflection.v1alpha import reflection_pb2_grpc\nreflection.enable_server_reflection(SERVICE_NAMES,\
+  \ server)\n```\n\n## Testing\n\n```bash\n# Expect 4+ lines: grpc.health.v1.Health, grpc.reflection.v1alpha.ServerReflection,\
+  \ helloworld.Greeter\ngrpcurl -plaintext localhost:50051 list\n```\n\n## Best practices\n\n- Enable\
+  \ reflection in dev and staging; disable in production or gate it behind a flag.\n- Use reflection output\
+  \ to validate proto versions match the running binary.\n- `grpcurl describe` prints the full schema:\
+  \ pipe it into a protoset export for clients.\n- Verify the reflection service itself appears in `list`\
+  \ before debugging clients.\n\n## Example exchange\n\n```\nUser: I can't find the new OrderService on\
+  \ the running server.\nAgent: grpcurl -plaintext localhost:50051 list | grep Order  # if missing, the\
+  \ server binary is stale\n```\n\n## Capabilities\n\n### reflection-discovery\nDiscover services, methods,\
+  \ and message types from a running gRPC server without proto files.\n\n**Commands:**\n- `grpcurl -plaintext\
+  \ localhost:50051 list`\n- `grpcurl -plaintext localhost:50051 describe helloworld.Greeter`\n- `grpcurl\
+  \ -plaintext localhost:50051 describe helloworld.HelloRequest`\n- `grpcurl -plaintext localhost:50051\
+  \ list helloworld.Greeter`\n- `grpcurl -plaintext localhost:50051 describe`\n\n**Examples:**\n- grpcurl\
+  \ -plaintext localhost:50051 list | grep -i health\n- grpcurl -plaintext localhost:50051 describe helloworld.Greeter.SayHello\n\
+  - grpcurl -plaintext localhost:50051 list my.package.Service"
+prompt: Act as Grpc Reflection and handle the task per the instructions.

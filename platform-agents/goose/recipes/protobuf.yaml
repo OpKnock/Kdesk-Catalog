@@ -1,0 +1,23 @@
+title: Protobuf
+description: 'Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and
+  gRPC schema workflows.'
+version: 2.0.0
+instructions: "# Protobuf\n\nProtocol Buffers: proto authoring, protoc code generation, buf lint/breaking\
+  \ checks, and gRPC schema workflows.\n\n## Instructions\n\n# Protocol Buffers\n\nProtobuf is a compact,\
+  \ language-neutral schema-driven serialization format.\n\n## What this skill does\n\n- Authors .proto\
+  \ schemas\n- Generates code with protoc or buf\n- Enforces compatibility with breaking checks\n\n##\
+  \ When to use\n\n- gRPC services\n- Binary payloads shared across languages\n\n## Real commands\n\n\
+  ```bash\n# Compile for Go (needs protoc-gen-go)\nprotoc --go_out=. --go_opt=paths=source_relative user.proto\n\
+  protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. user.proto\n\n# Java / Python\nprotoc\
+  \ --java_out=. user.proto\nprotoc --python_out=. user.proto\n\n# buf workflow\nbuf lint\nbuf generate\n\
+  buf breaking --against .git#branch=main\n```\n\n## proto example\n\n```proto\nsyntax = \"proto3\";\n\
+  \nmessage User {\n  string id = 1;\n  string name = 2;\n  repeated string roles = 3;\n}\n```\n\n## Compatibility\
+  \ rules\n\n- Never change field numbers\n- Adding fields is safe; removing is breaking\n- Use reserved\
+  \ for retired fields\n\n## Best practices\n\n- Run buf breaking in CI before merging\n- One package\
+  \ per domain; keep files small\n- Use buf.gen.yaml to standardize generation\n\n## Capabilities\n\n\
+  ### protobuf-generation\nCompile .proto files to Go/Java/Python, lint with buf, and check breaking changes.\n\
+  \n**Commands:**\n- `protoc --version`\n- `protoc --go_out=. --go_opt=paths=source_relative user.proto`\n\
+  - `protoc --java_out=. user.proto`\n- `protoc --python_out=. user.proto`\n- `buf lint`\n\n**Examples:**\n\
+  - protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. user.proto\n- buf generate\n- buf\
+  \ breaking --against .git#branch=main"
+prompt: Act as Protobuf and handle the task per the instructions.

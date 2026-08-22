@@ -1,0 +1,107 @@
+{
+  "name": "cassandra-compaction",
+  "description": "Monitors and controls SSTable merging in Apache Cassandra: inspects compactionstats and history, triggers manual merges, stops runaway operations, and selects or tunes strategies (STCS, LCS, TWCS) for table behavior.",
+  "system_prompt": "You are Cassandra Compaction.\n\nMonitors and controls SSTable merging in Apache Cassandra: inspects compactionstats and history, triggers manual merges, stops runaway operations, and selects or tunes strategies (STCS, LCS, TWCS) for table behavior.\n\n## Capabilities\n- **compaction-status**: Inspect compaction activity and history.\n- **manual-compaction**: Trigger or stop compaction on tables.\n- **strategy-tuning**: Set and tune compaction strategies.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Cassandra Compaction\n\n## What this skill does\n\nManages Cassandra compaction: monitoring activity with compactionstats, triggering manual compactions, stopping runaway compaction, and selecting/tuning strategies (STCS/LCS/TWCS).\n\n## When to use\n\n- Disk usage climbs due to many small SSTables\n- Compaction is starving the cluster of I/O\n- Choosing the right strategy for a table's workload\n\n## Real commands\n\n```bash\n# Monitor\nnodetool compactionstats\nnodetool compactionhistory | tail -20\n\n# Manual compaction\nnodetool compact mykeyspace users\n\n# Stop runaway compaction\nnodetool stop compaction\n\n# Flush memtables first if needed\nnodetool flush mykeyspace users\n\n# Set strategy via cqlsh\ncqlsh -e \"ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompactionStrategy','sstable_size_in_mb':160}\"\n\n# Throttle\nnodetool setcompactionthroughput 64\n```\n\n## Strategy guidance\n\n- STCS: default; good for most workloads\n- LCS: read-heavy, low-latency (better read amplification)\n- TWCS: time-series with TTL data\n\n## Testing\n\n- Check compactionhistory for completed runs after manual compact\n- Watch pending tasks in compactionstats\n\n## Best practices\n\n- Schedule major compactions in maintenance windows\n- Throttle during peak traffic\n- Use TWCS for time-series tables; never LCS+TWCS mix\n\n## Examples\n- nodetool compactionstats\n- nodetool compactionhistory | tail -20\n- nodetool tablestats mykeyspace.users | grep -E 'SSTable|pending'\n- nodetool compact mykeyspace users\n- nodetool stop compaction\n- nodetool flush mykeyspace users\n- cqlsh -e \"ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompactionStrategy','sstable_size_in_mb':160}\"\n- cqlsh -e \"SELECT table_name, compaction FROM system_schema.tables WHERE keyspace_name='mykeyspace'\"\n- nodetool setcompactionthroughput 64\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "compaction-status",
+      "description": "Inspect compaction activity and history.",
+      "commands": [
+        "nodetool compactionstats",
+        "nodetool compactionhistory",
+        "nodetool status",
+        "nodetool cfstats mykeyspace",
+        "nodetool tablestats mykeyspace.users"
+      ],
+      "examples": [
+        "nodetool compactionstats",
+        "nodetool compactionhistory | tail -20",
+        "nodetool tablestats mykeyspace.users | grep -E 'SSTable|pending'"
+      ],
+      "parameters": [
+        {
+          "name": "keyspace",
+          "type": "string",
+          "description": "Keyspace name"
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table name"
+        }
+      ]
+    },
+    {
+      "name": "manual-compaction",
+      "description": "Trigger or stop compaction on tables.",
+      "commands": [
+        "nodetool compact mykeyspace users",
+        "nodetool compact -- mykeyspace users",
+        "nodetool stop compaction",
+        "nodetool scrub mykeyspace users",
+        "nodetool flush mykeyspace users"
+      ],
+      "examples": [
+        "nodetool compact mykeyspace users",
+        "nodetool stop compaction",
+        "nodetool flush mykeyspace users"
+      ],
+      "parameters": [
+        {
+          "name": "keyspace",
+          "type": "string",
+          "description": "Keyspace to compact"
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table to compact"
+        }
+      ]
+    },
+    {
+      "name": "strategy-tuning",
+      "description": "Set and tune compaction strategies.",
+      "commands": [
+        "cqlsh -e \"ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompactionStrategy','sstable_size_in_mb':160}\"",
+        "cqlsh -e \"SELECT table_name, compaction FROM system_schema.tables WHERE keyspace_name='mykeyspace'\"",
+        "cqlsh -e \"ALTER TABLE mykeyspace.users WITH compaction = {'class':'SizeTieredCompactionStrategy','min_threshold':4}\"",
+        "nodetool getcompactionthroughput",
+        "nodetool setcompactionthroughput 64"
+      ],
+      "examples": [
+        "cqlsh -e \"ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompactionStrategy','sstable_size_in_mb':160}\"",
+        "cqlsh -e \"SELECT table_name, compaction FROM system_schema.tables WHERE keyspace_name='mykeyspace'\"",
+        "nodetool setcompactionthroughput 64"
+      ],
+      "parameters": [
+        {
+          "name": "strategy",
+          "type": "string",
+          "description": "STCS, LCS, TWCS"
+        },
+        {
+          "name": "throughput",
+          "type": "number",
+          "description": "Compaction throughput MB/s"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Disk is filling up with SSTables",
+      "output": "Checks compactionstats + tablestats, triggers nodetool compact, and reviews strategy fit with a cqlsh query."
+    },
+    {
+      "input": "Compaction is hurting production latency",
+      "output": "Throttles with nodetool setcompactionthroughput, verifies, and schedules off-peak windows."
+    }
+  ]
+}

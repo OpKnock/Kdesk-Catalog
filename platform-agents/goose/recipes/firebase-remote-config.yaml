@@ -1,0 +1,37 @@
+title: Firebase Remote Config
+description: 'Firebase Remote Config: manage parameter values per environment, publish changes with conditions,
+  and fetch config from the CLI.'
+version: 2.0.0
+instructions: "# Firebase Remote Config\n\nFirebase Remote Config: manage parameter values per environment,\
+  \ publish changes with conditions, and fetch config from the CLI.\n\n## Instructions\n\n# Firebase Remote\
+  \ Config\n\n## What this skill does\n\nRemote Config changes app behavior without a release: parameters\
+  \ with per-condition values are served to clients with a template versioned server-side. This skill\
+  \ covers template inspection and publishing.\n\n## When to use\n\n- Rolling out UI experiments per audience\n\
+  - Killing a feature remotely during incidents\n- A/B testing parameter values\n\n## Real commands\n\n\
+  ```bash\n# List all parameters\ncurl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters | keys'\n\n# Inspect one parameter and\
+  \ its conditions\ncurl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters.maintenance_mode'\n\n# Current template\
+  \ version\ncurl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.version'\n\n# Client-side fetch and activate\nnode\
+  \ -e \"const rc=require('firebase/remote-config');const app=initializeApp();rc.getRemoteConfig(app).then(c=>{console.log(c.value('welcome_message'));c.activate()})\"\
+  \n```\n\n## Condition example\n\n```json\n\"conditions\": [{\n  \"name\": \"android_2_plus\",\n  \"\
+  expression\": \"device.android_version >= 8\"\n}]\n```\n\n## Publishing safely\n\n```bash\n# Fetch template\
+  \ -> edit -> publish with If-Match etag to avoid conflicts\ncurl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' -H 'If-Match: <etag>'\n```\n\n## Best practices\n\n- Always\
+  \ give every parameter a sensible default in the client SDK.\n- Use conditions sparingly; each adds\
+  \ complexity and cache misses.\n- Publish during low-traffic windows; clients cache templates.\n- Validate\
+  \ with the REST `validate` step before publishing.\n- Version-stamp experiments so analytics can correlate\
+  \ results.\n\n## Capabilities\n\n### remote-config\nList, get, and publish Remote Config parameters\
+  \ and templates.\n\n**Commands:**\n- `curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters | keys'`\n- `curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters.maintenance_mode'`\n- `node -e \"const\
+  \ rc=require('firebase/remote-config');const app=initializeApp();rc.getRemoteConfig(app).then(c=>{console.log(c.value('welcome_message'));c.activate()})\"\
+  `\n- `curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig' -H\
+  \ 'Authorization: Bearer $ACCESS_TOKEN' | jq '.version'`\n- `curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' -H 'If-Match: <etag>' | jq '.parameters'`\n\n**Examples:**\n\
+  - curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig' -H 'Authorization:\
+  \ Bearer $ACCESS_TOKEN' | jq '.parameters | keys'\n- curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig'\
+  \ -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.version'\n- node -e \"const rc=require('firebase/remote-config');const\
+  \ app=initializeApp();rc.getRemoteConfig(app).then(c=>{console.log(c.value('welcome_message'));c.activate()})\""
+prompt: Act as Firebase Remote Config and handle the task per the instructions.

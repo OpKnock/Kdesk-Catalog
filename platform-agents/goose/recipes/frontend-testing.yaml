@@ -1,0 +1,31 @@
+title: Frontend Testing
+description: Tests frontend applications end-to-end and at the component level with Playwright, Cypress,
+  and Vitest.
+version: 2.0.0
+instructions: "# Frontend Testing\n\nTests frontend applications end-to-end and at the component level\
+  \ with Playwright, Cypress, and Vitest.\n\n## Instructions\n\n# Frontend Testing\n\nLayer unit, component,\
+  \ and end-to-end tests to catch regressions at every level.\n\n## When to Use\n\n- Verifying critical\
+  \ user journeys (login, checkout)\n- Regression testing across browsers and viewports\n- Locking down\
+  \ component behavior before refactors\n\n## E2E with Playwright\n\n```bash\nnpx playwright install --with-deps\n\
+  npx playwright test\nnpx playwright codegen https://example.com\nnpx playwright show-report\n```\n\n\
+  Write tests with user-visible queries:\n\n```typescript\nawait page.goto('/checkout');\nawait page.getByRole('button',\
+  \ { name: 'Place order' }).click();\nawait expect(page.getByText('Order confirmed')).toBeVisible();\n\
+  ```\n\n## Component tests with Vitest + Testing Library\n\n```typescript\nimport { render, screen }\
+  \ from '@testing-library/react';\nimport { expect, test } from 'vitest';\n\ntest('shows error when email\
+  \ invalid', async () => {\n  render(<SignupForm />);\n  await screen.getByLabelText('Email').then(el\
+  \ => {\n    // fireEvent.change, expect error message\n  });\n});\n```\n\n```bash\nnpx vitest run --coverage\n\
+  ```\n\n## Parallelism and flakiness\n\n- Prefer `getByRole`/`getByLabel` over selectors on CSS classes.\n\
+  - Use `expect(...).toPass()` for slow async assertions in Cypress.\n- Run unit tests on every commit;\
+  \ E2E on PRs and nightly.\n\n## Best practices\n\n- Keep E2E suites small and business-critical only.\n\
+  - Test mobile viewport at least for the top 3 journeys.\n- Record videos/traces on failure only, to\
+  \ save CI time.\n- Aim for > 80% coverage on logic-heavy utilities and state reducers.\n\n## Capabilities\n\
+  \n### playwright\nWrite and run browser end-to-end tests with Playwright.\n\n**Commands:**\n- `npx playwright\
+  \ install --with-deps`\n- `npx playwright test`\n- `npx playwright test --project=chromium --headed`\n\
+  - `npx playwright codegen http://localhost:8080`\n- `npx playwright show-report`\n\n**Examples:**\n\
+  - npx playwright test tests/e2e/checkout.spec.ts --grep 'checkout'\n- npx playwright test --project=firefox\
+  \ --workers=4\n- npx playwright codegen --viewport-size '390,844' http://localhost:8080\n\n### vitest\n\
+  Run fast component and unit tests with Vitest.\n\n**Commands:**\n- `npx vitest run`\n- `npx vitest run\
+  \ --coverage`\n- `npx vitest --ui`\n- `npx vitest run tests/unit/button.test.tsx`\n- `npx vitest watch`\n\
+  \n**Examples:**\n- npx vitest run --coverage --reporter=json --outputFile=coverage.json\n- npx vitest\
+  \ run --changed main\n- npx vitest watch --exclude '**/e2e/**'"
+prompt: Act as Frontend Testing and handle the task per the instructions.

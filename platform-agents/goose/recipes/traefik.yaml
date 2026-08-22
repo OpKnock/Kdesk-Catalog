@@ -1,0 +1,28 @@
+title: Traefik
+description: Run it and configure routers/services/middlewares.
+version: 2.0.0
+instructions: "# Traefik\n\nRun it and configure routers/services/middlewares.\n\n## Instructions\n\n\
+  # Traefik\n\nHand-crafted skill for edge routing with Traefik.\n\n## What this skill does\n\n- Boots\
+  \ Traefik with docker provider discovery\n- Exposes routers and services via the HTTP API\n- Verifies\
+  \ TLS and routing rules end to end\n\n## When to use\n\n- Adding a reverse proxy to a compose stack\n\
+  - Inspecting which container serves which host rule\n- Debugging 404s from bad router matchers\n\n##\
+  \ Real commands\n\n```bash\n# Run with docker provider + API\ndocker run -d -p 80:80 -p 8080:8080 -v\
+  \ /var/run/docker.sock:/var/run/docker.sock traefik:v3.0 --api.insecure=true\n\n# Inspect state\ncurl\
+  \ -s localhost:8080/api/http/routers | jq\ncurl -s localhost:8080/api/http/services | jq\n\n# Label-based\
+  \ routing on a container\ndocker run -d --label 'traefik.http.routers.app.rule=Host(`app.local`)' --label\
+  \ 'traefik.http.services.app.loadbalancer.server.port=80' nginx\n\n# Verify\ncurl -sk https://localhost\
+  \ -H 'Host: app.local' -o /dev/null -w '%{http_code}'\n```\n\n## File provider config\n\n```yaml\nhttp:\n\
+  \  routers:\n    app:\n      rule: Host(`app.local`)\n      service: app\n      tls: {}\n  services:\n\
+  \    app:\n      loadBalancer:\n        servers:\n          - url: http://backend:3000\n```\n\n## Testing\n\
+  \n```bash\ncurl -s localhost:8080/api/http/routers | jq '.[] | {name, rule}'\ncurl -sk https://localhost\
+  \ -H 'Host: app.local' -o /dev/null -w '%{http_code}'\n```\n\n## Best practices\n\n- Use the file provider\
+  \ for production rules; docker labels for local\n- Pin Traefik version tags; v3 changed labels syntax\n\
+  - Enable access logging before debugging routing\n\n## Capabilities\n\n### traefik-routing\nRun Traefik\
+  \ and configure routers/services/middlewares\n\n**Commands:**\n- `docker run -d -p 80:80 -p 8080:8080\
+  \ -v /var/run/docker.sock:/var/run/docker.sock traefik:v3.0 --api.insecure=true`\n- `curl -s localhost:8080/api/http/routers\
+  \ | jq`\n- `curl -s localhost:8080/api/http/services | jq`\n- `docker service ls`\n- `curl -sk https://localhost\
+  \ -H 'Host: app.local' -o /dev/null -w '%{http_code}'`\n\n**Examples:**\n- curl -s localhost:8080/api/http/routers\
+  \ | jq '.[] | {name, rule, service}'\n- docker run -d -p 80:80 -v /var/run/docker.sock:/var/run/docker.sock\
+  \ traefik:v3.0 --providers.docker=true\n- curl -sk https://localhost -H 'Host: app.local' -o /dev/null\
+  \ -w '%{http_code}'"
+prompt: Act as Traefik and handle the task per the instructions.

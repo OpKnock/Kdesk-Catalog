@@ -1,0 +1,26 @@
+title: Pulsar Producer Go
+description: 'Pulsar producers in Go: send messages, batching, delivery semantics, and performance benchmarking
+  with pulsar-perf.'
+version: 2.0.0
+instructions: "# Pulsar Producer Go\n\nPulsar producers in Go: send messages, batching, delivery semantics,\
+  \ and performance benchmarking with pulsar-perf.\n\n## Instructions\n\n# Pulsar Producer (Go)\n\nProduce\
+  \ messages to Pulsar with the official Go client and benchmark throughput.\n\n## What this skill does\n\
+  \n- Writes Go producers with options\n- Sends messages with delivery semantics\n- Benchmarks with pulsar-perf\n\
+  \n## When to use\n\n- Ingesting events from Go services\n- Capacity testing a cluster\n\n## Real commands\n\
+  \n```bash\n# App producer\ngo run producer.go\ngo vet ./...\n\n# CLI quick send\nbin/pulsar-client produce\
+  \ my-topic --messages \"hello\"\n\n# Benchmark\nbin/pulsar-perf produce my-topic --num-producers 1 --num-messages\
+  \ 100000 --rate 1000\nbin/pulsar-perf produce my-topic -rp 1000 --size 1024\n```\n\n## Producer code\n\
+  \n```go\nclient, _ := pulsar.NewClient(pulsar.ClientOptions{URL: \"pulsar://localhost:6650\"})\nproducer,\
+  \ _ := client.CreateProducer(pulsar.ProducerOptions{Topic: \"my-topic\"})\ndefer producer.Close()\n\n\
+  for i := 0; i < 100; i++ {\n    producer.Send(context.Background(), &pulsar.ProducerMessage{\n     \
+  \   Payload: []byte(fmt.Sprintf(\"msg-%d\", i)),\n    })\n}\n```\n\n## Send options\n\n- `Send` (sync)\
+  \ vs `SendAsync` (async)\n- `DisableBlockIfQueueFull` to drop instead of block\n\n## Best practices\n\
+  \n- Use async sends for high throughput\n- Monitor `ProducerStats` for send failures\n- Size topics\
+  \ and partitions by benchmark results\n\n## Capabilities\n\n### pulsar-go-producer\nWrite Go Pulsar\
+  \ producers with send options and benchmark throughput with pulsar-perf.\n\n**Commands:**\n- `go run\
+  \ producer.go`\n- `go vet ./...`\n- `bin/pulsar-client produce my-topic --messages \"hello\"`\n- `bin/pulsar-perf\
+  \ produce my-topic --num-producers 1 --num-messages 100000 --rate 1000`\n- `bin/pulsar-perf produce\
+  \ my-topic -rp 1000 --size 1024`\n\n**Examples:**\n- go run producer.go\n- bin/pulsar-perf produce my-topic\
+  \ --num-producers 4 --num-messages 1000000\n- bin/pulsar-client produce my-topic --messages '{\"id\"\
+  :1}' -n 3"
+prompt: Act as Pulsar Producer Go and handle the task per the instructions.

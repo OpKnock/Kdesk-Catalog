@@ -1,0 +1,107 @@
+---
+name: "websocket-engineer"
+description: "Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd for real-time messaging. Use when building or debugging real-time WebSocket channels. Don't use for webhook delivery (see webhook-reliability-engineer) or one-way event streams."
+type: knowledge
+triggers: ["websocket-engineer", "test websocket servers with wscat", "relay and stream with websocat", "run websocket servers with websocketd"]
+---
+
+# websocket-engineer
+
+Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd for real-time messaging. Use when building or debugging real-time WebSocket channels. Don't use for webhook delivery (see webhook-reliability-engineer) or one-way event streams.
+
+## Instructions
+
+# WebSocket Engineering
+
+Design and debug real-time, bidirectional, persistent connections for chat, streaming, and live data.
+
+## When to Use
+
+- Live chat, notifications, and collaborative editing
+- Streaming market data, logs, or telemetry
+- Server push where polling or SSE latency is unacceptable
+- Any duplex real-time protocol you control end to end
+
+## Handshake and Protocol
+
+1. Client opens a GET upgrade request with Sec-WebSocket-Key; server answers 101 with Sec-WebSocket-Accept.
+2. Frames are masked client-to-server and unmasked server-to-client; binary vs text must be distinguished.
+3. Subprotocols negotiate application-level message formats; pick one and document it.
+4. Ping/pong keepalives detect dead peers; respond to pings promptly or the stack drops you.
+
+## Connection Lifecycle
+
+- Clients reconnect with exponential backoff plus jitter and a max cap.
+- Track a connection id per socket for correlation in logs.
+- Replay missed messages: clients send a resume point (last seen sequence) on reconnect.
+- Close gracefully: server sends Close frame with code 1000; clients echo and terminate.
+
+## Scaling Patterns
+
+- Single node: in-memory pub/sub with one socket per connection.
+- Multi node: fan-out via a broker (Redis, NATS) keyed by room or user; never send from the socket owner only.
+- Backpressure: slow consumers must not block the broker; use per-connection queues with drop-oldest or close policy.
+
+## Debugging Toolkit
+
+- wscat for quick manual tests with custom headers and subprotocols.
+- websocat -t to bridge two endpoints and inspect frame flow.
+- websocketd to stand up throwaway servers from shell scripts.
+- Check the 101 response, Sec-WebSocket-Accept, and frame fragmentation on the wire when clients misbehave.
+
+## Common Pitfalls
+
+- Heartbeat only from client side; servers die silently in NAT setups.
+- Broadcast loops: echoing your own messages back to the sender.
+- Unbounded queue growth when a client stops reading.
+- TLS mismatch (wss on plain ws port) producing confusing handshake failures.
+
+## Production Checklist
+
+- Ping/pong heartbeat with timeout disconnect
+- Reconnect with backoff and resume semantics
+- Room-level authorization at subscribe time
+- Connection metrics: active count, open rate, close rate, error rate
+- Graceful drain on deploy (drain connections, then stop accepting)
+
+## Capabilities
+
+### Test WebSocket servers with wscat
+Connect interactively or non-interactively, send frames, and verify server responses, headers, and protocols.
+
+**Commands:**
+- `wscat -c ws://localhost:8080`
+- `wscat -c wss://api.example.com/socket -H 'Authorization: Bearer demo-token'`
+- `wscat -c ws://localhost:8080 --wait 5 --execute 'ping'`
+- `wscat -c ws://localhost:8080 -p chat-v1`
+
+**Examples:**
+- wscat -c wss://api.example.com/socket -H 'Authorization: Bearer demo-token'
+- wscat -c ws://localhost:8080 -p chat-v1
+
+### Relay and stream with websocat
+Tunnel WebSocket traffic, stream files into connections, and bridge websocket endpoints for debugging.
+
+**Commands:**
+- `websocat ws://localhost:8080`
+- `websocat -t ws://internal:8080 wss://public.example.com/socket`
+- `websocat ws://localhost:8080 payload.txt`
+- `websocat -s 9000`
+- `websocat -b -E ws://localhost:8080`
+
+**Examples:**
+- websocat -t ws://internal:8080 wss://public.example.com/socket
+- websocat -s 9000
+
+### Run WebSocket servers with websocketd
+Turn any stdin/stdout program into a WebSocket server and serve a static demo page.
+
+**Commands:**
+- `websocketd --port=8080 ./counter.sh`
+- `websocketd --port=8080 --staticdir=./public ./echo.py`
+- `websocketd --port=8080 --passenv=API_KEY ./feed.sh`
+- `websocketd --port=8080 --loglevel=debug ./counter.sh`
+
+**Examples:**
+- websocketd --port=8080 ./counter.sh
+- websocketd --port=8080 --staticdir=./public ./echo.py

@@ -1,0 +1,34 @@
+title: semgrep
+description: Finds bugs and security issues with Semgrep's pattern-based SAST across 30+ languages, including
+  custom rules and CI integration.
+version: 2.0.0
+instructions: "# semgrep\n\nFinds bugs and security issues with Semgrep's pattern-based SAST across 30+\
+  \ languages, including custom rules and CI integration.\n\n## Instructions\n\n# Semgrep\n\nFast, pattern-based\
+  \ static analysis with first-class custom rule support.\n\n## What This Skill Does\n\n- Scans 30+ languages\
+  \ with rules matching code structure, not just regex\n- Runs OWASP Top 10 and language-specific rule\
+  \ packs\n- Authors custom rules with metavariables and pattern composition\n- Emits SARIF/JSON for CI\
+  \ and code scanning\n\n## When to Use\n\n- Finding security bugs in large monorepos fast\n- Enforcing\
+  \ team-specific code patterns\n- Replacing regex greps with maintainable rules\n\n## Real Commands\n\
+  \n```bash\n# Standard scans\nsemgrep scan --config auto .\nsemgrep scan --config p/owasp-top-ten .\n\
+  semgrep scan --config p/python --severity ERROR src/\n\n# Inline pattern\nsemgrep scan --pattern 'eval($X)'\
+  \ --lang python .\n\n# Custom rules\nsemgrep scan --config custom.yml .\nsemgrep scan --validate --config\
+  \ custom.yml\n\n# CI\nsemgrep login\nsemgrep ci --sarif -o results.sarif\nsemgrep ci --supply-chain\n\
+  ```\n\n## Custom Rule\n\n```yaml\nrules:\n  - id: no-exec-user-input\n    patterns:\n      - pattern:\
+  \ exec($CODE)\n      - pattern-not: exec(\"fixed-command\")\n    message: Avoid exec with dynamic input\n\
+  \    languages: [python]\n    severity: ERROR\n```\n\n## Best Practices\n\n- Run --config auto locally,\
+  \ p/ rules for language depth\n- Validate custom rules in CI with --validate\n- Use SARIF for inline\
+  \ GitHub annotations\n- Fix findings at the source; track false positives with nosemgrep\n- Run semgrep\
+  \ ci to correlate findings across PRs\n\n## Capabilities\n\n### semgrep-scan\nScan code with built-in\
+  \ or custom rule packs.\n\n**Commands:**\n- `semgrep scan --config auto .`\n- `semgrep scan --config\
+  \ p/owasp-top-ten .`\n- `semgrep scan --config p/python .`\n- `semgrep scan --config rules.yml src/`\n\
+  - `semgrep scan --config auto --severity ERROR --json -o results.json`\n\n**Examples:**\n- semgrep scan\
+  \ --config auto .\n- semgrep scan --config p/owasp-top-ten .\n- semgrep scan --config p/python --severity\
+  \ ERROR src/\n\n### custom-rules\nWrite and test custom pattern rules.\n\n**Commands:**\n- `semgrep\
+  \ scan --config custom.yml .`\n- `semgrep scan --validate --config custom.yml`\n- `semgrep scan --config\
+  \ semgrep-rules/ --dry-run`\n- `semgrep scan --pattern 'eval($X)' --lang python .`\n\n**Examples:**\n\
+  - semgrep scan --validate --config custom.yml\n- semgrep scan --pattern 'exec($X)' --lang python .\n\
+  - semgrep scan --config semgrep-rules/ .\n\n### ci-integration\nRun Semgrep CI with findings management.\n\
+  \n**Commands:**\n- `semgrep login`\n- `semgrep ci`\n- `semgrep ci --json -o results.sarif --sarif`\n\
+  - `semgrep ci --supply-chain`\n\n**Examples:**\n- semgrep ci\n- semgrep ci --sarif -o results.sarif\n\
+  - semgrep ci --supply-chain"
+prompt: Act as semgrep and handle the task per the instructions.

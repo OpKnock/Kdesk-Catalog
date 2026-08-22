@@ -1,0 +1,31 @@
+title: Apache Httpd
+description: 'Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd
+  basic auth, and graceful reloads.'
+version: 2.0.0
+instructions: "# Apache Httpd\n\nAdministers Apache HTTP Server: config validation, virtual hosts, module\
+  \ inspection, htpasswd basic auth, and graceful reloads.\n\n## Instructions\n\n# Apache HTTP Server\n\
+  \n## What this skill does\n\nAdministers Apache httpd: validating configs before reload, inspecting\
+  \ virtual hosts and modules, configuring reverse proxies and SSL, and protecting paths with htpasswd\
+  \ basic auth.\n\n## When to use\n\n- A config change must be validated before a reload\n- Setting up\
+  \ a virtual host for a new site\n- Password-protecting an internal path\n\n## Real commands\n\n```bash\n\
+  # Validate config\napachectl -t\n\n# Dump vhost summary\napachectl -S\n\n# Check loaded modules\nhttpd\
+  \ -t -D DUMP_MODULES | grep -E \"ssl|proxy\"\n\n# Graceful reload\napachectl graceful\n\n# htpasswd\
+  \ management\nhtpasswd -c /etc/httpd/conf/.htpasswd alice\nhtpasswd -b /etc/httpd/conf/.htpasswd bob\
+  \ bobpass\napachectl -t && apachectl graceful\n```\n\n## Vhost example\n\n```apache\n<VirtualHost *:443>\n\
+  \  ServerName api.your-app.test\n  SSLEngine on\n  SSLCertificateFile /etc/pki/tls/certs/api.crt\n \
+  \ SSLCertificateKeyFile /etc/pki/tls/private/api.key\n  ProxyPass /api/ http://backend:8080/api/\n \
+  \ ErrorLog logs/api-error.log\n  CustomLog logs/api-access.log combined\n</VirtualHost>\n```\n\n## Basic\
+  \ auth block\n\n```apache\n<Location /admin>\n  AuthType Basic\n  AuthName \"Admin\"\n  AuthUserFile\
+  \ /etc/httpd/conf/.htpasswd\n  Require valid-user\n</Location>\n```\n\n## Testing\n\n- Always run `apachectl\
+  \ -t` before `graceful`\n- Test auth with curl -u and confirm 401 without credentials\n\n## Best practices\n\
+  \n- Prefer graceful over restart to avoid dropping connections\n- Use bcrypt (htpasswd -B) for password\
+  \ files\n- Check apachectl -S after adding vhosts for name collisions\n\n## Capabilities\n\n### config-management\n\
+  Validate, dump, and hot-reload the Apache configuration.\n\n**Commands:**\n- `apachectl -t`\n- `apachectl\
+  \ -S`\n- `httpd -V`\n- `apachectl graceful`\n- `apachectl configtest`\n\n**Examples:**\n- apachectl\
+  \ -t && apachectl graceful\n- apachectl -S | grep -E \"port|vhost\"\n- httpd -t -D DUMP_MODULES | grep\
+  \ ssl\n\n### vhost-and-auth\nConfigure virtual hosts and protect directories with htpasswd.\n\n**Commands:**\n\
+  - `htpasswd -c /etc/httpd/conf/.htpasswd alice`\n- `htpasswd -b /etc/httpd/conf/.htpasswd bob bobpass`\n\
+  - `htpasswd -D /etc/httpd/conf/.htpasswd bob`\n- `htpasswd -nB alice`\n- `curl -u alice:pass -I http://localhost/private/`\n\
+  \n**Examples:**\n- htpasswd -c .htpasswd admin && apachectl -t && apachectl graceful\n- curl -I -u alice:secret\
+  \ http://localhost/private/\n- htpasswd -bB /etc/httpd/conf/.htpasswd deploy deploypass"
+prompt: Act as Apache Httpd and handle the task per the instructions.

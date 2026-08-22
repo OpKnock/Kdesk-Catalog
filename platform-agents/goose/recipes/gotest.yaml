@@ -1,0 +1,30 @@
+title: gotest
+description: Runs Go tests with go test, covering race detection, coverage profiles, benchmarks, and focused
+  runs.
+version: 2.0.0
+instructions: "# gotest\n\nRuns Go tests with go test, covering race detection, coverage profiles, benchmarks,\
+  \ and focused runs.\n\n## Instructions\n\n# go test\n\nTesting Go code with the standard toolchain.\n\
+  \n## What This Skill Does\n\n- Runs unit and integration tests with filters\n- Detects data races with\
+  \ -race\n- Produces and visualizes coverage profiles\n- Runs benchmarks with memory stats\n\n## When\
+  \ to Use\n\n- Pre-merge test verification\n- Race condition debugging\n- Performance regression checks\n\
+  \n## Real Commands\n\n```bash\n# Basics\n go test ./...\ngo test -v ./internal/...\ngo test -run TestOrderService\
+  \ ./...\ngo test -count=1 ./...\n\n# Race detection\ngo test -race ./...\n\n# Coverage\ngo test -coverprofile=coverage.out\
+  \ ./...\ngo tool cover -func=coverage.out\ngo tool cover -html=coverage.out\n\n# Benchmarks\ngo test\
+  \ -bench=. -benchmem ./...\ngo test -bench=BenchmarkParse -benchtime=5s\n\n# Lint\ngo vet ./...\n```\n\
+  \n## Sample Test\n\n```go\nfunc TestParse(t *testing.T) {\n\tgot, err := Parse(\"42\")\n\tif err !=\
+  \ nil {\n\t\tt.Fatal(err)\n\t}\n\tif got != 42 {\n\t\tt.Errorf(\"Parse() = %d, want 42\", got)\n\t}\n\
+  }\n```\n\n## Best Practices\n\n- Use table-driven tests with t.Run subtests\n- Run -race in CI; races\
+  \ are bugs\n- Set coverage gates via go tool cover -func\n- Use -count=1 to avoid cached results during\
+  \ debugging\n- Benchmark against a fixed revision for comparisons\n\n## Capabilities\n\n### go-testing\n\
+  Run Go tests with filters and verbosity.\n\n**Commands:**\n- `go test ./...`\n- `go test -v ./internal/...`\n\
+  - `go test -run TestOrderService ./...`\n- `go test -count=1 ./...`\n- `go test -short ./...`\n\n**Examples:**\n\
+  - go test ./...\n- go test -run TestOrderService -v ./internal/orders\n- go test -count=1 ./...\n\n\
+  ### race-and-coverage\nRace detection and coverage profiles.\n\n**Commands:**\n- `go test -race ./...`\n\
+  - `go test -coverprofile=coverage.out ./...`\n- `go tool cover -func=coverage.out`\n- `go tool cover\
+  \ -html=coverage.out`\n- `go test -covermode=atomic ./...`\n\n**Examples:**\n- go test -race ./...\n\
+  - go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out\n- go tool cover -html=coverage.out\n\
+  \n### benchmarks-and-vet\nBenchmarks, profiling, and vet checks.\n\n**Commands:**\n- `go test -bench=.\
+  \ -benchmem ./...`\n- `go test -bench=BenchmarkParse -benchtime=5s ./...`\n- `go vet ./...`\n- `go test\
+  \ -run=NONE -bench=. ./...`\n- `go test -cpuprofile=cpu.out -bench=. ./...`\n\n**Examples:**\n- go test\
+  \ -bench=. -benchmem ./...\n- go vet ./...\n- go test -bench=BenchmarkParse -benchtime=5s"
+prompt: Act as gotest and handle the task per the instructions.

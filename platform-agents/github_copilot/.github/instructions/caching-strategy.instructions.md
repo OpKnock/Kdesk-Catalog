@@ -1,0 +1,109 @@
+---
+applyTo: "**/*.go **/*.py **/*.r **/*.sh"
+---
+
+# Caching Strategy
+
+Designs and tunes multi-layer caching systems with Redis, Memcached, and HTTP caches including invalidation, TTL, and cache-aside patterns.
+
+## Instructions
+
+# Caching Strategy
+
+Design multi-layer caches and keep them consistent.
+
+## When to Use
+
+- Serving the same read-heavy data repeatedly
+- Protecting databases from hot keys and read amplification
+- Storing sessions, rate counters, or computed aggregates
+- Reducing latency on slow third-party lookups
+
+## Patterns
+
+- Cache-aside: read cache, on miss load from DB and populate, invalidate on write
+- Read-through: cache loads from DB automatically on miss
+- Write-through: writes go to cache and DB together
+- TTL-based expiry with jitter to avoid thundering herd
+- Setnx lock-based stampede protection for expensive recompute
+
+## Commands
+
+```bash
+# Basic set with TTL (seconds)
+redis-cli set user:123 "{\"name\":\"alice\"}" EX 300
+
+# Inspect TTL remaining
+redis-cli ttl user:123
+redis-cli pttl user:123
+
+# Scan keys by pattern
+redis-cli --scan --pattern "user:*"
+
+# Check memory usage of a key
+redis-cli memory usage user:123
+
+# Cache stats
+redis-cli info keyspace
+redis-cli dbsize
+
+# Invalidate
+redis-cli unlink user:123
+redis-cli del user:123
+
+# Stampede lock
+redis-cli setnx lock:regen:report "1" EX 30
+```
+
+## Example
+
+```python
+import redis
+r = redis.Redis(host="localhost")
+
+def get_user(user_id):
+    cached = r.get(f"user:{user_id}")
+    if cached:
+        return cached
+    data = db.fetch_user(user_id)  # miss: load from DB
+    r.set(f"user:{user_id}", data, ex=300)
+    return data
+```
+
+## Best Practices
+
+- Add random jitter (e.g. 5-10% of TTL) to keys to prevent expiry stampedes
+- Use unlink instead of del for large values to avoid blocking Redis
+- Evict with LRU/LFU policies appropriate to access patterns
+- Never cache unauthenticated or per-user secrets without authorization checks
+- Profile hit rate with redis-cli info stats before and after tuning
+
+## Capabilities
+
+### redis-caching
+Operate Redis as a cache: set/get with TTL, scan keys, and inspect memory.
+
+**Commands:**
+- `redis-cli set user:123 "{\"name\":\"alice\"}" EX 300`
+- `redis-cli --scan --pattern "user:*"`
+- `redis-cli ttl user:123`
+- `redis-cli memory usage user:123`
+- `redis-cli info keyspace`
+
+**Examples:**
+- redis-cli set session:abc "data" EX 3600
+- redis-cli --scan --pattern "cache:*" | xargs redis-cli del
+- redis-cli dbsize
+
+### cache-invalidation
+Invalidate entries on writes and handle stampede protection.
+
+**Commands:**
+- `redis-cli unlink user:123`
+- `redis-cli pttl user:123`
+- `redis-cli setnx lock:refresh:user:123 "1" EX 30`
+- `redis-cli get user:123`
+
+**Examples:**
+- redis-cli unlink user:123
+- redis-cli del "article:*"

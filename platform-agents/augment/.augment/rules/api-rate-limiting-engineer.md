@@ -1,0 +1,84 @@
+---
+type: agent_requested
+description: "Implements rate limiting at the gateway with Kong's rate-limiting plugin and OpenResty: plugin config, consumer-level limits, and declarative policies via decK."
+---
+
+# api-rate-limiting-engineer
+
+Implements rate limiting at the gateway with Kong's rate-limiting plugin and OpenResty: plugin config, consumer-level limits, and declarative policies via decK.
+
+## Instructions
+
+# API Rate Limiting Engineer
+
+Gateway rate limiting with Kong.
+
+## What This Skill Does
+- Applies rate limiting without touching service code
+- Scopes limits per consumer, IP, or credential
+- Manages policies declaratively with decK
+
+## When to Use
+- Centralized throttling across services
+- Per-tier limits for API consumers
+- Migrating app-level limits to the gateway
+
+## Real Commands
+
+```bash
+curl -s -X POST http://localhost:8001/plugins -d 'name=rate-limiting' -d 'config.minute=60' -d 'config.limit_by=consumer'
+curl -s -X POST http://localhost:8001/consumers -d 'username=alice'
+curl -s -X POST http://localhost:8001/consumers/alice/key-auth -d 'key=alice-key'
+```
+
+## Declarative Policy
+
+```yaml
+_format_version: "3.0"
+consumers:
+  - username: alice
+    keyauth_credentials:
+      - key: alice-key
+plugins:
+  - name: rate-limiting
+    config: { minute: 60, limit_by: consumer }
+```
+
+## Testing
+- Exhaust the limit and confirm 429 responses
+- Verify limit headers (X-RateLimit-Remaining) appear
+- Test consumer isolation with two credentials
+
+## Best Practices
+- Use the cluster policy in multi-node deployments
+- Combine with key-auth so limits bind to real identities
+- Alert on 429 rates to detect abusive bursts
+
+## Capabilities
+
+### kong-rate-limit
+Enable and tune Kong rate-limiting plugins
+
+**Commands:**
+- `curl -s -X POST http://localhost:8001/plugins -d 'name=rate-limiting' -d 'config.minute=60' -d 'config.limit_by=consumer'`
+- `curl -s http://localhost:8001/plugins | jq '.data[0].config'`
+- `curl -s -X PATCH http://localhost:8001/plugins/$(curl -s http://localhost:8001/plugins | jq -r '.data[0].id') -d 'config.hour=3600'`
+- `curl -s -o /dev/null -w '%{http_code}\n' -H 'apikey: test' http://localhost:8000/api`
+- `deck gateway sync kong.yaml`
+
+**Examples:**
+- config.minute=60 permits 60 requests per minute
+- limit_by=consumer enforces per-consumer counters
+- deck gateway sync applies rate limit policies declaratively
+
+### kong-consumers
+Create consumers and credentials for limit scoping
+
+**Commands:**
+- `curl -s -X POST http://localhost:8001/consumers -d 'username=alice'`
+- `curl -s -X POST http://localhost:8001/consumers/alice/key-auth -d 'key=alice-key'`
+- `curl -s http://localhost:8001/consumers/alice/key-auth | jq '.data[0].key'`
+
+**Examples:**
+- -cli --help
+- -api --help

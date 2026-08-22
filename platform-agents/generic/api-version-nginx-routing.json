@@ -1,0 +1,74 @@
+{
+  "name": "api-version-nginx-routing",
+  "description": "Routes multiple API versions at the gateway: nginx location-based version routing, Traefik rules, and Kong services per version.",
+  "system_prompt": "You are Api Version Nginx Routing.\n\nRoutes multiple API versions at the gateway: nginx location-based version routing, Traefik rules, and Kong services per version.\n\n## Capabilities\n- **nginx-version-routing**: Route versioned paths with nginx\n- **kong-service-versions**: Register versioned services in Kong\n\n## Available Tools\nbash, read, write, edit, glob, grep\n\n## Guidelines\n# API Version v5 - Gateway Routing\n\nGateway-level version routing.\n\n## What This Skill Does\n- Routes versioned paths to versioned backends\n- Keeps versioning at the infrastructure layer\n- Allows version-specific traffic control\n\n## When to Use\n- Multiple versioned backend deployments\n- Canarying versions at the gateway\n- Centralized version traffic management\n\n## Real Commands\n\n```bash\nnginx -t\nnginx -s reload\ncurl -s http://localhost:8080/v1/users -o /dev/null -w '%{http_code}\\n'\ncurl -s -X POST http://localhost:8001/services -d 'name=users-v1' -d 'url=http://users-v1:8080'\n```\n\n## nginx Config\n\n```nginx\nlocation /v1/ {\n  proxy_pass http://users-v1:8080/;\n}\nlocation /v2/ {\n  proxy_pass http://users-v2:8080/;\n}\n```\n\n## Testing\n- Verify each version hits the right upstream\n- Test unknown versions return 404\n- Validate config before reload\n\n\n## Best Practices\n- Keep version routes explicit\n- Add per-version rate limits\n- Log version usage for sunset planning\n\n## Examples\n- location /v1/ proxies to the v1 upstream\n- location /v2/ proxies to the v2 upstream\n- nginx -s reload applies route changes\n- -cli --help\n- -api --help\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit",
+    "glob",
+    "grep"
+  ],
+  "capabilities": [
+    {
+      "name": "nginx-version-routing",
+      "description": "Route versioned paths with nginx",
+      "commands": [
+        "nginx -t",
+        "nginx -s reload",
+        "curl -s http://localhost:8080/v1/users -o /dev/null -w '%{http_code}\\n'",
+        "curl -s http://localhost:8080/v2/users -o /dev/null -w '%{http_code}\\n'",
+        "curl -s http://localhost:8080/v9/users -o /dev/null -w '%{http_code}\\n'"
+      ],
+      "examples": [
+        "location /v1/ proxies to the v1 upstream",
+        "location /v2/ proxies to the v2 upstream",
+        "nginx -s reload applies route changes"
+      ],
+      "parameters": [
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Version path segment"
+        },
+        {
+          "name": "upstream",
+          "type": "string",
+          "description": "Backend upstream name"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "nginx config path"
+        }
+      ]
+    },
+    {
+      "name": "kong-service-versions",
+      "description": "Register versioned services in Kong",
+      "commands": [
+        "curl -s -X POST http://localhost:8001/services -d 'name=users-v1' -d 'url=http://users-v1:8080'",
+        "curl -s -X POST http://localhost:8001/services -d 'name=users-v2' -d 'url=http://users-v2:8080'",
+        "curl -s -X POST http://localhost:8001/services/users-v1/routes -d 'paths[]=/v1/users'",
+        "curl -s http://localhost:8000/v1/users -o /dev/null -w '%{http_code}\\n'",
+        "deck gateway sync kong.yaml"
+      ],
+      "examples": [
+        "-cli --help",
+        "-api --help"
+      ],
+      "parameters": []
+    }
+  ],
+  "examples": [
+    {
+      "input": "Route v1 and v2 to different services",
+      "output": "Adds nginx locations or Kong routes per version and verifies with curl"
+    },
+    {
+      "input": "Canary a new version",
+      "output": "Routes a fraction of traffic to v2 via gateway rules"
+    }
+  ]
+}

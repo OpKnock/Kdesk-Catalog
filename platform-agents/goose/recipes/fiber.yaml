@@ -1,0 +1,28 @@
+title: Fiber
+description: 'Build high-performance Go HTTP APIs with Fiber: run the server, wire middleware, and test
+  routes.'
+version: 2.0.0
+instructions: "# Fiber\n\nBuild high-performance Go HTTP APIs with Fiber: run the server, wire middleware,\
+  \ and test routes.\n\n## Instructions\n\n# Fiber\n\n## What this skill does\n\nFiber is an Express-inspired\
+  \ web framework for Go built on fasthttp, known for high throughput and low memory usage. It provides\
+  \ familiar routing, middleware, and context APIs.\n\n## When to use\n\n- Building fast Go REST APIs\
+  \ or BFFs\n- Teams coming from Express/Node wanting Go performance\n- Embedding HTTP servers in existing\
+  \ Go services\n\n## Real commands\n\n```bash\n# Get the module and run\ngo get github.com/gofiber/fiber/v2\n\
+  go run main.go\n\n# Build and test\ngo build -o server main.go\n go test ./... -v\n\n# Smoke test\n\
+  curl -s localhost:3000/api/orders | jq\n```\n\n## Minimal app\n\n```go\npackage main\n\nimport (\n \
+  \   \"github.com/gofiber/fiber/v2\"\n    \"github.com/gofiber/fiber/v2/middleware/logger\"\n)\n\nfunc\
+  \ main() {\n    app := fiber.New()\n    app.Use(logger.New())\n\n    app.Get(\"/api/orders/:id\", func(c\
+  \ *fiber.Ctx) error {\n        if c.Params(\"id\") == \"\" {\n            return c.Status(400).JSON(fiber.Map{\"\
+  error\": \"missing id\"})\n        }\n        return c.JSON(fiber.Map{\"id\": c.Params(\"id\")})\n \
+  \   })\n\n    app.Listen(\":3000\")\n}\n```\n\n## Testing\n\n```go\nfunc TestGetOrder(t *testing.T)\
+  \ {\n    app := buildApp()\n    req := httptest.NewRequest(\"GET\", \"/api/orders/1\", nil)\n    resp,\
+  \ _ := app.Test(req)\n    if resp.StatusCode != 200 {\n        t.Fatalf(\"expected 200, got %d\", resp.StatusCode)\n\
+  \    }\n}\n```\n\n## Best practices\n\n- Use the embedded `app.Test()` in tests; no need to bind a port.\n\
+  - Add recover and request-id middleware first in the stack.\n- Use `fiber.Map` for ad hoc JSON, typed\
+  \ structs for contracts.\n- Enable prefork only with a single process supervisor model.\n- Set `IdleTimeout`\
+  \ and `ReadTimeout` on production listeners.\n\n## Capabilities\n\n### fiber-routing\nRun Fiber apps,\
+  \ add middleware, and test endpoints.\n\n**Commands:**\n- `go get github.com/gofiber/fiber/v2`\n- `go\
+  \ run main.go`\n- `go build -o server main.go`\n- `go test ./... -v`\n- `curl -s localhost:3000/api/orders\
+  \ | jq`\n\n**Examples:**\n- go get github.com/gofiber/fiber/v2 && go run main.go\n- go test ./... -v\n\
+  - curl -s localhost:3000/api/orders | jq"
+prompt: Act as Fiber and handle the task per the instructions.

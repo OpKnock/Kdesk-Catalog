@@ -1,0 +1,28 @@
+title: Redis Pubsub Go
+description: 'Publish and subscribe to Redis channels from Go using go-redis: channel and pattern subscriptions
+  with graceful shutdown handling.'
+version: 2.0.0
+instructions: "# Redis Pubsub Go\n\nPublish and subscribe to Redis channels from Go using go-redis: channel\
+  \ and pattern subscriptions with graceful shutdown handling.\n\n## Instructions\n\n# Redis Pub/Sub in\
+  \ Go\n\nHand-crafted skill for Redis publish/subscribe messaging with the go-redis client.\n\n## What\
+  \ this skill does\n\n- Subscribes to exact channels and glob patterns from Go\n- Publishes JSON messages\
+  \ from redis-cli or other producers\n- Handles ReceiveMessage timeouts and reconnects in subscriber\
+  \ loops\n\n## When to use\n\n- Fanning out order events to multiple Go services\n- Replacing polling\
+  \ with push notifications between services\n- Testing channel traffic during a release\n\n## Real commands\n\
+  \n```bash\n# Add the client\ngo get github.com/redis/go-redis/v9\ngo mod init app && go mod tidy\n\n\
+  # Produce from the CLI while the Go subscriber runs\nredis-cli -p 6379 publish events:orders '{\"id\"\
+  :1,\"total\":99}'\n\n# Inspect live channels\nredis-cli -p 6379 pubsub channels\nredis-cli -p 6379 pubsub\
+  \ numsub events:orders\n\n# Run the subscriber\ngo run main.go\n```\n\n## Minimal subscriber\n\n```go\n\
+  import \"github.com/redis/go-redis/v9\"\n\nsub := rdb.Subscribe(ctx, \"events:orders\")\ndefer sub.Close()\n\
+  \nfor {\n    msg, err := sub.ReceiveMessage(ctx)\n    if err != nil {\n        log.Println(\"recv:\"\
+  , err)\n        continue\n    }\n    log.Printf(\"order event: %s\", msg.Payload)\n}\n```\n\n## Testing\n\
+  \n```bash\n# Publish from a second terminal and watch the subscriber print\nredis-cli -p 6379 publish\
+  \ events:orders '{\"id\":2,\"total\":49}'\nredis-cli -p 6379 psubscribe 'events:*'\n```\n\n## Best practices\n\
+  \n- Always Close() the PubSub object to avoid leaking the connection\n- Run one subscriber goroutine\
+  \ per channel with a select on ctx.Done()\n- JSON-encode payloads so every consumer can decode them\
+  \ safely\n\n## Capabilities\n\n### go-redis-pubsub\nPublish and subscribe to Redis channels from Go\
+  \ with the go-redis PubSub API\n\n**Commands:**\n- `go get github.com/redis/go-redis/v9`\n- `go mod\
+  \ init app && go mod tidy`\n- `go run main.go`\n- `redis-cli -p 6379 publish events:orders '{\"id\"\
+  :1,\"total\":99}'`\n- `redis-cli -p 6379 pubsub channels`\n\n**Examples:**\n- redis-cli -p 6379 publish\
+  \ events:orders '{\"id\":1}'\n- redis-cli -p 6379 pubsub channels events:*\n- go run main.go"
+prompt: Act as Redis Pubsub Go and handle the task per the instructions.

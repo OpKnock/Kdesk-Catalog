@@ -1,0 +1,29 @@
+title: Snyk
+description: Scans dependencies, code, IaC, and containers with Snyk, monitoring projects and enforcing
+  policies from the CLI.
+version: 2.0.0
+instructions: "# Snyk\n\nScans dependencies, code, IaC, and containers with Snyk, monitoring projects\
+  \ and enforcing policies from the CLI.\n\n## Instructions\n\n# Snyk\n\nDeveloper-first security scanning\
+  \ for dependencies, code, IaC, and containers.\n\n## What This Skill Does\n\n- Tests lockfiles for known\
+  \ vulnerabilities and fix paths\n- Scans source code with Snyk Code SAST\n- Scans Terraform/CloudFormation/K8s\
+  \ with Snyk IaC\n- Monitors projects so new vulns surface without rescanning\n\n## When to Use\n\n-\
+  \ Pre-merge dependency checks in CI\n- Continuous monitoring of long-lived projects\n- Full-stack scan\
+  \ (code + deps + IaC + images)\n\n## Real Commands\n\n```bash\n# Authenticate (once)\nsnyk auth\n\n\
+  # Dependencies\nsnyk test\nsnyk test --all-projects --severity-threshold=high\nsnyk test --json -o snyk-results.json\n\
+  \n# Code and IaC\nsnyk code test\nsnyk iac test --report\nsnyk container test nginx:1.25 --severity-threshold=high\n\
+  \n# Monitor\nsnyk monitor --all-projects\nsnyk monitor --project-name=my-api\n```\n\n## CI Gate\n\n\
+  ```yaml\n- name: Snyk test\n  run: snyk test --all-projects --severity-threshold=high --fail-on=upgradable\n\
+  ```\n\n## Best Practices\n\n- Set --severity-threshold=high in CI to start; tighten later\n- Use --fail-on=upgradable\
+  \ to only fail when a fix exists\n- Monitor every release so regressions alert automatically\n- Keep\
+  \ SNYK_TOKEN in CI secrets, never in the repo\n- Triage with the dashboard's priority score, not raw\
+  \ counts\n\n## Capabilities\n\n### dependency-testing\nTest projects for vulnerable dependencies.\n\n\
+  **Commands:**\n- `snyk auth`\n- `snyk test`\n- `snyk test --all-projects`\n- `snyk test --severity-threshold=high`\n\
+  - `snyk test --json -o snyk-results.json`\n\n**Examples:**\n- snyk test\n- snyk test --all-projects\
+  \ --severity-threshold=high\n- snyk test --org=my-org --json\n\n### code-iac-container\nScan source\
+  \ code, IaC files, and container images.\n\n**Commands:**\n- `snyk code test`\n- `snyk iac test`\n-\
+  \ `snyk iac test --report`\n- `snyk container test ubuntu:latest`\n- `snyk iac test --sarif`\n\n**Examples:**\n\
+  - snyk code test\n- snyk iac test --report\n- snyk container test nginx:1.25 --severity-threshold=high\n\
+  \n### monitoring\nMonitor projects and get alerts for new vulns.\n\n**Commands:**\n- `snyk monitor`\n\
+  - `snyk monitor --all-projects`\n- `snyk monitor --project-name=api`\n- `snyk test --all-projects --prune-repeated-subdependencies`\n\
+  \n**Examples:**\n- snyk monitor\n- snyk monitor --all-projects\n- snyk monitor --project-name=my-api"
+prompt: Act as Snyk and handle the task per the instructions.

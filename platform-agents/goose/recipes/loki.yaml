@@ -1,0 +1,38 @@
+title: Loki
+description: 'Run and query Grafana Loki: single-binary server, LogQL queries with logcli, promtail shipping,
+  and label-based filtering.'
+version: 2.0.0
+instructions: "# Loki\n\nRun and query Grafana Loki: single-binary server, LogQL queries with logcli,\
+  \ promtail shipping, and label-based filtering.\n\n## Instructions\n\n# Grafana Loki\n\nQuery and operate\
+  \ Grafana Loki, the log aggregation system.\n\n## What this skill does\n\n- Starts a local Loki instance\
+  \ (single binary / Docker).\n- Ships logs with promtail and queries with logcli.\n- Runs LogQL stream\
+  \ and metric queries.\n\n## When to use\n\n- Cheap log search without full-text indexing overhead.\n\
+  - Alerting on log rates (error rate, panic count).\n- Consolidating logs from Kubernetes clusters.\n\
+  \n## Real commands\n\n```bash\n# Start Loki\ndocker run -d --name loki -p 3100:3100 grafana/loki:3.0.0\n\
+  \n# Readiness\ncurl -s http://localhost:3100/ready\n\n# Ship logs with promtail\ndocker run -d --name\
+  \ promtail -v /var/log:/var/log:ro \\\n  -v $PWD/promtail-config.yml:/etc/promtail/config.yml \\\n \
+  \ grafana/promtail:3.0.0 -config.file=/etc/promtail/config.yml\n\n# logcli: recent lines for a label\
+  \ set\nlogcli query '{app=\"checkout\"}' --limit 50\n\n# logcli: filter for 500s in the last hour\n\
+  logcli query '{app=\"nginx\"} |= \"500\"' --from=\"1h ago\" --limit 20\n\n# logcli: rate query (lines/sec)\n\
+  logcli query rate('{app=\"checkout\"}[5m]') --from=\"1h ago\"\n\n# logcli: list label values\nlogcli\
+  \ labels app\n\n# HTTP query API\ncurl -G -s http://localhost:3100/loki/api/v1/query_range \\\n  --data-urlencode\
+  \ 'query={app=\"checkout\"}' --data-urlencode 'limit=10'\n```\n\n## promtail config example\n\n```yaml\n\
+  server:\n  http_listen_port: 9080\nclients:\n  - url: http://localhost:3100/loki/api/v1/push\nscrape_configs:\n\
+  \  - job_name: app\n    static_configs:\n      - targets: [localhost]\n        labels:\n          job:\
+  \ app\n          __path__: /var/log/app/*.log\n```\n\n## Testing\n\n```bash\nlogcli query '{job=\"app\"\
+  }' --limit 5\n```\n\n## Best practices\n\n- Design labels carefully; cardinality explodes storage and\
+  \ query cost.\n- Use LogQL metric queries (rate/count_over_time) for alerting.\n- Keep log lines parseable;\
+  \ combine with a parser for structured fields.\n\n## Capabilities\n\n### loki-server\nStart a local\
+  \ Loki server and check readiness.\n\n**Commands:**\n- `docker run -d --name loki -p 3100:3100 grafana/loki:3.0.0`\n\
+  - `curl -s http://localhost:3100/ready`\n- `curl -s http://localhost:3100/metrics | grep loki_logs_ingested_bytes_total\
+  \ | head -3`\n- `docker logs loki --tail=20`\n\n**Examples:**\n- docker run -d --name loki -p 3100:3100\
+  \ grafana/loki:3.0.0\n- curl -s http://localhost:3100/ready\n- curl -s http://localhost:3100/metrics\
+  \ | grep loki_logs_ingested_bytes_total | head -3\n\n### logcli-query\nQuery logs with logcli and the\
+  \ HTTP query API.\n\n**Commands:**\n- `logcli query '{app=\"checkout\"}' --limit 50`\n- `logcli query\
+  \ '{app=\"nginx\"} |= \"500\"' --from=\"1h ago\" --limit 20`\n- `logcli query rate('{app=\"checkout\"\
+  }[5m]') --from=\"1h ago\"`\n- `curl -G -s http://localhost:3100/loki/api/v1/query_range --data-urlencode\
+  \ 'query={app=\"checkout\"}' --data-urlencode 'limit=10'`\n- `logcli labels app`\n\n**Examples:**\n\
+  - logcli query '{app=\"nginx\"} |= \"500\"' --from=\"1h ago\" --limit 20\n- logcli query rate('{app=\"\
+  checkout\"}[5m]') --from=\"1h ago\"\n- curl -G -s http://localhost:3100/loki/api/v1/query_range --data-urlencode\
+  \ 'query={app=\"checkout\"}' --data-urlencode 'limit=10'"
+prompt: Act as Loki and handle the task per the instructions.

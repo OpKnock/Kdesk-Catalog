@@ -1,0 +1,35 @@
+title: Keepass
+description: 'Manage password databases with keepassxc-cli: create databases, add and search entries,
+  export CSV, and handle attachments from the terminal.'
+version: 2.0.0
+instructions: "# Keepass\n\nManage password databases with keepassxc-cli: create databases, add and search\
+  \ entries, export CSV, and handle attachments from the terminal.\n\n## Instructions\n\n# KeePassXC (keepassxc-cli)\n\
+  \nManage KeePassXC password databases from the command line.\n\n## What this skill does\n\n- Creates\
+  \ and unlocks .kdbx databases.\n- Adds, edits, generates, and deletes entries.\n- Exports CSV backups\
+  \ and handles attachments.\n\n## When to use\n\n- Scripting credential rotation across services.\n-\
+  \ Migrating secrets into a shared database.\n- Automation that needs to fetch a credential at runtime.\n\
+  \n## Real commands\n\n```bash\n# Create a database (prompts for master password)\nkeepassxc-cli create\
+  \ db.kdbx\n\n# List groups and entries\nkeepassxc-cli ls -p db.kdbx\n\n# Show an entry (masked)\nkeepassxc-cli\
+  \ show -p db.kdbx Web/staging.myapp.test\n\n# Show the password\nkeepassxc-cli show -p db.kdbx -s Web/staging.myapp.test\n\
+  \n# Add an entry\nkeepassxc-cli add -p db.kdbx Web/staging.myapp.test \\\n  --username alice --password\
+  \ s3cret\n\n# Generate a strong password into an entry\nkeepassxc-cli generate -p db.kdbx Web/staging.myapp.test\
+  \ \\\n  --length 24 --lowercase --uppercase --numbers --special\n\n# Edit username\nkeepassxc-cli edit\
+  \ -p db.kdbx Web/staging.myapp.test --username alice2\n\n# Export CSV backup\nkeepassxc-cli export -p\
+  \ db.kdbx -f csv backup.csv\n\n# Attach a file\nkeepassxc-cli attachment-export -p db.kdbx Web/staging.myapp.test\
+  \ key.pem keyfile.pem\n\n# Delete an entry\nkeepassxc-cli rm -p db.kdbx Web/staging.myapp.test\n```\n\
+  \n## Testing\n\n```bash\n# Verify the backup parses\nhead -5 backup.csv\n```\n\n## Best practices\n\n\
+  - Never pass the master password on the command line; use the prompt.\n- Keep exports encrypted; CSV\
+  \ backups contain plaintext secrets.\n- Store TOTP seeds as extra fields; pair with oathtool for OTP.\n\
+  \n## Capabilities\n\n### db-lifecycle\nCreate, unlock, and inspect KeePassXC databases.\n\n**Commands:**\n\
+  - `keepassxc-cli create db.kdbx`\n- `keepassxc-cli ls -p db.kdbx`\n- `keepassxc-cli show -p db.kdbx\
+  \ Web/staging.myapp.test`\n- `keepassxc-cli show -p db.kdbx -s Web/staging.myapp.test`\n- `keepassxc-cli\
+  \ export -p db.kdbx -f csv backup.csv`\n\n**Examples:**\n- keepassxc-cli create db.kdbx\n- keepassxc-cli\
+  \ ls -p db.kdbx\n- keepassxc-cli show -p db.kdbx -s Web/staging.myapp.test\n\n### entry-ops\nAdd, edit,\
+  \ generate, and remove entries with attachments.\n\n**Commands:**\n- `keepassxc-cli add -p db.kdbx Web/staging.myapp.test\
+  \ --username alice --password s3cret`\n- `keepassxc-cli generate -p db.kdbx Web/staging.myapp.test --length\
+  \ 24 --lowercase --uppercase --numbers --special`\n- `keepassxc-cli edit -p db.kdbx Web/staging.myapp.test\
+  \ --username alice2`\n- `keepassxc-cli rm -p db.kdbx Web/staging.myapp.test`\n- `keepassxc-cli attachment-export\
+  \ -p db.kdbx Web/staging.myapp.test key.pem keyfile.pem`\n\n**Examples:**\n- keepassxc-cli add -p db.kdbx\
+  \ Web/staging.myapp.test --username alice --password s3cret\n- keepassxc-cli generate -p db.kdbx Web/staging.myapp.test\
+  \ --length 24\n- keepassxc-cli attachment-export -p db.kdbx Web/staging.myapp.test key.pem keyfile.pem"
+prompt: Act as Keepass and handle the task per the instructions.

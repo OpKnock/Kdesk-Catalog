@@ -1,0 +1,37 @@
+title: Argocd
+description: 'Operates Argo CD for GitOps deployments: app creation, sync policies, health checks, rollbacks,
+  and CLI auth.'
+version: 2.0.0
+instructions: "# Argocd\n\nOperates Argo CD for GitOps deployments: app creation, sync policies, health\
+  \ checks, rollbacks, and CLI auth.\n\n## Instructions\n\n# Argo CD\n\n## What this skill does\n\nOperates\
+  \ Argo CD for GitOps: creating apps from git repos, controlling sync (manual/automated, prune, self-heal),\
+  \ inspecting sync/health state, rolling back to prior revisions, and CLI auth.\n\n## When to use\n\n\
+  - Deploying an API's manifests to Kubernetes from git\n- Fixing a bad deploy fast via rollback\n- Debugging\
+  \ why the cluster drifts from git\n\n## Real commands\n\n```bash\nargocd login argocd.staging.your-app.test\
+  \ --sso\n\nargocd app create my-api --repo https://github.com/org/my-api --path manifests --dest-server\
+  \ https://kubernetes.default.svc --dest-namespace prod\n\nargocd app sync my-api --prune --timeout 300\n\
+  \nargocd app set my-api --sync-policy automated --auto-prune --self-heal\n\nargocd app get my-api\n\
+  argocd app history my-api\nargocd app rollback my-api 3\n```\n\n## Declarative Application\n\n```yaml\n\
+  apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: my-api\nspec:\n  destination:\n\
+  \    server: https://kubernetes.default.svc\n    namespace: prod\n  source:\n    repoURL: https://github.com/org/my-api\n\
+  \    path: manifests\n    targetRevision: main\n  syncPolicy:\n    automated:\n      prune: true\n \
+  \     selfHeal: true\n```\n\n## Testing\n\n- Run `argocd app diff my-api` to preview drift\n- Wait for\
+  \ health with `argocd app wait my-api --health`\n\n## Best practices\n\n- Prefer declarative Applications\
+  \ in git\n- Pin targetRevision (tags, not main) for production\n- Enable prune+selfHeal only after diff\
+  \ tooling is in place\n\n## Capabilities\n\n### app-lifecycle\nCreate, sync, and manage Argo CD applications.\n\
+  \n**Commands:**\n- `argocd app create my-api --repo https://github.com/org/my-api --path manifests --dest-server\
+  \ https://kubernetes.default.svc --dest-namespace prod`\n- `argocd app list`\n- `argocd app sync my-api`\n\
+  - `argocd app get my-api`\n- `argocd app delete my-api`\n\n**Examples:**\n- argocd app create my-api\
+  \ --repo https://github.com/org/my-api --path charts/api --dest-server https://kubernetes.default.svc\
+  \ --dest-namespace prod --helm-set image.tag=v1.2.0\n- argocd app sync my-api --prune --timeout 300\n\
+  - argocd app get my-api -o wide\n\n### sync-policies\nConfigure automated sync, pruning, and self-heal\
+  \ behavior.\n\n**Commands:**\n- `argocd app set my-api --sync-policy automated`\n- `argocd app set my-api\
+  \ --auto-prune`\n- `argocd app set my-api --self-heal`\n- `argocd app get my-api --show-operation`\n\
+  - `argocd app wait my-api --health`\n\n**Examples:**\n- argocd app set my-api --sync-policy automated\
+  \ --auto-prune --self-heal\n- argocd app wait my-api --timeout 300\n- argocd app get my-api --refresh\n\
+  \n### rollback-and-ops\nRoll back deployments and manage CLI sessions.\n\n**Commands:**\n- `argocd login\
+  \ argocd.staging.your-app.test --sso`\n- `argocd app rollback my-api 3`\n- `argocd app history my-api`\n\
+  - `argocd app terminate-op my-api`\n- `argocd account get-user-info`\n\n**Examples:**\n- argocd login\
+  \ argocd.staging.your-app.test --username admin --insecure\n- argocd app history my-api | head -5\n\
+  - argocd app rollback my-api 2 --prune"
+prompt: Act as Argocd and handle the task per the instructions.

@@ -1,0 +1,26 @@
+title: Golangci Lint
+description: 'Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config,
+  and CI integration.'
+version: 2.0.0
+instructions: "# Golangci Lint\n\nRuns aggregated Go linting with golangci-lint: dozens of linters, fast\
+  \ parallel runs, config, and CI integration.\n\n## Instructions\n\n# golangci-lint\n\nFast aggregated\
+  \ Go linting.\n\n## When to Use\n\n- Enforcing multiple linters with one command\n- CI lint gates that\
+  \ stay fast\n- Catching style, bugs, and security issues together\n- Diff-only linting on PRs\n\n##\
+  \ Commands\n\n```bash\n# Install\ngo install github.com/golangci/golangci-lint/cmd/golangci-lint@latest\n\
+  \n# Run\ngolangci-lint run\ngolangci-lint run ./...\ngolangci-lint run --fix\n\n# Only new issues on\
+  \ a PR\ngolangci-lint run --new-from-rev HEAD~1\n\n# GitHub Actions output\ngolangci-lint run --out-format\
+  \ github-actions\n\n# Fast mode (skip slower linters)\ngolangci-lint run --fast\n\n# Inspect\ngolangci-lint\
+  \ linters\ngolangci-lint version\n```\n\n## Config Example\n\n```yaml\n# .golangci.yml\nrun:\n  timeout:\
+  \ 5m\nlinters:\n  enable:\n    - errcheck\n    - govet\n    - staticcheck\n    - gosec\n    - revive\n\
+  issues:\n  exclude-rules:\n    - path: _test\\.go\n      linters: [gosec]\n```\n\n## Best Practices\n\
+  \n- Enable errcheck, govet, staticcheck, gosec at minimum\n- Use --new-from-rev for PR-only findings\n\
+  - Cache builds; golangci-lint caches by default\n- Run --fix locally, verify-only in CI\n- Keep the\
+  \ config in the repo for consistent runs\n- Pin the golangci-lint version in CI\n\n## Capabilities\n\
+  \n### golangci-run\nRun golangci-lint with linter selection.\n\n**Commands:**\n- `golangci-lint run`\n\
+  - `golangci-lint run ./...`\n- `golangci-lint run --fix`\n- `golangci-lint run --enable-all --max-issues-per-linter\
+  \ 0`\n- `golangci-lint run --fast`\n\n**Examples:**\n- golangci-lint run --timeout 5m ./...\n- golangci-lint\
+  \ run --new-from-rev HEAD~1\n- golangci-lint run --out-format github-actions\n\n### golangci-config\n\
+  Manage linter configuration.\n\n**Commands:**\n- `golangci-lint linters`\n- `golangci-lint version`\n\
+  - `golangci-lint run --print-resources-usage`\n- `golangci-lint cache clean`\n\n**Examples:**\n- golangci-lint\
+  \ linters | grep enabled\n- golangci-lint run --disable errcheck"
+prompt: Act as Golangci Lint and handle the task per the instructions.

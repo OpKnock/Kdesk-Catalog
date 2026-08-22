@@ -1,0 +1,26 @@
+title: Prometheus Monitoring
+description: 'Prometheus server operations: config, relabeling, recording rules, queries via promtool,
+  and API access.'
+version: 2.0.0
+instructions: "# Prometheus Monitoring\n\nPrometheus server operations: config, relabeling, recording\
+  \ rules, queries via promtool, and API access.\n\n## Instructions\n\n# Prometheus Monitoring\n\nRun\
+  \ and operate the Prometheus server itself: configs, targets, rules and queries.\n\n## What this skill\
+  \ does\n\n- Starts Prometheus with validated config\n- Checks rules and runs queries with promtool\n\
+  - Reloads config and inspects targets\n\n## When to use\n\n- Setting up scraping for a new environment\n\
+  - Debugging missing or duplicated targets\n\n## Real commands\n\n```bash\n# Run\nprometheus --config.file=prometheus.yml\
+  \ --storage.tsdb.path=/data/prom\n\n# Validate before reload\npromtool check config prometheus.yml\n\
+  promtool check rules rules.yml\n\n# Reload without restart\ncurl -X POST http://localhost:9090/-/reload\n\
+  \n# Queries\npromtool query instant 'sum(rate(http_requests_total[5m]))' --url http://localhost:9090\n\
+  promtool query range 'http_requests_total' --start=... --end=... --step=30s --url http://localhost:9090\n\
+  \n# Targets\ncurl -s 'http://localhost:9090/api/v1/targets' | jq '.data.activeTargets[].health'\n```\n\
+  \n## prometheus.yml essentials\n\n```yaml\nglobal:\n  scrape_interval: 15s\nscrape_configs:\n- job_name:\
+  \ app\n  static_configs:\n  - targets: ['localhost:8080']\n```\n\n## Best practices\n\n- Run promtool\
+  \ check config in CI\n- Use -/reload instead of restarts\n- Alert on up == 0 for every job\n\n## Capabilities\n\
+  \n### prometheus-operations\nRun Prometheus, validate config and rules, run instant/range queries and\
+  \ manage targets.\n\n**Commands:**\n- `prometheus --config.file=prometheus.yml --storage.tsdb.path=/data/prom`\n\
+  - `promtool check config prometheus.yml`\n- `promtool check rules rules.yml`\n- `promtool query instant\
+  \ 'http_requests_total' --url http://localhost:9090`\n- `curl -X POST http://localhost:9090/-/reload`\n\
+  \n**Examples:**\n- promtool query instant 'sum(rate(http_requests_total[5m]))' --url http://localhost:9090\n\
+  - promtool check config prometheus.yml && promtool check rules rules.yml\n- curl -s 'http://localhost:9090/api/v1/targets'\
+  \ | jq '.data.activeTargets[].health' | sort | uniq -c"
+prompt: Act as Prometheus Monitoring and handle the task per the instructions.

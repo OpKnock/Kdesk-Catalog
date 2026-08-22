@@ -1,0 +1,32 @@
+title: Api Analytics Privacy
+description: Privacy-preserving API analytics - anonymize PII with Presidio, aggregate without raw data,
+  and comply with GDPR data minimization.
+version: 2.0.0
+instructions: "# Api Analytics Privacy\n\nPrivacy-preserving API analytics - anonymize PII with Presidio,\
+  \ aggregate without raw data, and comply with GDPR data minimization.\n\n## Instructions\n\n# API Analytics\
+  \ (Privacy-preserving)\n\n## What this skill does\nRun analytics without exposing personal data: detect\
+  \ and anonymize PII with Presidio before analytics pipelines, aggregate on pseudonymous dimensions,\
+  \ and set retention policies.\n\n## When to use\n- Collecting analytics containing emails, phones, or\
+  \ credit cards\n- GDPR / CCPA compliance for analytics\n- Sharing datasets with partners\n\n## Real\
+  \ commands\n```bash\n# Install\npip install presidio-analyzer presidio-anonymizer\n\n# Detect PII in\
+  \ text\npresidio-analyzer --text 'Call me at 555-1234 or email alice@example.com'\n\n# Anonymize a stream\n\
+  python anonymize.py --input events.jsonl \\\n  --output events_safe.jsonl \\\n  --entities EMAIL_ADDRESS,PHONE_NUMBER,CREDIT_CARD\n\
+  \n# Redact instead of replace\npython anonymize.py --input events.jsonl \\\n  --output events_safe.jsonl\
+  \ \\\n  --entities PERSON,EMAIL_ADDRESS --operator redact\n\n# Aggregates only on safe dimensions\n\
+  curl -s 'http://localhost:8080/api/analytics/aggregate?dimension=country' | jq '.rows | length'\n\n\
+  # Check retention config\ncurl -s http://localhost:8080/api/analytics/privacy/retention | jq '.days'\n\
+  ```\n\n## Anonymization strategies\n- redact: remove the value\n- replace: substitute a placeholder\n\
+  - hash: SHA-256 pseudonymization (still linkable)\n- encrypt: reversible for support use\n\n## Best\
+  \ practices\n- Anonymize before writing to analytics storage\n- Keep raw data in a locked data lake\
+  \ with retention limits\n- Never send PII to third-party analytics vendors\n- Document the legal basis\
+  \ for each event property\n\n## Testing\n```bash\npresidio-analyzer --text 'email alice@example.com'\
+  \ | jq '.recognized_entities'\ncurl -s http://localhost:8080/api/analytics/privacy/retention | jq '.days'\n\
+  ```\n\n## Capabilities\n\n### privacy-analytics\nAnonymize PII and run privacy-safe aggregations\n\n\
+  **Commands:**\n- `pip install presidio-analyzer presidio-anonymizer`\n- `presidio-analyzer --text 'Call\
+  \ me at 555-1234 or email alice@localhost'`\n- `presidio-anonymizer --analyzer_result /tmp/analysis.json\
+  \ --text 'alice@localhost called'`\n- `python anonymize.py --input events.jsonl --output events_safe.jsonl\
+  \ --entities EMAIL_ADDRESS,PHONE_NUMBER,CREDIT_CARD`\n- `curl -s http://localhost:8080/api/analytics/aggregate?dimension=country\
+  \ | jq '.rows | length'`\n\n**Examples:**\n- presidio-analyzer --text 'SSN 123-45-6789' --language en\n\
+  - python anonymize.py --input events.jsonl --output events_safe.jsonl --entities PERSON,EMAIL_ADDRESS\
+  \ --operator redact\n- curl -s http://localhost:8080/api/analytics/privacy/retention | jq '.days'"
+prompt: Act as Api Analytics Privacy and handle the task per the instructions.

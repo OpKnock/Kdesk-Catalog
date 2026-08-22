@@ -1,0 +1,28 @@
+title: api-rate-specialist
+description: 'Implements application-level rate limiting with express-rate-limit and @fastify/rate-limit:
+  window configuration, skip logic, headers, and standardizer patterns.'
+version: 2.0.0
+instructions: "# api-rate-specialist\n\nImplements application-level rate limiting with express-rate-limit\
+  \ and @fastify/rate-limit: window configuration, skip logic, headers, and standardizer patterns.\n\n\
+  ## Instructions\n\n# API Rate Specialist\n\nApp-level rate limiting libraries.\n\n## What This Skill\
+  \ Does\n- Adds in-process rate limiting to Express and Fastify\n- Emits standard RateLimit headers\n\
+  - Supports custom key generation and skip rules\n\n## When to Use\n- Single-instance services needing\
+  \ quick throttling\n- Per-route limits (login, uploads)\n- Building blocks before a gateway strategy\n\
+  \n## Real Commands\n\n```bash\nnpm install express-rate-limit\ncurl -s -D- -o /dev/null http://localhost:3000/api\
+  \ | grep -i 'x-ratelimit'\nfor i in $(seq 1 120); do curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api;\
+  \ done | sort | uniq -c\n```\n\n## Configuration\n\n```js\napp.use('/api', rateLimit({\n  windowMs:\
+  \ 60 * 1000,\n  limit: 100,\n  standardHeaders: 'draft-8',\n  keyGenerator: (req) => req.headers['x-client-id']\
+  \ || req.ip\n}));\n```\n\n## Testing\n- Confirm 429 after exceeding the limit\n- Validate RateLimit-Reset\
+  \ header math\n- Verify skip rules bypass counting for health checks\n\n## Best Practices\n- Mount tight\
+  \ limits on auth endpoints first\n- Use a shared store (Redis) for multi-instance deployments\n- Return\
+  \ informative Retry-After with 429s\n\n## Capabilities\n\n### express-rate-limit\nConfigure express-rate-limit\
+  \ middleware options\n\n**Commands:**\n- `npm install express-rate-limit`\n- `node -e \"const rateLimit=require('express-rate-limit');\
+  \ console.log(rateLimit({windowMs:60000,limit:100}).name)\"`\n- `curl -s -D- -o /dev/null http://localhost:3000/api\
+  \ | grep -i 'x-ratelimit'`\n- `curl -s -o /dev/null -w '%{http_code}\\n' -X POST http://localhost:3000/api/login`\n\
+  - `for i in $(seq 1 120); do curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api; done\
+  \ | sort | uniq -c`\n\n**Examples:**\n- rateLimit({ windowMs: 60000, limit: 100 }) allows 100 req/min\n\
+  - standardHeaders: true emits RateLimit-* headers\n- skip: (req) => req.ip === '127.0.0.1' bypasses\
+  \ localhost\n\n### fastify-rate-limit\nConfigure the Fastify rate limit plugin\n\n**Commands:**\n- `npm\
+  \ install @fastify/rate-limit`\n- `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api`\n\
+  - `node -e \"const rl=require('@fastify/rate-limit'); console.log(typeof rl)\"`"
+prompt: Act as api-rate-specialist and handle the task per the instructions.

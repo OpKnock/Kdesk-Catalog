@@ -1,0 +1,29 @@
+title: Nested Resources
+description: Designs and tests REST API nested resource hierarchies with URI structures, depth limits,
+  pagination, and RFC 8288 Link headers for client navigation.
+version: 2.0.0
+instructions: "# Nested Resources\n\nDesigns and tests REST API nested resource hierarchies with URI structures,\
+  \ depth limits, pagination, and RFC 8288 Link headers for client navigation.\n\n## Instructions\n\n\
+  # Nested Resources\n\nNested resources model parent-child relationships directly in the URI, e.g. /users/{id}/posts/{postId}.\n\
+  \n## What this skill does\n\n- Designs URI hierarchies that mirror domain relationships\n- Decides when\
+  \ nesting is appropriate vs top-level resources\n- Tests endpoints and link relations with curl\n\n\
+  ## When to use\n\n- Designing a new REST API from scratch\n- Reviewing an API where nesting is inconsistent\n\
+  \n## Real commands\n\n```bash\n# Collection under a parent\ncurl -s https://api.your-app.test/v1/users/42/posts\n\
+  \n# Deep nesting (avoid beyond 2 levels)\ncurl -s https://api.your-app.test/v1/users/42/posts/7/comments\n\
+  \n# Pagination on a nested collection\ncurl -s 'https://api.your-app.test/v1/users/42/posts?page=2&per_page=20'\n\
+  \n# Inspect links for navigation\ncurl -s https://api.your-app.test/v1/users/42/posts/7 | jq '.links'\n\
+  \n# Create returns 201 + Location\ncurl -sI -X POST -H 'Content-Type: application/json' \\\n  -d '{\"\
+  title\":\"t\"}' https://api.your-app.test/v1/users/42/posts | grep -i location\n```\n\n## Design rules\n\
+  \n- Nest only genuine compositions (posts belong to user)\n- Never nest more than 2 levels; use query\
+  \ params for filters\n- Reference cross-aggregates by ID (e.g. /posts/{id}/author)\n\n## Alternative\
+  \ when flat\n\n```\nGET /posts?author=42\nPOST /posts { \"user_id\": 42 }\n```\n\n## Best practices\n\
+  \n- Return `Link` headers or a `links` object for navigation\n- Keep names plural and consistent across\
+  \ levels\n- Document depth limit in the OpenAPI spec\n\n## Capabilities\n\n### nested-resource-design\n\
+  Design and test nested REST resources: URI structure, sub-resources, and linked navigation.\n\n**Commands:**\n\
+  - `curl -s https://api.your-app.test/v1/users/42/posts`\n- `curl -s https://api.your-app.test/v1/users/42/posts/7/comments`\n\
+  - `curl -sI https://api.your-app.test/v1/users/42/posts`\n- `curl -s https://api.your-app.test/v1/users/42/posts?page=2&per_page=20`\n\
+  - `curl -s https://api.your-app.test/v1/users/42/posts/7 | jq '.links'`\n\n**Examples:**\n- curl -s\
+  \ https://api.your-app.test/v1/teams/3/members/5 | jq .\n- curl -s 'https://api.your-app.test/v1/users/42/posts?sort=created_at.desc'\
+  \ | jq '.data'\n- curl -sI -X POST -H 'Content-Type: application/json' -d '{\"title\":\"t\"}' https://api.your-app.test/v1/users/42/posts\
+  \ | grep -i location"
+prompt: Act as Nested Resources and handle the task per the instructions.

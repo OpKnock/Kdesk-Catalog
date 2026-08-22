@@ -1,0 +1,33 @@
+title: Ktor Server
+description: 'Build Ktor server applications: routing, content negotiation, static files, and deployment
+  as a standalone JVM app.'
+version: 2.0.0
+instructions: "# Ktor Server\n\nBuild Ktor server applications: routing, content negotiation, static files,\
+  \ and deployment as a standalone JVM app.\n\n## Instructions\n\n# Ktor Server\n\nBuild production Ktor\
+  \ server applications.\n\n## What this skill does\n\n- Sets up routing with typed handlers.\n- Serves\
+  \ JSON via ContentNegotiation.\n- Packages and runs the standalone JAR.\n\n## When to use\n\n- New Kotlin\
+  \ backend services.\n- Lightweight REST APIs with coroutine support.\n- Services needing static files\
+  \ + JSON APIs.\n\n## Real commands\n\n```bash\n# Run in dev\n./gradlew run\n\n# Build a runnable fat\
+  \ jar (shadow plugin)\n./gradlew build\njava -jar build/libs/ktor-server-all.jar\n\n# Test routes\n\
+  curl -s http://localhost:8080/hello\ncurl -s http://localhost:8080/api/orders/42 | jq .\ncurl -s -X\
+  \ POST http://localhost:8080/api/orders \\\n  -H 'Content-Type: application/json' -d '{\"id\":43,\"\
+  amount\":99.5}'\ncurl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/api/orders/notfound\n\
+  ```\n\n## Routing example\n\n```kotlin\nfun Application.module() {\n    install(ContentNegotiation)\
+  \ { json() }\n    routing {\n        get(\"/hello\") { call.respondText(\"Hello, world!\") }\n     \
+  \   get(\"/api/orders/{id}\") {\n            val id = call.parameters[\"id\"]\n            val order\
+  \ = ordersRepo.findById(id)\n            if (order == null) call.respond(HttpStatusCode.NotFound)\n\
+  \            else call.respond(order)\n        }\n        post(\"/api/orders\") {\n            val order\
+  \ = call.receive<Order>()\n            ordersRepo.save(order)\n            call.respond(HttpStatusCode.Created,\
+  \ order)\n        }\n    }\n}\n```\n\n## Testing\n\n```bash\n./gradlew test\n```\n\n## Best practices\n\
+  \n- Use Ktor's status pages plugin to centralize error responses.\n- Serve behind a proxy (nginx/haproxy)\
+  \ for TLS termination.\n- Set engine config (threads, queue size) for production throughput.\n\n## Capabilities\n\
+  \n### server-routes\nDefine Ktor routes and run the server.\n\n**Commands:**\n- `./gradlew run`\n- `./gradlew\
+  \ build`\n- `java -jar build/libs/ktor-server-all.jar`\n- `curl -s http://localhost:8080/hello`\n\n\
+  **Examples:**\n- ./gradlew run\n- java -jar build/libs/ktor-server-all.jar\n- curl -s http://localhost:8080/hello\n\
+  \n### json-api\nServe JSON APIs with content negotiation and test them.\n\n**Commands:**\n- `curl -s\
+  \ http://localhost:8080/api/orders/42 | jq .`\n- `curl -s -X POST http://localhost:8080/api/orders -H\
+  \ 'Content-Type: application/json' -d '{\"id\":43,\"amount\":99.5}'`\n- `curl -s -o /dev/null -w '%{http_code}\\\
+  n' http://localhost:8080/api/orders/notfound`\n- `./gradlew test`\n\n**Examples:**\n- curl -s http://localhost:8080/api/orders/42\
+  \ | jq .\n- curl -s -X POST http://localhost:8080/api/orders -H 'Content-Type: application/json' -d\
+  \ '{\"id\":43,\"amount\":99.5}'\n- ./gradlew test"
+prompt: Act as Ktor Server and handle the task per the instructions.

@@ -1,0 +1,34 @@
+title: Alerting Rules
+description: 'Authors and tests Prometheus alerting rules and Alertmanager config: rule files, promtool
+  validation, unit tests, silences, and the HTTP API.'
+version: 2.0.0
+instructions: "# Alerting Rules\n\nAuthors and tests Prometheus alerting rules and Alertmanager config:\
+  \ rule files, promtool validation, unit tests, silences, and the HTTP API.\n\n## Instructions\n\n# Alerting\
+  \ Rules\n\n## What this skill does\n\nAuthors and operates Prometheus alerting: rule files, promtool\
+  \ validation and unit tests, Alertmanager routing and silences, and alert state queries via the HTTP\
+  \ API.\n\n## When to use\n\n- Creating an alert for a new SLO or error condition\n- Debugging an alert\
+  \ that fires (or fails to fire)\n- Managing an outage via silences without stopping metrics collection\n\
+  \n## Real commands\n\n```bash\n# Validate rules\npromtool check rules alerts.yml\n\n# Unit-test rule\
+  \ evaluation\npromtool test rules tests.yml\n\n# Inspect live alert state\ncurl -s 'http://localhost:9090/api/v1/rules?type=alert'\
+  \ | jq '.data.groups[].rules[] | {name,state}'\n\n# Alertmanager\namtool check-config alertmanager.yml\n\
+  amtool alert list\namtool silence add --expires=2h --author=oncall 'severity=\"critical\"'\n```\n\n\
+  ## Rules file\n\n```yaml\ngroups:\n- name: api\n  rules:\n  - alert: APIHighErrorRate\n    expr: sum(rate(http_requests_total{status=~\"\
+  5..\"}[5m])) / sum(rate(http_requests_total[5m])) > 0.05\n    for: 5m\n    labels:\n      severity:\
+  \ critical\n    annotations:\n      summary: \"API 5xx rate above 5%\"\n```\n\n## Unit test\n\n```yaml\n\
+  rule_files: [alerts.yml]\nevaluation_interval: 1m\ntests:\n- interval: 1m\n  input_series:\n  - series:\
+  \ 'http_requests_total{status=\"500\"}'\n    values: '0+10x10'\n  alert_rule_test:\n  - eval_time: 10m\n\
+  \    alertname: APIHighErrorRate\n```\n\n## Testing\n\n- Run `promtool check rules` in CI before merge\n\
+  - Write promtool test rules cases for fire/no-fire thresholds\n\n## Best practices\n\n- Prefer SLO burn-rate\
+  \ alerts over raw thresholds\n- Every alert needs a runbook URL in annotations\n- Use `for:` clauses\
+  \ to avoid flapping\n\n## Capabilities\n\n### rules-authoring\nAuthor Prometheus alerting/recording\
+  \ rules and validate them.\n\n**Commands:**\n- `promtool check rules alerting-rules.yml`\n- `promtool\
+  \ test rules rules.test.yml`\n- `promtool query instant 'up'`\n- `promtool query range 'http_requests_total[5m]'`\n\
+  - `curl 'http://localhost:9090/api/v1/rules?type=alert'`\n\n**Examples:**\n- promtool check rules /etc/prometheus/alerts.yml\n\
+  - promtool test rules unit-tests.yml\n- curl -s 'http://localhost:9090/api/v1/rules' | jq '.data.groups[].rules[]\
+  \ | {name, state}'\n\n### alertmanager\nConfigure Alertmanager routing, manage silences, and inspect\
+  \ the API.\n\n**Commands:**\n- `amtool check-config /etc/alertmanager/alertmanager.yml`\n- `amtool alert\
+  \ list`\n- `amtool silence add --expires=1h 'severity=\"critical\"'`\n- `amtool silence list`\n- `curl\
+  \ -X POST http://localhost:9093/api/v2/silences -d @silence.json`\n\n**Examples:**\n- amtool check-config\
+  \ /etc/alertmanager/alertmanager.yml\n- amtool silence add --author=oncall --comment=\"draining node\"\
+  \ 'instance=\"node1\"'\n- curl -X GET http://localhost:9093/api/v2/alerts | jq '.[].labels.alertname'"
+prompt: Act as Alerting Rules and handle the task per the instructions.

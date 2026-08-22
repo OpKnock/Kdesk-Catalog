@@ -1,0 +1,40 @@
+title: pact
+description: Pact contract testing. Real pact CLI.
+version: 1.0.0
+instructions: "# pact\n\nPact contract testing. Real pact CLI.\n\n## Instructions\n\n# Pact\n\nPact contract\
+  \ testing using real CLI.\n\n## When to Use\n\n- Consumer-driven contracts\n- Provider verification\n\
+  - Contract testing\n- Microservice testing\n\n## Commands\n\n```bash\n# Install (Node)\nnpm install\
+  \ -D @pact-foundation/pact\n\n# Install (CLI)\nbrew install pact-foundation/pact/pact-cli\n\n# Verify\n\
+  pact-verifier --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json\n\n\
+  # Publish\npact-broker publish ./pacts --broker-base-url=http://localhost:9292\n\n# Can I deploy\npact-broker\
+  \ can-i-deploy --pacticipant=consumer --version=1.0.0 --broker-base-url=http://localhost:9292\n```\n\
+  \n## Consumer Test (JavaScript)\n\n```javascript\n// consumer.test.js\nconst { Pact } = require('@pact-foundation/pact');\n\
+  const path = require('path');\n\nconst provider = new Pact({\n  consumer: 'MyConsumer',\n  provider:\
+  \ 'MyProvider',\n  port: 1234,\n  log: path.resolve(process.cwd(), 'logs', 'pact.log'),\n  dir: path.resolve(process.cwd(),\
+  \ 'pacts'),\n  spec: 2,\n});\n\ndescribe('User API Consumer', () => {\n  beforeAll(() => provider.setup());\n\
+  \  afterAll(() => provider.finalize());\n  \n  it('returns user', async () => {\n    await provider.addInteraction({\n\
+  \      state: 'user with id 123 exists',\n      uponReceiving: 'a request for user 123',\n      withRequest:\
+  \ {\n        method: 'GET',\n        path: '/users/123',\n        headers: { Accept: 'application/json'\
+  \ },\n      },\n      willRespondWith: {\n        status: 200,\n        headers: { 'Content-Type': 'application/json'\
+  \ },\n        body: {\n          id: '123',\n          name: 'John',\n          email: 'john@example.com',\n\
+  \        },\n      },\n    });\n    \n    // Make request to mock server\n    const response = await\
+  \ fetch('http://localhost:1234/users/123');\n    expect(response.status).toBe(200);\n  });\n});\n```\n\
+  \n## Provider Verification (JavaScript)\n\n```javascript\n// provider.test.js\nconst { Verifier } =\
+  \ require('@pact-foundation/pact');\nconst path = require('path');\n\ndescribe('User API Provider',\
+  \ () => {\n  it('verifies contracts', async () => {\n    const verifier = new Verifier({\n      providerBaseUrl:\
+  \ 'http://localhost:8080',\n      pactUrls: [path.resolve(process.cwd(), 'pacts', 'myconsumer-myprovider.json')],\n\
+  \      provider: 'MyProvider',\n    });\n    \n    await verifier.verifyProvider();\n  });\n});\n```\n\
+  \n## Examples\n\n```bash\n# Verify\npact-verifier --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json\n\
+  \n# Publish\npact-broker publish ./pacts --broker-base-url=http://localhost:9292\n```\n\n## CI/CD\n\n\
+  ```yaml\n# GitHub Actions\n- name: Verify Pact\n  run: |\n    pact-verifier --provider-base-url=http://localhost:8080\
+  \ --pact-url=./pacts/consumer-provider.json\n\n# GitLab CI\npact:\n  stage: test\n  script:\n    - pact-verifier\
+  \ --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json\n```\n\n## Capabilities\n\
+  \n### pact\nPact contract testing. Real pact CLI.\n\n**Commands:**\n- `npm install -D @pact-foundation/pact`\n\
+  - `brew install pact-foundation/pact/pact-cli`\n- `pact-verifier --provider-base-url=http://localhost:8080\
+  \ --pact-url=./pacts/consumer-provider.json`\n- `pact-broker publish ./pacts --broker-base-url=http://localhost:9292`\n\
+  - `pact-broker can-i-deploy --pacticipant=consumer --version=1.0.0 --broker-base-url=http://localhost:9292`\n\
+  - `pact-verifier --provider-base-url=http://localhost:8080 --pact-url=./pacts/consumer-provider.json`\n\
+  - `pact-broker publish ./pacts --broker-base-url=http://localhost:9292`\n\n**Examples:**\n- npm install\
+  \ -D @pact-foundation/pact\n- brew install pact-foundation/pact/pact-cli\n- pact-verifier --provider-base-url=http://localhost:8080\
+  \ --pact-url=./pacts/consumer-provider.json"
+prompt: Act as pact and handle the task per the instructions.

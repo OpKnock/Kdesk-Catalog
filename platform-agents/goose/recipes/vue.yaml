@@ -1,0 +1,31 @@
+title: vue
+description: 'Builds Vue 3 applications with the create-vue toolchain: SFCs, Pinia state, vue-router,
+  and vue-tsc type checking.'
+version: 2.0.0
+instructions: "# vue\n\nBuilds Vue 3 applications with the create-vue toolchain: SFCs, Pinia state, vue-router,\
+  \ and vue-tsc type checking.\n\n## Instructions\n\n# Vue\n\nBuild Vue 3 applications with the official\
+  \ create-vue toolchain.\n\n## When to Use\n\n- New SPAs with Composition API and SFCs\n- Teams wanting\
+  \ granular reactivity without a build-API lock-in\n- Progressive adoption: Vue drops into existing HTML\
+  \ projects too\n\n## Scaffold\n\n```bash\nnpm create vue@latest my-app -- --typescript --router --pinia\
+  \ --eslint\nnpm run dev\n```\n\n## Composition API basics\n\n```vue\n<script setup lang=\"ts\">\nimport\
+  \ { ref, computed } from 'vue';\n\nconst count = ref(0);\nconst doubled = computed(() => count.value\
+  \ * 2);\n</script>\n\n<template>\n  <button @click=\"count++\">{{ count }} / {{ doubled }}</button>\n\
+  </template>\n```\n\n## Pinia store\n\n```typescript\nimport { defineStore } from 'pinia';\n\nexport\
+  \ const useCartStore = defineStore('cart', {\n  state: () => ({ items: [] as string[] }),\n  actions:\
+  \ { add(sku: string) { this.items.push(sku); } },\n  getters: { size: (s) => s.items.length }\n});\n\
+  ```\n\n## Type-checking SFCs\n\n```bash\nnpx vue-tsc --noEmit\nnpm run build\n```\n\nvue-tsc validates\
+  \ template expressions against prop/ref types.\n\n## Routing\n\n```typescript\nconst routes = [\n  {\
+  \ path: '/', component: Home },\n  { path: '/products/:id', component: ProductDetail, props: true },\n\
+  \  { path: '/checkout', component: Checkout, meta: { requiresAuth: true } }\n];\n```\n\n## Best practices\n\
+  \n- Use `<script setup lang=\"ts\">` everywhere.\n- Keep stores feature-scoped; avoid one global mega-store.\n\
+  - Gate CI on vue-tsc --noEmit and npm run lint.\n- Prefer computed over watchers for derived values.\n\
+  \n## Testing\n\n```bash\nnpm run test\nnpx vitest run --coverage\n```\n\nTest stores and composables;\
+  \ keep coverage above 80% for critical logic.\n\n## Capabilities\n\n### scaffold\nCreate Vue 3 projects\
+  \ and add libraries.\n\n**Commands:**\n- `npm create vue@latest my-app -- --typescript --router --pinia\
+  \ --eslint`\n- `npm install`\n- `npm run dev`\n- `npm run build`\n- `npm run lint`\n\n**Examples:**\n\
+  - npm create vue@latest store -- --typescript --router --pinia --eslint --vitest\n- npm run dev -- --port\
+  \ 5173\n- npm run build\n\n### typecheck-test\nType-check, test, and analyze Vue components.\n\n**Commands:**\n\
+  - `npx vue-tsc --noEmit`\n- `npm run test`\n- `npx vitest run --coverage`\n- `npm run lint -- --fix`\n\
+  - `npm run build && npx vue-tsc --noEmit`\n\n**Examples:**\n- npx vue-tsc --noEmit --strict\n- npx vitest\
+  \ run tests/unit/cart.spec.ts\n- npm run lint -- --fix"
+prompt: Act as vue and handle the task per the instructions.

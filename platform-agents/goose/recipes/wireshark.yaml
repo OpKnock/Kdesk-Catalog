@@ -1,0 +1,34 @@
+title: Wireshark
+description: Capture and analyze API network traffic using tshark (Wireshark's CLI) and the Wireshark
+  GUI. Use BPF capture filters, display filters, field extraction, and protocol statistics to debug HTTP/TLS
+  issues.
+version: 2.0.0
+instructions: "# Wireshark\n\nCapture and analyze API network traffic using tshark (Wireshark's CLI) and\
+  \ the Wireshark GUI. Use BPF capture filters, display filters, field extraction, and protocol statistics\
+  \ to debug HTTP/TLS issues.\n\n## Instructions\n\n# Wireshark / tshark\n\n## What this skill does\n\
+  Capture and analyze API network traffic using tshark (Wireshark's CLI) and the Wireshark GUI. Use BPF\
+  \ capture filters, display filters, field extraction, and protocol statistics to debug HTTP/TLS issues.\n\
+  \n## When to use\n- Debugging slow or failing API requests\n- Verifying TLS handshakes and SNI\n- Confirming\
+  \ payloads leave the client unchanged\n\n## Real commands\n```bash\n# Capture HTTPS traffic to file\n\
+  sudo tshark -i eth0 -f 'tcp port 443' -w capture.pcapng\n\n# Capture local API traffic for 60s\ndumpcap\
+  \ -i lo -f 'tcp port 8080' -a duration:60 -w api.pcapng\n\n# List HTTP requests\n tshark -r capture.pcapng\
+  \ -Y 'http.request' -T fields -e http.host -e http.request.uri\n\n# Error responses\n tshark -r capture.pcapng\
+  \ -Y 'http.response.code >= 400' -T fields -e http.response.code -e http.request.uri | head\n\n# Protocol\
+  \ hierarchy stats\ntshark -r capture.pcapng -z io,phs\n\n# TLS SNI values\ntshark -r capture.pcapng\
+  \ -Y 'tls.handshake.type == 1' -T fields -e tls.handshake.extensions_server_name\n\n# Unique POST user\
+  \ agents\ntshark -r capture.pcapng -Y 'http.request.method == POST' -T fields -e http.user_agent | sort\
+  \ | uniq -c\n```\n\n## Common filters\n```\nhttp.request\nhttp.response.code >= 400\ntcp.port == 8080\n\
+  ip.addr == 10.0.0.5\ndns.qry.name contains api\n```\n\n## Best practices\n- Capture with BPF filters\
+  \ to keep files small\n- Use `-a duration:N` or `-c N` to bound captures\n- Decrypt TLS with a keylog\
+  \ file for payload inspection\n- Correlate with server logs by timestamp and IP\n\n## Testing\n```bash\n\
+  sudo tshark -i lo -f 'tcp port 8080' -a duration:10 -w test.pcapng &\ncurl -s http://localhost:8080/api/users\
+  \ > /dev/null\nsleep 12\n tshark -r test.pcapng -Y 'http.request' -T fields -e http.request.method -e\
+  \ http.request.uri\n```\n\n## Capabilities\n\n### packet-capture\nCapture and analyze network traffic\
+  \ for API debugging\n\n**Commands:**\n- `tshark -i eth0 -f 'tcp port 443' -w capture.pcapng`\n- `tshark\
+  \ -r capture.pcapng -Y 'http.request' -T fields -e http.host -e http.request.uri`\n- `tshark -r capture.pcapng\
+  \ -Y 'http.response.code >= 400' -T fields -e http.response.code -e http.request.uri | head`\n- `tshark\
+  \ -r capture.pcapng -z io,phs`\n- `dumpcap -i eth0 -c 5000 -w sample.pcapng`\n\n**Examples:**\n- tshark\
+  \ -i lo -f 'tcp port 8080' -a duration:60 -w api.pcapng\n- tshark -r capture.pcapng -Y 'http.request.method\
+  \ == POST' -T fields -e ip.src -e http.user_agent | sort | uniq -c\n- tshark -r capture.pcapng -Y 'tls.handshake.type\
+  \ == 1' -T fields -e tls.handshake.extensions_server_name"
+prompt: Act as Wireshark and handle the task per the instructions.

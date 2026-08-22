@@ -1,0 +1,81 @@
+---
+name: "pass"
+description: "Manages secrets using the password store utility: initializes GPG-encrypted stores, generates and inserts passwords and API tokens, and syncs via git enabling CLI-centric secret management."
+---
+
+# Pass
+
+Manages secrets using the password store utility: initializes GPG-encrypted stores, generates and inserts passwords and API tokens, and syncs via git enabling CLI-centric secret management.
+
+## Instructions
+
+# pass
+
+pass stores secrets as GPG-encrypted files in a git-tracked directory.
+
+## What this skill does
+
+- Initializes stores with a GPG key
+- Generates and inserts passwords/API tokens
+- Syncs the store with git
+
+## When to use
+
+- CLI-centric secret management on servers
+- Committing encrypted secrets to git
+
+## Real commands
+
+```bash
+# Initialize
+pass init "ABCD1234..."
+
+# Generate (no symbols, 20 chars)
+pass generate -n Email/example 20
+pass generate --no-symbols -l 24 server/root
+
+# Insert and view
+pass insert dev/apitoken
+pass show dev/apitoken
+pass show -c dev/apitoken   # copy to clipboard
+
+# Edit multi-line
+pass edit dev/credentials
+
+# List and git
+pass ls
+pass git status
+pass git push
+```
+
+## Multiline entries
+
+```
+password123
+---
+url: https://example.com
+username: alice
+```
+
+## Best practices
+
+- Use `-c` to copy instead of printing secrets to logs
+- Keep the store in a private git repo with GPG-only access
+- Rotate keys by re-encrypting with `pass init` and old recipients
+
+## Capabilities
+
+### pass-passwordstore
+Initialize the password store, generate and manage secrets with pass, and sync via git.
+
+**Commands:**
+- `pass init "FINGERPRINT"`
+- `pass generate -n Email/example 20`
+- `pass insert dev/apitoken`
+- `pass show dev/apitoken`
+- `pass edit dev/apitoken`
+
+**Examples:**
+- pass generate --no-symbols -l 24 server/root
+- pass ls
+- pass git push

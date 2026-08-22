@@ -1,0 +1,26 @@
+title: rust
+description: 'Builds Rust backends: cargo projects, workspace management, builds, tests, benchmarks, and
+  clippy-driven quality.'
+version: 2.0.0
+instructions: "# rust\n\nBuilds Rust backends: cargo projects, workspace management, builds, tests, benchmarks,\
+  \ and clippy-driven quality.\n\n## Instructions\n\n# Rust\n\nBackend development with the Rust toolchain.\n\
+  \n## When to Use\n\n- Performance-critical services and hot paths\n- Network daemons with tokio/axum\n\
+  - Tools that ship as single static binaries\n- Systems where memory safety matters\n\n## Commands\n\n\
+  ```bash\n# New project\ncargo new myapp\ncargo new myapp --bin\n\n# Build\ncargo build\ncargo build\
+  \ --release\n\n# Add deps\ncargo add tokio --features full\ncargo add axum serde --features serde/derive\n\
+  \n# Run\ncargo run\n\n# Test\ncargo test\ncargo test -- --nocapture\n\n# Lint\ncargo clippy -- -D warnings\n\
+  \n# Format\ncargo fmt --check\n\n# Bench\ncargo bench\n```\n\n## Axum Example\n\n```rust\nuse axum::{routing::get,\
+  \ Router};\n\n#[tokio::main]\nasync fn main() {\n    let app = Router::new().route(\"/health\", get(||\
+  \ async { \"ok\" }));\n    let listener = tokio::net::TcpListener::bind(\"0.0.0.0:8080\").await.unwrap();\n\
+  \    axum::serve(listener, app).await.unwrap();\n}\n```\n\n## Best Practices\n\n- Treat clippy warnings\
+  \ as errors in CI: cargo clippy -- -D warnings\n- Use feature flags to keep dependencies lean\n- Prefer\
+  \ error types over panics in library code\n- Benchmark hot paths with cargo bench before optimizing\n\
+  - Pin lockfile (Cargo.lock) for applications\n- Test with cargo test --workspace in monorepos\n\n##\
+  \ Capabilities\n\n### cargo-build\nCreate and build Rust projects and workspaces.\n\n**Commands:**\n\
+  - `cargo new myapp`\n- `cargo build`\n- `cargo build --release`\n- `cargo run`\n- `cargo add tokio --features\
+  \ full`\n\n**Examples:**\n- cargo new myapp --bin\n- cargo build --release --features rustls\n- cargo\
+  \ install cargo-watch\n\n### cargo-quality\nTest, lint, and benchmark Rust code.\n\n**Commands:**\n\
+  - `cargo test`\n- `cargo test -- --nocapture`\n- `cargo clippy -- -D warnings`\n- `cargo fmt --check`\n\
+  - `cargo bench`\n\n**Examples:**\n- cargo test --workspace\n- cargo clippy --all-targets -- -D warnings\n\
+  - cargo fmt --all -- --check"
+prompt: Act as rust and handle the task per the instructions.

@@ -1,0 +1,28 @@
+title: Pulsar Functions
+description: 'Pulsar Functions: create, deploy, trigger and manage lightweight stream processors.'
+version: 2.0.0
+instructions: "# Pulsar Functions\n\nPulsar Functions: create, deploy, trigger and manage lightweight\
+  \ stream processors.\n\n## Instructions\n\n# Pulsar Functions\n\nPulsar Functions are lightweight stream\
+  \ processors that consume from topics and emit to topics.\n\n## What this skill does\n\n- Packages and\
+  \ deploys functions\n- Triggers functions with test data\n- Monitors instance health\n\n## When to use\n\
+  \n- Simple transformations in the stream\n- Replacing ad-hoc consumers\n\n## Real commands\n\n```bash\n\
+  # Deploy\nbin/pulsar-admin functions create --tenant public --namespace default \\\n  --name double-echo\
+  \ --classname org.example.DoubleEcho --jar target/my-fn.jar --inputs my-topic\n\n# List / inspect\n\
+  bin/pulsar-admin functions list --tenant public --namespace default\nbin/pulsar-admin functions status\
+  \ --name double-echo\n\n# Trigger with test value\nbin/pulsar-admin functions trigger --name double-echo\
+  \ --trigger-value \"hello\"\n\n# Remove\nbin/pulsar-admin functions delete --tenant public --namespace\
+  \ default --name double-echo\n```\n\n## Function skeleton (Java)\n\n```java\npublic class DoubleEcho\
+  \ implements Function<String, String> {\n    public String process(String input, Context ctx) {\n  \
+  \      return input + input;\n    }\n}\n```\n\n## Best practices\n\n- Keep functions stateless (or use\
+  \ state storage)\n- Use --output for downstream topics\n- Trigger with sample payloads before wiring\
+  \ producers\n\n## Capabilities\n\n### pulsar-functions-operations\nDeploy and manage Pulsar Functions\
+  \ with pulsar-admin, and trigger them with test inputs.\n\n**Commands:**\n- `bin/pulsar-admin functions\
+  \ create --tenant public --namespace default --name double-echo --classname org.example.DoubleEcho --jar\
+  \ target/my-fn.jar --inputs my-topic`\n- `bin/pulsar-admin functions list --tenant public --namespace\
+  \ default`\n- `bin/pulsar-admin functions trigger --name double-echo --trigger-value \"hello\"`\n- `bin/pulsar-admin\
+  \ functions status --name double-echo`\n- `bin/pulsar-admin functions delete --tenant public --namespace\
+  \ default --name double-echo`\n\n**Examples:**\n- bin/pulsar-admin functions create --name counter --classname\
+  \ org.example.Counter --jar counter.jar --inputs events --output counts\n- bin/pulsar-admin functions\
+  \ trigger --name counter --trigger-value '{\"n\":1}'\n- bin/pulsar-admin functions status --name counter\
+  \ | jq '.instances[0].status'"
+prompt: Act as Pulsar Functions and handle the task per the instructions.

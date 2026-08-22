@@ -1,0 +1,88 @@
+---
+trigger: glob
+description: "Expert reference for automating incident runbooks end to end with kubectl/journalctl checks, Slack webhook alerts, PagerDuty event API, and scripted remediation playbooks."
+globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+---
+
+# Runbook Automation
+
+Expert reference for automating incident runbooks end to end with kubectl/journalctl checks, Slack webhook alerts, PagerDuty event API, and scripted remediation playbooks.
+
+## Instructions
+
+# Runbook Automation
+
+Expert skill for automating incident runbooks end to end.
+
+## What this skill does
+
+- Gathers diagnostics fast: pod state, logs, recent events
+- Pages humans with Slack webhooks and PagerDuty events
+- Runs scripted remediation with Ansible or shell
+
+## When to use
+
+- On-call pages for symptoms that have known fixes
+- Standardizing what the first responder actually runs
+- Wiring probes to paging instead of manual checks
+
+## Real commands
+
+```bash
+# Diagnose
+kubectl describe pod api-7d9f -n prod | tail -40
+kubectl get events -n prod --sort-by=.lastTimestamp | tail -20
+journalctl -u api -n 100 --no-pager
+
+# Alert to Slack
+curl -X POST https://hooks.slack.com/services/T123456/B789012/XYZ789 -H 'Content-Type: application/json' -d '{"text":":fire: API latency above 5s"}'
+
+# Page via PagerDuty Events API v2
+curl -X POST -H 'Content-Type: application/json' -H 'X-Routing-Key: rk_abc123def456' -d '{"event_type":"trigger","payload":{"summary":"API down","source":"probe"}}' https://events.pagerduty.com/v2/enqueue
+
+# Remediate
+ansible-playbook -i inventory.ini runbooks/restart-api.yml
+```
+
+## Playbook skeleton
+
+```yaml
+- hosts: api
+  tasks:
+    - name: Restart api service
+      ansible.builtin.service:
+        name: api
+        state: restarted
+```
+
+## Testing
+
+```bash
+# Dry-run remediation
+ansible-playbook -i inventory.ini runbooks/restart-api.yml --check
+# Test the webhook with a benign message
+curl -X POST https://hooks.slack.com/services/T123456/B789012/XYZ789 -H 'Content-Type: application/json' -d '{"text":"test"}'
+```
+
+## Best practices
+
+- Every runbook step must be a single command or script
+- Test webhooks before incidents; use pagerduty resolve on recovery
+- Log which runbook fired and its outcome to your ops store
+
+## Capabilities
+
+### incident-runbook
+Automate incident response: diagnose, alert, remediate
+
+**Commands:**
+- `kubectl describe pod api-7d9f -n prod | tail -40`
+- `journalctl -u api -n 100 --no-pager`
+- `curl -X POST https://hooks.slack.com/services/T123456/B789012/XYZ789 -H 'Content-Type: application/json' -d '{"text":":fire: API latency above 5s"}'`
+- `curl -X POST -H 'Content-Type: application/json' -H 'X-Routing-Key: rk_abc123def456' -d '{"event_type":"trigger","payload":{"summary":"API down","source":"probe"}}' https://events.pagerduty.com/v2/enqueue`
+- `ansible-playbook -i inventory.ini runbooks/restart-api.yml`
+
+**Examples:**
+- journalctl -u api -n 100 --no-pager -f
+- curl -X POST https://hooks.slack.com/services/T123456/B789012/XYZ789 -H 'Content-Type: application/json' -d '{"text":"deploy finished"}'
+- kubectl get events -n prod --sort-by=.lastTimestamp | tail -20

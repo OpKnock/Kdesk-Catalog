@@ -1,0 +1,24 @@
+title: Api Test Artillery Scenarios
+description: 'Runs performance and soak tests with Artillery: YAML scenarios, ramp loads, response time
+  assertions, and HTML/JSON reports.'
+version: 2.0.0
+instructions: "# Api Test Artillery Scenarios\n\nRuns performance and soak tests with Artillery: YAML\
+  \ scenarios, ramp loads, response time assertions, and HTML/JSON reports.\n\n## Instructions\n\n# API\
+  \ Test v4 - Performance Tests\n\nPerformance testing with Artillery.\n\n## What This Skill Does\n- Simulates\
+  \ user flows under load\n- Ramps and soaks traffic\n- Asserts latency thresholds\n\n## When to Use\n\
+  - Release performance validation\n- Soak testing memory leaks\n- Capacity estimation\n\n## Real Commands\n\
+  \n```bash\nnpx artillery quick --count 50 --num 20 https://api.example.com/users\nnpx artillery run\
+  \ config.yml\nnpx artillery run --output report.json config.yml\nnpx artillery report report.json\n\
+  ```\n\n## Scenario Example\n\n```yaml\nconfig:\n  target: https://api.example.com\n  phases:\n    -\
+  \ duration: 60\n      arrivalRate: 10\n      rampTo: 50\nscenarios:\n  - flow:\n      - get:\n     \
+  \     url: /api/users\n      - think: 1\n```\n\n## Testing\n- Run ramp and soak phases\n- Assert p95\
+  \ thresholds\n- Export and compare reports\n\n\n## Best Practices\n- Separate soak from spike scenarios\n\
+  - Monitor server metrics during runs\n- Randomize data per iteration\n\n## Capabilities\n\n### artillery-scenarios\n\
+  Define and run load test scenarios\n\n**Commands:**\n- `npx artillery run config.yml`\n- `npx artillery\
+  \ quick --count 50 --num 20 http://localhost:8080/users`\n- `npx artillery run --output report.json\
+  \ config.yml`\n- `npx artillery run --environment staging config.yml`\n- `npx artillery report report.json`\n\
+  \n**Examples:**\n- artillery quick runs ad-hoc load\n- --output exports JSON results\n- artillery report\
+  \ generates an HTML dashboard\n\n### ramp-scenarios\nRamp virtual users over time\n\n**Commands:**\n\
+  - `npx artillery run --record --key $ARTILLERY_KEY soak.yml`\n- `npx artillery run soak.yml`\n- `curl\
+  \ -s -o /dev/null -w '%{http_code} %{time_total}s\\n' http://localhost:8080/health`"
+prompt: Act as Api Test Artillery Scenarios and handle the task per the instructions.

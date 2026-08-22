@@ -1,0 +1,28 @@
+title: supertest-testing
+description: Tests Node.js HTTP APIs with supertest assertions against Express/Fastify servers, including
+  auth and streaming.
+version: 2.0.0
+instructions: "# supertest-testing\n\nTests Node.js HTTP APIs with supertest assertions against Express/Fastify\
+  \ servers, including auth and streaming.\n\n## Instructions\n\n# supertest\n\nHTTP assertions for Node.js\
+  \ APIs.\n\n## What This Skill Does\n\n- Sends requests to an app instance without binding ports\n- Asserts\
+  \ status, headers, and bodies fluently\n- Tests auth headers and JSON content\n- Integrates with jest/mocha\
+  \ runners\n\n## When to Use\n\n- Unit-level API tests for Express/Fastify apps\n- Contract checks on\
+  \ endpoints\n- Regression tests for handlers\n\n## Real Commands\n\n```bash\n# With jest\nnpx jest test/api.test.js\n\
+  \n# With mocha\nnpx mocha test/api.test.js\n\n# Direct\nnode test/api.test.js\n```\n\n## Sample Test\n\
+  \n```js\nconst request = require('supertest');\nconst app = require('../app');\n\ndescribe('GET /api/users',\
+  \ () => {\n  it('returns users', async () => {\n    const res = await request(app)\n      .get('/api/users')\n\
+  \      .set('Authorization', 'Bearer tok')\n      .expect(200)\n      .expect('Content-Type', /json/);\n\
+  \    expect(res.body.users).toBeInstanceOf(Array);\n  });\n\n  it('rejects unauthenticated', async ()\
+  \ => {\n    await request(app).get('/api/users').expect(401);\n  });\n});\n```\n\n## Best Practices\n\
+  \n- Import the app, not a running server\n- Assert status AND body shape\n- Test auth and error paths,\
+  \ not just happy paths\n- Use .expect('Content-Type', /json/) for contract\n- Keep tests independent\
+  \ of network and databases\n\n## Capabilities\n\n### supertest-api-tests\nWrite and run API assertions\
+  \ with supertest.\n\n**Commands:**\n- `npx jest test/api.test.js`\n- `npx mocha test/api.test.js`\n\
+  - `node test/api.test.js`\n- `npm test -- --runInBand`\n\n**Examples:**\n- npx jest test/api.test.js\n\
+  - npx mocha test/api.test.js\n- npm test\n\n### request-assertions\nChain requests and assert responses.\n\
+  \n**Commands:**\n- `request(app).get('/api/users').expect(200)`\n- `request(app).post('/api/users').send({\
+  \ name: 'alice' }).expect(201)`\n- `request(app).get('/api/users').set('Authorization', 'Bearer tok').expect(200)`\n\
+  - `request(app).get('/api/users').expect('Content-Type', /json/)`\n- `request(app).get('/api/stream').pipe(process.stdout)`\n\
+  \n**Examples:**\n- request(app).get('/api/users').expect(200, { users: [] })\n- request(app).post('/api/users').send({\
+  \ name: 'alice' }).expect(201)\n- request(app).get('/api/users').set('Authorization', 'Bearer tok').expect(200)"
+prompt: Act as supertest-testing and handle the task per the instructions.

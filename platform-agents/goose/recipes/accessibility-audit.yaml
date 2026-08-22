@@ -1,0 +1,40 @@
+title: accessibility-audit
+description: Run an accessibility scan of a single URL and capture violations in machine-readable format.
+  Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI. producing WCAG 2.x violation
+  reports and CI gates. Use when auditing a site or app against WCAG 2.x. Don't use for fixing individual
+  accessibility defects or for manual keyboard-navigation testing.
+version: 2.0.0
+instructions: "# accessibility-audit\n\nRun an accessibility scan of a single URL and capture violations\
+  \ in machine-readable format. Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse\
+  \ CI. producing WCAG 2.x violation reports and CI gates. Use when auditing a site or app against WCAG\
+  \ 2.x. Don't use for fixing individual accessibility defects or for manual keyboard-navigation testing.\n\
+  \n## Instructions\n\n# Accessibility Audit\n\n## What this skill does\n\nRuns automated accessibility\
+  \ audits on web apps using pa11y, axe-core and Lighthouse. It produces WCAG conformance violation lists,\
+  \ severity counts, and Lighthouse accessibility scores that can be wired into CI so regressions fail\
+  \ the build.\n\n## When to use\n\n- Checking a page or site for WCAG 2.1/2.2 conformance\n- Accessibility\
+  \ regressions keep appearing in a SPA (contrast, alt text, ARIA)\n- Setting up automated accessibility\
+  \ gates in a CI pipeline\n\n## Real commands\n\n```bash\n# Single-page audit with JSON output\nnpx pa11y\
+  \ https://example.com --reporter=json\n\n# Lighthouse accessibility-only run\nnpx lighthouse https://example.com\
+  \ --only-categories=accessibility --output=json --output-path=./a11y.json\n\n# Fail if more than 5 errors\n\
+  pa11y --standard WCAG2AA --threshold 5 https://example.com/login\n\n# axe-core with exit code 1 on violations\n\
+  npx axe https://example.com --exit\n\n# Audit every URL in a sitemap\nnpx pa11y-ci --sitemap https://example.com/sitemap.xml\n\
+  ```\n\n## .pa11yci config\n\n```json\n{\n  \"defaults\": {\n    \"standard\": \"WCAG2AA\",\n    \"timeout\"\
+  : 30000,\n    \"chromeLaunchConfig\": { \"args\": [\"--no-sandbox\"] }\n  },\n  \"urls\": {\n    \"\
+  https://example.com/\": [\"a11y/landmarks-one-main\"]\n  }\n}\n```\n\n## Testing\n\n- Run `npx pa11y-ci`\
+  \ locally first; exit code is non-zero when violations exceed threshold\n- Archive `results.json` as\
+  \ a CI artifact\n\n## Best practices\n\n- Default to `WCAG2AA`, escalate to `WCAG2AAA` for public content\n\
+  - Combine pa11y (DOM) with axe-core (in-page rules) for broader coverage\n- Treat `threshold 0` as the\
+  \ long-term goal; escalate thresholds gradually\n- Run headless Chrome in CI to keep the footprint small\n\
+  \n## Capabilities\n\n### audit-page\nRun an accessibility scan of a single URL and capture violations\
+  \ in machine-readable format.\n\n**Commands:**\n- `npx pa11y http://localhost:8080 --reporter=json`\n\
+  - `npx lighthouse http://localhost:8080 --output=json --output-path=./lighthouse-report.json`\n- `npx\
+  \ axe http://localhost:8080 --exit`\n- `pa11y --config .pa11yci http://localhost:8080`\n- `npx pa11y-ci\
+  \ --sitemap http://localhost:8080/sitemap.xml`\n\n**Examples:**\n- npx pa11y --standard WCAG2AA --threshold\
+  \ 5 http://localhost:8080/login\n- npx lighthouse http://localhost:8080 --only-categories=accessibility\
+  \ --output=html --output-path=report.html\n- pa11y --include-notices http://localhost:8080\n\n### ci-integration\n\
+  Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI.\n\n**Commands:**\n- `npm\
+  \ install --save-dev pa11y-ci`\n- `npx pa11y-ci`\n- `pa11y-ci --sitemap http://localhost:8080/sitemap.xml\
+  \ --json > results.json`\n- `npx lhci autorun --config=./lighthouserc.json`\n\n**Examples:**\n- npx\
+  \ pa11y-ci --sitemap http://localhost:8080/sitemap.xml\n- npx lhci healthcheck && npx lhci autorun\n\
+  - npm install --save-dev @lhci/cli"
+prompt: Act as accessibility-audit and handle the task per the instructions.

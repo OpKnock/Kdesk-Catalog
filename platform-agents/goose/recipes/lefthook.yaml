@@ -1,0 +1,26 @@
+title: lefthook
+description: 'Manages Git hooks with Lefthook: parallel fast hooks, commands per glob, and CI-friendly
+  behavior.'
+version: 2.0.0
+instructions: "# lefthook\n\nManages Git hooks with Lefthook: parallel fast hooks, commands per glob,\
+  \ and CI-friendly behavior.\n\n## Instructions\n\n# Lefthook\n\nFast, parallel Git hooks.\n\n## When\
+  \ to Use\n\n- Running many lint checks quickly before commits\n- Language-agnostic hook config (JS,\
+  \ Python, Go, Ruby)\n- CI-friendly hooks with force mode\n- Replacing husky/pre-commit setups\n\n##\
+  \ Commands\n\n```bash\n# Setup\nlefthook install\nlefthook add pre-commit\nlefthook uninstall\n\n# Run\
+  \ manually\nlefthook run pre-commit\nlefthook run pre-commit --all-files\nlefthook run commit-msg --file\
+  \ .git/COMMIT_EDITMSG\n\n# Debug\nlefthook run --debug pre-commit\nlefthook run --dry-run pre-commit\n\
+  ```\n\n## Config Example\n\n```yaml\n# lefthook.yml\npre-commit:\n  parallel: true\n  commands:\n  \
+  \  eslint:\n      glob: \"*.{js,ts}\"\n      run: npx eslint {staged_files} --fix\n    prettier:\n \
+  \     glob: \"*.{js,ts,json,md}\"\n      run: npx prettier --write {staged_files}\n    pytest:\n   \
+  \   glob: \"*.py\"\n      run: pytest -q {staged_files}\n```\n\n## Best Practices\n\n- Use parallel:\
+  \ true with independent commands\n- Scope commands with glob so checks run on the right files\n- Use\
+  \ {staged_files} and {all_files} variables precisely\n- Add a pre-push hook for slow full test runs\n\
+  - Use lefthook run --debug to fix hook issues\n- Commit lefthook.yml so all devs share the config\n\n\
+  ## Capabilities\n\n### lefthook-setup\nInstall and configure Lefthook.\n\n**Commands:**\n- `lefthook\
+  \ install`\n- `lefthook add pre-commit`\n- `lefthook uninstall`\n- `lefthook version`\n- `lefthook install\
+  \ -f`\n\n**Examples:**\n- lefthook install -f\n- lefthook add commit-msg\n- lefthook run pre-commit\n\
+  \n### lefthook-run\nRun hooks manually and debug.\n\n**Commands:**\n- `lefthook run pre-commit`\n- `lefthook\
+  \ run pre-commit --all-files`\n- `lefthook run commit-msg --file .git/COMMIT_EDITMSG`\n- `lefthook run\
+  \ --debug pre-commit`\n- `lefthook run pre-push --force`\n\n**Examples:**\n- lefthook run pre-commit\
+  \ --skip-output\n- lefthook run lint --only-files\n- lefthook run --dry-run pre-commit"
+prompt: Act as lefthook and handle the task per the instructions.

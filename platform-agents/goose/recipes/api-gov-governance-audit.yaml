@@ -1,0 +1,33 @@
+title: Api Gov Governance Audit
+description: Audits and enforces API governance on existing OpenAPI specs, blocking non-compliant changes
+  via CI linting with Spectral rulesets.
+version: 2.0.0
+instructions: "# Api Gov Governance Audit\n\nAudits and enforces API governance on existing OpenAPI specs,\
+  \ blocking non-compliant changes via CI linting with Spectral rulesets.\n\n## Instructions\n\n# API\
+  \ Gov (Audit & Enforce)\n\nAudits existing OpenAPI specs against an organizational style guide and enforces\
+  \ compliance in CI.\n\n## When to Use\n- Enforcing standards on a mature spec base\n- Blocking breaking\
+  \ or non-compliant PRs\n- Measuring governance drift over time\n- Onboarding teams onto a published\
+  \ style guide\n\n## Real Commands\n\n```bash\n# Install tooling\nnpm install -g @stoplight/spectral-cli\n\
+  npm install -g @redocly/cli\n\n# Lint a spec\nnpx @stoplight/spectral-cli lint openapi.yaml\n\n# Lint\
+  \ with a custom ruleset\nnpx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml\n\
+  \n# Recommended defaults\nredocly lint openapi.yaml --extends=recommended\n\n# Validate structure first\n\
+  swagger-cli validate openapi.yaml\n```\n\n## CI Gate\n\n```yaml\n# .github/workflows/api-governance.yml\n\
+  - name: Lint specs\n  run: npx @stoplight/spectral-cli lint --fail-severity error ${{ matrix.spec }}\n\
+  ```\n\n## Testing\nRun the linter on the PR branch against the main branch baseline and compare JSON\
+  \ reports.\n\n## Best Practices\n- Publish the style guide alongside the ruleset\n- Use `--fail-severity\
+  \ error` in CI, `warn` locally\n- Review lint report trends each sprint\n\n## Capabilities\n\n### governance-audit\n\
+  Run Spectral linting against existing OpenAPI specs to surface style guide violations and drift\n\n\
+  **Commands:**\n- `npx @stoplight/spectral-cli lint openapi.yaml`\n- `npx @stoplight/spectral-cli lint\
+  \ --ruleset .spectral.yaml --format json openapi.yaml`\n- `redocly lint openapi.yaml --extends=recommended`\n\
+  - `swagger-cli validate openapi.yaml`\n- `npx @stoplight/spectral-cli lint --fail-severity error openapi.yaml`\n\
+  \n**Examples:**\n- npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml\
+  \ > spectral-report.json\n- redocly lint api/v1/*.yaml --output-style=github-actions\n- swagger-cli\
+  \ validate openapi.yaml && npx @stoplight/spectral-cli lint openapi.yaml\n\n### compliance-gates\nWire\
+  \ lint gates into CI/CD so non-compliant API changes fail the pipeline\n\n**Commands:**\n- `npx @stoplight/spectral-cli\
+  \ lint --fail-severity warn openapi.yaml`\n- `npx @stoplight/spectral-cli lint --fail-on-unmatched-globs\
+  \ openapi.yaml`\n- `git diff --name-only HEAD~1 | grep -E '\\.(yaml|yml|json)$' | xargs npx @stoplight/spectral-cli\
+  \ lint`\n- `openapi-diff --fail-on-incompatible old.yaml new.yaml`\n- `npx @stoplight/spectral-cli lint\
+  \ --summary openapi.yaml`\n\n**Examples:**\n- git diff --name-only HEAD~1 | xargs npx @stoplight/spectral-cli\
+  \ lint --fail-severity error\n- openapi-diff --fail-on-incompatible prod-spec.yaml pr-spec.yaml\n- npx\
+  \ @stoplight/spectral-cli lint --summary --quiet openapi.yaml"
+prompt: Act as Api Gov Governance Audit and handle the task per the instructions.

@@ -1,0 +1,34 @@
+title: Sops
+description: 'Encrypts YAML/JSON/ENV files with SOPS keys (age, KMS, PGP): edit, set values, decrypt,
+  and GitOps integration.'
+version: 2.0.0
+instructions: "# Sops\n\nEncrypts YAML/JSON/ENV files with SOPS keys (age, KMS, PGP): edit, set values,\
+  \ decrypt, and GitOps integration.\n\n## Instructions\n\n# SOPS Secret Encryption\n\nKeep secrets encrypted\
+  \ in git with SOPS while keeping them usable in CI and clusters.\n\n## What This Skill Does\n\n- Encrypts/decrypts\
+  \ YAML, JSON, ENV, and INI files\n- Works with age, AWS/GCP/Azure KMS, and PGP keys\n- Edits encrypted\
+  \ files safely (sops opens the editor with decryption)\n- Sets individual values without exposing the\
+  \ rest\n- Integrates with Flux/Kustomize decryption providers\n\n## When to Use\n\n- Secrets in GitOps\
+  \ repositories\n- Encrypted env files for CI\n- Preferring file-level encryption over cluster-only encryption\n\
+  \n## Real Commands\n\n```bash\n# Encrypt / decrypt\nsops -e -i secrets.yaml\nsops -d secrets.yaml\n\
+  sops --encrypt --age age1xyz... secrets.env > secrets.enc.env\nsops --decrypt secrets.yaml | kubectl\
+  \ apply -f -\n\n# Edit in place\nsops secrets.yaml                          # opens editor, saves encrypted\n\
+  sops --set '[\"db\"][\"password\"] \"newpass\"' secrets.yaml\nsops --set --encrypt '[\"db\"][\"password\"\
+  ] \"raw-new-pass\"' secrets.yaml\n\n# Convert and manage\nsops --input-type yaml --output-type json\
+  \ -e config.yaml > config.json\nsops --decrypt --output decrypted.yaml secrets.yaml\nsops updatekeys\
+  \ --yes secrets.yaml          # re-encrypt for new keys\nsops --verbose -e secrets.yaml\n```\n\n## .sops.yaml\
+  \ Example\n\n```yaml\ncreation_rules:\n  - path_regex: \\.secrets\\.yaml$\n    age: age1xyz...\n  -\
+  \ path_regex: \\.env$\n    kms: arn:aws:kms:us-east-1:123456789012:key/abc\n```\n\n## Best Practices\n\
+  \n- Set creation_rules per path and key service\n- Keep recipient keys (public) in the repo; private\
+  \ keys in CI secrets\n- Decrypt to stdout, never write plaintext copies to disk\n- Use sops exec-env\
+  \ to load decrypted envs into processes\n- Rotate keys by running updatekeys after key changes\n\n##\
+  \ Capabilities\n\n### encrypt-decrypt\nEncrypt and decrypt files with configured key services.\n\n**Commands:**\n\
+  - `sops -e -i secrets.yaml`\n- `sops -d secrets.yaml`\n- `sops --encrypt --age age1xyz... secrets.env`\n\
+  - `sops --decrypt secrets.yaml | kubectl apply -f -`\n- `sops --input-type yaml --output-type json -e\
+  \ config.yaml > config.json`\n\n**Examples:**\n- sops -e -i secrets.yaml\n- sops --decrypt secrets.yaml\
+  \ | kubectl apply -f -\n- sops --encrypt --age age1xyz... secrets.env\n\n### edit-and-manage\nEdit encrypted\
+  \ values in place and manage key services.\n\n**Commands:**\n- `sops secrets.yaml`\n- `sops --set '[\"\
+  db\"][\"password\"] \"newpass\"' secrets.yaml`\n- `sops --set --encrypt '[\"db\"][\"password\"] \"raw-new\"\
+  ' secrets.yaml`\n- `sops --decrypt --output decrypted.yaml secrets.yaml`\n- `sops updatekeys --yes secrets.yaml`\n\
+  - `sops --verbose -e secrets.yaml`\n\n**Examples:**\n- sops secrets.yaml\n- sops --set '[\"db\"][\"\
+  password\"] \"newpass\"' secrets.yaml\n- sops updatekeys --yes secrets.yaml"
+prompt: Act as Sops and handle the task per the instructions.

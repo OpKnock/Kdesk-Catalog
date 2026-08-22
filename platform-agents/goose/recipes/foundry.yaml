@@ -1,0 +1,33 @@
+title: Foundry
+description: 'Develops Solidity with Foundry: forge build/test/fuzz, cast interactions, anvil local node,
+  and deployment scripts.'
+version: 2.0.0
+instructions: "# Foundry\n\nDevelops Solidity with Foundry: forge build/test/fuzz, cast interactions,\
+  \ anvil local node, and deployment scripts.\n\n## Instructions\n\n# Foundry\n\nRust-based Solidity development\
+  \ toolkit.\n\n## When to Use\n\n- Fast contract compilation and tests\n- Fuzz and invariant testing\n\
+  - On-chain interaction without custom tooling\n- Local forking with anvil\n\n## Commands\n\n```bash\n\
+  # Project\nforge init myapp\nforge build\nforge build --sizes\n\n# Test\nforge test\nforge test -vvv\n\
+  forge test --fuzz-runs 1000\nforge test --gas-report\n\n# Deploy\nforge create src/Token.sol:Token --rpc-url\
+  \ $RPC_URL --private-key $PK\nforge script script/Deploy.s.sol:Deploy --rpc-url $RPC_URL --broadcast\n\
+  \n# Interact\ncast call 0xToken --rpc-url $RPC_URL \"symbol()(string)\"\ncast send 0xToken --private-key\
+  \ $PK \"transfer(address,uint256)\" 0xTo 1000\ncast balance 0xAddress\ncast block latest\ncast sig \"\
+  transfer(address,uint256)\"\n\n# Local node\nanvil\nanvil --fork-url $RPC_URL\n```\n\n## Test Example\n\
+  \n```solidity\nfunction testMintOnlyOwner() public {\n    vm.prank(owner);\n    token.mint(address(this),\
+  \ 100);\n    assertEq(token.balanceOf(address(this)), 100);\n}\n```\n\n## Best Practices\n\n- Never\
+  \ put private keys in command history; use env vars\n- Use vm.prank/vm.expectRevert in tests\n- Run\
+  \ fuzz campaigns before audits\n- Test against an anvil fork of mainnet for integration\n- Use cast\
+  \ sig to double-check selectors\n- Keep scripts idempotent; verify with --slow on mainnet\n\n## Capabilities\n\
+  \n### forge-build-test\nBuild, test, and fuzz contracts.\n\n**Commands:**\n- `forge init myapp`\n- `forge\
+  \ build`\n- `forge test`\n- `forge test -vvv`\n- `forge test --fuzz-runs 1000`\n\n**Examples:**\n- forge\
+  \ test --match-test testOnlyOwner -vvvv\n- forge test --gas-report\n- forge build --sizes\n\n### cast-ops\n\
+  Interact with chains and contracts.\n\n**Commands:**\n- `cast call 0xToken --rpc-url $RPC_URL \"symbol()(string)\"\
+  `\n- `cast send 0xToken --private-key $PK \"transfer(address,uint256)\" 0xTo 1000`\n- `cast balance\
+  \ 0xAddress`\n- `cast block latest`\n- `cast code 0xContract`\n\n**Examples:**\n- cast call --rpc-url\
+  \ $RPC_URL 0xToken \"balanceOf(address)(uint256)\" 0xAccount\n- cast receipt 0xtxhash --rpc-url $RPC_URL\n\
+  - cast sig \"transfer(address,uint256)\"\n\n### forge-deploy\nDeploy contracts and run scripts.\n\n\
+  **Commands:**\n- `forge create src/Token.sol:Token --rpc-url $RPC_URL --private-key $PK`\n- `forge script\
+  \ script/Deploy.s.sol:Deploy --rpc-url $RPC_URL --broadcast`\n- `forge script script/Deploy.s.sol --fork-url\
+  \ $RPC_URL --verify`\n- `anvil`\n\n**Examples:**\n- forge script script/Deploy.s.sol --rpc-url $RPC_URL\
+  \ --broadcast --slow\n- anvil --fork-url $RPC_URL\n- forge create src/Token.sol:Token --constructor-args\
+  \ \"MyToken\" \"MTK\" 18"
+prompt: Act as Foundry and handle the task per the instructions.

@@ -1,0 +1,94 @@
+---
+name: "starlette"
+description: "Build lightweight ASGI APIs with Starlette and uvicorn. Composes async route handlers, runs a dev server with hot reload, and validates endpoints using the in-process TestClient \u2014 no live server required."
+---
+
+# Starlette
+
+Build lightweight ASGI APIs with Starlette and uvicorn. Composes async route handlers, runs a dev server with hot reload, and validates endpoints using the in-process TestClient — no live server required.
+
+## Instructions
+
+# Starlette
+
+Hand-crafted skill for building ASGI APIs with Starlette.
+
+## What this skill does
+
+- Composes routes into an ASGI application
+- Serves it with uvicorn including reload for dev
+- Tests handlers with the Starlette TestClient
+
+## When to use
+
+- Lightweight Python APIs without framework magic
+- Services that need async performance
+- Building up to FastAPI from its foundation
+
+## Real commands
+
+```bash
+# Install
+pip install starlette uvicorn
+
+# Dev server with reload
+uvicorn app:app --reload --port 8000
+
+# Exercise endpoints
+curl -s localhost:8000/health
+curl -s -X POST localhost:8000/items -H 'Content-Type: application/json' -d '{"name":"widget"}'
+
+# In-process tests
+python -c 'from starlette.testclient import TestClient; from app import app; c=TestClient(app); r=c.get("/health"); print(r.status_code, r.json())'
+```
+
+## App example
+
+```python
+from starlette.applications import Starlette
+from starlette.routing import Route
+from starlette.responses import JSONResponse
+
+async def health(request):
+    return JSONResponse({"status": "ok"})
+
+async def create_item(request):
+    body = await request.json()
+    return JSONResponse({"id": 1, "name": body["name"]}, status_code=201)
+
+app = Starlette(routes=[
+    Route("/health", health),
+    Route("/items", create_item, methods=["POST"]),
+])
+```
+
+## Testing
+
+```bash
+python -m pytest -q
+# or
+curl -s localhost:8000/health
+```
+
+## Best practices
+
+- Keep handlers async; use request.json() with await
+- Run uvicorn workers = CPU count in production
+- Test with TestClient (httpx-based) before deploying
+
+## Capabilities
+
+### starlette-apps
+Build and test ASGI APIs with Starlette and uvicorn
+
+**Commands:**
+- `pip install starlette uvicorn`
+- `uvicorn app:app --reload --port 8000`
+- `curl -s localhost:8000/health`
+- `curl -s -X POST localhost:8000/items -H 'Content-Type: application/json' -d '{"name":"widget"}'`
+- `python -c 'from starlette.testclient import TestClient; from app import app; c=TestClient(app); r=c.get("/health"); print(r.status_code, r.json())'`
+
+**Examples:**
+- uvicorn app:app --reload --port 8000
+- curl -s localhost:8000/health
+- python -c 'from starlette.testclient import TestClient; from app import app; c=TestClient(app); print(c.get("/health").json())'

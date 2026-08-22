@@ -1,0 +1,32 @@
+title: Django Rest Framework
+description: 'Builds and maintains Django REST Framework APIs: runs the dev server, manages migrations,
+  generates OpenAPI schemas via drf-spectacular, and tests endpoints.'
+version: 2.0.0
+instructions: "# Django Rest Framework\n\nBuilds and maintains Django REST Framework APIs: runs the dev\
+  \ server, manages migrations, generates OpenAPI schemas via drf-spectacular, and tests endpoints.\n\n\
+  ## Instructions\n\n# Django REST Framework\n\n## What this skill does\n\nDjango REST Framework (DRF)\
+  \ turns Django models into JSON APIs with serializers, viewsets, routers, authentication, and throttling.\
+  \ This skill covers project workflow: migrations, servers, schema export, and test runs.\n\n## When\
+  \ to use\n\n- Building a JSON API on top of Django models\n- Adding or changing API endpoints, serializers,\
+  \ or permissions\n- Generating and validating the OpenAPI schema for the API\n\n## Real commands\n\n\
+  ```bash\n# Run the development server\npython manage.py runserver 0.0.0.0:8000\n\n# Schema/model changes\n\
+  python manage.py makemigrations api\npython manage.py migrate\n\n# Generate OpenAPI schema and lint\
+  \ it\npython manage.py spectacular --file schema.yml\nnpx @redocly/cli lint schema.yml\n\n# Run tests\n\
+  python manage.py test api --keepdb\n\n# Quick data inspection\npython manage.py shell -c \"from api.models\
+  \ import Order; print(Order.objects.count())\"\n```\n\n## Example viewset\n\n```python\nfrom rest_framework\
+  \ import viewsets\nfrom rest_framework.permissions import IsAuthenticated\nfrom .models import Order\n\
+  from .serializers import OrderSerializer\n\nclass OrderViewSet(viewsets.ModelViewSet):\n    queryset\
+  \ = Order.objects.all()\n    serializer_class = OrderSerializer\n    permission_classes = [IsAuthenticated]\n\
+  \    filterset_fields = ['status', 'customer']\n```\n\n## Testing endpoints\n\n```bash\ncurl -s http://localhost:8000/api/orders/\
+  \ -H 'Authorization: Bearer $TOKEN' | jq\ncurl -s http://localhost:8000/api/schema/ | jq '.paths | keys'\n\
+  ```\n\n## Best practices\n\n- Use viewsets + routers instead of hand-written CRUD functions.\n- Set\
+  \ `DEFAULT_PAGINATION_CLASS` with a page size in settings.py.\n- Keep business logic in services or\
+  \ models, not in serializers.\n- Use drf-spectacular for schema generation; annotate with `@extend_schema`\
+  \ for docstrings.\n- Use `--keepdb` in CI to speed up test runs.\n\n## Capabilities\n\n### drf-project\n\
+  Day-to-day DRF project operations: server, migrations, schema generation, and tests.\n\n**Commands:**\n\
+  - `python manage.py runserver 0.0.0.0:8000`\n- `python manage.py makemigrations api`\n- `python manage.py\
+  \ migrate`\n- `python manage.py spectacular --file schema.yml`\n- `python manage.py test api`\n- `python\
+  \ manage.py shell -c \"from api.models import Order; print(Order.objects.count())\"`\n\n**Examples:**\n\
+  - python manage.py makemigrations api && python manage.py migrate\n- python manage.py spectacular --file\
+  \ schema.yml && npx @redocly/cli lint schema.yml\n- python manage.py test api --keepdb"
+prompt: Act as Django Rest Framework and handle the task per the instructions.

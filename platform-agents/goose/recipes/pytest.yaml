@@ -1,0 +1,31 @@
+title: pytest
+description: 'Runs Python tests with pytest: fixtures, parametrization, markers, parallel execution, and
+  coverage.'
+version: 2.0.0
+instructions: "# pytest\n\nRuns Python tests with pytest: fixtures, parametrization, markers, parallel\
+  \ execution, and coverage.\n\n## Instructions\n\n# pytest\n\nThe standard Python testing framework.\n\
+  \n## What This Skill Does\n\n- Runs tests with precise selectors and filters\n- Writes fixtures for\
+  \ shared state and mocks\n- Parametrizes tests for data-driven coverage\n- Parallelizes runs and measures\
+  \ coverage\n\n\n## When to Use\n\n- Unit and integration tests for Python services\n- Data-driven test\
+  \ matrices\n- CI coverage gates\n\n## Real Commands\n\n```bash\n# Run\npytest\npytest tests/test_app.py::test_login\n\
+  pytest -k \"login or signup\"\npytest -m smoke --maxfail=1\n\n# Debug\npytest --collect-only\npytest\
+  \ tests/test_order.py::test_calc[2-3-6] --pdb\n\n# Parallel and coverage\npytest -n 4 --cov=src --cov-report=term-missing\n\
+  pytest --cov=src --cov-report=html:coverage_html\npytest --junitxml=results.xml\n```\n\n## Sample Test\n\
+  \n```python\nimport pytest\n\n@pytest.fixture\ndef client():\n    return TestClient(app)\n\n@pytest.mark.parametrize(\"\
+  a,b,expected\", [(2, 3, 6), (-1, 5, -5)])\ndef test_multiply(a, b, expected):\n    assert multiply(a,\
+  \ b) == expected\n\n@pytest.mark.smoke\ndef test_health(client):\n    assert client.get(\"/health\"\
+  ).status_code == 200\n```\n\n## Best Practices\n\n- Use fixtures over module-level setup\n- Parametrize\
+  \ edge cases; keep one assertion intent per test\n- Tag smoke tests and run them on every PR\n- Use\
+  \ -n parallel in CI with careful fixture isolation\n- Set coverage thresholds in pytest.ini\n\n## Capabilities\n\
+  \n### pytest-runs\nRun tests with filters, markers, and ordering.\n\n**Commands:**\n- `pytest`\n- `pytest\
+  \ tests/test_app.py::test_login`\n- `pytest -k \"login or signup\"`\n- `pytest -m slow`\n- `pytest -x\
+  \ --maxfail=1`\n\n**Examples:**\n- pytest tests/test_app.py::test_login\n- pytest -k login\n- pytest\
+  \ -m smoke --maxfail=1\n\n### fixtures-and-parametrize\nBuild shared fixtures and data-driven tests.\n\
+  \n**Commands:**\n- `pytest --fixtures`\n- `pytest --setup-show`\n- `pytest tests/test_order.py::test_calc[2-3-6]`\n\
+  - `pytest --collect-only`\n- `pytest --pdb`\n\n**Examples:**\n- pytest --fixtures\n- pytest --collect-only\n\
+  - pytest tests/test_order.py::test_calc[2-3-6] --pdb\n\n### parallel-and-coverage\nParallel runs and\
+  \ coverage reports.\n\n**Commands:**\n- `pytest -n 4`\n- `pytest --cov=src --cov-report=term-missing`\n\
+  - `pytest --cov=src --cov-report=html:coverage_html`\n- `pytest --junitxml=results.xml`\n- `pytest --lf\
+  \ --last-failed-no-failures=all`\n\n**Examples:**\n- pytest -n 4 --cov=src\n- pytest --cov=src --cov-report=html:coverage_html\n\
+  - pytest --junitxml=results.xml"
+prompt: Act as pytest and handle the task per the instructions.

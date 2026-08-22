@@ -1,0 +1,30 @@
+title: Caddy
+description: 'Serves sites and reverse proxies with Caddy: Caddyfile authoring, automatic HTTPS, file
+  servers, and reloads.'
+version: 2.0.0
+instructions: "# Caddy\n\nServes sites and reverse proxies with Caddy: Caddyfile authoring, automatic\
+  \ HTTPS, file servers, and reloads.\n\n## Instructions\n\n# Caddy\n\n## What this skill does\n\nServes\
+  \ sites and proxies with Caddy: Caddyfile authoring, automatic HTTPS with Let's Encrypt, static file\
+  \ serving, reverse proxying, and safe reloads.\n\n## When to use\n\n- Stand up a static site with HTTPS\
+  \ in seconds\n- Reverse-proxy an API with automatic TLS\n- Replacing nginx config complexity\n\n## Real\
+  \ commands\n\n```bash\n# Serve static files\ncaddy file-server --root ./dist --listen :8080\n\n# Reverse\
+  \ proxy\ncaddy reverse-proxy --from localhost:8080 --to localhost:3000\n\n# Run with a Caddyfile\ncaddy\
+  \ run --config Caddyfile\n\n# Validate before reload\ncaddy validate --config Caddyfile\ncaddy reload\
+  \ --config Caddyfile\n\n# Format the Caddyfile\ncaddy fmt --overwrite Caddyfile\n```\n\n## Caddyfile\
+  \ example\n\n```caddy\napi.your-app.test {\n  reverse_proxy localhost:3000\n  encode gzip zstd\n  header\
+  \ Cache-Control \"max-age=3600\"\n}\n```\n\n## Testing\n\n- caddy validate catches syntax errors pre-reload\n\
+  - curl -sI to verify headers and certs\n\n## Best practices\n\n- Use caddy fmt for consistent formatting\n\
+  - Keep Caddyfiles in version control; caddy reload is zero-downtime\n- Let Caddy manage TLS; don't hand-manage\
+  \ certs unless needed\n\n## Capabilities\n\n### serve\nRun Caddy as a file server or site server.\n\n\
+  **Commands:**\n- `caddy run`\n- `caddy file-server --root ./public --listen :8080`\n- `caddy reverse-proxy\
+  \ --from localhost:8080 --to localhost:3000`\n- `caddy run --config Caddyfile`\n- `caddy stop`\n\n**Examples:**\n\
+  - caddy file-server --root ./dist --listen :8080 --browse\n- caddy reverse-proxy --from api.your-app.test\
+  \ --to localhost:3000\n- caddy run --watch --config Caddyfile\n\n### config\nValidate and adapt Caddyfile\
+  \ configs.\n\n**Commands:**\n- `caddy validate --config Caddyfile`\n- `caddy adapt --config Caddyfile`\n\
+  - `caddy adapt --config Caddyfile --pretty`\n- `caddy fmt Caddyfile`\n- `caddy reload --config Caddyfile`\n\
+  \n**Examples:**\n- caddy validate --config Caddyfile\n- caddy adapt --config Caddyfile --pretty > caddy.json\n\
+  - caddy fmt --overwrite Caddyfile\n\n### tls\nManage automatic HTTPS and certificates.\n\n**Commands:**\n\
+  - `caddy cert-manager list`\n- `caddy trust`\n- `caddy untrust`\n- `curl -sI https://localhost:8443\
+  \ | head -5`\n- `caddy list-modules | grep tls`\n\n**Examples:**\n- caddy trust --ca /etc/caddy/ca.crt\n\
+  - caddy cert-manager list --domain api.your-app.test\n- caddy list-modules | grep -i tls"
+prompt: Act as Caddy and handle the task per the instructions.

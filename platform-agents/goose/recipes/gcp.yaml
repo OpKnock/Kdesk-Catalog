@@ -1,0 +1,34 @@
+title: gcp
+description: 'Operates Google Cloud with the gcloud CLI: compute, GKE, Cloud Run, gsutil, IAM, and service
+  accounts.'
+version: 2.0.0
+instructions: "# gcp\n\nOperates Google Cloud with the gcloud CLI: compute, GKE, Cloud Run, gsutil, IAM,\
+  \ and service accounts.\n\n## Instructions\n\n# Google Cloud\n\nOperate GCP with the gcloud CLI.\n\n\
+  ## When to Use\n\n- Compute and GKE cluster management\n- Cloud Run serverless deploys\n- Cloud Storage\
+  \ via gsutil\n- IAM and service account management\n\n## Commands\n\n```bash\n# Auth and project\ngcloud\
+  \ auth login\ngcloud config set project my-project\ngcloud projects list\n\n# Compute\ngcloud compute\
+  \ instances list\ngcloud compute instances describe my-instance --zone us-central1-a\n\n# Storage\n\
+  gsutil ls\ngsutil cp file.txt gs://my-bucket/\n\n# Cloud Run\ngcloud builds submit --tag gcr.io/my-project/myapp:1.0\n\
+  gcloud run deploy myapp --image gcr.io/my-project/myapp:1.0 \\\n  --region us-central1 --allow-unauthenticated\n\
+  gcloud run services describe myapp --region us-central1\ngcloud run services update-traffic myapp --to-latest\
+  \ --region us-central1\n\n# GKE\ngcloud container clusters create mycluster --zone us-central1-a --num-nodes\
+  \ 3\ngcloud container clusters get-credentials mycluster --zone us-central1-a\nkubectl get nodes\n```\n\
+  \n## Best Practices\n\n- Use gcloud config set project to avoid cross-project mistakes\n- Prefer Workload\
+  \ Identity over static service account keys\n- Grant minimum roles; use IAM conditions where possible\n\
+  - Pin container tags; avoid :latest in production\n- Use --allow-unauthenticated only for public services\n\
+  - Enable logging and check Cloud Logging for errors\n\n## Capabilities\n\n### gcp-core\nManage projects,\
+  \ compute, and storage.\n\n**Commands:**\n- `gcloud auth login`\n- `gcloud config set project my-project`\n\
+  - `gcloud compute instances list`\n- `gsutil ls`\n- `gcloud projects list`\n\n**Examples:**\n- gcloud\
+  \ config list\n- gsutil cp file.txt gs://my-bucket/\n- gcloud compute instances describe my-instance\
+  \ --zone us-central1-a\n\n### gcp-run\nDeploy and manage Cloud Run services.\n\n**Commands:**\n- `gcloud\
+  \ run deploy myapp --image gcr.io/my-project/myapp:1.0 --region us-central1 --allow-unauthenticated`\n\
+  - `gcloud run services list`\n- `gcloud run services describe myapp --region us-central1`\n- `gcloud\
+  \ run services update-traffic myapp --to-latest --region us-central1`\n- `gcloud builds submit --tag\
+  \ gcr.io/my-project/myapp:1.0`\n\n**Examples:**\n- gcloud run deploy myapp --image gcr.io/my-project/myapp:1.0\
+  \ --region us-central1 --min-instances 1\n- gcloud run services update-traffic myapp --to-revisions\
+  \ REVISION=50 --region us-central1\n\n### gcp-gke\nManage GKE clusters and kubectl context.\n\n**Commands:**\n\
+  - `gcloud container clusters create mycluster --zone us-central1-a --num-nodes 3`\n- `gcloud container\
+  \ clusters get-credentials mycluster --zone us-central1-a`\n- `gcloud container clusters list`\n- `kubectl\
+  \ get nodes`\n\n**Examples:**\n- gcloud container clusters resize mycluster --node-pool default-pool\
+  \ --num-nodes 5\n- gcloud container node-pools list --cluster mycluster"
+prompt: Act as gcp and handle the task per the instructions.

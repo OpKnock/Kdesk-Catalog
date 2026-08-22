@@ -1,0 +1,30 @@
+title: dramatiq
+description: Builds and operates Dramatiq task queues with Redis/RabbitMQ brokers, worker CLI, delays,
+  and actor middleware.
+version: 2.0.0
+instructions: "# dramatiq\n\nBuilds and operates Dramatiq task queues with Redis/RabbitMQ brokers, worker\
+  \ CLI, delays, and actor middleware.\n\n## Instructions\n\n# Dramatiq\n\nBackground task processing\
+  \ for Python using Redis or RabbitMQ.\n\n## When to Use\n\n- Simple, reliable task queues with minimal\
+  \ ceremony\n- At-least-once delivery with retries built in\n- Parallel CPU and I/O work spread across\
+  \ worker processes\n- Where Celery feels heavy; Dramatiq is lighter weight\n\n## Setup\n\n```bash\n\
+  pip install dramatiq[redis]\n```\n\n## Commands\n\n```bash\n# Run workers\ndramatiq worker tasks:broker\n\
+  \n# Scale processes and threads\ndramatiq worker --processes 4 --threads 8 tasks:broker\n\n# Consume\
+  \ specific queues\ndramatiq worker tasks --queues email,default\n\n# Auto-reload on file changes\ndramatiq\
+  \ worker --watch . tasks\n\n# Inspect queues in Redis\nredis-cli llen dramatiq:default\nredis-cli lrange\
+  \ dramatiq:default 0 10\nredis-cli zrange dramatiq:delayed 0 -1\n```\n\n## Actor Example\n\n```python\n\
+  # tasks.py\nimport dramatiq\nfrom dramatiq.brokers.redis import RedisBroker\n\nbroker = RedisBroker(host=\"\
+  localhost\")\ndramatiq.set_broker(broker)\n\n@dramatiq.actor(max_retries=5, time_limit=60000)\ndef send_welcome(user_id):\n\
+  \    email = fetch_user(user_id).email\n    send_mail(email, \"Welcome!\")\n```\n\n## Enqueue\n\n```python\n\
+  from tasks import send_welcome\nsend_welcome.send(42)\nsend_welcome.send_with_options(args=(42,), delay=3600000)\n\
+  ```\n\n## Best Practices\n\n- Set max_retries and time_limit on every actor\n- Keep messages small;\
+  \ pass IDs rather than objects\n- Use separate queues for latency-sensitive work\n- Run workers under\
+  \ a process manager with at least 2 processes\n- Use --watch in dev for fast iteration\n\n## Capabilities\n\
+  \n### dramatiq-workers\nRun and manage Dramatiq worker processes.\n\n**Commands:**\n- `dramatiq worker\
+  \ tasks:broker`\n- `dramatiq worker --processes 4 --threads 8 tasks:broker`\n- `dramatiq worker tasks\
+  \ --queues email,default`\n- `dramatiq worker --watch . tasks`\n- `python -m dramatiq tasks:broker`\n\
+  \n**Examples:**\n- dramatiq worker --processes 2 tasks:broker\n- dramatiq worker tasks --queues high\n\
+  - dramatiq worker --watch tasks -v\n\n### dramatiq-broker\nInspect broker queues and message state directly.\n\
+  \n**Commands:**\n- `redis-cli llen dramatiq:default`\n- `redis-cli zrange dramatiq:delayed 0 -1`\n-\
+  \ `redis-cli lrange dramatiq:default 0 10`\n- `redis-cli flushdb`\n\n**Examples:**\n- redis-cli llen\
+  \ dramatiq:email\n- redis-cli hgetall dramatiq:message-state"
+prompt: Act as dramatiq and handle the task per the instructions.

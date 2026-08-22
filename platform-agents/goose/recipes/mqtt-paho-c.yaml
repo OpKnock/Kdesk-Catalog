@@ -1,0 +1,25 @@
+title: Mqtt Paho C
+description: 'Build C applications with the Eclipse Paho MQTT C library: synchronous/async clients, samples,
+  and CMake builds.'
+version: 2.0.0
+instructions: "# Mqtt Paho C\n\nBuild C applications with the Eclipse Paho MQTT C library: synchronous/async\
+  \ clients, samples, and CMake builds.\n\n## Instructions\n\n# Paho MQTT C\n\nThe Eclipse Paho C library\
+  \ provides synchronous (MQTTClient) and asynchronous (MQTTAsync) MQTT clients.\n\n## What this skill\
+  \ does\n\n- Builds the library and samples from source with CMake\n- Runs the provided sample clients\n\
+  - Links applications against libpaho-mqtt3c / libpaho-mqtt3as\n\n## When to use\n\n- Embedding MQTT\
+  \ into C daemons or embedded devices\n- Preferring zero-dependency sync/async C APIs\n\n## Real commands\n\
+  \n```bash\n# Clone and build\n git clone https://github.com/eclipse/paho.mqtt.c.git\ncd paho.mqtt.c\n\
+  cmake -Bbuild -DPAHO_WITH_SSL=ON -DPAHO_BUILD_SAMPLES=ON\ncmake --build build\nctest --test-dir build\n\
+  \n# Run samples (needs a broker)\n./build/output/samples/MQTTClient_publish -t test/topic -m \"hello\"\
+  \n./build/output/samples/MQTTClient_subscribe -t test/topic -q 1\n\n# Compile your own app\n gcc app.c\
+  \ -o app -lpaho-mqtt3c\n```\n\n## Minimal sample logic\n\n```c\nMQTTClient client;\nMQTTClient_create(&client,\
+  \ \"tcp://localhost:1883\", \"client-id\", MQTTCLIENT_PERSISTENCE_NONE, NULL);\nMQTTClient_connect(client,\
+  \ &conn_opts);\nMQTTClient_publishMessage(client, \"test/topic\", &msg, &token);\nMQTTClient_destroy(&client);\n\
+  ```\n\n## Best practices\n\n- Use MQTTAsync for non-blocking event-driven apps\n- Enable SSL build if\
+  \ you need TLS (`-DPAHO_WITH_SSL=ON`)\n- Always set a client ID; use clean sessions with persistent\
+  \ sessions deliberately\n\n## Capabilities\n\n### paho-c-build\nClone, build and run Paho MQTT C samples\
+  \ (MQTTClient/MQTTAsync) with the CMake toolchain.\n\n**Commands:**\n- `git clone https://github.com/eclipse/paho.mqtt.c.git`\n\
+  - `cmake -Bbuild -DPAHO_WITH_SSL=ON`\n- `cmake --build build`\n- `ctest --test-dir build`\n- `./build/output/samples/MQTTClient_publish\
+  \ -t test/topic -m \"hello\"`\n\n**Examples:**\n- cmake -Bbuild -DPAHO_BUILD_SAMPLES=ON -DPAHO_WITH_SSL=ON\n\
+  - ./build/output/samples/MQTTClient_subscribe -t test/topic -q 1\n- gcc app.c -o app -lpaho-mqtt3c -lpaho-mqtt3as"
+prompt: Act as Mqtt Paho C and handle the task per the instructions.

@@ -1,0 +1,26 @@
+title: Promtail
+description: 'Promtail log shipping to Loki: config, file discovery, labels, pipeline stages and logcli
+  queries.'
+version: 2.0.0
+instructions: "# Promtail\n\nPromtail log shipping to Loki: config, file discovery, labels, pipeline stages\
+  \ and logcli queries.\n\n## Instructions\n\n# Promtail\n\nPromtail tails log files, adds labels, and\
+  \ pushes them to Loki for querying.\n\n## What this skill does\n\n- Configures file discovery and labels\n\
+  - Transforms lines with pipeline stages\n- Queries Loki with logcli\n\n## When to use\n\n- Shipping\
+  \ app logs to Loki\n- Parsing structured fields from log lines\n\n## Real commands\n\n```bash\n# Run\
+  \ promtail\npromtail -config.file=promtail.yaml\npromtail -config.file=promtail.yaml -dry-run\n\n# Push\
+  \ test entry (Loki push API)\ncurl -X POST http://localhost:3100/loki/api/v1/push -H \"Content-Type:\
+  \ application/json\" \\\n  -d '{\"streams\":[{\"stream\":{\"job\":\"app\"},\"values\":[[\"1710000000000000000\"\
+  ,\"log line\"]]}]}'\n\n# Query\nlogcli query '{job=\"app\"}' --limit 50\nlogcli query '{job=\"app\"\
+  } |= \"error\"' --from \"1h ago\"\nlogcli labels\n```\n\n## promtail.yaml\n\n```yaml\nserver:\n  http_listen_port:\
+  \ 9080\nclients:\n- url: http://localhost:3100/loki/api/v1/push\nscrape_configs:\n- job_name: app\n\
+  \  static_configs:\n  - targets: [localhost]\n    labels:\n      job: app\n      __path__: /var/log/app/*.log\n\
+  ```\n\n## Best practices\n\n- Keep labels low-cardinality (job, env, service)\n- Use -dry-run to preview\
+  \ labels before pushing\n- Use json/regex stages to extract structured fields\n\n## Capabilities\n\n\
+  ### promtail-log-shipping\nRun promtail with configs, process log lines with pipelines, and query Loki\
+  \ with logcli.\n\n**Commands:**\n- `promtail -config.file=promtail.yaml`\n- `curl -X POST http://localhost:3100/loki/api/v1/push\
+  \ -H \"Content-Type: application/json\" -d '{\"streams\":[{\"stream\":{\"job\":\"app\"},\"values\":[[\"\
+  1710000000000000000\",\"log line\"]]}]}'`\n- `logcli query '{job=\"app\"}' --limit 50`\n- `logcli query\
+  \ '{job=\"app\"} |= \"error\"' --from \"1h ago\"`\n- `logcli labels`\n\n**Examples:**\n- logcli query\
+  \ '{service=\"orders\"} |= \"exception\" | json' --limit 100\n- promtail -config.file=promtail.yaml\
+  \ -dry-run\n- logcli query '{job=\"app\"} |= \"500\"' --since 24h | wc -l"
+prompt: Act as Promtail and handle the task per the instructions.

@@ -1,0 +1,171 @@
+---
+applyTo: "**/*.go **/*.html **/*.java **/*.json **/*.kt **/*.py **/*.r **/*.sh **/*.{ts,tsx} **/*.{yaml,yml}"
+---
+
+# OpenAPI Documentation Builder
+
+Builds comprehensive OpenAPI/Swagger documentation with validation, code generation, and interactive publishing. Authors specs with reusable components, generates typed clients for multiple languages, and deploys Redoc/Swagger UI documentation sites.
+
+## Instructions
+
+# OpenAPI Documentation Builder
+
+## What this agent does
+
+Produces production-ready API documentation: authors OpenAPI 3.1 specs with reusable components
+(schemas, parameters, responses, security schemes), validates with Spectral and Redocly, generates
+typed client SDKs and server stubs for TypeScript, Python, Go, Kotlin, Java, and publishes
+interactive Redoc and Swagger UI documentation sites.
+
+## When to use
+
+- Writing or refactoring OpenAPI specifications
+- Generating client SDKs for frontend teams (TypeScript, Python, Go, etc.)
+- Creating server stubs for backend implementation (FastAPI, Spring Boot, etc.)
+- Publishing developer-facing API documentation
+- Enforcing API governance with Spectral rulesets in CI
+
+## Real commands
+
+```bash
+# Validate spec
+swagger-cli validate ./api/openapi.yaml
+spectral lint ./api/openapi.yaml --ruleset=spectral:oas
+redocly lint ./api/openapi.yaml
+
+# Generate clients
+openapi-generator-cli generate -i ./api/openapi.yaml -g typescript-axios -o ./client/ts
+openapi-generator-cli generate -i ./api/openapi.yaml -g python-fastapi -o ./server/fastapi
+openapi-generator-cli generate -i ./api/openapi.yaml -g go -o ./client/go
+openapi-generator-cli generate -i ./api/openapi.yaml -g kotlin-spring -o ./client/kotlin
+openapi-generator-cli generate -i ./api/openapi.yaml -g java-spring -o ./server/java
+
+# Build and serve docs
+redoc-cli bundle ./api/openapi.yaml -o ./docs/index.html
+redocly build-docs ./api/openapi.yaml -o ./docs
+swagger-ui-serve ./api/openapi.yaml -p 8080
+npx @redocly/cli preview-docs ./api/openapi.yaml
+```
+
+## OpenAPI spec with reusable components
+
+```yaml
+openapi: 3.1.0
+info:
+  title: Orders API
+  version: 1.0.0
+components:
+  schemas:
+    Order:
+      type: object
+      required: [id, total, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        total:
+          type: number
+          format: decimal
+        status:
+          type: string
+          enum: [pending, confirmed, shipped, delivered]
+  parameters:
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+    limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+```
+
+## Spectral ruleset for documentation quality
+
+```yaml
+extends: ["spectral:oas"]
+rules:
+  operation-summary: error
+  operation-description: error
+  parameter-description: warn
+  response-contains-header: warn
+  no-server-example.com: error
+```
+
+## Testing
+
+- Run `swagger-cli validate`, `spectral lint`, `redocly lint` in CI
+- Verify generated clients compile: `npm run build`, `go build`, `./mvnw compile`
+- Test Redoc bundle renders: `npx serve docs` and check in browser
+- Validate examples in spec with `redocly lint --format=codeframe`
+
+## Best practices
+
+- Define all reusable components in components/ section
+- Include examples for every schema and response
+- Document all error responses, not just 200
+- Use semantic versioning in info.version
+- Pin generator versions for reproducible builds
+- Separate internal and public specs if needed
+
+## Capabilities
+
+### spec-authoring
+Authors OpenAPI 3.1 documents with reusable components, security schemes, and examples.
+
+**Commands:**
+- `swagger-cli validate openapi.yaml`
+- `spectral lint openapi.yaml --ruleset=spectral:oas`
+- `redocly lint openapi.yaml`
+
+**Examples:**
+- swagger-cli validate ./api/openapi.yaml
+- spectral lint ./api/openapi.yaml --ruleset=spectral:oas --format=stylish
+- redocly lint ./api/openapi.yaml --format=codeframe
+
+### client-generation
+Generates typed client SDKs, server stubs, and TypeScript types from validated OpenAPI specs.
+
+**Commands:**
+- `openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./client/ts`
+- `openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o ./server/fastapi`
+- `openapi-generator-cli generate -i openapi.yaml -g go -o ./client/go`
+- `openapi-generator-cli generate -i openapi.yaml -g kotlin-spring -o ./client/kotlin`
+- `openapi-generator-cli generate -i openapi.yaml -g java-spring -o ./server/java`
+
+**Examples:**
+- openapi-generator-cli generate -i ./api/openapi.yaml -g typescript-axios -o ./generated/ts
+- openapi-generator-cli generate -i ./api/openapi.yaml -g python-fastapi -o ./generated/fastapi
+- openapi-generator-cli generate -i ./api/openapi.yaml -g go -o ./generated/go
+- openapi-generator-cli generate -i ./api/openapi.yaml -g kotlin-spring -o ./generated/kotlin
+
+### documentation-publishing
+Builds and deploys interactive API documentation with Redoc and Swagger UI.
+
+**Commands:**
+- `redoc-cli bundle openapi.yaml -o docs/index.html`
+- `redocly build-docs openapi.yaml -o ./docs`
+- `swagger-ui-serve openapi.yaml -p 8080`
+- `npx @redocly/cli preview-docs openapi.yaml`
+
+**Examples:**
+- redoc-cli bundle ./api/openapi.yaml -o ./docs/index.html
+- redocly build-docs ./api/openapi.yaml -o ./docs
+- swagger-ui-serve ./api/openapi.yaml -p 8080
+- npx @redocly/cli preview-docs ./api/openapi.yaml

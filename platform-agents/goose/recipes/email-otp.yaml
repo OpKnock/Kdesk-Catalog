@@ -1,0 +1,37 @@
+title: Email Otp
+description: 'One-time password delivery by email: generate OTPs, send via SMTP/transactional APIs, and
+  verify codes with rate limiting and expiry.'
+version: 2.0.0
+instructions: "# Email Otp\n\nOne-time password delivery by email: generate OTPs, send via SMTP/transactional\
+  \ APIs, and verify codes with rate limiting and expiry.\n\n## Instructions\n\n# Email OTP\n\n## What\
+  \ this skill does\n\nEmail OTPs deliver time-limited one-time codes by email for login or verification.\
+  \ Production systems store only a hash of the code, expire it, and throttle verification attempts.\n\
+  \n## When to use\n\n- Passwordless login or second-factor email verification\n- Confirming new devices\
+  \ or sensitive actions\n\n## Real commands\n\n```bash\n# Send via SMTP with curl (starttls)\ncurl -s\
+  \ --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com \\\n  --mail-rcpt user@gmail.com\
+  \ --upload-file email.txt --user 'otp@yourdomain.com:app-password'\n\n# Generate a TOTP (RFC 6238) for\
+  \ comparison\nnode -e \"const o=require('otplib');console.log(o.authenticator.generate('BASE32SECRET'))\"\
+  \n\n# Store the code with TTL in Redis\nredis-cli SET otp:user@gmail.com 482913 EX 300\nredis-cli GET\
+  \ otp:user@gmail.com\n\n# Send via SendGrid API\ncurl -s -X POST https://api.sendgrid.com/v3/mail/send\
+  \ -H 'Authorization: Bearer $SENDGRID_KEY' -H 'Content-Type: application/json' -d @email.json\n```\n\
+  \n## email.json example\n\n```json\n{\n  \"personalizations\": [{\"to\": [{\"email\": \"user@gmail.com\"\
+  }]}],\n  \"from\": {\"email\": \"otp@yourdomain.com\", \"name\": \"Example Auth\"},\n  \"subject\":\
+  \ \"Your login code\",\n  \"content\": [{\"type\": \"text/plain\", \"value\": \"Your code is 482913.\
+  \ It expires in 5 minutes.\"}]\n}\n```\n\n## Verification flow\n\n```bash\n# Check existence + TTL,\
+  \ then compare hash; increment attempts\nredis-cli GET otp:user@gmail.com\nredis-cli TTL otp:user@gmail.com\n\
+  redis-cli INCR fail:user@gmail.com\n```\n\n## Best practices\n\n- Store a bcrypt/argon2 hash of the\
+  \ code, never the raw code.\n- 6 digits, 5-10 minute TTL, max 3-5 attempts then invalidate.\n- Log the\
+  \ attempt count per email; lock after 10 failed tries per hour.\n- Never reuse codes; always rotate\
+  \ on resend.\n- Monitor SMTP delivery rate; bounced OTPs burn user trust.\n\n## Capabilities\n\n###\
+  \ otp-verification\nSend OTP emails and verify codes against stored hashes with expiry and attempt limits.\n\
+  \n**Commands:**\n- `curl -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com\
+  \ --mail-rcpt user@gmail.com --upload-file email.txt --user 'otp@yourdomain.com:app-password'`\n- `node\
+  \ -e \"const o=require('otplib');console.log(o.authenticator.generate('BASE32SECRET'))\"`\n- `curl -s\
+  \ -X POST https://api.sendgrid.com/v3/mail/send -H 'Authorization: Bearer $SENDGRID_KEY' -H 'Content-Type:\
+  \ application/json' -d @email.json`\n- `redis-cli SET otp:user@gmail.com 482913 EX 300`\n- `redis-cli\
+  \ GET otp:user@gmail.com`\n\n**Examples:**\n- redis-cli SET otp:user@gmail.com 482913 EX 300 && curl\
+  \ -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com --mail-rcpt user@gmail.com\
+  \ --upload-file email.txt --user 'otp@yourdomain.com:app-password'\n- redis-cli GET otp:user@gmail.com\n\
+  - curl -s -X POST https://api.sendgrid.com/v3/mail/send -H 'Authorization: Bearer $SENDGRID_KEY' -H\
+  \ 'Content-Type: application/json' -d @email.json"
+prompt: Act as Email Otp and handle the task per the instructions.

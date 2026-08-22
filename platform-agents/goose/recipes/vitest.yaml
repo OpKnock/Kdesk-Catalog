@@ -1,0 +1,30 @@
+title: vitest
+description: 'Runs Vite-native unit tests with Vitest: watch mode, UI, coverage, mocking, and snapshot
+  updates.'
+version: 2.0.0
+instructions: "# vitest\n\nRuns Vite-native unit tests with Vitest: watch mode, UI, coverage, mocking,\
+  \ and snapshot updates.\n\n## Instructions\n\n# Vitest\n\nFast, Vite-native unit testing for JS/TS.\n\
+  \n## What This Skill Does\n\n- Runs tests in watch or one-shot mode\n- Uses Vite transforms for instant\
+  \ startup\n- Produces coverage with thresholds\n- Mocks modules and supports jsdom environments\n\n\n\
+  ## When to Use\n\n- Vite/React/Vue project unit tests\n- Fast iteration with watch mode\n- Snapshot\
+  \ testing for components\n\n## Real Commands\n\n```bash\n# Run\nnpx vitest\nnpx vitest run\nnpx vitest\
+  \ run tests/foo.test.ts\nnpx vitest --changed\n\n# Coverage\nnpx vitest run --coverage\nnpx vitest run\
+  \ --coverage.thresholds.lines=80\n\n# Env and UI\nnpx vitest run --environment=jsdom\nnpx vitest --ui\n\
+  \n# Snapshots\nnpx vitest --update\n```\n\n## Sample Test\n\n```ts\nimport { describe, it, expect, vi\
+  \ } from 'vitest';\nimport { fetchUser } from './api';\n\nvi.mock('./api', () => ({\n  fetchUser: vi.fn(()\
+  \ => Promise.resolve({ name: 'alice' }))\n}));\n\ndescribe('user card', () => {\n  it('renders the name',\
+  \ async () => {\n    const name = await fetchUser(1).then(u => u.name);\n    expect(name).toBe('alice');\n\
+  \  });\n});\n```\n\n## Best Practices\n\n- Use vitest run in CI; watch locally\n- Set coverage thresholds\
+  \ in config\n- Mock at module boundaries, not inside tests\n- Prefer jsdom over full browser for component\
+  \ tests\n- Run --changed in pre-push hooks\n\n## Capabilities\n\n### vitest-runs\nRun tests in watch\
+  \ or one-shot mode.\n\n**Commands:**\n- `npx vitest`\n- `npx vitest run`\n- `npx vitest run tests/foo.test.ts`\n\
+  - `npx vitest run --reporter=verbose`\n- `npx vitest --changed`\n\n**Examples:**\n- npx vitest\n- npx\
+  \ vitest run tests/foo.test.ts\n- npx vitest --changed\n\n### coverage-and-ui\nCoverage reports and\
+  \ interactive UI.\n\n**Commands:**\n- `npx vitest run --coverage`\n- `npx vitest run --coverage.thresholds.lines=80`\n\
+  - `npx vitest --ui`\n- `npx vitest run --coverage.reporter=lcov`\n- `npx vitest --update`\n\n**Examples:**\n\
+  - npx vitest run --coverage\n- npx vitest --ui\n- npx vitest run --coverage.thresholds.lines=80\n\n\
+  ### mocking-and-config\nMock modules and configure environments.\n\n**Commands:**\n- `npx vitest run\
+  \ --environment=jsdom`\n- `npx vitest run --testNamePattern=login`\n- `npx vitest run --config vitest.config.ts`\n\
+  - `npx vitest --pool=forks`\n- `npx vitest run --sequence.shuffle`\n\n**Examples:**\n- npx vitest run\
+  \ --environment=jsdom\n- npx vitest run --testNamePattern=login\n- npx vitest run --sequence.shuffle"
+prompt: Act as vitest and handle the task per the instructions.

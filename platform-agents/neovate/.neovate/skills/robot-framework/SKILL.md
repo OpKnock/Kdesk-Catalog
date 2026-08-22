@@ -1,0 +1,120 @@
+---
+name: "robot-framework"
+description: "Writes keyword-driven acceptance tests with Robot Framework, using tags, variables, data-driven tables, and reports."
+---
+
+# Robot Framework
+
+Writes keyword-driven acceptance tests with Robot Framework, using tags, variables, data-driven tables, and reports.
+
+## Instructions
+
+# Robot Framework
+
+Keyword-driven acceptance testing with readable tables.
+
+## What This Skill Does
+
+- Writes tests in the Robot data table syntax
+- Filters by tags and test names
+- Overrides variables per environment
+- Merges and rebuilds logs with rebot
+
+## When to Use
+
+- Acceptance and BDD-style test suites
+- UI/API keyword libraries with SeleniumLibrary/RequestsLibrary
+- Non-developer-friendly readable tests
+
+## Real Commands
+
+```bash
+# Run
+robot tests.robot
+robot --outputdir results tests/
+robot -t "User Login" tests.robot
+robot -i smoke -e slow tests/
+robot -v HOST:localhost:8000 tests.robot
+
+# Validate
+robot --dryrun tests.robot
+
+# Reports
+rebot --merge output1.xml output2.xml
+rebot --outputdir merged output.xml
+```
+
+## Sample Suite
+
+```robot
+*** Settings ***
+Library    SeleniumLibrary
+Suite Setup    Open Browser    https://example.com    chrome
+
+*** Test Cases ***
+User Login
+    [Tags]    smoke
+    Input Text    id=email    alice@example.com
+    Input Password    id=password    secret
+    Click Button    id=submit
+    Page Should Contain    Welcome
+
+*** Test Cases ***
+Calculator
+    [Template]    Multiply
+    2    3    6
+    -1    5    -5
+```
+
+## Best Practices
+
+- Write custom keywords for reusable steps
+- Use [Template] for data-driven cases
+- Tag suites (smoke, slow, broken) and run subsets
+- Keep variables in variable files per environment
+- Archive output.xml/log.html for audit trails
+
+## Capabilities
+
+### robot-runs
+Run Robot test suites with tags and outputs.
+
+**Commands:**
+- `robot tests.robot`
+- `robot --outputdir results tests/`
+- `robot -t "User Login" tests.robot`
+- `robot -i smoke -e slow tests/`
+- `robot -v HOST:localhost:8000 tests.robot`
+
+**Examples:**
+- robot --outputdir results tests/
+- robot -t "User Login" tests.robot
+- robot -i smoke -e slow tests/
+
+### data-driven-tests
+Write table-driven test cases.
+
+**Commands:**
+- `robot --dryrun tests.robot`
+- `robot --listener RobotMongo?db=mongotest.robot`
+- `robot --metadata version:1.2 tests/`
+- `robot --logtitle "Release tests" tests.robot`
+
+**Examples:**
+- robot --dryrun tests.robot
+- robot --metadata version:1.2 tests/
+- robot --logtitle "Release tests" tests.robot
+
+### reports-and-tools
+Rebuild logs and run postprocessing tools.
+
+**Commands:**
+- `rebot --outputdir results/rebot output.xml`
+- `rebot --merge output1.xml output2.xml`
+- `robot --console verbose tests.robot`
+- `python -m robot.tidy --format robot tests.robot`
+
+**Examples:**
+- rebot --merge output1.xml output2.xml
+- rebot --outputdir merged results/output.xml
+- robot --console verbose tests.robot

@@ -1,0 +1,117 @@
+{
+  "name": "azure-api-management",
+  "description": "Operates Azure API Management gateways end-to-end: provisioning service tiers, importing OpenAPI definitions, applying policies (rate limit, CORS, transformation), managing subscription keys, and validating gateway routing with live curl calls.",
+  "system_prompt": "You are Azure Api Management.\n\nOperates Azure API Management gateways end-to-end: provisioning service tiers, importing OpenAPI definitions, applying policies (rate limit, CORS, transformation), managing subscription keys, and validating gateway routing with live curl calls.\n\n## Capabilities\n- **apim-service**: Create and manage API Management instances.\n- **api-import**: Import and manage APIs in APIM.\n- **subscriptions**: Manage subscriptions and keys.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Azure API Management\n\n## What this skill does\n\nOperates Azure API Management gateways end-to-end: provisioning service tiers, importing OpenAPI definitions, applying policies (rate limit, CORS, transformation), managing subscription keys, and validating gateway routing with live curl calls.\n\n## When to use\n\n- Exposing a backend API with rate limits, caching, or transformation\n- Importing an OpenAPI spec to generate the gateway surface\n- Issuing and rotating subscription keys\n\n## Real commands\n\n```bash\n# Create a service\naz apim create --name my-apim --resource-group api-rg --publisher-email admin@contoso.com --publisher-name Contoso --sku-name Consumption\n\n# Import an OpenAPI spec\naz apim api import --service-name my-apim -g api-rg --api-id petstore --path petstore --specification-format OpenApiJson --specification-path ./openapi.json\n\n# List operations\naz apim api operation list --service-name my-apim -g api-rg --api-id petstore --query '[].{method:method,url:urlTemplate}' -o table\n\n# Subscription\naz apim subscription create --service-name my-apim -g api-rg --name svc-key --owner-id svc-account --scope /apis\n\n# Call through the gateway\ncurl -s -H \"Ocp-Apim-Subscription-Key: $KEY\" https://my-apim.azure-api.net/petstore/pets\n```\n\n## Testing\n\n- Import then immediately list operations to verify the spec parsed\n- Call the gateway URL with and without a key (401 without)\n\n## Best practices\n\n- Use Consumption/Developer tier for dev; Premium for production SLAs\n- Set policies (rate limit, CORS) per API or product\n- Rotate keys via regenerate-primary-key on a schedule\n\n## Examples\n- az apim create --name my-apim --resource-group api-rg --publisher-email admin@contoso.com --publisher-name Contoso --sku-name Developer\n- az apim show --name my-apim -g api-rg --query 'gatewayUrl' -o tsv\n- az apim list --resource-group api-rg --query '[].{name:name,sku:sku.name}' -o table\n- az apim api import --service-name my-apim -g api-rg --api-id petstore --path petstore --specification-format OpenApiJson --specification-url https://httpbin.org/openapi.json\n- az apim api operation list --service-name my-apim -g api-rg --api-id petstore --query '[].{method:method,url:urlTemplate}' -o table\n- az apim api list --service-name my-apim -g api-rg --query '[].{id:name,path:path}' -o table\n- az apim subscription create --service-name my-apim -g api-rg --name svc-key --owner-id svc-account --scope /apis --primary-key $(openssl rand -hex 16)\n- az apim subscription regenerate-secondary-key --service-name my-apim -g api-rg --subscription-id sub-12345\n- curl -s -H \"Ocp-Apim-Subscription-Key: $KEY\" https://my-apim.azure-api.net/petstore/pets?limit=5\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "apim-service",
+      "description": "Create and manage API Management instances.",
+      "commands": [
+        "az apim create --name my-apim --resource-group api-rg --publisher-email admin@contoso.com --publisher-name Contoso --sku-name Consumption",
+        "az apim show --name my-apim -g api-rg",
+        "az apim list --resource-group api-rg",
+        "az apim delete --name my-apim -g api-rg --yes",
+        "az apim list-skus"
+      ],
+      "examples": [
+        "az apim create --name my-apim --resource-group api-rg --publisher-email admin@contoso.com --publisher-name Contoso --sku-name Developer",
+        "az apim show --name my-apim -g api-rg --query 'gatewayUrl' -o tsv",
+        "az apim list --resource-group api-rg --query '[].{name:name,sku:sku.name}' -o table"
+      ],
+      "parameters": [
+        {
+          "name": "sku",
+          "type": "string",
+          "description": "Consumption, Developer, Basic, Standard, Premium"
+        },
+        {
+          "name": "publisher_email",
+          "type": "string",
+          "description": "Publisher email"
+        }
+      ]
+    },
+    {
+      "name": "api-import",
+      "description": "Import and manage APIs in APIM.",
+      "commands": [
+        "az apim api import --service-name my-apim -g api-rg --api-id petstore --path petstore --specification-format OpenApiJson --specification-path ./openapi.json",
+        "az apim api list --service-name my-apim -g api-rg",
+        "az apim api show --service-name my-apim -g api-rg --api-id petstore",
+        "az apim api operation list --service-name my-apim -g api-rg --api-id petstore",
+        "az apim api update --service-name my-apim -g api-rg --api-id petstore --display-name \"Pet Store v2\""
+      ],
+      "examples": [
+        "az apim api import --service-name my-apim -g api-rg --api-id petstore --path petstore --specification-format OpenApiJson --specification-url https://httpbin.org/openapi.json",
+        "az apim api operation list --service-name my-apim -g api-rg --api-id petstore --query '[].{method:method,url:urlTemplate}' -o table",
+        "az apim api list --service-name my-apim -g api-rg --query '[].{id:name,path:path}' -o table"
+      ],
+      "parameters": [
+        {
+          "name": "api_id",
+          "type": "string",
+          "description": "API identifier"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": "URL path suffix"
+        },
+        {
+          "name": "spec_file",
+          "type": "string",
+          "description": "OpenAPI spec file or URL"
+        }
+      ]
+    },
+    {
+      "name": "subscriptions",
+      "description": "Manage subscriptions and keys.",
+      "commands": [
+        "az apim subscription list --service-name my-apim -g api-rg",
+        "az apim subscription create --service-name my-apim -g api-rg --name svc-key --owner-id svc-account --scope /apis",
+        "az apim subscription show --service-name my-apim -g api-rg --subscription-id sub-12345",
+        "az apim subscription regenerate-primary-key --service-name my-apim -g api-rg --subscription-id sub-12345",
+        "curl -s -H \"Ocp-Apim-Subscription-Key: $SUBSCRIPTION_KEY\" https://my-apim.azure-api.net/petstore/pets"
+      ],
+      "examples": [
+        "az apim subscription create --service-name my-apim -g api-rg --name svc-key --owner-id svc-account --scope /apis --primary-key $(openssl rand -hex 16)",
+        "az apim subscription regenerate-secondary-key --service-name my-apim -g api-rg --subscription-id sub-12345",
+        "curl -s -H \"Ocp-Apim-Subscription-Key: $KEY\" https://my-apim.azure-api.net/petstore/pets?limit=5"
+      ],
+      "parameters": [
+        {
+          "name": "subscription_name",
+          "type": "string",
+          "description": "Subscription name"
+        },
+        {
+          "name": "scope",
+          "type": "string",
+          "description": "Scope: /apis, /apis/{api}, /products"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "description": "Owner user/group id"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Expose our petstore backend through APIM",
+      "output": "Creates the APIM service, imports openapi.json, creates a subscription, and demonstrates a curl call through the gateway URL with Ocp-Apim-Subscription-Key."
+    },
+    {
+      "input": "Rotate the subscription key",
+      "output": "Runs regenerate-primary-key, updates downstream config, and verifies the old key now returns 401."
+    }
+  ]
+}

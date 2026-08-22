@@ -1,0 +1,33 @@
+title: Graphql Server
+description: Designs and runs GraphQL servers with Apollo Server, GraphQL Yoga, and gqlgen including resolvers,
+  schema stitching, and query cost limiting.
+version: 2.0.0
+instructions: "# Graphql Server\n\nDesigns and runs GraphQL servers with Apollo Server, GraphQL Yoga,\
+  \ and gqlgen including resolvers, schema stitching, and query cost limiting.\n\n## Instructions\n\n\
+  # GraphQL Server\n\nDesign and operate GraphQL APIs.\n\n## When to Use\n\n- Clients need to fetch nested\
+  \ data in one round trip\n- Many consumers with divergent data needs\n- Schema-first development where\
+  \ the contract is the source of truth\n- Aggregating multiple services behind one API layer\n\n## Core\
+  \ Concepts\n\n- Schema: type definitions that define the API contract\n- Resolvers: functions that fetch\
+  \ each field\n- Query vs Mutation: reads vs writes\n- Federation/stitching: combining multiple schemas\n\
+  - Query complexity: cost of a query to prevent abuse\n\n## Commands\n\n```bash\n# Apollo Server (Node)\n\
+  npm install @apollo/server graphql\nnode server.js\n\n# GraphQL Yoga\nnpm install graphql-yoga\n\n#\
+  \ gqlgen (Go)\ngo run github.com/99designs/gqlgen/cmd/gqlgen@latest init\n\n# Introspect the schema\n\
+  curl -X POST http://localhost:4000/graphql -H \"Content-Type: application/json\" \\\n  -d '{\"query\"\
+  :\"{ __schema { queryType { name } } }\"}'\n\n# Run a query\ncurl -X POST http://localhost:4000/graphql\
+  \ -H \"Content-Type: application/json\" \\\n  -d '{\"query\":\"{ users { id name } }\"}'\n```\n\n##\
+  \ Schema Example\n\n```graphql\ntype Query {\n  user(id: ID!): User\n}\n\ntype User {\n  id: ID!\n \
+  \ name: String!\n  posts: [Post!]!\n}\n\ntype Post {\n  id: ID!\n  title: String!\n}\n```\n\n## Best\
+  \ Practices\n\n- Always define a __typename-friendly schema with unique type names\n- Cap query depth\
+  \ and complexity to avoid nested-DoS attacks\n- Batch data fetches with DataLoader to avoid N+1 resolvers\n\
+  - Use persisted queries for stable, cacheable clients\n- Run schema checks (apollo schema:check) in\
+  \ CI before releasing\n\n## Capabilities\n\n### graphql-servers\nScaffold and run popular GraphQL server\
+  \ frameworks.\n\n**Commands:**\n- `npm install @apollo/server graphql`\n- `npx apollo init`\n- `node\
+  \ index.js`\n- `npm install graphql-yoga`\n- `go run github.com/99designs/gqlgen/cmd/gqlgen@latest init`\n\
+  \n**Examples:**\n- npx @graphql-codegen/cli init\n- npx gqlgen init\n- npm start\n\n### graphql-querying\n\
+  Run introspection and test queries against a server.\n\n**Commands:**\n- `curl -X POST http://localhost:4000/graphql\
+  \ -H \"Content-Type: application/json\" -d \"{\\\"query\\\":\\\"{ __schema { queryType { name } } }\\\
+  \"}\"`\n- `curl -X POST http://localhost:4000/graphql -H \"Content-Type: application/json\" -d \"{\\\
+  \"query\\\":\\\"{ users { id name } }\\\"}\"`\n- `npx graphql-codegen`\n- `npx apollo schema:check`\n\
+  \n**Examples:**\n- curl -s -X POST localhost:4000/graphql -d \"{\\\"query\\\":\\\"{ __typename }\\\"\
+  }\"\n- npx graphql-codegen --config codegen.yml"
+prompt: Act as Graphql Server and handle the task per the instructions.

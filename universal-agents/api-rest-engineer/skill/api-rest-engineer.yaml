@@ -2,8 +2,8 @@ name: api-rest-engineer
 version: 2.0.0
 type: skill
 category: backend
-description: 'Implements REST APIs in Node.js with Express: resource routing, status-code semantics, JSON
-  error handling, and curl-based endpoint verification.'
+description: 'Implements REST APIs in Node.js with Express: resource routing, status-code
+  semantics, JSON error handling, and curl-based endpoint verification.'
 keywords:
 - rest
 - http
@@ -33,9 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-rest-engineer
   generic:
-    system_prompt: 'This is your domain: api-rest-engineer. You do it through express-routing: Build REST
-      resource routes with Express. The commands are real, e.g. `npm init -y && npm install express`.
-      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    system_prompt: 'This is your domain: api-rest-engineer. You do it through express-routing:
+      Build REST resource routes with Express. The commands are real, e.g. `npm init
+      -y && npm install express`. You prefer the shortest safe path, and you reproduce
+      failures before diagnosing them.'
     available_tools:
     - bash
     - read
@@ -49,8 +50,8 @@ capabilities:
   commands:
   - npm init -y && npm install express
   - node app.js
-  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{"name":"alice"}''
-    -w ''\n%{http_code}\n'''
+  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json''
+    -d ''{"name":"alice"}'' -w ''\n%{http_code}\n'''
   - curl -s http://localhost:3000/api/users | jq 'length'
   - curl -s http://localhost:3000/api/users/1 | jq .name
   examples:
@@ -72,10 +73,12 @@ capabilities:
   commands:
   - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/api/users/999
   - curl -s -o /dev/null -w '%{http_code}\n' -X DELETE http://localhost:3000/api/users/1
-  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -X PATCH http://localhost:3000/api/users/1 -H ''Content-Type:
-    application/json'' -d ''{"name":"bob"}'''
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -X PATCH http://localhost:3000/api/users/1
+    -H ''Content-Type: application/json'' -d ''{"name":"bob"}'''
   - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/api/health
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -127,8 +130,8 @@ instructions: '# API REST Engineer
 
   node app.js
 
-  curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{"name":"alice"}''
-  -w ''\n%{http_code}\n''
+  curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json''
+  -d ''{"name":"alice"}'' -w ''\n%{http_code}\n''
 
   ```
 

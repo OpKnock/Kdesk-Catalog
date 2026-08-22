@@ -2,8 +2,8 @@ name: api-version-management
 version: 2.0.0
 type: skill
 category: backend
-description: 'Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement
-  processes with RFC 8594 Deprecation header conventions.'
+description: 'Manages API version lifecycles: deprecation headers, sunset dates, changelogs,
+  and retirement processes with RFC 8594 Deprecation header conventions.'
 keywords:
 - deprecation
 - lifecycle
@@ -34,9 +34,9 @@ platforms:
     plugin: opencode-api-version-management
   generic:
     system_prompt: 'You own api-version-management end to end. You do it through deprecation-headers:
-      Signal deprecation with standard headers. The commands are real, e.g. `curl -sI https://api.example.com/v1/users
-      | grep -iE ^(deprecation|sunset|link):`. You run and verify the real CLI commands before you claim
-      anything.'
+      Signal deprecation with standard headers. The commands are real, e.g. `curl
+      -sI https://api.example.com/v1/users | grep -iE ^(deprecation|sunset|link):`.
+      You run and verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
@@ -50,7 +50,8 @@ capabilities:
   commands:
   - curl -sI http://localhost:8080/v1/users | grep -iE '^(deprecation|sunset|link):'
   - curl -s -D- http://localhost:8080/v1/users | grep -i '^link:'
-  - node -e "const d=new Date(); d.setMonth(d.getMonth()+6); console.log('Sunset:', d.toUTCString())"
+  - node -e "const d=new Date(); d.setMonth(d.getMonth()+6); console.log('Sunset:',
+    d.toUTCString())"
   - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/v1/users
   examples:
   - 'Deprecation: true warns clients of planned removal'
@@ -73,7 +74,9 @@ capabilities:
   - git tag -a v2.0.0 -m 'v2 GA'
   - git tag -l 'v*' --sort=-v:refname | head -5
   - curl -s http://localhost:8080/changelog | jq '.versions[0]'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js

@@ -2,8 +2,9 @@ name: api-rest-architect
 version: 2.0.0
 type: skill
 category: backend
-description: 'Architects REST APIs with an OpenAPI-first workflow: spectral linting, Redocly validation,
-  swagger-cli checks, and HTML reference docs generated from one contract.'
+description: 'Architects REST APIs with an OpenAPI-first workflow: spectral linting,
+  Redocly validation, swagger-cli checks, and HTML reference docs generated from one
+  contract.'
 keywords:
 - rest
 platforms:
@@ -31,10 +32,11 @@ platforms:
   opencode:
     plugin: opencode-api-rest-architect
   generic:
-    system_prompt: 'You own api-rest-architect end to end. You do it through openapi-validation: Lint
-      and validate the OpenAPI contract before implementation. The commands are real, e.g. `npx @stoplight/spectral-cli
-      lint openapi.yaml -r .spectral.yml`. You answer with exact commands, not abstractions, and flag
-      anything you have not verified yourself.'
+    system_prompt: 'You own api-rest-architect end to end. You do it through openapi-validation:
+      Lint and validate the OpenAPI contract before implementation. The commands are
+      real, e.g. `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml`.
+      You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
     available_tools:
     - bash
     - read
@@ -70,7 +72,9 @@ capabilities:
   - npx @redocly/cli build-docs openapi.yaml -o api-docs.html
   - npx @redocly/cli preview-docs openapi.yaml
   - curl -s http://localhost:8080/docs -o /dev/null -w '%{http_code}\n'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -86,7 +90,8 @@ tools:
 - postman
 examples:
 - input: Design a new orders API
-  output: Writes the OpenAPI contract, runs spectral lint, and generates docs before any code
+  output: Writes the OpenAPI contract, runs spectral lint, and generates docs before
+    any code
 - input: Enforce API conventions team-wide
   output: Creates a shared spectral ruleset and runs it in CI
 instructions: '# API REST Architect

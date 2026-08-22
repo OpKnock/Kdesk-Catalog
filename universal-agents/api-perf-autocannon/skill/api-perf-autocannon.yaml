@@ -2,8 +2,9 @@ name: api-perf-autocannon
 version: 2.0.0
 type: skill
 category: backend
-description: Analyzes API latency distribution and connection behavior with autocannon, artillery quick
-  mode, and request-level timing to separate network from application cost.
+description: Analyzes API latency distribution and connection behavior with autocannon,
+  artillery quick mode, and request-level timing to separate network from application
+  cost.
 keywords:
 - api-perf-autocannon
 platforms:
@@ -31,9 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-perf-autocannon
   generic:
-    system_prompt: 'Your lane is Api Perf Autocannon. You do it through autocannon: Run pipelined HTTP
-      benchmarks with full statistics. The commands are real, e.g. `npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/`.
-      You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'Your lane is Api Perf Autocannon. You do it through autocannon:
+      Run pipelined HTTP benchmarks with full statistics. The commands are real, e.g.
+      `npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/`. You work hands-on
+      and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -46,7 +48,8 @@ capabilities:
   description: Run pipelined HTTP benchmarks with full statistics
   commands:
   - npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/
-  - npx autocannon -c 10 -d 20 -m POST -b '{"a":1}' -H 'Content-Type=application/json' http://localhost:3000/api
+  - npx autocannon -c 10 -d 20 -m POST -b '{"a":1}' -H 'Content-Type=application/json'
+    http://localhost:3000/api
   - npx autocannon -c 20 -d 30 --json http://localhost:3000/ > results.json
   - npx autocannon --renderStatusCodes -c 20 -d 10 http://localhost:3000/
   examples:
@@ -69,7 +72,9 @@ capabilities:
   - npx artillery quick -d 30 -r 20 http://localhost:3000/api
   - npx artillery quick --count 50 --num 20 http://localhost:8080/users
   - npx artillery quick -d 60 -r 50 -o report.json http://localhost:3000/
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js

@@ -2,8 +2,8 @@ name: api-sdk-specialist
 version: 2.0.0
 type: skill
 category: backend
-description: 'Applies SDK design patterns: configuration objects, typed errors, retry policies, pagination
-  helpers, and package metadata quality with publint.'
+description: 'Applies SDK design patterns: configuration objects, typed errors, retry
+  policies, pagination helpers, and package metadata quality with publint.'
 keywords:
 - api-sdk
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-sdk-specialist
   generic:
-    system_prompt: 'You are the api-sdk-specialist specialist. You do it through sdk-design: Design consistent
-      SDK configuration and error surfaces. The commands are real, e.g. `npm install openapi-fetch`. You
-      verify each step you report and stay honest about what you have not run.'
+    system_prompt: 'You are the api-sdk-specialist specialist. You do it through sdk-design:
+      Design consistent SDK configuration and error surfaces. The commands are real,
+      e.g. `npm install openapi-fetch`. You verify each step you report and stay honest
+      about what you have not run.'
     available_tools:
     - bash
     - read
@@ -48,8 +49,8 @@ capabilities:
   - npm install openapi-fetch
   - node -e "const api=require('openapi-fetch').createClient({baseUrl:'http://localhost:8080',headers:{'X-API-Key':process.env.API_KEY}});
     console.log(typeof api.GET)"
-  - node -e "const api=require('openapi-fetch').createClient({baseUrl:'http://localhost:8080'}); api.GET('/users',{params:{query:{page:1}}}).then(r=>console.log(r.data
-    ?? r.error))"
+  - node -e "const api=require('openapi-fetch').createClient({baseUrl:'http://localhost:8080'});
+    api.GET('/users',{params:{query:{page:1}}}).then(r=>console.log(r.data ?? r.error))"
   - npx publint
   examples:
   - createClient sets baseUrl and headers once
@@ -72,7 +73,9 @@ capabilities:
   - node -e "const pRetry=require('p-retry'); const fn=async()=>{const r=await fetch('http://localhost:8080/users');
     if(!r.ok) throw new Error('fail'); return r.json()}; pRetry(fn,{retries:3,factor:2}).then(console.log).catch(console.error)"
   - node -e "const r=require('retry'); console.log(r.operation({retries:3,factor:2}).attempt)"
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - openapi-generator
@@ -89,16 +92,18 @@ examples:
   output: Wraps fetch with p-retry and exponential backoff
 - input: Fix SDK package metadata
   output: Runs publint and fixes exports/type fields
-instructions: "# API SDK Specialist\n\nSDK design patterns and quality.\n\n## What This Skill Does\n-\
-  \ Designs SDK config and error surfaces\n- Implements retries and pagination helpers\n- Ensures package\
-  \ quality with publint\n\n## When to Use\n- SDK refactoring for consistency\n- Adding retry behavior\n\
-  - Preparing SDK releases\n\n## Real Commands\n\n```bash\nnpm install openapi-fetch\nnode -e \"const\
-  \ api=require('openapi-fetch').createClient({baseUrl:'https://api.example.com',headers:{'X-API-Key':process.env.API_KEY}});\
-  \ console.log(typeof api.GET)\"\nnpx publint\n```\n\n## SDK Pattern\n\n```ts\nconst client = createClient<paths>({\n\
-  \  baseUrl: process.env.API_URL,\n  headers: { 'X-API-Key': process.env.API_KEY },\n  fetch: withRetry(fetch,\
-  \ { retries: 3 })\n});\n```\n\n## Testing\n- Test retry behavior with failing mocks\n- Validate package\
-  \ exports with publint\n- Check types compile for consumers\n\n## Best Practices\n- Expose typed errors,\
-  \ not strings\n- Keep config objects minimal\n- Follow semantic versioning for breaking changes"
+instructions: "# API SDK Specialist\n\nSDK design patterns and quality.\n\n## What\
+  \ This Skill Does\n- Designs SDK config and error surfaces\n- Implements retries\
+  \ and pagination helpers\n- Ensures package quality with publint\n\n## When to Use\n\
+  - SDK refactoring for consistency\n- Adding retry behavior\n- Preparing SDK releases\n\
+  \n## Real Commands\n\n```bash\nnpm install openapi-fetch\nnode -e \"const api=require('openapi-fetch').createClient({baseUrl:'https://api.example.com',headers:{'X-API-Key':process.env.API_KEY}});\
+  \ console.log(typeof api.GET)\"\nnpx publint\n```\n\n## SDK Pattern\n\n```ts\nconst\
+  \ client = createClient<paths>({\n  baseUrl: process.env.API_URL,\n  headers: {\
+  \ 'X-API-Key': process.env.API_KEY },\n  fetch: withRetry(fetch, { retries: 3 })\n\
+  });\n```\n\n## Testing\n- Test retry behavior with failing mocks\n- Validate package\
+  \ exports with publint\n- Check types compile for consumers\n\n## Best Practices\n\
+  - Expose typed errors, not strings\n- Keep config objects minimal\n- Follow semantic\
+  \ versioning for breaking changes"
 display_name: api-sdk-specialist
 knowledge:
 - title: openapi-fetch

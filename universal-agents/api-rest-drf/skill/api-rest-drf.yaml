@@ -2,8 +2,8 @@ name: api-rest-drf
 version: 2.0.0
 type: skill
 category: backend
-description: 'Builds REST APIs with Django REST Framework: models, serializers, viewsets, routers, permissions,
-  and browsable API testing.'
+description: 'Builds REST APIs with Django REST Framework: models, serializers, viewsets,
+  routers, permissions, and browsable API testing.'
 keywords:
 - rest
 platforms:
@@ -31,9 +31,9 @@ platforms:
   opencode:
     plugin: opencode-api-rest-drf
   generic:
-    system_prompt: 'Your lane is Api Rest Drf. You do it through drf-setup: Scaffold a Django project
-      with DRF. The commands are real, e.g. `pip install django djangorestframework`. You work hands-on
-      and only report outcomes you have observed.'
+    system_prompt: 'Your lane is Api Rest Drf. You do it through drf-setup: Scaffold
+      a Django project with DRF. The commands are real, e.g. `pip install django djangorestframework`.
+      You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -68,12 +68,14 @@ capabilities:
   description: Expose CRUD via viewsets and routers
   commands:
   - curl -s http://localhost:8000/api/users/ | jq 'length'
-  - 'curl -s -X POST http://localhost:8000/api/users/ -H ''Content-Type: application/json'' -d ''{"name":"alice","email":"a@localhost"}''
-    -w ''\n%{http_code}\n'''
-  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -X POST http://localhost:8000/api/users/ -H ''Content-Type:
-    application/json'' -d ''{"name":"x"}'''
+  - 'curl -s -X POST http://localhost:8000/api/users/ -H ''Content-Type: application/json''
+    -d ''{"name":"alice","email":"a@localhost"}'' -w ''\n%{http_code}\n'''
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -X POST http://localhost:8000/api/users/
+    -H ''Content-Type: application/json'' -d ''{"name":"x"}'''
   - python manage.py test api -v 2
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -91,17 +93,20 @@ examples:
   output: Creates a viewset with router registration and tests CRUD via curl
 - input: Protect write operations
   output: Adds IsAuthenticated permission and verifies 401s
-instructions: "# API REST v4 - Django REST Framework\n\nREST APIs with DRF.\n\n## What This Skill Does\n\
-  - Exposes models as REST resources with viewsets\n- Validates and serializes with serializers\n- Handles\
-  \ auth with permission classes\n\n## When to Use\n- Python/Django teams\n- Rapid CRUD APIs with admin\
-  \ UIs\n- Standardized DRF projects\n\n## Real Commands\n\n```bash\npip install django djangorestframework\n\
-  django-admin startproject config .\npython manage.py startapp api\npython manage.py migrate\npython\
-  \ manage.py runserver\n```\n\n## ViewSet Example\n\n```python\nfrom rest_framework import viewsets\n\
-  from .models import User\nfrom .serializers import UserSerializer\n\nclass UserViewSet(viewsets.ModelViewSet):\n\
-  \    queryset = User.objects.all()\n    serializer_class = UserSerializer\n```\n\n## Testing\n- Verify\
-  \ browsable API at /api/users/\n- Test validation and permissions with APIClient\n- Confirm 401/403\
-  \ for anonymous writes\n\n## Best Practices\n- Use routers to wire URLs consistently\n- Add filtering\
-  \ and ordering mixins\n- Document with drf-spectacular OpenAPI generation"
+instructions: "# API REST v4 - Django REST Framework\n\nREST APIs with DRF.\n\n##\
+  \ What This Skill Does\n- Exposes models as REST resources with viewsets\n- Validates\
+  \ and serializes with serializers\n- Handles auth with permission classes\n\n##\
+  \ When to Use\n- Python/Django teams\n- Rapid CRUD APIs with admin UIs\n- Standardized\
+  \ DRF projects\n\n## Real Commands\n\n```bash\npip install django djangorestframework\n\
+  django-admin startproject config .\npython manage.py startapp api\npython manage.py\
+  \ migrate\npython manage.py runserver\n```\n\n## ViewSet Example\n\n```python\n\
+  from rest_framework import viewsets\nfrom .models import User\nfrom .serializers\
+  \ import UserSerializer\n\nclass UserViewSet(viewsets.ModelViewSet):\n    queryset\
+  \ = User.objects.all()\n    serializer_class = UserSerializer\n```\n\n## Testing\n\
+  - Verify browsable API at /api/users/\n- Test validation and permissions with APIClient\n\
+  - Confirm 401/403 for anonymous writes\n\n## Best Practices\n- Use routers to wire\
+  \ URLs consistently\n- Add filtering and ordering mixins\n- Document with drf-spectacular\
+  \ OpenAPI generation"
 display_name: Api Rest Drf
 knowledge:
 - title: DRF Quickstart

@@ -2,8 +2,8 @@ name: api-webhook-specialist
 version: 2.0.0
 type: skill
 category: backend
-description: 'Secures webhooks with HMAC signatures: signing payloads with openssl and node crypto, signature
-  verification middleware, and replay protection.'
+description: 'Secures webhooks with HMAC signatures: signing payloads with openssl
+  and node crypto, signature verification middleware, and replay protection.'
 keywords:
 - webhooks
 - delivery
@@ -33,9 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-webhook-specialist
   generic:
-    system_prompt: 'You are the api-webhook-specialist specialist. You do it through hmac-signing: Sign
-      and verify webhook payloads. The commands are real, e.g. `openssl dgst -sha256 -hmac secret-key
-      -hex payload.json`. You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'You are the api-webhook-specialist specialist. You do it through
+      hmac-signing: Sign and verify webhook payloads. The commands are real, e.g.
+      `openssl dgst -sha256 -hmac secret-key -hex payload.json`. You work hands-on
+      and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -52,9 +53,9 @@ capabilities:
     console.log(sig)"
   - node -e "const c=require('crypto'); const sig=(s)=>c.createHmac('sha256','secret-key').update(s).digest('hex');
     const payload=JSON.stringify({a:1}); console.log('X-Signature:', sig(payload))"
-  - 'curl -s -X POST http://localhost:3000/webhooks -H ''Content-Type: application/json'' -H "X-Signature:
-    sha256=$(openssl dgst -sha256 -hmac ''secret-key'' -hex payload.json | awk ''{print $2}'')" -d @payload.json
-    -w ''\n%{http_code}\n'''
+  - 'curl -s -X POST http://localhost:3000/webhooks -H ''Content-Type: application/json''
+    -H "X-Signature: sha256=$(openssl dgst -sha256 -hmac ''secret-key'' -hex payload.json
+    | awk ''{print $2}'')" -d @payload.json -w ''\n%{http_code}\n'''
   examples:
   - openssl dgst -hmac signs with a shared secret
   - node crypto verifies signatures in middleware
@@ -73,10 +74,13 @@ capabilities:
   description: Verify signatures in middleware
   commands:
   - node -e "const c=require('crypto'); const ok=(sig,p)=>{const expect=c.createHmac('sha256','secret-key').update(p).digest('hex');
-    return c.timingSafeEqual(Buffer.from(sig),Buffer.from(expect))}; console.log(ok('abc','x'), ok(c.createHmac('sha256','secret-key').update('x').digest('hex'),'x'))"
-  - 'curl -s -X POST http://localhost:3000/webhooks -H ''Content-Type: application/json'' -H ''X-Signature:
-    sha256=bad'' -d ''{"a":1}'' -o /dev/null -w ''%{http_code}\n'''
-  examples: []
+    return c.timingSafeEqual(Buffer.from(sig),Buffer.from(expect))}; console.log(ok('abc','x'),
+    ok(c.createHmac('sha256','secret-key').update('x').digest('hex'),'x'))"
+  - 'curl -s -X POST http://localhost:3000/webhooks -H ''Content-Type: application/json''
+    -H ''X-Signature: sha256=bad'' -d ''{"a":1}'' -o /dev/null -w ''%{http_code}\n'''
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -94,17 +98,20 @@ examples:
   output: Implements HMAC verification middleware with timing-safe comparison
 - input: Sign outgoing webhooks
   output: Adds X-Signature headers using openssl/node crypto
-instructions: "# API Webhook Specialist\n\nWebhook signature security.\n\n## What This Skill Does\n- Signs\
-  \ payloads with HMAC-SHA256\n- Verifies signatures in middleware\n- Protects against replay and forgery\n\
-  \n## When to Use\n- Receiving third-party webhooks\n- Emitting signed webhooks\n- Auditing delivery\
-  \ authenticity\n\n## Real Commands\n\n```bash\nopenssl dgst -sha256 -hmac \"secret-key\" -hex payload.json\n\
+instructions: "# API Webhook Specialist\n\nWebhook signature security.\n\n## What\
+  \ This Skill Does\n- Signs payloads with HMAC-SHA256\n- Verifies signatures in middleware\n\
+  - Protects against replay and forgery\n\n## When to Use\n- Receiving third-party\
+  \ webhooks\n- Emitting signed webhooks\n- Auditing delivery authenticity\n\n## Real\
+  \ Commands\n\n```bash\nopenssl dgst -sha256 -hmac \"secret-key\" -hex payload.json\n\
   node -e \"const c=require('crypto'); console.log(c.createHmac('sha256','secret-key').update('payload').digest('hex'))\"\
-  \n```\n\n## Verification Middleware\n\n```js\napp.post('/webhooks', (req, res) => {\n  const sig = req.get('X-Signature').replace('sha256=',\
-  \ '');\n  const expected = crypto.createHmac('sha256', SECRET)\n    .update(JSON.stringify(req.body)).digest('hex');\n\
-  \  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) {\n    return res.sendStatus(401);\n\
-  \  }\n  res.sendStatus(200);\n});\n```\n\n## Testing\n- Send bad signatures and expect 401\n- Verify\
-  \ timestamped replay rejection\n- Test header/body integrity\n\n\n## Best Practices\n- Rotate webhook\
-  \ secrets regularly\n- Use timingSafeEqual for comparisons\n- Include timestamps to block replays"
+  \n```\n\n## Verification Middleware\n\n```js\napp.post('/webhooks', (req, res) =>\
+  \ {\n  const sig = req.get('X-Signature').replace('sha256=', '');\n  const expected\
+  \ = crypto.createHmac('sha256', SECRET)\n    .update(JSON.stringify(req.body)).digest('hex');\n\
+  \  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) {\n   \
+  \ return res.sendStatus(401);\n  }\n  res.sendStatus(200);\n});\n```\n\n## Testing\n\
+  - Send bad signatures and expect 401\n- Verify timestamped replay rejection\n- Test\
+  \ header/body integrity\n\n\n## Best Practices\n- Rotate webhook secrets regularly\n\
+  - Use timingSafeEqual for comparisons\n- Include timestamps to block replays"
 display_name: api-webhook-specialist
 knowledge:
 - title: Stripe Webhook Signatures

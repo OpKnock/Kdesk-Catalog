@@ -2,8 +2,8 @@ name: api-sec-specialist
 version: 2.0.0
 type: skill
 category: security
-description: 'Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI, baseline scans, active
-  scan rules, and HTML/JSON vulnerability reports.'
+description: 'Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI,
+  baseline scans, active scan rules, and HTML/JSON vulnerability reports.'
 keywords:
 - api-security
 - authentication
@@ -34,9 +34,10 @@ platforms:
   opencode:
     plugin: opencode-api-sec-specialist
   generic:
-    system_prompt: 'You work api-sec-specialist hands-on. You do it through zap-api-scan: Run ZAP automated
-      scans against APIs. The commands are real, e.g. `docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py
-      -t...`. You run and verify the real CLI commands before you claim anything.'
+    system_prompt: 'You work api-sec-specialist hands-on. You do it through zap-api-scan:
+      Run ZAP automated scans against APIs. The commands are real, e.g. `docker run
+      -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t...`. You run and verify the real
+      CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
@@ -48,10 +49,12 @@ capabilities:
 - name: zap-api-scan
   description: Run ZAP automated scans against APIs
   commands:
-  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t http://localhost:8080/v3/api-docs -f openapi
-    -O -r zap_api_report.html
-  - docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t http://localhost:8080 -r zap_baseline.html
-  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi -j -l WARN -r report.html
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t http://localhost:8080/v3/api-docs
+    -f openapi -O -r zap_api_report.html
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t http://localhost:8080
+    -r zap_baseline.html
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi
+    -j -l WARN -r report.html
   - docker run -t ghcr.io/zaproxy/zaproxy zap-cli.py --help
   examples:
   - zap-api-scan.py -f openapi scans from the OpenAPI spec
@@ -71,10 +74,12 @@ capabilities:
   description: Automate ZAP scans in CI pipelines
   commands:
   - curl -s http://localhost:8080/v3/api-docs -o openapi.json
-  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.json -f openapi -J -j -l FAIL -r
-    report.html
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.json -f openapi
+    -J -j -l FAIL -r report.html
   - curl -s http://localhost:8080/health -o /dev/null -w '%{http_code}\n'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -120,9 +125,11 @@ instructions: '# API Security Specialist
 
   ```bash
 
-  docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi -j -l WARN -r report.html
+  docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi
+  -j -l WARN -r report.html
 
-  docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://api.example.com -r zap_baseline.html
+  docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://api.example.com
+  -r zap_baseline.html
 
   ```
 

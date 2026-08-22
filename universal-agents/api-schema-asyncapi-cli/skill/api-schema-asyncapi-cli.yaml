@@ -2,8 +2,8 @@ name: api-schema-asyncapi-cli
 version: 2.0.0
 type: skill
 category: data
-description: 'Authors event API schemas with AsyncAPI and Apache Avro: AsyncAPI document validation and
-  generation, Avro schema tooling, and Kafka payload contracts.'
+description: 'Authors event API schemas with AsyncAPI and Apache Avro: AsyncAPI document
+  validation and generation, Avro schema tooling, and Kafka payload contracts.'
 keywords:
 - api-schema
 - json-schema
@@ -33,9 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-schema-asyncapi-cli
   generic:
-    system_prompt: 'You are the Api Schema Asyncapi Cli specialist. You do it through asyncapi-cli: Validate
-      and generate AsyncAPI documents. The commands are real, e.g. `npm install -g @asyncapi/cli`. You
-      verify each step you report and stay honest about what you have not run.'
+    system_prompt: 'You are the Api Schema Asyncapi Cli specialist. You do it through
+      asyncapi-cli: Validate and generate AsyncAPI documents. The commands are real,
+      e.g. `npm install -g @asyncapi/cli`. You verify each step you report and stay
+      honest about what you have not run.'
     available_tools:
     - bash
     - read
@@ -72,8 +73,11 @@ capabilities:
   - java -jar avro-tools-1.11.3.jar compile schema user.avsc .
   - java -jar avro-tools-1.11.3.jar getmeta user.avsc
   - java -jar avro-tools-1.11.3.jar tojson users.avro
-  - java -jar avro-tools-1.11.3.jar fromjson --schema-file user.avsc users.json > users.avro
-  examples: []
+  - java -jar avro-tools-1.11.3.jar fromjson --schema-file user.avsc users.json >
+    users.avro
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - openapi
@@ -91,16 +95,19 @@ examples:
   output: Writes an AsyncAPI doc, validates it, and generates HTML docs
 - input: Define a Kafka user schema
   output: Creates an Avro record and compiles it with avro-tools
-instructions: "# API Schema v4 - AsyncAPI/Avro\n\nEvent schema authoring.\n\n## What This Skill Does\n\
-  - Documents event-driven APIs with AsyncAPI\n- Compiles Avro schemas for Kafka\n- Generates docs and\
-  \ stubs\n\n## When to Use\n- Kafka/Kinesis event contracts\n- Event-driven microservices\n- Schema registry\
-  \ management\n\n## Real Commands\n\n```bash\nnpm install -g @asyncapi/cli\nasyncapi validate asyncapi.yaml\n\
-  asyncapi generate fromTemplate asyncapi.yaml @asyncapi/html-template -o docs\njava -jar avro-tools-1.11.3.jar\
-  \ compile schema user.avsc .\n```\n\n## Avro Schema\n\n```json\n{\n  \"type\": \"record\",\n  \"name\"\
-  : \"User\",\n  \"fields\": [\n    { \"name\": \"id\", \"type\": \"long\" },\n    { \"name\": \"email\"\
-  , \"type\": \"string\" }\n  ]\n}\n```\n\n## Testing\n- Validate documents in CI\n- Round-trip JSON to\
-  \ Avro and back\n- Check schema registry compatibility\n\n## Best Practices\n- Version event schemas\
-  \ with a registry\n- Use forward/backward compatible fields\n- Keep AsyncAPI docs in sync with topics"
+instructions: "# API Schema v4 - AsyncAPI/Avro\n\nEvent schema authoring.\n\n## What\
+  \ This Skill Does\n- Documents event-driven APIs with AsyncAPI\n- Compiles Avro\
+  \ schemas for Kafka\n- Generates docs and stubs\n\n## When to Use\n- Kafka/Kinesis\
+  \ event contracts\n- Event-driven microservices\n- Schema registry management\n\n\
+  ## Real Commands\n\n```bash\nnpm install -g @asyncapi/cli\nasyncapi validate asyncapi.yaml\n\
+  asyncapi generate fromTemplate asyncapi.yaml @asyncapi/html-template -o docs\njava\
+  \ -jar avro-tools-1.11.3.jar compile schema user.avsc .\n```\n\n## Avro Schema\n\
+  \n```json\n{\n  \"type\": \"record\",\n  \"name\": \"User\",\n  \"fields\": [\n\
+  \    { \"name\": \"id\", \"type\": \"long\" },\n    { \"name\": \"email\", \"type\"\
+  : \"string\" }\n  ]\n}\n```\n\n## Testing\n- Validate documents in CI\n- Round-trip\
+  \ JSON to Avro and back\n- Check schema registry compatibility\n\n## Best Practices\n\
+  - Version event schemas with a registry\n- Use forward/backward compatible fields\n\
+  - Keep AsyncAPI docs in sync with topics"
 display_name: Api Schema Asyncapi Cli
 knowledge:
 - title: AsyncAPI CLI

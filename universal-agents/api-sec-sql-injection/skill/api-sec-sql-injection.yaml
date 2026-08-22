@@ -2,8 +2,8 @@ name: api-sec-sql-injection
 version: 2.0.0
 type: skill
 category: security
-description: 'Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes,
-  fuzzing inputs, and HTTP method abuse checks.'
+description: 'Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual
+  payload probes, fuzzing inputs, and HTTP method abuse checks.'
 keywords:
 - api-security
 - owasp
@@ -32,9 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-sec-sql-injection
   generic:
-    system_prompt: 'This is your domain: Api Sec Sql Injection. You do it through sql-injection: Detect
-      SQL injection in API parameters. The commands are real, e.g. `sqlmap -u https://api.example.com/search?q=1
-      --batch --level=2`. You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'This is your domain: Api Sec Sql Injection. You do it through
+      sql-injection: Detect SQL injection in API parameters. The commands are real,
+      e.g. `sqlmap -u https://api.example.com/search?q=1 --batch --level=2`. You work
+      hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -69,10 +70,12 @@ capabilities:
   commands:
   - curl -s -X OPTIONS http://localhost:8080/users -D- -o /dev/null | grep -i allow
   - curl -s -X TRACE http://localhost:8080/ -o /dev/null -w '%{http_code}\n'
-  - 'curl -s -X PATCH http://localhost:8080/users/1 -H ''Content-Type: application/json'' -d ''{"role":"admin"}''
-    -w ''\n%{http_code}\n'''
+  - 'curl -s -X PATCH http://localhost:8080/users/1 -H ''Content-Type: application/json''
+    -d ''{"role":"admin"}'' -w ''\n%{http_code}\n'''
   - npx fuzzapi --target http://localhost:8080/users
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js

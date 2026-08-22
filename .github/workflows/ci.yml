@@ -24,6 +24,9 @@ jobs:
           python -m compileall -q kdesk scripts
           python -m py_compile kdesk/cli.py
 
+      - name: Generate JSON from YAML
+        run: python scripts/yaml-to-json.py
+
       - name: Stats validation (authoritative counts, zero-file guard)
         run: python -m kdesk.cli stats --format json --root .
 

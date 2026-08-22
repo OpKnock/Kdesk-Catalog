@@ -2,8 +2,8 @@ name: api-webhook-engineer
 version: 2.0.0
 type: skill
 category: backend
-description: 'Implements webhook delivery in Node.js: receiver endpoints, retry with backoff, delivery
-  logging, and idempotent handling of events.'
+description: 'Implements webhook delivery in Node.js: receiver endpoints, retry with
+  backoff, delivery logging, and idempotent handling of events.'
 keywords:
 - webhooks
 - delivery
@@ -35,9 +35,9 @@ platforms:
   opencode:
     plugin: opencode-api-webhook-engineer
   generic:
-    system_prompt: 'This is your domain: api-webhook-engineer. You do it through webhook-receiver: Build
-      a webhook receiver endpoint. The commands are real, e.g. `npm install express`. You run and verify
-      the real CLI commands before you claim anything.'
+    system_prompt: 'This is your domain: api-webhook-engineer. You do it through webhook-receiver:
+      Build a webhook receiver endpoint. The commands are real, e.g. `npm install
+      express`. You run and verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
@@ -51,10 +51,10 @@ capabilities:
   commands:
   - npm install express
   - node server.js
-  - 'curl -s -X POST http://localhost:3000/webhooks -H ''Content-Type: application/json'' -d ''{"event":"order.created","data":{"id":1}}''
-    -w ''\n%{http_code}\n'''
-  - 'curl -s -X POST http://localhost:3000/webhooks -H ''Content-Type: application/json'' -d ''{"event":"order.created","data":{"id":1}}''
-    -w ''\n%{http_code}\n'''
+  - 'curl -s -X POST http://localhost:3000/webhooks -H ''Content-Type: application/json''
+    -d ''{"event":"order.created","data":{"id":1}}'' -w ''\n%{http_code}\n'''
+  - 'curl -s -X POST http://localhost:3000/webhooks -H ''Content-Type: application/json''
+    -d ''{"event":"order.created","data":{"id":1}}'' -w ''\n%{http_code}\n'''
   - curl -s http://localhost:3000/webhooks/log | jq 'length'
   examples:
   - POST /webhooks receives events
@@ -74,10 +74,13 @@ capabilities:
   description: Retry failed deliveries with backoff
   commands:
   - npm install p-retry
-  - node -e "const pRetry=require('p-retry'); const send=()=>Promise.reject(new Error('down')); pRetry(send,{retries:3,factor:2}).catch(e=>console.log('gave
-    up:',e.message))"
-  - node -e "const r=require('retry'); const o=r.operation({retries:4,factor:2,minTimeout:1000}); o.attempt(n=>console.log('attempt',n))"
-  examples: []
+  - node -e "const pRetry=require('p-retry'); const send=()=>Promise.reject(new Error('down'));
+    pRetry(send,{retries:3,factor:2}).catch(e=>console.log('gave up:',e.message))"
+  - node -e "const r=require('retry'); const o=r.operation({retries:4,factor:2,minTimeout:1000});
+    o.attempt(n=>console.log('attempt',n))"
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -95,17 +98,20 @@ examples:
   output: Builds a receiver with idempotent handling and delivery logs
 - input: Handle transient failures
   output: Adds retry with backoff and gives up after max attempts
-instructions: "# API Webhook Engineer\n\nWebhook delivery implementation.\n\n## What This Skill Does\n\
-  - Receives and processes webhook events\n- Implements retries with exponential backoff\n- Logs deliveries\
-  \ for debugging\n\n## When to Use\n- Building webhook receivers\n- Adding reliable event delivery\n\
-  - Handling third-party webhooks\n\n## Real Commands\n\n```bash\nnpm install express\nnode server.js\n\
-  curl -s -X POST http://localhost:3000/webhooks -H 'Content-Type: application/json' -d '{\"event\":\"\
-  order.created\",\"data\":{\"id\":1}}' -w '\\n%{http_code}\\n'\n```\n\n## Receiver Pattern\n\n```js\n\
-  app.post('/webhooks', async (req, res) => {\n  const key = req.body.id || hash(req.body);\n  if (await\
-  \ processed(key)) return res.sendStatus(200);\n  await processEvent(req.body);\n  res.sendStatus(200);\n\
-  });\n```\n\n## Testing\n- Replay events and verify idempotency\n- Simulate handler failure and check\
-  \ retries\n- Verify logs capture delivery attempts\n\n\n## Best Practices\n- Respond 200 fast, process\
-  \ asynchronously\n- Use idempotency keys for every event\n- Log delivery metadata with event IDs"
+instructions: "# API Webhook Engineer\n\nWebhook delivery implementation.\n\n## What\
+  \ This Skill Does\n- Receives and processes webhook events\n- Implements retries\
+  \ with exponential backoff\n- Logs deliveries for debugging\n\n## When to Use\n\
+  - Building webhook receivers\n- Adding reliable event delivery\n- Handling third-party\
+  \ webhooks\n\n## Real Commands\n\n```bash\nnpm install express\nnode server.js\n\
+  curl -s -X POST http://localhost:3000/webhooks -H 'Content-Type: application/json'\
+  \ -d '{\"event\":\"order.created\",\"data\":{\"id\":1}}' -w '\\n%{http_code}\\n'\n\
+  ```\n\n## Receiver Pattern\n\n```js\napp.post('/webhooks', async (req, res) => {\n\
+  \  const key = req.body.id || hash(req.body);\n  if (await processed(key)) return\
+  \ res.sendStatus(200);\n  await processEvent(req.body);\n  res.sendStatus(200);\n\
+  });\n```\n\n## Testing\n- Replay events and verify idempotency\n- Simulate handler\
+  \ failure and check retries\n- Verify logs capture delivery attempts\n\n\n## Best\
+  \ Practices\n- Respond 200 fast, process asynchronously\n- Use idempotency keys\
+  \ for every event\n- Log delivery metadata with event IDs"
 display_name: api-webhook-engineer
 knowledge:
 - title: Webhooks Guide (Svix)

@@ -2,8 +2,8 @@ name: api-rate-limit-verification
 version: 2.0.0
 type: skill
 category: security
-description: 'Verifies rate limiting behavior under load: 429 response testing, header assertions, burst
-  tolerance checks, and k6 scenarios that prove limits hold at scale.'
+description: 'Verifies rate limiting behavior under load: 429 response testing, header
+  assertions, burst tolerance checks, and k6 scenarios that prove limits hold at scale.'
 keywords:
 - rate-limiting
 platforms:
@@ -31,10 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-rate-limit-verification
   generic:
-    system_prompt: 'Your lane is Api Rate Limit Verification. You do it through limit-verification: Assert
-      429s and rate limit headers under controlled load. The commands are real, e.g. `curl -s -o /dev/null
-      -w %{http_code}\n -H X-Client-Id: test1 http://localhost:3000/api`. You run and verify the real
-      CLI commands before you claim anything.'
+    system_prompt: 'Your lane is Api Rate Limit Verification. You do it through limit-verification:
+      Assert 429s and rate limit headers under controlled load. The commands are real,
+      e.g. `curl -s -o /dev/null -w %{http_code}\n -H X-Client-Id: test1 http://localhost:3000/api`.
+      You run and verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
@@ -47,10 +47,11 @@ capabilities:
   description: Assert 429s and rate limit headers under controlled load
   commands:
   - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H ''X-Client-Id: test1'' http://localhost:3000/api'
-  - 'for i in $(seq 1 150); do curl -s -o /dev/null -w ''%{http_code}\n'' -H ''X-Client-Id: test1'' http://localhost:3000/api;
-    done | sort | uniq -c'
+  - 'for i in $(seq 1 150); do curl -s -o /dev/null -w ''%{http_code}\n'' -H ''X-Client-Id:
+    test1'' http://localhost:3000/api; done | sort | uniq -c'
   - curl -s -D- -o /dev/null http://localhost:3000/api | grep -iE 'ratelimit|retry-after'
-  - ab -n 500 -c 20 http://localhost:3000/api 2>&1 | grep -E 'Non-2xx|Requests per second'
+  - ab -n 500 -c 20 http://localhost:3000/api 2>&1 | grep -E 'Non-2xx|Requests per
+    second'
   examples:
   - curl loops count how many requests pass before 429s start
   - grep -iE 'ratelimit|retry-after' verifies limit headers
@@ -71,7 +72,9 @@ capabilities:
   - k6 run --vus 5 --iterations 300 ratelimit-test.js
   - k6 run --threshold 'http_req_duration:p(95)<500' ratelimit-test.js
   - k6 run --summary-export=limit-summary.json ratelimit-test.js
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - redis
@@ -85,21 +88,26 @@ tools:
 - express-rate-limit
 examples:
 - input: Verify a 60 req/min limit
-  output: Loops 150 requests and asserts exactly 60 pass before 429s, with Retry-After present
+  output: Loops 150 requests and asserts exactly 60 pass before 429s, with Retry-After
+    present
 - input: Prove limits under concurrency
   output: Runs a k6 scenario with per-VU client keys and a 429 threshold assertion
-instructions: "# API Rate v4 - Limit Testing\n\nProving rate limits behave under load.\n\n## What This\
-  \ Skill Does\n- Verifies exact 429 thresholds per client\n- Asserts RateLimit and Retry-After headers\n\
-  - Proves limits hold under concurrency\n\n## When to Use\n- Acceptance tests for new limit configs\n\
-  - Regression checks after limit refactors\n- Documenting observable limit behavior\n\n## Real Commands\n\
-  \n```bash\nfor i in $(seq 1 150); do curl -s -o /dev/null -w '%{http_code}\\n' -H 'X-Client-Id: test1'\
-  \ http://localhost:3000/api; done | sort | uniq -c\ncurl -s -D- -o /dev/null http://localhost:3000/api\
-  \ | grep -iE 'ratelimit|retry-after'\n```\n\n## k6 Assertions\n\n```js\nconst res = http.get('http://localhost:3000/api',\
-  \ { headers: { 'X-Client-Id': __VU } });\nif (res.status === 429) {\n  check(res, { 'has retry-after':\
-  \ (r) => r.headers['Retry-After'] !== undefined });\n}\n```\n\n## Testing\n- Confirm the burst count\
-  \ matches the configured limit\n- Validate header values match window math\n- Run with 2x VUs to catch\
-  \ race conditions\n\n## Best Practices\n- Test at the exact boundary and one request beyond\n- Include\
-  \ a control client that stays under the limit\n- Store limit-test scripts with the API source"
+instructions: "# API Rate v4 - Limit Testing\n\nProving rate limits behave under load.\n\
+  \n## What This Skill Does\n- Verifies exact 429 thresholds per client\n- Asserts\
+  \ RateLimit and Retry-After headers\n- Proves limits hold under concurrency\n\n\
+  ## When to Use\n- Acceptance tests for new limit configs\n- Regression checks after\
+  \ limit refactors\n- Documenting observable limit behavior\n\n## Real Commands\n\
+  \n```bash\nfor i in $(seq 1 150); do curl -s -o /dev/null -w '%{http_code}\\n' -H\
+  \ 'X-Client-Id: test1' http://localhost:3000/api; done | sort | uniq -c\ncurl -s\
+  \ -D- -o /dev/null http://localhost:3000/api | grep -iE 'ratelimit|retry-after'\n\
+  ```\n\n## k6 Assertions\n\n```js\nconst res = http.get('http://localhost:3000/api',\
+  \ { headers: { 'X-Client-Id': __VU } });\nif (res.status === 429) {\n  check(res,\
+  \ { 'has retry-after': (r) => r.headers['Retry-After'] !== undefined });\n}\n```\n\
+  \n## Testing\n- Confirm the burst count matches the configured limit\n- Validate\
+  \ header values match window math\n- Run with 2x VUs to catch race conditions\n\n\
+  ## Best Practices\n- Test at the exact boundary and one request beyond\n- Include\
+  \ a control client that stays under the limit\n- Store limit-test scripts with the\
+  \ API source"
 display_name: Api Rate Limit Verification
 knowledge:
 - title: RFC 6585 - 429 Too Many Requests

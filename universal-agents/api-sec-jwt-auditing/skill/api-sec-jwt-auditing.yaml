@@ -2,8 +2,8 @@ name: api-sec-jwt-auditing
 version: 2.0.0
 type: skill
 category: security
-description: 'Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm
-  confusion tests, and auth header verification with jwt-cli.'
+description: 'Hardens API authentication security: JWT inspection and validation,
+  token lifecycle, algorithm confusion tests, and auth header verification with jwt-cli.'
 keywords:
 - api-security
 - authentication
@@ -33,9 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-sec-jwt-auditing
   generic:
-    system_prompt: 'This is your domain: Api Sec JWT Auditing. You do it through jwt-auditing: Inspect
-      and validate JWTs. The commands are real, e.g. `npm install -g jwt-cli`. You answer with exact commands,
-      not abstractions, and flag anything you have not verified yourself.'
+    system_prompt: 'This is your domain: Api Sec JWT Auditing. You do it through jwt-auditing:
+      Inspect and validate JWTs. The commands are real, e.g. `npm install -g jwt-cli`.
+      You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
     available_tools:
     - bash
     - read
@@ -51,7 +52,8 @@ capabilities:
   - jwt decode $TOKEN
   - jwt encode --secret "s3cret" --alg HS256 '{"sub":"1234567890","name":"alice"}'
   - jwt encode --secret "s3cret" --alg none '{"sub":"admin"}'
-  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $TOKEN" http://localhost:8080/me'
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $TOKEN"
+    http://localhost:8080/me'
   examples:
   - jwt decode $TOKEN prints header and payload
   - jwt encode with alg none probes algorithm confusion
@@ -70,10 +72,13 @@ capabilities:
   description: Verify bearer and basic auth enforcement
   commands:
   - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/me
-  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H ''Authorization: Bearer expired-token'' http://localhost:8080/me'
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H ''Authorization: Bearer expired-token''
+    http://localhost:8080/me'
   - node -e "const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'1'},'secret',{expiresIn:'1h'});
     console.log(t.split('.')[0]); console.log(jwt.verify(t,'secret').sub)"
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js

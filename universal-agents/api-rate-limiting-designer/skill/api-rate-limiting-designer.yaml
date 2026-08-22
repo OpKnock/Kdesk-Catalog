@@ -2,8 +2,8 @@ name: api-rate-limiting-designer
 version: 2.0.0
 type: skill
 category: infrastructure
-description: 'Designs rate limiting algorithms and data models: token bucket, sliding window, fixed window,
-  and Redis-backed counters with Lua atomicity.'
+description: 'Designs rate limiting algorithms and data models: token bucket, sliding
+  window, fixed window, and Redis-backed counters with Lua atomicity.'
 keywords:
 - rate-limiting
 - token-bucket
@@ -34,9 +34,10 @@ platforms:
   opencode:
     plugin: opencode-api-rate-limiting-designer
   generic:
-    system_prompt: 'You are the api-rate-limiting-designer specialist. You do it through redis-windows:
-      Model rate limit windows with Redis primitives. The commands are real, e.g. `redis-cli INCR rate:user:42`.
-      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    system_prompt: 'You are the api-rate-limiting-designer specialist. You do it through
+      redis-windows: Model rate limit windows with Redis primitives. The commands
+      are real, e.g. `redis-cli INCR rate:user:42`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
     available_tools:
     - bash
     - read
@@ -75,7 +76,9 @@ capabilities:
     end; return c' 1 rate:user:42 60
   - redis-cli GET rate:user:42
   - redis-cli DEL rate:user:42
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - redis-cli
@@ -90,7 +93,8 @@ tools:
 - go
 examples:
 - input: Pick an algorithm for a chat API
-  output: Selects sliding window over ZSETs for smooth user pacing and documents burst tolerance
+  output: Selects sliding window over ZSETs for smooth user pacing and documents burst
+    tolerance
 - input: Design a distributed limiter
   output: Specifies Redis counters with Lua INCR+EXPIRE and per-region keys
 instructions: '# API Rate Limiting Designer

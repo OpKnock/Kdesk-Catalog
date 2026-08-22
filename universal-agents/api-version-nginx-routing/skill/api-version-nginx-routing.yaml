@@ -2,8 +2,8 @@ name: api-version-nginx-routing
 version: 2.0.0
 type: skill
 category: backend
-description: 'Routes multiple API versions at the gateway: nginx location-based version routing, Traefik
-  rules, and Kong services per version.'
+description: 'Routes multiple API versions at the gateway: nginx location-based version
+  routing, Traefik rules, and Kong services per version.'
 keywords:
 - api-version-nginx-routing
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-version-nginx-routing
   generic:
-    system_prompt: 'You work Api Version Nginx Routing hands-on. You do it through nginx-version-routing:
-      Route versioned paths with nginx. The commands are real, e.g. `nginx -t`. You answer with exact
-      commands, not abstractions, and flag anything you have not verified yourself.'
+    system_prompt: 'You work Api Version Nginx Routing hands-on. You do it through
+      nginx-version-routing: Route versioned paths with nginx. The commands are real,
+      e.g. `nginx -t`. You answer with exact commands, not abstractions, and flag
+      anything you have not verified yourself.'
     available_tools:
     - bash
     - read
@@ -72,7 +73,9 @@ capabilities:
   - curl -s -X POST http://localhost:8001/services/users-v1/routes -d 'paths[]=/v1/users'
   - curl -s http://localhost:8000/v1/users -o /dev/null -w '%{http_code}\n'
   - deck gateway sync kong.yaml
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -88,16 +91,19 @@ examples:
   output: Adds nginx locations or Kong routes per version and verifies with curl
 - input: Canary a new version
   output: Routes a fraction of traffic to v2 via gateway rules
-instructions: "# API Version v5 - Gateway Routing\n\nGateway-level version routing.\n\n## What This Skill\
-  \ Does\n- Routes versioned paths to versioned backends\n- Keeps versioning at the infrastructure layer\n\
-  - Allows version-specific traffic control\n\n## When to Use\n- Multiple versioned backend deployments\n\
-  - Canarying versions at the gateway\n- Centralized version traffic management\n\n## Real Commands\n\n\
-  ```bash\nnginx -t\nnginx -s reload\ncurl -s http://localhost:8080/v1/users -o /dev/null -w '%{http_code}\\\
-  n'\ncurl -s -X POST http://localhost:8001/services -d 'name=users-v1' -d 'url=http://users-v1:8080'\n\
-  ```\n\n## nginx Config\n\n```nginx\nlocation /v1/ {\n  proxy_pass http://users-v1:8080/;\n}\nlocation\
-  \ /v2/ {\n  proxy_pass http://users-v2:8080/;\n}\n```\n\n## Testing\n- Verify each version hits the\
-  \ right upstream\n- Test unknown versions return 404\n- Validate config before reload\n\n\n## Best Practices\n\
-  - Keep version routes explicit\n- Add per-version rate limits\n- Log version usage for sunset planning"
+instructions: "# API Version v5 - Gateway Routing\n\nGateway-level version routing.\n\
+  \n## What This Skill Does\n- Routes versioned paths to versioned backends\n- Keeps\
+  \ versioning at the infrastructure layer\n- Allows version-specific traffic control\n\
+  \n## When to Use\n- Multiple versioned backend deployments\n- Canarying versions\
+  \ at the gateway\n- Centralized version traffic management\n\n## Real Commands\n\
+  \n```bash\nnginx -t\nnginx -s reload\ncurl -s http://localhost:8080/v1/users -o\
+  \ /dev/null -w '%{http_code}\\n'\ncurl -s -X POST http://localhost:8001/services\
+  \ -d 'name=users-v1' -d 'url=http://users-v1:8080'\n```\n\n## nginx Config\n\n```nginx\n\
+  location /v1/ {\n  proxy_pass http://users-v1:8080/;\n}\nlocation /v2/ {\n  proxy_pass\
+  \ http://users-v2:8080/;\n}\n```\n\n## Testing\n- Verify each version hits the right\
+  \ upstream\n- Test unknown versions return 404\n- Validate config before reload\n\
+  \n\n## Best Practices\n- Keep version routes explicit\n- Add per-version rate limits\n\
+  - Log version usage for sunset planning"
 display_name: Api Version Nginx Routing
 knowledge:
 - title: nginx location Docs

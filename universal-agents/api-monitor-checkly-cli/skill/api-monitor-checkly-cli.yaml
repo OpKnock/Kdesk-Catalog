@@ -2,8 +2,8 @@ name: api-monitor-checkly-cli
 version: 2.0.0
 type: skill
 category: sre
-description: 'Builds synthetic monitoring with Checkly: multi-step browser checks, API checks as code,
-  and deployment to Checkly''s global runners from a Node project.'
+description: 'Builds synthetic monitoring with Checkly: multi-step browser checks,
+  API checks as code, and deployment to Checkly''s global runners from a Node project.'
 keywords:
 - api-monitor-checkly-cli
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-monitor-checkly-cli
   generic:
-    system_prompt: 'This is your domain: Api Monitor Checkly Cli. You do it through checkly-cli: Author
-      and deploy API/browser checks as code. The commands are real, e.g. `npx create-checkly-project my-checks
-      --template api-check`. You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'This is your domain: Api Monitor Checkly Cli. You do it through
+      checkly-cli: Author and deploy API/browser checks as code. The commands are
+      real, e.g. `npx create-checkly-project my-checks --template api-check`. You
+      work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -71,7 +72,9 @@ capabilities:
   - npx playwright test --project=chromium
   - npx checkly test --browser
   - npx checkly login
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - prometheus
@@ -84,21 +87,25 @@ tools:
 - new-relic
 examples:
 - input: Monitor the login flow end-to-end
-  output: Writes a browser check with Playwright steps and deploys it with npx checkly deploy
+  output: Writes a browser check with Playwright steps and deploys it with npx checkly
+    deploy
 - input: Add a health check to CI
   output: Adds an ApiCheck to the repo and runs npx checkly test in the pipeline
-instructions: "# API Monitor v3 - Synthetic Checks\n\nSynthetic monitoring with Checkly.\n\n## What This\
-  \ Skill Does\n- Defines API and browser checks as TypeScript code\n- Runs checks locally and on global\
-  \ runners\n- Alerts on failures via email, Slack, or PagerDuty\n\n## When to Use\n- Monitoring user-critical\
-  \ flows the backend cannot measure\n- Pre-deploy canary checks\n- Third-party dependency monitoring\n\
-  \n## Real Commands\n\n```bash\nnpx create-checkly-project my-checks --template api-check\nnpx checkly\
-  \ test\nnpx checkly deploy\n```\n\n## API Check Example\n\n```ts\nimport { ApiCheck, AssertionBuilder\
-  \ } from 'checkly/constructs';\nnew ApiCheck('api-health', {\n  request: { method: 'GET', url: 'https://api.example.com/health'\
-  \ },\n  assertions: [\n    AssertionBuilder.statusCode().equals(200),\n    AssertionBuilder.jsonBody('status').equals('ok')\n\
-  \  ]\n});\n```\n\n## Testing\n- Run npx checkly test before merging changes\n- Use browser checks for\
-  \ multi-step journeys (login -> search)\n- Schedule groups with frequency and regions\n\n## Best Practices\n\
-  - Store check code in the API repository\n- Use environments for stage-specific URLs\n- Keep assertions\
-  \ tight; alert on user impact only"
+instructions: "# API Monitor v3 - Synthetic Checks\n\nSynthetic monitoring with Checkly.\n\
+  \n## What This Skill Does\n- Defines API and browser checks as TypeScript code\n\
+  - Runs checks locally and on global runners\n- Alerts on failures via email, Slack,\
+  \ or PagerDuty\n\n## When to Use\n- Monitoring user-critical flows the backend cannot\
+  \ measure\n- Pre-deploy canary checks\n- Third-party dependency monitoring\n\n##\
+  \ Real Commands\n\n```bash\nnpx create-checkly-project my-checks --template api-check\n\
+  npx checkly test\nnpx checkly deploy\n```\n\n## API Check Example\n\n```ts\nimport\
+  \ { ApiCheck, AssertionBuilder } from 'checkly/constructs';\nnew ApiCheck('api-health',\
+  \ {\n  request: { method: 'GET', url: 'https://api.example.com/health' },\n  assertions:\
+  \ [\n    AssertionBuilder.statusCode().equals(200),\n    AssertionBuilder.jsonBody('status').equals('ok')\n\
+  \  ]\n});\n```\n\n## Testing\n- Run npx checkly test before merging changes\n- Use\
+  \ browser checks for multi-step journeys (login -> search)\n- Schedule groups with\
+  \ frequency and regions\n\n## Best Practices\n- Store check code in the API repository\n\
+  - Use environments for stage-specific URLs\n- Keep assertions tight; alert on user\
+  \ impact only"
 display_name: Api Monitor Checkly Cli
 knowledge:
 - title: Checkly CLI Docs

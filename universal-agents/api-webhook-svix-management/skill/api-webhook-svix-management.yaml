@@ -2,8 +2,8 @@ name: api-webhook-svix-management
 version: 2.0.0
 type: skill
 category: backend
-description: 'Operates webhook infrastructure with Svix and Hookdeck: endpoint management, message dispatch,
-  retries, and delivery observability.'
+description: 'Operates webhook infrastructure with Svix and Hookdeck: endpoint management,
+  message dispatch, retries, and delivery observability.'
 keywords:
 - webhooks
 - delivery
@@ -33,10 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-webhook-svix-management
   generic:
-    system_prompt: 'You are the Api Webhook Svix Management specialist. You do it through svix-management:
-      Manage webhook endpoints and dispatch messages. The commands are real, e.g. `svix webhook create
-      --name order-created --url https://app.example.com/hook`. You work hands-on and only report outcomes
-      you have observed.'
+    system_prompt: 'You are the Api Webhook Svix Management specialist. You do it
+      through svix-management: Manage webhook endpoints and dispatch messages. The
+      commands are real, e.g. `svix webhook create --name order-created --url https://app.example.com/hook`.
+      You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -51,8 +51,8 @@ capabilities:
   - svix webhook create --name "order-created" --url http://localhost:8080/hook
   - svix webhook get --id wh_xxxx
   - svix webhook list
-  - 'curl -s -X POST http://localhost:8071/api/v1/message -H ''Authorization: Bearer $SVIX_TOKEN'' -H
-    ''Content-Type: application/json'' -d ''{"eventType":"order.created","payload":{"id":1}}'''
+  - 'curl -s -X POST http://localhost:8071/api/v1/message -H ''Authorization: Bearer
+    $SVIX_TOKEN'' -H ''Content-Type: application/json'' -d ''{"eventType":"order.created","payload":{"id":1}}'''
   - curl -s http://localhost:8071/api/v1/health -o /dev/null -w '%{http_code}\n'
   examples:
   - svix webhook create registers an endpoint
@@ -76,7 +76,9 @@ capabilities:
   - hookdeck sources list
   - hookdeck destinations list
   - hookdeck events list
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -125,8 +127,8 @@ instructions: '# API Webhook v3 - Infrastructure
 
   svix webhook create --name "order-created" --url https://app.example.com/hook
 
-  curl -s -X POST http://localhost:8071/api/v1/message -H ''Authorization: Bearer $SVIX_TOKEN'' -H ''Content-Type:
-  application/json'' -d ''{"eventType":"order.created","payload":{"id":1}}''
+  curl -s -X POST http://localhost:8071/api/v1/message -H ''Authorization: Bearer
+  $SVIX_TOKEN'' -H ''Content-Type: application/json'' -d ''{"eventType":"order.created","payload":{"id":1}}''
 
   hookdeck listen 3000 webhook
 

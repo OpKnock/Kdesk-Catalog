@@ -2,8 +2,8 @@ name: api-test-data-engineer
 version: 2.0.0
 type: skill
 category: testing
-description: 'Generates realistic API test data with Faker: user records, locales, deterministic seeding,
-  and bulk generation for load testing.'
+description: 'Generates realistic API test data with Faker: user records, locales,
+  deterministic seeding, and bulk generation for load testing.'
 keywords:
 - test-data
 - faker
@@ -32,9 +32,9 @@ platforms:
   opencode:
     plugin: opencode-api-test-data-engineer
   generic:
-    system_prompt: 'You work api-test-data-engineer hands-on. You do it through faker-generation: Generate
-      realistic test datasets. The commands are real, e.g. `npm install @faker-js/faker`. You run and
-      verify the real CLI commands before you claim anything.'
+    system_prompt: 'You work api-test-data-engineer hands-on. You do it through faker-generation:
+      Generate realistic test datasets. The commands are real, e.g. `npm install @faker-js/faker`.
+      You run and verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
@@ -71,11 +71,14 @@ capabilities:
   commands:
   - node -e "const {faker}=require('@faker-js/faker'); const out=Array.from({length:1000},()=>({id:faker.string.uuid(),email:faker.internet.email(),name:faker.person.fullName()}));
     require('fs').writeFileSync('users.json',JSON.stringify(out)); console.log(out.length)"
-  - python -c "from faker import Faker; f=Faker('en_US'); rows=[{'name':f.name(),'email':f.email()} for
-    _ in range(500)]; import json; open('users.json','w').write(json.dumps(rows)); print(len(rows))"
-  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d @users.json
-    -o /dev/null -w ''%{http_code}\n'''
-  examples: []
+  - python -c "from faker import Faker; f=Faker('en_US'); rows=[{'name':f.name(),'email':f.email()}
+    for _ in range(500)]; import json; open('users.json','w').write(json.dumps(rows));
+    print(len(rows))"
+  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json''
+    -d @users.json -o /dev/null -w ''%{http_code}\n'''
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - faker

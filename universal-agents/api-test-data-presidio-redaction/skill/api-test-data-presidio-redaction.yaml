@@ -2,8 +2,8 @@ name: api-test-data-presidio-redaction
 version: 2.0.0
 type: skill
 category: testing
-description: 'Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field masking,
-  and synthetic data generation for compliance.'
+description: 'Anonymizes and masks test data for safe environments: Presidio PII redaction,
+  jq field masking, and synthetic data generation for compliance.'
 keywords:
 - test-data
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-test-data-presidio-redaction
   generic:
-    system_prompt: 'You work Api Test Data Presidio Redaction hands-on. You do it through presidio-redaction:
-      Redact PII with Microsoft Presidio. The commands are real, e.g. `pip install presidio-analyzer presidio-anonymizer`.
-      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    system_prompt: 'You work Api Test Data Presidio Redaction hands-on. You do it
+      through presidio-redaction: Redact PII with Microsoft Presidio. The commands
+      are real, e.g. `pip install presidio-analyzer presidio-anonymizer`. You prefer
+      the shortest safe path, and you reproduce failures before diagnosing them.'
     available_tools:
     - bash
     - read
@@ -47,11 +48,11 @@ capabilities:
   commands:
   - pip install presidio-analyzer presidio-anonymizer
   - presidio-anonymizer --text "Contact alice@localhost or 555-1234" --language en
-  - 'python -c "from presidio_anonymizer import AnonymizerEngine; from presidio_analyzer import AnalyzerEngine;
-    a=AnalyzerEngine(); res=a.analyze(text=''email: a@b.co'', language=''en''); print([str(r) for r in
-    res])"'
-  - python -c "from presidio_anonymizer import AnonymizerEngine; e=AnonymizerEngine(); print(e.anonymize(text='call
-    555-1234', analyzer_results=[]))"
+  - 'python -c "from presidio_anonymizer import AnonymizerEngine; from presidio_analyzer
+    import AnalyzerEngine; a=AnalyzerEngine(); res=a.analyze(text=''email: a@b.co'',
+    language=''en''); print([str(r) for r in res])"'
+  - python -c "from presidio_anonymizer import AnonymizerEngine; e=AnonymizerEngine();
+    print(e.anonymize(text='call 555-1234', analyzer_results=[]))"
   examples:
   - presidio-anonymizer redacts emails and phones
   - AnalyzerEngine detects PII entities
@@ -69,10 +70,13 @@ capabilities:
 - name: field-masking
   description: Mask fields with jq transformations
   commands:
-  - curl -s http://localhost:3000/api/users | jq 'map(.email |= sub("(?<=.{3}).*(?=@)"; "***"))'
+  - curl -s http://localhost:3000/api/users | jq 'map(.email |= sub("(?<=.{3}).*(?=@)";
+    "***"))'
   - curl -s http://localhost:3000/api/users | jq 'map(.phone = "***-***-0000")'
   - curl -s http://localhost:3000/api/users | jq 'del(.[].ssn)'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - faker
@@ -122,7 +126,8 @@ instructions: '# API Test Data v4 - Masking
 
   presidio-anonymizer --text "Contact alice@example.com or 555-1234" --language en
 
-  curl -s http://localhost:3000/api/users | jq ''map(.email |= sub("(?<=.{3}).*(?=@)"; "***"))''
+  curl -s http://localhost:3000/api/users | jq ''map(.email |= sub("(?<=.{3}).*(?=@)";
+  "***"))''
 
   ```
 

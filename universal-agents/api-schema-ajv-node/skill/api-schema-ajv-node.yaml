@@ -2,8 +2,8 @@ name: api-schema-ajv-node
 version: 2.0.0
 type: skill
 category: data
-description: 'Uses JSON Schema in Node.js validation pipelines: ajv with formats, custom keywords, schema
-  compilation caching, and request validation middleware.'
+description: 'Uses JSON Schema in Node.js validation pipelines: ajv with formats,
+  custom keywords, schema compilation caching, and request validation middleware.'
 keywords:
 - api-schema
 - json-schema
@@ -33,9 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-schema-ajv-node
   generic:
-    system_prompt: 'Your lane is Api Schema Ajv Node. You do it through ajv-node: Compile and use ajv
-      validators in Node. The commands are real, e.g. `npm install ajv ajv-formats`. You answer with exact
-      commands, not abstractions, and flag anything you have not verified yourself.'
+    system_prompt: 'Your lane is Api Schema Ajv Node. You do it through ajv-node:
+      Compile and use ajv validators in Node. The commands are real, e.g. `npm install
+      ajv ajv-formats`. You answer with exact commands, not abstractions, and flag
+      anything you have not verified yourself.'
     available_tools:
     - bash
     - read
@@ -48,8 +49,8 @@ capabilities:
   description: Compile and use ajv validators in Node
   commands:
   - npm install ajv ajv-formats
-  - node -e "const Ajv=require('ajv'); const addFormats=require('ajv-formats'); const a=new Ajv({allErrors:true});
-    addFormats(a); const v=a.compile({type:'object',properties:{email:{type:'string',format:'email'}},required:['email']});
+  - node -e "const Ajv=require('ajv'); const addFormats=require('ajv-formats'); const
+    a=new Ajv({allErrors:true}); addFormats(a); const v=a.compile({type:'object',properties:{email:{type:'string',format:'email'}},required:['email']});
     console.log(v({email:'a@b.co'}), JSON.stringify(v.errors))"
   - node -e "const Ajv=require('ajv'); const a=new Ajv(); a.addKeyword({keyword:'even',validate:(s,v)=>v%2===0});
     const v=a.compile({type:'integer',even:true}); console.log(v(2), v(3))"
@@ -73,11 +74,13 @@ capabilities:
   commands:
   - node -e "const Ajv=require('ajv'); const v=new Ajv().compile({type:'object',additionalProperties:false});
     console.log(v({}), v({extra:1}))"
-  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{"email":"bad"}''
-    -o /dev/null -w ''%{http_code}\n'''
-  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json'' -d ''{"email":"ok@x.co"}''
-    -o /dev/null -w ''%{http_code}\n'''
-  examples: []
+  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json''
+    -d ''{"email":"bad"}'' -o /dev/null -w ''%{http_code}\n'''
+  - 'curl -s -X POST http://localhost:3000/api/users -H ''Content-Type: application/json''
+    -d ''{"email":"ok@x.co"}'' -o /dev/null -w ''%{http_code}\n'''
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - openapi
@@ -95,17 +98,20 @@ examples:
   output: Compiles an ajv validator and wires it into the signup route
 - input: Reject unknown fields
   output: Sets additionalProperties:false and returns 400s for extras
-instructions: "# API Schema v2 - Node Validation\n\nJSON Schema validation in Node.js.\n\n## What This\
-  \ Skill Does\n- Validates payloads with ajv\n- Extends validation with formats and keywords\n- Integrates\
-  \ into request middleware\n\n## When to Use\n- Node API request validation\n- Validating external data\n\
-  - Shared schema modules\n\n## Real Commands\n\n```bash\nnpm install ajv ajv-formats\nnode -e \"const\
-  \ Ajv=require('ajv'); const addFormats=require('ajv-formats'); const a=new Ajv({allErrors:true}); addFormats(a);\
+instructions: "# API Schema v2 - Node Validation\n\nJSON Schema validation in Node.js.\n\
+  \n## What This Skill Does\n- Validates payloads with ajv\n- Extends validation with\
+  \ formats and keywords\n- Integrates into request middleware\n\n## When to Use\n\
+  - Node API request validation\n- Validating external data\n- Shared schema modules\n\
+  \n## Real Commands\n\n```bash\nnpm install ajv ajv-formats\nnode -e \"const Ajv=require('ajv');\
+  \ const addFormats=require('ajv-formats'); const a=new Ajv({allErrors:true}); addFormats(a);\
   \ const v=a.compile({type:'object',properties:{email:{type:'string',format:'email'}},required:['email']});\
-  \ console.log(v({email:'a@b.co'}))\"\n```\n\n## Middleware Pattern\n\n```js\nconst validate = ajv.compile(userSchema);\n\
-  app.post('/api/users', (req, res) => {\n  if (!validate(req.body)) return res.status(400).json(validate.errors);\n\
-  \  res.status(201).end();\n});\n```\n\n## Testing\n- Test valid and invalid fixtures\n- Verify 400 responses\
-  \ carry error details\n- Benchmark compiled validator performance\n\n## Best Practices\n- Compile validators\
-  \ once at startup\n- Use additionalProperties:false for strict DTOs\n- Keep schemas versioned and shared"
+  \ console.log(v({email:'a@b.co'}))\"\n```\n\n## Middleware Pattern\n\n```js\nconst\
+  \ validate = ajv.compile(userSchema);\napp.post('/api/users', (req, res) => {\n\
+  \  if (!validate(req.body)) return res.status(400).json(validate.errors);\n  res.status(201).end();\n\
+  });\n```\n\n## Testing\n- Test valid and invalid fixtures\n- Verify 400 responses\
+  \ carry error details\n- Benchmark compiled validator performance\n\n## Best Practices\n\
+  - Compile validators once at startup\n- Use additionalProperties:false for strict\
+  \ DTOs\n- Keep schemas versioned and shared"
 display_name: Api Schema Ajv Node
 knowledge:
 - title: Ajv Guide

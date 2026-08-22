@@ -2,8 +2,8 @@ name: api-versioning
 display_name: Api Versioning
 category: backend
 subcategory: general
-description: 'Implements general API versioning across backend services: strategy selection, version headers,
-  backward compatibility, and version-aware routing.'
+description: 'Implements general API versioning across backend services: strategy
+  selection, version headers, backward compatibility, and version-aware routing.'
 version: 2.0.0
 tags:
 - backend
@@ -19,8 +19,8 @@ capabilities:
     | jq ''.full_name'''
   - 'curl -s -H ''X-API-Version: 2'' http://localhost:3000/api/users | jq ''.version'''
   - 'curl -s -H ''X-API-Version: 1'' http://localhost:3000/api/users | jq ''.version'''
-  - 'curl -s -D- -H ''Accept: application/vnd.api.v2+json'' http://localhost:3000/api/users | grep -i
-    ''^vary:'''
+  - 'curl -s -D- -H ''Accept: application/vnd.api.v2+json'' http://localhost:3000/api/users
+    | grep -i ''^vary:'''
   examples:
   - Accept headers negotiate media-type versions
   - X-API-Version selects explicit versions
@@ -42,7 +42,9 @@ capabilities:
   - curl -s http://localhost:3000/v2/users | jq '.fields | keys'
   - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/v9/users
   - git tag -l 'v*' --sort=-v:refname | head -3
-  examples: []
+  examples:
+  - general-cli --help
+  - general-api --help
   parameters: []
 knowledge:
 - title: Microsoft API Versioning Guidance
@@ -144,9 +146,10 @@ platforms:
   opencode:
     plugin: opencode-api-versioning
   generic:
-    system_prompt: 'This is your domain: Api Versioning. You do it through version-headers: Serve versions
-      via headers and negotiation. The commands are real, e.g. `curl -s -H Accept: application/vnd.github.v3+json...`.
-      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    system_prompt: 'This is your domain: Api Versioning. You do it through version-headers:
+      Serve versions via headers and negotiation. The commands are real, e.g. `curl
+      -s -H Accept: application/vnd.github.v3+json...`. You prefer the shortest safe
+      path, and you reproduce failures before diagnosing them.'
     available_tools:
     - bash
     - read

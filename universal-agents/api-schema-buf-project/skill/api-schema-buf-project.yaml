@@ -2,8 +2,8 @@ name: api-schema-buf-project
 version: 2.0.0
 type: skill
 category: data
-description: 'Manages protobuf schemas with buf: project setup, linting, formatting, code generation,
-  and breaking-change detection for gRPC APIs.'
+description: 'Manages protobuf schemas with buf: project setup, linting, formatting,
+  code generation, and breaking-change detection for gRPC APIs.'
 keywords:
 - api-schema
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-schema-buf-project
   generic:
-    system_prompt: 'You take the Api Schema Buf Project seat. You do it through buf-project: Set up and
-      maintain buf protobuf projects. The commands are real, e.g. `go install github.com/bufbuild/buf/cmd/buf@latest`.
-      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    system_prompt: 'You take the Api Schema Buf Project seat. You do it through buf-project:
+      Set up and maintain buf protobuf projects. The commands are real, e.g. `go install
+      github.com/bufbuild/buf/cmd/buf@latest`. You prefer the shortest safe path,
+      and you reproduce failures before diagnosing them.'
     available_tools:
     - bash
     - read
@@ -71,7 +72,9 @@ capabilities:
   - buf generate --template buf.gen.yaml
   - buf breaking --against .git#branch=main
   - buf build -o schema.binpb
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - openapi
@@ -89,15 +92,17 @@ examples:
   output: Inits a buf module, writes user.proto, lints and generates stubs
 - input: Check schema compatibility
   output: Runs buf breaking against main before merging
-instructions: "# API Schema v3 - Protobuf/buf\n\nProtobuf schema management with buf.\n\n## What This\
-  \ Skill Does\n- Manages proto schemas as buf modules\n- Lints and formats proto files\n- Generates stubs\
-  \ and checks compatibility\n\n## When to Use\n- gRPC API schema management\n- Multi-language stub generation\n\
-  - Safe schema evolution\n\n## Real Commands\n\n```bash\ngo install github.com/bufbuild/buf/cmd/buf@latest\n\
-  buf mod init\nbuf lint\nbuf format -w\nbuf generate\nbuf breaking --against .git#branch=main\n```\n\n\
-  ## Example proto\n\n```proto\nsyntax = \"proto3\";\npackage api.v1;\n\nmessage User {\n  int64 id =\
-  \ 1;\n  string email = 2;\n}\n```\n\n## Testing\n- Run buf lint and breaking checks in CI\n- Generate\
-  \ stubs into a scratch dir\n- Test wire compatibility after changes\n\n## Best Practices\n- Never reuse\
-  \ field numbers\n- Add fields at the end of messages\n- Commit generated code for release tags"
+instructions: "# API Schema v3 - Protobuf/buf\n\nProtobuf schema management with buf.\n\
+  \n## What This Skill Does\n- Manages proto schemas as buf modules\n- Lints and formats\
+  \ proto files\n- Generates stubs and checks compatibility\n\n## When to Use\n- gRPC\
+  \ API schema management\n- Multi-language stub generation\n- Safe schema evolution\n\
+  \n## Real Commands\n\n```bash\ngo install github.com/bufbuild/buf/cmd/buf@latest\n\
+  buf mod init\nbuf lint\nbuf format -w\nbuf generate\nbuf breaking --against .git#branch=main\n\
+  ```\n\n## Example proto\n\n```proto\nsyntax = \"proto3\";\npackage api.v1;\n\nmessage\
+  \ User {\n  int64 id = 1;\n  string email = 2;\n}\n```\n\n## Testing\n- Run buf\
+  \ lint and breaking checks in CI\n- Generate stubs into a scratch dir\n- Test wire\
+  \ compatibility after changes\n\n## Best Practices\n- Never reuse field numbers\n\
+  - Add fields at the end of messages\n- Commit generated code for release tags"
 display_name: Api Schema Buf Project
 knowledge:
 - title: buf Docs

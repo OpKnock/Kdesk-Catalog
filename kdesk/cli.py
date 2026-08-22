@@ -21,11 +21,13 @@ from kdesk.engine import (STATUS_BLOCKED, STATUS_CANCELLED, STATUS_FAILED,
 from kdesk.graph import CatalogGraph
 from kdesk.installer import Installer, InstallError
 from kdesk.license import LicenseAudit, LicensePolicy
+from kdesk.policy import PolicyEngine, PolicyEngineV2
 from kdesk.provenance import Provenance, verify_wiring
 from kdesk.quality import QualityReport
 from kdesk.registry import Catalog, CatalogError, default_repo_root
 from kdesk.security import scan_repo
 from kdesk.stats import StatsError, compute as compute_stats, format_table, write_baseline
+from kdesk.verify import run_verify
 from kdesk.workflow import WorkflowEngine, WorkflowError
 from kdesk.verify import run_verify
 
@@ -484,6 +486,56 @@ def _cmd_duplicates(args) -> int:
     return 3 if report["unresolved_count"] else 0
 
 
+def _cmd_policy(args) -> int:
+    catalog = _catalog(args)
+    engine = PolicyEngineV2()
+    
+    # Load custom policy file if provided
+    if args.policy_file:
+        policy_file = Path(args.policy_file)
+        if policy_file.exists():
+            import yaml
+            with open(policy_file, 'r') as f:
+                if policy_file.suffix in ['.yaml', '.yml']:
+                    custom_rules = yaml.safe_load(f)
+                else:
+                    import json
+                    custom_rules = json.load(f)
+                # Add custom rules to engine
+                for rule_data in custom_rules.get("rules", []):
+                    from kdesk.policy import PolicyRuleV2, Severity
+                    rule = PolicyRuleV2(
+                        id=rule_data["id"],
+                        name=rule_data["name"],
+                        description=rule_data.get("description", ""),
+                        severity=Severity(rule_data.get("severity", "warning")),
+                        condition=rule_data.get("condition", ""),
+                        message=rule_data.get("message", ""),
+                        fix_hint=rule_data.get("fix_hint", "")
+                    )
+                    engine.rules.append(rule)
+    
+    result = engine.evaluate(catalog)
+    
+    if args.format == "json":
+        import json
+        print(json.dumps({
+            "violations": result["violations"],
+            "passed": result["passed"],
+            "total_rules": result["total_rules"]
+        }, indent=2, default=str))
+    else:
+        if result["violations"]:
+            for v in result["violations"]:
+                print(f"[{v['severity'].upper()}] {v['rule_id']}: {v['message']} (target: {v['target']})")
+            print(f"\nPassed: {result['passed']}/{result['total_rules']} rules")
+            print(f"Violations: {len(result['violations'])}")
+        else:
+            print(f"All {result['total_rules']} policy rules passed!")
+    
+    return 3 if result["violations"] else 0
+
+
 def _cmd_resolve(args) -> int:
     root = Path(args.root) if args.root else default_repo_root()
     engine = Engine(root)
@@ -648,6 +700,57 @@ def _cmd_wiring(args) -> int:
     return 3 if result.get("problems") else 0
 
 
+def _cmd_skill_publish(args) -> int:
+    root = Path(args.root) if args.root else default_repo_root()
+    catalog = Catalog.from_repo(root)
+    skill = catalog.get_skill(args.skill_id)
+    if not skill:
+        print(f"ERROR: Skill '{args.skill_id}' not found in catalog", file=sys.stderr)
+        return 1
+    # In a real implementation, this would package and upload to the registry
+    print(f"Publishing skill '{args.skill_id}' version {args.version} to {args.registry}")
+    print("Note: This is a stub implementation. Real implementation would package and upload.")
+    return 0
+
+
+def _cmd_skill_install(args) -> int:
+    skill_spec = args.skill_spec
+    if "@" in skill_spec:
+        skill_id, version = skill_spec.split("@", 1)
+    else:
+        skill_id, version = skill_spec, "latest"
+    print(f"Installing skill '{skill_id}@{version}' from {args.registry}")
+    print("Note: This is a stub implementation. Real implementation would download and install.")
+    return 0
+
+
+def _cmd_skill_search(args) -> int:
+    query = args.query or ""
+    print(f"Searching marketplace for '{query}'...")
+    print("Note: This is a stub implementation. Real implementation would query the registry.")
+    return 0
+
+
+def _cmd_skill_list(args) -> int:
+    print(f"Listing skills from {args.registry}...")
+    print("Note: This is a stub implementation. Real implementation would query the registry.")
+    return 0
+
+
+def _cmd_skill(args) -> int:
+    if args.skill_command == "publish":
+        return _cmd_skill_publish(args)
+    elif args.skill_command == "install":
+        return _cmd_skill_install(args)
+    elif args.skill_command == "search":
+        return _cmd_skill_search(args)
+    elif args.skill_command == "list":
+        return _cmd_skill_list(args)
+    else:
+        print("Usage: kdesk skill {publish|install|search|list} ...")
+        return 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="kdesk", description="Universal AI Agent + Skill + Workflow Registry")
     p.add_argument("--version", action="version", version=f"kdesk {__version__}")
@@ -742,6 +845,10 @@ def build_parser() -> argparse.ArgumentParser:
     l = sub.add_parser("license", parents=[root_parent], help="license audit")
     l.add_argument("--format", choices=["json", "table"], default="json")
 
+    pl = sub.add_parser("policy", parents=[root_parent], help="policy-as-code engine")
+    pl.add_argument("--format", choices=["json", "table"], default="json")
+    pl.add_argument("--policy-file", default=None, help="custom policy file (JSON/YAML)")
+
     du = sub.add_parser("duplicates", parents=[root_parent], help="duplicate family detection")
     du.add_argument("--format", choices=["json", "table"], default="json")
 
@@ -801,6 +908,28 @@ def build_parser() -> argparse.ArgumentParser:
     wg = sub.add_parser("wiring", parents=[root_parent],
                         help="verify agent->skill wiring evidence")
     wg.add_argument("--json", action="store_true")
+
+    # Skill marketplace commands
+    sk = sub.add_parser("skill", parents=[root_parent],
+                        help="skill marketplace (publish, install, search, list)")
+    sk_sub = sk.add_subparsers(dest="skill_command")
+
+    sk_pub = sk_sub.add_parser("publish", help="publish a skill to the marketplace")
+    sk_pub.add_argument("skill_id", help="skill ID to publish")
+    sk_pub.add_argument("--version", default="1.0.0", help="skill version")
+    sk_pub.add_argument("--registry", default="https://kdesk.registry.io", help="marketplace registry URL")
+
+    sk_inst = sk_sub.add_parser("install", help="install a skill from the marketplace")
+    sk_inst.add_argument("skill_spec", help="skill@version or skill_id")
+    sk_inst.add_argument("--registry", default="https://kdesk.registry.io", help="marketplace registry URL")
+
+    sk_search = sk_sub.add_parser("search", help="search the marketplace")
+    sk_search.add_argument("query", nargs="?", default="", help="search query")
+    sk_search.add_argument("--registry", default="https://kdesk.registry.io", help="marketplace registry URL")
+
+    sk_list = sk_sub.add_parser("list", help="list available skills")
+    sk_list.add_argument("--registry", default="https://kdesk.registry.io", help="marketplace registry URL")
+
     return p
 
 
@@ -824,6 +953,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         "quality": _cmd_quality,
         "license": _cmd_license,
         "duplicates": _cmd_duplicates,
+        "policy": _cmd_policy,
         "resolve": _cmd_resolve,
         "why": _cmd_why,
         "plan": _cmd_plan,
@@ -834,6 +964,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         "verify": _cmd_verify,
         "schema": _cmd_schema,
         "wiring": _cmd_wiring,
+        "skill": _cmd_skill,
     }
     handler = handlers.get(args.command)
     if handler is None:

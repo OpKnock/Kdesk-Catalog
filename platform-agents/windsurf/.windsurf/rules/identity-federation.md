@@ -1,12 +1,12 @@
 ---
 trigger: glob
-description: "Implement it."
+description: "Set up SAML/OIDC federation with IdP integration and SSO flows."
 globs: ["**/*.r", "**/*.rs"]
 ---
 
 # Identity Federation
 
-Implement it.
+Set up SAML/OIDC federation with IdP integration and SSO flows.
 
 ## Instructions
 

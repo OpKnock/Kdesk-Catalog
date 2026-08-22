@@ -1,13 +1,13 @@
 ---
 name: "database-mesh"
-description: "Implement it."
+description: "Build a distributed database mesh with sharding and replication."
 tools: ["Bash", "Read", "Write", "Edit"]
 model: "inherit"
 ---
 
 # Database Mesh
 
-Implement it.
+Build a distributed database mesh with sharding and replication.
 
 ## Instructions
 

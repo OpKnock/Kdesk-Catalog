@@ -1,13 +1,13 @@
 ---
 name: "database-auditing"
-description: "Implement it."
+description: "Track database changes, access logs, and compliance audits."
 tools: ["Bash", "Read", "Write", "Edit"]
 model: "inherit"
 ---
 
 # Database Auditing
 
-Implement it.
+Track database changes, access logs, and compliance audits.
 
 ## Instructions
 

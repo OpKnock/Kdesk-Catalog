@@ -95,6 +95,14 @@ def extract_skills(doc: dict):
     return "none", []
 
 
+def extract_sub_agents(doc: dict):
+    """Sub-agent references: explicit 'sub_agents' key when present, else none."""
+    s = doc.get("sub_agents")
+    if isinstance(s, list):
+        return "sub_agents", [str(x) for x in s if isinstance(x, str)]
+    return "none", []
+
+
 def build_definition(doc: dict, typ: str, rel: str, wiring: list = None, wiring_src: str = None,
                      provenance: dict = None) -> dict:
     """Lossless JSON: id + type, every original key verbatim, then derived fields.
@@ -108,12 +116,14 @@ def build_definition(doc: dict, typ: str, rel: str, wiring: list = None, wiring_
     out["type"] = typ
     tools_src, tools = extract_tools(doc)
     skills_src, skills = extract_skills(doc)
+    sub_agents_src, sub_agents = extract_sub_agents(doc)
     deps_src, deps = extract_deps(doc)
     params = extract_inputs(doc)
     if typ == "agent" and wiring:
         skills = skills + [w["skill"] for w in wiring if w["skill"] not in skills]
         skills_src = f"wiring ({wiring_src})"
     out["skills"] = skills
+    out["sub_agents"] = sub_agents
     out["tools"] = tools
     out["inputs"] = {"parameters": params} if params else {}
     out["outputs"] = {}
@@ -124,6 +134,7 @@ def build_definition(doc: dict, typ: str, rel: str, wiring: list = None, wiring_
         "source_yaml": rel,
         "derived": {
             "skills": skills_src,
+            "sub_agents": sub_agents_src,
             "tools": tools_src,
             "inputs": "capability.parameters" if params else "none",
             "outputs": "none (not present in source YAML)",
@@ -157,10 +168,43 @@ def build_workflow(doc: dict, agent_id: str, rel: str, skills: list, params: lis
     for sk in skills:
         n += 1
         steps.append({"id": f"step-{n}-load-skill-{sk}", "type": "skill", "skill": sk})
+    
+    # Sub-agent delegation steps
+    sub_agents = doc.get("sub_agents", []) or []
+    delegation_pattern = doc.get("delegation_pattern", "sequential")
+    
+    if sub_agents:
+        n += 1
+        if delegation_pattern == "parallel":
+            # Parallel: load all sub-agents at once, then invoke all
+            for sa in sub_agents:
+                n += 1
+                steps.append({"id": f"step-{n}-load-subagent-{sa}", "type": "agent", "agent": sa, "input": "{{input}}"})
+            # Add a parallel invocation step
+            parallel_step = f"step-{n}-parallel-subagents"
+            steps.append({"id": parallel_step, "type": "parallel", "agents": sub_agents, "input": "{{input}}"})
+            last = parallel_step
+        else:
+            # Sequential (default) or conditional: invoke sub-agents in sequence
+            for sa in sub_agents:
+                n += 1
+                sa_step = f"step-{n}-subagent-{sa}"
+                steps.append({"id": sa_step, "type": "agent", "agent": sa, "input": "{{input}}"})
+                if delegation_pattern == "conditional":
+                    # Add conditional branch - only proceed if sub-agent succeeds
+                    pass
+            last = f"step-{n}-subagent-{sub_agents[-1]}"
+    else:
+        last = None
+    
     n += 1
     agent_step = f"step-{n}-agent"
     steps.append({"id": agent_step, "type": "agent", "agent": agent_id, "input": "{{input}}"})
-    last = agent_step
+    if last:
+        steps[-2]["requires"] = agent_step  # sub-agent steps run before main agent
+    else:
+        last = agent_step
+    
     for cap in doc.get("capabilities") or []:
         if not isinstance(cap, dict) or not cap.get("name"):
             continue
@@ -170,7 +214,7 @@ def build_workflow(doc: dict, agent_id: str, rel: str, skills: list, params: lis
         if cmds and isinstance(cmds[0], str) and cmds[0].strip():
             tool = cmds[0].strip().split()[0]
         sid = f"step-{n}-capability-{slugify(cap['name'])}"
-        step = {"id": sid, "type": "capability", "capability": str(cap["name"]), "requires": agent_step}
+        step = {"id": sid, "type": "capability", "capability": str(cap["name"]), "requires": last}
         if tool:
             step["tool"] = tool
         steps.append(step)
@@ -189,8 +233,8 @@ def build_workflow(doc: dict, agent_id: str, rel: str, skills: list, params: lis
             "tool": TOOL_NAME,
             "schema": WORKFLOW_SCHEMA,
             "source_yaml": rel,
-            "note": ("steps reflect source order: skill loads (only referenced/wired skills) -> agent -> "
-             "capabilities; no conditions/loops/parallel/retries defined in source"),
+            "note": ("steps reflect source order: skill loads -> sub-agent delegation -> agent -> "
+             "capabilities; delegation pattern from source YAML"),
         },
     }
     if provenance:

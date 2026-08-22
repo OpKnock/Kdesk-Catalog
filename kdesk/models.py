@@ -86,6 +86,8 @@ class Agent(BaseDefinition):
     skills: List[str] = field(default_factory=list)
     tools: List[str] = field(default_factory=list)
     prerequisites: List[str] = field(default_factory=list)
+    sub_agents: List[str] = field(default_factory=list)
+    delegation_pattern: Optional[str] = None  # sequential | parallel | conditional
 
 
 @dataclass

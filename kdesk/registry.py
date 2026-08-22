@@ -159,6 +159,8 @@ class Catalog:
         agent.skills = list(doc.get("skills", []) or [])
         agent.tools = list(doc.get("tools", []) or [])
         agent.prerequisites = list(doc.get("prerequisites", []) or [])
+        agent.sub_agents = list(doc.get("sub_agents", []) or [])
+        agent.delegation_pattern = doc.get("delegation_pattern")
         return agent
 
     @staticmethod

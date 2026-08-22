@@ -330,6 +330,63 @@ Kdesk-Catalog/
 
 ---
 
+## Kdesk Doctor
+
+Kdesk Doctor is a developer-facing compatibility, diagnosis, repair, and validation system for AI agent/skill projects.
+
+### Quick Start
+
+```bash
+# Scan project for AI configuration
+kdesk doctor --mode scan --project-root ./my-project
+
+# Diagnose compatibility for a target platform
+kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project --json
+
+# Fix issues (dry-run preview)
+kdesk doctor --mode fix --platform claude_code --project-root ./my-project --dry-run
+
+# Apply fixes
+kdesk doctor --mode fix --platform claude_code --project-root ./my-project
+
+# Full pipeline: diagnose + fix
+kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project --fix
+
+# CI mode with threshold
+kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project --ci --threshold 90 --json
+```
+
+### Features
+
+- **Project Scanner**: Discovers AI development configuration across 45+ platforms (Claude Code, Cursor, OpenCode, Codex CLI, Gemini CLI, etc.)
+- **Compatibility Engine**: Analyzes components against platform capabilities with severity levels (CRITICAL, ERROR, WARNING, INFO)
+- **Compatibility Score**: Deterministic scoring (0-100) based on errors, warnings, and unsupported features
+- **Automatic Fix Engine**: Safe fixes with backups (add_field, remove_field, replace_tool, replace_value)
+- **Secret Redaction**: Automatic redaction of API keys, tokens, passwords in reports
+- **CI Mode**: Exit codes based on health threshold for pipeline integration
+- **JSON Output**: Machine-readable output for all modes
+
+### Demo
+
+```bash
+# Scan the demo project
+kdesk doctor --mode scan --project-root ./demo
+
+# Diagnose compatibility issues
+kdesk doctor --mode diagnose --platform claude_code --project-root ./demo --json
+
+# Fix issues (dry-run)
+kdesk doctor --mode fix --platform claude_code --project-root ./demo --dry-run --json
+
+# Apply fixes
+kdesk doctor --mode fix --platform claude_code --project-root ./demo --json
+
+# Full pipeline with CI
+kdesk doctor --mode diagnose --platform claude_code --project-root ./demo --ci --threshold 90 --json
+```
+
+---
+
 ## License
 
 MIT © Mehul Wagde

@@ -76,6 +76,7 @@ GATES: List[Tuple[str, List[str]]] = [
      ":(exclude)agents/*",
      ":(exclude)skills/json",
      ":(exclude)skills/yaml",
+     ":(exclude)skills/wiring.json",
      ":(exclude)workflows/*"]),
 ]
 

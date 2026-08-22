@@ -1,15 +1,15 @@
 {
   "version": "1",
   "rule": "tool-evidence: exact match of agent capability command tokens against skill tools/prerequisites tokens; score = sum(1/token-freq) over STRONG tokens (non-generic CLIs); link kept iff score >= threshold OR >= 2 distinct matching tokens; generic CLIs (curl, aws, gcloud, docker, kubectl, helm, python, node, git, npm, npx, go, cd, ls, ...) are weak evidence alone; short-but-distinct CLIs (op, bw, k6, mb, yq, ng, jq, >= 2 chars) count as evidence; block-style YAML label words (first word ending in ':') excluded; skills without tools/prerequisites have no tokens and are reported as skills_without_evidence (conceptual skills: not auto-wireable by design); no invented links",
-  "created_at": "2026-08-18",
+  "created_at": "2026-08-23",
   "stats": {
-    "agents": 1766,
-    "skills_with_tool_evidence": 1090,
-    "skills_without_evidence": 53,
-    "agents_wired": 611,
-    "skills_used": 467,
-    "total_links": 4242,
-    "unwired_agents": 1155,
+    "agents": 1858,
+    "skills_with_tool_evidence": 1188,
+    "skills_without_evidence": 47,
+    "agents_wired": 626,
+    "skills_used": 469,
+    "total_links": 4305,
+    "unwired_agents": 1232,
     "manual_links": 11
   },
   "wiring": {
@@ -80,14 +80,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -120,10 +112,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -178,14 +178,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -218,10 +210,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -389,14 +389,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -429,10 +421,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -487,14 +487,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -527,10 +519,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -585,14 +585,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -625,10 +617,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -710,101 +710,34 @@
     ],
     "api-contract-validator": [
       {
+        "skill": "provider-driven-contract",
+        "evidence": [
+          "pact-broker",
+          "pact-provider-verifier"
+        ],
+        "score": 1.5
+      },
+      {
+        "skill": "graphql-schema-designer",
+        "evidence": [
+          "graphql-inspector"
+        ],
+        "score": 1.0
+      },
+      {
+        "skill": "pact",
+        "evidence": [
+          "pact-broker"
+        ],
+        "score": 0.5
+      },
+      {
         "skill": "api-governance-engineer",
         "evidence": [
-          "openapi",
           "spectral",
           "swagger-cli"
         ],
-        "score": 0.2391649048625793
-      },
-      {
-        "skill": "api-contract-ci",
-        "evidence": [
-          "openapi",
-          "pact"
-        ],
-        "score": 0.18992248062015504
-      },
-      {
-        "skill": "api-contract-consumer-tests",
-        "evidence": [
-          "openapi",
-          "pact"
-        ],
-        "score": 0.18992248062015504
-      },
-      {
-        "skill": "api-contract-engineer",
-        "evidence": [
-          "openapi",
-          "pact"
-        ],
-        "score": 0.18992248062015504
-      },
-      {
-        "skill": "api-contract-pact-workflow",
-        "evidence": [
-          "openapi",
-          "pact"
-        ],
-        "score": 0.18992248062015504
-      },
-      {
-        "skill": "api-contract-specialist",
-        "evidence": [
-          "openapi",
-          "pact"
-        ],
-        "score": 0.18992248062015504
-      },
-      {
-        "skill": "api-contract-validator-api-contract-validator",
-        "evidence": [
-          "openapi",
-          "pact"
-        ],
-        "score": 0.18992248062015504
-      },
-      {
-        "skill": "api-gov-governance-audit",
-        "evidence": [
-          "openapi",
-          "spectral"
-        ],
-        "score": 0.14825581395348836
-      },
-      {
-        "skill": "api-gov-governance-bootstrap",
-        "evidence": [
-          "openapi",
-          "spectral"
-        ],
-        "score": 0.14825581395348836
-      },
-      {
-        "skill": "api-gov-governance-design",
-        "evidence": [
-          "openapi",
-          "spectral"
-        ],
-        "score": 0.14825581395348836
-      },
-      {
-        "skill": "api-gov-specialist",
-        "evidence": [
-          "openapi",
-          "spectral"
-        ],
-        "score": 0.14825581395348836
-      },
-      {
-        "skill": "api-governance-specialist",
-        "evidence": [
-          "openapi",
-          "spectral"
-        ],
-        "score": 0.14825581395348836
+        "score": 0.2159090909090909
       }
     ],
     "api-documentation": [
@@ -877,47 +810,49 @@
     ],
     "api-gateway-configurator": [
       {
+        "skill": "api-gateway-mgmt",
+        "evidence": [
+          "deck"
+        ],
+        "score": 1.0
+      },
+      {
         "skill": "api-gateway-architect",
         "evidence": [
-          "kong",
-          "traefik"
+          "kong"
         ],
-        "score": 0.3666666666666667
+        "score": 0.16666666666666666
       },
       {
         "skill": "api-gateway-engineer",
         "evidence": [
-          "kong",
-          "traefik"
+          "kong"
         ],
-        "score": 0.3666666666666667
+        "score": 0.16666666666666666
       },
       {
         "skill": "api-gateway-kong",
         "evidence": [
-          "kong",
-          "traefik"
+          "kong"
         ],
-        "score": 0.3666666666666667
+        "score": 0.16666666666666666
+      },
+      {
+        "skill": "api-gateway-patterns",
+        "evidence": [
+          "kong"
+        ],
+        "score": 0.16666666666666666
       },
       {
         "skill": "api-gateway-routing-design",
         "evidence": [
-          "kong",
-          "traefik"
+          "kong"
         ],
-        "score": 0.3666666666666667
+        "score": 0.16666666666666666
       },
       {
         "skill": "api-gateway-specialist",
-        "evidence": [
-          "kong",
-          "traefik"
-        ],
-        "score": 0.3666666666666667
-      },
-      {
-        "skill": "api-gateway-patterns",
         "evidence": [
           "kong"
         ],
@@ -926,95 +861,11 @@
     ],
     "api-gateway-rate-limiter": [
       {
-        "skill": "api-gateway-architect",
+        "skill": "api-gateway-mgmt",
         "evidence": [
-          "kong",
-          "traefik"
+          "deck"
         ],
-        "score": 0.3666666666666667
-      },
-      {
-        "skill": "api-gateway-engineer",
-        "evidence": [
-          "kong",
-          "traefik"
-        ],
-        "score": 0.3666666666666667
-      },
-      {
-        "skill": "api-gateway-kong",
-        "evidence": [
-          "kong",
-          "traefik"
-        ],
-        "score": 0.3666666666666667
-      },
-      {
-        "skill": "api-gateway-routing-design",
-        "evidence": [
-          "kong",
-          "traefik"
-        ],
-        "score": 0.3666666666666667
-      },
-      {
-        "skill": "api-gateway-specialist",
-        "evidence": [
-          "kong",
-          "traefik"
-        ],
-        "score": 0.3666666666666667
-      },
-      {
-        "skill": "api-rate-limiting-designer",
-        "evidence": [
-          "envoy",
-          "redis-cli"
-        ],
-        "score": 0.19298245614035087
-      },
-      {
-        "skill": "rate-limiting-pattern",
-        "evidence": [
-          "envoy",
-          "redis-cli"
-        ],
-        "score": 0.19298245614035087
-      },
-      {
-        "skill": "api-gateway-patterns",
-        "evidence": [
-          "kong"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "api-rate-limiting-engineer",
-        "evidence": [
-          "envoy"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "envoy",
-        "evidence": [
-          "envoy"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "grpc-web",
-        "evidence": [
-          "envoy"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "sidecar-pattern",
-        "evidence": [
-          "envoy"
-        ],
-        "score": 0.16666666666666666
+        "score": 1.0
       }
     ],
     "api-gateway-security": [
@@ -1062,25 +913,88 @@
         "score": 0.16666666666666666
       }
     ],
+    "api-graphql-agent": [
+      {
+        "skill": "graphql",
+        "evidence": [],
+        "score": 0,
+        "manual": true
+      },
+      {
+        "skill": "api-graphql-architect",
+        "evidence": [
+          "rover"
+        ],
+        "score": 0.3333333333333333
+      },
+      {
+        "skill": "graphql-federation",
+        "evidence": [
+          "rover"
+        ],
+        "score": 0.3333333333333333
+      },
+      {
+        "skill": "graphql-schema-designer",
+        "evidence": [
+          "rover"
+        ],
+        "score": 0.3333333333333333
+      }
+    ],
     "api-grpc-agent": [
       {
-        "skill": "grpc-kotlin",
+        "skill": "grpc-health-check",
         "evidence": [
-          "grpcurl",
-          "protoc"
+          "grpc_health_probe",
+          "grpcurl"
         ],
-        "score": 0.14835164835164835
+        "score": 1.0769230769230769
       },
       {
         "skill": "grpc-service",
         "evidence": [
+          "buf",
           "grpcurl",
           "protoc"
         ],
-        "score": 0.14835164835164835
+        "score": 0.2912087912087912
       },
       {
         "skill": "grpc-service-designer",
+        "evidence": [
+          "buf",
+          "grpcurl",
+          "protoc"
+        ],
+        "score": 0.2912087912087912
+      },
+      {
+        "skill": "connectrpc",
+        "evidence": [
+          "buf",
+          "grpcurl"
+        ],
+        "score": 0.21978021978021978
+      },
+      {
+        "skill": "grpc-codegen",
+        "evidence": [
+          "buf",
+          "protoc"
+        ],
+        "score": 0.21428571428571427
+      },
+      {
+        "skill": "protobuf",
+        "evidence": [
+          "buf",
+          "protoc"
+        ],
+        "score": 0.21428571428571427
+      },
+      {
+        "skill": "grpc-kotlin",
         "evidence": [
           "grpcurl",
           "protoc"
@@ -1255,75 +1169,117 @@
     ],
     "api-openapi-agent": [
       {
-        "skill": "api-sdk-engineer",
+        "skill": "openapi-security",
         "evidence": [
-          "swagger-codegen"
+          "openapi-generator-cli",
+          "redocly",
+          "spectral"
         ],
-        "score": 0.3333333333333333
+        "score": 0.875
       },
       {
-        "skill": "api-sdk-specialist",
+        "skill": "openapi",
         "evidence": [
-          "swagger-codegen"
+          "openapi-generator-cli",
+          "redocly",
+          "swagger-cli"
         ],
-        "score": 0.3333333333333333
+        "score": 0.8409090909090909
       },
       {
-        "skill": "api-sdk-unit-tests",
+        "skill": "openapi-swagger2-authoring",
         "evidence": [
-          "swagger-codegen"
+          "openapi-generator-cli",
+          "swagger-cli"
         ],
-        "score": 0.3333333333333333
+        "score": 0.34090909090909094
+      },
+      {
+        "skill": "mock-server-generation",
+        "evidence": [
+          "openapi-generator-cli"
+        ],
+        "score": 0.25
+      },
+      {
+        "skill": "api-doc-openapi-authoring",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-site-architecture",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-spec-migration",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-specialist",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-engineer",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-generator",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-specialist",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-governance-engineer",
+        "evidence": [
+          "spectral",
+          "swagger-cli"
+        ],
+        "score": 0.2159090909090909
       }
     ],
     "api-rate-limiter": [
       {
-        "skill": "api-rate-aws-waf",
+        "skill": "gcp-secret-manager",
         "evidence": [
-          "express-rate-limit",
-          "nginx"
+          "printf"
         ],
-        "score": 0.16666666666666666
+        "score": 0.5
       },
       {
-        "skill": "api-rate-engineer",
+        "skill": "memcached-cli",
         "evidence": [
-          "express-rate-limit",
-          "nginx"
+          "printf"
         ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "api-rate-limit-verification",
-        "evidence": [
-          "express-rate-limit",
-          "nginx"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "api-rate-limiting-engineer",
-        "evidence": [
-          "express-rate-limit",
-          "nginx"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "api-rate-redis",
-        "evidence": [
-          "express-rate-limit",
-          "nginx"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "api-rate-specialist",
-        "evidence": [
-          "express-rate-limit",
-          "nginx"
-        ],
-        "score": 0.16666666666666666
+        "score": 0.5
       },
       {
         "skill": "adaptive-rate-limiting",
@@ -1356,6 +1312,104 @@
           "redis-cli"
         ],
         "score": 0.06798245614035087
+      }
+    ],
+    "api-rest-agent": [
+      {
+        "skill": "rest",
+        "evidence": [],
+        "score": 0,
+        "manual": true
+      },
+      {
+        "skill": "openapi",
+        "evidence": [
+          "npx",
+          "openapi-generator-cli",
+          "swagger-cli"
+        ],
+        "score": 0.34090909090909094
+      },
+      {
+        "skill": "openapi-swagger2-authoring",
+        "evidence": [
+          "npx",
+          "openapi-generator-cli",
+          "swagger-cli"
+        ],
+        "score": 0.34090909090909094
+      },
+      {
+        "skill": "mock-server-generation",
+        "evidence": [
+          "npx",
+          "openapi-generator-cli"
+        ],
+        "score": 0.25
+      },
+      {
+        "skill": "openapi-security",
+        "evidence": [
+          "npx",
+          "openapi-generator-cli"
+        ],
+        "score": 0.25
+      },
+      {
+        "skill": "api-doc-openapi-authoring",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-site-architecture",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-spec-migration",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-specialist",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-engineer",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-generator",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-specialist",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
       }
     ],
     "api-security-auditor": [
@@ -1480,100 +1534,18 @@
         "manual": true
       },
       {
-        "skill": "api-contract-ci",
+        "skill": "pact",
         "evidence": [
-          "openapi",
-          "postman"
+          "pact-broker"
         ],
-        "score": 0.0459830866807611
+        "score": 0.5
       },
       {
-        "skill": "api-contract-consumer-tests",
+        "skill": "provider-driven-contract",
         "evidence": [
-          "openapi",
-          "postman"
+          "pact-broker"
         ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-contract-engineer",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-contract-pact-workflow",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-contract-specialist",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-contract-validator-api-contract-validator",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-design-engineer",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-error-engineer",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-error-express-middleware",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-error-format-design",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-error-handling-engineer",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
-      },
-      {
-        "skill": "api-error-reproduction",
-        "evidence": [
-          "openapi",
-          "postman"
-        ],
-        "score": 0.0459830866807611
+        "score": 0.5
       }
     ],
     "async-task-queue-engineer": [
@@ -1672,14 +1644,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -1712,10 +1676,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -1770,14 +1742,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -1810,10 +1774,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -1868,14 +1840,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -1908,10 +1872,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -2170,14 +2142,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -2210,10 +2174,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -2305,14 +2277,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -2345,10 +2309,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -2419,14 +2391,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -2459,10 +2423,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -2615,14 +2587,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -2655,10 +2619,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -3411,14 +3383,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -3451,10 +3415,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -3509,14 +3481,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -3549,10 +3513,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -3607,14 +3579,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -3647,10 +3611,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -3742,14 +3714,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -3782,10 +3746,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -3840,14 +3812,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -3880,10 +3844,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -4036,14 +4008,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -4076,10 +4040,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -4327,13 +4299,6 @@
           "jenkins"
         ],
         "score": 1.3333333333333333
-      },
-      {
-        "skill": "batch-requests",
-        "evidence": [
-          "jq"
-        ],
-        "score": 1.0
       },
       {
         "skill": "cicd-pipeline",
@@ -5224,14 +5189,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -5264,10 +5221,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -5322,14 +5287,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -5362,10 +5319,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -5457,14 +5422,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -5497,10 +5454,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -5555,14 +5520,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -5595,10 +5552,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -5690,14 +5655,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -5730,10 +5687,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -5788,14 +5753,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -5828,10 +5785,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -5923,14 +5888,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -5963,10 +5920,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -6021,14 +5986,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -6061,10 +6018,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -6195,14 +6160,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -6235,10 +6192,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -6847,14 +6812,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -6887,10 +6844,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -6945,14 +6910,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -6985,10 +6942,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -7043,14 +7008,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -7083,10 +7040,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -7311,14 +7276,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -7351,10 +7308,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -7409,14 +7374,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -7449,10 +7406,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -7661,15 +7626,6 @@
           "flink"
         ],
         "score": 0.5
-      }
-    ],
-    "data-formatter": [
-      {
-        "skill": "batch-requests",
-        "evidence": [
-          "jq"
-        ],
-        "score": 1.0
       }
     ],
     "data-governance-specialist": [
@@ -8320,14 +8276,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -8360,10 +8308,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -8455,14 +8411,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -8495,10 +8443,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -8651,14 +8607,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -8691,10 +8639,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -8805,20 +8761,18 @@
       {
         "skill": "ansible",
         "evidence": [
-          "ansible",
           "ansible-galaxy",
           "ansible-playbook"
         ],
-        "score": 1.0333333333333332
+        "score": 0.7
       },
       {
         "skill": "configuration-management",
         "evidence": [
-          "ansible",
           "ansible-galaxy",
           "ansible-playbook"
         ],
-        "score": 1.0333333333333332
+        "score": 0.7
       },
       {
         "skill": "infrastructure-as-code-devops",
@@ -8829,19 +8783,18 @@
         "score": 0.7
       },
       {
-        "skill": "ansible-infrastructure",
-        "evidence": [
-          "ansible",
-          "ansible-playbook"
-        ],
-        "score": 0.5333333333333333
-      },
-      {
         "skill": "ansible-lint",
         "evidence": [
           "ansible-lint"
         ],
         "score": 0.5
+      },
+      {
+        "skill": "ansible-infrastructure",
+        "evidence": [
+          "ansible-playbook"
+        ],
+        "score": 0.2
       },
       {
         "skill": "runbook-automation",
@@ -8858,6 +8811,31 @@
           "cdk"
         ],
         "score": 1.0
+      }
+    ],
+    "devops-docker-agent": [
+      {
+        "skill": "cicd-pipeline",
+        "evidence": [
+          "hadolint"
+        ],
+        "score": 0.3333333333333333
+      },
+      {
+        "skill": "docker-security-scanner",
+        "evidence": [
+          "docker",
+          "hadolint"
+        ],
+        "score": 0.3333333333333333
+      },
+      {
+        "skill": "hadolint",
+        "evidence": [
+          "docker",
+          "hadolint"
+        ],
+        "score": 0.3333333333333333
       }
     ],
     "devops-github-actions-agent": [
@@ -9304,14 +9282,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -9344,10 +9314,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -9402,14 +9380,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -9442,10 +9412,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -9500,14 +9478,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -9540,10 +9510,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -9635,14 +9613,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -9675,10 +9645,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -9733,14 +9711,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -9773,10 +9743,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -9831,14 +9809,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -9871,10 +9841,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -9997,14 +9975,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -10037,10 +10007,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -10121,14 +10099,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -10161,10 +10131,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -10256,14 +10234,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -10296,10 +10266,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -10354,14 +10332,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -10394,10 +10364,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -10452,14 +10430,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -10492,10 +10462,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -10550,14 +10528,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -10590,10 +10560,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -10648,14 +10626,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -10688,10 +10658,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -10746,14 +10724,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -10786,10 +10756,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -10966,14 +10944,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -11006,10 +10976,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -11064,14 +11042,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -11104,10 +11074,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -11162,14 +11140,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -11202,10 +11172,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -11276,14 +11254,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -11316,10 +11286,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -11478,14 +11456,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -11518,10 +11488,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -11576,14 +11554,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -11616,10 +11586,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -11683,14 +11661,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -11723,10 +11693,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -11914,14 +11892,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -11954,10 +11924,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12012,14 +11990,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12052,10 +12022,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12156,14 +12134,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12196,10 +12166,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12254,14 +12232,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12294,10 +12264,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12352,14 +12330,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12392,10 +12362,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12487,14 +12465,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12527,10 +12497,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12585,14 +12563,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12625,10 +12595,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12720,14 +12698,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12760,10 +12730,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12818,14 +12796,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12858,10 +12828,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -12916,14 +12894,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -12956,10 +12926,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -13192,14 +13170,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -13232,10 +13202,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -13357,14 +13335,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -13397,10 +13367,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -13455,14 +13433,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -13495,10 +13465,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -13553,14 +13531,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -13593,10 +13563,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -13688,14 +13666,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -13728,10 +13698,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -13786,14 +13764,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -13826,10 +13796,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -13982,14 +13960,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -14022,10 +13992,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -14649,14 +14627,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -14689,10 +14659,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -14747,14 +14725,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -14787,10 +14757,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -14845,14 +14823,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -14885,10 +14855,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -14943,14 +14921,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -14983,10 +14953,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -15041,14 +15019,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -15081,10 +15051,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -15139,14 +15117,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -15179,10 +15149,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -15565,14 +15543,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -15605,10 +15575,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -15700,14 +15678,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -15740,10 +15710,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -15798,14 +15776,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -15838,10 +15808,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -15896,14 +15874,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -15936,10 +15906,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -16031,14 +16009,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -16071,10 +16041,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -16129,14 +16107,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -16169,10 +16139,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -16620,14 +16598,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -16660,10 +16630,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -16718,14 +16696,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -16758,10 +16728,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -17125,14 +17103,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -17165,10 +17135,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -17223,14 +17201,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -17263,10 +17233,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -17321,14 +17299,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -17361,10 +17331,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -17419,14 +17397,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -17459,10 +17429,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -17517,14 +17495,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -17557,10 +17527,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -17652,14 +17630,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -17692,10 +17662,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -17824,14 +17802,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -17864,10 +17834,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -17922,14 +17900,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -17962,10 +17932,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -18398,13 +18376,6 @@
         "score": 1.0555555555555556
       },
       {
-        "skill": "batch-requests",
-        "evidence": [
-          "jq"
-        ],
-        "score": 1.0
-      },
-      {
         "skill": "stern",
         "evidence": [
           "stern"
@@ -18482,6 +18453,14 @@
           "awk"
         ],
         "score": 0.25
+      },
+      {
+        "skill": "audit-logging",
+        "evidence": [
+          "journalctl",
+          "tail"
+        ],
+        "score": 0.2111111111111111
       }
     ],
     "message-broker": [
@@ -18811,14 +18790,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -18851,10 +18822,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -18909,14 +18888,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -18949,10 +18920,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -19007,14 +18986,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -19047,12 +19018,36 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
         ],
         "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      }
+    ],
+    "ml-audit": [
+      {
+        "skill": "finance-compliance",
+        "evidence": [
+          "compliance"
+        ],
+        "score": 0.5
+      },
+      {
+        "skill": "security-compliance",
+        "evidence": [
+          "compliance"
+        ],
+        "score": 0.5
       }
     ],
     "ml-azure-deploy": [
@@ -19105,14 +19100,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -19145,10 +19132,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -19506,14 +19501,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -19546,10 +19533,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -19749,6 +19744,22 @@
         "score": 0.5
       }
     ],
+    "ml-ollama-inference-agent": [
+      {
+        "skill": "llm-api-integration",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      },
+      {
+        "skill": "rag-pipeline",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      }
+    ],
     "ml-opensearch-vector-deploy": [
       {
         "skill": "chaos",
@@ -19799,14 +19810,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -19839,10 +19842,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -19897,14 +19908,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -19937,10 +19940,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -19950,6 +19961,527 @@
         "skill": "data-pipeline-orchestrator-data-pipeline-orchestrator",
         "evidence": [
           "prefect"
+        ],
+        "score": 1.0
+      }
+    ],
+    "ml-rag-aws-deploy": [
+      {
+        "skill": "climate-tech",
+        "evidence": [
+          "aws",
+          "python"
+        ],
+        "score": 0
+      }
+    ],
+    "ml-rag-gcp-deploy": [
+      {
+        "skill": "etl-pipeline",
+        "evidence": [
+          "psql",
+          "python"
+        ],
+        "score": 0.125
+      },
+      {
+        "skill": "async-asyncio-basics",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "async-retry",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "asyncapi-python",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "avro",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "bson",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cbor",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "dramatiq-dashboard",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "fastapi",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "fastapi-backend",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "graphql-graphene",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "grpc-python",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      }
+    ],
+    "ml-rag-node": [
+      {
+        "skill": "adapter",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "async",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "async-retry",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "asyncapi-nodejs",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "auth-middleware",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "bulkhead",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cbor",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "correlation-ids",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cors",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cors-preflight",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "csp",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "csrf-protection",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      }
+    ],
+    "ml-rag-node-agent": [
+      {
+        "skill": "adapter",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "async",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "async-retry",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "asyncapi-nodejs",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "auth-middleware",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "bulkhead",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cbor",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "correlation-ids",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cors",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cors-preflight",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "csp",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "csrf-protection",
+        "evidence": [
+          "node",
+          "npm"
+        ],
+        "score": 0
+      }
+    ],
+    "ml-rag-python": [
+      {
+        "skill": "dramatiq-dashboard",
+        "evidence": [
+          "pip",
+          "python",
+          "uvicorn"
+        ],
+        "score": 0.2
+      },
+      {
+        "skill": "fastapi",
+        "evidence": [
+          "pip",
+          "python",
+          "uvicorn"
+        ],
+        "score": 0.2
+      },
+      {
+        "skill": "fastapi-backend",
+        "evidence": [
+          "pip",
+          "python",
+          "uvicorn"
+        ],
+        "score": 0.2
+      },
+      {
+        "skill": "starlette",
+        "evidence": [
+          "pip",
+          "python",
+          "uvicorn"
+        ],
+        "score": 0.2
+      },
+      {
+        "skill": "uvicorn",
+        "evidence": [
+          "uvicorn"
+        ],
+        "score": 0.2
+      },
+      {
+        "skill": "async-asyncio-basics",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "async-retry",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "asyncapi-python",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "avro",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "bson",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cbor",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "graphql-graphene",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      }
+    ],
+    "ml-rag-python-agent": [
+      {
+        "skill": "async-asyncio-basics",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "async-retry",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "asyncapi-python",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "avro",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "bson",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "cbor",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "dramatiq-dashboard",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "fastapi",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "fastapi-backend",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "graphql-graphene",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "grpc-python",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kafka-python",
+        "evidence": [
+          "pip",
+          "python"
+        ],
+        "score": 0
+      }
+    ],
+    "ml-risk-python-agent": [
+      {
+        "skill": "finance-risk",
+        "evidence": [
+          "risk"
+        ],
+        "score": 1.0
+      }
+    ],
+    "ml-safety-azure-deploy": [
+      {
+        "skill": "marketing-content",
+        "evidence": [
+          "content"
         ],
         "score": 1.0
       }
@@ -20150,6 +20682,15 @@
         "score": 0
       }
     ],
+    "ml-whisper-inference-agent": [
+      {
+        "skill": "speech-recognition",
+        "evidence": [
+          "whisper"
+        ],
+        "score": 1.0
+      }
+    ],
     "mlflow-experiment-tracker": [
       {
         "skill": "ai-ml-pipeline",
@@ -20257,14 +20798,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -20297,10 +20830,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -20661,14 +21202,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -20701,10 +21234,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -20768,14 +21309,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -20808,10 +21341,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -20866,14 +21407,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -20906,10 +21439,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -21011,14 +21552,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -21051,10 +21584,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -21169,14 +21710,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -21209,10 +21742,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -21267,14 +21808,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -21307,10 +21840,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -21365,14 +21906,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -21405,10 +21938,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -21792,14 +22333,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -21832,10 +22365,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -21927,14 +22468,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -21967,10 +22500,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -22148,14 +22689,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -22188,10 +22721,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -22246,14 +22787,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -22286,16 +22819,38 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
     ],
     "ollama-identity-py": [
       {
+        "skill": "llm-api-integration",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      },
+      {
+        "skill": "rag-pipeline",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      },
+      {
         "skill": "chaos",
         "evidence": [
           "helm",
@@ -22344,14 +22899,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -22380,20 +22927,26 @@
         "evidence": [
           "helm",
           "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "health-check-engineer",
-        "evidence": [
-          "docker",
-          "python"
         ],
         "score": 0
       }
     ],
     "ollama-inference": [
       {
+        "skill": "llm-api-integration",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      },
+      {
+        "skill": "rag-pipeline",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      },
+      {
         "skill": "chaos",
         "evidence": [
           "helm",
@@ -22442,14 +22995,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -22480,17 +23025,25 @@
           "kubectl"
         ],
         "score": 0
-      },
-      {
-        "skill": "health-check-engineer",
-        "evidence": [
-          "docker",
-          "python"
-        ],
-        "score": 0
       }
     ],
     "ollama-inference-2": [
+      {
+        "skill": "llm-api-integration",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      },
+      {
+        "skill": "rag-pipeline",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      }
+    ],
+    "ollama-inference-3": [
       {
         "skill": "llm-api-integration",
         "evidence": [
@@ -22545,6 +23098,20 @@
     ],
     "ollama-sdk": [
       {
+        "skill": "llm-api-integration",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      },
+      {
+        "skill": "rag-pipeline",
+        "evidence": [
+          "ollama"
+        ],
+        "score": 0.5
+      },
+      {
         "skill": "chaos",
         "evidence": [
           "helm",
@@ -22593,14 +23160,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -22629,14 +23188,6 @@
         "evidence": [
           "helm",
           "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "health-check-engineer",
-        "evidence": [
-          "docker",
-          "python"
         ],
         "score": 0
       }
@@ -22728,14 +23279,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -22768,10 +23311,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -22826,14 +23377,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -22866,10 +23409,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -22878,18 +23429,95 @@
       {
         "skill": "openapi-security",
         "evidence": [
+          "npx",
+          "openapi-generator-cli",
           "redocly",
           "spectral"
         ],
-        "score": 0.625
+        "score": 0.875
       },
       {
         "skill": "openapi",
         "evidence": [
+          "npx",
+          "openapi-generator-cli",
           "redocly",
           "swagger-cli"
         ],
-        "score": 0.5909090909090909
+        "score": 0.8409090909090909
+      },
+      {
+        "skill": "openapi-swagger2-authoring",
+        "evidence": [
+          "npx",
+          "openapi-generator-cli",
+          "swagger-cli"
+        ],
+        "score": 0.34090909090909094
+      },
+      {
+        "skill": "mock-server-generation",
+        "evidence": [
+          "npx",
+          "openapi-generator-cli"
+        ],
+        "score": 0.25
+      },
+      {
+        "skill": "api-doc-openapi-authoring",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-site-architecture",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-spec-migration",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-doc-specialist",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-engineer",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-generator",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
+      },
+      {
+        "skill": "api-documentation-specialist",
+        "evidence": [
+          "redoc-cli",
+          "swagger-cli"
+        ],
+        "score": 0.23376623376623376
       },
       {
         "skill": "api-governance-engineer",
@@ -22898,62 +23526,6 @@
           "swagger-cli"
         ],
         "score": 0.2159090909090909
-      },
-      {
-        "skill": "api-doc-openapi-authoring",
-        "evidence": [
-          "openapi-generator",
-          "swagger-cli"
-        ],
-        "score": 0.1534090909090909
-      },
-      {
-        "skill": "api-doc-site-architecture",
-        "evidence": [
-          "openapi-generator",
-          "swagger-cli"
-        ],
-        "score": 0.1534090909090909
-      },
-      {
-        "skill": "api-doc-spec-migration",
-        "evidence": [
-          "openapi-generator",
-          "swagger-cli"
-        ],
-        "score": 0.1534090909090909
-      },
-      {
-        "skill": "api-doc-specialist",
-        "evidence": [
-          "openapi-generator",
-          "swagger-cli"
-        ],
-        "score": 0.1534090909090909
-      },
-      {
-        "skill": "api-documentation-engineer",
-        "evidence": [
-          "openapi-generator",
-          "swagger-cli"
-        ],
-        "score": 0.1534090909090909
-      },
-      {
-        "skill": "api-documentation-generator",
-        "evidence": [
-          "openapi-generator",
-          "swagger-cli"
-        ],
-        "score": 0.1534090909090909
-      },
-      {
-        "skill": "api-documentation-specialist",
-        "evidence": [
-          "openapi-generator",
-          "swagger-cli"
-        ],
-        "score": 0.1534090909090909
       }
     ],
     "opensearch-identity-py": [
@@ -23006,14 +23578,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23046,10 +23610,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -23104,14 +23676,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23144,10 +23708,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -23202,14 +23774,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23242,10 +23806,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -23337,14 +23909,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23377,10 +23941,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -23472,14 +24044,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23512,10 +24076,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -23570,14 +24142,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23610,10 +24174,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -23668,14 +24240,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23708,10 +24272,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -23784,14 +24356,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23824,10 +24388,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -23919,14 +24491,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -23959,10 +24523,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -24017,14 +24589,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -24057,10 +24621,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -24124,14 +24696,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -24164,10 +24728,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -24253,14 +24825,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -24293,10 +24857,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -24388,14 +24960,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -24428,10 +24992,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -24486,14 +25058,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -24526,10 +25090,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -24699,14 +25271,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -24739,10 +25303,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -24797,14 +25369,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -24837,10 +25401,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -24895,14 +25467,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -24935,10 +25499,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -25046,14 +25618,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -25086,10 +25650,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -25144,14 +25716,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -25184,10 +25748,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -25334,14 +25906,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -25374,10 +25938,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -25432,14 +26004,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -25472,10 +26036,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -25548,14 +26120,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -25588,10 +26152,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -25710,235 +26282,180 @@
     ],
     "rag": [
       {
-        "skill": "chaos",
+        "skill": "dramatiq-dashboard",
         "evidence": [
-          "helm",
-          "kubectl"
+          "pip",
+          "python",
+          "uvicorn"
         ],
-        "score": 0
+        "score": 0.2
       },
       {
-        "skill": "chaos-engineering",
+        "skill": "fastapi",
         "evidence": [
-          "helm",
-          "kubectl"
+          "pip",
+          "python",
+          "uvicorn"
         ],
-        "score": 0
+        "score": 0.2
       },
       {
-        "skill": "chaos-mesh",
+        "skill": "fastapi-backend",
         "evidence": [
-          "helm",
-          "kubectl"
+          "pip",
+          "python",
+          "uvicorn"
         ],
-        "score": 0
+        "score": 0.2
       },
       {
-        "skill": "container-orchestration",
+        "skill": "starlette",
         "evidence": [
-          "docker",
-          "kubectl"
+          "pip",
+          "python",
+          "uvicorn"
         ],
-        "score": 0
+        "score": 0.2
       },
       {
-        "skill": "container-orchestration-specialist",
+        "skill": "uvicorn",
         "evidence": [
-          "helm",
-          "kubectl"
+          "uvicorn"
         ],
-        "score": 0
+        "score": 0.2
       },
       {
-        "skill": "crossplane",
+        "skill": "async-asyncio-basics",
         "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
+          "pip",
           "python"
         ],
         "score": 0
       },
       {
-        "skill": "external-secrets",
+        "skill": "async-retry",
         "evidence": [
-          "helm",
-          "kubectl"
+          "pip",
+          "python"
         ],
         "score": 0
       },
       {
-        "skill": "external-secrets-security",
+        "skill": "asyncapi-python",
         "evidence": [
-          "helm",
-          "kubectl"
+          "pip",
+          "python"
         ],
         "score": 0
       },
       {
-        "skill": "fault-injection",
+        "skill": "avro",
         "evidence": [
-          "docker",
-          "kubectl"
+          "pip",
+          "python"
         ],
         "score": 0
       },
       {
-        "skill": "gatekeeper",
+        "skill": "bson",
         "evidence": [
-          "helm",
-          "kubectl"
+          "pip",
+          "python"
         ],
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "cbor",
         "evidence": [
-          "docker",
+          "pip",
+          "python"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "graphql-graphene",
+        "evidence": [
+          "pip",
           "python"
         ],
         "score": 0
       }
     ],
-    "rag-identity-py": [
+    "rag-inference": [
       {
-        "skill": "chaos",
+        "skill": "python",
         "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "chaos-engineering",
-        "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "chaos-mesh",
-        "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "container-orchestration",
-        "evidence": [
-          "docker",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "container-orchestration-specialist",
-        "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "crossplane",
-        "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
+          "pytest",
           "python"
         ],
-        "score": 0
+        "score": 0.07142857142857142
       },
       {
-        "skill": "external-secrets",
+        "skill": "refactoring",
         "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "external-secrets-security",
-        "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "fault-injection",
-        "evidence": [
-          "docker",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "gatekeeper",
-        "evidence": [
-          "helm",
-          "kubectl"
-        ],
-        "score": 0
-      },
-      {
-        "skill": "health-check-engineer",
-        "evidence": [
-          "docker",
+          "pytest",
           "python"
         ],
-        "score": 0
+        "score": 0.07142857142857142
+      }
+    ],
+    "rag-inference-2": [
+      {
+        "skill": "api-rate-limiting-designer",
+        "evidence": [
+          "python",
+          "redis-cli"
+        ],
+        "score": 0.02631578947368421
+      },
+      {
+        "skill": "dramatiq",
+        "evidence": [
+          "python",
+          "redis-cli"
+        ],
+        "score": 0.02631578947368421
+      },
+      {
+        "skill": "dramatiq-dashboard",
+        "evidence": [
+          "python",
+          "redis-cli"
+        ],
+        "score": 0.02631578947368421
+      },
+      {
+        "skill": "huey",
+        "evidence": [
+          "python",
+          "redis-cli"
+        ],
+        "score": 0.02631578947368421
+      },
+      {
+        "skill": "redis-caching-strategist",
+        "evidence": [
+          "python",
+          "redis-cli"
+        ],
+        "score": 0.02631578947368421
+      },
+      {
+        "skill": "redis-pubsub-python",
+        "evidence": [
+          "python",
+          "redis-cli"
+        ],
+        "score": 0.02631578947368421
       }
     ],
     "rag-model-server": [
       {
-        "skill": "audit-logging",
+        "skill": "bulkhead-pattern",
         "evidence": [
-          "systemctl"
+          "watch"
         ],
-        "score": 0.2
-      },
-      {
-        "skill": "kubelet",
-        "evidence": [
-          "systemctl"
-        ],
-        "score": 0.2
-      },
-      {
-        "skill": "lighttpd",
-        "evidence": [
-          "systemctl"
-        ],
-        "score": 0.2
-      },
-      {
-        "skill": "load-balancing",
-        "evidence": [
-          "systemctl"
-        ],
-        "score": 0.2
-      },
-      {
-        "skill": "retry",
-        "evidence": [
-          "systemctl"
-        ],
-        "score": 0.2
+        "score": 1.0
       }
     ],
     "rate-limiter": [
@@ -26041,55 +26558,36 @@
     ],
     "rate-limiter-architect": [
       {
-        "skill": "api-rate-limiting-designer",
+        "skill": "api-gateway-mgmt",
         "evidence": [
-          "envoy",
-          "nginx",
-          "python",
-          "redis-cli"
+          "deck"
         ],
-        "score": 0.23464912280701752
+        "score": 1.0
       },
       {
-        "skill": "api-rate-limiting-engineer",
+        "skill": "gcp-secret-manager",
         "evidence": [
-          "envoy",
-          "nginx",
-          "python"
+          "printf"
         ],
-        "score": 0.20833333333333331
+        "score": 0.5
       },
       {
-        "skill": "rate-limiting-pattern",
+        "skill": "memcached-cli",
         "evidence": [
-          "envoy",
-          "redis-cli"
+          "printf"
         ],
-        "score": 0.19298245614035087
-      },
-      {
-        "skill": "envoy",
-        "evidence": [
-          "envoy"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "grpc-web",
-        "evidence": [
-          "envoy"
-        ],
-        "score": 0.16666666666666666
-      },
-      {
-        "skill": "sidecar-pattern",
-        "evidence": [
-          "envoy"
-        ],
-        "score": 0.16666666666666666
+        "score": 0.5
       },
       {
         "skill": "adaptive-rate-limiting",
+        "evidence": [
+          "nginx",
+          "redis-cli"
+        ],
+        "score": 0.06798245614035087
+      },
+      {
+        "skill": "api-rate-limiting-designer",
         "evidence": [
           "nginx",
           "redis-cli"
@@ -26113,26 +26611,10 @@
         "score": 0.06798245614035087
       },
       {
-        "skill": "api-rate-aws-waf",
+        "skill": "load-balancing",
         "evidence": [
-          "nginx",
-          "python"
-        ],
-        "score": 0.041666666666666664
-      },
-      {
-        "skill": "api-rate-engineer",
-        "evidence": [
-          "nginx",
-          "python"
-        ],
-        "score": 0.041666666666666664
-      },
-      {
-        "skill": "api-rate-limit-verification",
-        "evidence": [
-          "nginx",
-          "python"
+          "kubectl",
+          "nginx"
         ],
         "score": 0.041666666666666664
       }
@@ -26337,14 +26819,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -26377,10 +26851,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -26472,14 +26954,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -26512,10 +26986,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -26570,14 +27052,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -26610,10 +27084,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -26668,14 +27150,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -26708,10 +27182,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -26803,14 +27285,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -26843,10 +27317,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -26901,14 +27383,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -26941,10 +27415,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -26999,14 +27481,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27039,10 +27513,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27097,14 +27579,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27137,10 +27611,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27232,14 +27714,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27272,10 +27746,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27330,14 +27812,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27370,10 +27844,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27428,14 +27910,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27468,10 +27942,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27526,14 +28008,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27566,10 +28040,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27624,14 +28106,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27664,10 +28138,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27722,14 +28204,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27762,10 +28236,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27881,14 +28363,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -27921,10 +28395,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -27979,14 +28461,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -28019,10 +28493,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -28077,14 +28559,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -28117,10 +28591,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -28280,14 +28762,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -28320,10 +28794,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -28415,14 +28897,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -28455,10 +28929,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -28513,14 +28995,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -28553,10 +29027,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -28611,14 +29093,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -28651,10 +29125,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -29248,14 +29730,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -29288,10 +29762,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -29356,14 +29838,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -29396,10 +29870,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -29454,14 +29936,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -29494,10 +29968,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -29589,14 +30071,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -29629,10 +30103,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -29894,6 +30376,22 @@
           "github"
         ],
         "score": 0.16666666666666666
+      }
+    ],
+    "soc2-compliance-automator": [
+      {
+        "skill": "finance-compliance",
+        "evidence": [
+          "compliance"
+        ],
+        "score": 0.5
+      },
+      {
+        "skill": "security-compliance",
+        "evidence": [
+          "compliance"
+        ],
+        "score": 0.5
       }
     ],
     "sre-chaos": [
@@ -30237,14 +30735,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -30277,10 +30767,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -30358,14 +30856,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -30398,10 +30888,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -30885,14 +31383,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -30925,10 +31415,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -30983,14 +31481,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -31023,10 +31513,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -31118,14 +31616,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -31158,10 +31648,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -31253,14 +31751,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -31293,10 +31783,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -31351,14 +31849,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -31391,10 +31881,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -31547,14 +32045,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -31587,10 +32077,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -31661,14 +32159,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -31701,10 +32191,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -31759,14 +32257,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -31799,10 +32289,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -31927,14 +32425,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -31967,10 +32457,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -32025,14 +32523,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -32065,10 +32555,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -32160,14 +32658,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -32200,10 +32690,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -32258,14 +32756,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -32298,10 +32788,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -32356,14 +32854,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -32396,10 +32886,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -32491,14 +32989,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -32531,10 +33021,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -32589,14 +33087,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -32629,10 +33119,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -32724,14 +33222,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -32764,10 +33254,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -32822,14 +33320,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -32862,10 +33352,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -33018,14 +33516,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -33058,10 +33548,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -33223,14 +33721,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -33263,10 +33753,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -33321,14 +33819,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -33361,10 +33851,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -33456,14 +33954,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -33496,10 +33986,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -33610,6 +34108,34 @@
           "smee"
         ],
         "score": 0.5
+      },
+      {
+        "skill": "jq",
+        "evidence": [
+          "cat"
+        ],
+        "score": 0.25
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "cat"
+        ],
+        "score": 0.25
+      },
+      {
+        "skill": "memory-stress-testing",
+        "evidence": [
+          "cat"
+        ],
+        "score": 0.25
+      },
+      {
+        "skill": "wireguard",
+        "evidence": [
+          "cat"
+        ],
+        "score": 0.25
       }
     ],
     "websocket-realtime-builder": [
@@ -33620,6 +34146,15 @@
           "ws"
         ],
         "score": 2.0
+      }
+    ],
+    "whisper-identity-py": [
+      {
+        "skill": "speech-recognition",
+        "evidence": [
+          "whisper"
+        ],
+        "score": 1.0
       }
     ],
     "whisper-inference": [
@@ -33817,14 +34352,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -33857,10 +34384,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -33952,14 +34487,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -33992,10 +34519,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -34050,14 +34585,6 @@
         "score": 0
       },
       {
-        "skill": "debugging",
-        "evidence": [
-          "kubectl",
-          "python"
-        ],
-        "score": 0
-      },
-      {
         "skill": "external-secrets",
         "evidence": [
           "helm",
@@ -34090,10 +34617,18 @@
         "score": 0
       },
       {
-        "skill": "health-check-engineer",
+        "skill": "kubernetes-network-policy-engineer",
         "evidence": [
-          "docker",
-          "python"
+          "helm",
+          "kubectl"
+        ],
+        "score": 0
+      },
+      {
+        "skill": "kyverno",
+        "evidence": [
+          "helm",
+          "kubectl"
         ],
         "score": 0
       }
@@ -34173,25 +34708,9 @@
         "manual": true
       }
     ],
-    "api-rest-agent": [
-      {
-        "skill": "rest",
-        "evidence": [],
-        "score": 0,
-        "manual": true
-      }
-    ],
     "pagination-designer": [
       {
         "skill": "pagination",
-        "evidence": [],
-        "score": 0,
-        "manual": true
-      }
-    ],
-    "api-graphql-agent": [
-      {
-        "skill": "graphql",
         "evidence": [],
         "score": 0,
         "manual": true

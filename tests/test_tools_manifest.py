@@ -92,7 +92,9 @@ class TestPlatformDirCoverage(unittest.TestCase):
     def test_every_platform_dir_covered(self):
         platform_dir = ROOT / "platform-agents"
         dirs = {p.name for p in platform_dir.iterdir() if p.is_dir()}
-        self.assertEqual(set(TOOLS), dirs)
+        # Only platforms with format != "none" should have directories
+        active_platforms = {k for k, v in TOOLS.items() if v.get("format") != "none"}
+        self.assertEqual(active_platforms, dirs)
 
 
 class TestConverterValidation(unittest.TestCase):

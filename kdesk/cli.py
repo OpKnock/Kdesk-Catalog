@@ -29,6 +29,9 @@ from kdesk.security import scan_repo
 from kdesk.stats import StatsError, compute as compute_stats, format_table, write_baseline
 from kdesk.verify import run_verify
 from kdesk.workflow import WorkflowEngine, WorkflowError
+from kdesk.delegation import SubAgentResolver
+from kdesk.versioning import VersionResolver, build_available_versions
+from kdesk.telemetry import summary as telemetry_summary
 from kdesk.verify import run_verify
 
 
@@ -701,39 +704,58 @@ def _cmd_wiring(args) -> int:
 
 
 def _cmd_skill_publish(args) -> int:
+    from kdesk.marketplace import Marketplace
     root = Path(args.root) if args.root else default_repo_root()
     catalog = Catalog.from_repo(root)
     skill = catalog.get_skill(args.skill_id)
     if not skill:
         print(f"ERROR: Skill '{args.skill_id}' not found in catalog", file=sys.stderr)
         return 1
-    # In a real implementation, this would package and upload to the registry
-    print(f"Publishing skill '{args.skill_id}' version {args.version} to {args.registry}")
-    print("Note: This is a stub implementation. Real implementation would package and upload.")
-    return 0
+    mp = Marketplace(root)
+    try:
+        result = mp.publish(skill.source_path, force=args.force)
+        print(json.dumps(result, indent=2, default=str))
+        return 0
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
 
 
 def _cmd_skill_install(args) -> int:
-    skill_spec = args.skill_spec
-    if "@" in skill_spec:
-        skill_id, version = skill_spec.split("@", 1)
-    else:
-        skill_id, version = skill_spec, "latest"
-    print(f"Installing skill '{skill_id}@{version}' from {args.registry}")
-    print("Note: This is a stub implementation. Real implementation would download and install.")
+    from kdesk.marketplace import Marketplace
+    root = Path(args.root) if args.root else default_repo_root()
+    mp = Marketplace(root)
+    entry = mp.resolve(args.skill_spec)
+    if entry is None:
+        print(f"NOT FOUND: {args.skill_spec} (no version matches)", file=sys.stderr)
+        return 1
+    print(json.dumps({"status": "resolved", "name": entry.name, "version": entry.version,
+                       "checksum": entry.checksum, "dependencies": entry.dependencies}, indent=2))
     return 0
 
 
 def _cmd_skill_search(args) -> int:
-    query = args.query or ""
-    print(f"Searching marketplace for '{query}'...")
-    print("Note: This is a stub implementation. Real implementation would query the registry.")
+    from kdesk.marketplace import Marketplace
+    root = Path(args.root) if args.root else default_repo_root()
+    mp = Marketplace(root)
+    results = mp.search(args.query, limit=args.limit)
+    if not results:
+        print("No results found.")
+        return 0
+    for e in results:
+        print(f"  {e.name}@{e.version}  [{e.category}]  {e.description[:60]}")
     return 0
 
 
 def _cmd_skill_list(args) -> int:
-    print(f"Listing skills from {args.registry}...")
-    print("Note: This is a stub implementation. Real implementation would query the registry.")
+    from kdesk.marketplace import Marketplace
+    root = Path(args.root) if args.root else default_repo_root()
+    mp = Marketplace(root)
+    entries = mp.list_all()
+    stats = mp.stats()
+    print(f"Registry: {mp.registry_path} ({stats['unique_skills']} skills, {stats['total_versions']} versions)")
+    for e in entries:
+        print(f"  {e.name}@{e.version}  [{e.category}]")
     return 0
 
 
@@ -749,6 +771,48 @@ def _cmd_skill(args) -> int:
     else:
         print("Usage: kdesk skill {publish|install|search|list} ...")
         return 2
+
+
+def _cmd_delegate(args) -> int:
+    catalog = _catalog(args)
+    resolver = SubAgentResolver(catalog)
+    plan = resolver.resolve(args.agent, input_data={})
+    if plan is None:
+        agent = catalog.get_agent(args.agent)
+        if not agent:
+            print(f"ERROR: Agent '{args.agent}' not found", file=sys.stderr)
+            return 1
+        print(f"Agent '{args.agent}' has no sub_agents declared.")
+        return 0
+    data = plan.summary()
+    print(json.dumps(data, indent=2, default=str))
+    return 0 if plan.all_succeeded else 3
+
+
+def _cmd_version_resolve(args) -> int:
+    catalog = _catalog(args)
+    all_names = list(catalog.agents.keys()) + list(catalog.skills.keys())
+    available = build_available_versions({n: True for n in all_names})
+    resolver = VersionResolver()
+    result = resolver.resolve(args.spec, available)
+    if result is None:
+        print(f"NO MATCH: {args.spec}", file=sys.stderr)
+        return 1
+    # Check for breaking change if we have a current version
+    spec_parts = result.split("@")
+    if len(spec_parts) == 2:
+        check = resolver.check_breaking_change("1.0.0", spec_parts[1])
+        print(json.dumps({"resolved": result, **({"breaking_change_check": check})}, indent=2))
+    else:
+        print(result)
+    return 0
+
+
+def _cmd_telemetry(args) -> int:
+    root = Path(args.root) if args.root else default_repo_root()
+    stats = telemetry_summary(root)
+    print(json.dumps(stats, indent=2))
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -914,21 +978,29 @@ def build_parser() -> argparse.ArgumentParser:
                         help="skill marketplace (publish, install, search, list)")
     sk_sub = sk.add_subparsers(dest="skill_command")
 
-    sk_pub = sk_sub.add_parser("publish", help="publish a skill to the marketplace")
+    sk_pub = sk_sub.add_parser("publish", help="publish a skill to the local registry")
     sk_pub.add_argument("skill_id", help="skill ID to publish")
-    sk_pub.add_argument("--version", default="1.0.0", help="skill version")
-    sk_pub.add_argument("--registry", default="https://kdesk.registry.io", help="marketplace registry URL")
+    sk_pub.add_argument("--force", action="store_true", help="overwrite existing version")
 
-    sk_inst = sk_sub.add_parser("install", help="install a skill from the marketplace")
+    sk_inst = sk_sub.add_parser("install", help="resolve a skill spec (name@semver)")
     sk_inst.add_argument("skill_spec", help="skill@version or skill_id")
-    sk_inst.add_argument("--registry", default="https://kdesk.registry.io", help="marketplace registry URL")
 
-    sk_search = sk_sub.add_parser("search", help="search the marketplace")
+    sk_search = sk_sub.add_parser("search", help="search the registry")
     sk_search.add_argument("query", nargs="?", default="", help="search query")
-    sk_search.add_argument("--registry", default="https://kdesk.registry.io", help="marketplace registry URL")
+    sk_search.add_argument("--limit", type=int, default=20)
 
     sk_list = sk_sub.add_parser("list", help="list available skills")
-    sk_list.add_argument("--registry", default="https://kdesk.registry.io", help="marketplace registry URL")
+
+    dg = sub.add_parser("delegate", parents=[root_parent],
+                        help="resolve sub-agent delegation for an agent")
+    dg.add_argument("agent", help="agent name with sub_agents")
+
+    vr = sub.add_parser("resolve-version", parents=[root_parent],
+                        help="resolve a name@semver spec against the catalog")
+    vr.add_argument("spec", help="e.g. my-agent@^2.0 or terraform-infrastructure")
+
+    tl = sub.add_parser("telemetry", parents=[root_parent],
+                        help="show anonymous usage stats")
 
     return p
 
@@ -965,6 +1037,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         "schema": _cmd_schema,
         "wiring": _cmd_wiring,
         "skill": _cmd_skill,
+        "delegate": _cmd_delegate,
+        "resolve-version": _cmd_version_resolve,
+        "telemetry": _cmd_telemetry,
     }
     handler = handlers.get(args.command)
     if handler is None:

@@ -239,6 +239,10 @@ def _cmd_doctor(args) -> int:
     base = Path(args.base).resolve() if args.base else Path.cwd()
     doctor = Doctor(adapters, base=base, registry_root=registry)
 
+    # CI mode: run diagnostics and exit with code based on threshold
+    if args.ci:
+        return _cmd_doctor_ci(args, doctor)
+
     # Route to appropriate mode
     if args.mode == "check":
         return _cmd_doctor_check(args, doctor)
@@ -303,7 +307,80 @@ def _cmd_doctor_diagnose(args, doctor=None) -> int:
     return 0
 
 
-def _cmd_doctor_fix(args, doctor=None) -> int:
+def _cmd_doctor_ci(args, doctor=None) -> int:
+    """CI mode: run diagnostics and exit with code based on health threshold."""
+    if doctor is None:
+        registry = Path(args.root).resolve() if args.root else default_repo_root()
+        adapters = AdapterRegistry(registry)
+        doctor = Doctor(adapters, base=Path(args.base).resolve() if args.base else Path.cwd(), registry_root=Path(args.root).resolve() if args.root else default_repo_root())
+
+    if not args.platform:
+        print("Error: --platform required for CI mode", file=sys.stderr)
+        return 1
+
+    project_root = Path(args.project_root).resolve() if args.project_root else Path.cwd()
+    scan_result = doctor.scan_project(project_root)
+    issues = doctor.analyze_compatibility(scan_result, args.platform)
+
+    from kdesk.diagnostics import DiagnosticReport, ComponentReport
+    from kdesk.diagnostics import Issue, Severity, Category
+
+    # Build report
+    components = {}
+    for issue in issues:
+        comp_key = f"{issue.component}:{issue.file}"
+        if comp_key not in components:
+            comp_type = "config"
+            if "agent" in issue.component.lower() or "agent" in issue.file.lower():
+                comp_type = "agent"
+            elif "skill" in issue.component.lower() or "skill" in issue.file.lower():
+                comp_type = "skill"
+            elif "workflow" in issue.component.lower() or "workflow" in issue.file.lower():
+                comp_type = "workflow"
+            elif "command" in issue.component.lower() or "command" in issue.file.lower():
+                comp_type = "command"
+            components[comp_key] = ComponentReport(
+                name=Path(issue.component).name if issue.component else "unknown",
+                type=comp_type,
+                file=issue.file,
+                platform=issue.platform,
+            )
+        components[comp_key].issues.append(issue)
+
+    component_list = list(components.values())
+    issues_list = issues
+
+    # Calculate score
+    def calc_score(issues):
+        if not issues:
+            return 100
+        critical = sum(1 for i in issues if i.severity == i.severity.CRITICAL)
+        errors = sum(1 for i in issues if i.severity == i.severity.ERROR)
+        warnings = sum(1 for i in issues if i.severity == i.severity.WARNING)
+        penalty = min(critical * 20, 80) + min(errors * 10, 60) + min(warnings * 2, 40)
+        return max(0, 100 - penalty)
+
+    score = calc_score(issues_list)
+    report = DiagnosticReport(
+        project_root=str(Path.cwd()),
+        platform=args.platform,
+        score=score,
+        max_score=100,
+        components=component_list,
+        issues=issues_list,
+        scan_metadata={},
+    )
+
+    if args.json:
+        output = {"report": report.to_dict()}
+        print(json.dumps(output, indent=2, default=str))
+
+    # Exit with non-zero if score below threshold
+    threshold = args.threshold
+    if score < threshold:
+        print(f"Health score {score}% below threshold {threshold}%", file=sys.stderr)
+        return 1
+    return 0
     """Apply fixes for a previously diagnosed project."""
     if doctor is None:
         base = Path(args.project_root).resolve() if args.project_root else Path.cwd()
@@ -649,6 +726,9 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument("--dry-run", action="store_true", help="preview fixes without applying")
     d.add_argument("--json", action="store_true", help="output JSON")
     d.add_argument("--verbose", action="store_true", help="show detailed issue explanations")
+    # CI mode
+    d.add_argument("--ci", action="store_true", help="CI mode: exit with non-zero code if health below threshold")
+    d.add_argument("--threshold", type=int, default=90, help="CI health threshold (0-100), exit non-zero if below")
 
     s = sub.add_parser("security", parents=[root_parent], help="secret scan")
     s.add_argument("--json", action="store_true")

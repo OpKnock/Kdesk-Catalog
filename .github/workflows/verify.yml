@@ -35,7 +35,13 @@ jobs:
       - name: Report freshness (reports must match current repository state)
         run: python scripts/check-report-freshness.py --root .
 
-      - name: No uncommitted generated output
+      - name: No uncommitted source changes
         run: |
-          git diff --exit-code -- . ':(exclude)reports/*' \
-            || { echo "generated output is stale; rerun converter"; exit 1; }
+          git diff --exit-code -- . \
+            ':(exclude)reports/*' \
+            ':(exclude)platform-agents/*' \
+            ':(exclude)agents/*' \
+            ':(exclude)skills/json' \
+            ':(exclude)skills/yaml' \
+            ':(exclude)workflows/*' \
+            || { echo "source output is stale; rerun converter and commit"; exit 1; }

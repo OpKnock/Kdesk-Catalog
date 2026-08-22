@@ -6,7 +6,7 @@ installed files (sha256 per target) under `<base>/.kdesk/manifest.json`,
 snapshots overwritten content to `<base>/.kdesk/backups/`, and supports
 uninstall / drift reporting / rollback.
 
-Contract (pinned by tests/test_kdesk_modules.py):
+Contract (pinned by tests/test_kdesk_install.py):
     Installer(registry, dry_run=False)
     installer.install(platform, target="project"|"home", base=Path)
         -> {"results": [{"status": "DRY-RUN"|"OK", "copied": int, ...}]}

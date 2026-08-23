@@ -51,11 +51,38 @@ class FixEngine:
                     f"Manual action required for {issue.id}: {issue.suggested_fix}"
                 )
 
-        # Calculate scores (placeholder - would be computed from diagnostics)
-        report.before_score = 0
-        report.after_score = 0
+        # Calculate real scores from issue severity counts
+        report.before_score = self._calculate_score(issues)
+        report.after_score = self._calculate_score(issues, applied_fixes=report.fixes)
 
         return report
+
+    @staticmethod
+    def _calculate_score(issues, applied_fixes=None) -> int:
+        """Deterministic health score from issue severities (0-100)."""
+        if not issues:
+            return 100
+        fixed_ids = set()
+        if applied_fixes:
+            fixed_ids = {f.issue_id for f in applied_fixes if f.success}
+        penalty = 0
+        for i in issues:
+            if i.id in fixed_ids:
+                continue
+            sev = getattr(i, "severity", None)
+            if sev is not None:
+                sev_val = getattr(sev, "value", str(sev))
+            else:
+                sev_val = str(getattr(i, "severity", ""))
+            if sev_val == "critical":
+                penalty += 20
+            elif sev_val == "error":
+                penalty += 10
+            elif sev_val == "warning":
+                penalty += 2
+            else:
+                penalty += 1
+        return max(0, 100 - min(penalty, 100))
 
     def _apply_fix(self, issue, project_root: Optional[Path] = None) -> FixResult:
         """Apply a single fix based on issue type."""

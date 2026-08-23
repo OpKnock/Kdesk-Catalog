@@ -1,17 +1,18 @@
-# Kdesk-Catalog
+<h1 align="center">🔧 Kdesk-Catalog</h1>
 
-**Universal AI Agents & Skills Registry** — 3,093 production-ready definitions that convert once to 45+ platforms.
+<p align="center">
+  <strong>Universal AI Agents & Skills Registry</strong><br>
+  3,093 production-ready definitions · 45+ platforms · Write once, deploy everywhere
+</p>
 
-[![Platforms](https://img.shields.io/badge/platforms-45%2B-blue)](https://github.com/OpKnock/Kdesk-Catalog)
-[![Agents](https://img.shields.io/badge/agents-1,858-green)](https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents)
-[![Skills](https://img.shields.io/badge/skills-1,235-green)](https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-
----
-
-## 🎭 The Catalog: AI Specialists Ready to Transform Your Workflow
-
-> **A complete AI agent & skill registry at your fingertips** — From ML engineers to Reddit community ninjas, from whimsy injectors to reality checkers. Each definition is a specialized expert with personality, processes, and proven deliverables.
+<p align="center">
+  <a href="https://github.com/OpKnock/Kdesk-Catalog/actions"><img src="https://img.shields.io/github/actions/workflow/status/OpKnock/Kdesk-Catalog/ci.yml?branch=main&label=CI&logo=github" alt="CI"></a>
+  <a href="https://github.com/OpKnock/Kdesk-Catalog"><img src="https://img.shields.io/badge/platforms-45%2B-blue" alt="Platforms"></a>
+  <a href="https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents"><img src="https://img.shields.io/badge/agents-1%2C858-green" alt="Agents"></a>
+  <a href="https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents"><img src="https://img.shields.io/badge/skills-1%2C235-green" alt="Skills"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="License"></a>
+  <a href="https://github.com/OpKnock/Kdesk-Catalog/pulls"><img src="https://img.shields.io/badge/PRs-welcome-orange" alt="PRs Welcome"></a>
+</p>
 
 ---
 
@@ -21,7 +22,41 @@
 
 > **Source of truth:** `universal-agents/` — every agent and skill is a single YAML file with real commands, official documentation links, and expert instructions.
 
-**Output:** `platform-agents/` — auto-generated platform-specific formats (gitignored, regenerated on demand).
+**Output:** `platform-agents/` — auto-generated platform-specific formats.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Clone & Generate
+
+```bash
+git clone https://github.com/OpKnock/Kdesk-Catalog
+cd Kdesk-Catalog
+
+# Generate for ALL platforms
+python scripts/universal-converter.py --platforms all --quiet
+
+# Or just one platform (fast)
+python scripts/universal-converter.py --platforms windsurf --quiet
+```
+
+### 2. Install to Your Tool
+
+| Platform | Install Command |
+|----------|-----------------|
+| **Claude Code** | `cp -r platform-agents/claude_code/.claude/* ~/.claude/` |
+| **Cursor** | `cp -r platform-agents/cursor/* .cursor/rules/` |
+| **GitHub Copilot** | `cp -r platform-agents/github_copilot/.github .github/` |
+| **Codex CLI** | `cp -r platform-agents/codex_cli/.agents .` |
+| **Gemini CLI** | `cp -r platform-agents/gemini_cli/.gemini .` |
+| **Windsurf** | `cp -r platform-agents/windsurf/* .windsurf/rules/` |
+| **OpenCode** | `opencode plugin install ./platform-agents/opencode` |
+| **Zed** | `cp -r platform-agents/zed/.agents .` |
+| **Cline** | `cp -r platform-agents/cline/.clinerules .` |
+| **Goose** | `cp -r platform-agents/goose/recipes/* ~/.config/goose/recipes/` |
+
+> Each platform folder in `platform-agents/` has its own `README.md` with exact instructions.
 
 ---
 
@@ -41,312 +76,19 @@ Each of the 45 platforms receives agents/skills in its **native format**:
 | **Zed** | `SKILL.md` | N/A | `.agents/skills/*/SKILL.md` |
 | **Cline** | `SKILL.md` | N/A | `.clinerules/skills/*/SKILL.md` |
 | **Goose** | YAML recipes | `.goose/recipes/*.yaml` | N/A |
-| **Codex CLI** | `.md` | `.agents/*.md` | N/A |
-| **Gemini CLI** | `SKILL.md` | N/A | `.gemini/skills/*/SKILL.md` |
 | **Aider** | `.md` conventions | `conventions/*.md` | N/A |
-| **Zed** | `SKILL.md` | N/A | `.agents/skills/*/SKILL.md` |
-| **Amp** | `SKILL.md` | N/A | `.agents/skills/*/SKILL.md` |
-| **And 30+ more...** | Platform-specific | Platform-specific | Platform-specific |
-
-> **Note:** Each platform folder in `platform-agents/` contains its exact native format. Run `python scripts/universal-converter.py --platforms <platform> --quiet` to generate.
+| **And 35+ more...** | Platform-specific | Platform-specific | Platform-specific |
 
 ---
 
-## 🚀 Quick Start
+## ✨ Features
 
-### 1. Clone & Generate
-
-```bash
-git clone https://github.com/OpKnock/Kdesk-Catalog
-cd Kdesk-Catalog
-
-# Generate for ALL platforms (~15 min, 130k files)
-python scripts/universal-converter.py --platforms all --quiet
-
-# Or just one platform (fast)
-python scripts/universal-converter.py --platforms windsurf --quiet
-```
-
-### 2. Install to Your Tool
-
-| Platform | Install Command |
-|----------|-----------------|
-| **Claude Code** | `cp -r platform-agents/claude_code/.claude/agents/* ~/.claude/agents/ && cp -r platform-agents/claude_code/.claude/skills/* ~/.claude/skills/` |
-| **Cursor** | `cp -r platform-agents/cursor/* .cursor/rules/` |
-| **GitHub Copilot** | `cp -r platform-agents/github_copilot/.github .github/` |
-| **Codex CLI** | `cp -r platform-agents/codex_cli/.agents .` |
-| **Gemini CLI** | `cp -r platform-agents/gemini_cli/.gemini .` |
-| **Windsurf** | `cp -r platform-agents/windsurf/* .windsurf/rules/` |
-| **OpenCode** | `opencode plugin install ./platform-agents/opencode` |
-| **Zed** | `cp -r platform-agents/zed/.agents .` |
-| **Cline** | `cp -r platform-agents/cline/.clinerules .` |
-| **Goose** | `cp -r platform-agents/goose/recipes/* ~/.config/goose/recipes/` |
-
-> Each platform folder in `platform-agents/` has its own `README.md` with exact instructions.
-
----
-
-## 🎭 The Catalog: AI Specialists Ready to Transform Your Workflow
-
-> **A complete AI agent & skill registry at your fingertips** — From ML engineers to Reddit community ninjas, from whimsy injectors to reality checkers. Each definition is a specialized expert with personality, processes, and proven deliverables.
-
----
-
-## 🎭 The Catalog Roster
-
-### 💻 Engineering Division
-
-Building the future, one commit at a time.
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [ML Engineer](universal-agents/ml/agent/ml-engineer.yaml) | ML pipelines, training, deployment | End-to-end ML pipelines, model serving, MLOps |
-| [API Architect](universal-agents/api/agent/api-architect.yaml) | REST/GraphQL design, contracts | API design, versioning, contract testing |
-| [SRE Engineer](universal-agents/sre/agent/sre-engineer.yaml) | Reliability, SLOs, incident response | SLOs, error budgets, chaos engineering |
-| [DevOps Engineer](universal-agents/devops/agent/devops-engineer.yaml) | CI/CD, infrastructure automation | CI/CD pipelines, infrastructure as code |
-| [API Security Engineer](universal-agents/security/agent/api-security-engineer.yaml) | API security, auth, rate limiting | Auth, rate limiting, threat modeling |
-| [Terraform Module Builder](universal-agents/devops/agent/devops-terraform-module-builder.yaml) | Terraform modules, providers | Module design, registry publishing |
-| [Kubernetes Deployment Specialist](universal-agents/devops/deployment/kubernetes-deployment.yaml) | K8s deployments, Helm, Kustomize | K8s manifests, Helm charts, ArgoCD |
-
-### 🎨 Design Division
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [UI Designer](universal-agents/design/agent/design-ui-designer.yaml) | Visual design, component libraries | Interface creation, brand consistency |
-| [UX Researcher](universal-agents/design/agent/design-ux-researcher.yaml) | User testing, behavior analysis | User research, usability testing |
-| [Design Systems Engineer](universal-agents/design/agent/design-design-systems-engineer.yaml) | Design systems, component libraries | Design tokens, component libraries, Storybook |
-
-### 💰 Paid Media Division
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [PPC Campaign Strategist](universal-agents/paid-media/agent/paid-media-ppc-strategist.yaml) | Google/Meta/LinkedIn Ads | Account buildouts, budget allocation, scaling |
-| [Search Query Analyst](universal-agents/paid-media/agent/paid-media-search-query-analyst.yaml) | Search term analysis, negative keywords | Query audits, wasted spend elimination |
-| [Creative Strategist](universal-agents/paid-media/agent/paid-media-creative-strategist.yaml) | Ad creative, testing programs | Creative launches, ad fatigue refreshes |
-
-### 💼 Sales Division
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [Outbound Strategist](universal-agents/sales/agent/sales-outbound-strategist.yaml) | Signal-based prospecting | Pipeline building, ICP targeting |
-| [Deal Strategist](universal-agents/sales/agent/sales-deal-strategist.yaml) | MEDDPICC, competitive positioning | Deal scoring, win strategies |
-| [Sales Engineer](universal-agents/sales/agent/sales-engineer.yaml) | Technical demos, POCs | Technical demos, POC scoping |
-
-### 📢 Marketing Division
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [Growth Hacker](universal-agents/marketing/agent/marketing-growth-hacker.yaml) | Rapid user acquisition | Viral loops, user acquisition |
-| [Content Creator](universal-agents/marketing/agent/marketing-content-creator.yaml) | Multi-platform content | Content strategy, copywriting |
-| [Social Media Strategist](universal-agents/marketing/agent/marketing-social-media-strategist.yaml) | Cross-platform strategy | Social strategy, campaigns |
-
-### 📊 Product Division
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [Product Manager](universal-agents/product/agent/product-manager.yaml) | Full lifecycle product ownership | Discovery, PRDs, roadmap, GTM |
-| [Product Analyst](universal-agents/product/agent/product-analyst.yaml) | Metrics, experimentation | Metrics design, A/B testing, funnels |
-
-### 🛠 DevOps Division
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [Kubernetes Deployment Specialist](universal-agents/devops/deployment/kubernetes-deployment.yaml) | K8s, Helm, ArgoCD | K8s manifests, Helm charts, ArgoCD |
-| [Terraform Module Builder](universal-agents/devops/agent/devops-terraform-module-builder.yaml) | Terraform modules | Module design, registry publishing |
-| [CI/CD Pipeline Optimizer](universal-agents/devops/agent/ci-pipeline-optimizer.yaml) | CI/CD pipelines | Pipeline optimization, caching, parallelization |
-
-### 🔒 Security Division
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [API Security Engineer](universal-agents/security/agent/api-security-engineer.yaml) | API auth, rate limiting | Auth, rate limiting, threat modeling |
-| [Security Scanner](universal-agents/security/agent/security-trivy-agent.yaml) | Container/image scanning | Trivy, Grype, Syft integration |
-| [Compliance Scanner](universal-agents/security/agent/compliance-scanner.yaml) | SOC2, PCI, GDPR | Audit prep, evidence collection |
-
-### 🧪 Testing Division
-
-| Agent | Specialty | When to Use |
-|-------|-----------|-------------|
-| [Playwright E2E Automator](universal-agents/testing/agent/testing-playwright-e2e-automator.yaml) | E2E testing | E2E test suites, visual regression |
-| [Load Testing Engineer](universal-agents/testing/agent/testing-load-testing-engineer.yaml) | k6, Locust, performance | Load testing, stress testing |
-| [Security Testing Engineer](universal-agents/testing/agent/testing-security-testing-engineer.yaml) | Security testing | SAST/DAST, penetration testing |
-
----
-
-## 🛠 Skill Categories
-
-### 🛠 Tool Workflow Skills
-
-| Skill | Description |
-|-------|-------------|
-| [Terraform Infrastructure](universal-agents/devops/skill/terraform-infrastructure.yaml) | Infrastructure as code with Terraform |
-| [Docker Deployment](universal-agents/devops/skill/docker-deployment.yaml) | Container deployment workflows |
-| [Kubernetes Deployment](universal-agents/devops/skill/kubernetes-deployment.yaml) | K8s deployment patterns |
-| [CI/CD Pipeline](universal-agents/devops/skill/ci-cd-pipeline.yaml) | CI/CD pipeline patterns |
-
-### 🔒 Security & Compliance Skills
-
-| Skill | Description |
-|-------|-------------|
-| [Trivy Security Scanner](universal-agents/security/skill/trivy-security-scanner.yaml) | Container vulnerability scanning |
-| [Semgrep Security](universal-agents/security/skill/semgrep-security.yaml) | Static analysis security rules |
-| [SOC2 Compliance](universal-agents/security/skill/soc2-compliance.yaml) | SOC2 audit preparation |
-
-### 🔧 Pattern & Architecture Skills
-
-| Skill | Description |
-|-------|-------------|
-| [Circuit Breaker Pattern](universal-agents/patterns/skill/circuit-breaker-pattern.yaml) | Resilience patterns |
-| [Sidecar Pattern](universal-agents/patterns/skill/sidecar-pattern.yaml) | Sidecar proxy patterns |
-| [Adapter Pattern](universal-agents/patterns/skill/adapter-pattern.yaml) | Interface adaptation |
-
----
-
-## 📦 Installation Examples
-
-### For Claude Code
-```bash
-# Agents
-cp -r platform-agents/claude_code/.claude/agents/* ~/.claude/agents/
-# Skills
-cp -r platform-agents/claude_code/.claude/skills/* ~/.claude/skills/
-```
-
-### For Cursor
-```bash
-cp -r platform-agents/cursor/* .cursor/rules/
-```
-
-### For GitHub Copilot
-```bash
-cp -r platform-agents/github_copilot/.github .github/
-```
-
-### For Windsurf
-```bash
-cp -r platform-agents/windsurf/* .windsurf/rules/
-```
-
-### For OpenCode
-```bash
-opencode plugin install ./platform-agents/opencode
-```
-
----
-
-## 🔧 Key Commands
-
-```bash
-# Validate all YAMLs (0 violations required)
-python scripts/schema-check.py
-
-# Regenerate JSON definitions from YAML
-python scripts/yaml-to-json.py --inplace --wiring skills/wiring.json
-
-# Generate per-platform marketplace manifests
-python scripts/generate-marketplaces.py
-
-# Convert single platform
-python scripts/universal-converter.py --platforms windsurf --quiet
-
-# Run tests
-pytest -q tests
-```
-
----
-
-## 🏗 Project Structure
-
-```
-Kdesk-Catalog/
-├── universal-agents/          # ← EDIT THESE (source of truth)
-│   ├── ml/                    # 501 agents, 543 skills
-│   ├── api/                   # 14 agents, 494 skills
-│   ├── devops/                # 38 agents, 142 skills
-│   ├── backend/               # 51 agents, 67 skills
-│   ├── security/              # 31 agents, 66 skills
-│   ├── code-quality/          # 46 agents, 73 skills
-│   ├── cloud/                 # 27 agents, 22 skills
-│   ├── database/              # 28 agents, 44 skills
-│   ├── frontend/              # 31 agents, 27 skills
-│   ├── testing/               # 24 agents, 52 skills
-│   ├── data/                  # 26 agents, 32 skills
-│   ├── monitoring/            # 10 agents, 14 skills
-│   ├── sre/                   # 7 agents, 14 skills
-│   ├── infrastructure/        # 8 agents, 19 skills
-│   ├── finops/                # 7 agents, 12 skills
-│   ├── messaging/             # 7 agents, 9 skills
-│   ├── compliance/            # 9 agents, 19 skills
-│   ├── patterns/              # 10 agents, 10 skills
-│   ├── mobile/                # 15 agents, 14 skills
-│   ├── devtools/              # 12 agents, 30 skills
-│   ├── networking/            # 5 agents, 12 skills
-│   ├── personas/              # ADD YOUR PERSONAS HERE
-│   ├── gcp/skill/             # ADD YOUR SKILL PACKS HERE
-│   └── ... (40+ more categories)
-├── scripts/                   # Automation (converter, validators)
-├── reports/                   # Status reports
-├── platform-agents/           # AUTO-GENERATED (gitignored)
-├── schemas/universal-agent.schema.json
-├── tests/
-└── README.md                  # You are here
-```
-
----
-
-## ✅ Verification Status
-
-- ✅ **Schema validation** — 0 violations across 3,093 files
-- ✅ **JSON regeneration** — deterministic with skill wiring
-- ✅ **Tests** — `test_wire_skills.py`, `test_yaml_to_json.py`, `test_marketplaces.py` pass
-
----
-
-## 🏥 Kdesk Doctor
-
-Kdesk Doctor is a developer-facing compatibility, diagnosis, repair, and validation system for AI agent/skill projects.
-
-### Quick Start
-
-```bash
-# Scan project for AI configuration
-kdesk doctor --mode scan --project-root ./my-project
-
-# Diagnose compatibility for a target platform
-kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project --json
-
-# Fix issues (dry-run preview)
-kdesk doctor --mode fix --platform claude_code --project-root ./my-project --dry-run
-
-# Apply fixes
-kdesk doctor --mode fix --platform claude_code --project-root ./my-project
-
-# Full pipeline: diagnose + fix
-kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project --fix
-
-# CI mode with threshold
-kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project --ci --threshold 90 --json
-```
-
-### Features
-
-- **Project Scanner**: Discovers AI development configuration across 45+ platforms
-- **Compatibility Engine**: Analyzes components against platform capabilities with severity levels (CRITICAL, ERROR, WARNING, INFO)
-- **Compatibility Score**: Deterministic scoring (0-100) based on errors, warnings, and unsupported features
-- **Automatic Fix Engine**: Safe fixes with backups (add_field, remove_field, replace_tool, replace_value)
-- **Secret Redaction**: Automatic redaction of API keys, tokens, passwords in reports
-- **CI Mode**: Exit codes based on health threshold for pipeline integration
-- **JSON Output**: Machine-readable output for all modes
-
----
-
-## 🔗 Agent Composition & Chaining
+### 🔗 Agent Composition & Chaining
 
 Agents can delegate work to specialized sub-agents:
 
 ```yaml
 name: ml-pipeline-orchestrator
-description: Orchestrates end-to-end ML pipelines by delegating to specialists.
 sub_agents:
   - data-engineer
   - ml-engineer
@@ -354,33 +96,61 @@ sub_agents:
 delegation_pattern: sequential   # or parallel | conditional
 ```
 
-Workflows automatically emit delegation steps based on the pattern.
+Runtime resolution via CLI:
+
+```bash
+# Resolve and execute sub-agent delegation chain
+kdesk delegate ml-pipeline-orchestrator
+```
+
+Supports recursive delegation (up to depth 5), failure propagation in sequential mode, and first-match-wins in conditional mode.
 
 ---
 
-## 🛒 Skill Marketplace
+### 🛒 Skill Marketplace
 
-Publish, search, and install skills from any registry:
+Real local registry backed by `marketplace-registry.json`:
 
 ```bash
-# Publish a skill
-kdesk skill publish my-skill --version 1.2.0
+# Publish a skill from the catalog
+kdesk skill publish terraform-infrastructure
 
-# Search the marketplace
-kdesk skill search "database migration"
+# Search by keyword
+kdesk skill search "terraform"
 
-# Install a specific version
-kdesk skill install database-migration@2.1.0
+# Resolve a specific version (semver)
+kdesk skill install kubernetes-deployment@^2.0.0
 
-# List available skills
+# List all published skills
 kdesk skill list
 ```
 
+Supports semver constraints (`^`, `~`, `>=`, `<`), duplicate detection, and checksum validation.
+
 ---
 
-## 🧪 Agent Testing Framework
+### 🔢 Agent Versioning & Semver Resolution
 
-Write unit tests for agents using `AgentTestCase`:
+Resolve agents/skills with version constraints:
+
+```bash
+# Resolve best match for a semver range
+kdesk resolve-version terraform-infrastructure@^2.0.0
+
+# Exact version
+kdesk resolve-version my-agent@1.2.3
+
+# Any version (latest)
+kdesk resolve-version docker-deployment
+```
+
+Includes breaking-change detection on major version bumps.
+
+---
+
+### 🧪 Agent Testing Framework
+
+Write unit tests for agents without real tool execution:
 
 ```python
 from tests.test_agent_framework import AgentTestCase, MockToolExecutor
@@ -399,78 +169,293 @@ class TestMyAgent(AgentTestCase):
     def test_sub_agent_delegation(self):
         self.create_test_agent("orchestrator", sub_agents=["worker-a"])
         self.assert_sub_agents("orchestrator", ["worker-a"])
+
+    def test_mock_tool_execution(self):
+        executor = MockToolExecutor()
+        executor.set_response("git", {"success": True, "stdout": "abc123"})
+        result = executor.execute("git", ["commit"])
+        self.assertTrue(result["success"])
 ```
 
-Run with: `pytest tests/test_agent_framework.py -v`
+Run: `pytest tests/test_agent_framework.py -v`
 
 ---
 
-## 📋 Policy-as-Code
+### 📋 Policy-as-Code
 
 Enforce quality rules across the catalog:
 
 ```bash
-# Run built-in policy checks (12 rules)
-kdesk policy
-
-# Use a custom policy file
-kdesk policy --policy-file policies/custom-rules.yaml
-
-# JSON output for CI
-kdesk policy --format json
+kdesk policy                          # Run 12 built-in rules
+kdesk policy --format json            # JSON for CI
+kdesk policy --policy-file custom.yaml  # Custom rules
 ```
 
-Built-in rules include: description length, capability completeness, tool declarations,
-semantic versioning, sub-agent existence, and more.
+Built-in rules: description length, capability completeness, tool declarations, semantic versioning, sub-agent existence, skills-exist, delegation-pattern validity, and more.
 
 Custom policy format:
 
 ```yaml
 version: "1.0"
 rules:
-  - id: no-hardcoded-secrets
+  - id: no-secrets
     name: No Hardcoded Secrets
     severity: critical
     condition: "'password' in str(agent.capabilities).lower()"
     message: Potential secret detected
-    fix_hint: Use environment variables instead
 ```
 
 ---
 
-## 🕸 Dependency Graph Visualization
+### 🕸 Dependency Graph Visualization
 
-Generate an interactive HTML graph of the catalog:
+Generate an interactive HTML graph:
 
 ```bash
-# Full catalog (400 nodes)
 python scripts/generate-graph.py --output catalog-graph.html
-
-# Single category
-python scripts/generate-graph.py --category ml --output ml-graph.html
-
-# More nodes for large screens
-python scripts/generate-graph.py --max-nodes 800
+python scripts/generate-graph.py --category ml --max-nodes 800
 ```
 
-Features force-directed layout, search highlighting, tooltips, zoom/pan.
+Features D3.js force-directed layout, search highlighting, tooltips, zoom/pan.
+
+---
+
+### 📊 Anonymous Telemetry
+
+Opt-in usage tracking (local only, no network):
+
+```bash
+# View stats
+kdesk telemetry
+
+# Enable collection
+KD_TELEMETRY=1 kdesk verify
+```
+
+Tracks command name, duration, and success/fail. Never records arguments or content.
+
+---
+
+### 🏥 Kdesk Doctor
+
+Compatibility, diagnosis, repair, and validation system:
+
+```bash
+# Scan project
+kdesk doctor --mode scan --project-root ./my-project
+
+# Diagnose + fix
+kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project --fix
+
+# CI gate
+kdesk doctor --mode diagnose --platform claude_code --ci --threshold 90 --json
+```
+
+Features project scanning, compatibility scoring (0–100), automatic fixes with backups, secret redaction, and CI mode.
+
+---
+
+### 📖 Documentation Site
+
+```bash
+pip install mkdocs mkdocs-material
+mkdocs serve    # http://localhost:8000
+mkdocs build    # generates site/
+```
+
+---
+
+### 🧩 VS Code Extension
+
+Schema validation + autocomplete for `universal-agents/` YAML files:
+
+Copy `.vscode-kdesk/` into your `.vscode/extensions/kdesk-yaml/` directory. Provides:
+- JSON Schema validation against `schemas/universal-agent.schema.json`
+- Snippets for agent (`kdesk-agent`) and skill (`kdesk-skill`) templates
+
+---
+
+### ⚙️ GitHub Auto-Convert
+
+`.github/workflows/convert.yml` auto-regenerates the catalog whenever a PR touches `universal-agents/**/*.yaml`. Validates schema → regenerates outputs → auto-commits.
+
+---
+
+## 🎭 The Catalog Roster
+
+<details>
+<summary><strong>💻 Engineering Division</strong></summary>
+
+| Agent | Specialty | When to Use |
+|-------|-----------|-------------|
+| [ML Engineer](universal-agents/ml/agent/ml-engineer.yaml) | ML pipelines, training, deployment | End-to-end ML pipelines, MLOps |
+| [API Architect](universal-agents/api/agent/api-architect.yaml) | REST/GraphQL design | API design, contract testing |
+| [SRE Engineer](universal-agents/sre/agent/sre-engineer.yaml) | Reliability, SLOs | SLOs, error budgets, chaos engineering |
+| [DevOps Engineer](universal-agents/devops/agent/devops-engineer.yaml) | CI/CD, infrastructure | Pipelines, IaC |
+| [Kubernetes Specialist](universal-agents/devops/deployment/kubernetes-deployment.yaml) | K8s deployments | K8s manifests, Helm charts |
+
+</details>
+
+<details>
+<summary><strong>🔒 Security Division</strong></summary>
+
+| Agent | Specialty | When to Use |
+|-------|-----------|-------------|
+| [API Security Engineer](universal-agents/security/agent/api-security-engineer.yaml) | API auth, rate limiting | Auth, threat modeling |
+| [Security Scanner](universal-agents/security/agent/security-trivy-agent.yaml) | Container scanning | Trivy, Grype, Syft |
+| [Compliance Scanner](universal-agents/security/agent/compliance-scanner.yaml) | SOC2, PCI, GDPR | Audit prep, evidence |
+
+</details>
+
+<details>
+<summary><strong>🎨 Design Division</strong></summary>
+
+| Agent | Specialty | When to Use |
+|-------|-----------|-------------|
+| [UI Designer](universal-agents/design/agent/design-ui-designer.yaml) | Visual design | Interface creation |
+| [UX Researcher](universal-agents/design/agent/design-ux-researcher.yaml) | User testing | Usability testing |
+| [Design Systems Engineer](universal-agents/design/agent/design-design-systems-engineer.yaml) | Design tokens | Component libraries, Storybook |
+
+</details>
+
+<details>
+<summary><strong>💰 Business Divisions</strong></summary>
+
+Paid Media (Google/Meta Ads), Sales (outbound, MEDDPICC), Marketing (growth, content, social), Product (PM, analytics), Finance (fintech, trading), Support (customer success), GIS, Healthcare (HIPAA, FHIR), Academic, Game Development (Unity, Unreal, Godot).
+
+</details>
+
+<details>
+<summary><strong>🛠 Skill Categories</strong></summary>
+
+| Category | Examples |
+|----------|----------|
+| Tool Workflows | Terraform, Docker, Kubernetes, CI/CD Pipeline |
+| Security & Compliance | Trivy Scanner, Semgrep, SOC2 Compliance |
+| Patterns | Circuit Breaker, Sidecar, Adapter |
+| ML Operations | Model Training, Inference Serving, Monitoring |
+| Data Engineering | Streaming Pipelines, Data Virtualization |
+
+</details>
+
+---
+
+## 🏗 Project Structure
+
+```
+Kdesk-Catalog/
+├── universal-agents/          # ← EDIT THESE (source of truth)
+│   ├── ml/                    # 501+ agents, 543+ skills
+│   ├── api/                   # 14 agents, 494 skills
+│   ├── devops/                # 38 agents, 142 skills
+│   ├── security/              # 31 agents, 66 skills
+│   ├── design/                # Design agents & skills
+│   ├── sales/                 # Sales agents & skills
+│   ├── healthcare/            # Healthcare agents & skills
+│   └── ... (45 categories)
+├── kdesk/                     # Python package (CLI engine)
+│   ├── cli.py                 # All commands
+│   ├── marketplace.py         # Skill marketplace backend
+│   ├── delegation.py          # Sub-agent runtime resolution
+│   ├── versioning.py          # Semver resolution
+│   ├── policy.py              # Policy-as-code engine
+│   ├── telemetry.py           # Anonymous usage tracking
+│   └── ...
+├── scripts/                   # Automation (converter, validators)
+│   ├── universal-converter.py # Multi-platform converter
+│   ├── generate-graph.py      # Dependency graph visualization
+│   └── generate-reports.py    # Report generator
+├── schemas/                   # JSON schema for definitions
+├── tests/                     # Test suite
+│   ├── test_agent_framework.py # Agent testing framework
+│   └── ...
+├── docs/                      # MkDocs documentation
+├── .vscode-kdesk/             # VS Code extension config
+├── .github/workflows/         # CI + auto-conversion
+├── marketplaces/              # Per-platform marketplace manifests
+├── reports/                   # Status reports
+├── platform-agents/           # Auto-generated output
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+└── tools.json                 # Platform manifest (45 tools)
+```
+
+---
+
+## 🔧 Key Commands
+
+```bash
+# Validate schema
+python scripts/schema-check.py
+
+# Full verification
+python -m kdesk.cli verify --fast
+
+# Policy checks
+python -m kdesk.cli policy
+
+# Convert to a platform
+python scripts/universal-converter.py --platforms windsurf --quiet
+
+# Generate dependency graph
+python scripts/generate-graph.py --output graph.html
+
+# Run tests
+pytest tests/test_agent_framework.py -v
+
+# Docs site
+mkdocs serve
+
+# Marketplace
+python -m kdesk.cli skill search "terraform"
+
+# Sub-agent delegation
+python -m kdesk.cli delegate ml-pipeline-orchestrator
+
+# Version resolution
+python -m kdesk.cli resolve-version my-skill@^2.0
+
+# Telemetry stats
+python -m kdesk.cli telemetry
+```
 
 ---
 
 ## ✅ Verification Status
 
-- ✅ **Schema validation** — 0 violations across 3,093 files
-- ✅ **Policy engine** — 12 rules, 0 violations
-- ✅ **JSON regeneration** — deterministic with skill wiring
-- ✅ **All CI checks** — schema, provenance, security, duplicates, license, wiring, quality, graph
-- ✅ **Unit tests** — full pytest suite passes
+| Check | Status |
+|-------|--------|
+| Schema validation | ✅ 0 violations / 3,093 files |
+| Policy engine | ✅ 12/12 rules pass |
+| Catalog consistency | ✅ 313 divisions |
+| Wiring integrity | ✅ 1,476 nodes, no cycles |
+| Security scan | ✅ 0 blocking secrets |
+| Duplicate scan | ✅ 0 unresolved |
+| License gate | ✅ All resolved |
+| Quality check | ✅ 0 issues |
+| Unit tests | ✅ All passing |
+| CI (GitHub Actions) | ✅ Schema + Tests + Verify + CI green |
+
+---
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. PRs welcome!
+
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ---
 
 ## 📜 License
 
-MIT © Kdesk
+MIT © [Kdesk](https://github.com/OpKnock)
 
 ---
 
-> **Built with ❤️ for AI developers everywhere** — Transform your workflow with specialized AI experts at your fingertips.
+<div align="center">
+
+**[⭐ Star this repo](https://github.com/OpKnock/Kdesk-Catalog)** if you find it useful!
+
+Built with ❤️ for AI developers everywhere.
+
+</div>

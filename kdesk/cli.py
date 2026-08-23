@@ -32,6 +32,7 @@ from kdesk.workflow import WorkflowEngine, WorkflowError
 from kdesk.delegation import SubAgentResolver
 from kdesk.versioning import VersionResolver, build_available_versions
 from kdesk.telemetry import summary as telemetry_summary
+from kdesk.marketplace import Marketplace
 
 
 def _out(data: Any, fmt: str) -> None:
@@ -520,7 +521,6 @@ def _cmd_policy(args) -> int:
     result = engine.evaluate(catalog)
     
     if args.format == "json":
-        import json
         print(json.dumps({
             "violations": result["violations"],
             "passed": result["passed"],
@@ -703,7 +703,6 @@ def _cmd_wiring(args) -> int:
 
 
 def _cmd_skill_publish(args) -> int:
-    from kdesk.marketplace import Marketplace
     root = Path(args.root) if args.root else default_repo_root()
     catalog = Catalog.from_repo(root)
     skill = catalog.get_skill(args.skill_id)
@@ -721,7 +720,6 @@ def _cmd_skill_publish(args) -> int:
 
 
 def _cmd_skill_install(args) -> int:
-    from kdesk.marketplace import Marketplace
     root = Path(args.root) if args.root else default_repo_root()
     mp = Marketplace(root)
     entry = mp.resolve(args.skill_spec)
@@ -734,7 +732,6 @@ def _cmd_skill_install(args) -> int:
 
 
 def _cmd_skill_search(args) -> int:
-    from kdesk.marketplace import Marketplace
     root = Path(args.root) if args.root else default_repo_root()
     mp = Marketplace(root)
     results = mp.search(args.query, limit=args.limit)
@@ -747,7 +744,6 @@ def _cmd_skill_search(args) -> int:
 
 
 def _cmd_skill_list(args) -> int:
-    from kdesk.marketplace import Marketplace
     root = Path(args.root) if args.root else default_repo_root()
     mp = Marketplace(root)
     entries = mp.list_all()

@@ -18,11 +18,144 @@
 
 ## 🚀 What Is This?
 
-**Kdesk-Catalog** is a hand-curated registry of AI agents and skills. Each definition is written once in YAML and automatically converts to work across **45+ platforms** — including Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex CLI, Gemini CLI, Zed, Cline, Goose, and more.
+**Kdesk-Catalog** is an all-in-one platform for building, sharing, and deploying AI agents and skills across every major AI coding tool.
 
-> **Source of truth:** `universal-agents/` — every agent and skill is a single YAML file with real commands, official documentation links, and expert instructions.
+Every AI coding assistant has its **own proprietary format** — Claude Code wants `.md` files, Cursor wants `.mdc`, Copilot wants `.instructions.md`. If you build an agent for one tool, it doesn't work in another. Kdesk eliminates that: **write once in YAML → deploy everywhere.**
 
-**Output:** `platform-agents/` — auto-generated platform-specific formats.
+---
+
+### 🏗️ The Three Core Components
+
+#### 1. Kdesk Catalog — The Registry
+
+A library of **3,093 production-ready definitions** (1,858 agents + 1,235 skills) organized into 45 categories — ML, DevOps, Security, Design, Sales, Healthcare, and more. Each definition is a single YAML file containing:
+
+- Who the agent is (name, description, personality)
+- What it can do (capabilities with real CLI commands like `kubectl apply` or `terraform plan`)
+- What tools it needs (kubectl, terraform, docker, python...)
+- How to use it (instructions, examples, parameters)
+
+You can use the existing catalog as-is, or add your own agents to it.
+
+#### 2. Kdesk Converter — The Multi-Platform Engine
+
+The converter takes any YAML definition and generates the exact native format for each platform. One YAML file becomes:
+
+- `.claude/agents/ml-engineer.md` for Claude Code
+- `.cursor/rules/ml-engineer.mdc` for Cursor  
+- `.github/instructions/ml-engineer.instructions.md` for Copilot
+- `.windsurf/rules/ml-engineer.mdc` for Windsurf
+- ...and 41 more platforms automatically
+
+```bash
+python scripts/universal-converter.py --platforms claude_code,cursor,windsurf --quiet
+```
+
+No manual rewriting, no format research — just run the converter and copy the output.
+
+#### 3. Kdesk Doctor — Diagnostics & Repair
+
+A compatibility scanner that analyzes **any project directory** for AI configuration issues:
+
+```bash
+kdesk doctor --mode diagnose --platform claude_code --project-root ./my-project
+```
+
+It discovers what AI tools are configured, detects broken/incompatible agent files, finds missing fields and invalid formats, scans for leaked secrets, produces a health score (0–100), and applies automatic fixes with backups.
+
+---
+
+### ⚡ Everything Else Built On Top
+
+| Feature | What It Does | Command |
+|---------|-------------|---------|
+| **Agent Composition** | Agents delegate to sub-agents (sequential/parallel/conditional) | `kdesk delegate ml-pipeline-orchestrator` |
+| **Skill Marketplace** | Publish/search/install skills with semver versioning | `kdesk skill search "terraform"` |
+| **Policy-as-Code** | 12 quality rules enforced across the catalog + custom rules | `kdesk policy` |
+| **Agent Versioning** | Resolve agents with semver constraints (`@^2.0`) + breaking-change detection | `kdesk resolve-version my-skill@^2.0` |
+| **Testing Framework** | Unit test agents without real tool execution (mock executors, assertions) | `pytest tests/test_agent_framework.py` |
+| **Dependency Graph** | Interactive D3.js visualization of catalog relationships | `python scripts/generate-graph.py` |
+| **Telemetry** | Anonymous opt-in usage stats (local only) | `kdesk telemetry` |
+| **VS Code Extension** | YAML schema validation + autocomplete snippets for editing definitions | Copy `.vscode-kdesk/` to extensions |
+| **Docs Site** | MkDocs Material site with search and navigation | `mkdocs serve` |
+| **GitHub Auto-Convert** | CI regenerates all platform outputs when YAML changes on PRs | Automatic |
+
+---
+
+### 🔄 How It All Fits Together
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    YOU (Developer)                       │
+│  Write agent/skill YAML in universal-agents/            │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│              Kdesk Converter                             │
+│  Validates schema → checks policy rules → converts      │
+│  to native formats for 45+ platforms                     │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+         ┌─────────────┼─────────────┐
+         ▼             ▼             ▼
+   Claude Code    Cursor       Windsurf    ...40 more
+   (.claude/)   (.cursor/)  (.windsurf/)
+         │             │             │
+         └─────────────┼─────────────┘
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│              Kdesk Doctor                                │
+│  Scans installed configs → diagnoses issues →           │
+│  scores health (0-100) → applies fixes with backups      │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 📦 Quick Example
+
+Write this YAML once:
+
+```yaml
+name: db-migration
+display_name: Database Migration Specialist
+category: database
+description: >
+  Plans and executes zero-downtime database migrations with rollback
+  strategies, schema validation, and cutover planning.
+version: 1.0.0
+capabilities:
+  - name: migrate
+    description: Run migration
+    commands:
+      - flyway migrate -configFile=./flyway.conf
+    examples:
+      - flyway migrate -configFile=./flyway.conf
+    parameters:
+      - name: config_path
+        type: string
+        description: Path to Flyway config
+instructions: >
+  Analyze current schema, identify breaking changes, propose a phased
+  migration plan with rollback steps, validate data integrity after.
+platforms:
+  claude_code:
+    tools: [Bash, Read]
+```
+
+Then:
+
+```bash
+# Generate for Claude Code
+python scripts/universal-converter.py --platforms claude_code --quiet
+
+# Install it
+cp platform-agents/claude_code/.claude/agents/db-migration.md ~/.claude/agents/
+
+# Done! Also works for Cursor, Copilot, Windsurf, etc.
+cp platform-agents/cursor/db-migration.mdc .cursor/rules/
+```
 
 ---
 

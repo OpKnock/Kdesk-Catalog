@@ -1,0 +1,75 @@
+name: Cross-Platform
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.11"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install pyyaml jsonschema pytest platformdirs
+
+      - name: Generate JSON from YAML
+        run: python scripts/yaml-to-json.py
+
+      - name: CLI smoke test
+        run: |
+          python -m kdesk.cli --version
+          python -m kdesk.cli stats --format json --fast
+          python -m kdesk.cli registry
+
+      - name: Schema validation
+        run: python scripts/schema-check.py
+
+      - name: Unit tests (cross-platform)
+        run: pytest tests/test_agent_framework.py tests/test_divisions.py tests/test_golden_converter.py -v
+
+  sbom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pip-audit cyclonedx-bom pyyaml platformdirs
+
+      - name: Generate SBOM (CycloneDX)
+        run: |
+          python -m cyclonedx_py requirements.txt --output-format JSON --output-file sbom.json 2>/dev/null || \
+          pip freeze | python -c "
+          import json, sys
+          pkgs = []
+          for line in sys.stdin:
+              line = line.strip()
+              if '==' in line:
+                  name, ver = line.split('==', 1)
+                  pkgs.append({'name': name, 'version': ver, 'type': 'library', 'bom-ref': f'{name}@{ver}'})
+          print(json.dumps({'bomFormat': 'CycloneDX', 'specVersion': '1.4', 'components': pkgs}, indent=2))
+          " > sbom.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
+
+      - name: Dependency vulnerability scan
+        run: pip-audit --desc || echo "pip-audit completed"

@@ -15,6 +15,62 @@
       "default": "1.0",
       "description": "Schema version for forward compatibility."
     },
+    "permissions": {
+      "type": "object",
+      "description": "Explicit permission declarations for runtime enforcement.",
+      "properties": {
+        "filesystem": {
+          "type": "object",
+          "properties": {
+            "read": { "type": "boolean", "default": true },
+            "write": { "type": "boolean", "default": false },
+            "delete": { "type": "boolean", "default": false }
+          }
+        },
+        "network": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "domains": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "process": {
+          "type": "object",
+          "properties": {
+            "execute": { "type": "boolean", "default": true },
+            "shell": { "type": "boolean", "default": false }
+          }
+        },
+        "git": {
+          "type": "object",
+          "properties": {
+            "read": { "type": "boolean", "default": true },
+            "write": { "type": "boolean", "default": false }
+          }
+        },
+        "secrets": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this agent needs access to secrets/env vars."
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "description": "Declared risk level with explainable reasons.",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["safe", "low", "moderate", "high", "critical"],
+          "default": "safe"
+        },
+        "reasons": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Why this risk level was assigned."
+        }
+      }
+    },
     "name": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",

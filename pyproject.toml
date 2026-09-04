@@ -36,6 +36,10 @@ docs = [
     "mkdocs>=1.5",
     "mkdocs-material>=9.0",
 ]
+web = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
 
 [project.scripts]
 kdesk = "kdesk.cli:main"
@@ -46,7 +50,10 @@ Repository = "https://github.com/OpKnock/Kdesk-Catalog"
 Issues = "https://github.com/OpKnock/Kdesk-Catalog/issues"
 
 [tool.setuptools]
-packages = ["kdesk", "kdesk.adapters", "kdesk.cli_commands", "kdesk.converters"]
+packages = ["kdesk", "kdesk.adapters", "kdesk.cli_commands", "kdesk.converters", "kdesk.web"]
+
+[tool.setuptools.package-data]
+kdesk = ["web/static/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

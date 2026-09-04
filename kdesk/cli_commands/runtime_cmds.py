@@ -242,3 +242,15 @@ def _cmd_telemetry(args) -> int:
     stats = telemetry_summary(root)
     print(json.dumps(stats, indent=2))
     return 0
+
+
+def _cmd_serve(args) -> int:
+    try:
+        from kdesk.web.app import run as run_server
+    except ImportError:
+        print("The dashboard needs FastAPI: pip install -e \".[web]\"",
+              file=sys.stderr)
+        return 1
+    root = Path(args.root) if args.root else default_repo_root()
+    run_server(root, host=args.host, port=args.port)
+    return 0

@@ -1,0 +1,96 @@
+{
+  "name": "kdesk-catalog",
+  "displayName": "Kdesk Catalog",
+  "description": "Browse 3,093 AI agents & skills, run Doctor, convert to 45 platforms — from VS Code.",
+  "version": "1.1.0",
+  "publisher": "kdesk",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpKnock/Kdesk-Catalog.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other", "Snippets"],
+  "activationEvents": [
+    "onCommand:kdesk.search",
+    "onCommand:kdesk.insert",
+    "onCommand:kdesk.doctor",
+    "onCommand:kdesk.stats",
+    "onCommand:kdesk.convert",
+    "onCommand:kdesk.dashboard",
+    "onView:kdesk-explorer"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Kdesk",
+      "properties": {
+        "kdesk.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Python executable used to run the Kdesk CLI."
+        },
+        "kdesk.repoRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the Kdesk-Catalog repository. Defaults to the open workspace folder."
+        },
+        "kdesk.dashboardPort": {
+          "type": "number",
+          "default": 8000,
+          "description": "Port of the local Kdesk dashboard (kdesk serve)."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "kdesk.search",
+        "title": "Kdesk: Search Agents & Skills"
+      },
+      {
+        "command": "kdesk.insert",
+        "title": "Kdesk: Insert Agent Reference at Cursor"
+      },
+      {
+        "command": "kdesk.doctor",
+        "title": "Kdesk: Diagnose This Project"
+      },
+      {
+        "command": "kdesk.stats",
+        "title": "Kdesk: Show Catalog Stats"
+      },
+      {
+        "command": "kdesk.convert",
+        "title": "Kdesk: Convert Catalog to Platform…"
+      },
+      {
+        "command": "kdesk.dashboard",
+        "title": "Kdesk: Open Dashboard"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "kdesk",
+          "title": "Kdesk",
+          "icon": "media/kdesk.svg"
+        }
+      ]
+    },
+    "views": {
+      "kdesk": [
+        {
+          "id": "kdesk-explorer",
+          "name": "Catalog",
+          "icon": "media/kdesk.svg",
+          "contextualTitle": "Kdesk Catalog"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "check": "node --check extension.js"
+  }
+}

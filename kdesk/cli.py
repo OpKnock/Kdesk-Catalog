@@ -235,6 +235,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
+    # Windows consoles default to cp1252, which crashes on the box-drawing
+    # characters used in doctor/fix reports. Force UTF-8 with replacement.
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            enc = getattr(_stream, "encoding", "") or ""
+            if enc.lower().replace("-", "") != "utf8":
+                _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
     args = build_parser().parse_args(argv)
     handlers = {
         "stats": _cmd_stats,

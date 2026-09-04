@@ -39,11 +39,12 @@ class Doctor:
         adapters: AdapterRegistry,
         base: Optional[Path] = None,
         registry_root: Optional[Path] = None,
+        catalog: Optional[Catalog] = None,
     ):
         self.adapters = adapters
         self.base = Path(base) if base else Path.cwd()
         self.registry_root = Path(registry_root).resolve() if registry_root else default_repo_root()
-        self.catalog = Catalog.from_repo(self.registry_root)
+        self.catalog = catalog if catalog is not None else Catalog.from_repo(self.registry_root)
         self.scanner = ProjectScanner(self.base, self.registry_root)
 
     # ------------------------------------------------------------------------

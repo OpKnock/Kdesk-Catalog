@@ -82,7 +82,8 @@ def doctor(req: DoctorRequest) -> JSONResponse:
     state = _state()
     registry = AdapterRegistry(state.root)
     base = Path(req.project_root).resolve() if req.project_root else Path.cwd()
-    doc = Doctor(registry, base=base, registry_root=state.root)
+    doc = Doctor(registry, base=base, registry_root=state.root,
+                 catalog=state.catalog)
 
     if req.mode == "check":
         if req.platform:
@@ -116,7 +117,7 @@ class EngineRequest(BaseModel):
 def resolve(req: EngineRequest) -> JSONResponse:
     from kdesk.engine import Engine
 
-    engine = Engine(_state().root)
+    engine = Engine(_state().root, catalog=_state().catalog)
     return _json(engine.resolve(req.request, top=req.top).to_dict())
 
 
@@ -129,7 +130,7 @@ class WhyRequest(BaseModel):
 def why(req: WhyRequest) -> JSONResponse:
     from kdesk.engine import Engine
 
-    data = Engine(_state().root).why(req.request, req.target)
+    data = Engine(_state().root, catalog=_state().catalog).why(req.request, req.target)
     if data is None:
         return JSONResponse({"error": f"unknown target: {req.target}"},
                             status_code=404)
@@ -148,7 +149,7 @@ class RunRequest(BaseModel):
 def plan(req: RunRequest) -> JSONResponse:
     from kdesk.engine import Engine
 
-    return _json(Engine(_state().root).plan(req.request).to_dict())
+    return _json(Engine(_state().root, catalog=_state().catalog).plan(req.request).to_dict())
 
 
 @router.post("/run")
@@ -156,7 +157,7 @@ def run(req: RunRequest) -> JSONResponse:
     from kdesk.engine import Engine
 
     base = Path(req.base) if req.base else Path.cwd()
-    result = Engine(_state().root).run(
+    result = Engine(_state().root, catalog=_state().catalog).run(
         req.request, base=base, auto_approve=req.auto_approve,
         timeout_s=req.timeout, dry_run=req.dry_run)
     return _json(result.to_dict())
@@ -166,17 +167,55 @@ def run(req: RunRequest) -> JSONResponse:
 def history(limit: int = 20) -> JSONResponse:
     from kdesk.engine import Engine
 
-    return _json(Engine(_state().root).history(limit=limit))
+    return _json(Engine(_state().root, catalog=_state().catalog).history(limit=limit))
 
 
 @router.get("/inspect/{execution_id}")
 def inspect_execution(execution_id: str) -> JSONResponse:
     from kdesk.engine import Engine
 
-    data = Engine(_state().root).inspect(execution_id)
+    data = Engine(_state().root, catalog=_state().catalog).inspect(execution_id)
     if data is None:
         return JSONResponse({"error": "unknown execution"}, status_code=404)
     return _json(data)
+
+
+class ApproveRequest(BaseModel):
+    execution_id: str
+    step: int
+    approve: bool = True
+    note: str = ""
+    by: str = "dashboard"
+
+
+@router.post("/approve")
+def approve(req: ApproveRequest) -> JSONResponse:
+    from kdesk.engine import Engine
+
+    updated = Engine(_state().root, catalog=_state().catalog).approve(
+        req.execution_id, req.step, req.approve,
+        note=req.note, decided_by=req.by)
+    if updated is None:
+        return JSONResponse({"error": "unknown execution"}, status_code=404)
+    return _json(updated)
+
+
+class ResumeRequest(BaseModel):
+    execution_id: str
+    base: Optional[str] = None
+    auto_approve: bool = False
+    timeout: float = 120.0
+
+
+@router.post("/resume")
+def resume(req: ResumeRequest) -> JSONResponse:
+    from kdesk.engine import Engine
+
+    base = Path(req.base) if req.base else Path.cwd()
+    result = Engine(_state().root, catalog=_state().catalog).resume(
+        req.execution_id, base=base,
+        timeout_s=req.timeout, auto_approve=req.auto_approve)
+    return _json(result.to_dict())
 
 
 # --------------------------------------------------------------- marketplace
@@ -218,6 +257,27 @@ def skills_install(spec: str) -> JSONResponse:
     return _json({"status": "resolved", "name": entry.name,
                   "version": entry.version, "checksum": entry.checksum,
                   "dependencies": entry.dependencies})
+
+
+class PublishRequest(BaseModel):
+    skill_id: str
+    force: bool = False
+
+
+@router.post("/skills/publish")
+def skills_publish(req: PublishRequest) -> JSONResponse:
+    from kdesk.marketplace import Marketplace
+
+    root = _state().root
+    skill = _state().catalog.get_skill(req.skill_id)
+    if skill is None:
+        return JSONResponse({"error": f"unknown skill: {req.skill_id}"},
+                            status_code=404)
+    try:
+        result = Marketplace(root).publish(skill.source_path, force=req.force)
+    except ValueError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    return _json(result)
 
 
 # -------------------------------------------------------- delegate / version
@@ -291,3 +351,75 @@ def drift(platform: Optional[str] = None) -> JSONResponse:
     except InstallError as exc:
         return JSONResponse({"error": str(exc)}, status_code=400)
     return _json(report)
+
+
+@router.post("/uninstall")
+def uninstall(req: InstallRequest) -> JSONResponse:
+    from kdesk.adapters import AdapterRegistry
+    from kdesk.installer import Installer, InstallError
+
+    installer = Installer(AdapterRegistry(_state().root), dry_run=req.dry_run)
+    try:
+        result = installer.uninstall(
+            req.platform, base=Path(req.base) if req.base else None)
+    except InstallError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    return _json(result)
+
+
+@router.post("/rollback")
+def rollback(req: InstallRequest) -> JSONResponse:
+    from kdesk.adapters import AdapterRegistry
+    from kdesk.installer import Installer, InstallError
+
+    installer = Installer(AdapterRegistry(_state().root), dry_run=req.dry_run)
+    try:
+        result = installer.rollback(
+            req.platform, base=Path(req.base) if req.base else None)
+    except InstallError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    return _json(result)
+
+
+@router.get("/install-status")
+def install_status() -> JSONResponse:
+    from kdesk.adapters import AdapterRegistry
+    from kdesk.installer import Installer
+
+    return _json(Installer(AdapterRegistry(_state().root)).status())
+
+
+# ----------------------------------------------------------------- workflows
+
+class WorkflowAction(BaseModel):
+    workflow_id: str
+    execute: bool = False
+
+
+@router.post("/workflows/validate")
+def workflow_validate(req: WorkflowAction) -> JSONResponse:
+    from kdesk.workflow import WorkflowEngine, WorkflowError
+
+    state = _state()
+    engine = WorkflowEngine(state.catalog, workflows_dir=state.root / "workflows")
+    try:
+        wf = engine.load(req.workflow_id)
+    except WorkflowError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=404)
+    problems = engine.validate(wf)
+    return _json({"id": wf.id, "steps": len(wf.steps),
+                  "problems": problems, "valid": not problems})
+
+
+@router.post("/workflows/run")
+def workflow_run(req: WorkflowAction) -> JSONResponse:
+    from kdesk.workflow import WorkflowEngine, WorkflowError
+
+    state = _state()
+    engine = WorkflowEngine(state.catalog, workflows_dir=state.root / "workflows")
+    try:
+        wf = engine.load(req.workflow_id)
+        result = engine.run(wf, dry_run=not req.execute)
+    except WorkflowError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    return _json(result)

@@ -101,6 +101,7 @@ const PAGES = [
   ["marketplace", "▣", "Marketplace"],
   ["engine", "▶", "Engine"],
   ["install", "⬇", "Install"],
+  ["tools", "⚙", "Tools"],
 ];
 
 function paintNav(active) {
@@ -135,9 +136,10 @@ window.addEventListener("hashchange", route);
 
 /* ---------------- dashboard ---------------- */
 RENDER.dashboard = async () => {
-  const [stats, verify] = await Promise.all([
+  const [stats, verify, tele] = await Promise.all([
     api("/api/stats?fast=true"),
     api("/api/verify?fast=true").catch(() => null),
+    api("/api/telemetry").catch(() => null),
   ]);
   const cards = [
     [stats.definitions_total ?? stats.total_files ?? "—", "definitions"],
@@ -147,12 +149,12 @@ RENDER.dashboard = async () => {
     [stats.workflows ?? "—", "workflows"],
     [stats.platform_output_files ?? "—", "generated files"],
   ];
-  const v = verify
-    ? pillFor(verify.status) + ` <span class="muted">${verify.checks ? "" : ""}</span>`
-    : `<span class="pill warn">UNKNOWN</span>`;
+  const v = verify ? pillFor(verify.status) : `<span class="pill warn">UNKNOWN</span>`;
+  const teleLine = tele && tele.total
+    ? `<span class="muted"> · ${tele.total} tracked runs</span>` : "";
   return `
     <h1>Dashboard</h1>
-    <p class="lede">Catalog health at a glance &nbsp;${v}</p>
+    <p class="lede">Catalog health at a glance &nbsp;${v}${teleLine}</p>
     <div class="grid">${cards.map(([n, l]) =>
       `<div class="card"><div class="stat-num">${n}</div><div class="stat-label">${l}</div></div>`).join("")}
     </div>
@@ -163,8 +165,21 @@ RENDER.dashboard = async () => {
         <button class="ghost" onclick="location.hash='#/quality'">Run quality gates</button>
         <button class="ghost" onclick="location.hash='#/doctor'">Diagnose a project</button>
         <button class="ghost" onclick="location.hash='#/converter'">Convert to a platform</button>
+        <button class="ghost" id="refresh-btn">Refresh catalog</button>
       </div>
     </div>`;
+};
+
+RENDER["dashboard$mount"] = () => {
+  const b = $("#refresh-btn");
+  if (b) b.onclick = async () => {
+    setBusy(b, true, "Refreshing…");
+    try {
+      await api("/api/refresh", { method: "POST" });
+      toast("Catalog reloaded");
+      route();
+    } catch (e) { toast(e.message); } finally { setBusy(b, false); }
+  };
 };
 
 /* ---------------- catalog ---------------- */
@@ -208,13 +223,21 @@ RENDER["catalog$mount"] = () => {
 async function showDefinition(h) {
   openModal(`<p class="muted">Loading…</p>`);
   try {
-    const d = await api(`/api/definition/${h.type}/${encodeURIComponent(h.name)}`);
+    const [d, links] = await Promise.all([
+      api(`/api/definition/${h.type}/${encodeURIComponent(h.name)}`),
+      h.type === "agent"
+        ? api(`/api/graph?agent=${encodeURIComponent(h.name)}`).catch(() => [])
+        : Promise.resolve([]),
+    ]);
     const caps = (d.capabilities || []).map((c) =>
       `<tr><td class="mono">${esc(c.name || "")}</td><td>${esc(c.description || "")}</td></tr>`).join("");
+    const linkChips = (links || []).slice(0, 24).map((l) =>
+      `<span class="pill info" style="margin:0 6px 6px 0">${esc(l.skill || l)}</span>`).join("");
     openModal(`
       <h2 class="mono">${esc(d.name || h.name)}</h2>
       <p class="muted">${esc(d.display_name || "")} · v${esc(d.version || "?")} · ${esc(d.category || "")}</p>
       <p style="margin:12px 0">${esc(d.description || "")}</p>
+      ${linkChips ? `<div style="margin-bottom:12px"><div class="muted" style="font-size:12px;margin-bottom:6px">LINKED SKILLS</div>${linkChips}</div>` : ""}
       ${caps ? `<table><thead><tr><th>Capability</th><th>Description</th></tr></thead><tbody>${caps}</tbody></table>` : ""}
       <div class="row" style="margin-top:16px">
         <button class="ghost" onclick="closeModal()">Close</button>
@@ -370,6 +393,11 @@ RENDER.marketplace = async () => {
     <input type="text" id="sq" placeholder="Search skills…"><button id="sgo">Search</button>
     <input type="text" id="sins" placeholder="name@version to resolve" style="max-width:240px"><button id="sib" class="ghost">Resolve</button>
   </div></div>
+  <div class="panel"><h3>Publish a skill</h3><div class="row">
+    <input type="text" id="spub-id" placeholder="skill id from the catalog">
+    <label class="muted" style="font-size:13px"><input type="checkbox" id="spub-force"> overwrite existing version</label>
+    <button id="spub" class="ghost">Publish</button>
+  </div></div>
   <div class="panel"><table><thead><tr><th>Skill</th><th>Category</th><th>Description</th></tr></thead>
   <tbody id="srows">${rows}</tbody></table></div>`;
 };
@@ -391,37 +419,114 @@ RENDER["marketplace$mount"] = () => {
       toast(`Resolved ${d.name}@${d.version}`);
     } catch (e) { toast(e.message); }
   };
+  $("#spub").onclick = async (e) => {
+    const id = $("#spub-id").value.trim();
+    if (!id) { toast("Type a skill id first"); return; }
+    const b = e.target; setBusy(b, true, "Publishing…");
+    try {
+      const d = await api("/api/skills/publish", { method: "POST",
+        body: JSON.stringify({ skill_id: id, force: $("#spub-force").checked }) });
+      toast(`Published ${d.name || id}`);
+      route();
+    } catch (err) { toast(err.message); } finally { setBusy(b, false); }
+  };
 };
 
 /* ---------------- engine ---------------- */
 RENDER.engine = async () => {
   const h = await api("/api/history?limit=8").catch(() => []);
-  const rows = (h || []).map((x) =>
-    `<tr><td class="mono">${esc((x.execution_id || "").slice(0, 12))}</td>
+  const rows = (h || []).map((x, i) =>
+    `<tr class="result-row" data-id="${esc(x.execution_id || "")}">
+     <td class="mono">${esc((x.execution_id || "").slice(0, 12))}</td>
      <td>${esc(x.request || "")}</td><td>${pillFor(x.status)}</td></tr>`).join("");
   return `
   <h1>Engine</h1>
-  <p class="lede">Resolve intent, plan, and dry-run executions.</p>
+  <p class="lede">Resolve intent, plan, and run executions. Click a row to inspect.</p>
   <div class="panel"><h3>Ask</h3>
     <div class="row"><input type="text" id="eq" placeholder="e.g. lint my terraform code">
       <button id="eb1">Resolve</button><button id="eb2" class="ghost">Plan</button>
       <button id="eb3" class="ghost">Dry-run</button></div>
+    <div class="row" style="margin-top:10px">
+      <label class="muted" style="font-size:13px"><input type="checkbox" id="eexec"> execute for real (not a dry-run)</label>
+      <label class="muted" style="font-size:13px"><input type="checkbox" id="eauto"> auto-approve steps</label>
+    </div>
   </div>
-  <div class="panel" id="eres" style="display:none"><h3>Result</h3><pre class="out" id="epre"></pre></div>
+  <div class="panel" id="eres" style="display:none"><h3>Result</h3><pre class="out" id="epre"></pre>
+    <div class="row" id="eactions" style="margin-top:12px"></div></div>
   <div class="panel"><h3>Recent executions</h3>
-    <table><thead><tr><th>ID</th><th>Request</th><th>Status</th></tr></thead><tbody>${rows || `<tr><td colspan="3" class="muted">None yet.</td></tr>`}</tbody></table></div>`;
+    <table><thead><tr><th>ID</th><th>Request</th><th>Status</th></tr></thead>
+    <tbody id="ehist">${rows || `<tr><td colspan="3" class="muted">None yet.</td></tr>`}</tbody></table></div>`;
 };
 
+async function inspectExecution(id) {
+  openModal(`<p class="muted">Loading execution…</p>`);
+  try {
+    const d = await api(`/api/inspect/${encodeURIComponent(id)}`);
+    const ex = d.execution || {};
+    const step = ex.approval_step;
+    const waiting = ex.status === "WAITING_APPROVAL" || ex.status === "PENDING";
+    openModal(`<h2 class="mono">${esc(id.slice(0, 12))}…</h2>
+      <p style="margin:6px 0 12px">${pillFor(ex.status)} <span class="muted">${esc(ex.request || "")}</span></p>
+      <pre class="out">${esc(JSON.stringify(d, null, 2).slice(0, 4000))}</pre>
+      <div class="row" style="margin-top:14px">
+        ${waiting && step != null && step >= 0 ? `
+          <button id="ap-yes">Approve step ${step}</button>
+          <button id="ap-no" class="ghost">Reject</button>
+          <button id="ap-resume" class="ghost">Resume</button>` : ""}
+        <button class="ghost" onclick="closeModal()">Close</button>
+      </div>`);
+    const ay = $("#ap-yes"), an = $("#ap-no"), ar = $("#ap-resume");
+    if (ay) ay.onclick = () => decide(id, step, true);
+    if (an) an.onclick = () => decide(id, step, false);
+    if (ar) ar.onclick = async () => {
+      try {
+        const r = await api("/api/resume", { method: "POST",
+          body: JSON.stringify({ execution_id: id, auto_approve: $("#eauto")?.checked || false }) });
+        toast(`Resumed: ${r.status || "ok"}`);
+        closeModal(); route();
+      } catch (e) { toast(e.message); }
+    };
+  } catch (e) { openModal(`<p class="muted">${esc(e.message)}</p>`); }
+}
+
+async function decide(id, step, ok) {
+  try {
+    await api("/api/approve", { method: "POST",
+      body: JSON.stringify({ execution_id: id, step, approve: ok, by: "dashboard" }) });
+    toast(ok ? "Step approved" : "Step rejected");
+    closeModal(); route();
+  } catch (e) { toast(e.message); }
+}
+
 RENDER["engine$mount"] = () => {
+  $$("#ehist .result-row").forEach((tr) => {
+    tr.onclick = () => inspectExecution(tr.dataset.id);
+  });
+  const showRun = (d) => {
+    $("#eres").style.display = "";
+    $("#epre").textContent = JSON.stringify(d, null, 2).slice(0, 6000);
+    const acts = $("#eactions");
+    const id = d.execution_id;
+    const waiting = id && (d.status === "WAITING_APPROVAL" || d.status === "PENDING");
+    acts.innerHTML = id
+      ? `<button class="ghost" id="e-inspect">Inspect ${esc(String(id).slice(0, 8))}…</button>
+         ${waiting ? `<span class="muted" style="font-size:13px">waiting — inspect to approve steps</span>` : ""}`
+      : "";
+    const b = $("#e-inspect");
+    if (b) b.onclick = () => inspectExecution(id);
+  };
   const ask = async (kind, btn) => {
     const q = $("#eq").value.trim();
     if (!q) { toast("Type a request first"); return; }
     setBusy(btn, true);
     try {
+      const exec = $("#eexec").checked, auto = $("#eauto").checked;
+      if (kind === "run" && exec && !confirm("Execute for real (not a dry-run)?")) return;
       const url = kind === "resolve" ? "/api/resolve" : kind === "plan" ? "/api/plan" : "/api/run";
-      const d = await api(url, { method: "POST", body: JSON.stringify({ request: q, dry_run: true }) });
-      $("#eres").style.display = "";
-      $("#epre").textContent = JSON.stringify(d, null, 2).slice(0, 6000);
+      const d = await api(url, { method: "POST",
+        body: JSON.stringify({ request: q, dry_run: !(kind === "run" && exec), auto_approve: auto }) });
+      if (kind === "run") showRun(d);
+      else { $("#eres").style.display = ""; $("#eactions").innerHTML = ""; $("#epre").textContent = JSON.stringify(d, null, 2).slice(0, 6000); }
     } catch (e) { toast(e.message); } finally { setBusy(btn, false); }
   };
   $("#eb1").onclick = (e) => ask("resolve", e.target);
@@ -435,13 +540,18 @@ RENDER.install = async () => {
   const opts = plats.map((p) => `<option value="${p.id}">${esc(p.id)}</option>`).join("");
   return `
   <h1>Install</h1>
-  <p class="lede">Dry-run installs and drift checks. Nothing touches disk unless dry-run is off.</p>
+  <p class="lede">Install, verify, drift-check, roll back, or remove platform files. Dry-run is on by default.</p>
   <div class="panel"><div class="row">
+    <select id="iact">
+      <option value="install">install</option><option value="uninstall">uninstall</option>
+      <option value="rollback">rollback</option><option value="drift">drift</option>
+      <option value="status">status</option>
+    </select>
     <select id="iplat">${opts}</select>
-    <input type="text" id="iscope" placeholder="scope (optional)" style="max-width:160px">
-    <input type="text" id="itool" placeholder="tool (optional)" style="max-width:160px">
+    <input type="text" id="iscope" placeholder="scope (optional)" style="max-width:150px">
+    <input type="text" id="itool" placeholder="tool (optional)" style="max-width:150px">
     <label class="muted" style="font-size:13px"><input type="checkbox" id="idry" checked> dry-run</label>
-    <button id="ibtn">Install</button><button id="dbtn2" class="ghost">Drift</button>
+    <button id="ibtn">Go</button>
   </div></div>
   <div class="panel" id="ires" style="display:none"><h3>Result</h3><pre class="out" id="ipre"></pre></div>`;
 };
@@ -452,26 +562,126 @@ RENDER["install$mount"] = () => {
     $("#ipre").textContent = JSON.stringify(d, null, 2).slice(0, 5000);
   };
   $("#ibtn").onclick = async (e) => {
-    const b = e.target; setBusy(b, true, "Installing…");
+    const act = $("#iact").value, plat = $("#iplat").value;
+    const dry = $("#idry").checked;
+    if (!dry && (act === "uninstall" || act === "rollback" || (act === "install"))
+        && !confirm(`${act} ${plat} for real (dry-run off)?`)) return;
+    const b = e.target; setBusy(b, true, "Working…");
     try {
-      show(await api("/api/install", { method: "POST", body: JSON.stringify({
-        platform: $("#iplat").value,
-        scope: $("#iscope").value.trim() || null,
-        tool: $("#itool").value.trim() || null,
-        dry_run: $("#idry").checked,
-      }) }));
+      if (act === "drift") {
+        show(await api("/api/drift?platform=" + encodeURIComponent(plat)));
+      } else if (act === "status") {
+        show(await api("/api/install-status"));
+      } else {
+        show(await api("/api/" + act, { method: "POST", body: JSON.stringify({
+          platform: plat,
+          scope: $("#iscope").value.trim() || null,
+          tool: $("#itool").value.trim() || null,
+          dry_run: dry,
+        }) }));
+      }
     } catch (err) { toast(err.message); } finally { setBusy(b, false); }
-  };
-  $("#dbtn2").onclick = async () => {
-    try {
-      show(await api("/api/drift?platform=" + encodeURIComponent($("#iplat").value)));
-    } catch (err) { toast(err.message); }
   };
 };
 
+/* ---------------- tools ---------------- */
+RENDER.tools = async () => {
+  const [tele, wfs] = await Promise.all([
+    api("/api/telemetry").catch(() => null),
+    api("/api/workflows").catch(() => ({})),
+  ]);
+  const wfList = wfs.workflows || wfs.ids || [];
+  const wfRows = (Array.isArray(wfList) ? wfList : []).map((w) => {
+    const id = typeof w === "string" ? w : (w.id || w.name || "");
+    return `<tr><td class="mono">${esc(id)}</td>
+      <td class="row" style="gap:6px"><button class="ghost" data-wf="${esc(id)}" data-act="validate">Validate</button>
+      <button class="ghost" data-wf="${esc(id)}" data-act="run">Dry-run</button></td></tr>`;
+  }).join("");
+  return `
+  <h1>Tools</h1>
+  <p class="lede">Delegation, versions, telemetry, workflows.</p>
+  <div class="panel"><h3>Delegate sub-agents</h3><div class="row">
+    <input type="text" id="t-agent" placeholder="agent name">
+    <button id="t-delegate" class="ghost">Resolve</button><span id="t-del-out" class="muted"></span>
+  </div></div>
+  <div class="panel"><h3>Resolve version</h3><div class="row">
+    <input type="text" id="t-spec" placeholder="e.g. terraform-infrastructure@^1.0">
+    <button id="t-ver" class="ghost">Resolve</button><span id="t-ver-out" class="muted"></span>
+  </div></div>
+  <div class="panel"><h3>Telemetry</h3>
+    <pre class="out">${esc(JSON.stringify(tele || { tracked: 0 }, null, 2).slice(0, 1200))}</pre></div>
+  <div class="panel"><h3>Workflows</h3>
+    <table><thead><tr><th>ID</th><th>Actions</th></tr></thead><tbody id="wrows">
+    ${wfRows || `<tr><td colspan="2" class="muted">No workflows found.</td></tr>`}</tbody></table>
+    <pre class="out" id="wout" style="display:none;margin-top:12px"></pre></div>`;
+};
+
+RENDER["tools$mount"] = () => {
+  $("#t-delegate").onclick = async () => {
+    const a = $("#t-agent").value.trim();
+    if (!a) return;
+    try {
+      const d = await api("/api/delegate?agent=" + encodeURIComponent(a), { method: "POST" });
+      $("#t-del-out").textContent = d.delegated
+        ? `${d.succeeded}/${d.total} sub-agents ok (${d.pattern})` : (d.reason || "no delegation");
+    } catch (e) { toast(e.message); }
+  };
+  $("#t-ver").onclick = async () => {
+    const s = $("#t-spec").value.trim();
+    if (!s) return;
+    try {
+      const d = await api("/api/resolve-version?spec=" + encodeURIComponent(s));
+      $("#t-ver-out").textContent = d.resolved;
+    } catch (e) { toast(e.message); }
+  };
+  $$("#wrows button").forEach((b) => {
+    b.onclick = async () => {
+      const out = $("#wout"); out.style.display = "";
+      out.textContent = "Working…";
+      try {
+        const d = await api("/api/workflows/" + b.dataset.act, { method: "POST",
+          body: JSON.stringify({ workflow_id: b.dataset.wf, execute: false }) });
+        out.textContent = JSON.stringify(d, null, 2).slice(0, 4000);
+      } catch (e) { out.textContent = e.message; }
+    };
+  });
+};
+
 /* ---------------- boot ---------------- */
+async function ensureCatalog() {
+  try {
+    const h = await api("/api/health");
+    if (h.catalog_ok) return true;
+    $("#setup-msg").textContent =
+      `No catalog found at ${h.root || "this location"}. Paste the path to your Kdesk-Catalog checkout.`;
+  } catch (e) {
+    $("#setup-msg").textContent = "Server unreachable. Is `kdesk serve` running?";
+  }
+  $("#splash").classList.add("done");
+  $("#setup").classList.add("show");
+  return new Promise((resolve) => {
+    const go = async () => {
+      const v = $("#root-input").value.trim();
+      if (!v) return;
+      try {
+        const d = await api("/api/set-root", { method: "POST", body: JSON.stringify({ path: v }) });
+        toast(`Loaded ${d.definitions} definitions`);
+        $("#setup").classList.remove("show");
+        $("#app").classList.add("ready");
+        paintGreet();
+        resolve(true);
+      } catch (err) { toast(err.message); }
+    };
+    $("#root-go").onclick = go;
+    $("#root-input").onkeydown = (e) => { if (e.key === "Enter") go(); };
+    setTimeout(() => $("#root-input").focus(), 400);
+  });
+}
+
 (async function boot() {
   await bootIdentity();
+  const ok = await ensureCatalog();
+  if (!ok) return;
   if (!location.hash) location.hash = "#/dashboard";
   route();
 })();

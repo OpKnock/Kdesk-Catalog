@@ -94,19 +94,24 @@ def _definition_checksums(root: Path) -> Dict[str, str]:
     return out
 
 
-def compute(root: Optional[Path] = None, fast: bool = False) -> Dict[str, Any]:
+def compute(root: Optional[Path] = None, fast: bool = False,
+            catalog=None) -> Dict[str, Any]:
     """Compute authoritative, current repository statistics.
 
     Raises StatsError if zero definitions are found (never a false pass).
-    
+
     If fast=True, skips the slow platform_output_files count and uses a cached value.
+
+    Pass a pre-loaded `catalog` to skip re-parsing all definitions
+    (used by the long-lived dashboard server; CLI callers omit it).
     """
     root = Path(root) if root else default_repo_root()
     if not (root / "universal-agents").is_dir():
         raise StatsError(f"universal-agents directory not found under {root}")
 
     try:
-        catalog = Catalog.from_repo(root)
+        if catalog is None:
+            catalog = Catalog.from_repo(root)
     except CatalogError as exc:
         raise StatsError(str(exc)) from exc
     if not catalog.agents and not catalog.skills:

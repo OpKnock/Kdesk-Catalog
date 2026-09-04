@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, File, Form, UploadFile
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -48,11 +48,16 @@ def convert(req: ConvertRequest) -> JSONResponse:
     finally:
         cfg.QUIET, cfg.UNIVERSAL_DIR = prev_quiet, prev_dir
     counts = {}
+    samples = {}
     for p in platforms:
         files = [f for f in (out / p).rglob("*") if f.is_file()
                  and f.name not in ("README.md", "manifest.yaml")]
         counts[p] = len(files)
-    return _json({"status": "ok", "platforms": platforms, "files": counts})
+        samples[p] = sorted(
+            str(f.relative_to(out / p)).replace("\\", "/") for f in files
+        )[:100]
+    return _json({"status": "ok", "platforms": platforms, "files": counts,
+                  "sample_paths": samples})
 
 
 @router.post("/validate")
@@ -61,6 +66,198 @@ def validate() -> JSONResponse:
 
     ok = validate_agents()
     return _json({"valid": ok})
+
+
+MAX_UPLOAD_FILES = 20
+MAX_UPLOAD_BYTES = 200 * 1024
+
+
+def _read_uploads(files) -> list:
+    """Read+parse uploaded YAML files. Returns [(filename, agent_dict)]."""
+    import yaml
+
+    if len(files) > MAX_UPLOAD_FILES:
+        raise ValueError(f"max {MAX_UPLOAD_FILES} files per upload")
+    out = []
+    for f in files:
+        raw = f.file.read()
+        if len(raw) > MAX_UPLOAD_BYTES:
+            raise ValueError(f"{f.filename}: over {MAX_UPLOAD_BYTES // 1024}KB limit")
+        try:
+            doc = yaml.safe_load(raw.decode("utf-8"))
+        except Exception as exc:
+            raise ValueError(f"{f.filename}: invalid YAML ({exc})")
+        if not isinstance(doc, dict) or not doc.get("name"):
+            raise ValueError(f"{f.filename}: missing required 'name' field")
+        doc = dict(doc)
+        doc["file_path"] = f.filename or "upload.yaml"
+        out.append((f.filename or "upload.yaml", doc))
+    if not out:
+        raise ValueError("no files uploaded")
+    return out
+
+
+@router.post("/convert-upload")
+async def convert_upload(files: List[UploadFile] = File(...),
+                         platforms: str = Form("cursor")):
+    return await _convert_upload_impl(files, platforms)
+
+
+async def _convert_upload_impl(files, platforms):
+    if not files:
+        return JSONResponse({"error": "no files uploaded"}, status_code=400)
+    try:
+        docs = _read_uploads(files)
+    except ValueError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    return _convert_docs(docs, platforms)
+
+
+def _convert_docs(docs, platforms):
+    """Convert [(source_name, agent_dict)] to platform artifacts (shared)."""
+    from kdesk.converters.native import (
+        convert_to_claude_code,
+        convert_to_copilot,
+        convert_to_cursor,
+        convert_to_generic,
+        convert_to_opencode,
+        convert_to_windsurf,
+    )
+    from kdesk.converters.pipeline import parse_platforms
+    from kdesk.converters.standard import convert_new_platform
+
+    try:
+        if isinstance(platforms, str):
+            platforms = [p.strip() for p in platforms.split(",") if p.strip()]
+        wanted = parse_platforms(platforms)
+    except ValueError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+
+    native = {
+        "claude_code": convert_to_claude_code,
+        "cursor": convert_to_cursor,
+        "github_copilot": convert_to_copilot,
+        "windsurf": convert_to_windsurf,
+        "opencode": convert_to_opencode,
+        "generic": convert_to_generic,
+    }
+    from kdesk.converters.constants import NEW_PLATFORMS
+
+    artifacts = []
+    for filename, agent in docs:
+        for platform in wanted:
+            try:
+                if platform in native:
+                    out = native[platform](agent)
+                elif platform in NEW_PLATFORMS:
+                    out = convert_new_platform(platform, agent)
+                else:
+                    continue
+                artifacts.append({"source": filename, "platform": platform,
+                                  "path": out.get("rel_path", ""),
+                                  "content": out.get("content", "")})
+            except Exception as exc:
+                artifacts.append({"source": filename, "platform": platform,
+                                  "error": str(exc)[:300]})
+    return _json({"status": "ok", "files": len(docs),
+                  "platforms": wanted, "artifacts": artifacts})
+
+
+class ConvertSelectedRequest(BaseModel):
+    names: List[str] = []
+    platforms: List[str] = ["cursor"]
+
+
+@router.post("/convert-selected")
+def convert_selected(req: ConvertSelectedRequest):
+    """Convert named catalog definitions (max 25) with full contents back."""
+    if not req.names:
+        return JSONResponse({"error": "no definitions selected"}, status_code=400)
+    if len(req.names) > 25:
+        return JSONResponse({"error": "max 25 definitions per conversion"},
+                            status_code=400)
+    catalog = _state().catalog
+    docs = []
+    missing = []
+    for name in req.names:
+        item = catalog.agents.get(name) or catalog.skills.get(name)
+        if item is None:
+            missing.append(name)
+            continue
+        doc = dict(item.raw or {})
+        doc["file_path"] = str(getattr(item, "source_path", "") or name)
+        docs.append((name, doc))
+    if missing:
+        return JSONResponse({"error": f"unknown definitions: {', '.join(missing[:8])}"},
+                            status_code=404)
+    return _convert_docs(docs, req.platforms)
+
+
+@router.get("/convert/file")
+def convert_file(platform: str = "", path: str = "") -> JSONResponse:
+    """Download one generated file (constrained under platform-agents/)."""
+    from fastapi.responses import PlainTextResponse
+
+    root = _state().root
+    base = (root / "platform-agents").resolve()
+    if not platform or not path:
+        return JSONResponse({"error": "platform and path required"}, status_code=400)
+    target = (base / platform / path.replace("\\", "/")).resolve()
+    if base not in target.parents:
+        return JSONResponse({"error": "path escapes platform-agents/"},
+                            status_code=400)
+    if not target.is_file() or target.stat().st_size > 2 * 1024 * 1024:
+        return JSONResponse({"error": "not found or too large"}, status_code=404)
+    try:
+        content = target.read_text(encoding="utf-8", errors="replace")
+    except OSError as exc:
+        return JSONResponse({"error": str(exc)[:200]}, status_code=500)
+    return PlainTextResponse(content)
+
+
+@router.post("/doctor-upload")
+async def doctor_upload(files: List[UploadFile] = File(...),
+                        platform: str = Form("generic"),
+                        mode: str = Form("diagnose")):
+    return await _doctor_upload_impl(files, platform, mode)
+
+
+async def _doctor_upload_impl(files, platform, mode):
+    import shutil
+    import tempfile
+
+    from kdesk.adapters import AdapterRegistry
+    from kdesk.doctor import Doctor
+
+    if not files:
+        return JSONResponse({"error": "no files uploaded"}, status_code=400)
+    if mode not in ("scan", "diagnose"):
+        return JSONResponse({"error": "mode must be scan or diagnose"},
+                            status_code=400)
+    tmp = Path(tempfile.mkdtemp(prefix="kdesk_upload_"))
+    try:
+        for f in files[:MAX_UPLOAD_FILES]:
+            raw = f.file.read()
+            if len(raw) > MAX_UPLOAD_BYTES:
+                return JSONResponse(
+                    {"error": f"{f.filename}: over size limit"}, status_code=400)
+            name = Path(f.filename or "file.md").name
+            (tmp / name).write_bytes(raw)
+        state = _state()
+        doc = Doctor(AdapterRegistry(state.root), base=tmp,
+                     registry_root=state.root, catalog=state.catalog)
+        if mode == "scan":
+            return _json(doc.scan_project(tmp).to_dict())
+        result = doc.diagnose(platform=platform, project_root=tmp,
+                              fix=False, dry_run=True)
+        out: Dict[str, Any] = {"report": result["report"].to_dict()}
+        if result["fix_report"]:
+            out["fix_report"] = result["fix_report"].to_dict()
+        return _json(out)
+    except Exception as exc:
+        return JSONResponse({"error": str(exc)[:300]}, status_code=500)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 # -------------------------------------------------------------------- doctor

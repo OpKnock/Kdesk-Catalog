@@ -32,18 +32,64 @@ def stats(fast: bool = True) -> JSONResponse:
 
 @router.get("/search")
 def search(q: str = Query("", min_length=1), limit: int = 30,
-           type: str = "all") -> JSONResponse:
+           type: str = "all", category: str = "") -> JSONResponse:
     from kdesk.web.app import get_state
 
     kind = type if type in ("agent", "skill") else "all"
     catalog = get_state().catalog
-    hits = catalog.search(q)[:limit * 3]
+    hits = catalog.search(q)[: limit * 5]
     if kind != "all":
         hits = [h for h in hits if h.type == kind]
+    if category:
+        hits = [h for h in hits if (h.category or "") == category]
     return _json([
         {"type": h.type, "name": h.name, "category": h.category}
         for h in hits[:limit]
     ])
+
+
+@router.get("/categories")
+def categories() -> JSONResponse:
+    from collections import Counter
+
+    from kdesk.web.app import get_state
+
+    catalog = get_state().catalog
+    agents = Counter((a.category or "other") for a in catalog.agents.values())
+    skills = Counter((s.category or "other") for s in catalog.skills.values())
+    return _json({
+        "agent": dict(sorted(agents.items(), key=lambda kv: -kv[1])),
+        "skill": dict(sorted(skills.items(), key=lambda kv: -kv[1])),
+    })
+
+
+@router.get("/browse")
+def browse(type: str = "all", category: str = "", q: str = "",
+           limit: int = 60, offset: int = 0) -> JSONResponse:
+    from kdesk.web.app import get_state
+
+    catalog = get_state().catalog
+    pools = []
+    if type in ("all", "agent"):
+        pools += [("agent", d) for d in catalog.agents.values()]
+    if type in ("all", "skill"):
+        pools += [("skill", d) for d in catalog.skills.values()]
+    if category:
+        pools = [(k, d) for k, d in pools if (d.category or "") == category]
+    if q:
+        needle = q.lower()
+        pools = [(k, d) for k, d in pools
+                 if needle in d.name.lower()
+                 or needle in (d.description or "").lower()]
+    pools.sort(key=lambda kd: kd[1].name)
+    total = len(pools)
+    page = pools[offset: offset + limit]
+    return _json({
+        "total": total, "offset": offset, "limit": limit,
+        "items": [{"type": k, "name": d.name, "category": d.category,
+                   "description": (d.description or "")[:140]}
+                  for k, d in page],
+    })
 
 
 @router.get("/definition/{kind}/{name}")
@@ -131,3 +177,54 @@ def platforms() -> JSONResponse:
                      if hasattr(p.support_level, "value") else str(p.support_level))}
         for p in reg.all()
     ])
+
+
+@router.get("/official")
+def official() -> JSONResponse:
+    """Hand-written runnable Kdesk agent implementations (*.sh/*.py)."""
+    from kdesk.web.app import get_state
+
+    base = get_state().root / "agents"
+    items = []
+    if base.is_dir():
+        for path in sorted(base.rglob("*")):
+            if not path.is_file() or path.suffix not in (".sh", ".py"):
+                continue
+            try:
+                text = path.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            desc = ""
+            for line in text.splitlines()[:15]:
+                s = line.strip().lstrip("#").strip()
+                if s and not s.startswith("!") and len(s) > 12:
+                    desc = s[:160]
+                    break
+            rel = str(path.relative_to(base)).replace("\\", "/")
+            items.append({
+                "name": path.stem, "path": f"agents/{rel}",
+                "language": "bash" if path.suffix == ".sh" else "python",
+                "size": path.stat().st_size, "description": desc,
+            })
+    return _json({"total": len(items), "items": items})
+
+
+@router.get("/official/file")
+def official_file(path: str = "") -> JSONResponse:
+    """Read one official implementation (constrained under agents/)."""
+    from kdesk.web.app import get_state
+
+    base = (get_state().root / "agents").resolve()
+    target = (base / path.replace("\\", "/")).resolve()
+    if base not in target.parents and target != base:
+        return JSONResponse({"error": "path escapes agents/"}, status_code=400)
+    if target.suffix not in (".sh", ".py") or not target.is_file():
+        return JSONResponse({"error": "not found"}, status_code=404)
+    try:
+        content = target.read_text(encoding="utf-8", errors="replace")
+    except OSError as exc:
+        return JSONResponse({"error": str(exc)[:200]}, status_code=500)
+    if len(content) > 60000:
+        content = content[:60000] + "\n…[truncated]"
+    return _json({"path": str(target.relative_to(base)).replace("\\", "/"),
+                  "content": content})

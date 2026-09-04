@@ -81,6 +81,21 @@ class Catalog:
     def _load(self) -> None:
         if not self.universal_dir.is_dir():
             raise CatalogError(f"universal dir not found: {self.universal_dir}")
+        cached_docs = self._load_parse_cache()
+        if cached_docs is not None:
+            for rel, doc in cached_docs:
+                path = self.universal_dir / rel
+                try:
+                    defn = self._classify_and_build(path, doc)
+                except Exception as exc:  # keep going, record the failure
+                    self.errors.append(f"{path}: {exc}")
+                    continue
+                if isinstance(defn, Agent):
+                    self._register(self.agents, defn, "agent")
+                elif isinstance(defn, Skill):
+                    self._register(self.skills, defn, "skill")
+            return
+        parsed: list = []
         yaml_files = sorted(self.universal_dir.rglob("*.yaml"))
         if not yaml_files:
             raise CatalogError(f"no YAML files found under {self.universal_dir}")
@@ -92,11 +107,63 @@ class Catalog:
             except Exception as exc:  # keep going, record the failure
                 self.errors.append(f"{path}: {exc}")
                 continue
+            rel = str(path.relative_to(self.universal_dir)).replace("\\", "/")
+            parsed.append((rel, doc))
             defn = self._classify_and_build(path, doc)
             if isinstance(defn, Agent):
                 self._register(self.agents, defn, "agent")
             elif isinstance(defn, Skill):
                 self._register(self.skills, defn, "skill")
+        self._save_parse_cache(parsed)
+
+    @staticmethod
+    def _cache_path(universal_dir: Path) -> Path:
+        # lives under gitignored .kdesk/runtime; keyed by tree hash (see from_repo)
+        return universal_dir.parent / ".kdesk" / "runtime" / "catalog-parse-cache-v1.pkl"
+
+    def _load_parse_cache(self):
+        """Return [(rel_path, doc)] if a valid cache exists, else None.
+
+        Validity is bound to the tree key (file list + mtime + size), so any
+        catalog edit invalidates. All failures fall back to a full reparse —
+        the cache can never break loading.
+        """
+        import pickle
+
+        try:
+            from kdesk.registry import Catalog as _Cls
+            key = _Cls._tree_key(self.universal_dir)
+            cache_file = self._cache_path(self.universal_dir)
+            if not cache_file.is_file():
+                return None
+            with open(cache_file, "rb") as fh:
+                payload = pickle.load(fh)
+            if (not isinstance(payload, dict) or payload.get("key") != key
+                    or payload.get("version") != 1):
+                return None
+            docs = payload.get("docs")
+            if not isinstance(docs, list) or not docs:
+                return None
+            return docs
+        except Exception:
+            return None
+
+    def _save_parse_cache(self, parsed: list) -> None:
+        import pickle
+
+        try:
+            from kdesk.registry import Catalog as _Cls
+            cache_file = self._cache_path(self.universal_dir)
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            tmp = cache_file.with_suffix(".tmp")
+            with open(tmp, "wb") as fh:
+                pickle.dump({"version": 1,
+                             "key": _Cls._tree_key(self.universal_dir),
+                             "docs": parsed}, fh,
+                            protocol=pickle.HIGHEST_PROTOCOL)
+            tmp.replace(cache_file)
+        except Exception:
+            pass
 
     @staticmethod
     def _load_yaml(path: Path) -> dict:

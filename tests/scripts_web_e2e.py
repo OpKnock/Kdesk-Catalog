@@ -84,6 +84,69 @@ try:
     check("history", lambda: f"entries={len(json.loads(get('/api/history?limit=3')[1]))}")
     check("set-root-bad", lambda: f"st={post_status('/api/set-root', {'path': 'C:/definitely/not/here'})[0]} (want 400)")
     check("set-root-restore", lambda: f"defs={post('/api/set-root', {'path': str(ROOT)}, timeout=300)[1]['definitions']}")
+    check("categories", lambda: f"agent-cats={len(json.loads(get('/api/categories')[1])['agent'])}")
+    check("official", lambda: f"total={json.loads(get('/api/official')[1])['total']}")
+    check("official-file", lambda: f"{json.loads(get('/api/official/file?path=' + json.loads(get('/api/official')[1])['items'][0]['path'].replace('agents/', ''))[1])['path']}")
+    check("browse", lambda: f"total={json.loads(get('/api/browse?type=skill&category=api&limit=5')[1])['total']}")
+    check("browse-q", lambda: f"hits={json.loads(get('/api/browse?q=kubernetes&limit=5')[1])['total']}")
+
+    # upload: tiny synthetic agent yaml, multipart
+    import urllib.error
+    boundary = "----kdesktest1234"
+    yaml_body = ("name: e2e-probe-agent\ndisplay_name: E2E Probe\ncategory: testing\n"
+                 "description: probe agent for e2e upload test\nversion: 1.0.0\n"
+                 "instructions: do nothing\n")
+    mp = ("\r\n".join([
+        f"--{boundary}",
+        'Content-Disposition: form-data; name="files"; filename="probe-agent.yaml"',
+        "Content-Type: text/yaml", "",
+        yaml_body,
+        f"--{boundary}",
+        'Content-Disposition: form-data; name="platforms"', "",
+        "cursor,claude_code",
+        f"--{boundary}--", ""]) + "\r\n")
+
+    def upload_convert():
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{PORT}/api/convert-upload", data=mp.encode(),
+            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+            method="POST")
+        with urllib.request.urlopen(req, timeout=120) as r:
+            d = json.loads(r.read().decode("utf-8"))
+        arts = [a for a in d["artifacts"] if not a.get("error")]
+        return f"artifacts={len(arts)}/{len(d['artifacts'])}"
+    check("convert-upload", upload_convert)
+    check("convert-selected", lambda: f"arts={len(post('/api/convert-selected', {'names': ['kubernetes', 'terraform-infrastructure'], 'platforms': ['cursor', 'claude_code']})[1]['artifacts'])}")
+    check("convert-file", lambda: f"{get('/api/convert/file?platform=cursor&path=kubernetes.mdc'.replace(' ', '%20'))[0]}")
+
+    def upload_doctor():
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{PORT}/api/doctor-upload", data=mp.replace(
+                'name="platforms"', 'name="FAKE"').encode(),
+            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+            method="POST")
+        # rebuild with proper doctor fields
+        mp2 = ("\r\n".join([
+            f"--{boundary}",
+            'Content-Disposition: form-data; name="files"; filename="AGENTS.md"',
+            "Content-Type: text/markdown", "",
+            "# rules\nBe kind.\n",
+            f"--{boundary}",
+            'Content-Disposition: form-data; name="platform"',
+            "", "generic",
+            f"--{boundary}",
+            'Content-Disposition: form-data; name="mode"',
+            "", "diagnose",
+            f"--{boundary}--", ""]) + "\r\n")
+        req2 = urllib.request.Request(
+            f"http://127.0.0.1:{PORT}/api/doctor-upload", data=mp2.encode(),
+            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+            method="POST")
+        with urllib.request.urlopen(req2, timeout=180) as r:
+            d = json.loads(r.read().decode("utf-8"))
+        rep = d.get("report", d)
+        return f"score={rep.get('score')}% issues={len(rep.get('issues', []))}"
+    check("doctor-upload", upload_doctor)
 finally:
     proc.terminate()
     try:

@@ -71,3 +71,7 @@ Validate the OpenAPI document before mocking it
 - `npx swagger-cli validate openapi.yaml`
 - `npx @stoplight/prism-cli mock --help`
 - `curl -s http://localhost:4010/__prism/health`
+
+**Examples:**
+- -cli --help
+- -api --help

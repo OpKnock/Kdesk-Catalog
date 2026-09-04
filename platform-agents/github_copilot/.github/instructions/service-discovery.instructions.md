@@ -4,7 +4,7 @@ applyTo: "**/*.r"
 
 # Service Discovery
 
-Implement it.
+Configure service discovery with Consul, etcd, and DNS.
 
 ## Instructions
 

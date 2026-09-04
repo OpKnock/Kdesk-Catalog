@@ -79,3 +79,7 @@ Verify signatures in middleware
 **Commands:**
 - `node -e "const c=require('crypto'); const ok=(sig,p)=>{const expect=c.createHmac('sha256','secret-key').update(p).digest('hex'); return c.timingSafeEqual(Buffer.from(sig),Buffer.from(expect))}; console.log(ok('abc','x'), ok(c.createHmac('sha256','secret-key').update('x').digest('hex'),'x'))"`
 - `curl -s -X POST http://localhost:3000/webhooks -H 'Content-Type: application/json' -H 'X-Signature: sha256=bad' -d '{"a":1}' -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

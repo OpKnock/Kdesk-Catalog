@@ -75,3 +75,7 @@ Expose CRUD via viewsets and routers
 - `curl -s -X POST http://localhost:8000/api/users/ -H 'Content-Type: application/json' -d '{"name":"alice","email":"a@localhost"}' -w '\n%{http_code}\n'`
 - `curl -s -o /dev/null -w '%{http_code}\n' -X POST http://localhost:8000/api/users/ -H 'Content-Type: application/json' -d '{"name":"x"}'`
 - `python manage.py test api -v 2`
+
+**Examples:**
+- -cli --help
+- -api --help

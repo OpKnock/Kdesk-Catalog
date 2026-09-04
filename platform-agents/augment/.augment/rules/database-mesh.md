@@ -1,11 +1,11 @@
 ---
 type: agent_requested
-description: "Implement it."
+description: "Build a distributed database mesh with sharding and replication."
 ---
 
 # Database Mesh
 
-Implement it.
+Build a distributed database mesh with sharding and replication.
 
 ## Instructions
 

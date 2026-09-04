@@ -1,6 +1,6 @@
 import json, sys
 
-path = r"C:\Users\Mehul\Kdesk-Catalog\scripts\knowledge-urls.json"
+path = r"<repo-root>\scripts\knowledge-urls.json"
 url_map = json.load(open(path, encoding="utf-8"))
 
 ADD = {

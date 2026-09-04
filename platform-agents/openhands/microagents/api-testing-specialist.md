@@ -83,3 +83,7 @@ Run CI workflows locally with act
 - `act -W .github/workflows/api-tests.yml`
 - `act -W .github/workflows/api-tests.yml -j test`
 - `act --secret-file .secrets --pull=false`
+
+**Examples:**
+- -cli --help
+- -api --help

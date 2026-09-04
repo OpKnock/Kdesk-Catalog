@@ -1,11 +1,11 @@
 ---
 name: "service-discovery"
-description: "Implement it."
+description: "Configure service discovery with Consul, etcd, and DNS."
 ---
 
 # Service Discovery
 
-Implement it.
+Configure service discovery with Consul, etcd, and DNS.
 
 ## Instructions
 

@@ -1,13 +1,13 @@
 ---
 name: "edge-networking"
-description: "Configure it."
+description: "Manage edge CDN, DNS, and global load balancing configurations."
 type: knowledge
 triggers: ["edge-networking"]
 ---
 
 # Edge Networking
 
-Configure it.
+Manage edge CDN, DNS, and global load balancing configurations.
 
 ## Instructions
 

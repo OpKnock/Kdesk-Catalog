@@ -52,6 +52,26 @@ function setBusy(btn, busy, label) {
   }
 }
 
+/* thin top progress bar — always moving during loads */
+let topTimer = null;
+function topStart() {
+  const bar = $("#topbar");
+  bar.classList.add("on");
+  let w = 8;
+  bar.style.width = w + "%";
+  clearInterval(topTimer);
+  topTimer = setInterval(() => {
+    w = Math.min(94, w + (100 - w) * 0.06);
+    bar.style.width = w + "%";
+  }, 250);
+}
+function topDone() {
+  const bar = $("#topbar");
+  clearInterval(topTimer);
+  bar.style.width = "100%";
+  setTimeout(() => { bar.classList.remove("on"); bar.style.width = "0"; }, 350);
+}
+
 /* ---------------- identity / onboarding ---------------- */
 function userName() { return localStorage.getItem("kdesk_name") || ""; }
 
@@ -121,6 +141,7 @@ async function route() {
   const page = RENDER[id] ? id : "dashboard";
   paintNav(page);
   const main = $("#main");
+  topStart();
   main.innerHTML = `<div class="page"><p class="muted">Loading…</p></div>`;
   try {
     main.innerHTML = `<div class="page">${await RENDER[page]()}</div>`;
@@ -129,6 +150,8 @@ async function route() {
     main.innerHTML = `<div class="page"><h1>Something broke</h1>
       <p class="lede">${esc(e.message)}</p>
       <button class="ghost" onclick="location.reload()">Retry</button></div>`;
+  } finally {
+    topDone();
   }
   $("#main").scrollTop = 0;
 }
@@ -136,9 +159,8 @@ window.addEventListener("hashchange", route);
 
 /* ---------------- dashboard ---------------- */
 RENDER.dashboard = async () => {
-  const [stats, verify, tele] = await Promise.all([
+  const [stats, tele] = await Promise.all([
     api("/api/stats?fast=true"),
-    api("/api/verify?fast=true").catch(() => null),
     api("/api/telemetry").catch(() => null),
   ]);
   const cards = [
@@ -149,14 +171,16 @@ RENDER.dashboard = async () => {
     [stats.workflows ?? "—", "workflows"],
     [stats.platform_output_files ?? "—", "generated files"],
   ];
-  const v = verify ? pillFor(verify.status) : `<span class="pill warn">UNKNOWN</span>`;
   const teleLine = tele && tele.total
     ? `<span class="muted"> · ${tele.total} tracked runs</span>` : "";
   return `
     <h1>Dashboard</h1>
-    <p class="lede">Catalog health at a glance &nbsp;${v}${teleLine}</p>
+    <p class="lede">Catalog health at a glance &nbsp;<span id="vpill"><span class="pill info">CHECKING</span></span>${teleLine}</p>
     <div class="grid">${cards.map(([n, l]) =>
       `<div class="card"><div class="stat-num">${n}</div><div class="stat-label">${l}</div></div>`).join("")}
+    </div>
+    <div class="panel" style="margin-top:16px;display:none" id="vpanel">
+      <h3>Verify checks</h3><div id="vchecks"><p class="muted">Running verify gate…</p></div>
     </div>
     <div class="panel" style="margin-top:16px">
       <h3>Start here</h3>
@@ -180,6 +204,23 @@ RENDER["dashboard$mount"] = () => {
       route();
     } catch (e) { toast(e.message); } finally { setBusy(b, false); }
   };
+  // verify fills in async — never blocks the cards
+  api("/api/verify?fast=true")
+    .then((v) => {
+      const pill = $("#vpill"), box = $("#vchecks"), panel = $("#vpanel");
+      if (!pill) return;
+      pill.innerHTML = pillFor(v.status);
+      if (panel && box && v.results) {
+        panel.style.display = "";
+        box.innerHTML = `<table><tbody>${v.results.map((r) =>
+          `<tr><td>${pillFor(r.status)}</td><td style="font-weight:650">${esc(r.name)}</td>
+           <td class="muted">${esc(r.detail || "")}</td></tr>`).join("")}</tbody></table>`;
+      }
+    })
+    .catch(() => {
+      const pill = $("#vpill");
+      if (pill) pill.innerHTML = `<span class="pill warn">UNKNOWN</span>`;
+    });
 };
 
 /* ---------------- catalog ---------------- */
@@ -193,19 +234,26 @@ RENDER.catalog = async () => `
       <input type="text" id="q" placeholder="Try ‘kubernetes’, ‘terraform’, ‘testing’…">
       <button id="go">Search</button>
     </div>
+    <div class="checks" id="kindpick" style="margin-top:10px">
+      <label><input type="radio" name="kind" value="all" checked> all</label>
+      <label><input type="radio" name="kind" value="agent"> agents</label>
+      <label><input type="radio" name="kind" value="skill"> skills</label>
+    </div>
   </div>
   <div class="panel" id="results"><p class="muted">Type to search.</p></div>`;
 
 RENDER["catalog$mount"] = () => {
   const q = $("#q"), box = $("#results");
+  const kind = () => (document.querySelector('input[name="kind"]:checked') || {}).value || "all";
   const run = async () => {
     const term = q.value.trim();
     if (!term) return;
     box.innerHTML = `<p class="muted">Searching…</p>`;
     try {
-      catalogCache = await api("/api/search?q=" + encodeURIComponent(term));
+      catalogCache = await api("/api/search?q=" + encodeURIComponent(term) + "&type=" + kind());
       if (!catalogCache.length) { box.innerHTML = `<p class="muted">No results.</p>`; return; }
-      box.innerHTML = `<table><thead><tr><th>Type</th><th>Name</th><th>Category</th></tr></thead>
+      box.innerHTML = `<p class="muted" style="margin-bottom:10px">${catalogCache.length} result(s)</p>
+        <table><thead><tr><th>Type</th><th>Name</th><th>Category</th></tr></thead>
         <tbody>${catalogCache.map((h, i) =>
           `<tr class="result-row" data-i="${i}"><td><span class="pill info">${h.type}</span></td>
            <td class="mono">${esc(h.name)}</td><td class="muted">${esc(h.category || "")}</td></tr>`).join("")}
@@ -217,6 +265,7 @@ RENDER["catalog$mount"] = () => {
   };
   $("#go").onclick = run;
   q.onkeydown = (e) => { if (e.key === "Enter") run(); };
+  $$('input[name="kind"]').forEach((r) => { r.onchange = () => { if (q.value.trim()) run(); }; });
   setTimeout(() => q.focus(), 100);
 };
 
@@ -233,12 +282,19 @@ async function showDefinition(h) {
       `<tr><td class="mono">${esc(c.name || "")}</td><td>${esc(c.description || "")}</td></tr>`).join("");
     const linkChips = (links || []).slice(0, 24).map((l) =>
       `<span class="pill info" style="margin:0 6px 6px 0">${esc(l.skill || l)}</span>`).join("");
+    const platKeys = d.platforms && typeof d.platforms === "object"
+      ? Object.keys(d.platforms).slice(0, 20) : [];
+    const platChips = platKeys.map((p) =>
+      `<span class="pill ok" style="margin:0 6px 6px 0">${esc(p)}</span>`).join("");
+    const instr = String(d.instructions || "");
     openModal(`
       <h2 class="mono">${esc(d.name || h.name)}</h2>
       <p class="muted">${esc(d.display_name || "")} · v${esc(d.version || "?")} · ${esc(d.category || "")}</p>
       <p style="margin:12px 0">${esc(d.description || "")}</p>
+      ${platChips ? `<div style="margin-bottom:12px"><div class="muted" style="font-size:12px;margin-bottom:6px">PLATFORMS</div>${platChips}</div>` : ""}
       ${linkChips ? `<div style="margin-bottom:12px"><div class="muted" style="font-size:12px;margin-bottom:6px">LINKED SKILLS</div>${linkChips}</div>` : ""}
-      ${caps ? `<table><thead><tr><th>Capability</th><th>Description</th></tr></thead><tbody>${caps}</tbody></table>` : ""}
+      ${instr ? `<div class="muted" style="font-size:12px;margin-bottom:6px">INSTRUCTIONS</div><pre class="out" style="max-height:180px">${esc(instr.slice(0, 1500))}</pre>` : ""}
+      ${caps ? `<table style="margin-top:12px"><thead><tr><th>Capability</th><th>Description</th></tr></thead><tbody>${caps}</tbody></table>` : ""}
       <div class="row" style="margin-top:16px">
         <button class="ghost" onclick="closeModal()">Close</button>
       </div>`);
@@ -261,29 +317,35 @@ const GATES = [
 
 RENDER.quality = async () => `
   <h1>Quality</h1>
-  <p class="lede">Every gate, live. Click a card for raw output.</p>
-  <div class="grid" id="gates"><div class="card"><p class="muted">Running gates…</p></div></div>`;
+  <p class="lede">Every gate, live. Cards fill in as each gate finishes — click one for raw output.</p>
+  <div class="grid" id="gates">${GATES.map(([id, label], i) => `
+    <div class="card" data-gate="${id}" style="animation-delay:${0.05 * i}s">
+      <div data-slot="pill"><span class="pill info">QUEUED</span></div>
+      <div style="font-weight:700;margin:8px 0 2px">${label}</div>
+      <div class="muted" data-slot="sub" style="font-size:13px">waiting…</div>
+    </div>`).join("")}
+  </div>`;
 
-RENDER["quality$mount"] = async () => {
-  const grid = $("#gates");
-  const results = await Promise.all(GATES.map(async ([id, label, url, fmt]) => {
-    try {
-      const d = await api(url);
+RENDER["quality$mount"] = () => {
+  window._gates = window._gates || {};
+  GATES.forEach(([id, label, url, fmt]) => {
+    api(url).then((d) => {
       const [st, sub] = fmt(d);
-      return { id, label, st, sub, raw: d };
-    } catch (e) { return { id, label, st: "ERROR", sub: e.message, raw: { error: e.message } }; }
-  }));
-  window._gates = Object.fromEntries(results.map((r) => [r.id, r.raw]));
-  grid.innerHTML = results.map((r, i) => `
-    <div class="card result-row" data-id="${r.id}" style="animation-delay:${0.05 * i}s">
-      <div>${pillFor(r.st)}</div>
-      <div style="font-weight:700;margin:8px 0 2px">${r.label}</div>
-      <div class="muted" style="font-size:13px">${esc(r.sub)}</div>
-    </div>`).join("");
-  $$(".result-row", grid).forEach((c) => {
-    c.onclick = () => openModal(`<h2>${esc(c.dataset.id)}</h2>
-      <pre class="out" style="margin-top:12px">${esc(JSON.stringify(window._gates[c.dataset.id], null, 2).slice(0, 6000))}</pre>
-      <div class="row" style="margin-top:14px"><button class="ghost" onclick="closeModal()">Close</button></div>`);
+      window._gates[id] = d;
+      const card = document.querySelector(`[data-gate="${id}"]`);
+      if (!card) return;
+      card.querySelector('[data-slot="pill"]').innerHTML = pillFor(st);
+      card.querySelector('[data-slot="sub"]').textContent = sub;
+      card.classList.add("result-row");
+      card.onclick = () => openModal(`<h2>${label}</h2>
+        <pre class="out" style="margin-top:12px">${esc(JSON.stringify(d, null, 2).slice(0, 6000))}</pre>
+        <div class="row" style="margin-top:14px"><button class="ghost" onclick="closeModal()">Close</button></div>`);
+    }).catch((e) => {
+      const card = document.querySelector(`[data-gate="${id}"]`);
+      if (!card) return;
+      card.querySelector('[data-slot="pill"]').innerHTML = pillFor("ERROR");
+      card.querySelector('[data-slot="sub"]').textContent = e.message;
+    });
   });
 };
 
@@ -339,9 +401,10 @@ RENDER.doctor = async () => {
       <select id="dplat">${opts}</select>
       <select id="dmode">
         <option value="check">check</option><option value="scan">scan</option>
-        <option value="diagnose">diagnose</option><option value="fix">fix (dry-run)</option>
+        <option value="diagnose">diagnose</option><option value="fix">fix</option>
       </select>
       <input type="text" id="droot" placeholder="Project path (blank = this repo)">
+      <label class="muted" style="font-size:13px"><input type="checkbox" id="ddry" checked> preview only (dry-run)</label>
       <button id="dbtn">Run</button>
     </div>
   </div>
@@ -351,23 +414,31 @@ RENDER.doctor = async () => {
 RENDER["doctor$mount"] = () => {
   $("#dbtn").onclick = async (e) => {
     const b = e.target; setBusy(b, true, "Diagnosing…");
+    const mode = $("#dmode").value;
+    const dry = $("#ddry").checked;
+    if (mode === "fix" && !dry && !confirm("Apply fixes for real (not a preview)?")) { setBusy(b, false); return; }
     try {
       const d = await api("/api/doctor", { method: "POST", body: JSON.stringify({
-        platform: $("#dplat").value, mode: $("#dmode").value,
-        project_root: $("#droot").value.trim() || null, dry_run: true,
+        platform: $("#dplat").value, mode,
+        project_root: $("#droot").value.trim() || null, dry_run: dry,
       }) });
       const box = $("#dres"); box.style.display = "";
       const rep = d.report || d;
       const score = rep.score != null ? rep.score : 100;
       const C = 2 * Math.PI * 34;
       const issues = (rep.issues || []).slice(0, 60);
+      const cats = {};
+      (rep.issues || []).forEach((i) => { cats[i.category || "other"] = (cats[i.category || "other"] || 0) + 1; });
+      const catLine = Object.entries(cats).slice(0, 8).map(([k, v]) =>
+        `<span class="pill info" style="margin:0 6px 6px 0">${esc(k)} · ${v}</span>`).join("");
       $("#dbody").innerHTML = `
         <div class="ring">
           <svg width="88" height="88"><circle class="bg" cx="44" cy="44" r="34" fill="none" stroke-width="9"/>
           <circle class="fg" cx="44" cy="44" r="34" fill="none" stroke-width="9"
             stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg>
-          <div><div class="pct">${score}%</div><div class="muted">health · ${esc(rep.platform || "")}</div></div>
+          <div><div class="pct">${score}%</div><div class="muted">health · ${esc(rep.platform || "")}${mode === "fix" && !dry ? " · applied" : ""}</div></div>
         </div>
+        ${catLine ? `<div style="margin-top:12px">${catLine}</div>` : ""}
         ${issues.length ? `<table style="margin-top:14px"><thead><tr><th>Severity</th><th>File</th><th>Message</th></tr></thead>
         <tbody>${issues.map((i) => `<tr><td>${pillFor(i.severity)}</td>
           <td class="mono">${esc(i.file || "")}</td><td>${esc(i.message || "")}</td></tr>`).join("")}</tbody></table>` : ""}
@@ -451,7 +522,7 @@ RENDER.engine = async () => {
       <label class="muted" style="font-size:13px"><input type="checkbox" id="eauto"> auto-approve steps</label>
     </div>
   </div>
-  <div class="panel" id="eres" style="display:none"><h3>Result</h3><pre class="out" id="epre"></pre>
+  <div class="panel" id="eres" style="display:none"><h3>Result</h3><div id="ebody"></div>
     <div class="row" id="eactions" style="margin-top:12px"></div></div>
   <div class="panel"><h3>Recent executions</h3>
     <table><thead><tr><th>ID</th><th>Request</th><th>Status</th></tr></thead>
@@ -504,7 +575,7 @@ RENDER["engine$mount"] = () => {
   });
   const showRun = (d) => {
     $("#eres").style.display = "";
-    $("#epre").textContent = JSON.stringify(d, null, 2).slice(0, 6000);
+    $("#ebody").innerHTML = `<pre class="out">${esc(JSON.stringify(d, null, 2).slice(0, 6000))}</pre>`;
     const acts = $("#eactions");
     const id = d.execution_id;
     const waiting = id && (d.status === "WAITING_APPROVAL" || d.status === "PENDING");
@@ -514,6 +585,23 @@ RENDER["engine$mount"] = () => {
       : "";
     const b = $("#e-inspect");
     if (b) b.onclick = () => inspectExecution(id);
+  };
+  const showPretty = (kind, d) => {
+    $("#eres").style.display = "";
+    $("#eactions").innerHTML = "";
+    const body = $("#ebody");
+    if (kind === "resolve" && d.candidates) {
+      body.innerHTML = `<p class="muted" style="font-size:13px;margin-bottom:10px">intent: <b>${esc((d.intent && d.intent.intent) || "unknown")}</b></p>
+        <table><thead><tr><th>#</th><th>Name</th><th>Type</th><th>Score</th><th>Risk</th></tr></thead><tbody>` +
+        d.candidates.slice(0, 12).map((c, i) =>
+          `<tr><td class="muted">${i + 1}</td><td class="mono">${esc(c.name)}</td>
+           <td>${esc(c.definition_type || "")}</td><td>${esc(c.score)}</td><td>${esc(c.risk || "")}</td></tr>`).join("") +
+        `</tbody></table>`;
+    } else if (kind === "plan" && d.steps) {
+      body.innerHTML = `<pre class="out">${esc(d.steps.map((s) => `${s.index}. [${s.decision || "allowed"}] ${s.description}`).join("\n"))}</pre>`;
+    } else {
+      body.innerHTML = `<pre class="out">${esc(JSON.stringify(d, null, 2).slice(0, 6000))}</pre>`;
+    }
   };
   const ask = async (kind, btn) => {
     const q = $("#eq").value.trim();
@@ -608,6 +696,10 @@ RENDER.tools = async () => {
     <input type="text" id="t-spec" placeholder="e.g. terraform-infrastructure@^1.0">
     <button id="t-ver" class="ghost">Resolve</button><span id="t-ver-out" class="muted"></span>
   </div></div>
+  <div class="panel"><h3>Who uses a tool?</h3><div class="row">
+    <input type="text" id="t-tool" placeholder="e.g. Bash, kubectl, terraform">
+    <button id="t-cap" class="ghost">Lookup</button>
+  </div><div id="t-cap-out" style="margin-top:10px"></div></div>
   <div class="panel"><h3>Telemetry</h3>
     <pre class="out">${esc(JSON.stringify(tele || { tracked: 0 }, null, 2).slice(0, 1200))}</pre></div>
   <div class="panel"><h3>Workflows</h3>
@@ -633,6 +725,20 @@ RENDER["tools$mount"] = () => {
       const d = await api("/api/resolve-version?spec=" + encodeURIComponent(s));
       $("#t-ver-out").textContent = d.resolved;
     } catch (e) { toast(e.message); }
+  };
+  $("#t-cap").onclick = async () => {
+    const t = $("#t-tool").value.trim();
+    if (!t) return;
+    const box = $("#t-cap-out");
+    box.innerHTML = `<p class="muted">Looking up…</p>`;
+    try {
+      const d = await api("/api/capabilities?tool=" + encodeURIComponent(t));
+      box.innerHTML = d.length
+        ? `<table><thead><tr><th>Definition</th><th>Capability</th></tr></thead><tbody>` +
+          d.slice(0, 20).map((r) => `<tr><td class="mono">${esc(r.definition)}</td><td>${esc(r.capability)}</td></tr>`).join("") +
+          `</tbody></table>`
+        : `<p class="muted">No definitions invoke ‘${esc(t)}’.</p>`;
+    } catch (e) { box.innerHTML = `<p class="muted">${esc(e.message)}</p>`; }
   };
   $$("#wrows button").forEach((b) => {
     b.onclick = async () => {

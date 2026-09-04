@@ -83,3 +83,7 @@ Lint and verify factories
 - `bundle exec rspec spec/factories_spec.rb`
 - `bundle exec rails db:seed`
 - `bundle exec rails runner "puts FactoryBot.build(:user).email"`
+
+**Examples:**
+- -cli --help
+- -api --help

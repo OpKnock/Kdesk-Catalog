@@ -74,3 +74,7 @@ Trigger and receive Stripe and Slack events
 - `stripe trigger payment_intent.succeeded`
 - `curl -s -X POST -H "Authorization: Bearer $SLACK_TOKEN" -H 'Content-Type: application/json' -d '{"text":"Deploy complete"}' https://slack.com/api/chat.postMessage`
 - `stripe trigger checkout.session.completed`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -4,7 +4,7 @@ applyTo: "**/*.r **/*.sql"
 
 # Database Performance
 
-Optimize it.
+Tune query plans, indexes, and caching for optimal performance.
 
 ## Instructions
 

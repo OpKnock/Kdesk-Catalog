@@ -77,3 +77,7 @@ Use Lua scripts for atomic check-and-increment
 - `redis-cli EVAL 'local c=redis.call("INCR",KEYS[1]); if c==1 then redis.call("EXPIRE",KEYS[1],ARGV[1]) end; return c' 1 rate:user:42 60`
 - `redis-cli GET rate:user:42`
 - `redis-cli DEL rate:user:42`
+
+**Examples:**
+- -cli --help
+- -api --help

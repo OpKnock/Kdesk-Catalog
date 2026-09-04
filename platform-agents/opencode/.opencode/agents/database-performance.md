@@ -1,12 +1,12 @@
 ---
 name: "database-performance"
-description: "Optimize it."
+description: "Tune query plans, indexes, and caching for optimal performance."
 mode: subagent
 ---
 
 # Database Performance
 
-Optimize it.
+Tune query plans, indexes, and caching for optimal performance.
 
 ## Instructions
 

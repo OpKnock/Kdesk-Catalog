@@ -68,3 +68,7 @@ Detect leaked secrets in repositories
 - `gitleaks detect --report-format json --report-path gitleaks.json`
 - `gitleaks detect --source . --no-git`
 - `gitleaks protect -v`
+
+**Examples:**
+- -cli --help
+- -api --help

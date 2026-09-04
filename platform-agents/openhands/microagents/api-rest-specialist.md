@@ -77,3 +77,7 @@ Return RFC 7807 problem details for errors
 - `curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -d '{}' | jq '.type, .status, .title'`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/api/orders/404`
 - `curl -s http://localhost:3000/api/orders/404 | jq '.detail'`
+
+**Examples:**
+- -cli --help
+- -api --help

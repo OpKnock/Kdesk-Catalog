@@ -64,3 +64,7 @@ Track versions through the lifecycle
 - `git tag -a v2.0.0 -m 'v2 GA'`
 - `git tag -l 'v*' --sort=-v:refname | head -5`
 - `curl -s http://localhost:8080/changelog | jq '.versions[0]'`
+
+**Examples:**
+- -cli --help
+- -api --help

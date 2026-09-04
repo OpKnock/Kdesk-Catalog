@@ -1,12 +1,12 @@
 ---
 name: "service-discovery"
-description: "Implement it."
+description: "Configure service discovery with Consul, etcd, and DNS."
 mode: subagent
 ---
 
 # Service Discovery
 
-Implement it.
+Configure service discovery with Consul, etcd, and DNS.
 
 ## Instructions
 

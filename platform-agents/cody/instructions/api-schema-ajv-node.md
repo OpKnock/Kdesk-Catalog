@@ -68,3 +68,7 @@ Validate request bodies in middleware
 - `node -e "const Ajv=require('ajv'); const v=new Ajv().compile({type:'object',additionalProperties:false}); console.log(v({}), v({extra:1}))"`
 - `curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"email":"bad"}' -o /dev/null -w '%{http_code}\n'`
 - `curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"email":"ok@x.co"}' -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

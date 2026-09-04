@@ -67,3 +67,7 @@ Structure versioned routers and shared middleware
 - `node -e "const fs=require('fs'); console.log(fs.existsSync('routes/v2/users.js'))"`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/v9/users`
 - `curl -s http://localhost:3000/v1/users | jq '.count'`
+
+**Examples:**
+- -cli --help
+- -api --help

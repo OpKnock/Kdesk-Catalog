@@ -86,3 +86,7 @@ Queue async work with BullMQ
 - `node worker.js`
 - `redis-cli ping`
 - `rq worker --url redis://localhost:6379`
+
+**Examples:**
+- -cli --help
+- -api --help

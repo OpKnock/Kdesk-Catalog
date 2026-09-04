@@ -71,3 +71,7 @@ Compare with hey and ApacheBench for POST and header testing
 - `hey -n 5000 -c 50 http://localhost:3000/api`
 - `ab -n 5000 -c 50 -p post.json -T application/json http://localhost:3000/api`
 - `ab -n 1000 -c 20 -k http://localhost:3000/api`
+
+**Examples:**
+- -cli --help
+- -api --help

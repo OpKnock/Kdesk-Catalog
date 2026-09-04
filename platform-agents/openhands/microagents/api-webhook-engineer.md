@@ -79,3 +79,7 @@ Retry failed deliveries with backoff
 - `npm install p-retry`
 - `node -e "const pRetry=require('p-retry'); const send=()=>Promise.reject(new Error('down')); pRetry(send,{retries:3,factor:2}).catch(e=>console.log('gave up:',e.message))"`
 - `node -e "const r=require('retry'); const o=r.operation({retries:4,factor:2,minTimeout:1000}); o.attempt(n=>console.log('attempt',n))"`
+
+**Examples:**
+- -cli --help
+- -api --help

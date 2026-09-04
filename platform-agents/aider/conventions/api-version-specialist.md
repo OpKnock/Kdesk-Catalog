@@ -67,3 +67,7 @@ Classify changes as breaking or non-breaking
 - `git tag -a v2.0.0 -m 'Breaking: remove legacy fields'`
 - `npm view my-api versions --json`
 - `git log --oneline v1.0.0..HEAD`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -4,7 +4,7 @@ applyTo: "**/*.py **/*.r"
 
 # API Management
 
-Implement it.
+Manage API gateways, developer portals, and analytics.
 
 ## Instructions
 

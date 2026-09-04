@@ -73,3 +73,7 @@ Test the generated Go client
 - `go vet ./...`
 - `go mod tidy`
 - `go test -race ./...`
+
+**Examples:**
+- -cli --help
+- -api --help

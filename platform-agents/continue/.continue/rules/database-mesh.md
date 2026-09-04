@@ -1,13 +1,13 @@
 ---
 name: "Database Mesh"
-description: "Implement it."
+description: "Build a distributed database mesh with sharding and replication."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
 
 # Database Mesh
 
-Implement it.
+Build a distributed database mesh with sharding and replication.
 
 ## Instructions
 

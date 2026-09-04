@@ -73,3 +73,7 @@ Write response assertions in collections
 - `node -e "const c=require('./collection.json'); const t=c.item[0].event[0].script.exec.join('\n'); console.log(t.includes('pm.test'))"`
 - `curl -s https://postman-echo.com/get?q=1 -o /dev/null -w '%{http_code}\n'`
 - `npx postman-to-openapi collection.json -o openapi.yaml`
+
+**Examples:**
+- -cli --help
+- -api --help

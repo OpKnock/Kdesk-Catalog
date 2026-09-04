@@ -78,3 +78,7 @@ Monitor retries and dead letters
 - `redis-cli ZCARD bull:webhook-delivery:failed`
 - `npx bull-board`
 - `node -e "const {Queue}=require('bullmq'); const q=new Queue('webhook-delivery'); q.obliterate().then(()=>console.log('cleared'))"`
+
+**Examples:**
+- -cli --help
+- -api --help

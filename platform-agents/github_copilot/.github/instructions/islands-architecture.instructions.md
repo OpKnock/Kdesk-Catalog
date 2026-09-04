@@ -4,7 +4,7 @@ applyTo: "**/*.java **/*.r **/*.{js,ts,jsx,tsx}"
 
 # Islands Architecture
 
-Implement it.
+Build interactive islands with partial hydration for fast loads.
 
 ## Instructions
 

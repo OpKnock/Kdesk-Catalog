@@ -71,3 +71,7 @@ Author and schedule Airflow DAGs
 - `airflow users create --username admin --password admin --role Admin --email admin@localhost.test`
 - `airflow scheduler`
 - `airflow dags list`
+
+**Examples:**
+- general-cli --help
+- general-api --help

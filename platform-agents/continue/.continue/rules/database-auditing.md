@@ -1,13 +1,13 @@
 ---
 name: "Database Auditing"
-description: "Implement it."
+description: "Track database changes, access logs, and compliance audits."
 globs: ["**/*.go", "**/*.r", "**/*.sql"]
 alwaysApply: false
 ---
 
 # Database Auditing
 
-Implement it.
+Track database changes, access logs, and compliance audits.
 
 ## Instructions
 

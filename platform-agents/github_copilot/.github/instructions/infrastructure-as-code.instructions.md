@@ -4,7 +4,7 @@ applyTo: "**/*.r **/*.tf"
 
 # Infrastructure as Code
 
-Write it.
+Manage infrastructure as code with Terraform, Pulumi, and GitOps.
 
 ## Instructions
 

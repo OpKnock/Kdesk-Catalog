@@ -1,13 +1,13 @@
 ---
 name: "Service Discovery"
-description: "Implement it."
+description: "Configure service discovery with Consul, etcd, and DNS."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
 
 # Service Discovery
 
-Implement it.
+Configure service discovery with Consul, etcd, and DNS.
 
 ## Instructions
 

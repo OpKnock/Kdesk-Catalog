@@ -64,3 +64,7 @@ Automate ZAP scans in CI pipelines
 - `curl -s http://localhost:8080/v3/api-docs -o openapi.json`
 - `docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.json -f openapi -J -j -l FAIL -r report.html`
 - `curl -s http://localhost:8080/health -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -82,3 +82,7 @@ Configure pyproject.toml metadata
 - `python -c "import tomllib; d=tomllib.load(open('pyproject.toml','rb')); print(d['project']['name'], d['project']['version'])"`
 - `pip show my-sdk`
 - `python -c "import my_sdk; print(my_sdk.__version__)"`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -74,3 +74,7 @@ Encode and decode opaque page cursors
 - `node -e "console.log(Buffer.from(JSON.stringify({created_at:'2024-01-01',id:100})).toString('base64url'))"`
 - `node -e "console.log(JSON.parse(Buffer.from('eyJjcmVhdGVkX2F0IjoiMjAyNC0wMS0wMSIsImlkIjoxMDB9','base64url').toString()))"`
 - `curl -s 'http://localhost:3000/api/users?cursor=bad%20token' -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

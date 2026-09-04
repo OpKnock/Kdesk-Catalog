@@ -70,3 +70,7 @@ Use Fastify plugin encapsulation to scope middleware to route subsets
 - `fastify start -p 3000 app.js`
 - `node -e "const f=require('fastify')(); console.log(f.register ? 'fastify ready' : 'no')"`
 - `curl -s http://localhost:3000/docs -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

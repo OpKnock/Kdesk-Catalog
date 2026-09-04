@@ -1,11 +1,11 @@
 ---
 type: agent_requested
-description: "Implement it."
+description: "Build interactive islands with partial hydration for fast loads."
 ---
 
 # Islands Architecture
 
-Implement it.
+Build interactive islands with partial hydration for fast loads.
 
 ## Instructions
 

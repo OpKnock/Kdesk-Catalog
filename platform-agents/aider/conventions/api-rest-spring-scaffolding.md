@@ -72,3 +72,7 @@ Implement controllers with validation
 - `curl -s -X POST http://localhost:8080/api/users -H 'Content-Type: application/json' -d '{"name":"alice"}' -w '\n%{http_code}\n'`
 - `curl -s -o /dev/null -w '%{http_code}\n' -X POST http://localhost:8080/api/users -H 'Content-Type: application/json' -d '{}'`
 - `./mvnw clean test`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -71,3 +71,7 @@ Structure commits for changelog generation
 - `npx cz`
 - `npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0`
 - `git log --oneline --format='%h %s' -20`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -1,6 +1,6 @@
 # Database Auditing
 
-Implement it.
+Track database changes, access logs, and compliance audits.
 
 ## Instructions
 

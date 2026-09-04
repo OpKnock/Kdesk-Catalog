@@ -1,13 +1,13 @@
 ---
 name: "database-auditing"
-description: "Implement it."
+description: "Track database changes, access logs, and compliance audits."
 type: knowledge
 triggers: ["database-auditing", "db-auditing"]
 ---
 
 # Database Auditing
 
-Implement it.
+Track database changes, access logs, and compliance audits.
 
 ## Instructions
 

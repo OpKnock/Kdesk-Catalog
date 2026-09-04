@@ -1,13 +1,13 @@
 ---
 name: "API Management"
-description: "Implement it."
+description: "Manage API gateways, developer portals, and analytics."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
 
 # API Management
 
-Implement it.
+Manage API gateways, developer portals, and analytics.
 
 ## Instructions
 

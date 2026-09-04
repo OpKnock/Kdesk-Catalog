@@ -1,12 +1,12 @@
 ---
 name: "database-mesh"
-description: "Implement it."
+description: "Build a distributed database mesh with sharding and replication."
 mode: subagent
 ---
 
 # Database Mesh
 
-Implement it.
+Build a distributed database mesh with sharding and replication.
 
 ## Instructions
 

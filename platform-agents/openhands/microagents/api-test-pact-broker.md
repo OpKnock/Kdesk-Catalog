@@ -74,3 +74,7 @@ Verify provider against consumer contracts
 - `npx pact-verifier --provider-base-url http://localhost:3000 --pact-url ./pacts/order-consumer-order-service.json`
 - `npx jest --verbose`
 - `pact-broker list-latest-pact-versions --broker-base-url http://localhost:8080`
+
+**Examples:**
+- -cli --help
+- -api --help

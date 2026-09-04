@@ -1,6 +1,6 @@
 # Edge Networking
 
-Configure it.
+Manage edge CDN, DNS, and global load balancing configurations.
 
 ## Instructions
 

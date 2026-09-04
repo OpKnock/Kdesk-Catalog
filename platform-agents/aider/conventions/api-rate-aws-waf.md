@@ -72,3 +72,7 @@ Manage Cloudflare rate limiting rules
 - `curl -s "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits" -H "Authorization: Bearer $CF_TOKEN" | jq '.result[0].threshold'`
 - `gcloud compute security-policies create api-armor --description "API rate limits" --project my-proj`
 - `gcloud compute security-policies rules create 1000 --security-policy api-armor --action deny-403 --rate-limit-threshold-count 200 --rate-limit-threshold-interval-sec 60 --project my-proj`
+
+**Examples:**
+- -cli --help
+- -api --help

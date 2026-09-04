@@ -71,3 +71,7 @@ Configure the Fastify rate limit plugin
 - `npm install @fastify/rate-limit`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/api`
 - `node -e "const rl=require('@fastify/rate-limit'); console.log(typeof rl)"`
+
+**Examples:**
+- -cli --help
+- -api --help

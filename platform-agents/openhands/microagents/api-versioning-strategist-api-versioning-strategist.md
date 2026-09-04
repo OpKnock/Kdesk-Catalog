@@ -72,3 +72,7 @@ Document versioning decisions
 - `curl -s http://localhost:8080/docs/versioning | jq '.strategies'`
 - `npx swagger-cli validate openapi.yaml`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/v2/health`
+
+**Examples:**
+- -cli --help
+- -api --help

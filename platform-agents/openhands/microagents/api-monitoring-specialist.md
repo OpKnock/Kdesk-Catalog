@@ -79,3 +79,7 @@ Define and test SLO burn-rate alert rules
 - `promtool check rules slo-rules.yml`
 - `promtool test rules slo-tests.yml`
 - `curl -s 'http://localhost:9090/api/v1/rules?type=alert' | jq '.data.groups | length'`
+
+**Examples:**
+- -cli --help
+- -api --help

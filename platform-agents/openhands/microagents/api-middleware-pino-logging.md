@@ -78,3 +78,7 @@ Query and filter structured logs in production and development
 - `cat app.log | pino-pretty --translateTime`
 - `jq 'select(.level >= 40)' app.log`
 - `node -r pino-pretty app.js`
+
+**Examples:**
+- -cli --help
+- -api --help

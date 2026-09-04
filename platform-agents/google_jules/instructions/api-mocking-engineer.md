@@ -67,3 +67,7 @@ Simulate and record APIs with Hoverfly in capture mode
 - `curl -s -X PUT http://localhost:8888/api/v2/hoverfly/mode -d '{"mode":"capture"}' -H 'Content-Type: application/json'`
 - `curl -s http://localhost:8500/api/v2/hoverfly/state`
 - `curl -s -X PUT http://localhost:8888/api/v2/hoverfly/mode -d '{"mode":"simulate"}' -H 'Content-Type: application/json'`
+
+**Examples:**
+- -cli --help
+- -api --help

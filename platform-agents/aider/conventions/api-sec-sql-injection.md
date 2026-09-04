@@ -66,3 +66,7 @@ Test HTTP method handling and fuzzing
 - `curl -s -X TRACE http://localhost:8080/ -o /dev/null -w '%{http_code}\n'`
 - `curl -s -X PATCH http://localhost:8080/users/1 -H 'Content-Type: application/json' -d '{"role":"admin"}' -w '\n%{http_code}\n'`
 - `npx fuzzapi --target http://localhost:8080/users`
+
+**Examples:**
+- -cli --help
+- -api --help

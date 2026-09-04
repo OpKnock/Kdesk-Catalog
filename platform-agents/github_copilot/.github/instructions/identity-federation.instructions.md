@@ -4,7 +4,7 @@ applyTo: "**/*.r **/*.rs"
 
 # Identity Federation
 
-Implement it.
+Set up SAML/OIDC federation with IdP integration and SSO flows.
 
 ## Instructions
 

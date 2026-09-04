@@ -66,3 +66,7 @@ Scan TLS configuration with testssl.sh
 - `testssl.sh --hints api.example.com`
 - `testssl.sh --ssl-native api.example.com`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/health`
+
+**Examples:**
+- -cli --help
+- -api --help

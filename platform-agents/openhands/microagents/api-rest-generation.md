@@ -79,3 +79,7 @@ Build and preview reference documentation
 - `npx @redocly/cli preview-docs openapi.yaml`
 - `npx @redocly/cli bundle openapi.yaml -o dist/openapi.bundle.yaml`
 - `npx @redocly/cli lint openapi.yaml`
+
+**Examples:**
+- -cli --help
+- -api --help

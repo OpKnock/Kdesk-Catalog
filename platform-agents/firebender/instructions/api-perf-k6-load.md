@@ -75,3 +75,7 @@ Define pass/fail gates on latency and error rate
 - `k6 run --threshold 'http_req_duration:p(95)<300' script.js`
 - `k6 run --threshold 'http_req_failed:rate<0.01' script.js`
 - `k6 run --quiet script.js`
+
+**Examples:**
+- -cli --help
+- -api --help

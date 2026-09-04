@@ -76,3 +76,7 @@ Share auth and DB logic via FastAPI dependencies
 - `curl -s -o /dev/null -w '%{http_code}\n' -H 'Authorization: Bearer invalid' http://127.0.0.1:8000/api/me`
 - `pytest -q`
 - `uvicorn main:app --host 0.0.0.0 --port 8000`
+
+**Examples:**
+- -cli --help
+- -api --help

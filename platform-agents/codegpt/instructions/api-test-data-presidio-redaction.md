@@ -65,3 +65,7 @@ Mask fields with jq transformations
 - `curl -s http://localhost:3000/api/users | jq 'map(.email |= sub("(?<=.{3}).*(?=@)"; "***"))'`
 - `curl -s http://localhost:3000/api/users | jq 'map(.phone = "***-***-0000")'`
 - `curl -s http://localhost:3000/api/users | jq 'del(.[].ssn)'`
+
+**Examples:**
+- -cli --help
+- -api --help

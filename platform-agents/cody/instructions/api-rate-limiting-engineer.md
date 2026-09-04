@@ -73,3 +73,7 @@ Create consumers and credentials for limit scoping
 - `curl -s -X POST http://localhost:8001/consumers -d 'username=alice'`
 - `curl -s -X POST http://localhost:8001/consumers/alice/key-auth -d 'key=alice-key'`
 - `curl -s http://localhost:8001/consumers/alice/key-auth | jq '.data[0].key'`
+
+**Examples:**
+- -cli --help
+- -api --help

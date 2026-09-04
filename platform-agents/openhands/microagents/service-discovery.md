@@ -1,13 +1,13 @@
 ---
 name: "service-discovery"
-description: "Implement it."
+description: "Configure service discovery with Consul, etcd, and DNS."
 type: knowledge
 triggers: ["service-discovery"]
 ---
 
 # Service Discovery
 
-Implement it.
+Configure service discovery with Consul, etcd, and DNS.
 
 ## Instructions
 

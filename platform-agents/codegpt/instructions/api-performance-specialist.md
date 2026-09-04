@@ -68,3 +68,7 @@ Gate merges on k6 and web performance results
 - `k6 run --summary-export=summary.json --threshold 'http_req_duration:p(95)<300' perf.js`
 - `npx lighthouse-ci --budget-config=budget.json http://localhost:8080`
 - `curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8080/health`
+
+**Examples:**
+- -cli --help
+- -api --help

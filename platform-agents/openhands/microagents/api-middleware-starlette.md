@@ -80,3 +80,7 @@ Write custom BaseHTTPMiddleware subclasses for auth and request logging
 - `python -c "from starlette.middleware.base import BaseHTTPMiddleware; print(BaseHTTPMiddleware.__mro__)"`
 - `curl -s -H 'Authorization: Bearer test' -o /dev/null -w '%{http_code}\n' http://localhost:8000/secure`
 - `curl -s http://localhost:8000/openapi.json | python -m json.tool | head -20`
+
+**Examples:**
+- -cli --help
+- -api --help

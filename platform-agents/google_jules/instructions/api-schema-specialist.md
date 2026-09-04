@@ -71,3 +71,7 @@ Enforce schema quality rules
 - `npx @stoplight/spectral-cli lint openapi.yaml -r quality-rules.yaml`
 - `curl -s http://localhost:3000/openapi.json -o openapi.json`
 - `npx @stoplight/spectral-cli lint openapi.json -r .spectral.yml`
+
+**Examples:**
+- -cli --help
+- -api --help

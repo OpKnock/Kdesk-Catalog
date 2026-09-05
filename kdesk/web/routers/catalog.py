@@ -31,8 +31,9 @@ def stats(fast: bool = True) -> JSONResponse:
 
 
 @router.get("/search")
-def search(q: str = Query("", min_length=1), limit: int = 30,
-           type: str = "all", category: str = "") -> JSONResponse:
+def search(q: str = Query("", min_length=1, max_length=200),
+           limit: int = Query(30, ge=1, le=100),
+           type: str = "all", category: str = Query("", max_length=80)) -> JSONResponse:
     from kdesk.web.app import get_state
 
     kind = type if type in ("agent", "skill") else "all"
@@ -64,8 +65,10 @@ def categories() -> JSONResponse:
 
 
 @router.get("/browse")
-def browse(type: str = "all", category: str = "", q: str = "",
-           limit: int = 60, offset: int = 0) -> JSONResponse:
+def browse(type: str = "all", category: str = Query("", max_length=80),
+           q: str = Query("", max_length=200),
+           limit: int = Query(60, ge=1, le=200),
+           offset: int = Query(0, ge=0)) -> JSONResponse:
     from kdesk.web.app import get_state
 
     catalog = get_state().catalog

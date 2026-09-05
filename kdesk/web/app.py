@@ -168,6 +168,13 @@ def run(root: Optional[Path] = None, host: str = "127.0.0.1",
     if not _boot_poc(root or _default_root()):
         print("POC FAILED — fix the items above, then restart.")
         raise SystemExit(1)
+    if host not in ("127.0.0.1", "localhost", "::1"):
+        print("")
+        print("  !! You are binding to a non-loopback address.")
+        print("  !! The dashboard has NO login — anyone on your network")
+        print("     can use it, including install/fix/run actions.")
+        print("     Only do this on networks you fully trust.")
+        print("")
     app = create_app(root)
     url = f"http://{host}:{port}"
     print(f"Kdesk dashboard at {url}")

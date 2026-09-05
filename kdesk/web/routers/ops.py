@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, File, Form, UploadFile
+from fastapi import APIRouter, File, Form, Query, UploadFile
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -361,7 +361,7 @@ def run(req: RunRequest) -> JSONResponse:
 
 
 @router.get("/history")
-def history(limit: int = 20) -> JSONResponse:
+def history(limit: int = Query(20, ge=1, le=100)) -> JSONResponse:
     from kdesk.engine import Engine
 
     return _json(Engine(_state().root, catalog=_state().catalog).history(limit=limit))
@@ -433,7 +433,8 @@ def skills() -> JSONResponse:
 
 
 @router.get("/skills/search")
-def skills_search(q: str = "", limit: int = 20) -> JSONResponse:
+def skills_search(q: str = Query("", max_length=200),
+                  limit: int = Query(20, ge=1, le=100)) -> JSONResponse:
     from kdesk.marketplace import Marketplace
 
     mp = Marketplace(_state().root)

@@ -2,6 +2,7 @@
 name: "factory"
 description: "Implements the Factory Method and Abstract Factory patterns in Go: creating objects through interfaces with go test verification. Use when working with go, patterns or when the user mentions go, patterns."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "patterns"}
 allowed-tools: "Glob Grep Read Bash(go:*)"
 ---

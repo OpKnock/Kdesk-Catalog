@@ -1,8 +1,26 @@
-# Snyk
-
 Scans dependencies, code, IaC, and containers with Snyk, monitoring projects and enforcing policies from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `snyk auth`, `snyk code test`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Snyk
 
@@ -62,6 +80,11 @@ snyk monitor --project-name=my-api
 ### dependency-testing
 Test projects for vulnerable dependencies.
 
+**Parameters:**
+- `severityThreshold` (string): Minimum severity: low, medium, high, critical
+- `allProjects` (boolean): Scan all projects in the directory
+- `org` (string): Snyk organization slug
+
 **Commands:**
 - `snyk auth`
 - `snyk test`
@@ -76,6 +99,10 @@ Test projects for vulnerable dependencies.
 
 ### code-iac-container
 Scan source code, IaC files, and container images.
+
+**Parameters:**
+- `severityThreshold` (string): Minimum severity to report
+- `report` (boolean): Upload IaC results to Snyk
 
 **Commands:**
 - `snyk code test`
@@ -92,6 +119,10 @@ Scan source code, IaC files, and container images.
 ### monitoring
 Monitor projects and get alerts for new vulns.
 
+**Parameters:**
+- `projectName` (string): Custom project name in the Snyk dashboard
+- `org` (string): Snyk org slug or ID to associate monitored projects with.
+
 **Commands:**
 - `snyk monitor`
 - `snyk monitor --all-projects`
@@ -102,3 +133,7 @@ Monitor projects and get alerts for new vulns.
 - snyk monitor
 - snyk monitor --all-projects
 - snyk monitor --project-name=my-api
+
+## References
+- [Snyk Documentation](https://docs.snyk.io/)
+- [Snyk CLI GitHub](https://github.com/snyk/cli)

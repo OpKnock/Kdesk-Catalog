@@ -227,8 +227,8 @@ def build_markdown(agent: Dict[str, Any]) -> str:
     delegation = agent.get("delegation_pattern")
     caps = agent.get("capabilities") or []
 
-    # Add agentic workflow section if not already in instructions
-    if "## Read" not in instructions and "## Reason" not in instructions:
+    # Add agentic workflow section if not already in instructions (check for marker, not substring "## Read" which matches "## Reading")
+    if "Agentic Workflow" not in instructions:
         parts += ["", "## Agentic Workflow: Read -> Reason -> Act", "",
                   "You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:"]
         parts += ["", "### 1. Read", "Gather context before acting:"]

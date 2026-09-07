@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Run Apache JMeter test plans headlessly, scale via property overrides, produce JTL results and HTML dashboards, and extract key metrics to support capacity reviews."
+description: "Run Apache JMeter test plans headlessly, scale via property overrides, produce JTL results and HTML dashboards, and extract key metrics to support capacity reviews. Use when working with jmeter run, api or when the user mentions jmeter run, api."
 ---
-
-# JMeter
 
 Run Apache JMeter test plans headlessly, scale via property overrides, produce JTL results and HTML dashboards, and extract key metrics to support capacity reviews.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `jmeter -n -t test-plan.jmx -l results.jtl -e -o report/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # JMeter
 
@@ -85,6 +103,11 @@ Agent: jmeter -n -t api-load.jmx -Jthreads=200 -Jduration=300 -l run1.jtl -e -o 
 ### jmeter-run
 Execute JMeter test plans in non-GUI mode and produce reports.
 
+**Parameters:**
+- `plan` (string): Path to the .jmx test plan.
+- `log_file` (string): JTL results output file.
+- `report_dir` (string): Directory for the HTML report (-e -o).
+
 **Commands:**
 - `jmeter -n -t test-plan.jmx -l results.jtl -e -o report/`
 - `jmeter -n -t test-plan.jmx -Jthreads=50 -Jramp=10 -l results.jtl`
@@ -96,3 +119,7 @@ Execute JMeter test plans in non-GUI mode and produce reports.
 - jmeter -n -t api-load.jmx -Jthreads=200 -Jduration=300 -l run1.jtl -e -o report1/
 - jmeter -n -t test-plan.jmx --testfile result.properties -l results.jtl
 - tail -n 5 results.jtl | cut -d, -f1,2,14
+
+## References
+- [JMeter User Manual](https://jmeter.apache.org/usermanual/index.html)
+- [JMeter Non-GUI Mode](https://jmeter.apache.org/usermanual/get-started.html#non_gui)

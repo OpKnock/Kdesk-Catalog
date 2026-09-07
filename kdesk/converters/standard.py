@@ -30,13 +30,17 @@ def _skill_frontmatter_std(agent: Dict[str, Any]) -> str:
     lines.append(f"license: {json.dumps(str(lic))}")
     prereqs = agent.get("prerequisites") or []
     tools = agent.get("tools") or []
-    if prereqs or tools:
-        combined = prereqs + [t for t in tools if t not in prereqs]
+    combined = prereqs + [t for t in tools if t not in prereqs]
+    if combined:
         compat = f"Requires {', '.join(combined[:6])}."
         if any("curl" in str(c.get("commands", [])) or "kubectl" in str(c.get("commands", [])) for c in agent.get("capabilities", []) or []):
             compat += " Needs network access."
-        compat = compat[:500]
-        lines.append(f"compatibility: {json.dumps(compat)}")
+    else:
+        compat = "No special requirements."
+        if any("curl" in str(c.get("commands", [])) or "kubectl" in str(c.get("commands", [])) for c in agent.get("capabilities", []) or []):
+            compat = "Requires network access."
+    compat = compat[:500]
+    lines.append(f"compatibility: {json.dumps(compat)}")
     meta = {"author": str(agent.get("author", "Kdesk")), "version": str(agent.get("version", "1.0.0")), "category": str(agent.get("category", "general"))}
     lines.append(f"metadata: {json.dumps(meta)}")
     bins = set()

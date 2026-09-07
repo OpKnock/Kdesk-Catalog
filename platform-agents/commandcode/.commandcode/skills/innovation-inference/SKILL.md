@@ -1,11 +1,37 @@
 ---
 name: "innovation-inference"
-description: "Innovation inference server agent Manages Innovation inference server."
+description: "Innovation inference server agent Manages Innovation inference server. Use when working with Ml Innovation Inference Server Agent V2 or when the user mentions Ml Innovation Inference Server Agent V2."
+license: "MIT"
+compatibility: "Requires network access."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(python:*)"
 ---
 
 # Innovation Inference
 
 Innovation inference server agent Manages Innovation inference server.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python prototype.py --idea 'new attention mechanism' --outpu`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -15,6 +41,9 @@ Innovation inference server operator (v2). Call on this agent to serve innovatio
 
 ### Ml Innovation Inference Server Agent V2
 Innovation inference server agent. Manages Innovation inference server.
+
+**Parameters:**
+- `output` (string): CLI flag --output observed in capability commands
 
 **Commands:**
 - `python prototype.py --idea 'new attention mechanism' --output prototype.py`
@@ -27,3 +56,7 @@ Innovation inference server agent. Manages Innovation inference server.
 - curl http://localhost:8080/innovate --data '{"topic": "transformer architectures"}'
 - python research.py --topic 'transformer architectures' --output research.json
 - python prototype.py --idea 'new attention mechanism' --output prototype.py
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

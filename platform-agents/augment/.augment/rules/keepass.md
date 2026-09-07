@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Manage password databases with keepassxc-cli: create databases, add and search entries, export CSV, and handle attachments from the terminal."
+description: "Manage password databases with keepassxc-cli: create databases, add and search entries, export CSV, and handle attachments from the terminal. Use when working with db lifecycle, entry ops, api or when the user mentions db lifecycle, entry ops, api."
 ---
-
-# Keepass
 
 Manage password databases with keepassxc-cli: create databases, add and search entries, export CSV, and handle attachments from the terminal.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `keepassxc-cli create db.kdbx`, `keepassxc-cli add -p db.kdbx Web/staging.myapp.test --userna`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # KeePassXC (keepassxc-cli)
 
@@ -79,6 +97,11 @@ head -5 backup.csv
 ### db-lifecycle
 Create, unlock, and inspect KeePassXC databases.
 
+**Parameters:**
+- `db` (string): Database file path.
+- `entry` (string): Entry path, e.g. Web/staging.myapp.test.
+- `show_secret` (boolean): -s prints the password.
+
 **Commands:**
 - `keepassxc-cli create db.kdbx`
 - `keepassxc-cli ls -p db.kdbx`
@@ -94,6 +117,12 @@ Create, unlock, and inspect KeePassXC databases.
 ### entry-ops
 Add, edit, generate, and remove entries with attachments.
 
+**Parameters:**
+- `entry` (string): Entry path.
+- `username` (string): Username for the entry.
+- `password` (string): Password for the entry.
+- `length` (integer): Generated password length.
+
 **Commands:**
 - `keepassxc-cli add -p db.kdbx Web/staging.myapp.test --username alice --password s3cret`
 - `keepassxc-cli generate -p db.kdbx Web/staging.myapp.test --length 24 --lowercase --uppercase --numbers --special`
@@ -105,3 +134,7 @@ Add, edit, generate, and remove entries with attachments.
 - keepassxc-cli add -p db.kdbx Web/staging.myapp.test --username alice --password s3cret
 - keepassxc-cli generate -p db.kdbx Web/staging.myapp.test --length 24
 - keepassxc-cli attachment-export -p db.kdbx Web/staging.myapp.test key.pem keyfile.pem
+
+## References
+- [KeePassXC CLI](https://keepassxc.org/docs/KeePassXC_UserGuide.html#_cli_usage)
+- [keepassxc-cli man page](https://github.com/keepassxreboot/keepassxc/blob/develop/docs/man/keepassxc-cli.1)

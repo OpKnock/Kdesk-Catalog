@@ -1,13 +1,35 @@
 ---
 name: "rocket"
-description: "Expert Rocket (Rust) reference covering routing with route attributes, state and guards, Rocket.toml config, and cargo build/run workflows suited to web APIs."
+description: "Expert Rocket (Rust) reference covering routing with route attributes, state and guards, Rocket.toml config, and cargo build/run workflows suited to web APIs. Use when working with rocket web, api or when the user mentions rocket web, api."
+license: "MIT"
+compatibility: "Requires cargo. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(cargo:*) Bash(curl:*)"
 ---
-
-# Rocket
 
 Expert Rocket (Rust) reference covering routing with route attributes, state and guards, Rocket.toml config, and cargo build/run workflows suited to web APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cargo new hello-rocket && cd hello-rocket && cargo add rocke`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Rocket (Rust)
 
@@ -96,6 +118,11 @@ curl -s -o /dev/null -w '%{http_code}\n' -X POST http://localhost:8000/submit -d
 ### rocket-web
 Build Rust web APIs with Rocket: routes, state, config
 
+**Parameters:**
+- `route_path` (string): Path expression like /hello/<name>
+- `port` (integer): Port from Rocket.toml or ROCKET_PORT
+- `profile` (string): Rocket profile: default, release, debug
+
 **Commands:**
 - `cargo new hello-rocket && cd hello-rocket && cargo add rocket`
 - `cargo run`
@@ -107,3 +134,7 @@ Build Rust web APIs with Rocket: routes, state, config
 - cargo run
 - curl -s http://localhost:8000/hello/Ada
 - curl -s -X POST http://localhost:8000/submit -H 'Content-Type: application/json' -d '{"title":"hi"}'
+
+## References
+- [Rocket guide](https://rocket.rs/v0.5/guide/)
+- [Rocket API reference](https://api.rocket.rs/v0.5/rocket/)

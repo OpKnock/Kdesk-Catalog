@@ -2,6 +2,7 @@
 name: "federated-identity"
 description: "Federated identity and SSO: configure Keycloak clients and realms, exchange tokens via OIDC, and test IdP-driven login flows. Use when working with oidc sso, api or when the user mentions oidc sso, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

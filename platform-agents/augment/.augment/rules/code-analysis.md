@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Performs static and dynamic code analysis: complexity metrics, duplicate detection, profiling, and cross-language analyzers."
+description: "Performs static and dynamic code analysis: complexity metrics, duplicate detection, profiling, and cross-language analyzers. Use when working with complexity analysis, runtime analysis, code quality or when the user mentions complexity analysis, runtime analysis, code quality."
 ---
-
-# code-analysis
 
 Performs static and dynamic code analysis: complexity metrics, duplicate detection, profiling, and cross-language analyzers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python -m pip install radon`, `python -m cProfile -o out.prof app.py`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Code Analysis
 
@@ -66,6 +84,10 @@ pprof -web cpu.out
 ### complexity-analysis
 Measure code complexity and duplication.
 
+**Parameters:**
+- `path` (string): Source directory
+- `threshold` (integer): Complexity threshold
+
 **Commands:**
 - `python -m pip install radon`
 - `radon cc src/ -s`
@@ -81,6 +103,10 @@ Measure code complexity and duplication.
 ### runtime-analysis
 Profile CPU, memory, and hot paths.
 
+**Parameters:**
+- `profile-file` (string): Profiler output path
+- `method` (string): cpu or heap profiling
+
 **Commands:**
 - `python -m cProfile -o out.prof app.py`
 - `python -m pstats`
@@ -92,3 +118,8 @@ Profile CPU, memory, and hot paths.
 - python -m cProfile -s cumtime app.py | head -30
 - node --heap-prof --heap-prof-dir=./prof app.js
 - pprof -web cpu.out
+
+## References
+- [Radon Docs](https://radon.readthedocs.io)
+- [Vulture Docs](https://github.com/jendrikseipp/vulture)
+- [pprof Docs](https://github.com/google/pprof)

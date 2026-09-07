@@ -1,13 +1,35 @@
 ---
 name: "api-test-data-engineer"
-description: "Generates realistic API test data with Faker: user records, locales, deterministic seeding, and bulk generation for load testing."
+description: "Generates realistic API test data with Faker: user records, locales, deterministic seeding, and bulk generation for load testing. Use when working with faker generation, bulk generation or when the user mentions faker generation, bulk generation."
+license: "MIT"
+compatibility: "Requires faker, node.js, python, factory-boy, json-schema-faker. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "testing"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*) Bash(pip:*) Bash(python:*)"
 ---
-
-# api-test-data-engineer
 
 Generates realistic API test data with Faker: user records, locales, deterministic seeding, and bulk generation for load testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @faker-js/faker`, `node -e "const {faker}=require('@faker-js/faker'); const out`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Test Data Engineer
 
@@ -52,6 +74,11 @@ python -m faker name --locale=ja_JP
 ### faker-generation
 Generate realistic test datasets
 
+**Parameters:**
+- `seed` (integer): Deterministic generation seed
+- `locale` (string): Locale code
+- `count` (integer): Number of records to generate
+
 **Commands:**
 - `npm install @faker-js/faker`
 - `node -e "const {faker}=require('@faker-js/faker'); for(let i=0;i<5;i++) console.log(faker.person.fullName(), faker.internet.email())"`
@@ -75,3 +102,7 @@ Generate bulk datasets for load tests
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Faker.js Docs](https://fakerjs.dev/)
+- [Python Faker Docs](https://faker.readthedocs.io/en/master/)

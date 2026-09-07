@@ -1,8 +1,26 @@
-# terrascan
-
 Scan directories, files, and modules against policy packs. Emit reports and apply automatic fixes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `terrascan init`, `terrascan scan -d . -o sarif`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Terrascan
 
@@ -54,6 +72,11 @@ terrascan scan -d . --skip-rules AWS.S3Bucket.DS.High.1043
 ### terrascan-scan
 Scan directories, files, and modules against policy packs.
 
+**Parameters:**
+- `directory` (string): Directory to scan recursively
+- `file` (string): Single file to scan
+- `policyType` (string): Cloud policy type: aws, azure, gcp, k8s
+
 **Commands:**
 - `terrascan init`
 - `terrascan scan -d .`
@@ -69,6 +92,11 @@ Scan directories, files, and modules against policy packs.
 ### reporting-and-fixing
 Emit reports and apply automatic fixes.
 
+**Parameters:**
+- `output` (string): Format: yaml, json, xml, html, sarif
+- `fix` (boolean): Auto-fix supported violations
+- `skipRules` (array): Rule IDs to skip
+
 **Commands:**
 - `terrascan scan -d . -o sarif`
 - `terrascan scan -d . -o json --output-file results.json`
@@ -80,3 +108,7 @@ Emit reports and apply automatic fixes.
 - terrascan scan -d . -o sarif --output-file scan.sarif
 - terrascan scan -d . --fix
 - terrascan scan -d . --skip-rules AWS.S3Bucket.DS.High.1043
+
+## References
+- [Terrascan Documentation](https://docs.tenable.com/terrascan/)
+- [Terrascan GitHub](https://github.com/tenable/terrascan)

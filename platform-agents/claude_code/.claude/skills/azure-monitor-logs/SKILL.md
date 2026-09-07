@@ -2,6 +2,7 @@
 name: "azure-monitor-logs"
 description: "Queries and administers Log Analytics workspaces with the Azure CLI: creates workspaces, runs KQL queries for application and audit diagnostics, and configures diagnostic settings to route resource logs. Use when working with workspaces, kql queries, diagnostic settings, api or when the user mentions workspaces, kql queries, diagnostic settings, api."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(az:*)"
 ---

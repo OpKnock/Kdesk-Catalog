@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without application changes."
+description: "Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without application changes. Use when working with istio linkerd mesh, api or when the user mentions istio linkerd mesh, api."
 ---
-
-# Service Mesh
 
 Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without application changes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `istioctl install --set profile=demo -y`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Service Mesh
 
@@ -80,6 +98,10 @@ kubectl exec deploy/api -c istio-proxy -- curl -s localhost:15090/stats/promethe
 ### istio-linkerd-mesh
 Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without application changes.
 
+**Parameters:**
+- `profile` (string): Istio installation profile (demo, default, minimal)
+- `namespace` (string): Kubernetes namespace for mesh operations
+
 **Commands:**
 - `istioctl install --set profile=demo -y`
 - `istioctl analyze`
@@ -95,3 +117,6 @@ Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies si
 - istioctl proxy-status
 - kubectl get virtualservices -A
 - linkerd check --pre && linkerd install | kubectl apply -f -
+
+## References
+- [Istio docs](https://istio.io/latest/docs/)

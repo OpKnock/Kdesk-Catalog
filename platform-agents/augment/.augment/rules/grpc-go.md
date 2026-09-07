@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring."
+description: "gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring. Use when working with go grpc server, api or when the user mentions go grpc server, api."
 ---
-
-# Grpc Go
 
 gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@lat`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC Go
 
@@ -95,6 +113,11 @@ Agent: Add a timeout context and check the server address:
 ### go-grpc-server
 Build and run Go gRPC servers with registration, interceptors, and reflection.
 
+**Parameters:**
+- `listen_addr` (string): TCP address the server listens on, e.g. :50051.
+- `dial_target` (string): Client target address, e.g. localhost:50051.
+- `secure` (boolean): Use TLS credentials (true) or insecure credentials (false).
+
 **Commands:**
 - `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest`
 - `go get google.golang.org/grpc@latest`
@@ -106,3 +129,7 @@ Build and run Go gRPC servers with registration, interceptors, and reflection.
 - go run ./server & grpcurl -plaintext localhost:50051 list
 - go test ./...
 - go vet ./...
+
+## References
+- [gRPC Go Docs](https://grpc.io/docs/languages/go/)
+- [grpc-go Reference](https://pkg.go.dev/google.golang.org/grpc)

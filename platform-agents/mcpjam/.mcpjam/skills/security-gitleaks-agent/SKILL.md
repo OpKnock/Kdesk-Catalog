@@ -1,11 +1,37 @@
 ---
 name: "security-gitleaks-agent"
-description: "Gitleaks agent for secret detection."
+description: "Gitleaks agent for secret detection. Use when working with Security Gitleaks Agent or when the user mentions Security Gitleaks Agent."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(gitleaks:*)"
 ---
 
 # Security Gitleaks Agent
 
 Gitleaks agent for secret detection.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gitleaks detect`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -27,3 +53,6 @@ Gitleaks agent for secret detection.
 - gitleaks protect
 - gitleaks detect --source .
 - gitleaks detect --report-format json
+
+## References
+- [Gitleaks Documentation](https://github.com/gitleaks/gitleaks)

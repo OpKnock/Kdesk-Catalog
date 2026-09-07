@@ -1,13 +1,35 @@
 ---
 name: "api-perf-wrk"
-description: "Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing."
+description: "Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing. Use when working with wrk, hey ab or when the user mentions wrk, hey ab."
+license: "MIT"
+compatibility: "Requires node.js, python, redis, k6, new-relic."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(ab:*) Bash(hey:*) Bash(wrk:*)"
 ---
-
-# Api Perf Wrk
 
 Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `wrk -t4 -c100 -d30s http://localhost:3000/api`, `hey -n 10000 -c 100 -m POST -H 'Content-Type: application/js`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Perf v3 - Benchmarking
 
@@ -51,6 +73,11 @@ ab -n 5000 -c 50 -p post.json -T application/json http://localhost:3000/api
 ### wrk
 Run thread-based HTTP benchmarks with latency histograms
 
+**Parameters:**
+- `threads` (integer): Number of threads (-t)
+- `connections` (integer): Open connections (-c)
+- `duration` (string): Benchmark duration like 30s
+
 **Commands:**
 - `wrk -t4 -c100 -d30s http://localhost:3000/api`
 - `wrk -t2 -c50 -d20s --latency http://localhost:3000/api`
@@ -73,3 +100,7 @@ Compare with hey and ApacheBench for POST and header testing
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [wrk GitHub](https://github.com/wg/wrk)
+- [ApacheBench Docs](https://httpd.apache.org/docs/2.4/programs/ab.html)

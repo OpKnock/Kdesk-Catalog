@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "RabbitMQ clients in Java with amqp-client: ConnectionFactory, publishes, consumers, and RPC patterns."
+description: "RabbitMQ clients in Java with amqp-client: ConnectionFactory, publishes, consumers, and RPC patterns. Use when working with rabbitmq java client, api or when the user mentions rabbitmq java client, api."
 ---
-
-# Rabbitmq Java
 
 RabbitMQ clients in Java with amqp-client: ConnectionFactory, publishes, consumers, and RPC patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mvn dependency:tree -Dincludes=com.rabbitmq`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # RabbitMQ Java
 
@@ -73,6 +91,11 @@ channel.basicConsume("tasks", true, (tag, delivery) -> {
 ### rabbitmq-java-client
 Use amqp-client in Maven projects for queues, exchanges, publishers and consumers.
 
+**Parameters:**
+- `main_class` (string): Java main class to run
+- `queue` (string): Queue name
+- `uri` (string): AMQP URI
+
 **Commands:**
 - `mvn dependency:tree -Dincludes=com.rabbitmq`
 - `mvn compile`
@@ -84,3 +107,7 @@ Use amqp-client in Maven projects for queues, exchanges, publishers and consumer
 - mvn exec:java -Dexec.mainClass=com.example.Consumer
 - mvn compile
 - rabbitmqctl list_queues name messages
+
+## References
+- [RabbitMQ Java API Guide](https://www.rabbitmq.com/clients/java-api-guide.html)
+- [amqp-client GitHub](https://github.com/rabbitmq/rabbitmq-java-client)

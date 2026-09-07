@@ -1,8 +1,26 @@
-# postman-testing
-
 Designs and runs API tests with Postman collections via Newman CLI, including environments, data files, and reporters.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `newman run api.postman_collection.json`, `newman run collection.json -d data.csv`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Postman / Newman
 
@@ -62,6 +80,11 @@ pm.test('creates user with 201', () => {
 ### newman-runs
 Run Postman collections with environments.
 
+**Parameters:**
+- `collection` (string): Collection JSON path
+- `environment` (string): Environment JSON path
+- `folder` (string): Collection folder to run
+
 **Commands:**
 - `newman run api.postman_collection.json`
 - `newman run collection.json -e staging.postman_environment.json`
@@ -77,6 +100,11 @@ Run Postman collections with environments.
 ### data-driven
 Run collections with CSV/JSON data files.
 
+**Parameters:**
+- `dataFile` (string): CSV or JSON data file
+- `iterations` (number): Iteration limit
+- `delayRequest` (number): Delay between requests in ms
+
 **Commands:**
 - `newman run collection.json -d data.csv`
 - `newman run collection.json -d users.json`
@@ -91,6 +119,10 @@ Run collections with CSV/JSON data files.
 ### reporters
 Emit CLI, HTML, and JUnit reports.
 
+**Parameters:**
+- `reporters` (array): Reporter list: cli, html, junit, json
+- `exportPath` (string): Report export path
+
 **Commands:**
 - `newman run collection.json -r cli`
 - `newman run collection.json -r html --reporter-html-export report.html`
@@ -102,3 +134,7 @@ Emit CLI, HTML, and JUnit reports.
 - newman run collection.json -r html --reporter-html-export report.html
 - newman run collection.json -r junit --reporter-junit-export results.xml
 - newman run collection.json -r cli,html
+
+## References
+- [Newman CLI Documentation](https://learning.postman.com/docs/running-collections/using-newman-cli/)
+- [Postman Test Scripts](https://learning.postman.com/docs/writing-scripts/script-references/test-examples/)

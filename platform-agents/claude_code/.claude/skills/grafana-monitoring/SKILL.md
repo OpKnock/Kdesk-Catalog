@@ -2,6 +2,7 @@
 name: "grafana-monitoring"
 description: "Monitors systems with Grafana: datasource health, alert rules, provisioning as code, and API-driven dashboards. Use when working with api ops, provisioning, monitoring or when the user mentions api ops, provisioning, monitoring."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "monitoring"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

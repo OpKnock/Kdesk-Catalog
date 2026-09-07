@@ -1,8 +1,26 @@
-# ssh-agent
-
 Manages SSH keys in the agent: add/remove keys, list fingerprints, lifetimes, and agent forwarding for multi-hop connections.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `eval "$(ssh-agent -s)"`, `ssh-add -t 1h ~/.ssh/id_ed25519`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SSH Agent Management
 
@@ -63,6 +81,10 @@ ssh -A user@jumphost
 ### agent-lifecycle
 Start the agent and manage loaded keys.
 
+**Parameters:**
+- `keyfile` (string): Private key path
+- `agent-sock` (string): Agent socket path (SSH_AUTH_SOCK)
+
 **Commands:**
 - `eval "$(ssh-agent -s)"`
 - `ssh-add ~/.ssh/id_ed25519`
@@ -79,6 +101,10 @@ Start the agent and manage loaded keys.
 ### key-security
 Set lifetimes, require confirmation, and inspect agent state.
 
+**Parameters:**
+- `lifetime` (integer): Key lifetime in seconds (-t)
+- `confirm` (boolean): Require confirmation before use (-c)
+
 **Commands:**
 - `ssh-add -t 1h ~/.ssh/id_ed25519`
 - `ssh-add -c ~/.ssh/id_ed25519`
@@ -91,3 +117,7 @@ Set lifetimes, require confirmation, and inspect agent state.
 - ssh-add -t 1h ~/.ssh/id_ed25519
 - ssh-add -c ~/.ssh/id_ed25519
 - ssh-add -E sha256 -l
+
+## References
+- [ssh-agent Manual](https://man.openbsd.org/ssh-agent)
+- [ssh-add Manual](https://man.openbsd.org/ssh-add)

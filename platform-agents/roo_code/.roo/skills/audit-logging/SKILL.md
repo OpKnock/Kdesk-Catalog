@@ -1,13 +1,35 @@
 ---
 name: "audit-logging"
-description: "Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation."
+description: "Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation. Use when working with auditd, search report, app logging, api or when the user mentions auditd, search report, app logging, api."
+license: "MIT"
+compatibility: "Requires auditctl, augenrules, aureport, ausearch, journalctl, logger."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(auditctl:*) Bash(augenrules:*) Bash(aureport:*) Bash(ausearch:*) Bash(journalctl:*) Bash(logger:*) Bash(systemctl:*)"
 ---
-
-# Audit Logging
 
 Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `auditctl -w /etc/passwd -p wa -k password_changes`, `ausearch -k password_changes -ts today`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Audit Logging
 
@@ -65,6 +87,11 @@ journalctl -u my-api --since "1 hour ago"
 ### auditd
 Configure the Linux audit daemon and its rules.
 
+**Parameters:**
+- `watch_path` (string): File or directory to watch
+- `permissions` (string): Permission filter: r, w, x, a
+- `key` (string): Audit rule key (max 32 chars)
+
 **Commands:**
 - `auditctl -w /etc/passwd -p wa -k password_changes`
 - `auditctl -l`
@@ -79,6 +106,11 @@ Configure the Linux audit daemon and its rules.
 
 ### search-report
 Search audit logs and produce summaries.
+
+**Parameters:**
+- `key` (string): Rule key to filter by
+- `time_start` (string): Start time (-ts), e.g. today or 09:00
+- `time_end` (string): End time (-te)
 
 **Commands:**
 - `ausearch -k password_changes -ts today`
@@ -95,6 +127,10 @@ Search audit logs and produce summaries.
 ### app-logging
 Forward application audit events to syslog/journald.
 
+**Parameters:**
+- `tag` (string): Syslog tag (-t) for the application
+- `message` (string): Audit event message
+
 **Commands:**
 - `logger -t my-api "AUDIT user=alice action=delete resource=order/42"`
 - `journalctl -u my-api --since "1 hour ago"`
@@ -105,3 +141,8 @@ Forward application audit events to syslog/journald.
 - logger -t my-api "AUDIT user=alice action=export resource=reports/2026"
 - journalctl -u my-api -p err -n 100
 - journalctl -t my-api --output=json-pretty
+
+## References
+- [auditd Manual](https://linux.die.net/man/8/auditd)
+- [ausearch Manual](https://linux.die.net/man/8/ausearch)
+- [OWASP Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html)

@@ -1,13 +1,35 @@
 ---
 name: "capacity-planning"
-description: "Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware sizing for services."
+description: "Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware sizing for services. Use when working with load testing, sizing analysis or when the user mentions load testing, sizing analysis."
+license: "MIT"
+compatibility: "Requires prometheus, grafana, aws, terraform, kubernetes. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "sre"}
+allowed-tools: "Glob Grep Read Bash(ab:*) Bash(docker:*) Bash(hey:*) Bash(k6:*) Bash(kubectl:*) Bash(psutil::*) Bash(wrk:*)"
 ---
-
-# capacity-planning
 
 Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware sizing for services.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ab -n 10000 -c 100 http://localhost:8000/api`, `kubectl top pod -l app=myapp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Capacity Planning
 
@@ -76,6 +98,11 @@ spec:
 ### load-testing
 Generate load and measure service capacity.
 
+**Parameters:**
+- `concurrency` (integer): Concurrent connections
+- `requests` (integer): Total requests
+- `duration` (string): Test duration
+
 **Commands:**
 - `ab -n 10000 -c 100 http://localhost:8000/api`
 - `wrk -t4 -c200 -d30s http://localhost:8000/api`
@@ -90,6 +117,10 @@ Generate load and measure service capacity.
 ### sizing-analysis
 Analyze headroom and set scaling rules.
 
+**Parameters:**
+- `target-utilization` (integer): HPA target %
+- `metric` (string): cpu, memory, or latency
+
 **Commands:**
 - `kubectl top pod -l app=myapp`
 - `kubectl top node`
@@ -101,3 +132,7 @@ Analyze headroom and set scaling rules.
 - kubectl top pod -l app=myapp --containers
 - kubectl get hpa myapp -o yaml | grep -A5 spec
 - docker stats $(docker ps -q) --no-stream
+
+## References
+- [k6 Docs](https://grafana.com/docs/k6/latest/)
+- [HPA Docs](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)

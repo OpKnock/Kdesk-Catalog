@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Static type checking of Python code with mypy, including strict mode, incremental builds, and CI integration."
+description: "Static type checking of Python code with mypy, including strict mode, incremental builds, and CI integration. Use when working with type check python, code quality or when the user mentions type check python, code quality."
 ---
-
-# mypy
 
 Static type checking of Python code with mypy, including strict mode, incremental builds, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mypy src/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # MyPy
 
@@ -77,6 +95,11 @@ plugins = pydantic.mypy
 ### type-check-python
 Run mypy with configurable strictness, scopes, and output formats
 
+**Parameters:**
+- `strict` (boolean): Enable all strict mode flags (no untyped defs, disallow Any, etc.)
+- `python-version` (string): Python version to type check against, e.g. 3.11
+- `ignore-missing-imports` (boolean): Silence errors for packages without type stubs
+
 **Commands:**
 - `mypy src/`
 - `mypy --strict src/`
@@ -88,3 +111,7 @@ Run mypy with configurable strictness, scopes, and output formats
 - mypy src tests
 - mypy --strict --show-error-codes src/
 - mypy --cache-dir=.mypy_cache --pretty src/
+
+## References
+- [mypy documentation](https://mypy.readthedocs.io/)
+- [mypy strict mode](https://mypy.readthedocs.io/en/stable/command_line.html)

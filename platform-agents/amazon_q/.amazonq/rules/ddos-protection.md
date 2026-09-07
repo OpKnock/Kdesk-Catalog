@@ -1,8 +1,26 @@
-# ddos-protection
-
 Mitigates DDoS attacks: rate limiting, firewall rules, CDN shielding, and attack simulation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # DDoS Protection
 
@@ -66,6 +84,11 @@ mitigations, and verifies origin pressure drops.
 ### ddos-mitigation
 Configure rate limits, firewall rules, and verify mitigation
 
+**Parameters:**
+- `connlimit-above` (integer): Connection threshold per source IP
+- `pattern` (string): tcpdump filter pattern
+- `count` (integer): Packet count to capture
+
 **Commands:**
 - `iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit-above 100 -j DROP`
 - `nginx -t && nginx -s reload`
@@ -77,3 +100,7 @@ Configure rate limits, firewall rules, and verify mitigation
 - iptables -L -n -v | head -30
 - wrk -t8 -c500 -d60s http://localhost:8080/ --latency
 - ufw limit ssh comment 'rate limit ssh'
+
+## References
+- [OWASP DoS cheat sheet](https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html)
+- [Cloudflare DDoS protection](https://www.cloudflare.com/ddos/)

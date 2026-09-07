@@ -1,13 +1,35 @@
 ---
 name: "ethical-ai"
-description: "Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain checks, PII detection, and bias assessment."
+description: "Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain checks, PII detection, and bias assessment. Use when working with llm security scanning, data and supply chain or when the user mentions llm security scanning, data and supply chain."
+license: "MIT"
+compatibility: "Requires fairlearn, ai-fairness, shap, lime, tensorflow-model-analysis."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "ai"}
+allowed-tools: "Glob Grep Read Bash(detect-secrets:*) Bash(garak:*) Bash(gitleaks:*) Bash(pip-audit:*) Bash(presidio-analyzer:*) Bash(python:*) Bash(scorecard:*)"
 ---
-
-# ethical-ai
 
 Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain checks, PII detection, and bias assessment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `garak --model_type openai-chat --model_name gpt-4o-mini`, `gitleaks detect --source . --report-format json --report-pat`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Ethical AI Engineering
 
@@ -67,6 +89,11 @@ pip-audit -r requirements.txt
 ### llm-security-scanning
 Probe LLMs for prompt injection, jailbreaks, and harmful output with garak.
 
+**Parameters:**
+- `model_type` (string): Model interface: openai-chat, huggingface, claude
+- `model_name` (string): Model identifier
+- `probes` (string): Probe groups, e.g. dan, encoding
+
 **Commands:**
 - `garak --model_type openai-chat --model_name gpt-4o-mini`
 - `garak --model_type huggingface --model_name org/model --probes dan,encoding`
@@ -82,6 +109,10 @@ Probe LLMs for prompt injection, jailbreaks, and harmful output with garak.
 ### data-and-supply-chain
 Scan repos for secrets, PII, and supply-chain risks.
 
+**Parameters:**
+- `source` (string): Path or repo to scan
+- `report` (string): Report output path
+
 **Commands:**
 - `gitleaks detect --source . --report-format json --report-path leak.json`
 - `detect-secrets scan --baseline .secrets.baseline`
@@ -94,3 +125,9 @@ Scan repos for secrets, PII, and supply-chain risks.
 - gitleaks detect --source . --report-format json
 - scorecard --repo=github.com/org/app
 - presidio-analyzer --analyzer text 'Call me at 555-0100'
+
+## References
+- [garak LLM Vulnerability Scanner](https://docs.garak.ai/garak/)
+- [OpenSSF Scorecard](https://scorecard.dev/)
+- [Microsoft Presidio](https://microsoft.github.io/presidio/)
+- [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework)

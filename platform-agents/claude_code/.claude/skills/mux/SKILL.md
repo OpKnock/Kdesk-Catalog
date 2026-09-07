@@ -2,6 +2,7 @@
 name: "mux"
 description: "HTTP routing in Go with gorilla/mux: path variables, method matching, middleware, and route testing. Use when working with gorilla mux routing, api or when the user mentions gorilla mux routing, api."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(go:*)"
 ---

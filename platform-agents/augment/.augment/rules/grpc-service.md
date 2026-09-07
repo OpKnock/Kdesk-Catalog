@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Builds gRPC services with protobuf definitions, grpcurl inspection, and language-specific code generation."
+description: "Builds gRPC services with protobuf definitions, grpcurl inspection, and language-specific code generation. Use when working with protobuf codegen, grpc debugging, backend or when the user mentions protobuf codegen, grpc debugging, backend."
 ---
-
-# Grpc Service
 
 Builds gRPC services with protobuf definitions, grpcurl inspection, and language-specific code generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `protoc --go_out=. --go-grpc_out=. proto/order.proto`, `grpcurl -plaintext localhost:50051 list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC Service
 
@@ -77,6 +95,10 @@ grpcurl -plaintext localhost:50051 describe order.OrderService
 ### protobuf-codegen
 Compile protobuf definitions and generate server/client stubs.
 
+**Parameters:**
+- `out` (string): Output directory for generated code
+- `proto-file` (string): Protobuf file to compile
+
 **Commands:**
 - `protoc --go_out=. --go-grpc_out=. proto/order.proto`
 - `protoc --python_out=. --grpc_python_out=. proto/order.proto`
@@ -92,6 +114,11 @@ Compile protobuf definitions and generate server/client stubs.
 ### grpc-debugging
 Call and inspect gRPC services without writing code.
 
+**Parameters:**
+- `service` (string): Service name
+- `method` (string): Method name
+- `data` (string): JSON request body
+
 **Commands:**
 - `grpcurl -plaintext localhost:50051 list`
 - `grpcurl -plaintext -d "{\"id\":\"1\"}" localhost:50051 order.OrderService/GetOrder`
@@ -102,3 +129,8 @@ Call and inspect gRPC services without writing code.
 - grpcurl -plaintext localhost:50051 list order
 - grpcurl -plaintext -import-path proto -proto order.proto -d "{}" localhost:50051 order.OrderService/CreateOrder
 - grpcurl -plaintext localhost:50051 describe order.Order
+
+## References
+- [gRPC Docs](https://grpc.io/docs/)
+- [Protobuf Language Guide](https://protobuf.dev/programming-guides/proto3/)
+- [grpcurl](https://github.com/fullstorydev/grpcurl)

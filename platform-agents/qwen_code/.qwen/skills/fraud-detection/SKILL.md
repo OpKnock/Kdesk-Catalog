@@ -1,13 +1,35 @@
 ---
 name: "fraud-detection"
-description: "Builds fraud detection pipelines with pandas, scikit-learn, and MLflow: feature engineering, model training, evaluation, and experiment tracking."
+description: "Builds fraud detection pipelines with pandas, scikit-learn, and MLflow: feature engineering, model training, evaluation, and experiment tracking. Use when working with data pipeline, mlflow or when the user mentions data pipeline, mlflow."
+license: "MIT"
+compatibility: "Requires python, scikit-learn, tensorflow, kafka, redis."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(jupyter:*) Bash(mlflow:*) Bash(pip:*) Bash(python:*)"
 ---
-
-# fraud-detection
 
 Builds fraud detection pipelines with pandas, scikit-learn, and MLflow: feature engineering, model training, evaluation, and experiment tracking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python -m venv .venv && .venv/Scripts/activate`, `mlflow run . -e train --env-manager local`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Fraud Detection
 
@@ -81,6 +103,11 @@ Include golden-path unit tests for each engineered feature.
 ### data-pipeline
 Prepare and inspect transaction datasets with Python data tooling.
 
+**Parameters:**
+- `dataset` (string): Path to transactions CSV
+- `test-path` (string): pytest path filter
+- `notebook` (string): Notebook path to export
+
 **Commands:**
 - `python -m venv .venv && .venv/Scripts/activate`
 - `pip install pandas scikit-learn imbalanced-learn mlflow pytest`
@@ -96,6 +123,11 @@ Prepare and inspect transaction datasets with Python data tooling.
 ### mlflow
 Track experiments, log models, and compare fraud detection runs.
 
+**Parameters:**
+- `experiment-name` (string): MLflow experiment name
+- `model-uri` (string): Registered model URI like models:/fraud-detector/Production
+- `max_depth` (number): Tree depth hyperparameter for training run
+
 **Commands:**
 - `mlflow run . -e train --env-manager local`
 - `mlflow experiments create --experiment-name fraud-v3`
@@ -107,3 +139,8 @@ Track experiments, log models, and compare fraud detection runs.
 - mlflow run . -e train -P max_depth=7 -P scale_pos_weight=10
 - mlflow models serve -m models:/fraud-detector/Production -p 5001
 - mlflow runs list --experiment-id 42 --order-by 'metrics.auc desc'
+
+## References
+- [scikit-learn](https://scikit-learn.org/stable/)
+- [imbalanced-learn](https://imbalanced-learn.org/stable/)
+- [MLflow Docs](https://mlflow.org/docs/latest/)

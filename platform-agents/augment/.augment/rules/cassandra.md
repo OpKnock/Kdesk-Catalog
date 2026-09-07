@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Operates Cassandra: cqlsh queries, schema management, and node health via nodetool."
+description: "Operates Cassandra: cqlsh queries, schema management, and node health via nodetool. Use when working with cassandra cli, database or when the user mentions cassandra cli, database."
 ---
-
-# Cassandra
 
 Operates Cassandra: cqlsh queries, schema management, and node health via nodetool.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cqlsh -e "DESCRIBE KEYSPACES;"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Cassandra
 
@@ -77,6 +95,11 @@ recommends repairs, compactions, or query fixes.
 ### cassandra-cli
 Query and manage Cassandra with cqlsh and nodetool
 
+**Parameters:**
+- `keyspace` (string): Keyspace to use (-k)
+- `file` (string): CQL script file to execute (-f)
+- `parallel` (boolean): Run repair in parallel (-pr)
+
 **Commands:**
 - `cqlsh -e "DESCRIBE KEYSPACES;"`
 - `cqlsh -e "SELECT * FROM app.orders LIMIT 10;"`
@@ -88,3 +111,7 @@ Query and manage Cassandra with cqlsh and nodetool
 - cqlsh -k app -e "SELECT count(*) FROM orders;"
 - nodetool tpstats | head -20
 - nodetool compactionstats
+
+## References
+- [Cassandra docs](https://cassandra.apache.org/doc/latest/)
+- [nodetool reference](https://cassandra.apache.org/doc/latest/cassandra/operating/)

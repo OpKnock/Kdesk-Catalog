@@ -1,11 +1,37 @@
 ---
 name: "devops-github-actions"
-description: "GitHub Actions agent for CI/CD automation."
+description: "GitHub Actions agent for CI/CD automation. Use when working with Devops Github Actions, deployment or when the user mentions Devops Github Actions, deployment."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "devops"}
+allowed-tools: "Glob Grep Read Bash(Cancel::*) Bash(List::*) Bash(Re-run::*) Bash(View::*)"
 ---
 
 # Devops Github Actions
 
 GitHub Actions agent for CI/CD automation.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `View: gh run view`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -36,3 +62,6 @@ GitHub Actions agent for CI/CD automation.
 - View: gh run view
 - Cancel: gh run cancel run-id
 - Re-run: gh run rerun run-id
+
+## References
+- [GitHub Actions Documentation](https://docs.github.com/actions)

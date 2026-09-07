@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Builds content-focused websites and islands-architecture apps with Astro: content collections, integrations, and static builds."
+description: "Builds content-focused websites and islands-architecture apps with Astro: content collections, integrations, and static builds. Use when working with scaffold, build preview, frontend or when the user mentions scaffold, build preview, frontend."
 ---
-
-# Astro
 
 Builds content-focused websites and islands-architecture apps with Astro: content collections, integrations, and static builds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm create astro@latest -- --template minimal --no-git --ins`, `npm run dev`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Astro
 
@@ -82,6 +100,11 @@ npx astro preview
 ### scaffold
 Create Astro projects and add framework integrations.
 
+**Parameters:**
+- `template` (string): minimal, blog, docs, or portfolio starter
+- `install` (string): --install to auto-install dependencies
+- `no-git` (string): Skip git initialization
+
 **Commands:**
 - `npm create astro@latest -- --template minimal --no-git --install`
 - `npx astro add react`
@@ -97,6 +120,11 @@ Create Astro projects and add framework integrations.
 ### build-preview
 Develop, type-check, build, and preview Astro sites.
 
+**Parameters:**
+- `port` (number): Dev/preview server port
+- `minimumSeverityLevel` (string): astro check severity gate: hint, warning, error
+- `output` (string): static (default) or server for SSR
+
 **Commands:**
 - `npm run dev`
 - `npx astro check`
@@ -108,3 +136,8 @@ Develop, type-check, build, and preview Astro sites.
 - npm run dev -- --port 4321
 - npx astro check --minimumSeverityLevel error
 - npm run build && npx astro preview --port 8080
+
+## References
+- [Astro Docs](https://docs.astro.build/en/getting-started/)
+- [Astro Content Collections](https://docs.astro.build/en/guides/content-collections/)
+- [Astro CLI](https://docs.astro.build/en/reference/cli-reference/)

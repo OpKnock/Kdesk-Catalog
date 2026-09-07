@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Lock down Redis with ACL users, password auth, TLS listeners, and renamed dangerous commands to meet production hardening requirements."
+description: "Lock down Redis with ACL users, password auth, TLS listeners, and renamed dangerous commands to meet production hardening requirements. Use when working with redis hardening, api or when the user mentions redis hardening, api."
 ---
-
-# Redis Security
 
 Lock down Redis with ACL users, password auth, TLS listeners, and renamed dangerous commands to meet production hardening requirements.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli ACL LIST`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Redis Security
 
@@ -81,6 +99,11 @@ redis-cli ACL WHOAMI
 ### redis-hardening
 Lock down Redis with ACLs, passwords, TLS, and command renaming
 
+**Parameters:**
+- `username` (string): ACL user to create or modify
+- `key_pattern` (string): Key pattern the user may touch, e.g. cache:*
+- `commands` (string): Allow/deny command list, e.g. +get -set
+
 **Commands:**
 - `redis-cli ACL LIST`
 - `redis-cli ACL SETUSER appuser on >StrongPass123 ~cache:* +get +set +del`
@@ -93,3 +116,7 @@ Lock down Redis with ACLs, passwords, TLS, and command renaming
 - redis-cli ACL SETUSER readonly on >pw123 ~cache:* +get -set
 - redis-cli CONFIG GET bind
 - redis-cli --tls --cacert ca.crt -a $REDIS_PASS ping
+
+## References
+- [Redis Security](https://redis.io/docs/latest/operate/oss_and_stack/management/security/)
+- [ACL command reference](https://redis.io/docs/latest/commands/acl-setuser/)

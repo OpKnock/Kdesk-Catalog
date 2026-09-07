@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Run and use Zipkin for distributed tracing: start the server, emit spans over the v2 API, query traces by ID or service, and review service dependencies."
+description: "Run and use Zipkin for distributed tracing: start the server, emit spans over the v2 API, query traces by ID or service, and review service dependencies. Use when working with zipkin tracing, api or when the user mentions zipkin tracing, api."
 ---
-
-# Zipkin Tracing
 
 Run and use Zipkin for distributed tracing: start the server, emit spans over the v2 API, query traces by ID or service, and review service dependencies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -d -p 9411:9411 openzipkin/zipkin`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Zipkin Tracing
 
@@ -75,6 +93,11 @@ curl -s http://localhost:9411/api/v2/services
 ### zipkin-tracing
 Run Zipkin, emit spans, and query traces
 
+**Parameters:**
+- `traceId` (string): 128-bit trace identifier
+- `serviceName` (string): Service name to filter spans
+- `spanId` (string): Span identifier
+
 **Commands:**
 - `docker run -d -p 9411:9411 openzipkin/zipkin`
 - `curl -s http://localhost:9411/api/v2/traces | jq '.[0] | {id, duration}'`
@@ -86,3 +109,7 @@ Run Zipkin, emit spans, and query traces
 - docker run -d -p 9411:9411 -e STORAGE_TYPE=elasticsearch -e ES_HOSTS=http://localhost:9200 openzipkin/zipkin
 - curl -s http://localhost:9411/api/v2/services | jq '.'
 - curl -s 'http://localhost:9411/api/v2/spans?serviceName=orders-api' | jq '.[0].name'
+
+## References
+- [Zipkin Quickstart](https://zipkin.io/pages/quickstart.html)
+- [Zipkin API v2](https://zipkin.io/zipkin-api/)

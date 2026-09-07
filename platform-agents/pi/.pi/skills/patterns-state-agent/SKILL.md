@@ -1,11 +1,37 @@
 ---
 name: "patterns-state-agent"
-description: "State pattern agent for implementation."
+description: "State pattern agent for implementation. Use when working with Patterns State Agent or when the user mentions Patterns State Agent."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "patterns"}
+allowed-tools: "Glob Grep Read Bash(interface:*)"
 ---
 
 # Patterns State Agent
 
 State pattern agent for implementation.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `interface State { handle(context: Context): void; } class Co`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -21,3 +47,6 @@ State pattern agent for implementation.
 
 **Examples:**
 - interface State { handle(context: Context): void; } class ConcreteStateA implements State { handle(context: Context): void { context.setState(new ConcreteStateB()); } } class ConcreteStateB implements State { handle(context: Context): void { context.setState(new ConcreteStateA()); } } class Context { private state: State; setState(state: State) { this.state = state; } request() { this.state.handle(this); } }
+
+## References
+- [State Design Pattern](https://refactoring.guru/design-patterns/state)

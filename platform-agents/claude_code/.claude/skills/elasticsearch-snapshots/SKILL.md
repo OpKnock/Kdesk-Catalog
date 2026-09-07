@@ -2,6 +2,7 @@
 name: "elasticsearch-snapshots"
 description: "Elasticsearch snapshot and restore: register snapshot repositories, create and list snapshots, and restore indices from backups. Use when working with snapshot lifecycle, api or when the user mentions snapshot lifecycle, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

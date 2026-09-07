@@ -2,6 +2,7 @@
 name: "elasticsearch-cluster"
 description: "Elasticsearch cluster health and operations: check node status, shard allocation, pending tasks, and cluster settings from the REST API. Use when working with cluster health, api or when the user mentions cluster health, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

@@ -1,13 +1,35 @@
 ---
 name: "cors-preflight"
-description: "Handle and debug CORS preflight OPTIONS requests: correct status codes, Access-Control-Allow headers, and caching."
+description: "Handle and debug CORS preflight OPTIONS requests: correct status codes, Access-Control-Allow headers, and caching. Use when working with preflight debug, preflight config, api or when the user mentions preflight debug, preflight config, api."
+license: "MIT"
+compatibility: "Requires node, npm. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*)"
 ---
-
-# Cors Preflight
 
 Handle and debug CORS preflight OPTIONS requests: correct status codes, Access-Control-Allow headers, and caching.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -i -X OPTIONS http://localhost:8080/api -H "Origin: htt`, `npm install cors`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # CORS Preflight
 
@@ -81,6 +103,10 @@ curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api \
 ### preflight-debug
 Send preflight OPTIONS requests with curl and inspect the Access-Control response headers
 
+**Parameters:**
+- `origin` (string): Origin header, e.g. http://localhost:3000
+- `request_method` (string): Access-Control-Request-Method value
+
 **Commands:**
 - `curl -i -X OPTIONS http://localhost:8080/api -H "Origin: http://localhost:3000" -H "Access-Control-Request-Method: PUT" -H "Access-Control-Request-Headers: X-Custom-Header,Content-Type"`
 - `curl -s -o /dev/null -w "%{http_code}" -X OPTIONS http://localhost:8080/api -H "Origin: http://localhost:3000" -H "Access-Control-Request-Method: POST"`
@@ -95,6 +121,9 @@ Send preflight OPTIONS requests with curl and inspect the Access-Control respons
 ### preflight-config
 Configure preflight handling with middleware and caching headers
 
+**Parameters:**
+- `max_age` (string): Access-Control-Max-Age in seconds
+
 **Commands:**
 - `npm install cors`
 - `node server.js`
@@ -106,3 +135,7 @@ Configure preflight handling with middleware and caching headers
 - curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api -H "Origin: http://localhost:3000" -H "Access-Control-Request-Method: POST" | grep -i access-control-max-age
 - curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api -H "Origin: http://localhost:3000" -H "Access-Control-Request-Method: DELETE" | grep -ci 'access-control-allow-'
 
+
+## References
+- [MDN Preflight Requests](https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request)
+- [CORS Errors and Headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors)

@@ -1,13 +1,35 @@
 ---
 name: "real-user-monitoring"
-description: "Capture real-user Core Web Vitals with Grafana Faro, run Lighthouse lab audits, and correlate field versus lab performance signals."
+description: "Capture real-user Core Web Vitals with Grafana Faro, run Lighthouse lab audits, and correlate field versus lab performance signals. Use when working with rum instrumentation, api or when the user mentions rum instrumentation, api."
+license: "MIT"
+compatibility: "Requires npm, npx. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(npm:*) Bash(npx:*)"
 ---
-
-# Real User Monitoring
 
 Capture real-user Core Web Vitals with Grafana Faro, run Lighthouse lab audits, and correlate field versus lab performance signals.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @grafana/faro-web-sdk @grafana/faro-web-tracing`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Real User Monitoring
 
@@ -64,6 +86,11 @@ initializeFaro({
 ### rum-instrumentation
 Instrument web apps for RUM with Faro, measure Core Web Vitals, and run lighthouse audits.
 
+**Parameters:**
+- `url` (string): Page URL to audit
+- `preset` (string): lighthouse preset: desktop or mobile
+- `output_path` (string): Where to write the report
+
 **Commands:**
 - `npm install @grafana/faro-web-sdk @grafana/faro-web-tracing`
 - `npx lighthouse https://staging.your-app.test --output=json --output-path=report.json`
@@ -75,3 +102,7 @@ Instrument web apps for RUM with Faro, measure Core Web Vitals, and run lighthou
 - npx lighthouse https://staging.your-app.test --output=json --output-path=report.json | jq '.categories.performance.score'
 - npm install web-vitals
 - npx lighthouse https://staging.your-app.test --preset=desktop
+
+## References
+- [Grafana Faro](https://grafana.com/docs/grafana-cloud/monitor-applications/frontend-observability/faro-web-sdk/)
+- [Lighthouse CLI](https://github.com/GoogleChrome/lighthouse)

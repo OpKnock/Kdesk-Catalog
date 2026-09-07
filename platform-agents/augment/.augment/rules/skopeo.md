@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Inspects, copies, and signs container images with skopeo \u2014 registry operations without a daemon, including sync and list-tags."
+description: "Inspects, copies, and signs container images with skopeo \u2014 registry operations without a daemon, including sync and list-tags. Use when working with image inspection, copy and sync, devops or when the user mentions image inspection, copy and sync, devops."
 ---
-
-# skopeo
 
 Inspects, copies, and signs container images with skopeo — registry operations without a daemon, including sync and list-tags.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `skopeo inspect docker://nginx:latest`, `skopeo copy docker://nginx:latest docker://ghcr.io/nginx:lat`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # skopeo Registry Operations
 
@@ -62,6 +80,10 @@ skopeo delete docker://ghcr.io/old-app:v0.9
 ### image-inspection
 Inspect images and registries without pulling layers locally.
 
+**Parameters:**
+- `image` (string): Image reference
+- `format` (string): Go template for output
+
 **Commands:**
 - `skopeo inspect docker://nginx:latest`
 - `skopeo inspect --raw docker://nginx:latest`
@@ -77,6 +99,10 @@ Inspect images and registries without pulling layers locally.
 ### copy-and-sync
 Copy images between transports/registries and sync repositories.
 
+**Parameters:**
+- `src` (string): Source image reference
+- `dest` (string): Destination reference
+
 **Commands:**
 - `skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest`
 - `skopeo copy --all --preserve-digests docker://ghcr.io/org/app:1.0 docker://ghcr.io/org/app:1.0`
@@ -88,3 +114,7 @@ Copy images between transports/registries and sync repositories.
 - skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest
 - skopeo sync --src docker --dest dir nginx:latest /opt/images
 - skopeo delete docker://ghcr.io/old-app:v0.9
+
+## References
+- [skopeo GitHub](https://github.com/containers/skopeo)
+- [containers-common Transports](https://github.com/containers/image/blob/main/docs/containers-transports.5.md)

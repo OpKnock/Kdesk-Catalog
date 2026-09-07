@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability."
+description: "Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability. Use when working with honeycomb ops, api or when the user mentions honeycomb ops, api."
 ---
-
-# Honeycomb Observability
 
 Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `honeycomb auth login`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Honeycomb Observability
 
@@ -80,6 +98,11 @@ Agent: honeycomb query run --dataset myservice '{"time_range": 900, "breakdowns"
 ### honeycomb-ops
 Manage datasets, run queries, and send events with the Honeycomb CLI.
 
+**Parameters:**
+- `dataset` (string): Honeycomb dataset name.
+- `time_range` (integer): Query window in seconds.
+- `api_key` (string): Honeycomb API key (or OTEL header).
+
 **Commands:**
 - `honeycomb auth login`
 - `honeycomb dataset list`
@@ -91,3 +114,7 @@ Manage datasets, run queries, and send events with the Honeycomb CLI.
 - honeycomb query run --dataset myservice '{"time_range": 900, "order": [{"op": "COUNT"}]}'
 - honeycomb dataset create frontend
 - export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io
+
+## References
+- [Honeycomb Docs](https://docs.honeycomb.io/)
+- [Honeycomb CLI](https://docs.honeycomb.io/working-with-your-data/honeycomb-cli/)

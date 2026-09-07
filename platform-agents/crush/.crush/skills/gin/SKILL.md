@@ -1,13 +1,35 @@
 ---
 name: "gin"
-description: "Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test handlers."
+description: "Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test handlers. Use when working with gin development, api or when the user mentions gin development, api."
+license: "MIT"
+compatibility: "Requires network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(go:*)"
 ---
-
-# Gin
 
 Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test handlers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go get github.com/gin-gonic/gin`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Gin
 
@@ -97,6 +119,11 @@ func TestGetOrder(t *testing.T) {
 ### gin-development
 Run Gin apps, add middleware, and test handlers with Go testing.
 
+**Parameters:**
+- `port` (integer): Gin listen port
+- `mode` (string): GIN_MODE debug/release
+- `middleware` (string): logger, recovery, cors, custom
+
 **Commands:**
 - `go get github.com/gin-gonic/gin`
 - `go run main.go`
@@ -108,3 +135,7 @@ Run Gin apps, add middleware, and test handlers with Go testing.
 - go get github.com/gin-gonic/gin && go run main.go
 - go test ./... -race -v
 - curl -s localhost:8080/api/orders | jq
+
+## References
+- [Gin documentation](https://gin-gonic.com/docs/)
+- [Gin GitHub](https://github.com/gin-gonic/gin)

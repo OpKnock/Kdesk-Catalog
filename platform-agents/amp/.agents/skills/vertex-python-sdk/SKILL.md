@@ -1,11 +1,37 @@
 ---
 name: "vertex-python-sdk"
-description: "ML it agent handling Google Vertex AI integration."
+description: "ML it agent handling Google Vertex AI integration. Use when working with Ml Vertex Python Sdk Agent or when the user mentions Ml Vertex Python Sdk Agent."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(pip:*) Bash(python:*)"
 ---
 
 # Vertex Python Sdk
 
 ML it agent handling Google Vertex AI integration.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install vertex-sdk --upgrade`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -25,3 +51,7 @@ ML Vertex Python SDK agent for Google Vertex AI integration.
 **Examples:**
 - Predict: python -c 'from google.cloud import aiplatform; aiplatform.init(project="my-project"); model = aiplatform.Model("projects/123/locations/us-central1/models/456"); print(model.predict([1.0, 2.0]))'
 - List: python -c 'from google.cloud import aiplatform; aiplatform.init(project="my-project"); print([m.display_name for m in aiplatform.Model.list()])'
+
+## References
+- [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs)
+- [Python Documentation](https://docs.python.org/3/)

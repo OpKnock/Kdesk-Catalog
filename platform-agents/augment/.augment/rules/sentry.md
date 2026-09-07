@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Create releases and associate commits with it-cli. Upload source maps handling readable stack traces. and deploy notifications.'"
+description: "Create releases and associate commits with it-cli. Upload source maps handling readable stack traces. and deploy notifications.'. Use when working with releases, sourcemaps, monitoring or when the user mentions releases, sourcemaps, monitoring."
 ---
-
-# Sentry
 
 Create releases and associate commits with it-cli. Upload source maps handling readable stack traces. and deploy notifications.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sentry-cli releases new -p my-project 3.2.0`, `sentry-cli sourcemaps upload -o my-org -p my-project dist/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Sentry
 
@@ -68,6 +86,11 @@ Dry-run the flow in staging first.
 ### releases
 Create releases and associate commits with sentry-cli.
 
+**Parameters:**
+- `release` (string): Release version string
+- `env` (string): Deploy environment: production, staging
+- `project` (string): Sentry project slug
+
 **Commands:**
 - `sentry-cli releases new -p my-project 3.2.0`
 - `sentry-cli releases set-commits --auto 3.2.0`
@@ -83,6 +106,11 @@ Create releases and associate commits with sentry-cli.
 ### sourcemaps
 Upload source maps for readable stack traces.
 
+**Parameters:**
+- `org` (string): Sentry organization slug
+- `project` (string): Sentry project slug
+- `release` (string): Release to associate files with
+
 **Commands:**
 - `sentry-cli sourcemaps upload -o my-org -p my-project dist/`
 - `sentry-cli sourcemaps explain dist/app.9f2c1a.js`
@@ -94,3 +122,8 @@ Upload source maps for readable stack traces.
 - sentry-cli sourcemaps upload -o my-org -p my-project dist/ --release 3.2.0
 - sentry-cli debug-files upload -o my-org -p my-project ios/build/Release-iphoneos/app.app.dSYM
 - sentry-cli sourcemaps explain dist/app.js
+
+## References
+- [Sentry CLI](https://docs.sentry.io/cli/)
+- [Sentry Releases](https://docs.sentry.io/product/releases/)
+- [Source Maps](https://docs.sentry.io/platforms/javascript/sourcemaps/)

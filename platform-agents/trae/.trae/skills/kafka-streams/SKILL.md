@@ -1,13 +1,35 @@
 ---
 name: "kafka-streams"
-description: "Build and run Kafka Streams applications: topology processing, state-store changelogs, application resets, and output topic verification."
+description: "Build and run Kafka Streams applications: topology processing, state-store changelogs, application resets, and output topic verification. Use when working with streams app, output verify, api or when the user mentions streams app, output verify, api."
+license: "MIT"
+compatibility: "Requires ./gradlew, java, kafka-console-consumer.sh, kafka-consumer-groups.sh, kafka-streams-application-reset.sh, kafka-topics.sh."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(./gradlew:*) Bash(java:*) Bash(kafka-console-consumer.sh:*) Bash(kafka-consumer-groups.sh:*) Bash(kafka-streams-application-reset.sh:*) Bash(kafka-topics.sh:*)"
 ---
-
-# Kafka Streams
 
 Build and run Kafka Streams applications: topology processing, state-store changelogs, application resets, and output topic verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `java -jar build/libs/kafka-streams-demo.jar config/streams.p`, `kafka-console-consumer.sh --bootstrap-server localhost:9092 `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka Streams
 
@@ -97,6 +119,11 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic wordcount-ou
 ### streams-app
 Run Kafka Streams applications and manage their lifecycle.
 
+**Parameters:**
+- `application_id` (string): Streams application.id (group for internal topics).
+- `input_topics` (string): Comma-separated input topics.
+- `intermediate_topics` (string): Repartition/changelog topics to reset.
+
 **Commands:**
 - `java -jar build/libs/kafka-streams-demo.jar config/streams.properties`
 - `./gradlew run`
@@ -111,6 +138,9 @@ Run Kafka Streams applications and manage their lifecycle.
 ### output-verify
 Verify stream processing output and internal topology state.
 
+**Parameters:**
+- `output_topic` (string): Sink topic written by the topology.
+
 **Commands:**
 - `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic wordcount-output --from-beginning --property print.key=true --property print.value=true`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --list | grep -E 'wordcount|changelog|repartition'`
@@ -121,3 +151,7 @@ Verify stream processing output and internal topology state.
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic wordcount-output --from-beginning --property print.key=true
 - kafka-topics.sh --bootstrap-server localhost:9092 --list | grep -E 'changelog|repartition'
 - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group wordcount-app
+
+## References
+- [Kafka Streams](https://kafka.apache.org/documentation/streams/)
+- [Streams Developer Guide](https://kafka.apache.org/documentation/streams/developer-guide/)

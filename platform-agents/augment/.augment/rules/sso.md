@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Configure single sign-on with Keycloak by creating realms, registering OIDC clients, and exercising token flows from the terminal. Covers kcadm.sh administration, discovery endpoint usage, and logout wiring so SSO sessions terminate cleanly."
+description: "Configure single sign-on with Keycloak by creating realms, registering OIDC clients, and exercising token flows from the terminal. Covers kcadm.sh administration, discovery endpoint usage, and logout wiring so SSO sessions terminate cleanly. Use when working with keycloak sso, api or when the user mentions keycloak sso, api."
 ---
-
-# Sso
 
 Configure single sign-on with Keycloak by creating realms, registering OIDC clients, and exercising token flows from the terminal. Covers kcadm.sh administration, discovery endpoint usage, and logout wiring so SSO sessions terminate cleanly.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kcadm.sh config credentials --server http://localhost:8080 -`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SSO with Keycloak
 
@@ -74,6 +92,11 @@ curl -s -H "Authorization: Bearer $TOKEN" http://localhost:8080/realms/myrealm/p
 ### keycloak-sso
 Configure SSO with Keycloak: realms, clients, token flows
 
+**Parameters:**
+- `realm` (string): Keycloak realm name
+- `client_id` (string): OIDC client identifier
+- `grant_type` (string): authorization_code, password, client_credentials, refresh_token
+
 **Commands:**
 - `kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin`
 - `kcadm.sh create realms -s realm=myrealm -s enabled=true`
@@ -85,3 +108,7 @@ Configure SSO with Keycloak: realms, clients, token flows
 - kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin
 - kcadm.sh create clients -r myrealm -f client.json
 - curl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token -d 'grant_type=password&client_id=app&username=ada&password=secret' | jq -r .access_token
+
+## References
+- [Keycloak server admin guide](https://www.keycloak.org/docs/latest/server_admin/index.html)
+- [Keycloak Admin CLI](https://www.keycloak.org/docs/latest/server_admin/index.html#admin-cli)

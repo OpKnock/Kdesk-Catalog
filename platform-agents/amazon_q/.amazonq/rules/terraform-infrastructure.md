@@ -1,8 +1,26 @@
-# terraform-infrastructure
-
 Manages infrastructure as code with Terraform: init, plan, apply, state, and modules across environments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `terraform init`, `terraform state list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Terraform
 
@@ -93,6 +111,11 @@ Add Terratest or tofu test suites for module behavior.
 ### core
 Run the core Terraform workflow.
 
+**Parameters:**
+- `var-file` (string): Environment variable file
+- `out` (string): Save plan to a file
+- `target` (string): Target a specific resource/module
+
 **Commands:**
 - `terraform init`
 - `terraform plan -out=tfplan`
@@ -108,6 +131,11 @@ Run the core Terraform workflow.
 ### state
 Inspect and repair Terraform state.
 
+**Parameters:**
+- `address` (string): Resource address like aws_instance.web[0]
+- `import-id` (string): Provider resource id to import
+- `rm` (string): Remove resource from state
+
 **Commands:**
 - `terraform state list`
 - `terraform state show aws_instance.web[0]`
@@ -119,3 +147,8 @@ Inspect and repair Terraform state.
 - terraform state list | grep module.vpc
 - terraform state show aws_s3_bucket.logs
 - terraform import aws_iam_user.ci ci-bot
+
+## References
+- [Terraform CLI](https://developer.hashicorp.com/terraform/cli/commands)
+- [Terraform Language](https://developer.hashicorp.com/terraform/language)
+- [Terraform Best Practices](https://developer.hashicorp.com/terraform/tutorials/configuration-language/best-practices)

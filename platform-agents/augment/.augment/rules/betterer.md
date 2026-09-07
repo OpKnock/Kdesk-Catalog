@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Tracks and enforces code quality metrics over time with betterer: type coverage, lint counts, and complexity budgets that never regress."
+description: "Tracks and enforces code quality metrics over time with betterer: type coverage, lint counts, and complexity budgets that never regress. Use when working with betterer core, betterer config, code quality or when the user mentions betterer core, betterer config, code quality."
 ---
-
-# betterer
 
 Tracks and enforces code quality metrics over time with betterer: type coverage, lint counts, and complexity budgets that never regress.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx betterer init`, `npx betterer --ci`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Betterer
 
@@ -68,6 +86,10 @@ export default {
 ### betterer-core
 Initialize, run, and update betterer metrics.
 
+**Parameters:**
+- `update` (boolean): Update baseline results
+- `strict` (boolean): Reject unchanged results as failures
+
 **Commands:**
 - `npx betterer init`
 - `npx betterer`
@@ -83,6 +105,10 @@ Initialize, run, and update betterer metrics.
 ### betterer-config
 Configure custom tests and thresholds.
 
+**Parameters:**
+- `ci` (boolean): CI-friendly mode
+- `workers` (integer): Worker processes for checks
+
 **Commands:**
 - `npx betterer --ci`
 - `npx betterer --cache`
@@ -92,3 +118,7 @@ Configure custom tests and thresholds.
 **Examples:**
 - npx betterer --ci --silent
 - npx betterer --cache-dir .cache/betterer
+
+## References
+- [Betterer Docs](https://phenomnomnominal.github.io/betterer/)
+- [Betterer on GitHub](https://github.com/phenomnomnominal/betterer)

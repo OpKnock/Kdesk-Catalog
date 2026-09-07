@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Integrates with platform webhooks: GitHub repository hooks, Stripe event triggers, Slack incoming webhooks, and signature verification patterns."
+description: "Integrates with platform webhooks: GitHub repository hooks, Stripe event triggers, Slack incoming webhooks, and signature verification patterns. Use when working with github webhooks, stripe slack or when the user mentions github webhooks, stripe slack."
 ---
-
-# Api Webhook Github Webhooks
 
 Integrates with platform webhooks: GitHub repository hooks, Stripe event triggers, Slack incoming webhooks, and signature verification patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh api repos/octocat/Hello-World/hooks --method POST -f conf`, `stripe listen --forward-to localhost:3000/webhooks`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Webhook v5 - Integrations
 
@@ -53,6 +71,11 @@ stripe trigger payment_intent.succeeded
 ### github-webhooks
 Manage GitHub repository webhooks
 
+**Parameters:**
+- `repo` (string): owner/repo
+- `url` (string): Webhook URL
+- `events` (array): Event types
+
 **Commands:**
 - `gh api repos/octocat/Hello-World/hooks --method POST -f config.url=http://localhost:8080/hook -f config.content_type=json -f events[]=push`
 - `gh api repos/octocat/Hello-World/hooks | jq '.[].config.url'`
@@ -76,3 +99,7 @@ Trigger and receive Stripe and Slack events
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [GitHub Webhook Docs](https://docs.github.com/en/webhooks)
+- [Stripe CLI Docs](https://docs.stripe.com/stripe-cli)

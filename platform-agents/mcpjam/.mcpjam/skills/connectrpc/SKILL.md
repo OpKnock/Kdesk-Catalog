@@ -1,13 +1,35 @@
 ---
 name: "connectrpc"
-description: "Develop modern RPC services with ConnectRPC: protocol choice, buf codegen, and calling services from Go and browsers."
+description: "Develop modern RPC services with ConnectRPC: protocol choice, buf codegen, and calling services from Go and browsers. Use when working with proto codegen, protocol calls, api or when the user mentions proto codegen, protocol calls, api."
+license: "MIT"
+compatibility: "Requires buf, grpcurl. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(buf:*) Bash(curl:*) Bash(grpcurl:*)"
 ---
-
-# Connectrpc
 
 Develop modern RPC services with ConnectRPC: protocol choice, buf codegen, and calling services from Go and browsers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `buf lint`, `curl -H "Content-Type: application/json" -d '{"name":"alice"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ConnectRPC
 
@@ -93,6 +115,10 @@ curl -s -o /dev/null -w "%{http_code}\n" -H "Content-Type: application/json" -d 
 ### proto-codegen
 Lint, generate, and manage protobuf with buf for ConnectRPC projects
 
+**Parameters:**
+- `proto_dir` (string): Directory of proto files
+- `output_dir` (string): Generation output directory
+
 **Commands:**
 - `buf lint`
 - `buf generate`
@@ -107,6 +133,10 @@ Lint, generate, and manage protobuf with buf for ConnectRPC projects
 ### protocol-calls
 Call ConnectRPC services over Connect, gRPC, and gRPC-Web protocols
 
+**Parameters:**
+- `service_fqrn` (string): Fully qualified RPC path such as example.v1.GreetService/Greet
+- `content_type` (string): application/json, application/proto, application/connect+proto
+
 **Commands:**
 - `curl -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.v1.GreetService/Greet`
 - `curl -H "Content-Type: application/proto" --data-binary @req.bin http://localhost:8080/example.v1.GreetService/Greet`
@@ -117,3 +147,7 @@ Call ConnectRPC services over Connect, gRPC, and gRPC-Web protocols
 - curl -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.v1.GreetService/Greet
 - grpcurl -plaintext localhost:8080 list
 - grpcurl -plaintext -d '{}' localhost:8080 example.v1.GreetService/Greet
+
+## References
+- [ConnectRPC Docs](https://connectrpc.com/docs/)
+- [buf Docs](https://buf.build/docs/)

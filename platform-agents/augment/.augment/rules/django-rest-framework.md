@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Builds and maintains Django REST Framework APIs: runs the dev server, manages migrations, generates OpenAPI schemas via drf-spectacular, and tests endpoints."
+description: "Builds and maintains Django REST Framework APIs: runs the dev server, manages migrations, generates OpenAPI schemas via drf-spectacular, and tests endpoints. Use when working with drf project, api or when the user mentions drf project, api."
 ---
-
-# Django Rest Framework
 
 Builds and maintains Django REST Framework APIs: runs the dev server, manages migrations, generates OpenAPI schemas via drf-spectacular, and tests endpoints.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python manage.py runserver 0.0.0.0:8000`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Django REST Framework
 
@@ -77,6 +95,11 @@ curl -s http://localhost:8000/api/schema/ | jq '.paths | keys'
 ### drf-project
 Day-to-day DRF project operations: server, migrations, schema generation, and tests.
 
+**Parameters:**
+- `app-name` (string): Django app containing the models/serializers to manage
+- `port` (integer): Port for the development server
+- `schema-file` (string): Output path for the generated OpenAPI schema
+
 **Commands:**
 - `python manage.py runserver 0.0.0.0:8000`
 - `python manage.py makemigrations api`
@@ -89,3 +112,7 @@ Day-to-day DRF project operations: server, migrations, schema generation, and te
 - python manage.py makemigrations api && python manage.py migrate
 - python manage.py spectacular --file schema.yml && npx @redocly/cli lint schema.yml
 - python manage.py test api --keepdb
+
+## References
+- [DRF Official Docs](https://www.django-rest-framework.org/)
+- [drf-spectacular](https://drf-spectacular.readthedocs.io/)

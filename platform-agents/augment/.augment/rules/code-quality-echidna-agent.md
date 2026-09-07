@@ -1,11 +1,33 @@
 ---
 type: agent_requested
-description: "Property-based fuzzing for Solidity smart contracts. Runs invariant tests, manages corpus, and supports assertion mode."
+description: "Property-based fuzzing for Solidity smart contracts. Runs invariant tests, manages corpus, and supports assertion mode. Use when working with fuzz contracts, code quality, agent or when the user mentions fuzz contracts, code quality, agent."
 ---
 
 # Code Quality Echidna Agent
 
 Property-based fuzzing for Solidity smart contracts. Runs invariant tests, manages corpus, and supports assertion mode.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `echidna-test contract.sol --contract ContractName`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -37,6 +59,12 @@ Create echidna.yaml for test limits, gas settings, filter patterns, and corpus m
 ### fuzz-contracts
 Property-based fuzzing of Solidity contracts with Echidna
 
+**Parameters:**
+- `contract` (string): Contract name to test (required)
+- `config` (string): Path to Echidna config YAML
+- `test_mode` (string): Test mode (assertion, optimization)
+- `corpus_dir` (string): Directory for corpus persistence
+
 **Commands:**
 - `echidna-test contract.sol --contract ContractName`
 - `echidna-test contract.sol --config echidna.yaml`
@@ -48,3 +76,10 @@ Property-based fuzzing of Solidity contracts with Echidna
 - echidna-test contract.sol --config echidna.yaml
 - echidna-test contract.sol --test-mode assertion
 - echidna-test contract.sol --corpus-dir corpus
+
+## References
+- [Echidna Documentation](https://github.com/crytic/echidna)
+- [Echidna User Guide](https://github.com/crytic/echidna/wiki)
+- [Property-Based Testing](https://github.com/crytic/echidna/wiki/Property-Based-Testing)
+- [Echidna Configuration](https://github.com/crytic/echidna/wiki/Configuration-File)
+- [CI Integration](https://github.com/crytic/echidna/wiki/Continuous-Integration)

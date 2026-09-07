@@ -1,8 +1,26 @@
-# falco
-
 Detects abnormal container and host behavior at runtime with Falco rule engines, event generators, and falcoctl artifact management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `falco`, `falcoctl driver install`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Falco
 
@@ -68,6 +86,10 @@ falco-event-generator run network
 ### falco-runtime
 Run Falco, configure rules, and view detected events.
 
+**Parameters:**
+- `rulesFile` (string): Additional rules file to load
+- `set` (object): Config overrides, e.g. output.format or rules_files
+
 **Commands:**
 - `falco`
 - `falco --version`
@@ -82,6 +104,10 @@ Run Falco, configure rules, and view detected events.
 
 ### falcoctl-artifacts
 Manage rules artifacts and drivers with falcoctl.
+
+**Parameters:**
+- `artifact` (string): Artifact name, e.g. falcosecurity/falco-rules
+- `version` (string): Artifact version constraint
 
 **Commands:**
 - `falcoctl driver install`
@@ -98,6 +124,10 @@ Manage rules artifacts and drivers with falcoctl.
 ### event-generation
 Generate test events to validate rule coverage.
 
+**Parameters:**
+- `action` (string): Event action: run, list, or a specific action name
+- `namespace` (string): Namespace to deploy the event-generator workload in.
+
 **Commands:**
 - `falco-event-generator run`
 - `falco-event-generator run syscall`
@@ -108,3 +138,8 @@ Generate test events to validate rule coverage.
 - falco-event-generator run syscall
 - falco-event-generator list
 - falco-event-generator run network
+
+## References
+- [Falco Documentation](https://falco.org/docs/)
+- [falcoctl Guide](https://falco.org/docs/falcoctl/)
+- [Falco Rules Reference](https://falco.org/docs/reference/rules/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Operates Hasura GraphQL engines: metadata management, migrations, console access, remote schemas, and permissions."
+description: "Operates Hasura GraphQL engines: metadata management, migrations, console access, remote schemas, and permissions. Use when working with hasura cli, graphql engine, cloud or when the user mentions hasura cli, graphql engine, cloud."
 ---
-
-# hasura
 
 Operates Hasura GraphQL engines: metadata management, migrations, console access, remote schemas, and permissions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `hasura init myproject --endpoint http://localhost:8080`, `curl -X POST http://localhost:8080/v1/graphql -H "x-hasura-a`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Hasura
 
@@ -64,6 +82,10 @@ curl -X POST http://localhost:8080/v1/query \
 ### hasura-cli
 Manage Hasura metadata and migrations.
 
+**Parameters:**
+- `endpoint` (string): Hasura endpoint
+- `admin-secret` (string): Admin secret
+
 **Commands:**
 - `hasura init myproject --endpoint http://localhost:8080`
 - `hasura console`
@@ -79,6 +101,10 @@ Manage Hasura metadata and migrations.
 ### graphql-engine
 Query the GraphQL engine and manage schema.
 
+**Parameters:**
+- `query` (string): GraphQL query
+- `sql` (string): SQL to run
+
 **Commands:**
 - `curl -X POST http://localhost:8080/v1/graphql -H "x-hasura-admin-secret: mysecret" -H "Content-Type: application/json" -d "{\"query\":\"{ __schema { types { name } } }\"}"`
 - `curl -X POST http://localhost:8080/v1/query -H "x-hasura-admin-secret: mysecret" -H "Content-Type: application/json" -d "{\"type\":\"run_sql\",\"args\":{\"sql\":\"SELECT version();\"}}"`
@@ -88,3 +114,7 @@ Query the GraphQL engine and manage schema.
 **Examples:**
 - curl -s http://localhost:8080/healthz
 - hasura seed apply
+
+## References
+- [Hasura Docs](https://hasura.io/docs/)
+- [Hasura CLI](https://hasura.io/docs/3.0/cli/)

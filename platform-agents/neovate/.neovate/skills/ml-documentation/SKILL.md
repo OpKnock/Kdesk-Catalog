@@ -1,11 +1,37 @@
 ---
 name: "ml-documentation"
-description: "it agent handling creating comprehensive it."
+description: "it agent handling creating comprehensive it. Use when working with Ml Documentation or when the user mentions Ml Documentation."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(API:*) Bash(Data:*) Bash(Model:*) Bash(Sphinx::*)"
 ---
 
 # Ml Documentation
 
 it agent handling creating comprehensive it.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Data sheet: python -m docs.data-sheet --data data.csv --outp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -25,6 +51,9 @@ Always use real documentation tools. Never suggest fictional tools.
 ### Ml Documentation
 ML documentation agent for creating comprehensive ML documentation.
 
+**Parameters:**
+- `output` (string): CLI flag --output observed in capability commands
+
 **Commands:**
 - `Data sheet: python -m docs.data-sheet --data data.csv --output data_sheet.md`
 - `Sphinx: sphinx-build -b html docs/ docs/_build/`
@@ -36,3 +65,7 @@ ML documentation agent for creating comprehensive ML documentation.
 - Data sheet: python -m docs.data-sheet --data data.csv --output data_sheet.md
 - API docs: python -m docs.api --module my_module --output api_docs.md
 - Sphinx: sphinx-build -b html docs/ docs/_build/
+
+## References
+- [MkDocs Documentation](https://www.mkdocs.org/)
+- [Python Documentation](https://docs.python.org/3/)

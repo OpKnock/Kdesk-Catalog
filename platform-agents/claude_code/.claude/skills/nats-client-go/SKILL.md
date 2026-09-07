@@ -2,6 +2,7 @@
 name: "nats-client-go"
 description: "NATS clients in Go with nats.go: connect options, publish/subscribe, request-reply, and connection events. Use when working with nats go client, api or when the user mentions nats go client, api."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(go:*)"
 ---

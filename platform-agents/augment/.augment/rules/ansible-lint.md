@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Lints Ansible playbooks and roles with ansible-lint: best-practice rules, YAML validation, and CI integration."
+description: "Lints Ansible playbooks and roles with ansible-lint: best-practice rules, YAML validation, and CI integration. Use when working with ansible lint cli, ansible lint config, code quality or when the user mentions ansible lint cli, ansible lint config, code quality."
 ---
-
-# Ansible Lint
 
 Lints Ansible playbooks and roles with ansible-lint: best-practice rules, YAML validation, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ansible-lint playbooks/`, `ansible-lint --generate-ignore-file`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ansible-lint
 
@@ -73,6 +91,11 @@ warn_list:
 ### ansible-lint-cli
 Run ansible-lint with rule and config control.
 
+**Parameters:**
+- `paths` (string): Files or directories to lint
+- `skip-list` (string): Comma-separated rule ids to skip
+- `verbose` (boolean): Verbose output
+
 **Commands:**
 - `ansible-lint playbooks/`
 - `ansible-lint playbook.yml -v`
@@ -88,6 +111,10 @@ Run ansible-lint with rule and config control.
 ### ansible-lint-config
 Manage config and rule selection.
 
+**Parameters:**
+- `config` (string): Config file path
+- `fix` (boolean): Auto-fix issues
+
 **Commands:**
 - `ansible-lint --generate-ignore-file`
 - `ansible-lint --list-rules`
@@ -97,3 +124,7 @@ Manage config and rule selection.
 **Examples:**
 - ansible-lint --list-rules | grep -i "no-changed-when"
 - ansible-lint --fix
+
+## References
+- [ansible-lint Docs](https://ansible.readthedocs.io/projects/lint/)
+- [Ansible Docs](https://docs.ansible.com/)

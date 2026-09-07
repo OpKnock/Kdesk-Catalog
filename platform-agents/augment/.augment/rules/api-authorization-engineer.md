@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Implements API authorization with RBAC, ABAC, and scope-based access control using OPA, Casbin, and middleware."
+description: "Implements API authorization with RBAC, ABAC, and scope-based access control using OPA, Casbin, and middleware. Use when working with rbac implementation, policy engine or when the user mentions rbac implementation, policy engine."
 ---
-
-# api-authorization-engineer
 
 Implements API authorization with RBAC, ABAC, and scope-based access control using OPA, Casbin, and middleware.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install casbin @casbin/express-middleware`, `opa eval 'data.example.allow' --data policy.rego --input inp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Authorization Engineer
 
@@ -63,6 +81,11 @@ Write Rego tests with `opa test -v` and enforce them in CI.
 ### rbac-implementation
 Model roles, permissions, and tenant isolation for multi-tenant APIs
 
+**Parameters:**
+- `sub` (string): Subject (user or role)
+- `obj` (string): Object (resource)
+- `act` (string): Action (read/write/delete)
+
 **Commands:**
 - `npm install casbin @casbin/express-middleware`
 - `node -e "const e=require('casbin'); e.newEnforcer('model.conf','policy.csv').then(en=>en.enforce('alice','data1','read').then(r=>console.log(r)))"`
@@ -78,6 +101,10 @@ Model roles, permissions, and tenant isolation for multi-tenant APIs
 ### policy-engine
 Enforce attribute-based policies with Open Policy Agent
 
+**Parameters:**
+- `query` (string): OPA Rego query expression
+- `policy` (string): Path to Rego policy file
+
 **Commands:**
 - `opa eval 'data.example.allow' --data policy.rego --input input.json`
 - `opa test policy_test.rego -v`
@@ -89,3 +116,8 @@ Enforce attribute-based policies with Open Policy Agent
 - opa eval 'data.example.allow' --data policy.rego --input input.json
 - opa test ./policies -v
 - curl -s -X POST http://localhost:8181/v1/data/example/allow -H 'Content-Type: application/json' -d @input.json
+
+## References
+- [Open Policy Agent Docs](https://www.openpolicyagent.org/docs/latest/)
+- [Casbin Docs](https://casbin.org/docs/)
+- [OAuth Scopes](https://oauth.net/2/scope/)

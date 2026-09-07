@@ -1,8 +1,26 @@
-# Api Pagination Drf
-
 Implements pagination in Django REST Framework: PageNumberPagination, LimitOffsetPagination, CursorPagination classes, and OpenAPI schema integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python manage.py runserver 8000`, `curl -s 'http://localhost:8000/api/users/?ordering=created_a`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Pagination v4 - Django REST Framework
 
@@ -50,6 +68,11 @@ REST_FRAMEWORK = {
 ### drf-pagination
 Configure DRF pagination classes and page metadata
 
+**Parameters:**
+- `page` (integer): Page number for PageNumberPagination
+- `page_size` (integer): Custom page size query param
+- `ordering` (string): Ordering field for CursorPagination
+
 **Commands:**
 - `python manage.py runserver 8000`
 - `curl -s 'http://localhost:8000/api/users/?page=2&page_size=10' | jq '.count, .next, .previous'`
@@ -73,3 +96,7 @@ Subclass pagination classes for custom response shapes
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [DRF Pagination Guide](https://www.django-rest-framework.org/api-guide/pagination/)
+- [DRF Schemas](https://www.django-rest-framework.org/api-guide/schemas/)

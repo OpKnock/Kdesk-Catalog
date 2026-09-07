@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Core rate limiting: nginx limit_req/limit_conn, 429 responses, headers, and per-IP vs per-key scoping."
+description: "Core rate limiting: nginx limit_req/limit_conn, 429 responses, headers, and per-IP vs per-key scoping. Use when working with rate limiting basics, api or when the user mentions rate limiting basics, api."
 ---
-
-# Rate Limiting
 
 Core rate limiting: nginx limit_req/limit_conn, 429 responses, headers, and per-IP vs per-key scoping.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nginx -t`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Rate Limiting
 
@@ -68,6 +86,11 @@ server {
 ### rate-limiting-basics
 Configure nginx request and connection limits with burst handling and verify 429 responses.
 
+**Parameters:**
+- `rate` (string): Rate like 10r/s or 30r/m
+- `burst` (integer): Queue capacity for excess requests
+- `key` (string): Scoping key: IP, header, query param
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -79,3 +102,7 @@ Configure nginx request and connection limits with burst handling and verify 429
 - nginx -t && nginx -s reload
 - ab -n 300 -c 30 http://localhost:8080/api
 - curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api
+
+## References
+- [nginx limit_req](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)
+- [HTTP 429 semantics](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429)

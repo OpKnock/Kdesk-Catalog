@@ -1,13 +1,35 @@
 ---
 name: "static-site-optimizer"
-description: "Optimizes static sites for Core Web Vitals with Lighthouse CI, image compression, CSS purging, and asset minification."
+description: "Optimizes static sites for Core Web Vitals with Lighthouse CI, image compression, CSS purging, and asset minification. Use when working with performance audit, asset optimization, delivery optimization or when the user mentions performance audit, asset optimization, delivery optimization."
+license: "MIT"
+compatibility: "Requires next.js, astro, node.js, sharp, lighthouse, webpagetest. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "frontend"}
+allowed-tools: "Glob Grep Read Bash(brotli:*) Bash(curl:*) Bash(gzip:*) Bash(npx:*)"
 ---
-
-# static-site-optimizer
 
 Optimizes static sites for Core Web Vitals with Lighthouse CI, image compression, CSS purging, and asset minification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx lhci autorun`, `npx imagemin images/**/*.png --out-dir=optimized`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Static Site Optimization
 
@@ -72,6 +94,10 @@ curl -sI -H 'Accept-Encoding: br' https://example.com | grep -i content-encoding
 ### performance-audit
 Measure and gate performance with Lighthouse.
 
+**Parameters:**
+- `url` (string): Page URL to audit
+- `numberOfRuns` (number): Runs per URL for median scoring
+
 **Commands:**
 - `npx lhci autorun`
 - `npx lighthouse http://localhost:8080 --only-categories=performance --output=json --output-path=lh.json`
@@ -85,6 +111,10 @@ Measure and gate performance with Lighthouse.
 
 ### asset-optimization
 Compress images, purge CSS, and minify bundles.
+
+**Parameters:**
+- `source` (string): Source files to optimize
+- `output` (string): Output directory
 
 **Commands:**
 - `npx imagemin images/**/*.png --out-dir=optimized`
@@ -101,6 +131,10 @@ Compress images, purge CSS, and minify bundles.
 ### delivery-optimization
 Compress responses and inspect headers.
 
+**Parameters:**
+- `file` (string): File to compress
+- `quality` (number): Compression level 1-9
+
 **Commands:**
 - `gzip -9 -k dist/index.html`
 - `brotli -9 -k dist/index.html`
@@ -111,3 +145,8 @@ Compress responses and inspect headers.
 - brotli -9 -k dist/index.html
 - curl -sI -H 'Accept-Encoding: br' http://localhost:8080 | grep -i content-encoding
 - gzip -9 -k dist/app.js
+
+## References
+- [Lighthouse Documentation](https://developer.chrome.com/docs/lighthouse/overview)
+- [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
+- [web.dev Performance](https://web.dev/explore/learn-core-web-vitals)

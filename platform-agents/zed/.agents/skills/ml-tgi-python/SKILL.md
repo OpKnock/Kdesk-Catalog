@@ -1,11 +1,37 @@
 ---
 name: "ml-tgi-python"
-description: "Text Generation Inference Python SDK agent for LLM serving."
+description: "Text Generation Inference Python SDK agent for LLM serving. Use when working with Ml Tgi Python, inference or when the user mentions Ml Tgi Python, inference."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(Chat::*) Bash(Client::*) Bash(Generate::*) Bash(Install::*)"
 ---
 
 # Ml Tgi Python
 
 Text Generation Inference Python SDK agent for LLM serving.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Chat: response = client.chat('Hello', max_new_tokens=100)`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -36,3 +62,6 @@ Text Generation Inference Python SDK agent for LLM serving.
 - Client: from text_generation import Client; client = Client('http://localhost:8080')
 - Generate: response = client.generate('Hello', max_new_tokens=100)
 - Chat: response = client.chat('Hello', max_new_tokens=100)
+
+## References
+- [Text Generation Inference](https://huggingface.co/docs/text-generation-inference/)

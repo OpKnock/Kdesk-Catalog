@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Applies and verifies the four standard API versioning schemes: URI path, custom header, media type negotiation, and query parameter. Implements deprecation signaling with Deprecation and Sunset headers enabling smooth migrations."
+description: "Applies and verifies the four standard API versioning schemes: URI path, custom header, media type negotiation, and query parameter. Implements deprecation signaling with Deprecation and Sunset headers enabling smooth migrations. Use when working with versioning schemes, api, rest or when the user mentions versioning schemes, api, rest."
 ---
-
-# Versioning
 
 Applies and verifies the four standard API versioning schemes: URI path, custom header, media type negotiation, and query parameter. Implements deprecation signaling with Deprecation and Sunset headers enabling smooth migrations.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s https://api.your-app.test/v2/users`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Versioning
 
@@ -71,6 +89,10 @@ curl -s -H "X-Api-Version: 9999-01-01" https://api.your-app.test/users -o /dev/n
 ### versioning-schemes
 Apply and verify the four standard API versioning schemes
 
+**Parameters:**
+- `version` (string): Version value used in path, query, or header
+- `media_type` (string): Custom media type for content negotiation versioning
+
 **Commands:**
 - `curl -s https://api.your-app.test/v2/users`
 - `curl -s -H "X-Api-Version: 2024-01-15" https://api.your-app.test/users`
@@ -82,3 +104,8 @@ Apply and verify the four standard API versioning schemes
 - curl -s -H "Accept: application/vnd.example+json;version=2" https://api.your-app.test/users | jq ".schema"
 - curl -sI https://api.your-app.test/v2/users | grep -i sunset
 - curl -s "https://api.your-app.test/users?api-version=1" -o /dev/null -w "%{http_code}"
+
+## References
+- [Azure API Design Best Practices](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design)
+- [RFC 8594 - Sunset Header](https://datatracker.ietf.org/doc/html/rfc8594)
+- [Stripe API Versioning](https://stripe.com/docs/api/versioning)

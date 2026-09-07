@@ -1,8 +1,26 @@
-# kcat
-
 Produce, consume, and inspect Kafka topics with it. Kafka topics.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kcat -b localhost:9092 -t orders -P`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # kcat
 
@@ -57,6 +75,11 @@ topic metadata layout.
 ### kcat-commands
 Produce, consume, and inspect Kafka topics with kcat
 
+**Parameters:**
+- `offset` (string): Start offset: beginning, end, or -10
+- `format` (string): Message output format string (-f)
+- `exit` (boolean): Exit after consuming (-e) or print parsed exit codes
+
 **Commands:**
 - `kcat -b localhost:9092 -t orders -P`
 - `kcat -b localhost:9092 -t orders -C -o -10`
@@ -68,3 +91,7 @@ Produce, consume, and inspect Kafka topics with kcat
 - echo '{"id":1}' | kcat -b localhost:9092 -t orders -P -l
 - kcat -b localhost:9092 -t orders -C -q -o end -c 5
 - kcat -b localhost:9092 -L -J | jq '.topics[0]'
+
+## References
+- [kcat GitHub](https://github.com/edenhill/kcat)
+- [kcat usage examples](https://github.com/edenhill/kcat#examples)

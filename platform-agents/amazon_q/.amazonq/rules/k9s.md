@@ -1,8 +1,26 @@
-# k9s
-
 Navigates Kubernetes clusters with the k9s terminal UI: pod inspection, log streaming, resource editing, and context switching.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `k9s`, `k9s --logoless`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # k9s Terminal UI
 
@@ -57,6 +75,11 @@ k9s --kubeconfig ~/.kube/config2
 ### terminal-ui-navigation
 Launch k9s scoped to namespaces, resources, or contexts, and use hotkeys for views.
 
+**Parameters:**
+- `namespace` (string): Namespace to scope to
+- `context` (string): Kubeconfig context
+- `resource` (string): Initial resource view, e.g. deployments
+
 **Commands:**
 - `k9s`
 - `k9s -n production`
@@ -73,6 +96,10 @@ Launch k9s scoped to namespaces, resources, or contexts, and use hotkeys for vie
 ### live-observability
 Stream logs, exec shells, and drill into resource details from the UI (keybindings).
 
+**Parameters:**
+- `command` (string): Initial view command like deploy/web
+- `kubeconfig` (string): Alternate kubeconfig path
+
 **Commands:**
 - `k9s --logoless`
 - `k9s --readonly`
@@ -84,3 +111,7 @@ Stream logs, exec shells, and drill into resource details from the UI (keybindin
 - k9s --readonly
 - k9s --command deploy/web
 - k9s --plugins myplugin.yaml
+
+## References
+- [k9s CLI Documentation](https://k9scli.io/)
+- [k9s GitHub](https://github.com/derailed/k9s)

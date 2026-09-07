@@ -1,13 +1,35 @@
 ---
 name: "cli-tool-development"
-description: "Develops command-line tools with Commander, Click, and cobra: argument parsing, subcommands, help text, and distribution."
+description: "Develops command-line tools with Commander, Click, and cobra: argument parsing, subcommands, help text, and distribution. Use when working with cli scaffolding, cli verification or when the user mentions cli scaffolding, cli verification."
+license: "MIT"
+compatibility: "Requires node.js, python, click, commander, ink."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "devtools"}
+allowed-tools: "Glob Grep Read Bash(cobra-cli:*) Bash(echo:*) Bash(go:*) Bash(node:*) Bash(npm:*) Bash(python:*)"
 ---
-
-# cli-tool-development
 
 Develops command-line tools with Commander, Click, and cobra: argument parsing, subcommands, help text, and distribution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install commander`, `node bin/mycli.js --help`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # CLI Tool Development
 
@@ -74,6 +96,10 @@ if __name__ == "__main__":
 ### cli-scaffolding
 Scaffold CLI tools in Node, Python, and Go.
 
+**Parameters:**
+- `language` (string): node, python, or go
+- `name` (string): CLI name
+
 **Commands:**
 - `npm install commander`
 - `npm init -y && npm pkg set bin="./bin/mycli.js"`
@@ -89,6 +115,10 @@ Scaffold CLI tools in Node, Python, and Go.
 ### cli-verification
 Test and verify CLI behavior.
 
+**Parameters:**
+- `args` (string): CLI arguments
+- `stdin` (string): Piped input to test stdin handling
+
 **Commands:**
 - `node bin/mycli.js --help`
 - `python -m mycli --version`
@@ -100,3 +130,8 @@ Test and verify CLI behavior.
 - mycli --help | head -40
 - mycli greet --name World
 - mycli --version
+
+## References
+- [Commander.js Docs](https://github.com/tj/commander.js)
+- [Click Docs](https://click.palletsprojects.com)
+- [Cobra Docs](https://cobra.dev)

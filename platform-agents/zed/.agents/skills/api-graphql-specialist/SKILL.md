@@ -1,13 +1,35 @@
 ---
 name: "api-graphql-specialist"
-description: "Deep GraphQL expertise: query planning, cost analysis, persisted queries, caching, and advanced security hardening."
+description: "Deep GraphQL expertise: query planning, cost analysis, persisted queries, caching, and advanced security hardening. Use when working with query security, performance debugging or when the user mentions query security, performance debugging."
+license: "MIT"
+compatibility: "Requires apollo-server, graphql-codegen, dataloader, node.js, python, strawberry. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(graphql-inspector:*) Bash(node:*) Bash(npm:*) Bash(npx:*)"
 ---
-
-# api-graphql-specialist
 
 Deep GraphQL expertise: query planning, cost analysis, persisted queries, caching, and advanced security hardening.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install graphql-cost-analysis`, `npx @apollo/server-plugin-response-cache --help || true`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API GraphQL Specialist
 
@@ -55,6 +77,10 @@ graphql-inspector audit docs/query.graphql schema.graphql
 ### query-security
 Protect GraphQL APIs with complexity limits, depth limits, and persisted queries
 
+**Parameters:**
+- `maxCost` (string): Maximum query cost
+- `maxDepth` (string): Maximum query depth
+
 **Commands:**
 - `npm install graphql-cost-analysis`
 - `node -e "const {costAnalysisPlugin}=require('@graphql-community/graphql-query-cost');console.log(typeof costAnalysisPlugin)"`
@@ -70,6 +96,10 @@ Protect GraphQL APIs with complexity limits, depth limits, and persisted queries
 ### performance-debugging
 Profile and fix N+1 queries, slow resolvers, and cache misses
 
+**Parameters:**
+- `query` (string): GraphQL query to benchmark
+- `endpoint` (string): GraphQL endpoint URL
+
 **Commands:**
 - `npx @apollo/server-plugin-response-cache --help || true`
 - `node --trace-gc server.js 2>&1 | grep -i 'gc ' | head`
@@ -81,3 +111,8 @@ Profile and fix N+1 queries, slow resolvers, and cache misses
 - curl -s -X POST http://localhost:4001/graphql -H 'Content-Type: application/json' -d '{"query":"{ products { id name } }"}' -w '\n%{time_total}s'
 - graphql-inspector audit docs/query.graphql schema.graphql
 - node --trace-gc server.js 2>&1 | grep -i 'GC' | head -20
+
+## References
+- [GraphQL Armor](https://escape.tech/blog/graphql-armor/)
+- [Apollo Server Docs](https://www.apollographql.com/docs/apollo-server/)
+- [GraphQL Inspector](https://the-guild.dev/graphql/inspector/docs)

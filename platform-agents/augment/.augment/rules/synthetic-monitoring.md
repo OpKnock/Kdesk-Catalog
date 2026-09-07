@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Build always-on synthetic checks that catch outages before users do. Records browser journeys with Playwright, runs lightweight uptime probes with k6 and curl, and verifies status codes, timing, and page content from multiple regions."
+description: "Build always-on synthetic checks that catch outages before users do. Records browser journeys with Playwright, runs lightweight uptime probes with k6 and curl, and verifies status codes, timing, and page content from multiple regions. Use when working with synthetic checks, api or when the user mentions synthetic checks, api."
 ---
-
-# Synthetic Monitoring
 
 Build always-on synthetic checks that catch outages before users do. Records browser journeys with Playwright, runs lightweight uptime probes with k6 and curl, and verifies status codes, timing, and page content from multiple regions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx playwright test`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Synthetic Monitoring
 
@@ -84,6 +102,11 @@ export default function () {
 ### synthetic-checks
 Build browser and uptime checks that run on a schedule
 
+**Parameters:**
+- `url` (string): URL under check
+- `browser` (string): chromium, firefox, or webkit for Playwright
+- `schedule` (string): Run cadence, e.g. every 5m
+
 **Commands:**
 - `npx playwright test`
 - `npx playwright test --headed`
@@ -95,3 +118,7 @@ Build browser and uptime checks that run on a schedule
 - npx playwright test --headed
 - npx playwright codegen https://staging.your-app.test/login
 - k6 run --vus 1 --iterations 1 uptime.js
+
+## References
+- [Playwright test docs](https://playwright.dev/docs/test-intro)
+- [k6 docs](https://grafana.com/docs/k6/latest/)

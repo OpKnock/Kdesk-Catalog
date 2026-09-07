@@ -1,13 +1,35 @@
 ---
 name: "infracost"
-description: "Shows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure before you apply, and diffs cost changes in CI."
+description: "Shows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure before you apply, and diffs cost changes in CI. Use when working with breakdown, diff, infracost or when the user mentions breakdown, diff, infracost."
+license: "MIT"
+compatibility: "Requires infracost."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "finops"}
+allowed-tools: "Glob Grep Read Bash(infracost:*)"
 ---
-
-# Infracost
 
 Shows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure before you apply, and diffs cost changes in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `infracost breakdown --path .`, `infracost diff --path plan.json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Infracost
 
@@ -77,6 +99,11 @@ Keep `.infracost/base.json` refreshed weekly so diffs stay small.
 ### breakdown
 Generate detailed infrastructure cost estimates.
 
+**Parameters:**
+- `path` (string): Path to IaC directory or plan JSON
+- `format` (string): table, json, html, or markdown output
+- `usage-file` (string): YAML file with real usage estimates for accurate pricing
+
 **Commands:**
 - `infracost breakdown --path .`
 - `infracost breakdown --path . --format json`
@@ -92,6 +119,11 @@ Generate detailed infrastructure cost estimates.
 ### diff
 Show cost change between plans in CI pull requests.
 
+**Parameters:**
+- `compare-to` (string): Baseline breakdown JSON to diff against
+- `format` (string): Output format for comments: github-comment, slack-comment, html
+- `path` (string): Plan file or directory to evaluate
+
 **Commands:**
 - `infracost diff --path plan.json`
 - `infracost diff --path . --format json`
@@ -103,3 +135,8 @@ Show cost change between plans in CI pull requests.
 - infracost diff --path tfplan.json | tee /tmp/cost-diff.txt
 - infracost diff --path . --format json > diff.json
 - infracost output --path cost.json --format slack-comment
+
+## References
+- [Infracost Docs](https://www.infracost.io/docs/)
+- [Infracost CLI reference](https://www.infracost.io/docs/reference/cli/)
+- [Infracost CI/CD](https://www.infracost.io/docs/integrations/ci_cd/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Writes keyword-driven acceptance tests with Robot Framework, using tags, variables, data-driven tables, and reports."
+description: "Writes keyword-driven acceptance tests with Robot Framework, using tags, variables, data-driven tables, and reports. Use when working with robot runs, data driven tests, reports and tools, testing or when the user mentions robot runs, data driven tests, reports and tools, testing."
 ---
-
-# Robot Framework
 
 Writes keyword-driven acceptance tests with Robot Framework, using tags, variables, data-driven tables, and reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `robot tests.robot`, `robot --dryrun tests.robot`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Robot Framework
 
@@ -79,6 +97,11 @@ Calculator
 ### robot-runs
 Run Robot test suites with tags and outputs.
 
+**Parameters:**
+- `testName` (string): Test name filter (-t)
+- `include` (string): Tag to include (-i)
+- `variable` (string): Variable override (-v)
+
 **Commands:**
 - `robot tests.robot`
 - `robot --outputdir results tests/`
@@ -94,6 +117,10 @@ Run Robot test suites with tags and outputs.
 ### data-driven-tests
 Write table-driven test cases.
 
+**Parameters:**
+- `dryrun` (boolean): Validate without executing
+- `metadata` (string): Metadata key:value
+
 **Commands:**
 - `robot --dryrun tests.robot`
 - `robot --listener RobotMongo?db=mongotest.robot`
@@ -108,6 +135,10 @@ Write table-driven test cases.
 ### reports-and-tools
 Rebuild logs and run postprocessing tools.
 
+**Parameters:**
+- `outputXml` (string): output.xml path for rebot
+- `merge` (boolean): Merge multiple output.xml files with rebot --merge.
+
 **Commands:**
 - `rebot --outputdir results/rebot output.xml`
 - `rebot --merge output1.xml output2.xml`
@@ -118,3 +149,7 @@ Rebuild logs and run postprocessing tools.
 - rebot --merge output1.xml output2.xml
 - rebot --outputdir merged results/output.xml
 - robot --console verbose tests.robot
+
+## References
+- [Robot Framework User Guide](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html)
+- [Robot Framework GitHub](https://github.com/robotframework/robotframework)

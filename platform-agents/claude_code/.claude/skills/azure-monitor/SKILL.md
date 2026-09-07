@@ -2,6 +2,7 @@
 name: "azure-monitor"
 description: "Collects and evaluates Azure resource metrics and alerts via the Azure CLI: retrieves metric time series, defines metric and activity log alert rules with conditions, manages action groups, and queries the activity log for operational auditing. Use when working with metrics, alerts, activity log, api or when the user mentions metrics, alerts, activity log, api."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(az:*)"
 ---

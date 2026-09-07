@@ -1,8 +1,26 @@
-# Api Rest Spring Scaffolding
-
 Builds REST APIs with Spring Boot: Initializr scaffolding, Spring Web controllers, actuator health, and @Valid request validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s https://start.spring.io/starter.zip -d dependencies=`, `curl -s -X POST http://localhost:8080/api/users -H 'Content-`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API REST v3 - Spring Boot
 
@@ -54,6 +72,11 @@ public class UserController {
 ### spring-scaffolding
 Generate Spring Boot projects and run them
 
+**Parameters:**
+- `dependencies` (string): Comma-separated Spring starters
+- `packageName` (string): Base Java package
+- `build` (string): maven-project or gradle-project
+
 **Commands:**
 - `curl -s https://start.spring.io/starter.zip -d dependencies=web,validation,data-jpa,h2 -d type=maven-project -o demo.zip`
 - `unzip demo.zip -d demo && cd demo && ./mvnw spring-boot:run`
@@ -76,3 +99,7 @@ Implement controllers with validation
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Spring Initializr](https://start.spring.io/)
+- [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/)

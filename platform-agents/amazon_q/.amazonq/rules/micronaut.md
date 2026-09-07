@@ -1,8 +1,26 @@
-# Micronaut
-
 Create and operate Micronaut applications: project scaffolding, HTTP endpoints, config, and the mn CLI lifecycle.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mn create-app com.example.app --features data-jpa,mysql,kafk`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Micronaut
 
@@ -70,6 +88,11 @@ public class BookController {
 ### micronaut-project
 Scaffold, build, run and extend Micronaut projects using the mn CLI and build tools.
 
+**Parameters:**
+- `features` (array): Comma-separated Micronaut features to enable
+- `package` (string): Base package for generated sources
+- `build` (string): maven or gradle
+
 **Commands:**
 - `mn create-app com.example.app --features data-jpa,mysql,kafka`
 - `mn create-graal-app com.example.native --features graalvm`
@@ -81,3 +104,7 @@ Scaffold, build, run and extend Micronaut projects using the mn CLI and build to
 - mn create-app com.example.books --features data-jpa,mysql
 - ./mvnw mn:run
 - curl -s http://localhost:8080/health
+
+## References
+- [Micronaut Documentation](https://docs.micronaut.io/latest/guide/)
+- [Micronaut Health Endpoints](https://micronaut-projects.github.io/micronaut-micrometer/latest/guide/)

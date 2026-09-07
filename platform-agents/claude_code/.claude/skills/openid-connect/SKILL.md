@@ -2,6 +2,7 @@
 name: "openid-connect"
 description: "Implements OpenID Connect flows: discovers issuer metadata and JWKS, exchanges authorization codes to obtain tokens, validates ID token signatures, and fetches userinfo claims. Use when working with oidc flows, api or when the user mentions oidc flows, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

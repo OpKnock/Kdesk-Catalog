@@ -1,13 +1,35 @@
 ---
 name: "feature-flag-engineer"
-description: "Designs, ships, and retires feature flags across LaunchDarkly, Flipt, and Flagsmith, including kill switches, gradual rollouts, and flag lifecycle automation."
+description: "Designs, ships, and retires feature flags across LaunchDarkly, Flipt, and Flagsmith, including kill switches, gradual rollouts, and flag lifecycle automation. Use when working with launchdarkly, flipt or when the user mentions launchdarkly, flipt."
+license: "MIT"
+compatibility: "Requires unleash, node.js, python, redis, launchdarkly-cli, split-io."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "devops"}
+allowed-tools: "Glob Grep Read Bash(flipt:*) Bash(ldcli:*)"
 ---
-
-# feature-flag-engineer
 
 Designs, ships, and retires feature flags across LaunchDarkly, Flipt, and Flagsmith, including kill switches, gradual rollouts, and flag lifecycle automation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ldcli config --access-token $LD_ACCESS_TOKEN`, `flipt config --output /etc/flipt/config.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Feature Flag Engineering
 
@@ -70,6 +92,11 @@ Verify kill-switch behavior under production-like traffic before every launch wi
 ### launchdarkly
 Manage LaunchDarkly feature flags, environments, and segments via ldcli.
 
+**Parameters:**
+- `project-key` (string): LaunchDarkly project key, e.g. webapp
+- `environment-key` (string): Target environment, e.g. production or staging
+- `key` (string): Unique flag key, lowercase kebab-case
+
 **Commands:**
 - `ldcli config --access-token $LD_ACCESS_TOKEN`
 - `ldcli feature-flags list --project-key my-project --environment-key production`
@@ -85,6 +112,11 @@ Manage LaunchDarkly feature flags, environments, and segments via ldcli.
 ### flipt
 Manage self-hosted Flipt feature flags and experiments.
 
+**Parameters:**
+- `flag-key` (string): Flag key to evaluate
+- `entity-key` (string): Identifier of the evaluation entity (user, device, org)
+- `namespace` (string): Flipt namespace for organization
+
 **Commands:**
 - `flipt config --output /etc/flipt/config.yml`
 - `flipt import --input features.json`
@@ -96,3 +128,8 @@ Manage self-hosted Flipt feature flags and experiments.
 - flipt eval --flag-key checkout-v2 --entity-key user-1 --context '{"beta":true}'
 - flipt import --input flags.yaml --namespace production
 - flipt export --namespace production > backup-flags.json
+
+## References
+- [LaunchDarkly Docs](https://docs.launchdarkly.com/)
+- [Flipt Docs](https://www.flipt.io/docs/)
+- [Flagsmith Docs](https://docs.flagsmith.com/)

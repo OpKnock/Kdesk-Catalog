@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes, and deployment with uvicorn."
+description: "Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes, and deployment with uvicorn. Use when working with fastapi dev, fastapi openapi, backend or when the user mentions fastapi dev, fastapi openapi, backend."
 ---
-
-# Fastapi
 
 Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes, and deployment with uvicorn.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install "fastapi[standard]"`, `curl http://localhost:8000/openapi.json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # FastAPI
 
@@ -70,6 +88,11 @@ async def get_item(item_id: int):
 ### fastapi-dev
 Scaffold and run FastAPI applications with auto-reload.
 
+**Parameters:**
+- `host` (string): Bind address
+- `port` (integer): Port to listen on
+- `reload` (boolean): Auto-reload on code changes
+
 **Commands:**
 - `pip install "fastapi[standard]"`
 - `fastapi dev main.py`
@@ -85,6 +108,10 @@ Scaffold and run FastAPI applications with auto-reload.
 ### fastapi-openapi
 Inspect generated OpenAPI schema and test endpoints.
 
+**Parameters:**
+- `path` (string): API path to call
+- `method` (string): HTTP method: GET, POST, DELETE
+
 **Commands:**
 - `curl http://localhost:8000/openapi.json`
 - `curl http://localhost:8000/docs`
@@ -94,3 +121,7 @@ Inspect generated OpenAPI schema and test endpoints.
 **Examples:**
 - curl -s http://localhost:8000/openapi.json | python -m json.tool | head -50
 - curl -X GET "http://localhost:8000/items/1?verbose=true"
+
+## References
+- [FastAPI Docs](https://fastapi.tiangolo.com)
+- [FastAPI Deployment](https://fastapi.tiangolo.com/deployment/)

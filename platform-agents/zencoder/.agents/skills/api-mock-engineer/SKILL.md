@@ -1,13 +1,35 @@
 ---
 name: "api-mock-engineer"
-description: "Designs mock API services for frontend development and tests using MSW (Mock Service Worker), with OpenAPI-driven fixtures and realistic latency profiles."
+description: "Designs mock API services for frontend development and tests using MSW (Mock Service Worker), with OpenAPI-driven fixtures and realistic latency profiles. Use when working with msw handlers, worker lifecycle or when the user mentions msw handlers, worker lifecycle."
+license: "MIT"
+compatibility: "Requires prism, wiremock, msw, node.js, python, openapi. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "testing"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*) Bash(npx:*)"
 ---
-
-# api-mock-engineer
 
 Designs mock API services for frontend development and tests using MSW (Mock Service Worker), with OpenAPI-driven fixtures and realistic latency profiles.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install msw --save-dev`, `npx msw init public/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Mock Engineer
 
@@ -61,6 +83,11 @@ export const handlers = [
 ### msw-handlers
 Set up MSW request handlers for browser and Node test environments
 
+**Parameters:**
+- `handlers-dir` (string): Directory containing MSW request handler modules
+- `mock-db` (object): @mswjs/data model definitions for stateful mocking
+- `delay` (integer): Artificial latency in milliseconds for realistic UX
+
 **Commands:**
 - `npm install msw --save-dev`
 - `npx msw init public/ --save`
@@ -85,3 +112,7 @@ Start and stop the mock server in tests and development
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [MSW Documentation](https://mswjs.io/docs/)
+- [@mswjs/data](https://github.com/mswjs/data)

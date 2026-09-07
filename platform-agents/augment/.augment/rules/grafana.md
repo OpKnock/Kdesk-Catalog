@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Operates Grafana: plugin management, admin tasks, dashboard provisioning, and API-driven configuration."
+description: "Operates Grafana: plugin management, admin tasks, dashboard provisioning, and API-driven configuration. Use when working with grafana cli, api, infrastructure or when the user mentions grafana cli, api, infrastructure."
 ---
-
-# grafana
 
 Operates Grafana: plugin management, admin tasks, dashboard provisioning, and API-driven configuration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `grafana-cli plugins install grafana-clock-panel`, `curl -s -H 'Authorization: Bearer $GRAFANA_API_KEY' http://l`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Grafana
 
@@ -84,6 +102,11 @@ Verify dashboards count after provisioning.
 ### grafana-cli
 Manage plugins and admin access from the command line.
 
+**Parameters:**
+- `pluginsDir` (string): Custom plugin install directory
+- `config` (string): grafana.ini path for CLI context
+- `homepath` (string): Grafana install directory
+
 **Commands:**
 - `grafana-cli plugins install grafana-clock-panel`
 - `grafana-cli plugins update-all`
@@ -99,6 +122,11 @@ Manage plugins and admin access from the command line.
 ### api
 Drive Grafana configuration via the HTTP API.
 
+**Parameters:**
+- `api-key` (string): Grafana service account token
+- `payload` (string): JSON body for dashboard/annotation posts
+- `uid` (string): Dashboard or datasource uid
+
 **Commands:**
 - `curl -s -H 'Authorization: Bearer $GRAFANA_API_KEY' http://localhost:3000/api/org`
 - `curl -s -H 'Authorization: Bearer $GRAFANA_API_KEY' http://localhost:3000/api/search?type=dash-db | jq '.[].title'`
@@ -110,3 +138,8 @@ Drive Grafana configuration via the HTTP API.
 - curl -s -H 'Authorization: Bearer $KEY' http://localhost:3000/api/dashboards/uid/cQx8-abc | jq '.dashboard.title'
 - curl -s -H 'Authorization: Bearer $KEY' 'http://localhost:3000/api/datasources' | jq '.[] | {name, type}'
 - curl -s -X DELETE -H 'Authorization: Bearer $KEY' http://localhost:3000/api/datasources/uid/$DS_UID
+
+## References
+- [Grafana CLI](https://grafana.com/docs/grafana/latest/administration/cli/)
+- [Grafana HTTP API](https://grafana.com/docs/grafana/latest/developers/http_api/)
+- [Grafana Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Apollo Federation: build supergraph schemas from subgraph services, compose with rover, and operate the gateway/router."
+description: "Apollo Federation: build supergraph schemas from subgraph services, compose with rover, and operate the gateway/router. Use when working with federation tooling, api or when the user mentions federation tooling, api."
 ---
-
-# Graphql Federation
 
 Apollo Federation: build supergraph schemas from subgraph services, compose with rover, and operate the gateway/router.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `rover subgraph introspect http://orders:4001/graphql --outpu`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL Federation
 
@@ -88,6 +106,11 @@ rover dev --supergraph-config supergraph.yaml
 ### federation-tooling
 Compose subgraph schemas into a supergraph and manage the router with rover.
 
+**Parameters:**
+- `subgraph-name` (string): Name of the subgraph service
+- `graph-ref` (string): Graph ref like my-graph@prod
+- `compose-config` (string): supergraph.yaml path
+
 **Commands:**
 - `rover subgraph introspect http://orders:4001/graphql --output subgraph-orders.graphql`
 - `rover subgraph publish my-graph@prod --name orders --schema subgraph-orders.graphql`
@@ -99,3 +122,7 @@ Compose subgraph schemas into a supergraph and manage the router with rover.
 - rover subgraph introspect http://orders:4001/graphql --output subgraph-orders.graphql
 - rover supergraph compose --config supergraph.yaml --output supergraph.graphql
 - rover subgraph check my-graph@prod --name orders --schema subgraph-orders.graphql
+
+## References
+- [Apollo Federation docs](https://www.apollographql.com/docs/federation/)
+- [rover CLI docs](https://www.apollographql.com/docs/rover/)

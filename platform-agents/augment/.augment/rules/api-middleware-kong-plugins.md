@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Configures API gateway middleware using Kong Gateway and decK: global plugins like rate-limiting, key-auth, request-transformer, and CORS applied at the gateway edge."
+description: "Configures API gateway middleware using Kong Gateway and decK: global plugins like rate-limiting, key-auth, request-transformer, and CORS applied at the gateway edge. Use when working with kong plugins, plugin operations or when the user mentions kong plugins, plugin operations."
 ---
-
-# Api Middleware Kong Plugins
 
 Configures API gateway middleware using Kong Gateway and decK: global plugins like rate-limiting, key-auth, request-transformer, and CORS applied at the gateway edge.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -d --name kong -p 8000:8000 -p 8443:8443 -p 8001:`, `curl -s http://localhost:8001/plugins -G --data-urlencode "n`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Middleware v5 - Gateway Edge
 
@@ -51,6 +69,11 @@ curl -s -X POST http://localhost:8001/plugins -d 'name=key-auth'
 ### kong-plugins
 Apply global and per-service middleware plugins on Kong Gateway
 
+**Parameters:**
+- `plugin-name` (string): Kong plugin: rate-limiting, key-auth, cors, request-transformer
+- `config` (object): Plugin-specific config (minute, allow list, header names)
+- `scope` (string): Global, per-service, per-route, or per-consumer plugin scope
+
 **Commands:**
 - `docker run -d --name kong -p 8000:8000 -p 8443:8443 -p 8001:8001 kong/kong-gateway`
 - `curl -s http://localhost:8001/plugins | jq '.data | length'`
@@ -76,3 +99,7 @@ Inspect, update, and remove gateway middleware plugins via the Kong Admin API
 - curl with --data-urlencode filters plugins by name
 - PATCH updates plugin config in place
 - DELETE removes a middleware plugin
+
+## References
+- [Kong Gateway Plugins](https://docs.konghq.com/gateway/latest/reference/proxy-reference/)
+- [decK Documentation](https://docs.konghq.com/deck/)

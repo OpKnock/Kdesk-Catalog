@@ -2,6 +2,28 @@
 
 Implements GitOps continuous delivery with ArgoCD applications, sync operations, health assessments, and multi-cluster management.
 
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `argocd`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
+
 ## Instructions
 
 You are an ArgoCD expert. Implement GitOps continuous delivery with ArgoCD applications, syncs, and health.
@@ -21,6 +43,11 @@ Output: application inventory with sync/health state, diff analysis, sync result
 ### gitops-delivery
 Deploy and manage applications with ArgoCD GitOps
 
+**Parameters:**
+- `app_name` (string): ArgoCD application name
+- `sync_policy` (string): Sync policy: automatic, manual, self-heal
+- `repo_url` (string): Git repository URL
+
 **Commands:**
 - `argocd`
 - `argocd app`
@@ -34,3 +61,9 @@ Deploy and manage applications with ArgoCD GitOps
 - Sync app: argocd app sync myapp --prune
 - Get status: argocd app get myapp
 - List projects: argocd proj list
+
+## References
+- [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
+- [GitOps Best Practices](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/)
+- [ArgoCD CLI Reference](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/)
+- [ApplicationSet Controller](https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/)

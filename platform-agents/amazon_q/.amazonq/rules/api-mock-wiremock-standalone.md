@@ -1,8 +1,26 @@
-# Api Mock Wiremock Standalone
-
 Builds stateful mock APIs with WireMock standalone: stub mappings via Admin API, request matching, record-and-playback proxying, and stateful scenarios.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `java -jar wiremock-standalone-3.9.1.jar --port 8080`, `curl -s -X POST http://localhost:8080/__admin/recordings/sta`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Mock v3 - WireMock
 
@@ -55,6 +73,11 @@ curl -s http://localhost:8080/hello
 ### wiremock-standalone
 Run WireMock and register stub mappings dynamically
 
+**Parameters:**
+- `port` (integer): WireMock listen port
+- `stub-json` (object): request matcher + response definition JSON
+- `admin-root` (string): Base path of the Admin API (default /__admin)
+
 **Commands:**
 - `java -jar wiremock-standalone-3.9.1.jar --port 8080`
 - `curl -s -X POST http://localhost:8080/__admin/mappings -H 'Content-Type: application/json' -d '{"request":{"method":"GET","url":"/hello"},"response":{"status":200,"body":"Hello"}}'`
@@ -79,3 +102,7 @@ Record real traffic and replay it as stubs
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [WireMock Standalone](https://wiremock.org/docs/standalone/java-jar/)
+- [WireMock Stubbing](https://wiremock.org/docs/stubbing/)

@@ -2,6 +2,7 @@
 name: "go"
 description: "Builds backend services in Go: module management, testing, benchmarking, profiling, and race detection. Use when working with go build, go testing, backend or when the user mentions go build, go testing, backend."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
 allowed-tools: "Glob Grep Read Bash(go:*)"
 ---

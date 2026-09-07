@@ -1,13 +1,35 @@
 ---
 name: "api-schema-buf-project"
-description: "Manages protobuf schemas with buf: project setup, linting, formatting, code generation, and breaking-change detection for gRPC APIs."
+description: "Manages protobuf schemas with buf: project setup, linting, formatting, code generation, and breaking-change detection for gRPC APIs. Use when working with buf project, generation breaking or when the user mentions buf project, generation breaking."
+license: "MIT"
+compatibility: "Requires openapi, json-schema, node.js, python, stoplight-studio."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "data"}
+allowed-tools: "Glob Grep Read Bash(buf:*) Bash(go:*)"
 ---
-
-# Api Schema Buf Project
 
 Manages protobuf schemas with buf: project setup, linting, formatting, code generation, and breaking-change detection for gRPC APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go install github.com/bufbuild/buf/cmd/buf@latest`, `buf generate`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Schema v3 - Protobuf/buf
 
@@ -61,6 +83,11 @@ message User {
 ### buf-project
 Set up and maintain buf protobuf projects
 
+**Parameters:**
+- `module` (string): Buf module path
+- `input` (string): Input directory or file
+- `against` (string): Baseline for breaking checks
+
 **Commands:**
 - `go install github.com/bufbuild/buf/cmd/buf@latest`
 - `buf --version`
@@ -85,3 +112,7 @@ Generate code and detect breaking changes
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [buf Docs](https://buf.build/docs/)
+- [Protobuf Language Guide](https://protobuf.dev/programming-guides/proto3/)

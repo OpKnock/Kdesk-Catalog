@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Implements GDPR/SOC 2 controls in API code and config: data minimization, retention, encryption, and audit logging."
+description: "Implements GDPR/SOC 2 controls in API code and config: data minimization, retention, encryption, and audit logging. Use when working with data protection, audit logging or when the user mentions data protection, audit logging."
 ---
-
-# api-compliance-engineer
 
 Implements GDPR/SOC 2 controls in API code and config: data minimization, retention, encryption, and audit logging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `openssl rand -base64 32`, `node -e "console.log(JSON.stringify({ts:Date.now(),user:'u1'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Compliance Engineer
 
@@ -52,6 +70,10 @@ Verify no PII appears in raw logs after requests.
 ### data-protection
 Apply encryption, masking, and retention controls to API data
 
+**Parameters:**
+- `algorithm` (string): Encryption algorithm
+- `field` (string): Field to protect
+
 **Commands:**
 - `openssl rand -base64 32`
 - `node -e "const c=require('crypto');const k=c.randomBytes(32);console.log('key bytes:',k.length)"`
@@ -67,6 +89,10 @@ Apply encryption, masking, and retention controls to API data
 ### audit-logging
 Log access and data events for compliance evidence
 
+**Parameters:**
+- `user` (string): Acting user
+- `action` (string): Audited action
+
 **Commands:**
 - `node -e "console.log(JSON.stringify({ts:Date.now(),user:'u1',action:'read',resource:'orders/42',outcome:'allow'}))"`
 - `curl -s -X POST http://localhost:3000/api/audit -H 'Content-Type: application/json' -d '{"user":"u1","action":"export"}' -w '\n%{http_code}'`
@@ -78,3 +104,7 @@ Log access and data events for compliance evidence
 - node -e "console.log(JSON.stringify({ts:Date.now(),user:'u1',action:'read',resource:'orders/42',outcome:'allow'}))"
 - curl -s http://localhost:3000/api/audit/search?user=u1 | python -m json.tool
 - python -c "import json,datetime;print(json.dumps({'ts':datetime.datetime.now().isoformat(),'action':'login'}))"
+
+## References
+- [GDPR Guide](https://gdpr-info.eu/)
+- [OWASP Data Protection](https://owasp.org/www-project-data-protection/)

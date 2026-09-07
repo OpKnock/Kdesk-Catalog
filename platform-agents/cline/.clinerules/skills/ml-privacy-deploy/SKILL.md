@@ -1,11 +1,37 @@
 ---
 name: "ml-privacy-deploy"
-description: "Privacy deployment agent for ML privacy service deployment."
+description: "Privacy deployment agent for ML privacy service deployment. Use when working with Ml Privacy Deploy or when the user mentions Ml Privacy Deploy."
+license: "MIT"
+compatibility: "Requires network access."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(API::*) Bash(Health::*) Bash(Server::*) Bash(Status::*)"
 ---
 
 # Ml Privacy Deploy
 
 Privacy deployment agent for ML privacy service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `API: curl http://localhost:8080/privacy -X POST -H 'Content-`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -36,3 +62,8 @@ Privacy deployment agent for ML privacy service deployment.
 - API: curl http://localhost:8080/privacy -X POST -H 'Content-Type: application/json' -d '{"data": "sensitive data", "method": "differential_privacy"}'
 - Health: curl http://localhost:8080/health
 - Status: python -m privacy.status --server http://localhost:8080
+
+## References
+- [OpenMined](https://www.openmined.org/)
+- [curl Documentation](https://curl.se/docs/)
+- [Python Documentation](https://docs.python.org/3/)

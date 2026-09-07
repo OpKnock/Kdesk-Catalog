@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Audits Kubernetes workloads against best-practice checks and runs an in-cluster dashboard with Fairwinds Polaris."
+description: "Audits Kubernetes workloads against best-practice checks and runs an in-cluster dashboard with Fairwinds Polaris. Use when working with polaris audit, dashboard, security or when the user mentions polaris audit, dashboard, security."
 ---
-
-# polaris
 
 Audits Kubernetes workloads against best-practice checks and runs an in-cluster dashboard with Fairwinds Polaris.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `polaris audit --audit-path .`, `polaris dashboard --port 8080`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Polaris
 
@@ -75,6 +93,11 @@ checks:
 ### polaris-audit
 Audit manifests or live clusters with exit-code gating.
 
+**Parameters:**
+- `auditPath` (string): Path to manifests or kubeconfig for live audit
+- `config` (string): Custom configuration YAML path
+- `output` (string): Report format: json, html, sarif, score
+
 **Commands:**
 - `polaris audit --audit-path .`
 - `polaris audit --audit-path manifests/ --set-exit-code-below-score 80`
@@ -90,6 +113,10 @@ Audit manifests or live clusters with exit-code gating.
 ### dashboard
 Run the Polaris web dashboard in-cluster.
 
+**Parameters:**
+- `port` (string): Dashboard listen port
+- `namespace` (string): Namespace of the dashboard service
+
 **Commands:**
 - `polaris dashboard --port 8080`
 - `kubectl port-forward svc/polaris-dashboard 8080:80 -n polaris`
@@ -100,3 +127,7 @@ Run the Polaris web dashboard in-cluster.
 - polaris dashboard --port 8080
 - helm install polaris fairwinds-stable/polaris
 - kubectl port-forward svc/polaris 8080:80 -n polaris
+
+## References
+- [Polaris Documentation](https://polaris.docs.fairwinds.com/)
+- [Fairwinds Polaris GitHub](https://github.com/FairwindsOps/polaris)

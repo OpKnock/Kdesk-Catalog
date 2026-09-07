@@ -1,13 +1,35 @@
 ---
 name: "grpc-codegen"
-description: "Generate gRPC service stubs and clients from .proto definitions using protoc, protoc-gen-* plugins, and buf for linting and breaking-change detection."
+description: "Generate gRPC service stubs and clients from .proto definitions using protoc, protoc-gen-* plugins, and buf for linting and breaking-change detection. Use when working with proto codegen, api or when the user mentions proto codegen, api."
+license: "MIT"
+compatibility: "Requires buf, protoc."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(buf:*) Bash(protoc:*)"
 ---
-
-# Grpc Codegen
 
 Generate gRPC service stubs and clients from .proto definitions using protoc, protoc-gen-* plugins, and buf for linting and breaking-change detection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `protoc -I . --go_out=paths=source_relative:. --go-grpc_out=p`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC Code Generation
 
@@ -88,6 +110,11 @@ Agent: buf generate && go build ./...  # stubs regenerated, build green
 ### proto-codegen
 Compile proto files to language stubs, lint schemas, and detect breaking API changes with buf.
 
+**Parameters:**
+- `out_dir` (string): Output directory for generated stubs (default .).
+- `paths` (string): Module path mode: source_relative or import.
+- `proto_file` (string): The .proto file to compile.
+
 **Commands:**
 - `protoc -I . --go_out=paths=source_relative:. --go-grpc_out=paths=source_relative:. helloworld.proto`
 - `buf generate`
@@ -99,3 +126,7 @@ Compile proto files to language stubs, lint schemas, and detect breaking API cha
 - buf generate --template buf.gen.yaml
 - buf lint --error-format=json
 - buf breaking --against buf.build/acme/apis:latest
+
+## References
+- [protobuf.dev](https://protobuf.dev)
+- [Buf Docs](https://buf.build/docs)

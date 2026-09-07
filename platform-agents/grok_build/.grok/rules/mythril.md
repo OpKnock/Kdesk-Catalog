@@ -1,8 +1,26 @@
-# Mythril
-
 Security analysis of Ethereum smart contracts with Mythril, finding reentrancy, overflow, and other EVM vulnerabilities.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `myth analyze contracts/Token.sol`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Mythril
 
@@ -66,6 +84,11 @@ checks-effects-interactions fix.
 ### smart-contract-analysis
 Run Mythril symbolic-execution analysis against Solidity contracts
 
+**Parameters:**
+- `execution-timeout` (number): Timeout in seconds for each analysis run
+- `rpc` (string): RPC endpoint used when analyzing a deployed address
+- `solc-json` (string): JSON config file with compiler settings and remappings
+
 **Commands:**
 - `myth analyze contracts/Token.sol`
 - `myth analyze --execution-timeout 120 contract.sol`
@@ -77,3 +100,7 @@ Run Mythril symbolic-execution analysis against Solidity contracts
 - myth analyze --execution-timeout 90 contracts/Vault.sol
 - myth analyze -a 0xdeadbeef --infura-id $INFURA_ID
 - myth analyze --graph contracts/Tok.sol
+
+## References
+- [Mythril docs](https://mythril-classic.readthedocs.io/)
+- [Mythril GitHub](https://github.com/Consensys/mythril)

@@ -2,6 +2,7 @@
 name: "elasticsearch"
 description: "Operates Elasticsearch: index management, document CRUD, search, and cluster health via the REST API. Use when working with elasticsearch rest, database or when the user mentions elasticsearch rest, database."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "database"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

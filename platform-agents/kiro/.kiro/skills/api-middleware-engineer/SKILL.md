@@ -1,13 +1,35 @@
 ---
 name: "api-middleware-engineer"
-description: "Designs and builds Node.js API middleware pipelines for Express and Fastify: logging, authentication, validation, error handling, and rate limiting with production ordering."
+description: "Designs and builds Node.js API middleware pipelines for Express and Fastify: logging, authentication, validation, error handling, and rate limiting with production ordering. Use when working with express pipeline, pipeline testing or when the user mentions express pipeline, pipeline testing."
+license: "MIT"
+compatibility: "Requires node.js, python, express, fastify, koa, hapi. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*) Bash(npx:*)"
 ---
-
-# api-middleware-engineer
 
 Designs and builds Node.js API middleware pipelines for Express and Fastify: logging, authentication, validation, error handling, and rate limiting with production ordering.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm init -y && npm install express morgan helmet cors expres`, `npm install supertest jest`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Middleware Engineer
 
@@ -70,6 +92,11 @@ app.listen(3000);
 ### express-pipeline
 Assemble a layered Express middleware pipeline (logging -> security headers -> body parsing -> auth -> validation -> routes -> errors)
 
+**Parameters:**
+- `middleware-order` (string): Execution order of middleware in app.use() calls
+- `rate-limit-config` (object): windowMs, limit, and skip options for express-rate-limit
+- `error-strategy` (string): Centralized error handler placement (last in pipeline)
+
 **Commands:**
 - `npm init -y && npm install express morgan helmet cors express-rate-limit`
 - `node app.js`
@@ -94,3 +121,7 @@ Verify middleware behavior with supertest against a mounted app instance
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Express Writing Middleware](https://expressjs.com/en/guide/writing-middleware.html)
+- [Fastify Plugins Guide](https://fastify.dev/docs/latest/Guides/Plugins-Guide/)

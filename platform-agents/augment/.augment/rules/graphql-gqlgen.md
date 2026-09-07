@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "GraphQL in Go with gqlgen: generate resolvers from SDL, run the server, and iterate on schema-driven development."
+description: "GraphQL in Go with gqlgen: generate resolvers from SDL, run the server, and iterate on schema-driven development. Use when working with gqlgen codegen, api or when the user mentions gqlgen codegen, api."
 ---
-
-# Graphql Gqlgen
 
 GraphQL in Go with gqlgen: generate resolvers from SDL, run the server, and iterate on schema-driven development.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go run github.com/99designs/gqlgen init`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL gqlgen
 
@@ -83,6 +101,11 @@ curl -s -X POST http://localhost:8080/query -H 'Content-Type: application/json' 
 ### gqlgen-codegen
 Generate Go resolver code from GraphQL SDL and run the server.
 
+**Parameters:**
+- `config-file` (string): gqlgen.yml path
+- `schema-file` (string): GraphQL SDL path
+- `resolver-dir` (string): Directory for generated resolvers
+
 **Commands:**
 - `go run github.com/99designs/gqlgen init`
 - `go run github.com/99designs/gqlgen generate`
@@ -94,3 +117,7 @@ Generate Go resolver code from GraphQL SDL and run the server.
 - go run github.com/99designs/gqlgen init && go run github.com/99designs/gqlgen generate
 - go run ./server.go
 - go run github.com/99designs/gqlgen generate && go test ./... -v
+
+## References
+- [gqlgen docs](https://gqlgen.com/)
+- [gqlgen GitHub](https://github.com/99designs/gqlgen)

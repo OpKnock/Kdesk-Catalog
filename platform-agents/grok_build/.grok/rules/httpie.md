@@ -1,8 +1,26 @@
-# HTTPie
-
 HTTPie CLI: expressive HTTP requests with intuitive syntax, JSON bodies, auth flags, file downloads, and streaming responses.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `http http://localhost:8000/api/users`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # HTTPie
 
@@ -81,6 +99,11 @@ Agent: http POST http://localhost:8000/api/users name=John age:=30
 ### httpie-requests
 Compose and send HTTP requests with HTTPie's shorthand syntax.
 
+**Parameters:**
+- `method` (string): HTTP method, defaults to GET.
+- `url` (string): Target URL.
+- `headers` (string): Header shorthand, e.g. Accept:application/json.
+
 **Commands:**
 - `http http://localhost:8000/api/users`
 - `http POST http://localhost:8000/api/users name=John age:=30`
@@ -92,3 +115,7 @@ Compose and send HTTP requests with HTTPie's shorthand syntax.
 - http GET http://localhost:8000/api/users/42 Accept:application/json
 - http PUT http://localhost:8000/api/users/42 name=Jane
 - http -f POST http://localhost:8000/upload file@photo.png
+
+## References
+- [HTTPie Docs](https://httpie.io/docs)
+- [HTTPie CLI GitHub](https://github.com/httpie/cli)

@@ -1,13 +1,35 @@
 ---
 name: "redis-cluster"
-description: "Operate Redis Cluster topologies: create multi-node clusters, verify slot coverage, reshard, and manage replicas with redis-cli cluster commands."
+description: "Operate Redis Cluster topologies: create multi-node clusters, verify slot coverage, reshard, and manage replicas with redis-cli cluster commands. Use when working with redis cluster admin, api or when the user mentions redis cluster admin, api."
+license: "MIT"
+compatibility: "Requires redis-cli."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(redis-cli:*)"
 ---
-
-# Redis Cluster
 
 Operate Redis Cluster topologies: create multi-node clusters, verify slot coverage, reshard, and manage replicas with redis-cli cluster commands.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli -c -p 7000 cluster info`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Redis Cluster
 
@@ -76,6 +98,11 @@ redis-cli --cluster check 127.0.0.1:7000
 ### redis-cluster-admin
 Create, inspect, and rebalance Redis Cluster topologies with redis-cli cluster commands
 
+**Parameters:**
+- `cluster-replicas` (integer): Number of replicas per master when creating a cluster
+- `cluster-slots` (integer): Number of hash slots to move during resharding
+- `cluster-yes` (boolean): Auto-answer the resharding confirmation prompts
+
 **Commands:**
 - `redis-cli -c -p 7000 cluster info`
 - `redis-cli --cluster create 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 --cluster-replicas 1`
@@ -88,3 +115,7 @@ Create, inspect, and rebalance Redis Cluster topologies with redis-cli cluster c
 - redis-cli --cluster check 127.0.0.1:7000
 - redis-cli -c -p 7000 cluster info
 - redis-cli --cluster reshard 127.0.0.1:7000 --cluster-from 8a4f9c --cluster-to 7b2cd1 --cluster-slots 1000 --cluster-yes
+
+## References
+- [Redis Cluster Tutorial](https://redis.io/docs/latest/operate/oss_and_stack/management/scaling/)
+- [CLUSTER command reference](https://redis.io/docs/latest/commands/cluster-info/)

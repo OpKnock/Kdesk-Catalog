@@ -2,6 +2,7 @@
 name: "priority-rate-limiting"
 description: "Priority-aware rate limiting: separate limits for high/low-priority clients with Kong plugins and nginx maps. Use when working with priority rate limiting, api or when the user mentions priority rate limiting, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Implement correlation/request IDs across APIs: generate, propagate via headers, and trace requests through logs."
+description: "Implement correlation/request IDs across APIs: generate, propagate via headers, and trace requests through logs. Use when working with id generation, middleware, api or when the user mentions id generation, middleware, api."
 ---
-
-# Correlation Ids
 
 Implement correlation/request IDs across APIs: generate, propagate via headers, and trace requests through logs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -H "X-Correlation-ID: $(uuidgen)" https://httpbin.org/g`, `npm install express`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Correlation IDs
 
@@ -86,6 +104,10 @@ curl -s -D - -o /dev/null -H "X-Correlation-ID: test-123" http://localhost:8080/
 ### id-generation
 Generate and send correlation IDs with curl and system tools
 
+**Parameters:**
+- `header` (string): Header name such as X-Correlation-ID
+- `id` (string): Correlation ID value
+
 **Commands:**
 - `curl -H "X-Correlation-ID: $(uuidgen)" https://httpbin.org/get`
 - `uuidgen`
@@ -100,6 +122,9 @@ Generate and send correlation IDs with curl and system tools
 ### middleware
 Implement correlation ID middleware that accepts, generates, and propagates IDs
 
+**Parameters:**
+- `server_port` (string): Server port for testing
+
 **Commands:**
 - `npm install express`
 - `node server.js`
@@ -110,3 +135,7 @@ Implement correlation ID middleware that accepts, generates, and propagates IDs
 - node server.js
 - curl -s -D - -o /dev/null -H "X-Correlation-ID: test-123" http://localhost:8080/api | grep -i correlation
 - curl -s -D - -o /dev/null http://localhost:8080/api | grep -i correlation
+
+## References
+- [Zalando REST API Guidelines](https://opensource.zalando.com/restful-api-guidelines/)
+- [Microsoft Correlation Pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/correlation-id)

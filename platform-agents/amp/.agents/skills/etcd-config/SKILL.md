@@ -1,13 +1,35 @@
 ---
 name: "etcd-config"
-description: "etcd cluster configuration and operations: read and write keys, inspect member health, and manage leases and snapshots."
+description: "etcd cluster configuration and operations: read and write keys, inspect member health, and manage leases and snapshots. Use when working with etcd ops, api or when the user mentions etcd ops, api."
+license: "MIT"
+compatibility: "Requires etcdctl."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(etcdctl:*)"
 ---
-
-# Etcd Config
 
 etcd cluster configuration and operations: read and write keys, inspect member health, and manage leases and snapshots.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `etcdctl put /config/database/url postgres://db:5432/app --en`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # etcd Config
 
@@ -69,6 +91,11 @@ etcdctl defrag --endpoints=https://etcd-1:2379
 ### etcd-ops
 Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl.
 
+**Parameters:**
+- `endpoints` (array): Comma-separated etcd endpoints
+- `key` (string): Key path to read or write
+- `prefix` (string): Prefix for range operations
+
 **Commands:**
 - `etcdctl put /config/database/url postgres://db:5432/app --endpoints=https://etcd-1:2379`
 - `etcdctl get /config --prefix --keys-only`
@@ -82,3 +109,7 @@ Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl.
 - etcdctl get /config --prefix --keys-only
 - etcdctl endpoint health --endpoints=https://etcd-1:2379,https://etcd-2:2379
 - etcdctl snapshot save backup.db && etcdctl snapshot status backup.db
+
+## References
+- [etcdctl documentation](https://etcd.io/docs/v3.5/dev-guide/interacting_v3/)
+- [etcd Operations Guide](https://etcd.io/docs/v3.5/op-guide/maintenance/)

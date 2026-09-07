@@ -1,8 +1,26 @@
-# Spring WebFlux
-
 Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `./mvnw spring-boot:run`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Spring WebFlux
 
@@ -75,6 +93,11 @@ curl -H 'Accept: text/event-stream' -N localhost:8080/events | head -3
 ### webflux-reactive
 Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly.
 
+**Parameters:**
+- `endpoint` (string): Base URL of the WebFlux service
+- `accept_header` (string): Accept header for SSE (text/event-stream)
+- `file_path` (string): Path to file for multipart upload
+
 **Commands:**
 - `./mvnw spring-boot:run`
 - `curl -N localhost:8080/flux`
@@ -87,3 +110,6 @@ Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses 
 - curl -H "Accept: text/event-stream" -N localhost:8080/events
 - curl -s localhost:8080/api/prices | jq 'length'
 - curl -s -X POST localhost:8080/upload -F "file=@data.csv"
+
+## References
+- [WebFlux reference](https://docs.spring.io/spring-framework/reference/web/webflux.html)

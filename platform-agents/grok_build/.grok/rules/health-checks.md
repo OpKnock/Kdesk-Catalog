@@ -1,8 +1,26 @@
-# Health Checks
-
 Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints with proper semantics.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -o /dev/null -w "%{http_code}" http://localhost:8000`, `kubectl apply -f deployment.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Health Checks
 
@@ -73,6 +91,10 @@ containers:
 ### http-health
 Create and test HTTP health endpoints.
 
+**Parameters:**
+- `path` (string): Health endpoint path
+- `method` (string): HTTP method to request with
+
 **Commands:**
 - `curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/health`
 - `curl -s http://localhost:8000/ready`
@@ -86,6 +108,10 @@ Create and test HTTP health endpoints.
 ### k8s-probes
 Define liveness, readiness, and startup probes in Kubernetes manifests.
 
+**Parameters:**
+- `probe-type` (string): liveness, readiness, or startup
+- `initial-delay` (integer): Seconds before first probe
+
 **Commands:**
 - `kubectl apply -f deployment.yaml`
 - `kubectl get pods -w`
@@ -95,3 +121,7 @@ Define liveness, readiness, and startup probes in Kubernetes manifests.
 **Examples:**
 - kubectl get deploy myapp -o jsonpath="{.spec.template.spec.containers[0].readinessProbe}"
 - kubectl describe pod -l app=myapp | grep -A5 Probes
+
+## References
+- [Kubernetes Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+- [Health Checks Best Practices](https://microservices.io/patterns/observability/health-check-api.html)

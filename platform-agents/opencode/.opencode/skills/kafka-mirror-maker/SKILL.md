@@ -1,13 +1,31 @@
 ---
 name: "kafka-mirror-maker"
-description: "Replicate Kafka clusters with MirrorMaker 2: cluster-to-cluster topology configs, connector management, and cross-cluster topic verification."
+description: "Replicate Kafka clusters with MirrorMaker 2: cluster-to-cluster topology configs, connector management, and cross-cluster topic verification. Use when working with mm2 run, verify replication, api or when the user mentions mm2 run, verify replication, api."
 ---
-
-# Kafka Mirror Maker
 
 Replicate Kafka clusters with MirrorMaker 2: cluster-to-cluster topology configs, connector management, and cross-cluster topic verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kafka-mirror-maker2.sh --config config/mm2.properties`, `curl -s http://localhost:8083/connectors | jq .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka MirrorMaker 2
 
@@ -86,6 +104,10 @@ kafka-console-consumer.sh --bootstrap-server secondary:9092 --topic secondary.or
 ### mm2-run
 Run MirrorMaker 2 in standalone mode with a topology properties file.
 
+**Parameters:**
+- `config` (string): MM2 topology properties file.
+- `whitelist` (string): Topic regex for legacy MirrorMaker 1.
+
 **Commands:**
 - `kafka-mirror-maker2.sh --config config/mm2.properties`
 - `kafka-mirror-maker2.sh --config config/mm2.properties --manage-offsets`
@@ -100,6 +122,10 @@ Run MirrorMaker 2 in standalone mode with a topology properties file.
 ### verify-replication
 Check MM2 connectors, replicated topics, and consumed data on the target cluster.
 
+**Parameters:**
+- `source` (string): Source cluster alias, e.g. primary.
+- `target` (string): Target cluster bootstrap address, e.g. secondary:9092.
+
 **Commands:**
 - `curl -s http://localhost:8083/connectors | jq .`
 - `curl -s http://localhost:8083/connectors/mm2-primary-secondary/status | jq '.tasks[0].state'`
@@ -110,3 +136,7 @@ Check MM2 connectors, replicated topics, and consumed data on the target cluster
 - curl -s http://localhost:8083/connectors/mm2-primary-secondary/status | jq '.tasks[0].state'
 - kafka-topics.sh --bootstrap-server secondary:9092 --list | grep -E 'orders|payments'
 - kafka-console-consumer.sh --bootstrap-server secondary:9092 --topic secondary.orders --from-beginning --max-messages 5
+
+## References
+- [MirrorMaker 2](https://kafka.apache.org/documentation/#mmp)
+- [MM2 Config Example](https://kafka.apache.org/37/documentation/#mm2_config)

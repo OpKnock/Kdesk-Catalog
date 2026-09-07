@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Configure and operate the lighttpd web server: config validation, foreground/daemon modes, module enablement, and simple virtual hosts."
+description: "Configure and operate the lighttpd web server: config validation, foreground/daemon modes, module enablement, and simple virtual hosts. Use when working with lighttpd run, lighttpd modules, api or when the user mentions lighttpd run, lighttpd modules, api."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Lighttpd
-
 Configure and operate the lighttpd web server: config validation, foreground/daemon modes, module enablement, and simple virtual hosts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `lighttpd -f /etc/lighttpd/lighttpd.conf -t`, `lighttpd-enable-mod fastcgi`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # lighttpd
 
@@ -86,6 +104,10 @@ lighttpd -f /etc/lighttpd/lighttpd.conf -t && echo "config OK"
 ### lighttpd-run
 Validate config and start lighttpd in various modes.
 
+**Parameters:**
+- `config` (string): lighttpd config file path.
+- `foreground` (boolean): -D runs in foreground for debugging.
+
 **Commands:**
 - `lighttpd -f /etc/lighttpd/lighttpd.conf -t`
 - `lighttpd -f /etc/lighttpd/lighttpd.conf -D`
@@ -101,6 +123,9 @@ Validate config and start lighttpd in various modes.
 ### lighttpd-modules
 Enable modules and configure virtual hosts.
 
+**Parameters:**
+- `module` (string): Module name to enable.
+
 **Commands:**
 - `lighttpd-enable-mod fastcgi`
 - `lighttpd-enable-mod mod_rewrite`
@@ -111,3 +136,7 @@ Enable modules and configure virtual hosts.
 - lighttpd-enable-mod fastcgi
 - lighttpd-enable-mod mod_compress
 - curl -sI http://localhost/ | head -5
+
+## References
+- [lighttpd Documentation](https://redmine.lighttpd.net/projects/lighttpd/wiki)
+- [lighttpd Configuration](https://redmine.lighttpd.net/projects/lighttpd/wiki/Docs_Configuration)

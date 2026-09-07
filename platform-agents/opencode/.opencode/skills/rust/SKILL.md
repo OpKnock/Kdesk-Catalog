@@ -1,13 +1,31 @@
 ---
 name: "rust"
-description: "Builds Rust backends: cargo projects, workspace management, builds, tests, benchmarks, and clippy-driven quality."
+description: "Builds Rust backends: cargo projects, workspace management, builds, tests, benchmarks, and clippy-driven quality. Use when working with cargo build, cargo quality, backend or when the user mentions cargo build, cargo quality, backend."
 ---
-
-# rust
 
 Builds Rust backends: cargo projects, workspace management, builds, tests, benchmarks, and clippy-driven quality.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cargo new myapp`, `cargo test`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Rust
 
@@ -79,6 +97,10 @@ async fn main() {
 ### cargo-build
 Create and build Rust projects and workspaces.
 
+**Parameters:**
+- `bin` (string): Binary name
+- `features` (string): Cargo features to enable
+
 **Commands:**
 - `cargo new myapp`
 - `cargo build`
@@ -94,6 +116,10 @@ Create and build Rust projects and workspaces.
 ### cargo-quality
 Test, lint, and benchmark Rust code.
 
+**Parameters:**
+- `test-filter` (string): Test name filter
+- `all-targets` (boolean): Lint all targets including tests
+
 **Commands:**
 - `cargo test`
 - `cargo test -- --nocapture`
@@ -105,3 +131,8 @@ Test, lint, and benchmark Rust code.
 - cargo test --workspace
 - cargo clippy --all-targets -- -D warnings
 - cargo fmt --all -- --check
+
+## References
+- [Rust Book](https://doc.rust-lang.org/book/)
+- [Cargo Book](https://doc.rust-lang.org/cargo/)
+- [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)

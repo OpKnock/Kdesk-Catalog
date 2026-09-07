@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.json **/*.r **/*.sh"
 ---
 
-# opa
-
 Evaluate Rego queries against data and inputs. Run Rego unit tests, format code, and build bundles. Serve policies over HTTP handling live decisions. workflows.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `opa eval 'data.policies.allow'`, `opa test policy_test.rego policy.rego`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # OPA
 
@@ -77,6 +95,11 @@ allow if {
 ### policy-evaluation
 Evaluate Rego queries against data and inputs.
 
+**Parameters:**
+- `input` (string): Path to input JSON file
+- `data` (string): Path to Rego file or data JSON (can repeat)
+- `format` (string): Output format: pretty, raw, json
+
 **Commands:**
 - `opa eval 'data.policies.allow'`
 - `opa eval -i input.json -d policies.rego 'data.example.allow'`
@@ -90,6 +113,10 @@ Evaluate Rego queries against data and inputs.
 
 ### testing-and-linting
 Run Rego unit tests, format code, and build bundles.
+
+**Parameters:**
+- `files` (array): Rego and data files to test
+- `output` (string): Bundle output path
 
 **Commands:**
 - `opa test policy_test.rego policy.rego`
@@ -107,6 +134,10 @@ Run Rego unit tests, format code, and build bundles.
 ### server-mode
 Serve policies over HTTP for live decisions.
 
+**Parameters:**
+- `watch` (boolean): Reload policies on file changes (-w)
+- `addr` (string): Bind address for the server
+
 **Commands:**
 - `opa run --server`
 - `opa run -s -w -b bundle.tar.gz`
@@ -117,3 +148,7 @@ Serve policies over HTTP for live decisions.
 - opa run -s -w -b bundle.tar.gz
 - curl -s -X POST http://localhost:8181/v1/data/example/allow -d '{"input":{}}'
 - opa run --server --addr 127.0.0.1:9191
+
+## References
+- [OPA Documentation](https://www.openpolicyagent.org/docs/latest/)
+- [Rego Playground](https://play.openpolicyagent.org/)

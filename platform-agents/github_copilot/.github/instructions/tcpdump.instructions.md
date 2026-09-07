@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Tcpdump
-
 Capture and analyze packets with it filters.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `tcpdump -i eth0 -nn port 443`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # tcpdump
 
@@ -77,6 +95,11 @@ kill %1
 ### tcpdump-capture
 Capture and analyze packets with tcpdump filters
 
+**Parameters:**
+- `interface` (string): Capture interface, e.g. eth0 or any
+- `filter` (string): BPF filter expression
+- `pcap_file` (string): Capture or read file name
+
 **Commands:**
 - `tcpdump -i eth0 -nn port 443`
 - `tcpdump -i any -nnv -c 100`
@@ -89,3 +112,7 @@ Capture and analyze packets with tcpdump filters
 - tcpdump -i eth0 -nn host 10.0.0.5 and port 5432
 - tcpdump -r capture.pcap -nn 'tcp[13] & 2 != 0'
 - tcpdump -i any -nn -c 50 port 53
+
+## References
+- [tcpdump man page](https://www.tcpdump.org/manpages/tcpdump.1.html)
+- [pcap-filter man page](https://www.tcpdump.org/manpages/pcap-filter.7.html)

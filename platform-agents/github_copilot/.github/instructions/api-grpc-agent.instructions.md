@@ -2,11 +2,29 @@
 applyTo: "**/*.cs **/*.go **/*.java **/*.json **/*.py **/*.r **/*.sh **/*.{ts,tsx} **/*.{yaml,yml}"
 ---
 
-# gRPC API Agent
-
 Develops gRPC services from protobuf definitions. Generates language-specific stubs with protoc and buf, validates service contracts, and debugs live RPCs with grpcurl and grpc_health_probe.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `buf generate protobuf/`, `grpcurl -plaintext localhost:50051 list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC API Agent
 
@@ -110,6 +128,11 @@ breaking:
 ### protobuf-codegen
 Generates gRPC client and server stubs from .proto files using protoc and buf.
 
+**Parameters:**
+- `proto_dir` (string): Directory containing .proto files
+- `language` (string): Target language (go, python, java, typescript, csharp)
+- `check_breaking` (boolean): Run breaking change detection against main branch
+
 **Commands:**
 - `buf generate protobuf/`
 - `protoc --proto_path=protobuf --go_out=. --go-grpc_out=. protobuf/service.proto`
@@ -126,6 +149,11 @@ Generates gRPC client and server stubs from .proto files using protoc and buf.
 ### service-inspection
 Lists services, methods, and message schemas from a running gRPC server via reflection.
 
+**Parameters:**
+- `endpoint` (string): gRPC server address (host:port)
+- `service` (string): Service name to inspect
+- `plaintext` (boolean): Use plaintext (no TLS)
+
 **Commands:**
 - `grpcurl -plaintext localhost:50051 list`
 - `grpcurl -plaintext localhost:50051 describe UserService`
@@ -140,6 +168,10 @@ Lists services, methods, and message schemas from a running gRPC server via refl
 ### health-checking
 Probes gRPC health checking endpoint for liveness and readiness.
 
+**Parameters:**
+- `address` (string): gRPC server address
+- `service` (string): Specific service to check (optional)
+
 **Commands:**
 - `grpc_health_probe -addr=localhost:50051`
 - `grpc_health_probe -addr=localhost:50051 -service=UserService`
@@ -149,3 +181,10 @@ Probes gRPC health checking endpoint for liveness and readiness.
 - grpc_health_probe -addr=localhost:50051
 - grpc_health_probe -addr=localhost:50051 -service=UserService
 - grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check
+
+## References
+- [Protocol Buffers Documentation](https://protobuf.dev/)
+- [buf CLI Documentation](https://buf.build/docs/cli/)
+- [grpcurl Documentation](https://github.com/fullstorydev/grpcurl)
+- [gRPC Health Checking](https://github.com/grpc/grpc/blob/master/doc/health-checking.md)
+- [gRPC Go Documentation](https://grpc.io/docs/languages/go/)

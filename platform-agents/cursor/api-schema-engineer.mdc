@@ -1,14 +1,32 @@
 ---
-description: "Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test files, and format handling with ajv-cli."
+description: "Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test files, and format handling with ajv-cli. Use when working with schema authoring, draft handling or when the user mentions schema authoring, draft handling."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-schema-engineer
-
 Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test files, and format handling with ajv-cli.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g ajv-cli`, `ajv validate -s user.schema.json -d bad.json --strict=false `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Schema Engineer
 
@@ -61,6 +79,11 @@ ajv test -s user.schema.json -t user.schema.test.json --strict=false
 ### schema-authoring
 Write and validate JSON Schema files
 
+**Parameters:**
+- `schema` (string): Schema file path
+- `data` (string): Data file to validate
+- `strict` (boolean): Disable strict mode when false
+
 **Commands:**
 - `npm install -g ajv-cli`
 - `ajv compile -s user.schema.json --strict=false`
@@ -84,3 +107,7 @@ Handle schema drafts and formats
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [JSON Schema Docs](https://json-schema.org/learn/)
+- [Ajv Docs](https://ajv.js.org/)

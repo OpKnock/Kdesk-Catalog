@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds, runs, and manages containers and images with the docker CLI: images, volumes, networks, and container lifecycle."
+description: "Builds, runs, and manages containers and images with the docker CLI: images, volumes, networks, and container lifecycle. Use when working with container lifecycle, images and storage, devops or when the user mentions container lifecycle, images and storage, devops."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/Dockerfile*"]
 ---
 
-# docker
-
 Builds, runs, and manages containers and images with the docker CLI: images, volumes, networks, and container lifecycle.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -d --name web -p 8080:80 nginx:1.26`, `docker build -t myapp:1.0 .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Docker CLI Operations
 
@@ -82,6 +100,11 @@ CMD ["node", "server.js"]
 ### container-lifecycle
 Run, stop, exec into, and remove containers with full flag control.
 
+**Parameters:**
+- `name` (string): Container name
+- `ports` (string): Port mapping, e.g. 8080:80
+- `image` (string): Image reference
+
 **Commands:**
 - `docker run -d --name web -p 8080:80 nginx:1.26`
 - `docker ps -a`
@@ -98,6 +121,10 @@ Run, stop, exec into, and remove containers with full flag control.
 ### images-and-storage
 Build images, manage image lifecycle, and work with volumes and networks.
 
+**Parameters:**
+- `tag` (string): Image tag, e.g. myapp:1.0
+- `path` (string): Build context path
+
 **Commands:**
 - `docker build -t myapp:1.0 .`
 - `docker images`
@@ -111,3 +138,8 @@ Build images, manage image lifecycle, and work with volumes and networks.
 - docker build -t myapp:1.0 .
 - docker volume create pgdata && docker run -v pgdata:/data postgres
 - docker system df
+
+## References
+- [Docker Engine CLI Reference](https://docs.docker.com/engine/reference/commandline/docker/)
+- [Dockerfile Reference](https://docs.docker.com/engine/reference/builder/)
+- [Docker Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)

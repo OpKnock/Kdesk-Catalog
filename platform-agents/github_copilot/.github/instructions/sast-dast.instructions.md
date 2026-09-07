@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.html **/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Sast Dast
-
 Combines static analysis (bandit, semgrep, Trivy) with dynamic testing (OWASP ZAP, nikto, nuclei) for full application security coverage.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bandit -r app/ -f json -o bandit.json`, `zap-baseline.py -t http://localhost:8080 -r report.html`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SAST + DAST
 
@@ -67,6 +85,10 @@ stages:
 ### sast-scanning
 Static scans for Python, JS, Go, and infrastructure code.
 
+**Parameters:**
+- `language` (string): Target language for scanner selection
+- `severity` (string): Minimum severity: LOW, MEDIUM, HIGH
+
 **Commands:**
 - `bandit -r app/ -f json -o bandit.json`
 - `semgrep scan --config auto .`
@@ -82,6 +104,10 @@ Static scans for Python, JS, Go, and infrastructure code.
 ### dast-scanning
 Dynamic scanning against running applications.
 
+**Parameters:**
+- `target` (string): Base URL of the running app
+- `report` (string): Report output path
+
 **Commands:**
 - `zap-baseline.py -t http://localhost:8080 -r report.html`
 - `zap-full-scan.py -t http://localhost:8080 -J zap.json`
@@ -93,3 +119,8 @@ Dynamic scanning against running applications.
 - zap-baseline.py -t http://localhost:8080 -r report.html
 - nikto -h http://localhost:8080
 - zap-api-scan.py -t http://localhost:8080/api/swagger.json -f openapi
+
+## References
+- [OWASP ZAP Documentation](https://www.zaproxy.org/docs/)
+- [Bandit GitHub](https://github.com/PyCQA/bandit)
+- [Nuclei Documentation](https://docs.projectdiscovery.io/tools/nuclei/overview)

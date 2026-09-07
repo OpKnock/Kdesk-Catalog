@@ -1,13 +1,31 @@
 ---
 name: "rolling-deployment"
-description: "Expert Kubernetes rolling deployment skill covering set image, rollout status/history, undo, pause/resume, and canary verification with kubectl."
+description: "Expert Kubernetes rolling deployment skill covering set image, rollout status/history, undo, pause/resume, and canary verification with kubectl. Use when working with k8s rolling deploy, api or when the user mentions k8s rolling deploy, api."
 ---
-
-# Rolling Deployment
 
 Expert Kubernetes rolling deployment skill covering set image, rollout status/history, undo, pause/resume, and canary verification with kubectl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl set image deployment/api api=ghcr.io/your-org/api:v2`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Rolling Deployment
 
@@ -77,6 +95,11 @@ kubectl get pods -l app=api -w
 ### k8s-rolling-deploy
 Roll out and roll back Kubernetes Deployments safely
 
+**Parameters:**
+- `deployment` (string): Deployment name, e.g. deployment/api
+- `image` (string): New image reference, e.g. ghcr.io/your-org/api:v2.1
+- `timeout` (string): Rollout wait timeout, e.g. 180s
+
 **Commands:**
 - `kubectl set image deployment/api api=ghcr.io/your-org/api:v2.1`
 - `kubectl rollout status deployment/api --timeout=180s`
@@ -89,3 +112,7 @@ Roll out and roll back Kubernetes Deployments safely
 - kubectl rollout status deployment/api --timeout=180s
 - kubectl rollout undo deployment/api --to-revision=3
 - kubectl get pods -l app=api -w
+
+## References
+- [K8s Deployment docs](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [kubectl rollout reference](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/)

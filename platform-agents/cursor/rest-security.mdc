@@ -1,14 +1,32 @@
 ---
-description: "Expert reference covering authenticated curl flows, TLS certificate verification, OWASP ZAP baseline scans, and rate-limit/authorization probing."
+description: "Expert reference covering authenticated curl flows, TLS certificate verification, OWASP ZAP baseline scans, and rate-limit/authorization probing. Use when working with rest api hardening or when the user mentions rest api hardening."
 globs: ["**/*.html", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Rest Security
-
 Expert reference covering authenticated curl flows, TLS certificate verification, OWASP ZAP baseline scans, and rate-limit/authorization probing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -H "Authorization: Bearer $TOKEN" https://api.your-a`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # REST API Security
 
@@ -70,6 +88,11 @@ curl -s -o /dev/null -w '%{http_code}\n' https://staging.your-app.test/healthz
 ### rest-api-hardening
 Probe and harden REST APIs: auth, TLS, scanning, rate limits
 
+**Parameters:**
+- `token` (string): Bearer token for authenticated requests
+- `target` (string): Base URL to scan or probe
+- `report` (string): Output file for the ZAP scan report
+
 **Commands:**
 - `curl -s -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/users`
 - `curl -skI https://api.your-app.test/ -o /dev/null -w '%{http_code} %{ssl_verify_result}\n'`
@@ -81,3 +104,7 @@ Probe and harden REST APIs: auth, TLS, scanning, rate limits
 - curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' -X POST https://api.your-app.test/v1/login -d '{"user":"admin","pass":"wrong"}'
 - curl -s -o /dev/null -w '%{http_code}\n' https://api.your-app.test/v1/users
 - zap-baseline.py -t https://staging.your-app.test -r zap-report.html
+
+## References
+- [OWASP REST Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html)
+- [ZAP Baseline Scan](https://www.zaproxy.org/docs/docker/baseline-scan/)

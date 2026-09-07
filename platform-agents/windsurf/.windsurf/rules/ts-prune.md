@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Finds unused exports and dead code in TypeScript projects with ts-prune."
+description: "Finds unused exports and dead code in TypeScript projects with ts-prune. Use when working with ts prune, code quality or when the user mentions ts prune, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 ---
 
-# ts-prune
-
 Finds unused exports and dead code in TypeScript projects with ts-prune.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx ts-prune`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ts-prune
 
@@ -71,6 +89,11 @@ small batches, running tsc --noEmit after each.
 ### ts-prune
 Detect unused exports and configure failure thresholds
 
+**Parameters:**
+- `project` (string): Path to tsconfig.json
+- `error` (boolean): Exit with code 1 if unused exports exist (CI mode)
+- `ignore` (string): Regex of files to skip
+
 **Commands:**
 - `npx ts-prune`
 - `npx ts-prune -p tsconfig.json`
@@ -82,3 +105,7 @@ Detect unused exports and configure failure thresholds
 - npx ts-prune --error | head -30
 - npx ts-prune -p tsconfig.build.json --skip 'node_modules'
 - npx ts-prune --allowUnreachableCode
+
+## References
+- [ts-prune GitHub](https://github.com/nadeesha/ts-prune)
+- [ts-prune npm](https://www.npmjs.com/package/ts-prune)

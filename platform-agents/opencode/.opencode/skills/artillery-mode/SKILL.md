@@ -1,13 +1,31 @@
 ---
 name: "artillery-mode"
-description: "Load-tests APIs and WebSockets with Artillery v2: quick-mode runs, YAML scenarios, phases, assertions, and HTML reports."
+description: "Load-tests APIs and WebSockets with Artillery v2: quick-mode runs, YAML scenarios, phases, assertions, and HTML reports. Use when working with quick mode, scenario tests, api or when the user mentions quick mode, scenario tests, api."
 ---
-
-# Artillery Mode
 
 Load-tests APIs and WebSockets with Artillery v2: quick-mode runs, YAML scenarios, phases, assertions, and HTML reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx artillery quick -d 60 -r 20 http://localhost:3000/api/us`, `npx artillery run load-test.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Artillery v2
 
@@ -74,6 +92,11 @@ scenarios:
 ### quick-mode
 Run instant load tests without config files.
 
+**Parameters:**
+- `duration` (number): Test duration in seconds (-d)
+- `rate` (number): Requests per second (-r)
+- `method` (string): HTTP method, e.g. GET/POST
+
 **Commands:**
 - `npx artillery quick -d 60 -r 20 http://localhost:3000/api/users`
 - `npx artillery quick -d 30 -r 10 -m POST -b '{"name":"test"}' http://localhost:3000/api/users`
@@ -88,6 +111,11 @@ Run instant load tests without config files.
 ### scenario-tests
 Write multi-step YAML scenarios with phases, hooks, and assertions.
 
+**Parameters:**
+- `environment` (string): Environment name from config (-e)
+- `output` (string): JSON results output path
+- `report` (string): Input JSON to render an HTML report
+
 **Commands:**
 - `npx artillery run load-test.yml`
 - `npx artillery run --output report.json load-test.yml`
@@ -99,3 +127,8 @@ Write multi-step YAML scenarios with phases, hooks, and assertions.
 - npx artillery run --output results.json load.yml && npx artillery report results.json
 - npx artillery run -e production --quiet load.yml
 - npx artillery run --snippet-mode load.yml
+
+## References
+- [Artillery Docs](https://www.artillery.io/docs)
+- [Artillery Reference](https://www.artillery.io/docs/reference)
+- [Getting Started](https://www.artillery.io/docs/guides/getting-started/installing-artillery)

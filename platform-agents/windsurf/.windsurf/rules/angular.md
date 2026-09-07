@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds, tests, and deploys Angular applications with the Angular CLI: components, signals, routing, and standalone APIs."
+description: "Builds, tests, and deploys Angular applications with the Angular CLI: components, signals, routing, and standalone APIs. Use when working with scaffold, build test, frontend or when the user mentions scaffold, build test, frontend."
 globs: ["**/*.css", "**/*.json", "**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 ---
 
-# angular
-
 Builds, tests, and deploys Angular applications with the Angular CLI: components, signals, routing, and standalone APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ng new my-app --style=scss --routing --ssr=false`, `ng serve --port 4200 --hmr`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Angular
 
@@ -84,6 +102,11 @@ Target 80%+ coverage on services and reducers, not templates.
 ### scaffold
 Create Angular workspaces, components, and services.
 
+**Parameters:**
+- `style` (string): CSS preprocessor: scss, sass, less, css
+- `routing` (string): true/false to add the router
+- `ssr` (string): true/false server-side rendering support
+
 **Commands:**
 - `ng new my-app --style=scss --routing --ssr=false`
 - `ng generate component dashboard`
@@ -99,6 +122,11 @@ Create Angular workspaces, components, and services.
 ### build-test
 Build, serve, test, and analyze Angular apps.
 
+**Parameters:**
+- `configuration` (string): production, development, or custom config
+- `watch` (string): true/false test watch mode
+- `browsers` (string): Karma browser launcher, e.g. ChromeHeadless
+
 **Commands:**
 - `ng serve --port 4200 --hmr`
 - `ng build --configuration=production`
@@ -110,3 +138,8 @@ Build, serve, test, and analyze Angular apps.
 - ng serve --open
 - ng test --watch=false --code-coverage
 - ng build --configuration=staging --output-path dist/staging
+
+## References
+- [Angular CLI](https://angular.dev/tools/cli)
+- [Angular Guide](https://angular.dev/guide/components)
+- [Angular Router](https://angular.dev/guide/routing)

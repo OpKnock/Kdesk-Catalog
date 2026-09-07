@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived."
+description: "Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived. Use when working with proxy configuration, kubernetes lb, devops or when the user mentions proxy configuration, kubernetes lb, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Load Balancing
-
 Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `haproxy -c -f /etc/haproxy/haproxy.cfg`, `kubectl expose deployment web --type=LoadBalancer --port=80`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Load Balancing
 
@@ -71,6 +89,10 @@ backend web_servers
 ### proxy-configuration
 Configure and validate HAProxy and NGINX frontends and backends.
 
+**Parameters:**
+- `config` (string): Proxy config file path
+- `backend` (string): Backend pool name
+
 **Commands:**
 - `haproxy -c -f /etc/haproxy/haproxy.cfg`
 - `systemctl reload haproxy`
@@ -87,6 +109,10 @@ Configure and validate HAProxy and NGINX frontends and backends.
 ### kubernetes-lb
 Expose workloads with Services and MetalLB bare-metal load balancers.
 
+**Parameters:**
+- `type` (string): Service type: ClusterIP, NodePort, LoadBalancer
+- `port` (integer): Service port
+
 **Commands:**
 - `kubectl expose deployment web --type=LoadBalancer --port=80`
 - `kubectl get svc -o wide`
@@ -99,3 +125,8 @@ Expose workloads with Services and MetalLB bare-metal load balancers.
 - kubectl expose deployment web --type=LoadBalancer --port=80
 - kubectl apply -f metallb-config.yaml
 - kubectl get endpointslices -l kubernetes.io/service-name=web
+
+## References
+- [HAProxy Documentation](https://www.haproxy.org/documentation/)
+- [NGINX Load Balancing](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/)
+- [MetalLB](https://metallb.universe.tf/)

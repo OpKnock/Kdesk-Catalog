@@ -1,13 +1,31 @@
 ---
 name: "echidna"
-description: "Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus, and CI integration."
+description: "Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus, and CI integration. Use when working with echidna fuzz, echidna analysis, code quality or when the user mentions echidna fuzz, echidna analysis, code quality."
 ---
-
-# Echidna
 
 Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `echidna test/Invariants.sol`, `echidna test/Invariants.sol --test-mode property --test-limi`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Echidna
 
@@ -84,6 +102,11 @@ sender: ["0x10000", "0x20000"]
 ### echidna-fuzz
 Run property-based fuzzing campaigns.
 
+**Parameters:**
+- `contract` (string): Solidity file
+- `test-limit` (integer): Max test calls
+- `config` (string): Config yaml path
+
 **Commands:**
 - `echidna test/Invariants.sol`
 - `echidna test/Invariants.sol --test-mode assertion`
@@ -99,6 +122,10 @@ Run property-based fuzzing campaigns.
 ### echidna-analysis
 Analyze and shrink failing sequences.
 
+**Parameters:**
+- `deployer` (string): Deployer address
+- `format` (string): text or json
+
 **Commands:**
 - `echidna test/Invariants.sol --test-mode property --test-limit 0`
 - `echidna test/Invariants.sol --format text`
@@ -108,3 +135,7 @@ Analyze and shrink failing sequences.
 **Examples:**
 - echidna test/Invariants.sol --test-limit 0 --format text
 - echidna test/Invariants.sol --seq-len 100 --test-limit 5000
+
+## References
+- [Echidna Docs](https://echidna.readthedocs.io)
+- [Echidna on GitHub](https://github.com/crytic/echidna)

@@ -1,13 +1,9 @@
 ---
 name: "fortio"
-description: "Load testing with Fortio: run HTTP load tests, generate reports, and inspect latency percentiles and errors from the CLI."
+description: "Load testing with Fortio: run HTTP load tests, generate reports, and inspect latency percentiles and errors from the CLI. Use when working with fortio load, api or when the user mentions fortio load, api."
 ---
 
-# Fortio
-
 Load testing with Fortio: run HTTP load tests, generate reports, and inspect latency percentiles and errors from the CLI.
-
-## Instructions
 
 # Fortio
 
@@ -59,6 +55,11 @@ fortio load -c 50 -t 60s -json result.json http://localhost:8080/ | jq '{qps: .A
 ### fortio-load
 Run HTTP load tests with configurable rate, connections, and duration.
 
+**Parameters:**
+- `connections` (integer): Concurrent connections
+- `qps` (integer): Target queries per second (0 = max)
+- `duration` (string): Test duration like 30s
+
 **Commands:**
 - `fortio load -c 50 -t 30s -qps 500 http://localhost:8080/api/orders`
 - `fortio load -c 10 -n 1000 -httpbuffered=false http://localhost:8080/health`
@@ -70,3 +71,7 @@ Run HTTP load tests with configurable rate, connections, and duration.
 - fortio load -c 50 -t 30s -qps 500 http://localhost:8080/api/orders
 - fortio load -c 50 -t 60s -json result.json http://localhost:8080/ | jq '.DurationHistogram.Percentiles'
 - fortio report
+
+## References
+- [Fortio README](https://github.com/fortio/fortio)
+- [Fortio load guide](https://fortio.org/docs/fortio-load/)

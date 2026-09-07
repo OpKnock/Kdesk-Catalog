@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Parse and modify INI configuration files with Python configparser and shell tools. Covers section lookups, value extraction, validation, and in-place updates."
+description: "Parse and modify INI configuration files with Python configparser and shell tools. Covers section lookups, value extraction, validation, and in-place updates. Use when working with ini parsing, api or when the user mentions ini parsing, api."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 ---
 
-# INI
-
 Parse and modify INI configuration files with Python configparser and shell tools. Covers section lookups, value extraction, validation, and in-place updates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python3 -c "import configparser; c=configparser.ConfigParser`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # INI Files
 
@@ -91,6 +109,11 @@ Agent: python3 -c "import66:    configparser; c=configparser.ConfigParser(); c.r
 ### ini-parsing
 Read, validate, and modify INI files with Python and shell tools.
 
+**Parameters:**
+- `file` (string): Path to the INI file.
+- `section` (string): Section name, e.g. database.
+- `key` (string): Option key within the section.
+
 **Commands:**
 - `python3 -c "import configparser; c=configparser.ConfigParser(); c.read('app.ini'); print(c['database']['host'])"`
 - `python3 -m configparser app.ini`
@@ -102,3 +125,7 @@ Read, validate, and modify INI files with Python and shell tools.
 - awk -F= '/^host=/{print $2}' config.ini
 - python3 -c "import configparser; c=configparser.ConfigParser(); c.read('app.ini'); print(c.sections())"
 - grep -c '^\[' app.ini
+
+## References
+- [Python configparser docs](https://docs.python.org/3/library/configparser.html)
+- [INI format overview](https://en.wikipedia.org/wiki/INI_file)

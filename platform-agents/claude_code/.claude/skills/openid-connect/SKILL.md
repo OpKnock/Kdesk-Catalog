@@ -1,13 +1,34 @@
 ---
 name: "openid-connect"
-description: "Implements OpenID Connect flows: discovers issuer metadata and JWKS, exchanges authorization codes to obtain tokens, validates ID token signatures, and fetches userinfo claims."
+description: "Implements OpenID Connect flows: discovers issuer metadata and JWKS, exchanges authorization codes to obtain tokens, validates ID token signatures, and fetches userinfo claims. Use when working with oidc flows, api or when the user mentions oidc flows, api."
+license: "MIT"
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---
-
-# Openid Connect
 
 Implements OpenID Connect flows: discovers issuer metadata and JWKS, exchanges authorization codes to obtain tokens, validates ID token signatures, and fetches userinfo claims.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s https://auth.your-app.test/.well-known/openid-config`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # OpenID Connect
 
@@ -63,6 +84,11 @@ curl -s https://auth.your-app.test/realms/realm/protocol/openid-connect/userinfo
 ### oidc-flows
 Discover OIDC metadata, exchange codes for tokens, validate JWTs against JWKS and call userinfo.
 
+**Parameters:**
+- `issuer` (string): OIDC issuer URL
+- `client_id` (string): Client identifier
+- `grant_type` (string): authorization_code, client_credentials or refresh_token
+
 **Commands:**
 - `curl -s https://auth.your-app.test/.well-known/openid-configuration | jq .`
 - `curl -s https://auth.your-app.test/.well-known/jwks.json | jq '.keys[].alg'`
@@ -74,3 +100,7 @@ Discover OIDC metadata, exchange codes for tokens, validate JWTs against JWKS an
 - curl -s https://auth.your-app.test/.well-known/openid-configuration | jq '.issuer,.authorization_endpoint'
 - curl -s https://auth.your-app.test/realms/realm/protocol/openid-connect/userinfo -H "Authorization: Bearer $TOKEN" | jq .
 - curl -X POST https://auth.your-app.test/realms/realm/protocol/openid-connect/token -d "grant_type=authorization_code" -d "code=$CODE" -d "redirect_uri=..." -d "client_id=app"
+
+## References
+- [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html)
+- [OIDC Discovery 1.0](https://openid.net/specs/openid-connect-discovery-1_0.html)

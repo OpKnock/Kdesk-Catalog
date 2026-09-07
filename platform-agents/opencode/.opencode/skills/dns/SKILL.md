@@ -1,13 +1,31 @@
 ---
 name: "dns"
-description: "Diagnoses and manages DNS: dig lookups, zone transfers, MX/TXT checks, and propagation verification."
+description: "Diagnoses and manages DNS: dig lookups, zone transfers, MX/TXT checks, and propagation verification. Use when working with dig, troubleshoot, infrastructure or when the user mentions dig, troubleshoot, infrastructure."
 ---
-
-# Dns
 
 Diagnoses and manages DNS: dig lookups, zone transfers, MX/TXT checks, and propagation verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `dig localhost A`, `dig @8.8.8.8 localhost A +short && dig @1.1.1.1 localhost A `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # DNS
 
@@ -82,6 +100,11 @@ Run the lookup matrix (A, MX, TXT, NS, SOA) on every environment after DNS chang
 ### dig
 Query DNS records with dig for full detail.
 
+**Parameters:**
+- `server` (string): DNS server to query, e.g. @8.8.8.8
+- `type` (string): Record type: A, AAAA, MX, TXT, CNAME, NS, SOA
+- `trace` (string): Follow the delegation chain from root
+
 **Commands:**
 - `dig localhost A`
 - `dig localhost MX`
@@ -97,6 +120,11 @@ Query DNS records with dig for full detail.
 ### troubleshoot
 Cross-check records and test propagation across resolvers.
 
+**Parameters:**
+- `type` (string): Record type to verify
+- `dnssec` (string): Include DNSSEC records in output
+- `server` (string): Resolver to query directly
+
 **Commands:**
 - `dig @8.8.8.8 localhost A +short && dig @1.1.1.1 localhost A +short`
 - `host -t CNAME www.example.com`
@@ -108,3 +136,8 @@ Cross-check records and test propagation across resolvers.
 - dig @208.67.222.222 localhost A +short
 - dig localhost +dnssec +multi | grep -E 'RRSIG|flags'
 - nslookup -type=SOA localhost
+
+## References
+- [dig man page](https://man7.org/linux/man-pages/man1/dig.1.html)
+- [BIND 9 Docs](https://bind9.readthedocs.io/)
+- [RFC 1034/1035](https://www.rfc-editor.org/rfc/rfc1035)

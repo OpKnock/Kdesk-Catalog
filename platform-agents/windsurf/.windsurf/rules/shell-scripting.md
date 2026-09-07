@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Writes robust POSIX/bash scripts: syntax checking, shellcheck linting, error handling with set -euo pipefail, and cross-platform portability."
+description: "Writes robust POSIX/bash scripts: syntax checking, shellcheck linting, error handling with set -euo pipefail, and cross-platform portability. Use when working with script quality, robust patterns, devtools or when the user mentions script quality, robust patterns, devtools."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# shell-scripting
-
 Writes robust POSIX/bash scripts: syntax checking, shellcheck linting, error handling with set -euo pipefail, and cross-platform portability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bash -n script.sh`, `set -euo pipefail`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Shell Scripting
 
@@ -77,6 +95,10 @@ echo "deploying to $env"
 ### script-quality
 Validate and lint shell scripts for correctness.
 
+**Parameters:**
+- `script` (string): Script file path
+- `severity` (string): Minimum severity: error, warning, info, style
+
 **Commands:**
 - `bash -n script.sh`
 - `shellcheck script.sh`
@@ -93,6 +115,10 @@ Validate and lint shell scripts for correctness.
 ### robust-patterns
 Write error-safe scripts with strict mode and defensive patterns.
 
+**Parameters:**
+- `var` (string): Variable name for readonly/local
+- `timeout-seconds` (integer): Timeout for guarded commands
+
 **Commands:**
 - `set -euo pipefail`
 - `trap 'echo failed at line $LINENO; exit 1' ERR`
@@ -105,3 +131,8 @@ Write error-safe scripts with strict mode and defensive patterns.
 - set -euo pipefail
 - trap 'echo failed at line $LINENO' ERR
 - command -v jq >/dev/null || exit 1
+
+## References
+- [ShellCheck](https://www.shellcheck.net/)
+- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
+- [POSIX Shell Utilities](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/contents.html)

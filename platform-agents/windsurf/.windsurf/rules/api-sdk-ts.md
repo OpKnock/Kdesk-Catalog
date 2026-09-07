@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc API docs, and npm publishing flow."
+description: "Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc API docs, and npm publishing flow. Use when working with ts build, ts docs or when the user mentions ts build, ts docs."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 ---
 
-# Api Sdk Ts
-
 Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc API docs, and npm publishing flow.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -D tsup typescript typedoc`, `npx typedoc src/index.ts --out docs`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API SDK v2 - TypeScript
 
@@ -61,6 +79,11 @@ export default defineConfig({
 ### ts-build
 Bundle a TypeScript SDK with tsup
 
+**Parameters:**
+- `entry` (string): Entry point file
+- `formats` (string): cjs, esm, iife
+- `outDir` (string): Output directory
+
 **Commands:**
 - `npm install -D tsup typescript typedoc`
 - `npx tsup src/index.ts --format cjs,esm --dts`
@@ -85,3 +108,7 @@ Generate API documentation with typedoc
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [tsup Docs](https://tsup.egoist.dev/)
+- [TypeDoc Docs](https://typedoc.org/)

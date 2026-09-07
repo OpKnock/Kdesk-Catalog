@@ -1,14 +1,32 @@
 ---
-description: "Creates and manages web ACLs with IP sets and rate-based rules, associates them with Application Load Balancers, API Gateway stages, and CloudFront distributions, and inspects sampled requests."
+description: "Creates and manages web ACLs with IP sets and rate-based rules, associates them with Application Load Balancers, API Gateway stages, and CloudFront distributions, and inspects sampled requests. Use when working with web acl, rules ipset, associate, api or when the user mentions web acl, rules ipset, associate, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Aws Waf
-
 Creates and manages web ACLs with IP sets and rate-based rules, associates them with Application Load Balancers, API Gateway stages, and CloudFront distributions, and inspects sampled requests.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aws wafv2 list-web-acls --scope REGIONAL`, `aws wafv2 create-ip-set --name blocked-ips --scope REGIONAL `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AWS WAF
 
@@ -64,6 +82,10 @@ aws wafv2 get-rate-based-statement-managed-keys --scope REGIONAL --web-acl-name 
 ### web-acl
 Create and inspect WAF web ACLs.
 
+**Parameters:**
+- `scope` (string): REGIONAL or CLOUDFRONT
+- `acl_name` (string): Web ACL name
+
 **Commands:**
 - `aws wafv2 list-web-acls --scope REGIONAL`
 - `aws wafv2 create-web-acl --name my-acl --scope REGIONAL --default-action Allow={} --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=my-acl`
@@ -78,6 +100,11 @@ Create and inspect WAF web ACLs.
 
 ### rules-ipset
 Add rules and IP sets to web ACLs.
+
+**Parameters:**
+- `ip_set_name` (string): IP set name
+- `addresses` (string): CIDR addresses
+- `rules_file` (string): JSON rules file
 
 **Commands:**
 - `aws wafv2 create-ip-set --name blocked-ips --scope REGIONAL --ip-address-version IPV4 --addresses 203.0.113.0/24`
@@ -94,6 +121,10 @@ Add rules and IP sets to web ACLs.
 ### associate
 Associate web ACLs with protected resources.
 
+**Parameters:**
+- `resource_arn` (string): ARN of the protected resource
+- `web_acl_arn` (string): Web ACL ARN
+
 **Commands:**
 - `aws wafv2 associate-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123 --resource-arn arn:aws:elasticloadbalancing:us-east-1:111122223333:loadbalancer/app/api/abc`
 - `aws wafv2 disassociate-web-acl --resource-arn arn:aws:apigateway:us-east-1::/restapis/abc123xyz/stages/prod`
@@ -104,3 +135,7 @@ Associate web ACLs with protected resources.
 - aws wafv2 associate-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123 --resource-arn arn:aws:elasticloadbalancing:us-east-1:111122223333:loadbalancer/app/api/abc
 - aws wafv2 get-web-acl-for-resource --resource-arn arn:aws:apigateway:us-east-1::/restapis/abc123xyz/stages/prod
 - aws wafv2 list-resources-for-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123
+
+## References
+- [WAF Developer Guide](https://docs.aws.amazon.com/waf/latest/developerguide/)
+- [AWS CLI wafv2 Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/wafv2/index.html)

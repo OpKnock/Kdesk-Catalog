@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Operates Google Cloud with the gcloud CLI: compute, GKE, Cloud Run, gsutil, IAM, and service accounts."
+description: "Operates Google Cloud with the gcloud CLI: compute, GKE, Cloud Run, gsutil, IAM, and service accounts. Use when working with gcp core, gcp run, gcp gke, cloud or when the user mentions gcp core, gcp run, gcp gke, cloud."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# gcp
-
 Operates Google Cloud with the gcloud CLI: compute, GKE, Cloud Run, gsutil, IAM, and service accounts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gcloud auth login`, `gcloud run deploy myapp --image gcr.io/my-project/myapp:1.0 `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Google Cloud
 
@@ -64,6 +82,10 @@ kubectl get nodes
 ### gcp-core
 Manage projects, compute, and storage.
 
+**Parameters:**
+- `project` (string): GCP project id
+- `zone` (string): Compute zone
+
 **Commands:**
 - `gcloud auth login`
 - `gcloud config set project my-project`
@@ -79,6 +101,10 @@ Manage projects, compute, and storage.
 ### gcp-run
 Deploy and manage Cloud Run services.
 
+**Parameters:**
+- `service` (string): Cloud Run service name
+- `image` (string): Container image reference
+
 **Commands:**
 - `gcloud run deploy myapp --image gcr.io/my-project/myapp:1.0 --region us-central1 --allow-unauthenticated`
 - `gcloud run services list`
@@ -93,6 +119,10 @@ Deploy and manage Cloud Run services.
 ### gcp-gke
 Manage GKE clusters and kubectl context.
 
+**Parameters:**
+- `cluster` (string): GKE cluster name
+- `zone` (string): Compute zone
+
 **Commands:**
 - `gcloud container clusters create mycluster --zone us-central1-a --num-nodes 3`
 - `gcloud container clusters get-credentials mycluster --zone us-central1-a`
@@ -102,3 +132,7 @@ Manage GKE clusters and kubectl context.
 **Examples:**
 - gcloud container clusters resize mycluster --node-pool default-pool --num-nodes 5
 - gcloud container node-pools list --cluster mycluster
+
+## References
+- [gcloud CLI Reference](https://cloud.google.com/sdk/gcloud/reference/)
+- [Cloud Run Docs](https://cloud.google.com/run/docs)

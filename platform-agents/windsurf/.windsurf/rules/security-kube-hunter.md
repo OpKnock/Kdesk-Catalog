@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "kube-hunter agent for Kubernetes penetration testing."
+description: "kube-hunter agent for Kubernetes penetration testing. Use when working with Security Kube Hunter, scanning or when the user mentions Security Kube Hunter, scanning."
 globs: ["**/*.json", "**/*.r"]
 ---
 
 # Security Kube Hunter
 
 kube-hunter agent for Kubernetes penetration testing.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Report: kube-hunter --report json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -37,3 +59,6 @@ kube-hunter agent for Kubernetes penetration testing.
 - Remote: kube-hunter --remote 192.168.1.0/24
 - Active: kube-hunter --active
 - Report: kube-hunter --report json
+
+## References
+- [kube-hunter Documentation](https://github.com/aquasecurity/kube-hunter)

@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Csp
-
 Hardens API and web endpoints with Content-Security-Policy headers, using Helmet middleware and curl verification against real echo services.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -sI https://httpbin.org/headers | grep -i content-secur`, `npm install helmet`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Content Security Policy (CSP)
 
@@ -87,6 +105,9 @@ curl -s -D - -o /dev/null http://localhost:8080/health | grep -i content-securit
 ### header-verification
 Inspect and verify Content-Security-Policy response headers on live endpoints
 
+**Parameters:**
+- `url` (string): URL to check for CSP headers
+
 **Commands:**
 - `curl -sI https://httpbin.org/headers | grep -i content-security-policy`
 - `curl -s -D - -o /dev/null https://httpbin.org/headers | grep -i 'content-security-policy\|x-frame-options'`
@@ -101,6 +122,9 @@ Inspect and verify Content-Security-Policy response headers on live endpoints
 ### helmet-config
 Configure CSP and related security headers with helmet in Node.js
 
+**Parameters:**
+- `directives` (string): CSP directives such as default-src 'self'
+
 **Commands:**
 - `npm install helmet`
 - `node -e "const helmet=require('helmet'); console.log(typeof helmet.contentSecurityPolicy)"`
@@ -111,3 +135,7 @@ Configure CSP and related security headers with helmet in Node.js
 - npm install helmet && npm run start
 - curl -sI http://localhost:8080 | grep -i content-security-policy
 - npm test
+
+## References
+- [MDN CSP Guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
+- [Helmet Docs](https://helmetjs.github.io/)

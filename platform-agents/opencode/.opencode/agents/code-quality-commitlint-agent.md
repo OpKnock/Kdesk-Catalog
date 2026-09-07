@@ -1,12 +1,34 @@
 ---
 name: "code-quality-commitlint-agent"
-description: "Validates Git commit messages against conventional commit format. Supports range checks, inline testing, and custom config."
+description: "Validates Git commit messages against conventional commit format. Supports range checks, inline testing, and custom config. Use when working with lint commits, code quality, agent or when the user mentions lint commits, code quality, agent."
 mode: subagent
 ---
 
 # Code Quality Commitlint Agent
 
 Validates Git commit messages against conventional commit format. Supports range checks, inline testing, and custom config.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `commitlint --edit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -36,6 +58,12 @@ Create .commitlintrc.json or commitlint.config.js with rules, parser-presets, an
 ### lint-commits
 Validate Git commit messages for conventional commit compliance
 
+**Parameters:**
+- `from_ref` (string): Starting commit reference (e.g., HEAD~10)
+- `to_ref` (string): Ending commit reference (e.g., HEAD)
+- `config` (string): Path to commitlint config file
+- `message` (string): Commit message to test inline
+
 **Commands:**
 - `commitlint --edit`
 - `commitlint --from=HEAD~10 --to=HEAD`
@@ -47,3 +75,10 @@ Validate Git commit messages for conventional commit compliance
 - commitlint --from=HEAD~10 --to=HEAD
 - commitlint --config .commitlintrc.json
 - echo "feat(scope): add feature" | commitlint
+
+## References
+- [Commitlint Documentation](https://commitlint.js.org/)
+- [Commitlint Rules Reference](https://commitlint.js.org/reference/rules.html)
+- [Conventional Commits](https://www.conventionalcommits.org/)
+- [CI Integration](https://commitlint.js.org/guides/local-setup.html)
+- [Configuration Guide](https://commitlint.js.org/reference/configuration.html)

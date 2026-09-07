@@ -1,13 +1,31 @@
 ---
 name: "blockchain-development"
-description: "Develops EVM smart contracts with Hardhat and Foundry: compilation, deployment, testing, and on-chain verification."
+description: "Develops EVM smart contracts with Hardhat and Foundry: compilation, deployment, testing, and on-chain verification. Use when working with evm smart contracts, onchain interaction or when the user mentions evm smart contracts, onchain interaction."
 ---
-
-# blockchain-development
 
 Develops EVM smart contracts with Hardhat and Foundry: compilation, deployment, testing, and on-chain verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx hardhat compile`, `cast call 0xToken --rpc-url $RPC_URL "symbol()(string)"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Blockchain Development
 
@@ -80,6 +98,10 @@ contract Greeter {
 ### evm-smart-contracts
 Compile, test, and deploy Solidity contracts.
 
+**Parameters:**
+- `network` (string): Target network: sepolia, mainnet
+- `contract` (string): Contract name
+
 **Commands:**
 - `npx hardhat compile`
 - `npx hardhat test`
@@ -95,6 +117,11 @@ Compile, test, and deploy Solidity contracts.
 ### onchain-interaction
 Query and interact with deployed contracts.
 
+**Parameters:**
+- `address` (string): Contract address
+- `signature` (string): Function signature
+- `rpc-url` (string): RPC endpoint
+
 **Commands:**
 - `cast call 0xToken --rpc-url $RPC_URL "symbol()(string)"`
 - `cast send 0xToken --private-key $PK "transfer(address,uint256)" 0xTo 1000`
@@ -106,3 +133,8 @@ Query and interact with deployed contracts.
 - cast call 0xToken --rpc-url $RPC_URL "balanceOf(address)(uint256)" 0xAccount
 - cast send --value 0.1ether 0xRecipient
 - cast receipt 0xtxhash
+
+## References
+- [Solidity Docs](https://docs.soliditylang.org)
+- [Hardhat Docs](https://hardhat.org/docs)
+- [Foundry Book](https://book.getfoundry.sh)

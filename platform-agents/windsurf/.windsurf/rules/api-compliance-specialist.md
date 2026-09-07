@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Deep expertise in API compliance programs: GDPR/SOC 2 control mapping, continuous scanning pipelines, and audit reporting."
+description: "Deep expertise in API compliance programs: GDPR/SOC 2 control mapping, continuous scanning pipelines, and audit reporting. Use when working with continuous compliance, audit reporting or when the user mentions continuous compliance, audit reporting."
 globs: ["**/*.html", "**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# api-compliance-specialist
-
 Deep expertise in API compliance programs: GDPR/SOC 2 control mapping, continuous scanning pipelines, and audit reporting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `checkov -d . --quiet --compact`, `prowler aws -M csv -o reports/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Compliance Specialist
 
@@ -52,6 +70,10 @@ Map each scanner check to a control (e.g. encryption at rest, logging, access re
 ### continuous-compliance
 Build CI pipelines that scan IaC and APIs on every change
 
+**Parameters:**
+- `path` (string): Directory or file to scan
+- `format` (string): Report format: json, sarif, html, csv
+
 **Commands:**
 - `checkov -d . --quiet --compact`
 - `tfsec . --format sarif --out tfsec.sarif`
@@ -67,6 +89,10 @@ Build CI pipelines that scan IaC and APIs on every change
 ### audit-reporting
 Produce audit-ready evidence and control mapping reports
 
+**Parameters:**
+- `outputDir` (string): Reports output directory
+- `check` (string): Specific check ID
+
 **Commands:**
 - `prowler aws -M csv -o reports/`
 - `scout aws --report-dir reports/scout`
@@ -78,3 +104,8 @@ Produce audit-ready evidence and control mapping reports
 - prowler aws -M csv -o reports/ && python -c "import glob,csv;print([f for f in glob.glob('reports/*.csv')])"
 - checkov -d . --output-bc-ids --quiet | head -20
 - scout aws --report-dir reports/scout --rebase
+
+## References
+- [Checkov Policy Index](https://www.checkov.io/5.Policy%20Index/)
+- [Prowler](https://docs.prowler.com/)
+- [SOC 2 Trust Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)

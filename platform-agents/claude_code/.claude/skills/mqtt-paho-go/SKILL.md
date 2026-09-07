@@ -1,13 +1,34 @@
 ---
 name: "mqtt-paho-go"
-description: "Write MQTT clients in Go with eclipse/paho.mqtt.golang: connect options, pub/sub, tokens and TLS."
+description: "Write MQTT clients in Go with eclipse/paho.mqtt.golang: connect options, pub/sub, tokens and TLS. Use when working with paho go client, api or when the user mentions paho go client, api."
+license: "MIT"
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(go:*)"
 ---
-
-# Mqtt Paho Go
 
 Write MQTT clients in Go with eclipse/paho.mqtt.golang: connect options, pub/sub, tokens and TLS.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go get github.com/eclipse/paho.mqtt.golang`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Paho MQTT Go
 
@@ -66,6 +87,11 @@ c.Subscribe("sensors/#", 0, func(_ mqtt.Client, m mqtt.Message) {
 ### paho-go-client
 Add the Paho Go module, write connect/publish/subscribe code and run it against a broker.
 
+**Parameters:**
+- `broker` (string): Broker URL, e.g. tcp://localhost:1883 or ssl://host:8883
+- `client_id` (string): Client identifier for the connection
+- `topic` (string): Topic filter used in the handler
+
 **Commands:**
 - `go get github.com/eclipse/paho.mqtt.golang`
 - `go mod tidy`
@@ -77,3 +103,7 @@ Add the Paho Go module, write connect/publish/subscribe code and run it against 
 - go get github.com/eclipse/paho.mqtt.golang@v1.5.0
 - go run main.go
 - go test -run TestPublish -v ./...
+
+## References
+- [Paho MQTT Go repo](https://github.com/eclipse/paho.mqtt.golang)
+- [pkg.go.dev paho.mqtt.golang](https://pkg.go.dev/github.com/eclipse/paho.mqtt.golang)

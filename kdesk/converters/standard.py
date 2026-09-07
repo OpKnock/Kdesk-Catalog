@@ -20,10 +20,51 @@ from kdesk.converters.shared import (
 )
 
 
-def convert_to_skill_md(agent: Dict[str, Any], skills_dir: str) -> Dict[str, Any]:
-    """Agent Skills standard (SKILL.md) - read by 40+ tools."""
+def _skill_frontmatter_std(agent: Dict[str, Any]) -> str:
+    """Official SKILL.md frontmatter per agentskills.io spec."""
     slug = slugify(agent['name'])
-    content = f"---\nname: {json.dumps(slug)}\ndescription: {json.dumps(desc_safe(agent))}\n---\n\n{build_markdown(agent)}\n"
+    lines = ["---"]
+    lines.append(f"name: {json.dumps(slug)}")
+    lines.append(f"description: {json.dumps(desc_safe(agent))}")
+    lic = agent.get("license") or "MIT"
+    lines.append(f"license: {json.dumps(str(lic))}")
+    prereqs = agent.get("prerequisites") or []
+    tools = agent.get("tools") or []
+    if prereqs or tools:
+        combined = prereqs + [t for t in tools if t not in prereqs]
+        compat = f"Requires {', '.join(combined[:6])}."
+        if any("curl" in str(c.get("commands", [])) or "kubectl" in str(c.get("commands", [])) for c in agent.get("capabilities", []) or []):
+            compat += " Needs network access."
+        compat = compat[:500]
+        lines.append(f"compatibility: {json.dumps(compat)}")
+    meta = {"author": str(agent.get("author", "Kdesk")), "version": str(agent.get("version", "1.0.0")), "category": str(agent.get("category", "general"))}
+    lines.append(f"metadata: {json.dumps(meta)}")
+    bins = set()
+    for cap in agent.get("capabilities", []) or []:
+        for cmd in cap.get("commands", []) or []:
+            if isinstance(cmd, str) and cmd.strip():
+                bins.add(cmd.strip().split()[0].lstrip("$"))
+    if bins:
+        allowed = []
+        for b in sorted(bins):
+            if b.lower() in ("read", "grep", "glob", "write", "edit"):
+                allowed.append(b.capitalize())
+            else:
+                allowed.append(f"Bash({b}:*)")
+        for core in ["Read", "Grep", "Glob"]:
+            if core not in allowed:
+                allowed.insert(0, core)
+        lines.append(f"allowed-tools: {json.dumps(' '.join(allowed[:10]))}")
+    lines.append("---")
+    return "\n".join(lines)
+
+
+def convert_to_skill_md(agent: Dict[str, Any], skills_dir: str) -> Dict[str, Any]:
+    """Agent Skills standard (SKILL.md) - read by 40+ tools, with Read-Reason-Act body."""
+    slug = slugify(agent['name'])
+    fm = _skill_frontmatter_std(agent)
+    body = build_markdown(agent)
+    content = f"{fm}\n\n{body}\n"
     return {"name": agent['name'], "rel_path": f"{skills_dir}/{slug}/SKILL.md", "content": content}
 
 

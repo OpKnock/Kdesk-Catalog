@@ -1,14 +1,32 @@
 ---
-description: "Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts, and verbose troubleshooting."
+description: "Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts, and verbose troubleshooting. Use when working with connections, tunnels and forwarding, devtools or when the user mentions connections, tunnels and forwarding, devtools."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# ssh
-
 Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts, and verbose troubleshooting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ssh user@host`, `ssh -L 8080:localhost:80 user@host`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SSH Connections
 
@@ -72,6 +90,11 @@ Host prod
 ### connections
 Connect with keys, ports, and options.
 
+**Parameters:**
+- `host` (string): Remote host
+- `port` (integer): SSH port
+- `key` (string): Identity file
+
 **Commands:**
 - `ssh user@host`
 - `ssh -p 2222 user@host`
@@ -88,6 +111,10 @@ Connect with keys, ports, and options.
 ### tunnels-and-forwarding
 Forward ports, set up SOCKS proxies, and tunnel traffic.
 
+**Parameters:**
+- `local-port` (integer): Local port for -L
+- `target` (string): Forward target host:port
+
 **Commands:**
 - `ssh -L 8080:localhost:80 user@host`
 - `ssh -R 3000:localhost:3000 user@host`
@@ -100,3 +127,7 @@ Forward ports, set up SOCKS proxies, and tunnel traffic.
 - ssh -L 3306:db.internal:3306 user@bastion
 - ssh -D 1080 -N user@host
 - ssh -vvv user@host
+
+## References
+- [ssh Manual](https://man.openbsd.org/ssh)
+- [ssh_config Manual](https://man.openbsd.org/ssh_config)

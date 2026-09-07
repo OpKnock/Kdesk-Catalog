@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Trace Sampling
-
 Control trace volume with head and tail sampling strategies. Configures OpenTelemetry SDK samplers via environment variables (traceidratio, parentbased_traceidratio, always_on), sets Jaeger probabilistic or rate-limiting sampling, and describes collector-side tail sampling policies that retain errors while dropping successful traces.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Trace Sampling
 
@@ -79,6 +97,11 @@ export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=1.0
 ### sampling-strategy
 Configure head and tail trace sampling rates
 
+**Parameters:**
+- `sampler` (string): traceidratio, parentbased_traceidratio, always_on
+- `ratio` (float): Sampling fraction, e.g. 0.1 = 10%
+- `strategy` (string): probabilistic or ratelimiting for Jaeger
+
 **Commands:**
 - `export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=0.1`
 - `export OTEL_TRACES_SAMPLER=parentbased_traceidratio OTEL_TRACES_SAMPLER_ARG=0.25`
@@ -90,3 +113,7 @@ Configure head and tail trace sampling rates
 - export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=0.1
 - curl -g 'http://localhost:16686/api/sampling?service=api' | jq
 - docker run -p 16686:16686 jaegertracing/all-in-one --sampling.type=ratelimiting --sampling.param=10
+
+## References
+- [OpenTelemetry sampling docs](https://opentelemetry.io/docs/concepts/sampling/)
+- [Jaeger sampling strategies](https://www.jaegertracing.io/docs/1.57/sampling/)

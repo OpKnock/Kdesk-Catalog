@@ -2,11 +2,29 @@
 applyTo: "**/*.java **/*.json **/*.r **/*.sh"
 ---
 
-# mockserver
-
 Mocks HTTP and HTTPS APIs with MockServer, creating expectations via REST admin API and proxying to real backends.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `java -jar mockserver-netty-jar-with-dependencies.jar -server`, `curl -s -X PUT http://localhost:1080/mockserver/expectation `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # MockServer
 
@@ -64,6 +82,10 @@ curl -s -X PUT http://localhost:1080/mockserver/reset
 ### mockserver-start
 Start MockServer locally or in Docker.
 
+**Parameters:**
+- `port` (number): Server port
+- `initFile` (string): Initialization JSON path
+
 **Commands:**
 - `java -jar mockserver-netty-jar-with-dependencies.jar -serverPort 1080`
 - `docker run -d -p 1080:1080 --name mockserver mockserver/mockserver`
@@ -77,6 +99,10 @@ Start MockServer locally or in Docker.
 
 ### expectation-management
 Create, inspect, and clear expectations via the admin API.
+
+**Parameters:**
+- `expectation` (object): Request/response expectation JSON
+- `path` (string): Request path to match
 
 **Commands:**
 - `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{"httpRequest":{"path":"/api/users","method":"GET"},"httpResponse":{"statusCode":200,"body":"{\"users\":[]}"}}'`
@@ -93,6 +119,10 @@ Create, inspect, and clear expectations via the admin API.
 ### request-verification
 Inspect received requests and proxy behavior.
 
+**Parameters:**
+- `path` (string): Path filter for requests
+- `method` (string): Method filter
+
 **Commands:**
 - `curl -s http://localhost:1080/mockserver/requests -d '{"path":"/api/users"}'`
 - `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{"httpRequest":{"path":"/api/*"},"httpForward":{"host":"real-api","port":8080}}'`
@@ -101,3 +131,7 @@ Inspect received requests and proxy behavior.
 **Examples:**
 - curl -s http://localhost:1080/mockserver/requests -d '{"path":"/api/users"}'
 - curl -s -X PUT http://localhost:1080/mockserver/verify -d '{"path":"/api/users","method":"POST"}'
+
+## References
+- [MockServer Documentation](https://www.mock-server.com/)
+- [MockServer Docker](https://www.mock-server.com/mock_server/running_with_docker.html)

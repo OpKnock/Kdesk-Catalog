@@ -1,13 +1,31 @@
 ---
 name: "api-version-knex-migrations"
-description: "Manages database migrations for versioned APIs: knex and Prisma migration workflows, rollback, and schema evolution alongside API versions."
+description: "Manages database migrations for versioned APIs: knex and Prisma migration workflows, rollback, and schema evolution alongside API versions. Use when working with knex migrations, prisma migrate or when the user mentions knex migrations, prisma migrate."
 ---
-
-# Api Version Knex Migrations
 
 Manages database migrations for versioned APIs: knex and Prisma migration workflows, rollback, and schema evolution alongside API versions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx knex migrate:make add_users_table`, `npx prisma migrate dev --name add_users`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Version v3 - Migrations
 
@@ -55,6 +73,11 @@ npx prisma migrate deploy
 ### knex-migrations
 Create and apply knex migrations
 
+**Parameters:**
+- `name` (string): Migration name
+- `directory` (string): Migrations directory
+- `environment` (string): Knex env config
+
 **Commands:**
 - `npx knex migrate:make add_users_table`
 - `npx knex migrate:latest`
@@ -80,3 +103,7 @@ Manage Prisma schema migrations
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Knex Migrations](https://knexjs.org/guide/migrations.html)
+- [Prisma Migrate](https://www.prisma.io/docs/orm/prisma-migrate)

@@ -1,13 +1,31 @@
 ---
 name: "event-sourcing-event-sourcing"
-description: "Implements event sourcing with EventStoreDB, Kafka, projections, and CQRS read models using real CLI tooling."
+description: "Implements event sourcing with EventStoreDB, Kafka, projections, and CQRS read models using real CLI tooling. Use when working with event store operations, kafka event pipeline or when the user mentions event store operations, kafka event pipeline."
 ---
-
-# event-sourcing-event-sourcing
 
 Implements event sourcing with EventStoreDB, Kafka, projections, and CQRS read models using real CLI tooling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -d -p 2113:2113 -p 1113:1113 eventstore/eventstor`, `kafka-topics.sh --bootstrap-server localhost:9092 --create -`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Event Sourcing Implementation
 
@@ -67,6 +85,10 @@ redis-cli GET account:42:balance
 ### event-store-operations
 Run and interact with EventStoreDB streams.
 
+**Parameters:**
+- `stream` (string): Stream name
+- `event` (string): Event type
+
 **Commands:**
 - `docker run -d -p 2113:2113 -p 1113:1113 eventstore/eventstore:latest --insecure`
 - `curl -s http://localhost:2113/streams/orders | jq '.entries[0].title'`
@@ -82,6 +104,10 @@ Run and interact with EventStoreDB streams.
 ### kafka-event-pipeline
 Produce, consume, and replay events through Kafka.
 
+**Parameters:**
+- `topic` (string): Event topic name
+- `group` (string): Consumer group for replay
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic account.events --partitions 4`
 - `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic account.events`
@@ -93,3 +119,8 @@ Produce, consume, and replay events through Kafka.
 - kafka-topics.sh --bootstrap-server localhost:9092 --create --topic account.events --partitions 4
 - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group projection --to-earliest --execute
 - redis-cli GET account:42:balance
+
+## References
+- [EventStoreDB Documentation](https://developers.eventstore.com/)
+- [Debezium](https://debezium.io/documentation/)
+- [CQRS by Fowler](https://martinfowler.com/bliki/CQRS.html)

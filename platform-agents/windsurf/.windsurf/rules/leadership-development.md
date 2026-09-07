@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Develops engineering leaders: PR review practice, contribution metrics, and team-level operational habits grounded in real GitHub workflows."
+description: "Develops engineering leaders: PR review practice, contribution metrics, and team-level operational habits grounded in real GitHub workflows. Use when working with review practice, team habits or when the user mentions review practice, team habits."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# leadership-development
-
 Develops engineering leaders: PR review practice, contribution metrics, and team-level operational habits grounded in real GitHub workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh pr list --repo owner/repo --search 'reviewed-by:@me' --st`, `gh issue create --title '1:1 notes - 2026-08-10' --body 'Ski`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Leadership Development
 
@@ -72,6 +90,11 @@ Audit your own habits monthly: review response time, 1:1 cadence, action-item cl
 ### review-practice
 Build review habits and track team contribution patterns.
 
+**Parameters:**
+- `repo` (string): owner/repo pair
+- `reviewed-by` (string): Reviewer login filter
+- `search` (string): GitHub search query
+
 **Commands:**
 - `gh pr list --repo owner/repo --search 'reviewed-by:@me' --state all`
 - `gh pr list --review-requested @me`
@@ -87,6 +110,11 @@ Build review habits and track team contribution patterns.
 ### team-habits
 Run 1:1s and team operations with tangible artifacts.
 
+**Parameters:**
+- `label` (string): Issue label like 1-1 or action-item
+- `title` (string): Issue title
+- `body` (string): Issue body
+
 **Commands:**
 - `gh issue create --title '1:1 notes - 2026-08-10' --body 'Skip: roadmap; focus: growth areas' --repo owner/repo --label 1-1`
 - `gh issue list --label 1-1 --state open --repo owner/repo`
@@ -98,3 +126,8 @@ Run 1:1s and team operations with tangible artifacts.
 - gh issue create --title '1:1 - ada' --body 'Follow-ups: onboarding checklist' --repo owner/repo
 - gh issue list --label 1-1 --search 'state:open' --repo owner/repo
 - gh issue comment 42 --body 'Resolution: agreed in retro'
+
+## References
+- [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow)
+- [Google re:Work Manager Guide](https://rework.withgoogle.com/en/guides/manager-guide/)
+- [Engineering Manager Handbook](https://increment.com/teams/)

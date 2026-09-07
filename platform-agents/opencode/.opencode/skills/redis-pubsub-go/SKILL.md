@@ -1,13 +1,31 @@
 ---
 name: "redis-pubsub-go"
-description: "Publish and subscribe to Redis channels from Go using go-redis: channel and pattern subscriptions with graceful shutdown handling."
+description: "Publish and subscribe to Redis channels from Go using go-redis: channel and pattern subscriptions with graceful shutdown handling. Use when working with go redis pubsub, api or when the user mentions go redis pubsub, api."
 ---
-
-# Redis Pubsub Go
 
 Publish and subscribe to Redis channels from Go using go-redis: channel and pattern subscriptions with graceful shutdown handling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go get github.com/redis/go-redis/v9`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Redis Pub/Sub in Go
 
@@ -80,6 +98,11 @@ redis-cli -p 6379 psubscribe 'events:*'
 ### go-redis-pubsub
 Publish and subscribe to Redis channels from Go with the go-redis PubSub API
 
+**Parameters:**
+- `channel` (string): Channel name to publish to or subscribe on
+- `pattern` (string): Glob pattern like events:* used with PSubscribe
+- `poolSize` (integer): go-redis connection pool size (default 10)
+
 **Commands:**
 - `go get github.com/redis/go-redis/v9`
 - `go mod init app && go mod tidy`
@@ -91,3 +114,7 @@ Publish and subscribe to Redis channels from Go with the go-redis PubSub API
 - redis-cli -p 6379 publish events:orders '{"id":1}'
 - redis-cli -p 6379 pubsub channels events:*
 - go run main.go
+
+## References
+- [go-redis PubSub docs](https://pkg.go.dev/github.com/redis/go-redis/v9#PubSub)
+- [Redis pub/sub documentation](https://redis.io/docs/latest/develop/data-types/pubsub/)

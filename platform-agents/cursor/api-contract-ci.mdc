@@ -1,14 +1,32 @@
 ---
-description: "Wires contract testing into CI/CD: broker pipelines, deploy gates, and breaking-change detection for every release."
+description: "Wires contract testing into CI/CD: broker pipelines, deploy gates, and breaking-change detection for every release. Use when working with ci integration, breaking change gates or when the user mentions ci integration, breaking change gates."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Api Contract Ci
-
 Wires contract testing into CI/CD: broker pipelines, deploy gates, and breaking-change detection for every release.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx pact-broker publish ./pacts --consumer-version $BUILD_NU`, `openapi-diff --fail-on-incompatible main.yaml pr.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Contract (CI/CD)
 
@@ -55,6 +73,11 @@ Break a contract on purpose and confirm the gate blocks the release.
 ### ci-integration
 Add Pact publish, verify, and can-i-deploy steps to pipelines
 
+**Parameters:**
+- `broker` (string): Broker base URL
+- `environment` (string): Deployment environment
+- `buildNumber` (string): Build/version identifier
+
 **Commands:**
 - `npx pact-broker publish ./pacts --consumer-version $BUILD_NUMBER --broker-base-url http://localhost:9292`
 - `npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-broker-base-url http://localhost:9292 --provider api --consumer-version-selector '{"branch":"main"}'`
@@ -70,6 +93,10 @@ Add Pact publish, verify, and can-i-deploy steps to pipelines
 ### breaking-change-gates
 Block incompatible spec changes with automated diffs
 
+**Parameters:**
+- `base` (string): Baseline spec
+- `candidate` (string): PR spec
+
 **Commands:**
 - `openapi-diff --fail-on-incompatible main.yaml pr.yaml`
 - `git diff main.yaml pr.yaml --stat`
@@ -81,3 +108,7 @@ Block incompatible spec changes with automated diffs
 - openapi-diff --fail-on-incompatible main.yaml pr.yaml
 - git diff main.yaml pr.yaml --stat && openapi-diff --fail-on-incompatible main.yaml pr.yaml
 - swagger-cli validate pr.yaml && npx @stoplight/spectral-cli lint pr.yaml
+
+## References
+- [Pact Broker can-i-deploy](https://docs.pact.io/pact_broker/can_i_deploy)
+- [Pact Broker Environments](https://docs.pact.io/pact_broker/recording_deployments)

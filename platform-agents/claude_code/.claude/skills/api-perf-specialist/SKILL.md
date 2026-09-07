@@ -1,13 +1,13 @@
 ---
 name: "api-perf-specialist"
-description: "Profiles API request latency with curl timing statistics, response-size analysis, gzip validation, and HTTP/2 checks to identify optimization targets."
+description: "Profiles API request latency with curl timing statistics, response-size analysis, gzip validation, and HTTP/2 checks to identify optimization targets. Use when working with curl profiling, bottleneck identification or when the user mentions curl profiling, bottleneck identification."
+license: "MIT"
+compatibility: "Requires node.js, python, redis, k6, new-relic. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---
 
-# api-perf-specialist
-
 Profiles API request latency with curl timing statistics, response-size analysis, gzip validation, and HTTP/2 checks to identify optimization targets.
-
-## Instructions
 
 # API Perf Specialist
 
@@ -51,6 +51,11 @@ curl -w "dns:%{time_namelookup}s connect:%{time_connect}s tls:%{time_appconnect}
 ### curl-profiling
 Measure DNS, TCP, TLS, TTFB, and total time per request
 
+**Parameters:**
+- `write-out-format` (string): curl -w format string with timing variables
+- `url` (string): Endpoint under test
+- `headers` (array): Extra headers like Accept-Encoding or Authorization
+
 **Commands:**
 - `curl -w "dns:%{time_namelookup}s connect:%{time_connect}s tls:%{time_appconnect}s ttfb:%{time_starttransfer}s total:%{time_total}s size:%{size_download}\n" -o /dev/null -s https://api.example.com/v1/items`
 - `curl -s -o /dev/null -w '%{http_code} %{time_total} %{speed_download} bytes/s\n' http://localhost:8080/`
@@ -75,3 +80,7 @@ Compare endpoints and payloads to rank bottlenecks
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [curl -w Variables](https://curl.se/docs/manpage.html#-w)
+- [WebPageTest Docs](https://docs.webpagetest.org/)

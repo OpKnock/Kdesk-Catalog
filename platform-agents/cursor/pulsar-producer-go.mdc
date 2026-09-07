@@ -1,14 +1,32 @@
 ---
-description: "Pulsar producers in Go: send messages, batching, delivery semantics, and performance benchmarking with pulsar-perf."
+description: "Pulsar producers in Go: send messages, batching, delivery semantics, and performance benchmarking with pulsar-perf. Use when working with pulsar go producer, api or when the user mentions pulsar go producer, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Pulsar Producer Go
-
 Pulsar producers in Go: send messages, batching, delivery semantics, and performance benchmarking with pulsar-perf.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go run producer.go`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Pulsar Producer (Go)
 
@@ -70,6 +88,11 @@ for i := 0; i < 100; i++ {
 ### pulsar-go-producer
 Write Go Pulsar producers with send options and benchmark throughput with pulsar-perf.
 
+**Parameters:**
+- `topic` (string): Topic to produce to
+- `num_messages` (integer): Messages to send in benchmark
+- `rate` (integer): Target publish rate (msg/s)
+
 **Commands:**
 - `go run producer.go`
 - `go vet ./...`
@@ -81,3 +104,7 @@ Write Go Pulsar producers with send options and benchmark throughput with pulsar
 - go run producer.go
 - bin/pulsar-perf produce my-topic --num-producers 4 --num-messages 1000000
 - bin/pulsar-client produce my-topic --messages '{"id":1}' -n 3
+
+## References
+- [Pulsar Go client docs](https://pulsar.apache.org/docs/3.0.x/client-libraries-go/)
+- [pulsar-perf tool](https://pulsar.apache.org/docs/3.0.x/reference-cli-tools/)

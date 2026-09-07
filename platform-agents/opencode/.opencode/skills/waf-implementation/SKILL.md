@@ -1,13 +1,31 @@
 ---
 name: "waf-implementation"
-description: "Deploy and tune a Web Application Firewall with ModSecurity and OWASP CRS, block OWASP Top 10 attacks, and reduce false positives."
+description: "Deploy and tune a Web Application Firewall with ModSecurity and OWASP CRS, block OWASP Top 10 attacks, and reduce false positives. Use when working with Deploy ModSecurity with OWASP CRS, Configure and reload WAF rules, Tune rules and reduce false positives or when the user mentions Deploy ModSecurity with OWASP CRS, Configure and reload WAF rules, Tune rules and reduce false positives."
 ---
-
-# waf-implementation
 
 Deploy and tune a Web Application Firewall with ModSecurity and OWASP CRS, block OWASP Top 10 attacks, and reduce false positives.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -d --name crs -p 80:80 -p 443:443 -e PARANOIA=1 -`, `nginx -t`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # WAF Implementation
 
@@ -60,6 +78,10 @@ Put a web application firewall in front of HTTP traffic to detect and block OWAS
 ### Deploy ModSecurity with OWASP CRS
 Start an OWASP CRS-enabled ModSecurity container in front of your app and verify it proxies traffic and loads rules.
 
+**Parameters:**
+- `PARANOIA` (integer): CRS paranoia level (1-4); higher levels block more but create more false positives.
+- `BLOCKING_PARANOIA` (integer): Paranoia level at which traffic is actually blocked.
+
 **Commands:**
 - `docker run -d --name crs -p 80:80 -p 443:443 -e PARANOIA=1 -e BLOCKING_PARANOIA=1 owasp/modsecurity-crs:nginx`
 - `docker exec -it crs bash`
@@ -72,6 +94,10 @@ Start an OWASP CRS-enabled ModSecurity container in front of your app and verify
 
 ### Configure and reload WAF rules
 Check nginx config, reload the WAF, and test that attack payloads are detected and blocked.
+
+**Parameters:**
+- `target URL` (string): Origin behind the WAF to test, e.g. http://localhost.
+- `log path` (string): Location of the ModSecurity audit log inside the container.
 
 **Commands:**
 - `nginx -t`
@@ -87,6 +113,10 @@ Check nginx config, reload the WAF, and test that attack payloads are detected a
 ### Tune rules and reduce false positives
 Run in DetectionOnly mode, analyze audit log matches, and disable or adjust the rules that misfire on legitimate traffic.
 
+**Parameters:**
+- `rule id` (integer): CRS rule ID to pass or block (e.g. 949110 for inbound anomalies).
+- `mode` (string): SecRuleEngine mode: On, DetectionOnly, Off.
+
 **Commands:**
 - `sed -i 's/SecRuleEngine On/SecRuleEngine DetectionOnly/' /etc/modsecurity.d/modsecurity.conf`
 - `grep -E 'id "9|rule_id' /var/log/modsec_audit.log | sort | uniq -c | sort -rn`
@@ -96,3 +126,9 @@ Run in DetectionOnly mode, analyze audit log matches, and disable or adjust the 
 **Examples:**
 - grep -E 'id "9|rule_id' /var/log/modsec_audit.log | sort | uniq -c | sort -rn
 - sed -i 's/#SecRuleUpdateActionById/SecRuleUpdateActionById 949110:pass/' /etc/modsecurity.d/crs-setup.conf
+
+## References
+- [](https://github.com/owasp-modsecurity/ModSecurity)
+- [](https://github.com/coreruleset/coreruleset)
+- [](https://coreruleset.org/docs/)
+- [](https://github.com/owasp-modsecurity/ModSecurity/wiki/Reference-Manual)

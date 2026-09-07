@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Golden Signals
-
 Query the four it from Prometheus and set up alerting. them from Prometheus metrics and wire dashboards and alerts.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s 'http://prometheus:9090/api/v1/query' --data-urlenco`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Golden Signals
 
@@ -73,6 +91,11 @@ groups:
 ### golden-signals
 Query the four golden signals from Prometheus and set up alerting.
 
+**Parameters:**
+- `prometheus-url` (string): Prometheus API endpoint
+- `signal` (string): latency, traffic, errors, or saturation
+- `threshold` (string): Alert threshold for the signal
+
 **Commands:**
 - `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq '.data.result[0].value[1]'`
 - `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'`
@@ -84,3 +107,7 @@ Query the four golden signals from Prometheus and set up alerting.
 - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq '.data.result[0].value[1]'
 - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total{code=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'
 - promtool check rules golden-signals.rules.yml
+
+## References
+- [The Four Golden Signals (Google SRE)](https://sre.google/sre-book/monitoring-distributed-systems/)
+- [Prometheus querying](https://prometheus.io/docs/prometheus/latest/querying/basics/)

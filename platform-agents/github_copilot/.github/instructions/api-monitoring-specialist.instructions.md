@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# api-monitoring-specialist
-
 Configures alerting and SLOs for API services: Prometheus alert rules, Alertmanager routes and silence management with amtool, and SLO burn-rate alerts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST http://localhost:9093/api/v2/alerts -H 'Cont`, `promtool check rules slo-rules.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Monitoring Specialist
 
@@ -57,6 +75,11 @@ groups:
 ### alertmanager
 Operate Alertmanager and manage silences
 
+**Parameters:**
+- `config-file` (string): alertmanager.yml path
+- `matchers` (array): Label matchers for silences and routing
+- `duration` (string): Silence duration like 30m or 4h
+
 **Commands:**
 - `curl -s -X POST http://localhost:9093/api/v2/alerts -H 'Content-Type: application/json' -d '[{"labels":{"alertname":"APIHighErrorRate","service":"api"},"annotations":{"summary":"Error rate above 5%"}}]'`
 - `curl -s http://localhost:9093/api/v2/status | jq '.version'`
@@ -80,3 +103,7 @@ Define and test SLO burn-rate alert rules
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Alertmanager Docs](https://prometheus.io/docs/alerting/latest/alertmanager/)
+- [amtool Docs](https://prometheus.io/docs/alerting/latest/amtool/)

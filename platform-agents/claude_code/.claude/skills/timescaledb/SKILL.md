@@ -1,13 +1,35 @@
 ---
 name: "timescaledb"
-description: "Time-series data with TimescaleDB: hypertables, continuous aggregates, retention policies, and time_bucket queries."
+description: "Time-series data with TimescaleDB: hypertables, continuous aggregates, retention policies, and time_bucket queries. Use when working with timescaledb, database or when the user mentions timescaledb, database."
+license: "MIT"
+compatibility: "Requires psql."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "database"}
+allowed-tools: "Glob Grep Read Bash(psql:*)"
 ---
-
-# Timescaledb
 
 Time-series data with TimescaleDB: hypertables, continuous aggregates, retention policies, and time_bucket queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `psql -d app -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # TimescaleDB
 
@@ -63,6 +85,11 @@ plus retention policy; reports expected storage savings.
 ### timescaledb
 Create hypertables, aggregates, and retention policies with psql
 
+**Parameters:**
+- `chunk_time_interval` (string): Time range per chunk, e.g. INTERVAL '1 day'
+- `older_than` (string): Drop chunks older than this interval
+- `dbname` (string): Target database for psql (-d)
+
 **Commands:**
 - `psql -d app -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"`
 - `psql -d app -c "SELECT create_hypertable('conditions', 'time', chunk_time_interval => INTERVAL '1 day');"`
@@ -74,3 +101,7 @@ Create hypertables, aggregates, and retention policies with psql
 - psql -d app -c "SELECT create_continuous_aggregate('avg_temp', 'SELECT time_bucket(""1 hour"", time) t, avg(temp) FROM conditions GROUP BY t');"
 - psql -d app -c "SELECT drop_chunks('conditions', older_than => INTERVAL '90 days');"
 - psql -d app -c "SELECT chunks FROM chunk_relation_size_pretty('conditions');"
+
+## References
+- [TimescaleDB docs](https://docs.timescale.com/)
+- [Continuous aggregates](https://docs.timescale.com/use-timescale/latest/continuous-aggregates/)

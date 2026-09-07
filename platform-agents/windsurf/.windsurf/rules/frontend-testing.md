@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Tests frontend applications end-to-end and at the component level with Playwright, Cypress, and Vitest."
+description: "Tests frontend applications end-to-end and at the component level with Playwright, Cypress, and Vitest. Use when working with playwright, vitest, frontend or when the user mentions playwright, vitest, frontend."
 globs: ["**/*.css", "**/*.go", "**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 ---
 
-# Frontend Testing
-
 Tests frontend applications end-to-end and at the component level with Playwright, Cypress, and Vitest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx playwright install --with-deps`, `npx vitest run`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Frontend Testing
 
@@ -73,6 +91,11 @@ npx vitest run --coverage
 ### playwright
 Write and run browser end-to-end tests with Playwright.
 
+**Parameters:**
+- `project` (string): Browser project: chromium, firefox, webkit
+- `grep` (string): Run only tests matching a pattern
+- `workers` (number): Parallel worker count
+
 **Commands:**
 - `npx playwright install --with-deps`
 - `npx playwright test`
@@ -88,6 +111,11 @@ Write and run browser end-to-end tests with Playwright.
 ### vitest
 Run fast component and unit tests with Vitest.
 
+**Parameters:**
+- `coverage` (string): Enable coverage collection
+- `reporter` (string): default, json, junit, dot
+- `changed` (string): Test only files changed vs branch
+
 **Commands:**
 - `npx vitest run`
 - `npx vitest run --coverage`
@@ -99,3 +127,8 @@ Run fast component and unit tests with Vitest.
 - npx vitest run --coverage --reporter=json --outputFile=coverage.json
 - npx vitest run --changed main
 - npx vitest watch --exclude '**/e2e/**'
+
+## References
+- [Playwright Docs](https://playwright.dev/docs/intro)
+- [Cypress Docs](https://docs.cypress.io/)
+- [Vitest Docs](https://vitest.dev/guide/)

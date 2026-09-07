@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "OpenSearch Vector deployment agent handling ML OpenSearch vector deployment."
+description: "OpenSearch Vector deployment agent handling ML OpenSearch vector deployment. Use when working with Ml Opensearch Vector Deploy, vector db or when the user mentions Ml Opensearch Vector Deploy, vector db."
 globs: ["**/*.json", "**/*.r"]
 ---
 
 # Ml Opensearch Vector Deploy
 
 OpenSearch Vector deployment agent handling ML OpenSearch vector deployment.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker build -t opensearch:latest .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -29,3 +51,8 @@ OpenSearch Vector deployment agent for ML OpenSearch vector deployment.
 - Index: curl -X PUT http://localhost:9200/my_index -H 'Content-Type: application/json' -d '{"mappings": {"properties": {"embedding": {"type": "knn_vector", "dimension": 1536}}}}'
 - Insert: curl -X POST http://localhost:9200/my_index/_doc -H 'Content-Type: application/json' -d '{"title": "Hello", "embedding": [0.1, 0.2, 0.3]}'
 - Search: curl -X GET 'http://localhost:9200/my_index/_search' -H 'Content-Type: application/json' -d '{"query": {"knn": {"embedding": {"vector": [0.1, 0.2, 0.3], "k": 10}}}'
+
+## References
+- [OpenSearch Documentation](https://opensearch.org/docs/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

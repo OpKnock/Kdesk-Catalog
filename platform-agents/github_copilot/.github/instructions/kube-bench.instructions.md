@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# kube-bench
-
 Runs CIS Kubernetes Benchmark checks against master, worker, etcd, and control-plane components with the kube-bench auditor.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kube-bench`, `kube-bench run --json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # kube-bench
 
@@ -76,6 +94,11 @@ spec:
 ### benchmark-runs
 Run CIS checks against node roles and Kubernetes versions.
 
+**Parameters:**
+- `targets` (string): Comma-separated node roles: master, worker, etcd, policypki
+- `version` (string): Kubernetes version for the benchmark
+- `check` (string): Specific check IDs to run, e.g. 1.2.7,1.4.1
+
 **Commands:**
 - `kube-bench`
 - `kube-bench run --targets master`
@@ -91,6 +114,10 @@ Run CIS checks against node roles and Kubernetes versions.
 ### reporting
 Produce JSON and JUnit reports for compliance evidence.
 
+**Parameters:**
+- `outputfile` (string): File path for JSON results
+- `junitfile` (string): File path for JUnit XML results
+
 **Commands:**
 - `kube-bench run --json`
 - `kube-bench run --json --outputfile kube-bench-report.json`
@@ -102,3 +129,7 @@ Produce JSON and JUnit reports for compliance evidence.
 - kube-bench run --json --outputfile report.json
 - kube-bench run --junit --junitfile junit.xml
 - kube-bench install && kube-bench
+
+## References
+- [kube-bench GitHub](https://github.com/aquasecurity/kube-bench)
+- [CIS Kubernetes Benchmark](https://www.cisecurity.org/benchmark/kubernetes)

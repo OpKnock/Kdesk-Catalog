@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Inspect crash issues, upload symbols, and manage release reporting. and verify symbol uploads for readable stack traces.'"
+description: "Inspect crash issues, upload symbols, and manage release reporting. and verify symbol uploads for readable stack traces.'. Use when working with crashlytics ops, api or when the user mentions crashlytics ops, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# Firebase Crashlytics
-
 Inspect crash issues, upload symbols, and manage release reporting. and verify symbol uploads for readable stack traces.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s 'https://firebase.googleapis.com/v1beta1/projects/$P`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Firebase Crashlytics
 
@@ -65,6 +83,11 @@ firebase crashlytics:reports:list | grep -i 'test-crash'
 ### crashlytics-ops
 Inspect crash issues, upload symbols, and manage release reporting.
 
+**Parameters:**
+- `app-id` (string): Android app id or iOS bundle id
+- `issue-id` (string): Crashlytics issue identifier
+- `symbols-path` (string): Path to native symbol files (dSYM/so)
+
 **Commands:**
 - `curl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.issues[0] | {issueId, title, fatal}'`
 - `curl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues/$ISSUE_ID' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.sessions[0].appVersion'`
@@ -76,3 +99,7 @@ Inspect crash issues, upload symbols, and manage release reporting.
 - firebase crashlytics:symbols:upload --app com.example.app ./build/app.so
 - curl -s 'https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.issues[] | {issueId, title, fatal}'
 - firebase crashlytics:reports:list
+
+## References
+- [Crashlytics REST API](https://firebase.google.com/docs/crashlytics/rest-api)
+- [Crashlytics symbol upload](https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports)

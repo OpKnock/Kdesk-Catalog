@@ -1,13 +1,31 @@
 ---
 name: "caching"
-description: "Accelerates API responses with Redis TTL caches for computed data, HTTP cache-control and ETag headers for clients and proxies, and hit-rate measurement to validate effectiveness."
+description: "Accelerates API responses with Redis TTL caches for computed data, HTTP cache-control and ETag headers for clients and proxies, and hit-rate measurement to validate effectiveness. Use when working with redis cache, http caching, cache stats, api or when the user mentions redis cache, http caching, cache stats, api."
 ---
-
-# Caching
 
 Accelerates API responses with Redis TTL caches for computed data, HTTP cache-control and ETag headers for clients and proxies, and hit-rate measurement to validate effectiveness.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli SET mykey "hello" EX 60`, `curl -sI https://api.your-app.test/static/app.js | grep -i c`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Caching
 
@@ -63,6 +81,10 @@ redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'
 ### redis-cache
 Cache values in Redis with TTLs.
 
+**Parameters:**
+- `key` (string): Cache key
+- `ttl` (number): TTL seconds
+
 **Commands:**
 - `redis-cli SET mykey "hello" EX 60`
 - `redis-cli GET mykey`
@@ -78,6 +100,10 @@ Cache values in Redis with TTLs.
 ### http-caching
 Control browser/proxy caching with headers.
 
+**Parameters:**
+- `url` (string): Cached resource URL
+- `headers` (string): Validation headers
+
 **Commands:**
 - `curl -sI https://api.your-app.test/static/app.js | grep -i cache-control`
 - `curl -s -H "Cache-Control: max-age=0" -o /dev/null -w "%{http_code} %{time_total}\n" https://api.your-app.test/static/app.js`
@@ -92,6 +118,9 @@ Control browser/proxy caching with headers.
 ### cache-stats
 Measure hit rates and invalidate selectively.
 
+**Parameters:**
+- `pattern` (string): Key pattern to scan
+
 **Commands:**
 - `redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'`
 - `redis-cli --scan --pattern 'cache:users:*' | wc -l`
@@ -102,3 +131,8 @@ Measure hit rates and invalidate selectively.
 - redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'
 - redis-cli --scan --pattern 'cache:users:*' | head -20
 - varnishstat | grep -E 'hit_ratio|MAIN.cache_hit'
+
+## References
+- [Redis Commands](https://redis.io/docs/latest/commands/)
+- [HTTP Caching (RFC 9111)](https://httpwg.org/specs/rfc9111.html)
+- [Caching Best Practices](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching)

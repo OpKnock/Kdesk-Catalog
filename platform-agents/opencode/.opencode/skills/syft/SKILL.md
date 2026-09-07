@@ -1,13 +1,31 @@
 ---
 name: "syft"
-description: "Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats."
+description: "Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats. Use when working with sbom generation, sbom output, security or when the user mentions sbom generation, sbom output, security."
 ---
-
-# syft
 
 Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `syft alpine:latest`, `syft alpine:latest -o spdx-json > sbom.spdx.json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Syft
 
@@ -61,6 +79,11 @@ syft attest --key cosign.key alpine:latest -o cyclonedx-json
 ### sbom-generation
 Generate SBOMs from images, directories, and binaries.
 
+**Parameters:**
+- `target` (string): Image, directory, archive, or binary to catalog
+- `scope` (string): Squashed or all-layers for images
+- `exclude` (array): Glob patterns to exclude
+
 **Commands:**
 - `syft alpine:latest`
 - `syft .`
@@ -76,6 +99,10 @@ Generate SBOMs from images, directories, and binaries.
 ### sbom-output
 Emit SBOMs in standardized formats.
 
+**Parameters:**
+- `format` (string): Output format: spdx-json, cyclonedx-json, syft-json, table
+- `output` (string): Output file path
+
 **Commands:**
 - `syft alpine:latest -o spdx-json > sbom.spdx.json`
 - `syft alpine:latest -o cyclonedx-json > sbom.cdx.json`
@@ -86,3 +113,8 @@ Emit SBOMs in standardized formats.
 - syft alpine:latest -o spdx-json > sbom.spdx.json
 - syft alpine:latest -o cyclonedx-json > sbom.cdx.json
 - syft attest --key cosign.key alpine:latest
+
+## References
+- [Syft GitHub](https://github.com/anchore/syft)
+- [SPDX Specification](https://spdx.dev/specifications/)
+- [CycloneDX Specification](https://cyclonedx.org/specification/overview/)

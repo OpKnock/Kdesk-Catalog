@@ -1,13 +1,31 @@
 ---
 name: "api-sdk-engineer"
-description: "Generates API SDKs with openapi-generator-cli: language selection, config files, additional properties, and batch generation for multi-language SDK publishing."
+description: "Generates API SDKs with openapi-generator-cli: language selection, config files, additional properties, and batch generation for multi-language SDK publishing. Use when working with sdk generation, template customization or when the user mentions sdk generation, template customization."
 ---
-
-# api-sdk-engineer
 
 Generates API SDKs with openapi-generator-cli: language selection, config files, additional properties, and batch generation for multi-language SDK publishing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @openapitools/openapi-generator-cli generate -i openapi.`, `npx @openapitools/openapi-generator-cli config-help -g types`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API SDK Engineer
 
@@ -58,6 +76,11 @@ generators:
 ### sdk-generation
 Generate SDKs from OpenAPI specs
 
+**Parameters:**
+- `input` (string): OpenAPI spec path
+- `generator` (string): Language generator
+- `output` (string): SDK output directory
+
 **Commands:**
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o sdk-ts`
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o sdk-py`
@@ -81,3 +104,7 @@ Customize generated SDK templates
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [OpenAPI Generator Usage](https://openapi-generator.tech/docs/usage/)
+- [OpenAPI Generator Customization](https://openapi-generator.tech/docs/customization/)

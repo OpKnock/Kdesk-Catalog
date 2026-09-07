@@ -1,13 +1,31 @@
 ---
 name: "api-versioning-engineer"
-description: "Implements versioning in Java/Spring Boot: versioned controllers, request mapping constraints, media-type versioning, and endpoint tests."
+description: "Implements versioning in Java/Spring Boot: versioned controllers, request mapping constraints, media-type versioning, and endpoint tests. Use when working with spring versioning, version tests or when the user mentions spring versioning, version tests."
 ---
-
-# api-versioning-engineer
 
 Implements versioning in Java/Spring Boot: versioned controllers, request mapping constraints, media-type versioning, and endpoint tests.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s https://start.spring.io/starter.zip -d dependencies=`, `./mvnw test -Dtest=UserControllerTest`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Versioning Engineer
 
@@ -54,6 +72,11 @@ public class UserV2Controller { }
 ### spring-versioning
 Version Spring REST controllers
 
+**Parameters:**
+- `media-type` (string): Vendor media type
+- `version` (string): Version in the media type
+- `endpoint` (string): Controller endpoint
+
 **Commands:**
 - `curl -s https://start.spring.io/starter.zip -d dependencies=web,validation -d packageName=com.example -o ver.zip && unzip -o ver.zip -d ver`
 - `curl -s -H 'Accept: application/vnd.example.v1+json' http://localhost:8080/api/users | jq '.version'`
@@ -77,3 +100,7 @@ Test versioned endpoints
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Spring MVC Media Types](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping-media-types.html)
+- [Spring Boot Docs](https://docs.spring.io/spring-boot/index.html)

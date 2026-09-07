@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Validates API contracts across OpenAPI, GraphQL, and Protobuf formats. Runs schema validation, backward-compatibility checks, and consumer-driven contract verification with Pact, integrating gates into CI/CD pipelines."
+description: "Validates API contracts across OpenAPI, GraphQL, and Protobuf formats. Runs schema validation, backward-compatibility checks, and consumer-driven contract verification with Pact, integrating gates into CI/CD pipelines. Use when working with schema validation, compatibility check, consumer driven contracts, api contract or when the user mentions schema validation, compatibility check, consumer driven contracts, api contract."
 globs: ["**/*.go", "**/*.java", "**/*.r", "**/*.sh", "**/*.{js,ts,jsx,tsx}", "**/*.{yaml,yml}"]
 ---
 
-# API Contract Validator
-
 Validates API contracts across OpenAPI, GraphQL, and Protobuf formats. Runs schema validation, backward-compatibility checks, and consumer-driven contract verification with Pact, integrating gates into CI/CD pipelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `swagger-cli validate openapi.yaml`, `openapi-diff openapi-v1.yaml openapi-v2.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Contract Validator
 
@@ -86,6 +104,11 @@ await pact.addInteraction()
 ### schema-validation
 Validates OpenAPI, GraphQL SDL, and Protobuf schemas for structural correctness and spec compliance.
 
+**Parameters:**
+- `spec_path` (string): Path to the API specification file
+- `format` (string): Specification format (openapi, graphql, protobuf)
+- `ruleset` (string): Spectral ruleset for OpenAPI (spectral:oas, spectral:asyncapi)
+
 **Commands:**
 - `swagger-cli validate openapi.yaml`
 - `spectral lint openapi.yaml --ruleset=spectral:oas`
@@ -101,6 +124,11 @@ Validates OpenAPI, GraphQL SDL, and Protobuf schemas for structural correctness 
 ### compatibility-check
 Detects breaking changes between API specification versions using spectral, openapi-diff, and graphql-inspector.
 
+**Parameters:**
+- `old_spec` (string): Path to the previous specification
+- `new_spec` (string): Path to the new specification
+- `format` (string): Output format (text, markdown, json)
+
 **Commands:**
 - `openapi-diff openapi-v1.yaml openapi-v2.yaml`
 - `spectral lint openapi-v2.yaml --ruleset=./breaking-ruleset.yaml`
@@ -115,6 +143,11 @@ Detects breaking changes between API specification versions using spectral, open
 ### consumer-driven-contracts
 Runs Pact consumer tests, publishes contracts to a broker, and verifies providers against published pacts.
 
+**Parameters:**
+- `broker_url` (string): Pact Broker base URL
+- `consumer_version` (string): Consumer application version
+- `provider_url` (string): Provider base URL for verification
+
 **Commands:**
 - `pact-broker publish pacts/ --consumer-app-version=1.2.3 --branch=main`
 - `pact-provider-verifier --provider-base-url=http://localhost:8080 --pact-url=http://broker/pacts/provider/Consumer/latest`
@@ -124,3 +157,10 @@ Runs Pact consumer tests, publishes contracts to a broker, and verifies provider
 - pact-broker publish ./pacts --consumer-app-version=1.2.3 --branch=main
 - pact-provider-verifier --provider-base-url=http://localhost:8080 --pact-url=http://broker/pacts/provider/Consumer/latest
 - pact-broker can-i-deploy --pacticipant=OrdersAPI --version=1.2.3 --to=production
+
+## References
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)
+- [Spectral Linting](https://meta.stoplight.io/docs/spectral)
+- [Pact Contract Testing](https://docs.pact.io/)
+- [GraphQL Schema Validation](https://github.com/graphql-schema-linter/graphql-schema-linter)
+- [Buf Breaking Change Detection](https://buf.build/docs/cli/commands/buf-breaking)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Manages Git hooks with Lefthook: parallel fast hooks, commands per glob, and CI-friendly behavior."
+description: "Manages Git hooks with Lefthook: parallel fast hooks, commands per glob, and CI-friendly behavior. Use when working with lefthook setup, lefthook run, code quality or when the user mentions lefthook setup, lefthook run, code quality."
 globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.rb", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# lefthook
-
 Manages Git hooks with Lefthook: parallel fast hooks, commands per glob, and CI-friendly behavior.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `lefthook install`, `lefthook run pre-commit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Lefthook
 
@@ -71,6 +89,10 @@ pre-commit:
 ### lefthook-setup
 Install and configure Lefthook.
 
+**Parameters:**
+- `hook` (string): Hook name
+- `force` (boolean): Force reinstall of hooks
+
 **Commands:**
 - `lefthook install`
 - `lefthook add pre-commit`
@@ -86,6 +108,11 @@ Install and configure Lefthook.
 ### lefthook-run
 Run hooks manually and debug.
 
+**Parameters:**
+- `hook` (string): Hook to run
+- `all-files` (boolean): Run against all files
+- `debug` (boolean): Verbose debug output
+
 **Commands:**
 - `lefthook run pre-commit`
 - `lefthook run pre-commit --all-files`
@@ -97,3 +124,7 @@ Run hooks manually and debug.
 - lefthook run pre-commit --skip-output
 - lefthook run lint --only-files
 - lefthook run --dry-run pre-commit
+
+## References
+- [Lefthook Docs](https://github.com/evilmartians/lefthook)
+- [Lefthook Configuration](https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md)

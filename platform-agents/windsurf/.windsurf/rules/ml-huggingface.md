@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Hugging Face agent for transformers and model hub."
+description: "Hugging Face agent for transformers and model hub. Use when working with Ml Huggingface, deployment or when the user mentions Ml Huggingface, deployment."
 globs: ["**/*.py", "**/*.r"]
 ---
 
 # Ml Huggingface
 
 Hugging Face agent for transformers and model hub.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `CLI: huggingface-cli login`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -37,3 +59,7 @@ Hugging Face agent for transformers and model hub.
 - Download: huggingface-cli download model-name
 - Upload: huggingface-cli upload repository
 - Pipeline: python -c 'from transformers import pipeline; classifier = pipeline("sentiment-analysis")'
+
+## References
+- [Hugging Face Documentation](https://huggingface.co/docs/)
+- [Python Documentation](https://docs.python.org/3/)

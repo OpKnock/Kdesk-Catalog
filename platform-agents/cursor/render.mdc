@@ -1,14 +1,32 @@
 ---
-description: "Expert deployment reference covering render.yaml blueprints, CLI handling deploy/logs/secrets, and the platform API that enables service inspection and GitOps workflows."
+description: "Expert deployment reference covering render.yaml blueprints, CLI handling deploy/logs/secrets, and the platform API that enables service inspection and GitOps workflows. Use when working with render deploy, api or when the user mentions render deploy, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Render
-
 Expert deployment reference covering render.yaml blueprints, CLI handling deploy/logs/secrets, and the platform API that enables service inspection and GitOps workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `render login`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Render
 
@@ -86,6 +104,11 @@ render logs srv-abc123 --tail
 ### render-deploy
 Deploy and manage Render.com services with blueprint and CLI
 
+**Parameters:**
+- `service_id` (string): Render service identifier like srv-abc123
+- `region` (string): Region in render.yaml, e.g. oregon or frankfurt
+- `plan` (string): Instance plan, e.g. starter or pro
+
 **Commands:**
 - `render login`
 - `render deploy srv-abc123`
@@ -97,3 +120,7 @@ Deploy and manage Render.com services with blueprint and CLI
 - render deploy srv-abc123
 - render logs srv-abc123 --tail
 - curl -s https://api.render.com/v1/services -H "Authorization: Bearer $RENDER_API_KEY" | jq -r '.[].serviceDetails.url'
+
+## References
+- [Render Blueprint spec](https://render.com/docs/blueprint-spec)
+- [render-cli repository](https://github.com/render-oss/render-cli)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and zero-downtime reloads."
+description: "Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and zero-downtime reloads. Use when working with server, logs, infrastructure or when the user mentions server, logs, infrastructure."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# nginx
-
 Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and zero-downtime reloads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nginx -t`, `tail -f /var/log/nginx/error.log`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Nginx
 
@@ -93,6 +111,11 @@ Verify cache headers and TLS chain after each config change.
 ### server
 Manage nginx runtime: test, reload, and inspect.
 
+**Parameters:**
+- `c` (string): Config file path
+- `s` (string): Signal: reload, reopen, stop, quit
+- `T` (string): Dump full effective configuration
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -108,6 +131,11 @@ Manage nginx runtime: test, reload, and inspect.
 ### logs
 Analyze access and error logs for issues.
 
+**Parameters:**
+- `log-file` (string): Path to access or error log
+- `status-code` (string): HTTP status filter like 5xx
+- `lines` (number): Number of lines to tail
+
 **Commands:**
 - `tail -f /var/log/nginx/error.log`
 - `tail -n 100 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn`
@@ -119,3 +147,8 @@ Analyze access and error logs for issues.
 - tail -f /var/log/nginx/error.log
 - grep 'upstream timed out' /var/log/nginx/error.log | tail
 - tail -n 1000 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn
+
+## References
+- [nginx.org Docs](https://nginx.org/en/docs/)
+- [nginx Beginner Guide](https://nginx.org/en/docs/beginners_guide.html)
+- [nginx admin guide](https://nginx.org/en/docs/control.html)

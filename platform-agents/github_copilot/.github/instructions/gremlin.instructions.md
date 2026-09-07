@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Gremlin
-
 Gremlin chaos engineering platform operations: launching and halting CPU, disk, memory, and network attacks against production and staging hosts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gremlin i attack -t "disk" -a disk=50 -a path=/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Gremlin
 
@@ -102,6 +120,11 @@ Agent: sudo gremlin i attack -t "cpu" -a cpu=100 -a duration=300 -a host_id=prod
 ### attack-management
 Create, list, and halt chaos attacks and scenarios via the Gremlin CLI and API.
 
+**Parameters:**
+- `attack_type` (string): Type of attack: cpu, memory, disk, io, network, process-killer, dns, or shutdown.
+- `duration` (integer): Attack duration in seconds (default 600).
+- `host_id` (string): Target host ID to scope the attack to.
+
 **Commands:**
 - `gremlin i attack -t "disk" -a disk=50 -a path=/`
 - `gremlin i shutdown`
@@ -113,3 +136,7 @@ Create, list, and halt chaos attacks and scenarios via the Gremlin CLI and API.
 - sudo gremlin i attack -t "cpu" -a cpu=100 -a duration=60 -a cores=4
 - sudo gremlin i attack -t "memory" -a memory=90 -a duration=30
 - sudo gremlin i shutdown
+
+## References
+- [Gremlin Docs](https://www.gremlin.com/docs)
+- [Gremlin CLI Reference](https://www.gremlin.com/docs/cli)

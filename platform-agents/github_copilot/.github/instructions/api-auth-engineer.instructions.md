@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# api-auth-engineer
-
 Implement API authentication: OAuth2 flows with Keycloak, token exchange, client registration, and end-to-end token verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -d -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLO`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Auth Engineer
 
@@ -71,6 +89,11 @@ curl -s http://localhost:8080/api/verify -H "Authorization: Bearer $TOKEN" | jq
 ### oauth2-implementation
 Set up and verify OAuth2 flows against Keycloak
 
+**Parameters:**
+- `realm` (string): Keycloak realm name
+- `client_id` (string): OAuth2 client ID
+- `grant_type` (string): password, client_credentials, authorization_code, or refresh_token
+
 **Commands:**
 - `docker run -d -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev`
 - `curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=password&client_id=api&username=alice&password=secret' | jq -r '.access_token'`
@@ -82,3 +105,7 @@ Set up and verify OAuth2 flows against Keycloak
 - curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -d 'grant_type=client_credentials&client_id=orders-api&client_secret=abc123' | jq -r '.access_token'
 - curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/revoke' -d 'token=$REFRESH&client_id=api&client_secret=abc123'
 - curl -s -H 'Authorization: Bearer $TOKEN' http://localhost:8080/api/protected | jq '.role'
+
+## References
+- [OAuth 2.0 Framework (RFC 6749)](https://datatracker.ietf.org/doc/html/rfc6749)
+- [Keycloak Docs](https://www.keycloak.org/documentation)

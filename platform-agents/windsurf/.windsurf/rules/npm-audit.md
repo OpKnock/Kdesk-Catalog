@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Run npm audits, fix vulnerable packages, and enforce severity thresholds."
+description: "Run npm audits, fix vulnerable packages, and enforce severity thresholds. Use when working with npm audit, code quality or when the user mentions npm audit, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Npm Audit
-
 Run npm audits, fix vulnerable packages, and enforce severity thresholds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm audit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # npm Audit
 
@@ -76,6 +94,11 @@ advisory URL; then proposes the fix command.
 ### npm-audit
 Run npm audits, fix vulnerable packages, and enforce severity thresholds
 
+**Parameters:**
+- `audit-level` (string): Minimum severity to fail: info, low, moderate, high, critical
+- `omit` (string): Exclude dependency types, e.g. dev
+- `force` (boolean): Apply breaking semver-major fixes
+
 **Commands:**
 - `npm audit`
 - `npm audit --production`
@@ -87,3 +110,7 @@ Run npm audits, fix vulnerable packages, and enforce severity thresholds
 - npm audit --audit-level=high
 - npm audit fix --dry-run
 - npm audit --omit=dev --json | jq '.metadata.vulnerabilities'
+
+## References
+- [npm audit docs](https://docs.npmjs.com/cli/v10/commands/npm-audit)
+- [npm audit fix docs](https://docs.npmjs.com/cli/v10/commands/npm-audit-fix)

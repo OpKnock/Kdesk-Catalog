@@ -1,14 +1,32 @@
 ---
-description: "Implements RPC services using the Twirp framework with protobuf contracts. Defines services in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies behavior with curl and Go tests."
+description: "Implements RPC services using the Twirp framework with protobuf contracts. Defines services in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies behavior with curl and Go tests. Use when working with twirp basics, api, rpc, go or when the user mentions twirp basics, api, rpc, go."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Twirp
-
 Implements RPC services using the Twirp framework with protobuf contracts. Defines services in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies behavior with curl and Go tests.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `protoc --twirp_out=. --go_out=. types.proto`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Twirp
 
@@ -81,6 +99,11 @@ go test ./...
 ### twirp-basics
 Design contracts, serve RPCs, and debug Twirp errors
 
+**Parameters:**
+- `method` (string): Twirp method name
+- `body` (string): JSON payload
+- `service` (string): Service package
+
 **Commands:**
 - `protoc --twirp_out=. --go_out=. types.proto`
 - `curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": 12}"`
@@ -92,3 +115,8 @@ Design contracts, serve RPCs, and debug Twirp errors
 - curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -d "{\"inches\": 12}" -H "Content-Type: application/json"
 - curl -i -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -d "{}" -H "Content-Type: application/json"
 - go test ./...
+
+## References
+- [Twirp official docs](https://twitchtv.github.io/twirp/docs/intro.html)
+- [Twirp errors spec](https://twitchtv.github.io/twirp/docs/errors.html)
+- [Twirp Go reference](https://github.com/twitchtv/twirp)

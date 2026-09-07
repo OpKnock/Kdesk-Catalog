@@ -1,14 +1,32 @@
 ---
-description: "Implements cursor-based (keyset) pagination for high-volume APIs: indexed SQL queries, opaque cursor encoding, next-page links, and stability under writes."
+description: "Implements cursor-based (keyset) pagination for high-volume APIs: indexed SQL queries, opaque cursor encoding, next-page links, and stability under writes. Use when working with keyset queries, cursor encoding or when the user mentions keyset queries, cursor encoding."
 globs: ["**/*.json", "**/*.r", "**/*.scala", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# api-pagination-engineer
-
 Implements cursor-based (keyset) pagination for high-volume APIs: indexed SQL queries, opaque cursor encoding, next-page links, and stability under writes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `psql -d app -c "CREATE INDEX idx_users_created_id ON users(c`, `node -e "console.log(Buffer.from(JSON.stringify({created_at:`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Pagination Engineer
 
@@ -55,6 +73,11 @@ psql -d app -c "EXPLAIN ANALYZE SELECT id, name FROM users WHERE (created_at, id
 ### keyset-queries
 Build index-backed keyset queries with stable ordering
 
+**Parameters:**
+- `cursor` (string): Opaque base64url token encoding the last row's sort keys
+- `limit` (integer): Max rows per page, default 20
+- `sort` (string): Sort columns that must match the composite index
+
 **Commands:**
 - `psql -d app -c "CREATE INDEX idx_users_created_id ON users(created_at, id)"`
 - `psql -d app -c "EXPLAIN ANALYZE SELECT id, name FROM users WHERE (created_at, id) > ('2024-01-01', 100) ORDER BY created_at, id LIMIT 20"`
@@ -77,3 +100,7 @@ Encode and decode opaque page cursors
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [PostgreSQL Indexes Docs](https://www.postgresql.org/docs/current/indexes-intro.html)
+- [Use The Index Luke - Pagination](https://use-the-index-luke.com/sql/partial-results/fetch-next-page)

@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.rs **/*.sh **/*.{yaml,yml}"
 ---
 
-# linkerd
-
 Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric stats, tap traffic, and multicluster links.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `linkerd check --pre`, `linkerd viz install | kubectl apply -f -`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Linkerd Service Mesh
 
@@ -69,6 +87,10 @@ linkerd multicluster gateways
 ### install-and-mesh
 Install Linkerd, run preflight checks, and inject sidecars.
 
+**Parameters:**
+- `manifest` (string): Manifest to inject sidecars into
+- `namespace` (string): Namespace to mesh/inject
+
 **Commands:**
 - `linkerd check --pre`
 - `linkerd install | kubectl apply -f -`
@@ -85,6 +107,10 @@ Install Linkerd, run preflight checks, and inject sidecars.
 ### observability-and-traffic
 Inspect service metrics, top talkers, and live traffic with tap.
 
+**Parameters:**
+- `namespace` (string): Namespace to observe
+- `resource` (string): Resource for stats, e.g. deploy/web
+
 **Commands:**
 - `linkerd viz install | kubectl apply -f -`
 - `linkerd stat deploy -n app`
@@ -97,3 +123,8 @@ Inspect service metrics, top talkers, and live traffic with tap.
 - linkerd stat deploy -n app
 - linkerd tap deploy/web -n app
 - linkerd viz dashboard
+
+## References
+- [Linkerd Documentation](https://linkerd.io/2.15/overview/)
+- [Linkerd CLI](https://linkerd.io/2.15/reference/cli/)
+- [Linkerd Multicluster](https://linkerd.io/2.15/features/multicluster/)

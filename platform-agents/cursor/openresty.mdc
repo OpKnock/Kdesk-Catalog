@@ -1,14 +1,32 @@
 ---
-description: "Writes and tests Lua handlers using the resty CLI, manages lua-resty modules with luarocks, and configures nginx-Lua request processing at the edge."
+description: "Writes and tests Lua handlers using the resty CLI, manages lua-resty modules with luarocks, and configures nginx-Lua request processing at the edge. Use when working with openresty lua, api or when the user mentions openresty lua, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Openresty
-
 Writes and tests Lua handlers using the resty CLI, manages lua-resty modules with luarocks, and configures nginx-Lua request processing at the edge.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `openresty -t`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # OpenResty
 
@@ -65,6 +83,11 @@ server {
 ### openresty-lua
 Write and test Lua handlers for OpenResty and manage Lua modules with luarocks.
 
+**Parameters:**
+- `lua_code` (string): Inline Lua code to run with resty
+- `rock` (string): lua-resty module name for luarocks
+- `config` (string): nginx config path
+
 **Commands:**
 - `openresty -t`
 - `openresty -s reload`
@@ -76,3 +99,7 @@ Write and test Lua handlers for OpenResty and manage Lua modules with luarocks.
 - resty -e 'local cjson = require("cjson"); ngx.say(cjson.encode({a=1}))'
 - luarocks install lua-resty-redis
 - openresty -t && openresty -s reload
+
+## References
+- [OpenResty Official Site](https://openresty.org/en/)
+- [OpenResty Lua Guide](https://github.com/openresty/lua-nginx-module)

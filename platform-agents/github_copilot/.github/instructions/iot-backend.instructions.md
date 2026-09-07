@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# iot-backend
-
 Builds IoT backends: MQTT brokers with mosquitto/EMQX, device data ingestion, and AWS IoT Core integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mosquitto_sub -h localhost -t 'sensors/#' -v`, `aws iot describe-endpoint --endpoint-type iot:Data-ATS`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # IoT Backend
 
@@ -81,6 +99,11 @@ Verify delivery at each QoS level.
 ### mqtt
 Publish and subscribe to MQTT topics for device traffic.
 
+**Parameters:**
+- `topic` (string): MQTT topic with wildcards
+- `qos` (number): Quality of service 0, 1, or 2
+- `retain` (string): Retain the message with -r
+
 **Commands:**
 - `mosquitto_sub -h localhost -t 'sensors/#' -v`
 - `mosquitto_pub -h localhost -t sensors/temp -m '{"device":"d1","temp":22.4}'`
@@ -96,6 +119,11 @@ Publish and subscribe to MQTT topics for device traffic.
 ### aws-iot
 Manage AWS IoT Core endpoints and publish device data.
 
+**Parameters:**
+- `topic` (string): Device topic to publish to
+- `payload` (string): JSON payload
+- `thing-name` (string): IoT thing name
+
 **Commands:**
 - `aws iot describe-endpoint --endpoint-type iot:Data-ATS`
 - `aws iot-data publish --topic sensors/d1 --payload '{"temp":22.4}' --cli-binary-format raw-in-base64-out`
@@ -107,3 +135,8 @@ Manage AWS IoT Core endpoints and publish device data.
 - aws iot-data publish --topic devices/d1/telemetry --payload '{"temp":22.4,"hum":55}'
 - aws iot list-things --attribute-name firmware --attribute-value 2.1
 - aws iot describe-endpoint --endpoint-type iot:Data-ATS
+
+## References
+- [mosquitto man pages](https://mosquitto.org/man/)
+- [EMQX Docs](https://docs.emqx.com/)
+- [AWS IoT Core](https://docs.aws.amazon.com/iot/)

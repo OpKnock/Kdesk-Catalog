@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Designs idempotent APIs and consumers: idempotency keys, Redis SETNX locks, unique constraints, and replay-safe workflows."
+description: "Designs idempotent APIs and consumers: idempotency keys, Redis SETNX locks, unique constraints, and replay-safe workflows. Use when working with redis locks, api tests or when the user mentions redis locks, api tests."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# idempotency-designer-idempotency-designer
-
 Designs idempotent APIs and consumers: idempotency keys, Redis SETNX locks, unique constraints, and replay-safe workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli SET order:key:abc123 processed NX EX 900`, `curl -i -X POST http://localhost:8080/orders -H 'Idempotency`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Idempotency Design
 
@@ -92,6 +110,11 @@ Run sequential replay tests and the k6 concurrency test in CI.
 ### redis-locks
 Implement idempotency keys with Redis atomic primitives.
 
+**Parameters:**
+- `key` (string): Idempotency key: namespace:key:value
+- `NX` (string): Only set if key does not exist
+- `EX` (number): TTL in seconds for the lock
+
 **Commands:**
 - `redis-cli SET order:key:abc123 processed NX EX 900`
 - `redis-cli SETNX order:key:abc123 processed`
@@ -107,6 +130,11 @@ Implement idempotency keys with Redis atomic primitives.
 ### api-tests
 Verify idempotent behavior against live APIs.
 
+**Parameters:**
+- `Idempotency-Key` (string): Client-generated replay key
+- `method` (string): HTTP method under test
+- `vus` (number): k6 concurrent virtual users
+
 **Commands:**
 - `curl -i -X POST http://localhost:8080/orders -H 'Idempotency-Key: abc-123' -H 'Content-Type: application/json' -d '{"sku":"A1"}'`
 - `curl -i -X POST http://localhost:8080/orders -H 'Idempotency-Key: abc-123' -H 'Content-Type: application/json' -d '{"sku":"A1"}'`
@@ -118,3 +146,8 @@ Verify idempotent behavior against live APIs.
 - curl -i -X POST http://localhost:8080/payments -H 'Idempotency-Key: pay-1' -d '{"amount":100}' | head -12
 - k6 run --vus 50 --duration 10s idempotency-test.js
 - curl -i -X DELETE http://localhost:8080/orders/42
+
+## References
+- [Redis SETNX](https://redis.io/docs/latest/commands/setnx/)
+- [AWS Lambda Idempotency](https://docs.powertools.aws.dev/lambda/python/latest/utilities/idempotency/)
+- [Stripe Idempotency Guide](https://docs.stripe.com/api/idempotent_requests)

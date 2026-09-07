@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.json **/*.r **/*.sh"
 ---
 
-# Connectrpc Go
-
 Build ConnectRPC services in Go: protobuf codegen with buf, connect handlers, and HTTP/JSON serving.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go mod init github.com/acme/connectrpc-service`, `curl -H "Content-Type: application/json" -d '{"name":"alice"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ConnectRPC Go
 
@@ -97,6 +115,9 @@ go vet ./...
 ### go-scaffold
 Scaffold a Go ConnectRPC project, generate code from proto, and run the server
 
+**Parameters:**
+- `module` (string): Go module path such as github.com/acme/connectrpc-service
+
 **Commands:**
 - `go mod init github.com/acme/connectrpc-service`
 - `go get connectrpc.com/connect@latest`
@@ -112,6 +133,9 @@ Scaffold a Go ConnectRPC project, generate code from proto, and run the server
 ### handlers-testing
 Implement Connect handlers and test with curl and go test
 
+**Parameters:**
+- `service_path` (string): Connect service path, e.g. example.connectrpc.v1.GreetService/Greet
+
 **Commands:**
 - `curl -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet`
 - `curl -s -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet | jq '.greeting'`
@@ -122,3 +146,7 @@ Implement Connect handlers and test with curl and go test
 - curl -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet
 - go test -v ./...
 - curl -s -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet
+
+## References
+- [ConnectRPC Go Getting Started](https://connectrpc.com/docs/go/getting-started)
+- [Buf CLI Docs](https://buf.build/docs/)

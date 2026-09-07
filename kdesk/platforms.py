@@ -50,6 +50,9 @@ class PlatformSpec:
     deprecation_reason: str = ""
     replacement: str = ""
     tier: str = "C"                # A = Verified, B = Contract, C = Experimental
+    # Platform capability versioning
+    capability_version: str = ""    # e.g., ">=0.50", "<0.52"
+    capabilities: Dict[str, str] = field(default_factory=dict)  # capability -> version/level
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -93,6 +96,8 @@ def _p(
     tier: str = "C",
     deprecation_reason: str = "",
     replacement: str = "",
+    capability_version: str = "",
+    capabilities: Dict[str, str] = None,
 ) -> PlatformSpec:
     return PlatformSpec(
         id=id,
@@ -113,6 +118,8 @@ def _p(
         deprecation_reason=deprecation_reason,
         replacement=replacement,
         tier=tier,
+        capability_version=capability_version,
+        capabilities=capabilities or {},
     )
 
 
@@ -125,6 +132,8 @@ def _reg(spec: PlatformSpec):
 
 # ─── legacy core (6) ─────────────────────────────────────────────────────────
 
+# ─── legacy core (6) ─────────────────────────────────────────────────────────
+
 _reg(_p("claude_code", "Claude Code", "legacy-core",
     level=SupportLevel.FULL, tier="A",
     agent_fmt=".md", skill_fmt="SKILL.md",
@@ -133,6 +142,8 @@ _reg(_p("claude_code", "Claude Code", "legacy-core",
     detect=[".claude/agents", ".claude/skills"],
     fm_req=["name", "description"],
     supported=["name", "description", "tools", "instructions", "examples", "system_prompt"],
+    capability_version=">=1.0",
+    capabilities={"filesystem": "full", "git": "full", "shell": "partial", "network": "restricted"},
 ))
 
 _reg(_p("cursor", "Cursor", "rules",
@@ -145,6 +156,8 @@ _reg(_p("cursor", "Cursor", "rules",
     supported=["description", "globs", "alwaysApply"],
     unsupported=["model", "tools", "name"],
     max_size=50000,
+    capability_version=">=0.50",
+    capabilities={"filesystem": "full", "git": "full", "shell": "partial", "network": "none"},
 ))
 
 _reg(_p("github_copilot", "GitHub Copilot", "rules",
@@ -155,6 +168,8 @@ _reg(_p("github_copilot", "GitHub Copilot", "rules",
     fm_req=["applyTo"],
     supported=["applyTo", "description"],
     unsupported=["model", "tools", "name"],
+    capability_version=">=1.0",
+    capabilities={"applyTo": "full", "description": "full"},
 ))
 
 _reg(_p("windsurf", "Windsurf", "rules",
@@ -167,6 +182,8 @@ _reg(_p("windsurf", "Windsurf", "rules",
     supported=["trigger", "description", "globs", "alwaysApply"],
     unsupported=["model", "tools", "name"],
     max_size=12000,
+    capability_version=">=1.0",
+    capabilities={"trigger": "full", "description": "full", "globs": "full"},
 ))
 
 _reg(_p("opencode", "OpenCode", "legacy-core",
@@ -176,6 +193,8 @@ _reg(_p("opencode", "OpenCode", "legacy-core",
     detect=[".opencode/agents", ".opencode/skills"],
     fm_req=["name", "description", "mode"],
     supported=["name", "description", "mode", "model", "instructions", "examples", "tools"],
+    capability_version=">=1.0",
+    capabilities={"mode": "full", "model": "full", "tools": "full", "instructions": "full"},
 ))
 
 _reg(_p("generic", "Generic", "legacy-core",

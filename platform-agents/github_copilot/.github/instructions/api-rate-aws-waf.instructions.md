@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.json **/*.r **/*.sh"
 ---
 
-# Api Rate Aws Waf
-
 Configures managed rate limiting on cloud gateways: AWS WAFv2 rate-based rules, Google Cloud Armor policies, and Cloudflare rate limiting via API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aws wafv2 create-web-acl --name api-rate-acl --scope REGIONA`, `curl -s -X POST "https://api.cloudflare.com/client/v4/zones/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Rate v3 - Cloud Gateways
 
@@ -57,6 +75,11 @@ aws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL --default-action A
 ### aws-waf
 Create rate-based WAF rules and ACLs
 
+**Parameters:**
+- `rate-limit` (integer): Requests per 5-minute window per IP
+- `evaluation-window` (string): Window size for the rate calculation
+- `action` (string): Block, Allow, or Count on breach
+
 **Commands:**
 - `aws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL --default-action Allow={} --rules file://rate-rule.json --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=api-rate-acl --region us-east-1`
 - `aws wafv2 list-web-acls --scope REGIONAL --region us-east-1 | jq '.WebACLs[].Name'`
@@ -80,3 +103,7 @@ Manage Cloudflare rate limiting rules
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [AWS WAF Rate-based Rules](https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html)
+- [Cloudflare Rate Limiting API](https://developers.cloudflare.com/api/resources/rate_limits/)

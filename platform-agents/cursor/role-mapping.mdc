@@ -1,14 +1,32 @@
 ---
-description: "Expert role mapping skill covering Kubernetes RBAC bindings, kubectl auth checks, and AWS IAM role/policy inspection to trace who can do what."
+description: "Expert role mapping skill covering Kubernetes RBAC bindings, kubectl auth checks, and AWS IAM role/policy inspection to trace who can do what. Use when working with rbac iam mapping, api or when the user mentions rbac iam mapping, api."
 globs: ["**/*.r", "**/*.rs", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Role Mapping
-
 Expert role mapping skill covering Kubernetes RBAC bindings, kubectl auth checks, and AWS IAM role/policy inspection to trace who can do what.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl get rolebindings -A -o wide`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Role Mapping
 
@@ -68,6 +86,11 @@ kubectl auth can-i delete secrets -n backend   # should be no for CI accounts
 ### rbac-iam-mapping
 Map users to roles in Kubernetes RBAC and AWS IAM
 
+**Parameters:**
+- `namespace` (string): Namespace to scope RBAC queries
+- `role_name` (string): AWS IAM role name
+- `verb_resource` (string): Check like create deployments
+
 **Commands:**
 - `kubectl get rolebindings -A -o wide`
 - `kubectl auth can-i --list -n backend`
@@ -79,3 +102,7 @@ Map users to roles in Kubernetes RBAC and AWS IAM
 - kubectl auth can-i create deployments -n backend
 - kubectl get rolebindings -n backend -o yaml
 - aws iam list-role-policies --role-name app-prod-role
+
+## References
+- [K8s RBAC reference](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+- [AWS IAM roles docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)

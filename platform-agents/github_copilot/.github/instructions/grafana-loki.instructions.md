@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Grafana Loki
-
 Log aggregation with Grafana Loki: query logs with logcli, filter with LogQL, and manage labels and retention.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `logcli query '{job="orders"} |= "ERROR"' --limit=50 --since=`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Grafana Loki
 
@@ -70,6 +88,11 @@ logcli query '{job="orders", service="payments"}' --since=5m | grep 'order-123'
 ### loki-queries
 Query Loki logs via logcli and inspect label usage.
 
+**Parameters:**
+- `label-filter` (string): LogQL label selector like {job="orders"}
+- `line-filter` (string): Line filter like |= "ERROR"
+- `since` (string): Lookback window like 1h
+
 **Commands:**
 - `logcli query '{job="orders"} |= "ERROR"' --limit=50 --since=1h`
 - `logcli labels --since=24h`
@@ -81,3 +104,7 @@ Query Loki logs via logcli and inspect label usage.
 - logcli query '{job="orders"} |= "ERROR"' --limit=50 --since=1h
 - logcli labels --since=24h
 - logcli query 'sum by (level) (count_over_time({job="orders"}[5m]))' --since=1h
+
+## References
+- [LogQL reference](https://grafana.com/docs/loki/latest/logql/)
+- [logcli docs](https://grafana.com/docs/loki/latest/query/logcli/)

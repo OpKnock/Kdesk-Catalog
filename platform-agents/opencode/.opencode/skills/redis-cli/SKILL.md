@@ -1,13 +1,31 @@
 ---
 name: "redis-cli"
-description: "Redis CLI commands. Real redis-cli CLI."
+description: "Redis CLI commands. Real redis-cli CLI. Use when working with redis cli, database or when the user mentions redis cli, database."
 ---
-
-# redis-cli
 
 Redis CLI commands. Real redis-cli CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `brew install redis`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Redis CLI
 
@@ -371,3 +389,6 @@ Redis CLI commands. Real redis-cli CLI.
 - brew install redis
 - redis-cli
 - redis-cli -h localhost -p 6379
+
+## References
+- [redis-cli Skill Documentation](skills/database/redis-cli.md)

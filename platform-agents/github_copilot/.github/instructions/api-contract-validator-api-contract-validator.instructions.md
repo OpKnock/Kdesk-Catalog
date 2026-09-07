@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.py **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# api-contract-validator-api-contract-validator
-
 Validates API contracts continuously: response schema checks at runtime, spec diffs in CI, and consumer contract verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install express-openapi-validator`, `openapi-diff v1.yaml v2.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Contract Validator
 
@@ -51,6 +69,10 @@ Add negative tests: send responses that violate the schema and assert 500-level 
 ### runtime-validation
 Validate API responses at runtime against the OpenAPI contract
 
+**Parameters:**
+- `spec` (string): OpenAPI spec for runtime validation
+- `endpoint` (string): Endpoint to validate
+
 **Commands:**
 - `npm install express-openapi-validator`
 - `node -e "const v=require('express-openapi-validator');console.log(typeof v.middleware)"`
@@ -66,6 +88,10 @@ Validate API responses at runtime against the OpenAPI contract
 ### spec-diff-checking
 Diff specs across versions in CI to block breaking changes
 
+**Parameters:**
+- `oldSpec` (string): Baseline spec
+- `newSpec` (string): Candidate spec
+
 **Commands:**
 - `openapi-diff v1.yaml v2.yaml`
 - `openapi-diff --fail-on-incompatible v1.yaml v2.yaml`
@@ -77,3 +103,8 @@ Diff specs across versions in CI to block breaking changes
 - openapi-diff --fail-on-incompatible v1.yaml v2.yaml
 - openapi-diff v1.yaml v2.yaml | grep -i 'breaking'
 - git diff v1.yaml v2.yaml --stat && openapi-diff v1.yaml v2.yaml
+
+## References
+- [express-openapi-validator](https://github.com/cdimascio/express-openapi-validator)
+- [openapi-diff](https://github.com/OpenAPITools/openapi-diff)
+- [supertest](https://github.com/ladjs/supertest)

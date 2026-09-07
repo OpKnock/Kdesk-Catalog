@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# husky
-
 Configures Git hooks with husky: pre-commit, commit-msg, pre-push gates, and lint-staged integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx husky init`, `npm install --save-dev lint-staged`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Husky
 
@@ -61,6 +79,10 @@ git config core.hooksPath
 ### husky-setup
 Initialize and manage husky hooks.
 
+**Parameters:**
+- `hook` (string): Hook name: pre-commit, commit-msg, pre-push
+- `command` (string): Command to run
+
 **Commands:**
 - `npx husky init`
 - `npx husky add .husky/pre-commit "npm test"`
@@ -76,6 +98,10 @@ Initialize and manage husky hooks.
 ### husky-lint-staged
 Run staged-file checks with lint-staged.
 
+**Parameters:**
+- `glob` (string): File pattern
+- `config` (string): lint-staged config path
+
 **Commands:**
 - `npm install --save-dev lint-staged`
 - `npx lint-staged`
@@ -85,3 +111,7 @@ Run staged-file checks with lint-staged.
 **Examples:**
 - npx lint-staged --concurrent 4
 - npx lint-staged --no-stash
+
+## References
+- [Husky Docs](https://typicode.github.io/husky/)
+- [lint-staged Docs](https://github.com/lint-staged/lint-staged)

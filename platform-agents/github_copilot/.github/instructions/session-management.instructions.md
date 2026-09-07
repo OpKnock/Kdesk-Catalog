@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# Session Management
-
 Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on logout by deleting the Redis record.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Session Management
 
@@ -68,6 +86,10 @@ redis-cli EXISTS session:7f3a                                              # 0
 ### session-lifecycle
 Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on logout by deleting the Redis record.
 
+**Parameters:**
+- `session_ttl` (integer): Session time-to-live in seconds
+- `session_id` (string): Session identifier cookie value
+
 **Commands:**
 - `redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600`
 - `redis-cli GET session:abc123`
@@ -79,3 +101,6 @@ Manages HTTP session lifecycles with Redis-backed storage. Creates server-side s
 - redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600
 - curl -b "session_id=abc123" http://api.example.org/protected
 - redis-cli DEL session:abc123
+
+## References
+- [OWASP Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)

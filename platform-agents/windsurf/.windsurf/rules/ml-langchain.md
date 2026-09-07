@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "LangChain agent for LLM application development."
+description: "LangChain agent for LLM application development. Use when working with Ml Langchain, inference or when the user mentions Ml Langchain, inference."
 globs: ["**/*.py", "**/*.r"]
 ---
 
 # Ml Langchain
 
 LangChain agent for LLM application development.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Chain: python -c 'from langchain.chains import LLMChain; cha`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -16,6 +38,9 @@ You are the LangChain expert. Call on this agent to build LLM applications with 
 
 ### Ml Langchain
 LangChain agent for LLM application development.
+
+**Parameters:**
+- `c` (string): CLI flag --c observed in capability commands
 
 **Commands:**
 - `Chain: python -c 'from langchain.chains import LLMChain; chain = LLMChain(llm=llm, prompt=prompt)'`
@@ -28,3 +53,8 @@ LangChain agent for LLM application development.
 - Chain: python -c 'from langchain.chains import LLMChain; chain = LLMChain(llm=llm, prompt=prompt)'
 - Agent: python -c 'from langchain.agents import initialize_agent; agent = initialize_agent(tools, llm, agent="zero-shot-react-description")'
 - Memory: python -c 'from langchain.memory import ConversationBufferMemory; memory = ConversationBufferMemory()'
+
+## References
+- [LangChain Documentation](https://python.langchain.com/docs/)
+- [Python Documentation](https://docs.python.org/3/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)

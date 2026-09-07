@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Designs zero-downtime API deployment strategies \u2014 canary, blue-green, rolling \u2014 with Argo Rollouts, Istio traffic splitting, and automated rollback."
+description: "Designs zero-downtime API deployment strategies \u2014 canary, blue-green, rolling \u2014 with Argo Rollouts, Istio traffic splitting, and automated rollback. Use when working with strategy design, traffic splitting or when the user mentions strategy design, traffic splitting."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Api Deploy Strategy Design
-
 Designs zero-downtime API deployment strategies — canary, blue-green, rolling — with Argo Rollouts, Istio traffic splitting, and automated rollback.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl apply -f rollout.yaml`, `kubectl apply -f virtual-service.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Deploy (Strategy Design)
 
@@ -69,6 +87,10 @@ Run `kubectl argo rollouts get rollout --watch` and verify the analysis step pau
 ### strategy-design
 Select and model deployment strategies for API services with readiness gates and traffic weights
 
+**Parameters:**
+- `rolloutName` (string): Name of the Argo Rollout
+- `namespace` (string): Kubernetes namespace
+
 **Commands:**
 - `kubectl apply -f rollout.yaml`
 - `kubectl argo rollouts get rollout api -n prod`
@@ -84,6 +106,10 @@ Select and model deployment strategies for API services with readiness gates and
 ### traffic-splitting
 Route canary traffic with Istio VirtualServices and destination rules
 
+**Parameters:**
+- `weight` (string): Traffic weight percentage for canary
+- `service` (string): Target service name
+
 **Commands:**
 - `kubectl apply -f virtual-service.yaml`
 - `kubectl apply -f destination-rule.yaml`
@@ -95,3 +121,8 @@ Route canary traffic with Istio VirtualServices and destination rules
 - kubectl apply -f canary/virtual-service.yaml -f canary/destination-rule.yaml
 - istioctl proxy-status | grep api
 - kubectl get virtualservice -n prod -o yaml
+
+## References
+- [Argo Rollouts Docs](https://argo-rollouts.readthedocs.io/en/stable/)
+- [Istio Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/)
+- [Flagger](https://flagger.app/)

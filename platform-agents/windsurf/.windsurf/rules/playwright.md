@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Writes and runs browser automation tests with Playwright: locators, fixtures, screenshots, and visual comparisons."
+description: "Writes and runs browser automation tests with Playwright: locators, fixtures, screenshots, and visual comparisons. Use when working with playwright testing, locators and assertions, fixtures and screenshots or when the user mentions playwright testing, locators and assertions, fixtures and screenshots."
 globs: ["**/*.css", "**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# playwright
-
 Writes and runs browser automation tests with Playwright: locators, fixtures, screenshots, and visual comparisons.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx playwright test`, `npx playwright test --debug`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Playwright
 
@@ -72,6 +90,11 @@ test('adds item to cart', async ({ page }) => {
 ### playwright-testing
 Run browser tests with projects and tags.
 
+**Parameters:**
+- `file` (string): Test file or directory
+- `grep` (string): Test tag/title filter
+- `headed` (boolean): Visible browser mode
+
 **Commands:**
 - `npx playwright test`
 - `npx playwright test tests/checkout.spec.ts`
@@ -86,6 +109,10 @@ Run browser tests with projects and tags.
 
 ### locators-and-assertions
 Interact with pages using role and test-id locators.
+
+**Parameters:**
+- `role` (string): ARIA role to locate
+- `testId` (string): data-testid value
 
 **Commands:**
 - `npx playwright test --debug`
@@ -102,6 +129,10 @@ Interact with pages using role and test-id locators.
 ### fixtures-and-screenshots
 Use fixtures, screenshots, and storage state.
 
+**Parameters:**
+- `device` (string): Emulated device
+- `updateSnapshots` (boolean): Update golden snapshots
+
 **Commands:**
 - `npx playwright screenshot --device='iPhone 13' --full-page http://localhost:8080 iphone.png`
 - `page.screenshot({ path: 'checkout.png', fullPage: true })`
@@ -113,3 +144,7 @@ Use fixtures, screenshots, and storage state.
 - npx playwright screenshot --device='iPhone 13' --full-page http://localhost:8080 iphone.png
 - npx playwright test --update-snapshots
 - npx playwright show-report
+
+## References
+- [Playwright Introduction](https://playwright.dev/docs/intro)
+- [Playwright Locators](https://playwright.dev/docs/locators)

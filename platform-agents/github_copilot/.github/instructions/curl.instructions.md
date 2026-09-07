@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Curl
-
 Tests and debugs REST APIs from the terminal with curl: methods, headers, JSON bodies, auth, TLS options, timing, and output formatting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -i https://httpbin.org/get`, `curl -s -D headers.txt -o response.json https://httpbin.org/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # curl
 
@@ -74,6 +92,10 @@ curl -s https://httpbin.org/get | jq '.origin'
 ### requests
 Send HTTP requests with curl covering methods, headers, bodies, and auth
 
+**Parameters:**
+- `method` (string): HTTP method: GET, POST, PUT, PATCH, DELETE
+- `url` (string): Target URL
+
 **Commands:**
 - `curl -i https://httpbin.org/get`
 - `curl -X POST -H "Content-Type: application/json" -d '{"name":"alice"}' https://httpbin.org/post`
@@ -88,6 +110,10 @@ Send HTTP requests with curl covering methods, headers, bodies, and auth
 ### debugging
 Inspect responses, headers, TLS, timing, and write output to files
 
+**Parameters:**
+- `output_file` (string): File to write the body to with -o
+- `insecure` (string): -k skips TLS verification for self-signed certs
+
 **Commands:**
 - `curl -s -D headers.txt -o response.json https://httpbin.org/get`
 - `curl -k https://httpbin.org/get`
@@ -98,3 +124,7 @@ Inspect responses, headers, TLS, timing, and write output to files
 - curl -w "%{time_connect} %{time_starttransfer} %{time_total}\n" -o /dev/null https://httpbin.org/get
 - curl -k -v https://httpbin.org/get
 - curl -s https://httpbin.org/get | jq '.origin'
+
+## References
+- [curl man page](https://curl.se/docs/manpage.html)
+- [curl Everything curl](https://everything.curl.dev/)

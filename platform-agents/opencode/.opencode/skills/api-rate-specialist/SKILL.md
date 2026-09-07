@@ -1,13 +1,31 @@
 ---
 name: "api-rate-specialist"
-description: "Implements application-level rate limiting with express-rate-limit and @fastify/rate-limit: window configuration, skip logic, headers, and standardizer patterns."
+description: "Implements application-level rate limiting with express-rate-limit and @fastify/rate-limit: window configuration, skip logic, headers, and standardizer patterns. Use when working with express rate limit, fastify rate limit or when the user mentions express rate limit, fastify rate limit."
 ---
-
-# api-rate-specialist
 
 Implements application-level rate limiting with express-rate-limit and @fastify/rate-limit: window configuration, skip logic, headers, and standardizer patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install express-rate-limit`, `npm install @fastify/rate-limit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Rate Specialist
 
@@ -57,6 +75,11 @@ app.use('/api', rateLimit({
 ### express-rate-limit
 Configure express-rate-limit middleware options
 
+**Parameters:**
+- `windowMs` (integer): Window duration in milliseconds
+- `limit` (integer): Maximum requests per window
+- `keyGenerator` (function): Client key derivation function
+
 **Commands:**
 - `npm install express-rate-limit`
 - `node -e "const rateLimit=require('express-rate-limit'); console.log(rateLimit({windowMs:60000,limit:100}).name)"`
@@ -80,3 +103,7 @@ Configure the Fastify rate limit plugin
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [express-rate-limit](https://expressjs.com/en/resources/middleware/rate-limit.html)
+- [@fastify/rate-limit](https://github.com/fastify/fastify-rate-limit)

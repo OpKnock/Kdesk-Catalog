@@ -2,11 +2,29 @@
 applyTo: "**/*.php **/*.r **/*.sh"
 ---
 
-# laravel
-
 Builds PHP web applications with Laravel: artisan commands, migrations, queues, scheduling, and testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `composer create-project laravel/laravel myapp`, `php artisan queue:work`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Laravel
 
@@ -77,6 +95,10 @@ class SendEmail implements ShouldQueue
 ### laravel-artisan
 Scaffold and manage Laravel applications.
 
+**Parameters:**
+- `name` (string): Artisan make target name
+- `flags` (string): Artisan flags like -m --resource
+
 **Commands:**
 - `composer create-project laravel/laravel myapp`
 - `php artisan serve`
@@ -92,6 +114,10 @@ Scaffold and manage Laravel applications.
 ### laravel-queues
 Run queue workers and the scheduler.
 
+**Parameters:**
+- `connection` (string): Queue driver: redis, database
+- `tries` (integer): Max attempts
+
 **Commands:**
 - `php artisan queue:work`
 - `php artisan queue:listen --tries=3`
@@ -103,3 +129,7 @@ Run queue workers and the scheduler.
 - php artisan queue:work redis --timeout=60
 - php artisan schedule:test
 - php artisan queue:retry all
+
+## References
+- [Laravel Docs](https://laravel.com/docs)
+- [Laravel Queues](https://laravel.com/docs/queues)

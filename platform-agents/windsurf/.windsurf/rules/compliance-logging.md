@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping."
+description: "Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping. Use when working with auditd, journal rotation, api or when the user mentions auditd, journal rotation, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Compliance Logging
-
 Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `auditctl -l`, `journalctl -u api.service`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Compliance Logging
 
@@ -90,6 +108,10 @@ journalctl -u api.service --since "10 min ago" | wc -l
 ### auditd
 Configure Linux audit rules for file, syscall, and identity monitoring
 
+**Parameters:**
+- `watch_path` (string): File or directory to audit
+- `key` (string): Audit rule key such as identity or api-config
+
 **Commands:**
 - `auditctl -l`
 - `auditctl -w /etc/passwd -p wa -k identity`
@@ -104,6 +126,10 @@ Configure Linux audit rules for file, syscall, and identity monitoring
 ### journal-rotation
 Capture service logs in systemd journal and enforce rotation policies
 
+**Parameters:**
+- `unit` (string): Systemd unit name such as api.service
+- `vacuum_size` (string): Journal size limit such as 500M
+
 **Commands:**
 - `journalctl -u api.service`
 - `journalctl -u api.service --since "1 hour ago"`
@@ -114,3 +140,7 @@ Capture service logs in systemd journal and enforce rotation policies
 - journalctl -u api.service -f
 - journalctl -u api.service --since today -o json | jq '.MESSAGE'
 - journalctl --disk-usage && journalctl --vacuum-size=500M
+
+## References
+- [Linux auditd documentation](https://linux-audit.com/)
+- [logrotate man page](https://man7.org/linux/man-pages/man5/logrotate.conf.5.html)

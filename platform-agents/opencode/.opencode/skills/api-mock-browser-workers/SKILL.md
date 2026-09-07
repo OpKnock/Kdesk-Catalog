@@ -1,13 +1,31 @@
 ---
 name: "api-mock-browser-workers"
-description: "Implements browser and Node mock layers with MSW combined with Playwright for E2E mocking: persistent session state, resolver utilities, and test isolation."
+description: "Implements browser and Node mock layers with MSW combined with Playwright for E2E mocking: persistent session state, resolver utilities, and test isolation. Use when working with browser workers, e2e integration or when the user mentions browser workers, e2e integration."
 ---
-
-# Api Mock Browser Workers
 
 Implements browser and Node mock layers with MSW combined with Playwright for E2E mocking: persistent session state, resolver utilities, and test isolation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install msw --save-dev`, `npm install @playwright/test msw`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Mock v4 - MSW + Playwright
 
@@ -55,6 +73,11 @@ export const test = base.extend({
 ### browser-workers
 Configure MSW service workers in a Vite/Next.js application
 
+**Parameters:**
+- `worker-dir` (string): Directory that serves the service worker script
+- `onUnhandledRequest` (string): warn | error | bypass for unmatched requests
+- `quiet` (boolean): Suppress worker console output
+
 **Commands:**
 - `npm install msw --save-dev`
 - `npx msw init public/`
@@ -79,3 +102,7 @@ Reuse MSW handlers inside Playwright E2E tests
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [MSW Browser Docs](https://mswjs.io/docs/basics/mocking/browser)
+- [Playwright Test Docs](https://playwright.dev/docs/test-intro)

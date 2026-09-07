@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "AWS Versioning deployment agent for ML model versioning on AWS."
+description: "AWS Versioning deployment agent for ML model versioning on AWS. Use when working with Ml Versioning Aws Deploy or when the user mentions Ml Versioning Aws Deploy."
 globs: ["**/*.r"]
 ---
 
 # Ml Versioning Aws Deploy
 
 AWS Versioning deployment agent for ML model versioning on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Register: aws sagemaker register-model --model-package-name `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -17,6 +39,9 @@ You are the AWS ML model versioning deployment expert. Call on this agent to reg
 ### Ml Versioning Aws Deploy
 AWS Versioning deployment agent for ML model versioning on AWS.
 
+**Parameters:**
+- `model-package-name` (string): CLI flag --model-package-name observed in capability commands
+
 **Commands:**
 - `Register: aws sagemaker register-model --model-package-name my-model --model-package-group ml-models`
 - `Describe: aws sagemaker describe-model-package --model-package-name my-model:1`
@@ -26,3 +51,7 @@ AWS Versioning deployment agent for ML model versioning on AWS.
 - Register: aws sagemaker register-model --model-package-name my-model --model-package-group ml-models --model-data S3Uri=s3://bucket/model.tar.gz
 - List: aws sagemaker list-model-packages --model-package-group-name ml-models
 - Describe: aws sagemaker describe-model-package --model-package-name my-model:1
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)

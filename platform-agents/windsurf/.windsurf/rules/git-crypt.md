@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Transparently encrypts sensitive files in Git repositories with git-crypt, keyed by GPG users or symmetric keys."
+description: "Transparently encrypts sensitive files in Git repositories with git-crypt, keyed by GPG users or symmetric keys. Use when working with repo setup, encryption lifecycle, security or when the user mentions repo setup, encryption lifecycle, security."
 globs: ["**/*.r", "**/*.rs", "**/*.sh"]
 ---
 
-# git-crypt
-
 Transparently encrypts sensitive files in Git repositories with git-crypt, keyed by GPG users or symmetric keys.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `git-crypt init`, `git-crypt lock`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # git-crypt
 
@@ -67,6 +85,10 @@ git-crypt export-key /tmp/team.key
 ### repo-setup
 Initialize encryption, define .gitattributes, and add collaborators.
 
+**Parameters:**
+- `user` (string): GPG email or key ID of the collaborator
+- `keyFile` (string): Path to export the symmetric key
+
 **Commands:**
 - `git-crypt init`
 - `git-crypt add-gpg-user user@localhost`
@@ -82,6 +104,10 @@ Initialize encryption, define .gitattributes, and add collaborators.
 ### encryption-lifecycle
 Encrypt tracked files, lock/unlock working copies, and verify encryption state.
 
+**Parameters:**
+- `keyFile` (string): Symmetric key file for unlocking without GPG
+- `revision` (string): Git revision to inspect encryption state
+
 **Commands:**
 - `git-crypt lock`
 - `git-crypt unlock`
@@ -93,3 +119,7 @@ Encrypt tracked files, lock/unlock working copies, and verify encryption state.
 - git-crypt unlock
 - git-crypt lock
 - git-crypt status
+
+## References
+- [git-crypt GitHub](https://github.com/AGWA/git-crypt)
+- [git-crypt README Guide](https://github.com/AGWA/git-crypt/blob/master/README.md)

@@ -2,11 +2,29 @@
 applyTo: "**/*.java **/*.json **/*.r **/*.sh **/*.{js,ts,jsx,tsx} **/*.{yaml,yml}"
 ---
 
-# Elasticsearch Apm
-
 Application performance monitoring with the Elastic APM stack: configure APM Server, instrument Node.js apps, and query traces from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `apm-server -e -c apm-server.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Elasticsearch APM
 
@@ -83,6 +101,11 @@ curl -s 'localhost:9200/apm-*/_search' -H 'Content-Type: application/json' -d '{
 ### apm-instrumentation
 Configure and run the Elastic APM server and agents, and inspect traces and service status.
 
+**Parameters:**
+- `apm-server-config` (string): Path to apm-server.yml
+- `service-name` (string): APM agent service name for instrumentation
+- `index-pattern` (string): Index pattern for APM data, e.g. apm-*
+
 **Commands:**
 - `apm-server -e -c apm-server.yml`
 - `apm-server test config -c apm-server.yml`
@@ -94,3 +117,7 @@ Configure and run the Elastic APM server and agents, and inspect traces and serv
 - apm-server test config -c apm-server.yml && apm-server -e -c apm-server.yml
 - curl -s 'localhost:9200/apm-*/_search' -H 'Content-Type: application/json' -d '{"query":{"range":{"@timestamp":{"gte":"now-1h"}}}}' | jq '.hits.total'
 - curl -s http://localhost:8200/ | jq '.version'
+
+## References
+- [APM Server Reference](https://www.elastic.co/guide/en/apm/server/current/index.html)
+- [Elastic APM Node.js Agent](https://www.elastic.co/guide/en/apm/agent/nodejs/current/index.html)

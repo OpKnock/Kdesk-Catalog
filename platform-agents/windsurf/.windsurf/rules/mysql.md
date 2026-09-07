@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Operates MySQL: interactive queries, scripted DDL/DML, dumps, and performance status."
+description: "Operates MySQL: interactive queries, scripted DDL/DML, dumps, and performance status. Use when working with mysql cli, database or when the user mentions mysql cli, database."
 globs: ["**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# mysql
-
 Operates MySQL: interactive queries, scripted DDL/DML, dumps, and performance status.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mysql -u root -p`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # MySQL
 
@@ -66,6 +84,11 @@ recommends an index or query rewrite.
 ### mysql-cli
 Query, import/export, and inspect MySQL servers
 
+**Parameters:**
+- `execute` (string): SQL to execute in one-shot mode (-e)
+- `single-transaction` (boolean): Consistent snapshot for InnoDB dumps
+- `host` (string): Server hostname (-h)
+
 **Commands:**
 - `mysql -u root -p`
 - `mysql -u root -p appdb -e "SHOW TABLES;"`
@@ -77,3 +100,7 @@ Query, import/export, and inspect MySQL servers
 - mysql -h db.example.com -P 3306 -u app -p appdb -e "SELECT count(*) FROM orders;"
 - mysql -u root -p -e "SHOW GLOBAL STATUS LIKE 'Threads_connected';"
 - mysqldump -u root -p --no-data --routines appdb > schema-only.sql
+
+## References
+- [MySQL reference manual](https://dev.mysql.com/doc/refman/8.0/en/)
+- [mysqldump reference](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html)

@@ -1,13 +1,31 @@
 ---
 name: "snowflake"
-description: "Works with Snowflake: SQL execution via snowsql, warehouses, stages, and query performance."
+description: "Works with Snowflake: SQL execution via snowsql, warehouses, stages, and query performance. Use when working with snowsql, data or when the user mentions snowsql, data."
 ---
-
-# Snowflake
 
 Works with Snowflake: SQL execution via snowsql, warehouses, stages, and query performance.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `snowsql -a myorg-account -u jdoe -d analytics -s core`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Snowflake
 
@@ -59,6 +77,11 @@ size and cache misses, and recommends sizing or clustering changes.
 ### snowsql
 Execute SQL, scripts, and configuration against Snowflake
 
+**Parameters:**
+- `warehouse` (string): Warehouse to run the query on (-w/--warehouse)
+- `exit_on_error` (boolean): Stop script execution on first error
+- `output_format` (string): table, json, csv, or xml output
+
 **Commands:**
 - `snowsql -a myorg-account -u jdoe -d analytics -s core`
 - `snowsql -q "SELECT CURRENT_WAREHOUSE(), CURRENT_ROLE();"`
@@ -70,3 +93,7 @@ Execute SQL, scripts, and configuration against Snowflake
 - snowsql -a myorg-account -u jdoe -d analytics -s core -w compute_wh
 - snowsql -q "COPY INTO raw.events FROM @stage/events FILE_FORMAT=(TYPE=CSV)"
 - snowsql -q "SELECT query_id, total_elapsed_time/1000 secs FROM table(information_schema.query_history()) ORDER BY total_elapsed_time DESC LIMIT 10;"
+
+## References
+- [Snowflake docs](https://docs.snowflake.com/)
+- [snowsql reference](https://docs.snowflake.com/en/user-guide/snowsql-ref)

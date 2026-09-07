@@ -1,13 +1,31 @@
 ---
 name: "bundler"
-description: "Manages Ruby gem dependencies with Bundler: Gemfile authoring, install, update, exec, audit, and gem packaging."
+description: "Manages Ruby gem dependencies with Bundler: Gemfile authoring, install, update, exec, audit, and gem packaging. Use when working with dependency management, runtime and audit, devtools or when the user mentions dependency management, runtime and audit, devtools."
 ---
-
-# bundler
 
 Manages Ruby gem dependencies with Bundler: Gemfile authoring, install, update, exec, audit, and gem packaging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bundle init`, `bundle exec rspec`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Bundler for Ruby
 
@@ -70,6 +88,11 @@ bundle gem my_gem
 ### dependency-management
 Install, add, update, and verify Ruby gem dependencies.
 
+**Parameters:**
+- `gem` (string): Gem name
+- `version` (string): Version constraint
+- `group` (string): Gem group, e.g. test, development
+
 **Commands:**
 - `bundle init`
 - `bundle install --jobs 4`
@@ -87,6 +110,10 @@ Install, add, update, and verify Ruby gem dependencies.
 ### runtime-and-audit
 Run gems in the bundle context and audit for vulnerabilities.
 
+**Parameters:**
+- `command` (string): Command to run in bundle context
+- `platform` (string): Platform to add to lockfile
+
 **Commands:**
 - `bundle exec rspec`
 - `bundle exec rake db:migrate`
@@ -99,3 +126,7 @@ Run gems in the bundle context and audit for vulnerabilities.
 - bundle exec rspec
 - bundle audit check --update
 - bundle lock --add-platform x86_64-linux
+
+## References
+- [Bundler Documentation](https://bundler.io/docs.html)
+- [bundle-audit](https://github.com/rubysec/bundler-audit)

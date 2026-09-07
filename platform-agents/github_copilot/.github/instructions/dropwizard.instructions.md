@@ -2,11 +2,29 @@
 applyTo: "**/*.java **/*.r **/*.sh **/*.sql **/*.{yaml,yml}"
 ---
 
-# Dropwizard
-
 Operates Dropwizard services: validates config, runs DB migrations, and checks healthchecks and metrics on the admin port from the fat jar.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `java -jar app.jar server config.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Dropwizard
 
@@ -88,6 +106,11 @@ curl -sf localhost:8081/healthcheck | jq -e 'all(.; .healthy == true)'
 ### dropwizard-server
 Start, validate, migrate, and monitor a Dropwizard application from its fat jar.
 
+**Parameters:**
+- `jar-file` (string): Path to the Dropwizard fat jar
+- `config-file` (string): Path to the YAML config file
+- `command` (string): Dropwizard command: server, check, db migrate, db status
+
 **Commands:**
 - `java -jar app.jar server config.yml`
 - `java -jar app.jar check config.yml`
@@ -100,3 +123,6 @@ Start, validate, migrate, and monitor a Dropwizard application from its fat jar.
 - java -jar app.jar check config.yml && java -jar app.jar server config.yml
 - curl -s localhost:8081/healthcheck | jq '.deadlocks, .database'
 - java -jar app.jar db migrate config.yml --migrations migrations.xml
+
+## References
+- [Dropwizard Documentation](https://www.dropwizard.io/en/stable/)

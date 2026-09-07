@@ -1,13 +1,31 @@
 ---
 name: "quarkus"
-description: "Quarkus application development: CLI scaffolding, extensions, dev mode, testing and packaging."
+description: "Quarkus application development: CLI scaffolding, extensions, dev mode, testing and packaging. Use when working with quarkus workflow, api or when the user mentions quarkus workflow, api."
 ---
-
-# Quarkus
 
 Quarkus application development: CLI scaffolding, extensions, dev mode, testing and packaging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `quarkus create app hello-world`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Quarkus
 
@@ -75,6 +93,11 @@ quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/app
 ### quarkus-workflow
 Create, extend, run and test Quarkus apps with the quarkus CLI and Maven.
 
+**Parameters:**
+- `extensions` (array): Extensions to add via quarkus ext add
+- `port` (integer): Dev mode port
+- `package_type` (string): fast-jar, uber-jar or native
+
 **Commands:**
 - `quarkus create app hello-world`
 - `quarkus dev`
@@ -86,3 +109,7 @@ Create, extend, run and test Quarkus apps with the quarkus CLI and Maven.
 - quarkus create app -P io.quarkus.platform:quarkus-bom:3.10.0 hello
 - quarkus dev --port 8081
 - quarkus build --native
+
+## References
+- [Quarkus Guides](https://quarkus.io/guides/)
+- [Quarkus CLI](https://quarkus.io/guides/cli-tooling)

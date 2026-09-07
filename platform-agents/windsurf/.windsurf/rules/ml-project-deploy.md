@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Project deployment agent for ML project management service deployment."
+description: "Project deployment agent for ML project management service deployment. Use when working with Ml Project Deploy or when the user mentions Ml Project Deploy."
 globs: ["**/*.py", "**/*.r"]
 ---
 
 # Ml Project Deploy
 
 Project deployment agent for ML project management service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Create: python -m ml_project.create --name 'Customer Churn M`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -26,3 +48,8 @@ Project deployment agent for ML project management service deployment.
 - Server: python -m ml_project.server --port 8080
 - Create: python -m ml_project.create --name 'Customer Churn Model'
 - Health: curl http://localhost:8080/health
+
+## References
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

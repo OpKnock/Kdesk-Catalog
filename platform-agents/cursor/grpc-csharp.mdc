@@ -1,14 +1,32 @@
 ---
-description: "gRPC services and clients in C# with Grpc.Net.Client, Grpc.Tools proto codegen, and dotnet CLI project scaffolding."
+description: "gRPC services and clients in C# with Grpc.Net.Client, Grpc.Tools proto codegen, and dotnet CLI project scaffolding. Use when working with csharp grpc, api or when the user mentions csharp grpc, api."
 globs: ["**/*.cs", "**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Grpc Csharp
-
 gRPC services and clients in C# with Grpc.Net.Client, Grpc.Tools proto codegen, and dotnet CLI project scaffolding.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `dotnet new grpc -o GrpcGreeter`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC C#
 
@@ -89,6 +107,11 @@ Agent: Enable unencrypted HTTP/2 support in the client, or run the server over H
 ### csharp-grpc
 Scaffold .NET gRPC projects, generate code from proto files, and call services with Grpc.Net.Client.
 
+**Parameters:**
+- `project` (string): Project or solution path to build/run.
+- `package` (string): NuGet package to add (Grpc.Net.Client, Grpc.Tools, Grpc.AspNetCore).
+- `proto_file` (string): Proto file referenced in the csproj for codegen.
+
 **Commands:**
 - `dotnet new grpc -o GrpcGreeter`
 - `dotnet add package Grpc.Net.Client`
@@ -100,3 +123,7 @@ Scaffold .NET gRPC projects, generate code from proto files, and call services w
 - dotnet build GrpcGreeter && dotnet run --project GrpcGreeter
 - dotnet add package Grpc.AspNetCore
 - dotnet add GrpcGreeterClient reference GrpcGreeter
+
+## References
+- [gRPC C# Docs](https://grpc.io/docs/languages/csharp/)
+- [gRPC on ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/grpc/)

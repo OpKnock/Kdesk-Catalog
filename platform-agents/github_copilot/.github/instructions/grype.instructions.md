@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# grype
-
 Scan images, directories, and binaries handling known CVEs. Update the vulnerability database and scan SBOMs directly. and filesystem scanning.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `grype alpine:latest`, `grype db update`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Grype
 
@@ -61,6 +79,11 @@ grype db status
 ### vulnerability-matching
 Scan images, directories, and binaries for known CVEs.
 
+**Parameters:**
+- `target` (string): Image, directory, or binary to scan
+- `scope` (string): Squashed or all-layers scope
+- `output` (string): Format: table, json, sarif, cyclonedx
+
 **Commands:**
 - `grype alpine:latest`
 - `grype .`
@@ -76,6 +99,10 @@ Scan images, directories, and binaries for known CVEs.
 ### db-and-sbom
 Update the vulnerability database and scan SBOMs directly.
 
+**Parameters:**
+- `format` (string): SBOM format for syft output: json, cyclonedx, spdx
+- `outputFile` (string): Where to write the generated SBOM.
+
 **Commands:**
 - `grype db update`
 - `grype db status`
@@ -87,3 +114,7 @@ Update the vulnerability database and scan SBOMs directly.
 - grype db update
 - syft alpine:latest -o cyclonedx > sbom.cdx.json
 - grype -q sbom:sbom.cdx.json
+
+## References
+- [Grype GitHub](https://github.com/anchore/grype)
+- [Syft GitHub](https://github.com/anchore/syft)

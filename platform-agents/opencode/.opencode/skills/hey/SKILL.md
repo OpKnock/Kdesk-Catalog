@@ -1,13 +1,9 @@
 ---
 name: "hey"
-description: "HTTP load generation with hey: concurrency sweeps, fixed-duration tests, POST payloads, custom headers, and latency report interpretation."
+description: "HTTP load generation with hey: concurrency sweeps, fixed-duration tests, POST payloads, custom headers, and latency report interpretation. Use when working with hey load, api or when the user mentions hey load, api."
 ---
 
-# Hey
-
 HTTP load generation with hey: concurrency sweeps, fixed-duration tests, POST payloads, custom headers, and latency report interpretation.
-
-## Instructions
 
 # hey
 
@@ -92,6 +88,11 @@ Agent: hey -n 10000 -c 100 http://localhost:8080/api
 ### hey-load
 Generate HTTP load and read hey's latency/throughput reports.
 
+**Parameters:**
+- `n` (integer): Total number of requests.
+- `c` (integer): Number of concurrent workers.
+- `z` (string): Duration, e.g. 30s, instead of -n.
+
 **Commands:**
 - `hey -n 10000 -c 100 http://localhost:8080/api`
 - `hey -z 30s -c 200 -m POST -d '{"x":1}' http://localhost:8080/api`
@@ -103,3 +104,7 @@ Generate HTTP load and read hey's latency/throughput reports.
 - hey -z 60s -c 50 -c 100 http://localhost:8080/api
 - hey -n 5000 -c 20 -T application/json -d '{"x":1}' http://localhost:8080/api
 - hey -t 10 -n 1000 http://localhost:8080/slow
+
+## References
+- [hey GitHub](https://github.com/rakyll/hey)
+- [hey usage guide](https://github.com/rakyll/hey/blob/master/README.md#usage)

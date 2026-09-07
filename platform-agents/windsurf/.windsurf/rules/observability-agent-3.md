@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Observability server agent. Manages Observability ML server."
+description: "Observability server agent. Manages Observability ML server. Use when working with Ml Observability Server Agent or when the user mentions Ml Observability Server Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 ---
 
 # Observability Agent 3
 
 Observability server agent. Manages Observability ML server.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python -m observability.server --port 8000 --workers 4`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -29,3 +51,8 @@ Observability server agent. Manages Observability ML server.
 - curl http://localhost:8080/observe --data '{"model": "model.pkl"}'
 - python observability.py --model model.pkl --data-stream data.json --output metrics.json
 - python tracing.py --model model.pkl --input sample.json --output trace.json
+
+## References
+- [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

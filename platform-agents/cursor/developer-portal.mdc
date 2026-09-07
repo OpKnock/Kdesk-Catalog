@@ -1,14 +1,32 @@
 ---
-description: "Builds and maintains API developer portals: lint and bundle OpenAPI specs with Redocly, validate with swagger-cli, and publish static documentation with Docusaurus."
+description: "Builds and maintains API developer portals: lint and bundle OpenAPI specs with Redocly, validate with swagger-cli, and publish static documentation with Docusaurus. Use when working with spec publishing, api or when the user mentions spec publishing, api."
 globs: ["**/*.html", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Developer Portal
-
 Builds and maintains API developer portals: lint and bundle OpenAPI specs with Redocly, validate with swagger-cli, and publish static documentation with Docusaurus.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @redocly/cli lint openapi.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Developer Portal
 
@@ -74,6 +92,11 @@ npx @redocly/cli preview-docs openapi.yaml
 ### spec-publishing
 Validate, lint, bundle, and render OpenAPI specifications into developer portal pages.
 
+**Parameters:**
+- `spec-file` (string): Path to the OpenAPI 3.x spec file
+- `output-dir` (string): Directory for generated portal assets
+- `theme` (string): Redocly theme name or custom theme file for docs styling
+
 **Commands:**
 - `npx @redocly/cli lint openapi.yaml`
 - `npx @redocly/cli bundle openapi.yaml -o dist/openapi.bundle.yaml`
@@ -85,3 +108,6 @@ Validate, lint, bundle, and render OpenAPI specifications into developer portal 
 - npx @redocly/cli lint openapi.yaml && npx @redocly/cli build-docs openapi.yaml -o public/index.html
 - npx swagger-cli validate openapi.yaml
 - npx @redocly/cli bundle openapi.yaml -o dist/openapi.bundle.yaml
+
+## References
+- [Redocly CLI Reference](https://redocly.com/docs/cli/commands/lint/)

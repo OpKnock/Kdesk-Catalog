@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh **/*.sql"
 ---
 
-# Sqlite
-
 Works with SQLite databases: queries, schema management, CSV import/export, and integrity checks via sqlite3.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sqlite3 app.db ".tables"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SQLite
 
@@ -63,6 +81,11 @@ export and verifies row counts both ways.
 ### sqlite3-cli
 Query, manage, and convert SQLite databases
 
+**Parameters:**
+- `mode` (string): Output mode: csv, json, column, list
+- `header` (boolean): Show column headers in output
+- `backup` (string): Online backup destination with .backup
+
 **Commands:**
 - `sqlite3 app.db ".tables"`
 - `sqlite3 app.db "SELECT * FROM users LIMIT 10;"`
@@ -74,3 +97,7 @@ Query, manage, and convert SQLite databases
 - sqlite3 app.db "CREATE INDEX idx_users_email ON users(email);"
 - sqlite3 app.db ".mode csv" ".import users.csv users"
 - sqlite3 app.db "PRAGMA journal_mode=WAL;"
+
+## References
+- [SQLite CLI docs](https://sqlite.org/cli.html)
+- [SQLite pragmas](https://sqlite.org/pragma.html)

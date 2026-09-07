@@ -1,13 +1,31 @@
 ---
 name: "detect-secrets"
-description: "Scans codebases for high-entropy strings and known secret patterns, maintaining a reviewed baseline to prevent secret leaks in CI."
+description: "Scans codebases for high-entropy strings and known secret patterns, maintaining a reviewed baseline to prevent secret leaks in CI. Use when working with baseline scanning, audit and hooks, security or when the user mentions baseline scanning, audit and hooks, security."
 ---
-
-# detect-secrets
 
 Scans codebases for high-entropy strings and known secret patterns, maintaining a reviewed baseline to prevent secret leaks in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `detect-secrets scan . > .secrets.baseline`, `detect-secrets audit .secrets.baseline`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # detect-secrets
 
@@ -71,6 +89,10 @@ repos:
 ### baseline-scanning
 Scan repositories and manage the .secrets.baseline allowlist.
 
+**Parameters:**
+- `baseline` (string): Path to the baseline JSON file
+- `excludeFiles` (string): Regex of files to exclude
+
 **Commands:**
 - `detect-secrets scan . > .secrets.baseline`
 - `detect-secrets scan --baseline .secrets.baseline .`
@@ -85,6 +107,10 @@ Scan repositories and manage the .secrets.baseline allowlist.
 ### audit-and-hooks
 Audit findings, resolve them as true/false positives, and run pre-commit hooks.
 
+**Parameters:**
+- `stdin` (boolean): Read content from stdin (used with git diff)
+- `baseline` (string): Baseline file used by the hook
+
 **Commands:**
 - `detect-secrets audit .secrets.baseline`
 - `detect-secrets-hook --baseline .secrets.baseline .env`
@@ -95,3 +121,7 @@ Audit findings, resolve them as true/false positives, and run pre-commit hooks.
 - detect-secrets audit .secrets.baseline
 - git diff | detect-secrets-hook --baseline .secrets.baseline --stdin
 - pre-commit run --all-files
+
+## References
+- [detect-secrets GitHub](https://github.com/Yelp/detect-secrets)
+- [pre-commit Framework](https://pre-commit.com/)

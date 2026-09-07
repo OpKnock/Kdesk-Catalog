@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Advanced gRPC client workflows: interactive REPL with evans, rich output formats, large-message limits, deadlines, and request streaming from the CLI."
+description: "Advanced gRPC client workflows: interactive REPL with evans, rich output formats, large-message limits, deadlines, and request streaming from the CLI. Use when working with advanced grpc client, api or when the user mentions advanced grpc client, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Grpc Advanced
-
 Advanced gRPC client workflows: interactive REPL with evans, rich output formats, large-message limits, deadlines, and request streaming from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go install github.com/ktr0731/evans@latest`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC v2 (Advanced Client Workflows)
 
@@ -95,6 +113,11 @@ Agent: Raise the client and server limits:
 ### advanced-grpc-client
 Interactively explore and call gRPC services with evans, plus advanced grpcurl flags.
 
+**Parameters:**
+- `host` (string): gRPC host for evans/grpcurl, default localhost.
+- `port` (integer): gRPC port, default 50051.
+- `max_msg_size` (integer): Maximum message size in bytes (grpcurl -max-msg-sz).
+
 **Commands:**
 - `go install github.com/ktr0731/evans@latest`
 - `evans --host localhost --port 50051 -r`
@@ -106,3 +129,7 @@ Interactively explore and call gRPC services with evans, plus advanced grpcurl f
 - evans --tls --host localhost --port 50051 -r
 - echo '{"name":"John"}' | grpcurl -plaintext -d @ localhost:50051 mypackage.MyService/SayHello
 - evans --proto hello.proto --host localhost --port 50051
+
+## References
+- [evans GitHub](https://github.com/ktr0731/evans)
+- [gRPC Keepalive Guide](https://grpc.io/docs/guides/keepalive/)

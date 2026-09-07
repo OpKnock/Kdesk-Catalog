@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Plans and executes schema and data migrations across environments with Flyway/Liquibase plus cutover validation."
+description: "Plans and executes schema and data migrations across environments with Flyway/Liquibase plus cutover validation. Use when working with migration pipeline or when the user mentions migration pipeline."
 globs: ["**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# database-migration-engineer-database-migration-engineer
-
 Plans and executes schema and data migrations across environments with Flyway/Liquibase plus cutover validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `flyway -configFiles=conf/flyway.staging.conf migrate`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Database Migration Engineer
 
@@ -69,6 +87,11 @@ staging then prod, and confirms the schema history table state.
 ### migration-pipeline
 Run migrations in CI/CD with validation and rollback strategy
 
+**Parameters:**
+- `target` (string): Migration version to migrate up to
+- `configFiles` (string): Per-environment config files
+- `placeholders` (string): Placeholder values like -placeholders.schema=app
+
 **Commands:**
 - `flyway -configFiles=conf/flyway.staging.conf migrate`
 - `flyway validate -configFiles=conf/flyway.staging.conf`
@@ -80,3 +103,7 @@ Run migrations in CI/CD with validation and rollback strategy
 - flyway migrate -target=20240115 -placeholders.schema=app
 - liquibase update-sql --changelog-file=db/changelog.yml > preview.sql
 - flyway repair -configFiles=conf/flyway.prod.conf
+
+## References
+- [Flyway docs](https://documentation.red-gate.com/flyway/)
+- [Liquibase docs](https://docs.liquibase.com/)

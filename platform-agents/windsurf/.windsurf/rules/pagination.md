@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Designs and tests paginated REST endpoints with page/limit and cursor-based strategies. Emits RFC 8288 Link headers, enforces max page size, and validates cursor stability under concurrent writes."
+description: "Designs and tests paginated REST endpoints with page/limit and cursor-based strategies. Emits RFC 8288 Link headers, enforces max page size, and validates cursor stability under concurrent writes. Use when working with pagination design, api or when the user mentions pagination design, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Pagination
-
 Designs and tests paginated REST endpoints with page/limit and cursor-based strategies. Emits RFC 8288 Link headers, enforces max page size, and validates cursor stability under concurrent writes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s "https://api.your-app.test/v1/items?page=2&per_page=`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Pagination
 
@@ -69,6 +87,11 @@ Link: <https://api.your-app.test/v1/items?page=2&per_page=20>; rel="next", <http
 ### pagination-design
 Design and test paginated endpoints: query params, Link headers and cursor traversal.
 
+**Parameters:**
+- `page_size` (integer): Items per page
+- `max_limit` (integer): Maximum allowed per_page
+- `strategy` (string): offset, cursor or keyset
+
 **Commands:**
 - `curl -s "https://api.your-app.test/v1/items?page=2&per_page=20" | jq .`
 - `curl -sI "https://api.your-app.test/v1/items?page=1&per_page=20"`
@@ -80,3 +103,7 @@ Design and test paginated endpoints: query params, Link headers and cursor trave
 - curl -sI "https://api.your-app.test/v1/items?per_page=20" | grep -i '^link:' | tr ',' '\n'
 - curl -s "https://api.your-app.test/v1/items?page=2&per_page=20" | jq '.pagination'
 - curl -s "https://api.your-app.test/v1/items?cursor=eyJpZCI6MTAwfQ" | jq '.data[0].id'
+
+## References
+- [RFC 8288 Web Linking](https://www.rfc-editor.org/rfc/rfc8288)
+- [REST API Pagination Guide](https://restfulapi.net/pagination/)

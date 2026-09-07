@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Configures Kubernetes RBAC roles and bindings with can-i verification, manages AWS IAM policies with permission simulation, and validates role-based access patterns for API endpoints."
+description: "Configures Kubernetes RBAC roles and bindings with can-i verification, manages AWS IAM policies with permission simulation, and validates role-based access patterns for API endpoints. Use when working with kubernetes rbac, aws iam, design patterns, api or when the user mentions kubernetes rbac, aws iam, design patterns, api."
 globs: ["**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# Authorization
-
 Configures Kubernetes RBAC roles and bindings with can-i verification, manages AWS IAM policies with permission simulation, and validates role-based access patterns for API endpoints.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl create role reader --verb=get,list --resource=pods`, `aws iam attach-user-policy --user-name deploy-bot --policy-a`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Authorization
 
@@ -56,6 +74,11 @@ curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https:
 ### kubernetes-rbac
 Create and test RBAC roles and bindings.
 
+**Parameters:**
+- `verb` (string): get, list, watch, create, update, delete
+- `resource` (string): Resource or resource/subresource
+- `user` (string): User/group to bind or impersonate
+
 **Commands:**
 - `kubectl create role reader --verb=get,list --resource=pods`
 - `kubectl create rolebinding reader-binding --role=reader --user=jane`
@@ -70,6 +93,11 @@ Create and test RBAC roles and bindings.
 
 ### aws-iam
 Manage IAM policies, roles, and verify effective permissions.
+
+**Parameters:**
+- `principal_arn` (string): User/role ARN to simulate
+- `actions` (string): Space-separated action names
+- `resources` (string): Resource ARNs to test
 
 **Commands:**
 - `aws iam attach-user-policy --user-name deploy-bot --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess`
@@ -86,6 +114,10 @@ Manage IAM policies, roles, and verify effective permissions.
 ### design-patterns
 Design RBAC/ABAC models with verification checks.
 
+**Parameters:**
+- `role` (string): Role being tested
+- `endpoint` (string): Endpoint to probe
+
 **Commands:**
 - `curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $ADMIN" https://api.your-app.test/v1/admin`
 - `curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/admin`
@@ -96,3 +128,8 @@ Design RBAC/ABAC models with verification checks.
 - curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/other-user-resource
 - mysql -e "SHOW GRANTS FOR 'readonly'@'%'"
 - kubectl auth can-i --list --as=ci-bot
+
+## References
+- [Kubernetes RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+- [AWS IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/)
+- [OWASP AuthZ Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html)

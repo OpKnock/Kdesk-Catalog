@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.json **/*.r **/*.sh **/*.sql"
 ---
 
-# schema-design-engineer
-
 Designs and validates relational, NoSQL, and event-driven data schemas, producing migration-ready DDL, normalized models, and schema diagrams.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `psql -d appdb -c "\dt"`, `mongosh appdb --eval "db.createCollection('users', { validat`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Schema Design Engineering
 
@@ -77,6 +95,11 @@ CREATE INDEX orders_customer_idx ON orders (customer_id, created_at DESC);
 ### sql-schema-modeling
 Inspect, model, and normalize SQL schemas using psql, sqlite3, and Atlas.
 
+**Parameters:**
+- `url` (string): Database connection URL for schema inspection, e.g. postgres://user@localhost:5432/db
+- `table` (string): Table name to describe or inspect
+- `format` (string): Output format: SQL, HCL, or diagram
+
 **Commands:**
 - `psql -d appdb -c "\dt"`
 - `psql -d appdb -c "\d users"`
@@ -92,6 +115,10 @@ Inspect, model, and normalize SQL schemas using psql, sqlite3, and Atlas.
 ### document-schema-design
 Define MongoDB and JSON document models with mongosh validation and jq checks.
 
+**Parameters:**
+- `collection` (string): MongoDB collection to define or inspect
+- `index` (object): Index fields and direction, e.g. {customerId: 1}
+
 **Commands:**
 - `mongosh appdb --eval "db.createCollection('users', { validator: { $jsonSchema: { bsonType: 'object', required: ['email'] } } })"`
 - `mongosh appdb --eval "db.users.getIndexes()"`
@@ -102,3 +129,8 @@ Define MongoDB and JSON document models with mongosh validation and jq checks.
 - mongosh appdb --eval "db.users.getIndexes()"
 - jq -r '.items[] | .sku' catalog.json | sort -u
 - mongosh appdb --eval "db.orders.createIndex({ customerId: 1, createdAt: -1 })"
+
+## References
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/current/ddl.html)
+- [Atlas Schema Docs](https://atlasgo.io/docs)
+- [MongoDB Schema Validation](https://www.mongodb.com/docs/manual/core/schema-validation/)

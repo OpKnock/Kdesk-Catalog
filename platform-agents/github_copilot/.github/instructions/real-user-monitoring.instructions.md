@@ -2,11 +2,7 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Real User Monitoring
-
 Capture real-user Core Web Vitals with Grafana Faro, run Lighthouse lab audits, and correlate field versus lab performance signals.
-
-## Instructions
 
 # Real User Monitoring
 
@@ -63,6 +59,11 @@ initializeFaro({
 ### rum-instrumentation
 Instrument web apps for RUM with Faro, measure Core Web Vitals, and run lighthouse audits.
 
+**Parameters:**
+- `url` (string): Page URL to audit
+- `preset` (string): lighthouse preset: desktop or mobile
+- `output_path` (string): Where to write the report
+
 **Commands:**
 - `npm install @grafana/faro-web-sdk @grafana/faro-web-tracing`
 - `npx lighthouse https://staging.your-app.test --output=json --output-path=report.json`
@@ -74,3 +75,7 @@ Instrument web apps for RUM with Faro, measure Core Web Vitals, and run lighthou
 - npx lighthouse https://staging.your-app.test --output=json --output-path=report.json | jq '.categories.performance.score'
 - npm install web-vitals
 - npx lighthouse https://staging.your-app.test --preset=desktop
+
+## References
+- [Grafana Faro](https://grafana.com/docs/grafana-cloud/monitor-applications/frontend-observability/faro-web-sdk/)
+- [Lighthouse CLI](https://github.com/GoogleChrome/lighthouse)

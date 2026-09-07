@@ -1,13 +1,31 @@
 ---
 name: "shellcheck"
-description: "Finds bugs and portability issues in shell scripts with ShellCheck, including CI and JSON output."
+description: "Finds bugs and portability issues in shell scripts with ShellCheck, including CI and JSON output. Use when working with shellcheck, code quality or when the user mentions shellcheck, code quality."
 ---
-
-# shellcheck
 
 Finds bugs and portability issues in shell scripts with ShellCheck, including CI and JSON output.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `shellcheck script.sh`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ShellCheck
 
@@ -70,6 +88,11 @@ link, then the agent applies the suggested fix and re-runs until clean.
 ### shellcheck
 Analyze shell scripts with severity levels, excludes, and CI formats
 
+**Parameters:**
+- `severity` (string): Minimum severity: error, warning, info, style
+- `exclude` (string): Comma-separated SC codes to ignore
+- `shell` (string): Shell dialect: bash, sh, dash, ksh, zsh
+
 **Commands:**
 - `shellcheck script.sh`
 - `shellcheck -x scripts/*.sh`
@@ -81,3 +104,7 @@ Analyze shell scripts with severity levels, excludes, and CI formats
 - find . -name '*.sh' -exec shellcheck {} +
 - shellcheck --shell=bash --external-sources setup.sh
 - shellcheck --exclude=SC2317 --format=gcc ci.sh
+
+## References
+- [ShellCheck docs](https://www.shellcheck.net/)
+- [ShellCheck wiki](https://github.com/koalaman/shellcheck/wiki)

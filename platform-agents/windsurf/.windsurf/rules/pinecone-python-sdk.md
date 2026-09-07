@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "ML it agent handling Pinecone integration."
+description: "ML it agent handling Pinecone integration. Use when working with Ml Pinecone Python Sdk Agent, deployment or when the user mentions Ml Pinecone Python Sdk Agent, deployment."
 globs: ["**/*.py", "**/*.r"]
 ---
 
 # Pinecone Python Sdk
 
 ML it agent handling Pinecone integration.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Query: python -c 'from pinecone import Pinecone; pc = Pineco`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -26,3 +48,7 @@ ML Pinecone Python SDK agent for Pinecone integration.
 - Init: python -c 'from pinecone import Pinecone; pc = Pinecone(api_key="..."); print(pc.list_indexes())'
 - Upsert: python -c 'from pinecone import Pinecone; pc = Pinecone(api_key="..."); index = pc.Index("my-index"); index.upsert(vectors=[("id1", [1.0, 2.0, 3.0])])'
 - Query: python -c 'from pinecone import Pinecone; pc = Pinecone(api_key="..."); index = pc.Index("my-index"); print(index.query(vector=[1.0, 2.0, 3.0], top_k=5))'
+
+## References
+- [Pinecone Documentation](https://docs.pinecone.io/)
+- [Python Documentation](https://docs.python.org/3/)

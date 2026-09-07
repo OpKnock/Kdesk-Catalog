@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Elastic Logs
-
 Ship, index, and query application logs into Elasticsearch with Filebeat, and run Elasticsearch log queries from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `filebeat test config -c filebeat.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Elastic Logs
 
@@ -77,6 +95,11 @@ filebeat -e -c filebeat.yml -d 'publish'
 ### log-shipping
 Configure and run Filebeat, test pipelines, and query indexed logs via the Elasticsearch REST API.
 
+**Parameters:**
+- `config-file` (string): Filebeat YAML config path
+- `index-pattern` (string): Elasticsearch index pattern like filebeat-*
+- `es-url` (string): Elasticsearch endpoint for queries
+
 **Commands:**
 - `filebeat test config -c filebeat.yml`
 - `filebeat setup -e -c filebeat.yml --index-management`
@@ -88,3 +111,7 @@ Configure and run Filebeat, test pipelines, and query indexed logs via the Elast
 - filebeat test config -c filebeat.yml && filebeat -e -c filebeat.yml
 - curl -s 'localhost:9200/filebeat-*/_search' -H 'Content-Type: application/json' -d '{"query":{"bool":{"filter":[{"term":{"log.level":"ERROR"}}]}},"size":10}' | jq '.hits.hits[]._source.message'
 - curl -s 'localhost:9200/_cat/indices/filebeat-*?v'
+
+## References
+- [Filebeat Reference](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-overview.html)
+- [Elasticsearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)

@@ -1,13 +1,31 @@
 ---
 name: "depcheck"
-description: "Finds unused and missing dependencies with depcheck: unused imports, missing deps, and configuration analysis."
+description: "Finds unused and missing dependencies with depcheck: unused imports, missing deps, and configuration analysis. Use when working with depcheck scan, depcheck cleanup, code quality or when the user mentions depcheck scan, depcheck cleanup, code quality."
 ---
-
-# depcheck
 
 Finds unused and missing dependencies with depcheck: unused imports, missing deps, and configuration analysis.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx depcheck`, `npm uninstall unused-package`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # depcheck
 
@@ -60,6 +78,11 @@ npm prune
 ### depcheck-scan
 Scan projects for unused dependencies.
 
+**Parameters:**
+- `ignores` (string): Packages to ignore
+- `json` (boolean): JSON output
+- `specials` (string): Special parsers: eslint, webpack
+
 **Commands:**
 - `npx depcheck`
 - `npx depcheck --json`
@@ -75,6 +98,10 @@ Scan projects for unused dependencies.
 ### depcheck-cleanup
 Remove unused dependencies safely.
 
+**Parameters:**
+- `package` (string): Package name
+- `save` (boolean): Update package.json on removal
+
 **Commands:**
 - `npm uninstall unused-package`
 - `npm prune`
@@ -84,3 +111,7 @@ Remove unused dependencies safely.
 **Examples:**
 - npm ls --depth=0 | grep -v "deduped"
 - npm uninstall lodash --save
+
+## References
+- [depcheck on GitHub](https://github.com/depcheck/depcheck)
+- [npm Docs](https://docs.npmjs.com/cli/v10/commands/npm-uninstall)

@@ -1,14 +1,32 @@
 ---
-description: "Create and run Kubernetes-native CI/CD pipelines with Tekton using the tkn CLI. Applies Task and Pipeline definitions, starts runs with streaming logs, and inspects pipelinerun statuses and step output \u2014 replacing external CI systems with cluster-based execution."
+description: "Create and run Kubernetes-native CI/CD pipelines with Tekton using the tkn CLI. Applies Task and Pipeline definitions, starts runs with streaming logs, and inspects pipelinerun statuses and step output \u2014 replacing external CI systems with cluster-based execution. Use when working with tekton pipelines, api or when the user mentions tekton pipelines, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Tekton
-
 Create and run Kubernetes-native CI/CD pipelines with Tekton using the tkn CLI. Applies Task and Pipeline definitions, starts runs with streaming logs, and inspects pipelinerun statuses and step output — replacing external CI systems with cluster-based execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl apply -f tasks/build-image.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Tekton
 
@@ -84,6 +102,11 @@ tkn taskrun list -n ci
 ### tekton-pipelines
 Create and run Tekton pipelines with the tkn CLI
 
+**Parameters:**
+- `namespace` (string): Namespace for tasks/pipelines
+- `pipeline` (string): Pipeline name to start
+- `run_name` (string): Pipelinerun name for logs
+
 **Commands:**
 - `kubectl apply -f tasks/build-image.yaml`
 - `tkn task list -n ci`
@@ -96,3 +119,7 @@ Create and run Tekton pipelines with the tkn CLI
 - tkn pipeline start build-deploy --showlog -n ci
 - tkn pipelinerun logs -f build-deploy-run-abc -n ci
 - kubectl apply -f pipeline.yaml
+
+## References
+- [Tekton CLI docs](https://tekton.dev/docs/cli/)
+- [Tekton pipeline docs](https://tekton.dev/docs/pipelines/)

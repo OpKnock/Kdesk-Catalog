@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# supply-chain-security-supply-chain-security
-
 Secures the software supply chain with dependency auditing, SBOM generation, signing, and provenance verification across ecosystems.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm audit --json`, `syft . -o cyclonedx-json > sbom.cdx.json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Supply Chain Security
 
@@ -71,6 +89,10 @@ stages:
 ### dependency-auditing
 Audit dependencies across package ecosystems.
 
+**Parameters:**
+- `ecosystem` (string): Ecosystem: npm, pip, go, cargo, maven
+- `auditLevel` (string): Minimum severity for npm audit exit code
+
 **Commands:**
 - `npm audit --json`
 - `npm audit fix --force`
@@ -85,6 +107,10 @@ Audit dependencies across package ecosystems.
 
 ### sbom-and-signing
 Generate SBOMs and sign artifacts for provenance.
+
+**Parameters:**
+- `image` (string): Image reference to sign
+- `sbomFormat` (string): SBOM format: cyclonedx, spdx
 
 **Commands:**
 - `syft . -o cyclonedx-json > sbom.cdx.json`
@@ -101,6 +127,10 @@ Generate SBOMs and sign artifacts for provenance.
 ### vuln-scanning
 Scan repos and dependencies for known vulnerabilities.
 
+**Parameters:**
+- `recursive` (boolean): Scan recursively (osv-scanner -r)
+- `scanner` (string): Trivy scanners to enable: vuln, secret, config, license.
+
 **Commands:**
 - `trivy fs --scanners vuln,secret,config .`
 - `osv-scanner scan -r .`
@@ -111,3 +141,8 @@ Scan repos and dependencies for known vulnerabilities.
 - trivy fs --scanners vuln,secret .
 - osv-scanner scan -r .
 - safety check -r requirements.txt
+
+## References
+- [SLSA Framework](https://slsa.dev/)
+- [Sigstore Documentation](https://docs.sigstore.dev/)
+- [OSV Scanner](https://google.github.io/osv-scanner/)

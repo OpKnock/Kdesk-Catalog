@@ -1,13 +1,13 @@
 ---
 name: "load-testing-testing-2"
-description: "Load-tests HTTP services with hey, ApacheBench, and wrk for quick throughput and latency measurements."
+description: "Load-tests HTTP services with hey, ApacheBench, and wrk for quick throughput and latency measurements. Use when working with quick load tools, result analysis, testing or when the user mentions quick load tools, result analysis, testing."
+license: "MIT"
+compatibility: "Requires diff, hey, wrk."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "testing"}
+allowed-tools: "Glob Grep Read Bash(ab:*) Bash(diff:*) Bash(hey:*) Bash(wrk:*)"
 ---
 
-# load-testing-testing-2
-
 Load-tests HTTP services with hey, ApacheBench, and wrk for quick throughput and latency measurements.
-
-## Instructions
 
 # Load Testing
 
@@ -64,6 +64,11 @@ wrk -t4 -c100 -d30s https://api.example.com/v1/users | grep -E 'Requests/sec|Lat
 ### quick-load-tools
 Generate load with hey, ab, and wrk.
 
+**Parameters:**
+- `requests` (number): Total requests (-n)
+- `concurrency` (number): Concurrent clients (-c)
+- `duration` (string): Duration for wrk (-d30s)
+
 **Commands:**
 - `hey -n 10000 -c 100 http://localhost:8080/v1/users`
 - `ab -n 10000 -c 100 http://localhost:8080/v1/users`
@@ -79,6 +84,10 @@ Generate load with hey, ab, and wrk.
 ### result-analysis
 Parse and compare load-test results.
 
+**Parameters:**
+- `pattern` (string): Output line filter
+- `concurrency` (integer): Concurrent connections or workers (-c).
+
 **Commands:**
 - `hey -n 1000 -c 50 http://localhost:8080/v1/users | grep -E 'Requests|Total|Average|p99'`
 - `wrk -t4 -c100 -d30s http://localhost:8080/v1/users > baseline.txt`
@@ -89,3 +98,8 @@ Parse and compare load-test results.
 - hey -n 1000 -c 50 http://localhost:8080/v1/users | grep -E 'Average|p99'
 - wrk -t4 -c100 -d30s http://localhost:8080/v1/users > baseline.txt
 - diff <(wrk -t4 -c100 -d30s http://localhost:8080/v1/users) baseline.txt
+
+## References
+- [hey GitHub](https://github.com/rakyll/hey)
+- [ApacheBench Documentation](https://httpd.apache.org/docs/2.4/programs/ab.html)
+- [wrk GitHub](https://github.com/wg/wrk)

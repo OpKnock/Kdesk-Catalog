@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Operates webhook delivery end-to-end. Registers endpoints, forwards events locally with smee, sends test deliveries, inspects delivery status and logs, and replays failed deliveries."
+description: "Operates webhook delivery end-to-end. Registers endpoints, forwards events locally with smee, sends test deliveries, inspects delivery status and logs, and replays failed deliveries. Use when working with webhook delivery, api or when the user mentions webhook delivery, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Webhook Delivery
-
 Operates webhook delivery end-to-end. Registers endpoints, forwards events locally with smee, sends test deliveries, inspects delivery status and logs, and replays failed deliveries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `smee --url https://smee.io/your-channel --port 8080`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Webhook Delivery
 
@@ -74,6 +92,11 @@ curl -s http://localhost:8080/webhooks/deliveries | jq ".[0]"
 ### webhook-delivery
 Forward, deliver, and monitor webhook events
 
+**Parameters:**
+- `url` (string): smee.io channel URL for local forwarding
+- `port` (integer): Local port smee forwards to (default 3000)
+- `status` (string): Filter deliveries by status: pending, delivered, failed
+
 **Commands:**
 - `smee --url https://smee.io/your-channel --port 8080`
 - `curl -X POST -H "Content-Type: application/json" -d "{\"event\":\"order.created\",\"id\":42}" http://localhost:8080/webhooks/orders`
@@ -85,3 +108,8 @@ Forward, deliver, and monitor webhook events
 - smee --url https://smee.io/your-channel --port 8080
 - curl -s -X POST http://localhost:8080/webhooks/orders -H "X-Event-ID: evt_1" -d "{\"event\":\"payment.succeeded"}" | jq
 - curl -s http://localhost:8080/webhooks/endpoints | jq ".[].url"
+
+## References
+- [Webhooks.fyi](https://webhooks.fyi/)
+- [GitHub Webhooks Docs](https://docs.github.com/en/webhooks)
+- [Stripe Webhook Best Practices](https://docs.stripe.com/webhooks/best-practices)

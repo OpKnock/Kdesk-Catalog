@@ -1,13 +1,31 @@
 ---
 name: "caching-patterns-engineer"
-description: "Implements battle-tested caching patterns: cache-aside, read/write-through, stampede protection, and distributed locks."
+description: "Implements battle-tested caching patterns: cache-aside, read/write-through, stampede protection, and distributed locks. Use when working with pattern implementation, stampede protection or when the user mentions pattern implementation, stampede protection."
 ---
-
-# caching-patterns-engineer
 
 Implements battle-tested caching patterns: cache-aside, read/write-through, stampede protection, and distributed locks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install redis`, `redis-cli setnx lock:regen:popular-key "1" EX 10`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Caching Patterns Engineer
 
@@ -79,6 +97,11 @@ def get_user(uid):
 ### pattern-implementation
 Implement caching patterns in code with Redis.
 
+**Parameters:**
+- `key` (string): Cache key
+- `ttl` (integer): TTL seconds
+- `nx` (boolean): Only set if key absent
+
 **Commands:**
 - `pip install redis`
 - `npm install ioredis`
@@ -93,6 +116,10 @@ Implement caching patterns in code with Redis.
 ### stampede-protection
 Prevent thundering herd on cache expiry.
 
+**Parameters:**
+- `lock-key` (string): Stampede lock key
+- `ttl` (integer): Lock TTL in seconds
+
 **Commands:**
 - `redis-cli setnx lock:regen:popular-key "1" EX 10`
 - `redis-cli ttl popular-key`
@@ -102,3 +129,7 @@ Prevent thundering herd on cache expiry.
 **Examples:**
 - redis-cli setnx lock:regen:report "1" EX 15
 - redis-cli ttl report
+
+## References
+- [Redis Cache-Aside Pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside)
+- [Redis Commands](https://redis.io/commands/)

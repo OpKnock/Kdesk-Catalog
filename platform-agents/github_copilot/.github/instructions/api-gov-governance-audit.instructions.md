@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Api Gov Governance Audit
-
 Audits and enforces API governance on existing OpenAPI specs, blocking non-compliant changes via CI linting with Spectral rulesets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @stoplight/spectral-cli lint openapi.yaml`, `npx @stoplight/spectral-cli lint --fail-severity warn openap`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Gov (Audit & Enforce)
 
@@ -59,6 +77,11 @@ Run the linter on the PR branch against the main branch baseline and compare JSO
 ### governance-audit
 Run Spectral linting against existing OpenAPI specs to surface style guide violations and drift
 
+**Parameters:**
+- `spec` (string): Path to the OpenAPI spec to lint
+- `ruleset` (string): Path to the Spectral ruleset file
+- `format` (string): Output format: stylish, json, github-actions
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint openapi.yaml`
 - `npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml`
@@ -74,6 +97,10 @@ Run Spectral linting against existing OpenAPI specs to surface style guide viola
 ### compliance-gates
 Wire lint gates into CI/CD so non-compliant API changes fail the pipeline
 
+**Parameters:**
+- `baseRef` (string): Git ref to diff spec changes against
+- `failSeverity` (string): Minimum severity that fails CI
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint --fail-severity warn openapi.yaml`
 - `npx @stoplight/spectral-cli lint --fail-on-unmatched-globs openapi.yaml`
@@ -85,3 +112,8 @@ Wire lint gates into CI/CD so non-compliant API changes fail the pipeline
 - git diff --name-only HEAD~1 | xargs npx @stoplight/spectral-cli lint --fail-severity error
 - openapi-diff --fail-on-incompatible prod-spec.yaml pr-spec.yaml
 - npx @stoplight/spectral-cli lint --summary --quiet openapi.yaml
+
+## References
+- [Spectral Documentation](https://docs.stoplight.io/docs/spectral)
+- [OpenAPI Specification 3.1](https://spec.openapis.org/oas/v3.1.0)
+- [Redocly CLI](https://redocly.com/docs/cli/)

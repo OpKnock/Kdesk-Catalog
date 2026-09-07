@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Automates incident response: webhook triggers, runbook dispatch via GitHub Actions, and remediation playbooks executed from alerts."
+description: "Automates incident response: webhook triggers, runbook dispatch via GitHub Actions, and remediation playbooks executed from alerts. Use when working with runbook dispatch, webhooks or when the user mentions runbook dispatch, webhooks."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# incident-response-automation
-
 Automates incident response: webhook triggers, runbook dispatch via GitHub Actions, and remediation playbooks executed from alerts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh workflow run runbook.yml -f severity=sev1 -f service=chec`, `curl -X POST -H 'Content-Type: application/json' -d '{"text"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Incident Response Automation
 
@@ -71,6 +89,11 @@ Dry-run the full webhook chain in staging: simulate an alert and verify channel 
 ### runbook-dispatch
 Trigger and monitor automated runbooks in CI pipelines.
 
+**Parameters:**
+- `severity` (string): sev1-sev4 classification
+- `service` (string): Affected service name
+- `action` (string): Remediation action: rollback, scale, failover
+
 **Commands:**
 - `gh workflow run runbook.yml -f severity=sev1 -f service=checkout`
 - `gh run watch $(gh run list --workflow=runbook.yml --limit 1 --json databaseId -q '.[0].databaseId')`
@@ -86,6 +109,11 @@ Trigger and monitor automated runbooks in CI pipelines.
 ### webhooks
 Wire alerts to chat and ticketing systems via webhooks.
 
+**Parameters:**
+- `webhook-url` (string): Slack/PD/ticketing webhook endpoint
+- `payload` (string): JSON alert payload
+- `incident-id` (string): Incident identifier for correlation
+
 **Commands:**
 - `curl -X POST -H 'Content-Type: application/json' -d '{"text":"SEV-1: checkout 500s"}' $SLACK_WEBHOOK_URL`
 - `curl -X POST -H 'Content-Type: application/json' -d '{"summary":"checkout down","priority":"high"}' $PAGERDUTY_V2_URL`
@@ -97,3 +125,8 @@ Wire alerts to chat and ticketing systems via webhooks.
 - curl -X POST -H 'Content-Type: application/json' -d '{"text":"Rollback complete for P12345"}' $SLACK_WEBHOOK_URL
 - curl -X POST -d '{}' $PAGERDUTY_V2_URL
 - curl -s -X POST $RUNBOOK_HOOK -d '{"severity":"sev2"}'
+
+## References
+- [GitHub Actions](https://docs.github.com/en/actions)
+- [Slack incoming webhooks](https://api.slack.com/messaging/webhooks)
+- [PagerDuty Events API v2](https://developer.pagerduty.com/docs/events-api-v2/)

@@ -1,13 +1,31 @@
 ---
 name: "rest-versioning"
-description: "Expert reference covering Accept-header and URL versioning, cursor pagination, conditional requests, and Prefer response selection."
+description: "Expert reference covering Accept-header and URL versioning, cursor pagination, conditional requests, and Prefer response selection. Use when working with rest versioning, api or when the user mentions rest versioning, api."
 ---
-
-# Rest Versioning
 
 Expert reference covering Accept-header and URL versioning, cursor pagination, conditional requests, and Prefer response selection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -H 'Accept: application/vnd.myapi.v2+json' https://a`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # REST API Versioning (v2 conventions)
 
@@ -67,6 +85,11 @@ curl -s 'https://api.your-app.test/users?cursor=abc123&limit=100'
 ### rest-versioning
 Versioned REST design: media types, cursors, conditional requests
 
+**Parameters:**
+- `accept_header` (string): Media type selecting the API version, e.g. application/vnd.myapi.v2+json
+- `cursor` (string): Opaque pagination token from the previous page
+- `limit` (integer): Page size for list endpoints
+
 **Commands:**
 - `curl -s -H 'Accept: application/vnd.myapi.v2+json' https://api.your-app.test/users`
 - `curl -s 'https://api.your-app.test/users?cursor=abc123&limit=100' | jq '.next_cursor'`
@@ -78,3 +101,7 @@ Versioned REST design: media types, cursors, conditional requests
 - curl -s 'https://api.your-app.test/users?cursor=abc123&limit=100'
 - curl -i -H 'Accept: application/vnd.myapi.v2+json' https://api.your-app.test/users
 - curl -s -H 'If-None-Match: "etag-42"' -o /dev/null -w '%{http_code}\n' https://api.your-app.test/users/42
+
+## References
+- [Microsoft REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md)
+- [RFC 9110 Prefer header](https://www.rfc-editor.org/rfc/rfc9110#section-12.5.4)

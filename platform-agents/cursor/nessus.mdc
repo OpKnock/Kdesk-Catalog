@@ -1,14 +1,32 @@
 ---
-description: "Manages Tenable Nessus scans from the CLI: creating, launching, and reporting vulnerability scans."
+description: "Manages Tenable Nessus scans from the CLI: creating, launching, and reporting vulnerability scans. Use when working with nessus cli, code quality or when the user mentions nessus cli, code quality."
 globs: ["**/*.html", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Nessus
-
 Manages Tenable Nessus scans from the CLI: creating, launching, and reporting vulnerability scans.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nessuscli scan list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Nessus
 
@@ -72,6 +90,11 @@ by severity (Critical/High/Medium/Low) parsed from the downloaded report.
 ### nessus-cli
 Manage Nessus scans, users, and reports via nessuscli
 
+**Parameters:**
+- `scan-id` (integer): Numeric ID of the scan to start, stop, or report on
+- `targets` (string): IP addresses, CIDRs, or hostnames to scan
+- `format` (string): Report format: nessus, html, pdf, csv, or db
+
 **Commands:**
 - `nessuscli scan list`
 - `nessuscli scan new --name web-scan --targets 10.0.0.10 --policy Basic Network Scan`
@@ -83,3 +106,7 @@ Manage Nessus scans, users, and reports via nessuscli
 - nessuscli scan new --name prod-scan --targets 10.1.2.0/24 --policy 'Advanced Scan'
 - nessuscli scan list | grep -i prod
 - nessuscli report download --scan-id 7 --format html --output scan-report.html
+
+## References
+- [Tenable Nessus docs](https://docs.tenable.com/nessus/)
+- [Nessus CLI commands](https://docs.tenable.com/nessus/Content/CLICommands.htm)

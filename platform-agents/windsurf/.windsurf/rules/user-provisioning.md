@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Manages user and group lifecycle via SCIM 2.0 APIs. Creates, reads, updates, and deactivates users, manages group memberships, filters with SCIM syntax, and integrates with identity providers like Okta and Azure AD."
+description: "Manages user and group lifecycle via SCIM 2.0 APIs. Creates, reads, updates, and deactivates users, manages group memberships, filters with SCIM syntax, and integrates with identity providers like Okta and Azure AD. Use when working with scim lifecycle, api, identity or when the user mentions scim lifecycle, api, identity."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# User Provisioning
-
 Manages user and group lifecycle via SCIM 2.0 APIs. Creates, reads, updates, and deactivates users, manages group memberships, filters with SCIM syntax, and integrates with identity providers like Okta and Azure AD.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST "http://localhost:8080/scim/v2/Users" -H "Co`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # User Provisioning
 
@@ -70,6 +88,11 @@ curl -s "http://localhost:8080/scim/v2/ServiceProviderConfig" -H "Authorization:
 ### scim-lifecycle
 Manage user and group lifecycle over SCIM 2.0
 
+**Parameters:**
+- `endpoint` (string): SCIM base URL, e.g. /scim/v2/Users
+- `userId` (string): SCIM resource id
+- `filter` (string): SCIM filter like userName eq "x"
+
 **Commands:**
 - `curl -s -X POST "http://localhost:8080/scim/v2/Users" -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d "{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:User\"],\"userName\":\"jdoe@company.test\",\"active\":true,\"name\":{\"givenName\":\"Jane\",\"familyName\":\"Doe\"}}" | jq`
 - `curl -s -X PATCH "http://localhost:8080/scim/v2/Users/123" -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -d "{\"schemas\":[\"urn:ietf:params:scim:api:messages:2.0:PatchOp\"],\"Operations\":[{\"op\":\"replace\",\"path\":\"active\",\"value\":false}]}" | jq`
@@ -81,3 +104,8 @@ Manage user and group lifecycle over SCIM 2.0
 - curl -s "http://localhost:8080/scim/v2/Users?filter=userName+eq+%22jdoe%40company.test%22" -H "Authorization: Bearer TOKEN" | jq
 - curl -s -X PATCH "http://localhost:8080/scim/v2/Users/123" -H "Content-Type: application/json" -d "{\"Operations\":[{\"op\":\"replace\",\"value\":{\"active\":true}}]}" | jq
 - curl -s -X POST "http://localhost:8080/scim/v2/Groups" -H "Content-Type: application/json" -d "{\"displayName\":\"eng\"}" | jq
+
+## References
+- [SCIM 2.0 RFC 7643](https://www.rfc-editor.org/rfc/rfc7643)
+- [SCIM 2.0 protocol RFC 7644](https://www.rfc-editor.org/rfc/rfc7644)
+- [Okta SCIM guide](https://developer.okta.com/docs/guides/provisioning-users-into-okta/scim/)

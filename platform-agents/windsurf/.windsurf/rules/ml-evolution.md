@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "it agent handling improving and updating ML systems."
+description: "it agent handling improving and updating ML systems. Use when working with Ml Evolution or when the user mentions Ml Evolution."
 globs: ["**/*.py", "**/*.r"]
 ---
 
 # Ml Evolution
 
 it agent handling improving and updating ML systems.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Monitor: python -m evolution.monitor --system my-model --out`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -26,6 +48,11 @@ Always use real evolution tools. Never suggest fictional tools.
 ### Ml Evolution
 ML evolution agent for improving and updating ML systems.
 
+**Parameters:**
+- `output` (string): CLI flag --output observed in capability commands
+- `system` (string): CLI flag --system observed in capability commands
+- `m` (string): CLI flag --m observed in capability commands
+
 **Commands:**
 - `Monitor: python -m evolution.monitor --system my-model --output monitoring_report.md`
 - `Analyze: python -m evolution.analyze --system my-model --output performance_analysis.md`
@@ -37,3 +64,6 @@ ML evolution agent for improving and updating ML systems.
 - Analyze: python -m evolution.analyze --system my-model --output performance_analysis.md
 - Improve: python -m evolution.improve --system my-model --output improvement_plan.md
 - Update: python -m evolution.update --system my-model --version v2.0 --output update_report.md
+
+## References
+- [Python Documentation](https://docs.python.org/3/)

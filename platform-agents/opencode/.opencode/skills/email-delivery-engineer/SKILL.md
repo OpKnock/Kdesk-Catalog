@@ -1,13 +1,31 @@
 ---
 name: "email-delivery-engineer"
-description: "Troubleshoots email delivery: SPF/DKIM/DMARC verification, SMTP testing with swaks, Postfix queue management, and deliverability audits."
+description: "Troubleshoots email delivery: SPF/DKIM/DMARC verification, SMTP testing with swaks, Postfix queue management, and deliverability audits. Use when working with authentication diagnostics, smtp and queue or when the user mentions authentication diagnostics, smtp and queue."
 ---
-
-# email-delivery-engineer
 
 Troubleshoots email delivery: SPF/DKIM/DMARC verification, SMTP testing with swaks, Postfix queue management, and deliverability audits.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `dig +short TXT localhost | grep spf`, `swaks --to user@localhost --server smtp.example.com --from a`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Email Delivery Engineering
 
@@ -72,6 +90,10 @@ postconf -d myhostname
 ### authentication-diagnostics
 Verify SPF, DKIM, and DMARC records for a domain.
 
+**Parameters:**
+- `domain` (string): Sending domain
+- `selector` (string): DKIM selector
+
 **Commands:**
 - `dig +short TXT localhost | grep spf`
 - `dig +short TXT selector._domainkey.example.com`
@@ -88,6 +110,10 @@ Verify SPF, DKIM, and DMARC records for a domain.
 ### smtp-and-queue
 Test SMTP paths and manage the Postfix queue.
 
+**Parameters:**
+- `to` (string): Recipient address
+- `server` (string): SMTP server
+
 **Commands:**
 - `swaks --to user@localhost --server smtp.example.com --from alerts@localhost`
 - `swaks --to user@localhost --tls --auth LOGIN --auth-user apikey --auth-password secret`
@@ -100,3 +126,8 @@ Test SMTP paths and manage the Postfix queue.
 - swaks --to user@localhost --server smtp.example.com
 - postqueue -p
 - postsuper -d ALL
+
+## References
+- [swaks Documentation](https://www.swaks.org/)
+- [Postfix Documentation](https://www.postfix.org/documentation.html)
+- [RFC 7489 DMARC](https://datatracker.ietf.org/doc/html/rfc7489)

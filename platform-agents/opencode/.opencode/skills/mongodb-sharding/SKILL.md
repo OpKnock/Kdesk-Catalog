@@ -1,13 +1,31 @@
 ---
 name: "mongodb-sharding"
-description: "Deploy and manage MongoDB sharded clusters: config servers, mongos routers, shard collections and balanced data."
+description: "Deploy and manage MongoDB sharded clusters: config servers, mongos routers, shard collections and balanced data. Use when working with sharded cluster operations, api or when the user mentions sharded cluster operations, api."
 ---
-
-# Mongodb Sharding
 
 Deploy and manage MongoDB sharded clusters: config servers, mongos routers, shard collections and balanced data.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mongod --shardsvr --replSet shard1 --dbpath /data/shard1 --p`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # MongoDB Sharding
 
@@ -60,6 +78,11 @@ sh.status()
 ### sharded-cluster-operations
 Configure shardsvr mongods, start mongos, enable sharding and manage chunk distribution.
 
+**Parameters:**
+- `shardKey` (string): Field(s) used as the shard key, e.g. _id or customer_id
+- `shard` (string): Shard name or connection string for addShard
+- `namespace` (string): database.collection to enable sharding on
+
 **Commands:**
 - `mongod --shardsvr --replSet shard1 --dbpath /data/shard1 --port 27018`
 - `mongos --configdb cfgReplSet/cfg1:27019,cfg2:27019,cfg3:27019 --bind_ip 0.0.0.0 --port 27017`
@@ -71,3 +94,7 @@ Configure shardsvr mongods, start mongos, enable sharding and manage chunk distr
 - mongosh --eval "sh.shardCollection('appdb.orders', {_id: 'hashed'})"
 - mongosh --eval "sh.moveChunk('appdb.orders', {customer_id: MinKey}, 'shard1')"
 - mongosh --eval "sh.addShard('shard1/mongo1:27018,mongo2:27018')"
+
+## References
+- [MongoDB Sharding Docs](https://www.mongodb.com/docs/manual/sharding/)
+- [sh helper methods](https://www.mongodb.com/docs/manual/reference/method/js-sharding-administration/)

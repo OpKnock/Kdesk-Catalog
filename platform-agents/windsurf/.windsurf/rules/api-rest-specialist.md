@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links, and idempotency handling for robust consumers."
+description: "Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links, and idempotency handling for robust consumers. Use when working with json api style, problem errors or when the user mentions json api style, problem errors."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# api-rest-specialist
-
 Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links, and idempotency handling for robust consumers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s http://localhost:3000/api/orders | jq '.data[0], .li`, `curl -s -X POST http://localhost:3000/api/orders -H 'Content`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API REST Specialist
 
@@ -58,6 +76,11 @@ curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/j
 ### json-api-style
 Shape responses with data envelopes and links
 
+**Parameters:**
+- `idempotency-key` (string): Client-supplied retry key
+- `envelope` (string): Response envelope: data/links shape
+- `resource` (string): Resource collection
+
 **Commands:**
 - `curl -s http://localhost:3000/api/orders | jq '.data[0], .links'`
 - `curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -H 'Idempotency-Key: abc-123' -d '{"total":50}' | jq '.data.id'`
@@ -80,3 +103,7 @@ Return RFC 7807 problem details for errors
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [RFC 7807 Problem Details](https://www.rfc-editor.org/rfc/rfc7807)
+- [JSON:API Spec](https://jsonapi.org/format/)

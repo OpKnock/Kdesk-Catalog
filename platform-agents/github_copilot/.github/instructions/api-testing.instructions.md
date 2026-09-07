@@ -2,11 +2,29 @@
 applyTo: "**/*.html **/*.json **/*.r **/*.sh"
 ---
 
-# api-testing
-
 Tests REST APIs with curl, httpie, and Newman, covering auth, contracts, and response validation from the terminal.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080`, `http GET http://localhost:8080/v1/users`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Testing
 
@@ -66,6 +84,11 @@ pm.test("returns 201 and user id", () => {
 ### curl-testing
 Craft and assert on API requests with curl.
 
+**Parameters:**
+- `method` (string): HTTP method: GET, POST, PUT, DELETE
+- `headers` (object): Request headers
+- `data` (object): JSON request body
+
 **Commands:**
 - `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/users`
 - `curl -s -X POST http://localhost:8080/v1/users -H 'Content-Type: application/json' -d '{"name":"alice"}'`
@@ -80,6 +103,10 @@ Craft and assert on API requests with curl.
 
 ### httpie-testing
 Human-friendly API testing with httpie.
+
+**Parameters:**
+- `url` (string): Request URL
+- `fields` (object): Form or JSON fields
 
 **Commands:**
 - `http GET http://localhost:8080/v1/users`
@@ -96,6 +123,11 @@ Human-friendly API testing with httpie.
 ### newman-collections
 Run Postman collections with assertions in CI.
 
+**Parameters:**
+- `collection` (string): Collection JSON path
+- `environment` (string): Environment JSON path
+- `dataFile` (string): CSV/JSON data file for iteration
+
 **Commands:**
 - `newman run api.postman_collection.json`
 - `newman run collection.json -e staging.postman_environment.json`
@@ -107,3 +139,8 @@ Run Postman collections with assertions in CI.
 - newman run collection.json -e staging.env.json
 - newman run collection.json -r html,cli --reporter-html-export report.html
 - newman run collection.json --env-var baseUrl=http://localhost:8080
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [httpie Documentation](https://httpie.io/docs/cli)
+- [Newman Documentation](https://learning.postman.com/docs/running-collections/using-newman-cli/)

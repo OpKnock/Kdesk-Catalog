@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Runbook
-
 Creates and maintains operational runbooks with MkDocs and mdBook, including alerts-to-runbook linking and searchable playbooks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mkdocs new runbooks`, `mkdocs build --clean`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Runbooks
 
@@ -75,6 +93,10 @@ grep -rl 'TODO' runbooks/
 ### runbook-authoring
 Scaffold, write, and preview runbook documentation sites.
 
+**Parameters:**
+- `project` (string): Docs project directory name
+- `strict` (boolean): Fail build on warnings
+
 **Commands:**
 - `mkdocs new runbooks`
 - `mkdocs serve`
@@ -90,6 +112,10 @@ Scaffold, write, and preview runbook documentation sites.
 ### runbook-maintenance
 Maintain search index, structure, and quality.
 
+**Parameters:**
+- `dir` (string): Docs directory to lint or search
+- `port` (integer): Port for the local mkdocs preview server.
+
 **Commands:**
 - `mkdocs build --clean`
 - `grep -rl '`
@@ -101,3 +127,8 @@ Maintain search index, structure, and quality.
 - npx markdownlint-cli runbooks/**/*.md
 - mkdocs build --clean
 - grep -rl '
+
+## References
+- [MkDocs Documentation](https://www.mkdocs.org/)
+- [Google SRE Runbook Guidance](https://sre.google/workbook/incident-response/)
+- [mdBook Documentation](https://rust-lang.github.io/mdBook/)

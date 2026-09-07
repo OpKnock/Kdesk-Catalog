@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds REST APIs with Django REST Framework: models, serializers, viewsets, routers, permissions, and browsable API testing."
+description: "Builds REST APIs with Django REST Framework: models, serializers, viewsets, routers, permissions, and browsable API testing. Use when working with drf setup, viewsets or when the user mentions drf setup, viewsets."
 globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 ---
 
-# Api Rest Drf
-
 Builds REST APIs with Django REST Framework: models, serializers, viewsets, routers, permissions, and browsable API testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install django djangorestframework`, `curl -s http://localhost:8000/api/users/ | jq 'length'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API REST v4 - Django REST Framework
 
@@ -61,6 +79,11 @@ class UserViewSet(viewsets.ModelViewSet):
 ### drf-setup
 Scaffold a Django project with DRF
 
+**Parameters:**
+- `app` (string): Django app name
+- `model` (string): Model to expose via the API
+- `serializer` (string): DRF serializer class
+
 **Commands:**
 - `pip install django djangorestframework`
 - `django-admin startproject config .`
@@ -85,3 +108,7 @@ Expose CRUD via viewsets and routers
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [DRF Quickstart](https://www.django-rest-framework.org/tutorial/quickstart/)
+- [DRF Viewsets](https://www.django-rest-framework.org/api-guide/viewsets/)

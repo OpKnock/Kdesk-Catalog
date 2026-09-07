@@ -1,13 +1,31 @@
 ---
 name: "minifier"
-description: "Minify and mangle JS bundles with terser and esbuild. Minify CSS/HTML and apply gzip/brotli handling transfer size. and gzip/brotli compression.'"
+description: "Minify and mangle JS bundles with terser and esbuild. Minify CSS/HTML and apply gzip/brotli handling transfer size. and gzip/brotli compression.'. Use when working with javascript minification, css html and compression, devtools or when the user mentions javascript minification, css html and compression, devtools."
 ---
-
-# minifier
 
 Minify and mangle JS bundles with terser and esbuild. Minify CSS/HTML and apply gzip/brotli handling transfer size. and gzip/brotli compression.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `terser input.js -o output.min.js`, `npx cssnano styles.css styles.min.css`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Asset Minification
 
@@ -63,6 +81,11 @@ ls -lh input.js output.min.js output.min.js.gz
 ### javascript-minification
 Minify and mangle JS bundles with terser and esbuild.
 
+**Parameters:**
+- `input` (string): Input file
+- `output` (string): Output file
+- `mangle` (boolean): Rename variables to short names
+
 **Commands:**
 - `terser input.js -o output.min.js`
 - `npx terser input.js --compress --mangle --source-map`
@@ -78,6 +101,10 @@ Minify and mangle JS bundles with terser and esbuild.
 ### css-html-and-compression
 Minify CSS/HTML and apply gzip/brotli for transfer size.
 
+**Parameters:**
+- `level` (integer): Compression level (gzip 1-9, brotli 0-11)
+- `quality` (integer): SVG/asset quality
+
 **Commands:**
 - `npx cssnano styles.css styles.min.css`
 - `npx html-minifier-terser --collapse-whitespace --remove-comments index.html -o index.min.html`
@@ -89,3 +116,9 @@ Minify CSS/HTML and apply gzip/brotli for transfer size.
 - npx cssnano styles.css styles.min.css
 - npx html-minifier-terser --collapse-whitespace index.html -o index.min.html
 - brotli -q 11 -o bundle.js.br bundle.js
+
+## References
+- [Terser](https://terser.org/)
+- [esbuild Minify](https://esbuild.github.io/api/#minify)
+- [cssnano](https://cssnano.co/)
+- [html-minifier-terser](https://github.com/terser/html-minifier-terser)

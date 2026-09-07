@@ -1,13 +1,34 @@
 ---
 name: "elasticsearch-cluster"
-description: "Elasticsearch cluster health and operations: check node status, shard allocation, pending tasks, and cluster settings from the REST API."
+description: "Elasticsearch cluster health and operations: check node status, shard allocation, pending tasks, and cluster settings from the REST API. Use when working with cluster health, api or when the user mentions cluster health, api."
+license: "MIT"
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---
-
-# Elasticsearch Cluster
 
 Elasticsearch cluster health and operations: check node status, shard allocation, pending tasks, and cluster settings from the REST API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s 'localhost:9200/_cluster/health?pretty' | jq`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Elasticsearch Cluster
 
@@ -68,6 +89,11 @@ curl -s -X POST 'localhost:9200/_cluster/reroute?retry_failed=true' | jq
 ### cluster-health
 Inspect cluster health, nodes, allocations, and settings; diagnose red/yellow cluster states.
 
+**Parameters:**
+- `es-url` (string): Elasticsearch endpoint (default localhost:9200)
+- `timeout` (string): Wait-for-status timeout like 50s for health checks
+- `level` (string): Health detail level: cluster, indices, shards
+
 **Commands:**
 - `curl -s 'localhost:9200/_cluster/health?pretty' | jq`
 - `curl -s 'localhost:9200/_cat/nodes?v'`
@@ -79,3 +105,7 @@ Inspect cluster health, nodes, allocations, and settings; diagnose red/yellow cl
 - curl -s 'localhost:9200/_cluster/health?pretty' | jq '{status, unassigned_shards, number_of_nodes}'
 - curl -s 'localhost:9200/_cat/nodes?v&h=name,heap.percent,disk.used_percent,master'
 - curl -s 'localhost:9200/_cluster/reroute?explain' | jq
+
+## References
+- [Cluster Health API](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html)
+- [Cluster Settings API](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html)

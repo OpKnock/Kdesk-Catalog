@@ -1,13 +1,31 @@
 ---
 name: "starlette"
-description: "Build lightweight ASGI APIs with Starlette and uvicorn. Composes async route handlers, runs a dev server with hot reload, and validates endpoints using the in-process TestClient \u2014 no live server required."
+description: "Build lightweight ASGI APIs with Starlette and uvicorn. Composes async route handlers, runs a dev server with hot reload, and validates endpoints using the in-process TestClient \u2014 no live server required. Use when working with starlette apps, api or when the user mentions starlette apps, api."
 ---
-
-# Starlette
 
 Build lightweight ASGI APIs with Starlette and uvicorn. Composes async route handlers, runs a dev server with hot reload, and validates endpoints using the in-process TestClient — no live server required.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install starlette uvicorn`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Starlette
 
@@ -81,6 +99,11 @@ curl -s localhost:8000/health
 ### starlette-apps
 Build and test ASGI APIs with Starlette and uvicorn
 
+**Parameters:**
+- `host` (string): Bind host for uvicorn
+- `port` (integer): Bind port for uvicorn
+- `reload` (boolean): Auto-reload on source changes
+
 **Commands:**
 - `pip install starlette uvicorn`
 - `uvicorn app:app --reload --port 8000`
@@ -92,3 +115,7 @@ Build and test ASGI APIs with Starlette and uvicorn
 - uvicorn app:app --reload --port 8000
 - curl -s localhost:8000/health
 - python -c 'from starlette.testclient import TestClient; from app import app; c=TestClient(app); print(c.get("/health").json())'
+
+## References
+- [Starlette docs](https://www.starlette.io/)
+- [uvicorn docs](https://www.uvicorn.org/)

@@ -1,13 +1,31 @@
 ---
 name: "api-versioning-strategist-api-versioning-strategist"
-description: "Selects API versioning strategies: comparing URL, header, media-type, and query approaches against consumer constraints, and documenting decisions."
+description: "Selects API versioning strategies: comparing URL, header, media-type, and query approaches against consumer constraints, and documenting decisions. Use when working with strategy comparison, decision docs or when the user mentions strategy comparison, decision docs."
 ---
-
-# api-versioning-strategist-api-versioning-strategist
 
 Selects API versioning strategies: comparing URL, header, media-type, and query approaches against consumer constraints, and documenting decisions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -H 'Accept: application/vnd.github.v3+json' https://`, `curl -s http://localhost:8080/docs/versioning | jq '.strateg`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Versioning Strategist
 
@@ -52,6 +70,11 @@ npx @redocly/cli lint openapi.yaml
 ### strategy-comparison
 Evaluate versioning strategies against requirements
 
+**Parameters:**
+- `strategy` (string): url, header, media-type, query, or hybrid
+- `consumer` (string): Consumer type: browser, SDK, third-party
+- `spec` (string): OpenAPI doc path
+
 **Commands:**
 - `curl -s -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/octocat/Hello-World | jq '.full_name'`
 - `curl -s https://api.github.com/repos/octocat/Hello-World | jq '.full_name'`
@@ -74,3 +97,7 @@ Document versioning decisions
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [GitHub REST Versioning](https://docs.github.com/en/rest/about-the-rest-api/api-versions)
+- [Google API Design Guide](https://google.aip.dev/general/0135)

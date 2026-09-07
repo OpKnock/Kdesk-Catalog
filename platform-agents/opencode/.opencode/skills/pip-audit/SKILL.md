@@ -1,13 +1,31 @@
 ---
 name: "pip-audit"
-description: "Audits Python environments and requirements files for known vulnerabilities with pip-audit."
+description: "Audits Python environments and requirements files for known vulnerabilities with pip-audit. Use when working with pip audit, code quality or when the user mentions pip audit, code quality."
 ---
-
-# Pip Audit
 
 Audits Python environments and requirements files for known vulnerabilities with pip-audit.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip-audit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # pip Audit
 
@@ -71,6 +89,11 @@ version; then proposes the upgrade command.
 ### pip-audit
 Scan installed or declared Python dependencies against the OSV database
 
+**Parameters:**
+- `format` (string): Output format: columns, json, cyclonedx-json, cyclonedx-xml, markdown
+- `fix` (boolean): Attempt to fix vulnerabilities by upgrading packages
+- `vuln-service` (string): Vulnerability service: osv or pypi
+
 **Commands:**
 - `pip-audit`
 - `pip-audit -r requirements.txt`
@@ -82,3 +105,7 @@ Scan installed or declared Python dependencies against the OSV database
 - pip-audit -r requirements.txt --format markdown
 - pip-audit -l | grep -i critical
 - pip-audit --fix --dry-run -r requirements.txt
+
+## References
+- [pip-audit GitHub](https://github.com/pypa/pip-audit)
+- [pip-audit PyPI](https://pypi.org/project/pip-audit/)

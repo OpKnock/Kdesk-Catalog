@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Memory Stress Testing
-
 Stress test memory on Linux hosts: stress-ng and memtester workloads, OOM behavior checks, and system memory monitoring.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `stress-ng --vm 4 --vm-bytes 2G --timeout 60s`, `memtester 512M 5`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Memory Stress Testing
 
@@ -71,6 +89,11 @@ dmesg --level=err | grep -i 'out of memory' || echo 'no OOM'
 ### stress-ng
 Run memory stress workloads with stress-ng.
 
+**Parameters:**
+- `vm` (integer): Number of memory stressors.
+- `vm_bytes` (string): Bytes per stressor: 2G or 75%.
+- `timeout` (string): Run duration, e.g. 60s.
+
 **Commands:**
 - `stress-ng --vm 4 --vm-bytes 2G --timeout 60s`
 - `stress-ng --vm 2 --vm-bytes 75% --vm-method all --timeout 30s`
@@ -85,6 +108,10 @@ Run memory stress workloads with stress-ng.
 ### memtester-monitor
 Run memtester and monitor memory pressure.
 
+**Parameters:**
+- `size` (string): Memory size to test, e.g. 512M.
+- `iterations` (integer): memtester iterations.
+
 **Commands:**
 - `memtester 512M 5`
 - `free -h`
@@ -96,3 +123,7 @@ Run memtester and monitor memory pressure.
 - memtester 512M 5
 - free -h
 - vmstat 1 10
+
+## References
+- [stress-ng](https://github.com/ColinIanKing/stress-ng)
+- [memtester](https://pyropus.ca/software/memtester/)

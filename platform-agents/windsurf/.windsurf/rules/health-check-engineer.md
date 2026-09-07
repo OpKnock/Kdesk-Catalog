@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Designs liveness/readiness probes and external health checks: curl probes, TCP listeners, and uptime verification for services."
+description: "Designs liveness/readiness probes and external health checks: curl probes, TCP listeners, and uptime verification for services. Use when working with http probes, tcp ports or when the user mentions http probes, tcp ports."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# health-check-engineer
-
 Designs liveness/readiness probes and external health checks: curl probes, TCP listeners, and uptime verification for services.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -fsS http://localhost:8080/healthz`, `nc -zv localhost 5432`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Health Checks
 
@@ -74,6 +92,11 @@ Simulate dependency failure and verify readyz flips before livez does.
 ### http-probes
 Probe HTTP endpoints and validate status, latency, and response bodies.
 
+**Parameters:**
+- `max-time` (number): Request timeout in seconds
+- `output` (string): Write body to file, e.g. /dev/null
+- `retry` (number): Retry count for transient probes
+
 **Commands:**
 - `curl -fsS http://localhost:8080/healthz`
 - `curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' http://localhost:8080/readyz`
@@ -89,6 +112,11 @@ Probe HTTP endpoints and validate status, latency, and response bodies.
 ### tcp-ports
 Check TCP and TLS connectivity to services.
 
+**Parameters:**
+- `host` (string): Target host or IP
+- `port` (number): Target TCP port
+- `timeout` (number): Connect timeout in seconds
+
 **Commands:**
 - `nc -zv localhost 5432`
 - `nc -z -w 3 localhost 3306 && echo 'port open'`
@@ -100,3 +128,8 @@ Check TCP and TLS connectivity to services.
 - nc -zvw 3 db.internal 5432
 - openssl s_client -connect api.internal:443 -brief </dev/null
 - nc -z localhost 27017 && echo 'mongo reachable'
+
+## References
+- [curl Manual](https://curl.se/docs/manpage.html)
+- [Kubernetes probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+- [netcat man page](https://man7.org/linux/man-pages/man1/nc.1.html)

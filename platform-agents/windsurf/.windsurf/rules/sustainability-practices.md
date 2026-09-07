@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Measures and reduces software carbon footprint with Cloud Carbon Footprint, InfraCost, and workload efficiency analysis."
+description: "Measures and reduces software carbon footprint with Cloud Carbon Footprint, InfraCost, and workload efficiency analysis. Use when working with carbon measurement, cost efficiency, workload efficiency or when the user mentions carbon measurement, cost efficiency, workload efficiency."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# sustainability-practices
-
 Measures and reduces software carbon footprint with Cloud Carbon Footprint, InfraCost, and workload efficiency analysis.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ccf estimate --configfile ccf.config.json --period 2024-01-0`, `infracost breakdown --path .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Sustainability Practices
 
@@ -66,6 +84,10 @@ kubectl get nodes -o custom-columns=NAME:.metadata.name,CPU:.status.allocatable.
 ### carbon-measurement
 Estimate cloud carbon emissions and energy usage.
 
+**Parameters:**
+- `configfile` (string): Cloud Carbon Footprint config file
+- `period` (string): Date range for estimation
+
 **Commands:**
 - `ccf estimate --configfile ccf.config.json --period 2024-01-01 2024-01-31`
 - `ccf report --configfile ccf.config.json`
@@ -79,6 +101,10 @@ Estimate cloud carbon emissions and energy usage.
 
 ### cost-efficiency
 Align efficiency with cost using InfraCost and cloud queries.
+
+**Parameters:**
+- `path` (string): Terraform path to analyze
+- `format` (string): Output format: html, json, table
 
 **Commands:**
 - `infracost breakdown --path .`
@@ -94,6 +120,10 @@ Align efficiency with cost using InfraCost and cloud queries.
 ### workload-efficiency
 Analyze cluster utilization and right-sizing opportunities.
 
+**Parameters:**
+- `namespace` (string): Namespace scope for resource metrics
+- `format` (string): Output format for kubectl top metrics: wide, json.
+
 **Commands:**
 - `kubectl top nodes`
 - `kubectl top pods -A`
@@ -104,3 +134,8 @@ Analyze cluster utilization and right-sizing opportunities.
 - kubectl top nodes
 - kubectl top pods -A
 - kubectl get hpa -A
+
+## References
+- [Cloud Carbon Footprint](https://github.com/cloud-carbon-footprint/cloud-carbon-footprint)
+- [InfraCost Documentation](https://www.infracost.io/docs/)
+- [Green Software Foundation](https://greensoftware.foundation/)

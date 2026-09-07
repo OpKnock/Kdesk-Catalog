@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Runs linters only on staged files via lint-staged git hooks, keeping pre-commit checks fast in any JS project."
+description: "Runs linters only on staged files via lint-staged git hooks, keeping pre-commit checks fast in any JS project. Use when working with lint staged hooks, code quality or when the user mentions lint staged hooks, code quality."
 globs: ["**/*.css", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# lint-staged
-
 Runs linters only on staged files via lint-staged git hooks, keeping pre-commit checks fast in any JS project.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx lint-staged --allow-empty`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Lint-Staged
 
@@ -77,6 +95,11 @@ npx husky check
 ### lint-staged-hooks
 Configure and run lint-staged to execute linters and formatters on git-staged files
 
+**Parameters:**
+- `concurrent` (boolean): Run linter tasks in parallel (default true) or sequentially with false
+- `diff` (string): Override the file list scope, e.g. 'main...HEAD'
+- `allow-empty` (boolean): Allow empty commits when the staging area has no matching files
+
 **Commands:**
 - `npx lint-staged --allow-empty`
 - `npx lint-staged --concurrent false`
@@ -88,3 +111,7 @@ Configure and run lint-staged to execute linters and formatters on git-staged fi
 - npx lint-staged
 - npx lint-staged --concurrent false --debug
 - git commit -m 'chore: format'  # triggers lint-staged via pre-commit hook
+
+## References
+- [lint-staged GitHub docs](https://github.com/okonet/lint-staged)
+- [lint-staged configuration guide](https://github.com/okonet/lint-staged#configuration)

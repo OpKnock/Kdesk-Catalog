@@ -2,11 +2,29 @@
 applyTo: "**/*.java **/*.r **/*.sh"
 ---
 
-# jenkins
-
 Administers Jenkins: pipeline-as-code with Jenkinsfile, job management via CLI, plugin installs, and credential handling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `jenkins-jobs update --job 'ci-deploy' jenkins_jobs.ini`, `java -jar jenkins-cli.jar -s http://localhost:8080/ install-`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Jenkins Administration
 
@@ -72,6 +90,11 @@ pipeline {
 ### pipeline-as-code
 Write and run declarative Jenkinsfile pipelines.
 
+**Parameters:**
+- `url` (string): Jenkins base URL
+- `job` (string): Job name
+- `build-number` (integer): Build number for console
+
 **Commands:**
 - `jenkins-jobs update --job 'ci-deploy' jenkins_jobs.ini`
 - `java -jar jenkins-cli.jar -s http://localhost:8080/ build ci-deploy`
@@ -87,6 +110,10 @@ Write and run declarative Jenkinsfile pipelines.
 ### system-administration
 Manage plugins, credentials, and reload configuration.
 
+**Parameters:**
+- `plugin` (string): Plugin name to install
+- `credential-id` (string): Credential ID
+
 **Commands:**
 - `java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin kubernetes git -restart`
 - `java -jar jenkins-cli.jar -s http://localhost:8080/ reload-configuration`
@@ -98,3 +125,8 @@ Manage plugins, credentials, and reload configuration.
 - java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin kubernetes -restart
 - java -jar jenkins-cli.jar -s http://localhost:8080/ reload-configuration
 - java -jar jenkins.war --httpPort=8080
+
+## References
+- [Jenkins User Handbook](https://www.jenkins.io/doc/)
+- [Pipeline Syntax Reference](https://www.jenkins.io/doc/book/pipeline/syntax/)
+- [Jenkins CLI](https://www.jenkins.io/doc/book/managing/cli/)

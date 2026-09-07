@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Event Driven
-
 Architects event-driven systems with Kafka/Redpanda: topics, producers, consumers, consumer groups, and dead-letter handling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kafka-topics --bootstrap-server localhost:9092 --create --to`, `kafka-console-producer --bootstrap-server localhost:9092 --t`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Event-Driven Architecture
 
@@ -64,6 +82,10 @@ kafka-consumer-groups --group order-svc --reset-offsets --to-earliest --execute
 ### kafka-topics
 Create, list, and describe Kafka topics.
 
+**Parameters:**
+- `topic` (string): Topic name
+- `partitions` (integer): Partition count
+
 **Commands:**
 - `kafka-topics --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 1`
 - `kafka-topics --bootstrap-server localhost:9092 --list`
@@ -79,6 +101,10 @@ Create, list, and describe Kafka topics.
 ### kafka-streams
 Produce and consume messages, inspect consumer groups.
 
+**Parameters:**
+- `group` (string): Consumer group id
+- `from-beginning` (boolean): Read all messages from the start
+
 **Commands:**
 - `kafka-console-producer --bootstrap-server localhost:9092 --topic orders`
 - `kafka-console-consumer --bootstrap-server localhost:9092 --topic orders --from-beginning`
@@ -90,3 +116,7 @@ Produce and consume messages, inspect consumer groups.
 - kafka-console-consumer --topic orders --group debug-consumer --from-beginning
 - kafka-consumer-groups --group order-svc --reset-offsets --to-earliest --execute
 - kafka-console-producer --topic orders --property parse.key=true --property key.separator=:
+
+## References
+- [Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Redpanda Docs](https://docs.redpanda.com)

@@ -1,13 +1,31 @@
 ---
 name: "api-graphql-implementation"
-description: "Implements GraphQL APIs: Apollo Server setup, resolver wiring, schema authoring, and playground-based testing."
+description: "Implements GraphQL APIs: Apollo Server setup, resolver wiring, schema authoring, and playground-based testing. Use when working with server implementation, playground testing or when the user mentions server implementation, playground testing."
 ---
-
-# Api Graphql Implementation
 
 Implements GraphQL APIs: Apollo Server setup, resolver wiring, schema authoring, and playground-based testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm init -y && npm install @apollo/server graphql`, `curl -s -X POST http://localhost:4000/graphql -H 'Content-Ty`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API GraphQL (Implementation)
 
@@ -55,6 +73,10 @@ Exercise queries, mutations, and error paths over HTTP.
 ### server-implementation
 Stand up Apollo Server with resolvers and schema
 
+**Parameters:**
+- `typeDefs` (string): SDL type definitions
+- `resolvers` (string): Resolver map
+
 **Commands:**
 - `npm init -y && npm install @apollo/server graphql`
 - `node -e "const {ApolloServer}=require('@apollo/server');console.log(typeof ApolloServer)"`
@@ -70,6 +92,10 @@ Stand up Apollo Server with resolvers and schema
 ### playground-testing
 Test queries and mutations via HTTP introspection
 
+**Parameters:**
+- `endpoint` (string): GraphQL endpoint URL
+- `query` (string): GraphQL query string
+
 **Commands:**
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __schema { queryType { name } } }"}'`
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ products { id name } }"}'`
@@ -81,3 +107,8 @@ Test queries and mutations via HTTP introspection
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ products { id name } }"}'
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __schema { queryType { name } } }"}'
 - node -e "fetch('http://localhost:4000/graphql',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'{ __typename }'})}).then(r=>r.json()).then(console.log)"
+
+## References
+- [Apollo Server](https://www.apollographql.com/docs/apollo-server/)
+- [GraphQL Tools](https://the-guild.dev/graphql/tools)
+- [GraphQL Learn](https://graphql.org/learn/)

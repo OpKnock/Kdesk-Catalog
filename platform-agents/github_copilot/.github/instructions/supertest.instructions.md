@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Supertest
-
 Write and run HTTP API tests with it and jest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm init -y && npm i -D supertest jest`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Supertest
 
@@ -81,6 +99,11 @@ npx jest --verbose --watch
 ### supertest-http-tests
 Write and run HTTP API tests with supertest and jest
 
+**Parameters:**
+- `app` (string): Express app export to attach supertest to
+- `test_file` (string): Test file path for jest
+- `path` (string): Endpoint under test
+
 **Commands:**
 - `npm init -y && npm i -D supertest jest`
 - `npx jest --verbose`
@@ -92,3 +115,7 @@ Write and run HTTP API tests with supertest and jest
 - npx jest tests/api.test.js -t 'should return 200'
 - npx jest --verbose
 - node -e 'const request = require("supertest"); request(require("./app")).get("/health").expect(200).end(() => console.log("ok"))'
+
+## References
+- [Supertest repo](https://github.com/ladjs/supertest)
+- [Jest docs](https://jestjs.io/docs/getting-started)

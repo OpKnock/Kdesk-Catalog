@@ -1,14 +1,32 @@
 ---
-description: "PGP encryption and signing: generate keypairs, encrypt/decrypt files, sign and verify commits, and manage keyrings."
+description: "PGP encryption and signing: generate keypairs, encrypt/decrypt files, sign and verify commits, and manage keyrings. Use when working with gpg ops, api or when the user mentions gpg ops, api."
 globs: ["**/*.r", "**/*.rs", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Gpg
-
 PGP encryption and signing: generate keypairs, encrypt/decrypt files, sign and verify commits, and manage keyrings.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gpg --full-generate-key`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GPG
 
@@ -80,6 +98,11 @@ echo topsecret | gpg --encrypt --recipient alice@example.com | gpg --decrypt
 ### gpg-ops
 Generate keys, encrypt/decrypt, sign/verify, and manage keyring exports.
 
+**Parameters:**
+- `recipient` (string): Key id or email of the recipient
+- `input-file` (string): File to encrypt/sign/decrypt
+- `key-id` (string): Local key id or fingerprint
+
 **Commands:**
 - `gpg --full-generate-key`
 - `gpg --encrypt --recipient alice@localhost secrets.txt`
@@ -93,3 +116,7 @@ Generate keys, encrypt/decrypt, sign/verify, and manage keyring exports.
 - gpg --encrypt --recipient alice@localhost secrets.txt && gpg --decrypt secrets.txt.gpg
 - gpg --armor --export alice@localhost > alice.pub && gpg --import alice.pub
 - gpg --list-keys --fingerprint
+
+## References
+- [GnuPG documentation](https://www.gnupg.org/documentation/manuals/gnupg/)
+- [GPG CLI cheat sheet](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)

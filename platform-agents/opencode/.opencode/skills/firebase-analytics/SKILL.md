@@ -1,13 +1,31 @@
 ---
 name: "firebase-analytics"
-description: "Firebase Analytics operations: export events, query event data from BigQuery, manage measurement settings, and debug event flows with the Firebase CLI."
+description: "Firebase Analytics operations: export events, query event data from BigQuery, manage measurement settings, and debug event flows with the Firebase CLI. Use when working with analytics ops, api or when the user mentions analytics ops, api."
 ---
-
-# Firebase Analytics
 
 Firebase Analytics operations: export events, query event data from BigQuery, manage measurement settings, and debug event flows with the Firebase CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `firebase projects:list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Firebase Analytics
 
@@ -69,6 +87,11 @@ bq query --use_legacy_sql=false 'SELECT COUNT(*) FROM `project.analytics_123456.
 ### analytics-ops
 Manage Firebase Analytics projects, export data, and query events.
 
+**Parameters:**
+- `project-id` (string): Firebase project id
+- `dataset-id` (string): BigQuery dataset holding analytics events
+- `date` (string): YYYYMMDD date suffix for events tables
+
 **Commands:**
 - `firebase projects:list`
 - `firebase analytics:export`
@@ -80,3 +103,7 @@ Manage Firebase Analytics projects, export data, and query events.
 - bq query --use_legacy_sql=false 'SELECT event_name, COUNT(*) AS cnt FROM `project.analytics_123456.events_*` WHERE _TABLE_SUFFIX = FORMAT_DATE("%Y%m%d", CURRENT_DATE()) GROUP BY event_name ORDER BY cnt DESC LIMIT 20'
 - firebase analytics:export
 - firebase projects:list
+
+## References
+- [Firebase Analytics docs](https://firebase.google.com/docs/analytics)
+- [Analytics BigQuery export](https://firebase.google.com/docs/analytics/bigquery-export)

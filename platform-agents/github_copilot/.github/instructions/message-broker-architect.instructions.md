@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# message-broker-architect
-
 Selects and operates message brokers: Kafka topics, RabbitMQ queues, and NATS streams with the right delivery semantics for each workload.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kafka-topics.sh --bootstrap-server localhost:9092 --create -`, `rabbitmqctl list_queues name messages_ready messages_unackno`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Message Broker Architecture
 
@@ -72,6 +90,11 @@ Produce 10k messages, consume with a group, and verify zero lag and zero loss.
 ### kafka
 Administer Kafka topics and consumer groups.
 
+**Parameters:**
+- `topic` (string): Topic name
+- `partitions` (number): Partition count
+- `replication-factor` (number): Replication factor
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 1`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --list`
@@ -87,6 +110,11 @@ Administer Kafka topics and consumer groups.
 ### rabbitmq-nats
 Manage RabbitMQ queues and NATS streams.
 
+**Parameters:**
+- `queue` (string): Queue or stream name
+- `durable` (string): Survive broker restart
+- `max-age` (string): Retention window like 168h
+
 **Commands:**
 - `rabbitmqctl list_queues name messages_ready messages_unacknowledged`
 - `rabbitmqadmin declare queue name=orders durable=true`
@@ -98,3 +126,8 @@ Manage RabbitMQ queues and NATS streams.
 - rabbitmqadmin list queues name messages -f tsv
 - nats stream info ORDERS | head -25
 - nats consumer add ORDERS order-worker --pull --deliver last --max-deliver 5
+
+## References
+- [Kafka Docs](https://kafka.apache.org/documentation/)
+- [RabbitMQ Docs](https://www.rabbitmq.com/docs)
+- [NATS Docs](https://docs.nats.io/)

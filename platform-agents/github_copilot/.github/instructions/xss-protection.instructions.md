@@ -2,11 +2,29 @@
 applyTo: "**/*.html **/*.java **/*.json **/*.r **/*.rs **/*.sh **/*.{js,ts,jsx,tsx}"
 ---
 
-# XSS Protection
-
 Prevent cross-site scripting through your API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated payloads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -sI https://httpbin.org/ | grep -i 'content-security-po`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # XSS Protection
 
@@ -68,6 +86,11 @@ curl -sI http://localhost:8080/ | grep -iE 'content-security-policy|x-frame-opti
 ### xss-hardening
 Audit and harden APIs against cross-site scripting
 
+**Parameters:**
+- `policy` (string): Content-Security-Policy header value
+- `payload` (string): Test payload containing markup
+- `library` (string): Sanitizer: dompurify, owasp-html-sanitizer, bleach
+
 **Commands:**
 - `curl -sI https://httpbin.org/ | grep -i 'content-security-policy'`
 - `curl -s -X POST http://localhost:8080/api/echo -H 'Content-Type: application/json' -d '{"name":"javascript:alert(1)"}' | jq -r '.safeName'`
@@ -79,3 +102,7 @@ Audit and harden APIs against cross-site scripting
 - curl -sI http://localhost:8080/ | grep -iE 'x-frame-options|x-xss-protection'
 - node -e "const DOMPurify=require('isomorphic-dompurify');console.log(DOMPurify.sanitize('<img src=x onerror=alert(1)>'))"
 - curl -s -X POST http://localhost:8080/api/echo -d '{"name":"javascript:alert(1)"}' | jq '.safeName'
+
+## References
+- [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
+- [MDN Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)

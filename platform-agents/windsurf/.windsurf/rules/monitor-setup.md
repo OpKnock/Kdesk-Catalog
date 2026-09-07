@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Sets up Prometheus, Grafana, and Alertmanager observability stacks with real scrape configs, dashboards, and alert rules."
+description: "Sets up Prometheus, Grafana, and Alertmanager observability stacks with real scrape configs, dashboards, and alert rules. Use when working with prometheus setup, grafana setup, alert rules, alertmanager config or when the user mentions prometheus setup, grafana setup, alert rules, alertmanager config."
 globs: ["**/*.json", "**/*.r"]
 ---
 
 # Monitoring & Alerting Setup
 
 Sets up Prometheus, Grafana, and Alertmanager observability stacks with real scrape configs, dashboards, and alert rules.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `helm repo add prometheus-community https://prometheus-commun`, `grafana-cli plugins install grafana-piechart-panel`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -41,6 +63,9 @@ Common alert examples:
 ### prometheus-setup
 Install and configure Prometheus with scrape targets, retention, and rules
 
+**Parameters:**
+- `config_path` (string): Path to prometheus.yml
+
 **Commands:**
 - `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
 - `helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring`
@@ -55,6 +80,10 @@ Install and configure Prometheus with scrape targets, retention, and rules
 
 ### grafana-setup
 Provision Grafana dashboards, data sources, and API operations
+
+**Parameters:**
+- `grafana_url` (string): Grafana base URL
+- `api_token` (string): Grafana API token
 
 **Commands:**
 - `grafana-cli plugins install grafana-piechart-panel`
@@ -71,6 +100,9 @@ Provision Grafana dashboards, data sources, and API operations
 ### alert-rules
 Write and validate Prometheus alert rules with real query expressions
 
+**Parameters:**
+- `rules_path` (string): Path to alert rules YAML
+
 **Commands:**
 - `cat > alerts.yml <<EOF`
 - `promtool check rules alerts.yml`
@@ -83,6 +115,9 @@ Write and validate Prometheus alert rules with real query expressions
 
 ### alertmanager-config
 Configure Alertmanager routes, receivers (email, Slack, PagerDuty), and silences
+
+**Parameters:**
+- `config_path` (string): Path to alertmanager.yml
 
 **Commands:**
 - `amtool check-config alertmanager.yml`
@@ -99,6 +134,9 @@ Configure Alertmanager routes, receivers (email, Slack, PagerDuty), and silences
 ### health-check-endpoints
 Add and verify health check endpoints for applications
 
+**Parameters:**
+- `endpoint` (string): Health check URL
+
 **Commands:**
 - `curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health`
 - `curl -s http://localhost:8080/healthz | jq -r '.status'`
@@ -109,3 +147,15 @@ Add and verify health check endpoints for applications
 - Check health: curl -s -o /dev/null -w '%{http_code}' localhost:8080/health
 - Query metric: promtool query instant up
 - All targets up: curl -s 'localhost:9090/api/v1/query?query=up'
+
+## References
+- [Prometheus Configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/)
+- [Alerting Rules](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)
+- [Grafana Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

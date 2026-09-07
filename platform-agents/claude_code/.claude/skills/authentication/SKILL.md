@@ -1,13 +1,35 @@
 ---
 name: "authentication"
-description: "Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl."
+description: "Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl. Use when working with oauth tokens, jwt verify, bearer testing, api or when the user mentions oauth tokens, jwt verify, bearer testing, api."
+license: "MIT"
+compatibility: "Requires echo, openssl. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(echo:*) Bash(openssl:*)"
 ---
-
-# Authentication
 
 Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X POST https://auth.your-app.test/oauth2/token -d gran`, `openssl genrsa -out private.pem 2048`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Authentication
 
@@ -62,6 +84,11 @@ openssl rsa -in private.pem -pubout -out public.pem
 ### oauth-tokens
 Acquire and validate OAuth2/OIDC tokens.
 
+**Parameters:**
+- `token_url` (string): OAuth2 token endpoint
+- `grant_type` (string): client_credentials, authorization_code, refresh_token
+- `scope` (string): Requested scopes
+
 **Commands:**
 - `curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials -d client_id=api -d client_secret=secret -d scope=api:read`
 - `curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=authorization_code -d code=xyz -d redirect_uri=https://app.your-app.test/callback -d client_id=api -d client_secret=secret`
@@ -75,6 +102,10 @@ Acquire and validate OAuth2/OIDC tokens.
 
 ### jwt-verify
 Inspect and verify JWTs with openssl and jq.
+
+**Parameters:**
+- `token` (string): JWT to inspect
+- `key_file` (string): Public key file for verification
 
 **Commands:**
 - `openssl genrsa -out private.pem 2048`
@@ -91,6 +122,10 @@ Inspect and verify JWTs with openssl and jq.
 ### bearer-testing
 Test authenticated API calls with curl.
 
+**Parameters:**
+- `url` (string): Protected endpoint
+- `method` (string): HTTP method
+
 **Commands:**
 - `curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me`
 - `curl -i https://api.your-app.test/v1/me`
@@ -101,3 +136,8 @@ Test authenticated API calls with curl.
 - curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me
 - curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me | head -20
 - curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/orders
+
+## References
+- [OAuth 2.0](https://oauth.net/2/)
+- [JWT Introduction](https://jwt.io/introduction)
+- [OWASP Auth Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)

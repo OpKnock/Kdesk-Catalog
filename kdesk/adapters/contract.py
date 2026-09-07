@@ -117,8 +117,16 @@ class RuntimeAdapter:
     def install(self, definition: Dict[str, Any]) -> Dict[str, Any]:
         """Plan an install: returns rendered content + target paths. Writing is
         done by the transactional installer (Phase G)."""
-        rendered = self.render_agent(definition) if "name" in definition \
-            else self.render_skill(definition)
+        def_type = definition.get("type")
+        if def_type == "skill":
+            rendered = self.render_skill(definition)
+        elif def_type == "agent":
+            rendered = self.render_agent(definition)
+        else:
+            raise ValueError(
+                f"definition missing explicit type 'agent'|'skill': "
+                f"{definition.get('name', definition.get('skill', '?'))!r} has type={def_type!r}"
+            )
         return {
             "adapter": self.name,
             "definition": definition.get("name", definition.get("skill", "")),
@@ -257,7 +265,7 @@ class ClaudeCodeAdapter(RuntimeAdapter):
         rel = f".claude/agents/{slug}.md"
         return {rel: self._frontmatter(definition, {
             "tools": definition.get("tools") or [],
-            "model": definition.get("model") or "claude-4",
+            "model": definition.get("model") or "inherit",
         })}
 
     def render_skill(self, skill: Dict[str, Any]) -> Dict[str, str]:

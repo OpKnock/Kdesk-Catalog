@@ -1,13 +1,31 @@
 ---
 name: "redis-streams"
-description: "Expert Redis Streams reference covering XADD/XREAD/XRANGE/XREVRANGE basics, ID structure, blocking reads, and range queries suited to event logs and time series data."
+description: "Expert Redis Streams reference covering XADD/XREAD/XRANGE/XREVRANGE basics, ID structure, blocking reads, and range queries suited to event logs and time series data. Use when working with redis streams core, api or when the user mentions redis streams core, api."
 ---
-
-# Redis Streams
 
 Expert Redis Streams reference covering XADD/XREAD/XRANGE/XREVRANGE basics, ID structure, blocking reads, and range queries suited to event logs and time series data.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli XADD temperature:2026-08 * sensor office value 22.`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Redis Streams
 
@@ -72,6 +90,11 @@ redis-cli XLEN temperature:2026-08
 ### redis-streams-core
 Core Redis Streams operations: append, range read, block, length
 
+**Parameters:**
+- `stream` (string): Stream key name
+- `count` (integer): Number of entries to return
+- `block` (integer): Blocking read timeout in milliseconds
+
 **Commands:**
 - `redis-cli XADD temperature:2026-08 * sensor office value 22.5`
 - `redis-cli XRANGE temperature:2026-08 - +`
@@ -83,3 +106,7 @@ Core Redis Streams operations: append, range read, block, length
 - redis-cli XRANGE temperature:2026-08 - + COUNT 5
 - redis-cli XRANGE temperature:2026-08 1723000000000-0 1723999999999-0
 - redis-cli XREAD BLOCK 5000 COUNT 2 STREAMS temperature:2026-08 $
+
+## References
+- [Redis Streams data type](https://redis.io/docs/latest/develop/data-types/streams/)
+- [XADD command](https://redis.io/docs/latest/commands/xadd/)

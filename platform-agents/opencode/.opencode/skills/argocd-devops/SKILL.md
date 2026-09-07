@@ -1,13 +1,31 @@
 ---
 name: "argocd-devops"
-description: "GitOps with Argo CD: app registration, syncs, rollbacks, and sync policies for Kubernetes."
+description: "GitOps with Argo CD: app registration, syncs, rollbacks, and sync policies for Kubernetes. Use when working with argocd apps, devops or when the user mentions argocd apps, devops."
 ---
-
-# argocd-devops
 
 GitOps with Argo CD: app registration, syncs, rollbacks, and sync policies for Kubernetes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `argocd login argocd.example.com --sso`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Argo CD
 
@@ -89,6 +107,11 @@ application health is Healthy/Synced.
 ### argocd-apps
 Manage Argo CD applications and their sync lifecycle
 
+**Parameters:**
+- `repo` (string): Git repository URL for the app source
+- `path` (string): Path within the repo containing manifests
+- `sync-policy` (string): automated or manual sync policy
+
 **Commands:**
 - `argocd login argocd.example.com --sso`
 - `argocd app create guestbook --repo https://github.com/org/repo --path guestbook --dest-server https://kubernetes.default.svc --dest-namespace default`
@@ -100,3 +123,7 @@ Manage Argo CD applications and their sync lifecycle
 - argocd app list
 - argocd app diff guestbook
 - argocd app set guestbook --sync-policy automated --auto-prune
+
+## References
+- [Argo CD docs](https://argo-cd.readthedocs.io/)
+- [Argo CD declarative setup](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/)

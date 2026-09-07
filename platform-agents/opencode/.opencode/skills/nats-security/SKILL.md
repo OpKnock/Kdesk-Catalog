@@ -1,13 +1,31 @@
 ---
 name: "nats-security"
-description: "Secure NATS deployments: operators/accounts/users with nsc, credentials files, TLS, and authorization permissions."
+description: "Secure NATS deployments: operators/accounts/users with nsc, credentials files, TLS, and authorization permissions. Use when working with nats security identity, api or when the user mentions nats security identity, api."
 ---
-
-# Nats Security
 
 Secure NATS deployments: operators/accounts/users with nsc, credentials files, TLS, and authorization permissions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nsc add operator --generate-signing-key --sys`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # NATS Security
 
@@ -65,6 +83,11 @@ resolver: {
 ### nats-security-identity
 Create NATS operator/account/user hierarchies with nsc and connect using credentials files.
 
+**Parameters:**
+- `operator` (string): Operator name
+- `account` (string): Account name the user belongs to
+- `permissions` (array): Pub/sub allow-deny rules for the user
+
 **Commands:**
 - `nsc add operator --generate-signing-key --sys`
 - `nsc add account prod`
@@ -76,3 +99,7 @@ Create NATS operator/account/user hierarchies with nsc and connect using credent
 - nsc edit user api --allow-pub-sub 'orders.*'
 - nsc add user svc --allow-pub 'reply.*' --allow-sub 'req.*'
 - nats --creds user.creds pub orders.created '{"id":1}'
+
+## References
+- [NATS Security Docs](https://docs.nats.io/running-a-nats-service/configuration/securing_nats)
+- [NATS CLI Security Tutorial](https://docs.nats.io/running-a-nats-service/nats_admin/security)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds full-stack web applications with Django: projects, apps, ORM, admin, auth, migrations, and production deployment."
+description: "Builds full-stack web applications with Django: projects, apps, ORM, admin, auth, migrations, and production deployment. Use when working with django project, django orm, django testing, backend or when the user mentions django project, django orm, django testing, backend."
 globs: ["**/*.go", "**/*.py", "**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# Django
-
 Builds full-stack web applications with Django: projects, apps, ORM, admin, auth, migrations, and production deployment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `django-admin startproject mysite .`, `python manage.py makemigrations`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Django
 
@@ -78,6 +96,10 @@ class Question(models.Model):
 ### django-project
 Scaffold projects and apps, run the dev server.
 
+**Parameters:**
+- `name` (string): Project or app name
+- `settings` (string): Django settings module
+
 **Commands:**
 - `django-admin startproject mysite .`
 - `python manage.py startapp polls`
@@ -92,6 +114,10 @@ Scaffold projects and apps, run the dev server.
 
 ### django-orm
 Create and apply migrations, use the ORM shell.
+
+**Parameters:**
+- `app` (string): App label to make migrations for
+- `migration` (string): Migration name to show SQL for
 
 **Commands:**
 - `python manage.py makemigrations`
@@ -108,6 +134,10 @@ Create and apply migrations, use the ORM shell.
 ### django-testing
 Run the Django test suite.
 
+**Parameters:**
+- `test-spec` (string): Module, class, or method path
+- `keepdb` (boolean): Reuse the test database
+
 **Commands:**
 - `python manage.py test`
 - `python manage.py test polls.tests.TestQuestion`
@@ -117,3 +147,7 @@ Run the Django test suite.
 **Examples:**
 - python manage.py test polls --verbosity 2
 - python manage.py test --tag=slow
+
+## References
+- [Django Docs](https://docs.djangoproject.com/en/stable/)
+- [Django Deployment Checklist](https://docs.djangoproject.com/en/stable/howto/deployment/checklist/)

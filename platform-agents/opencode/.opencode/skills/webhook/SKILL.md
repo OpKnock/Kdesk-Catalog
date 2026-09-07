@@ -1,13 +1,31 @@
 ---
 name: "webhook"
-description: "Builds webhook endpoints that receive events from external systems. Registers endpoints, forwards traffic locally with smee, POSTs test payloads with headers, and inspects received events with timing and status verification."
+description: "Builds webhook endpoints that receive events from external systems. Registers endpoints, forwards traffic locally with smee, POSTs test payloads with headers, and inspects received events with timing and status verification. Use when working with webhook ops, api, events or when the user mentions webhook ops, api, events."
 ---
-
-# Webhook
 
 Builds webhook endpoints that receive events from external systems. Registers endpoints, forwards traffic locally with smee, POSTs test payloads with headers, and inspects received events with timing and status verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `smee --url https://smee.io/your-channel --port 8080`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Webhook
 
@@ -70,6 +88,11 @@ curl -s http://localhost:8080/hooks/received | jq ".[-1]"
 ### webhook-ops
 Create, receive, and debug webhook endpoints
 
+**Parameters:**
+- `event_type` (string): X-Event-Type header describing the event
+- `port` (integer): Port for smee forwarding (default 3000)
+- `url` (string): smee.io channel URL
+
 **Commands:**
 - `smee --url https://smee.io/your-channel --port 8080`
 - `curl -s -X POST http://localhost:8080/hooks -H "Content-Type: application/json" -H "X-Event-Type: order.created" -d "{\"id\":42}" -w "\n%{http_code}\n"`
@@ -81,3 +104,8 @@ Create, receive, and debug webhook endpoints
 - smee --url https://smee.io/demo-channel --port 8080
 - curl -s -X POST http://localhost:8080/hooks -H "Content-Type: application/json" -d "{\"event\":\"payment.succeeded"}" | jq ".received"
 - curl -sI http://localhost:8080/hooks -X OPTIONS | grep -i "x-webhook"
+
+## References
+- [Webhooks.fyi](https://webhooks.fyi/)
+- [GitHub Webhooks](https://docs.github.com/en/webhooks)
+- [Stripe Webhooks](https://docs.stripe.com/webhooks)

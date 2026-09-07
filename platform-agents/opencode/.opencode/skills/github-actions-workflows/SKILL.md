@@ -1,13 +1,31 @@
 ---
 name: "github-actions-workflows"
-description: "CI/CD with GitHub Actions: run workflows locally with act, manage secrets and runners via gh, and debug workflow runs."
+description: "CI/CD with GitHub Actions: run workflows locally with act, manage secrets and runners via gh, and debug workflow runs. Use when working with actions workflows, api or when the user mentions actions workflows, api."
 ---
-
-# Github Actions Workflows
 
 CI/CD with GitHub Actions: run workflows locally with act, manage secrets and runners via gh, and debug workflow runs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh workflow run ci.yml --ref main`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GitHub Actions v2
 
@@ -83,6 +101,11 @@ jobs:
 ### actions-workflows
 Run, validate, and debug GitHub Actions workflows.
 
+**Parameters:**
+- `workflow-file` (string): Workflow YAML path like .github/workflows/ci.yml
+- `ref` (string): Branch or tag to run the workflow on
+- `secret-name` (string): Repository secret to set
+
 **Commands:**
 - `gh workflow run ci.yml --ref main`
 - `gh run list --workflow=ci.yml --limit=5`
@@ -95,3 +118,7 @@ Run, validate, and debug GitHub Actions workflows.
 - gh workflow run ci.yml --ref main && gh run watch
 - act -W .github/workflows/ci.yml --pull=false
 - gh run download $(gh run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId') -n artifacts
+
+## References
+- [GitHub Actions docs](https://docs.github.com/en/actions)
+- [act](https://github.com/nektos/act)

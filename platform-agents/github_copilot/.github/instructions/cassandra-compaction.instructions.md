@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# Cassandra Compaction
-
 Monitors and controls SSTable merging in Apache Cassandra: inspects compactionstats and history, triggers manual merges, stops runaway operations, and selects or tunes strategies (STCS, LCS, TWCS) for table behavior.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nodetool compactionstats`, `nodetool compact mykeyspace users`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Cassandra Compaction
 
@@ -65,6 +83,10 @@ nodetool setcompactionthroughput 64
 ### compaction-status
 Inspect compaction activity and history.
 
+**Parameters:**
+- `keyspace` (string): Keyspace name
+- `table` (string): Table name
+
 **Commands:**
 - `nodetool compactionstats`
 - `nodetool compactionhistory`
@@ -79,6 +101,10 @@ Inspect compaction activity and history.
 
 ### manual-compaction
 Trigger or stop compaction on tables.
+
+**Parameters:**
+- `keyspace` (string): Keyspace to compact
+- `table` (string): Table to compact
 
 **Commands:**
 - `nodetool compact mykeyspace users`
@@ -95,6 +121,10 @@ Trigger or stop compaction on tables.
 ### strategy-tuning
 Set and tune compaction strategies.
 
+**Parameters:**
+- `strategy` (string): STCS, LCS, TWCS
+- `throughput` (number): Compaction throughput MB/s
+
 **Commands:**
 - `cqlsh -e "ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompactionStrategy','sstable_size_in_mb':160}"`
 - `cqlsh -e "SELECT table_name, compaction FROM system_schema.tables WHERE keyspace_name='mykeyspace'"`
@@ -106,3 +136,7 @@ Set and tune compaction strategies.
 - cqlsh -e "ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompactionStrategy','sstable_size_in_mb':160}"
 - cqlsh -e "SELECT table_name, compaction FROM system_schema.tables WHERE keyspace_name='mykeyspace'"
 - nodetool setcompactionthroughput 64
+
+## References
+- [Cassandra Compaction](https://cassandra.apache.org/doc/latest/cassandra/operating/compaction/index.html)
+- [nodetool Reference](https://cassandra.apache.org/doc/latest/cassandra/operating/nodetool/)

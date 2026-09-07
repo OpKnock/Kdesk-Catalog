@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Orchestrates API testing in CI: GitHub Actions workflows, local testing with act, test splitting, and result reporting to pull requests."
+description: "Orchestrates API testing in CI: GitHub Actions workflows, local testing with act, test splitting, and result reporting to pull requests. Use when working with ci orchestration, local execution or when the user mentions ci orchestration, local execution."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# api-testing-specialist
-
 Orchestrates API testing in CI: GitHub Actions workflows, local testing with act, test splitting, and result reporting to pull requests.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh workflow run api-tests.yml`, `act -l`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Testing Specialist
 
@@ -63,6 +81,11 @@ jobs:
 ### ci-orchestration
 Run API tests in GitHub Actions
 
+**Parameters:**
+- `workflow` (string): Workflow file name
+- `ref` (string): Branch or tag
+- `inputs` (object): Workflow dispatch inputs
+
 **Commands:**
 - `gh workflow run api-tests.yml`
 - `gh run list --workflow=api-tests.yml --limit 5`
@@ -86,3 +109,7 @@ Run CI workflows locally with act
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [GitHub Actions Docs](https://docs.github.com/en/actions)
+- [act Docs](https://github.com/nektos/act)

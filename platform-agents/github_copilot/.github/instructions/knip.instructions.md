@@ -2,11 +2,29 @@
 applyTo: "**/*.java **/*.json **/*.r **/*.sh **/*.{js,ts,jsx,tsx}"
 ---
 
-# knip
-
 Finds unused files, exports, and dependencies with knip, the JavaScript dead-code detective, including plugin configs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx knip`, `npx knip --init`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Knip
 
@@ -68,6 +86,10 @@ npx knip --fix --include dependencies
 ### knip-scan
 Scan projects for dead code.
 
+**Parameters:**
+- `include` (string): files, exports, dependencies
+- `reporter` (string): default, json, codeowners
+
 **Commands:**
 - `npx knip`
 - `npx knip --production`
@@ -83,6 +105,10 @@ Scan projects for dead code.
 ### knip-config
 Configure entry points and ignore rules.
 
+**Parameters:**
+- `fix` (boolean): Fix issues where possible
+- `workspace` (string): Workspace glob
+
 **Commands:**
 - `npx knip --init`
 - `npx knip --debug`
@@ -92,3 +118,7 @@ Configure entry points and ignore rules.
 **Examples:**
 - npx knip --fix --include dependencies
 - npx knip --workspace packages/*
+
+## References
+- [Knip Docs](https://knip.dev)
+- [Knip on GitHub](https://github.com/webpro/knip)

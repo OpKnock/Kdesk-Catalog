@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Pulsar Topics
-
 Pulsar topic lifecycle: create partitioned/non-partitioned topics, stats, TTL/retention, and deletion.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bin/pulsar-admin topics create persistent://public/default/m`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Pulsar Topics
 
@@ -57,6 +75,11 @@ bin/pulsar-admin topics delete persistent://public/default/my-topic
 ### pulsar-topic-lifecycle
 Manage topics: create, partition, apply retention/TTL, inspect stats and delete.
 
+**Parameters:**
+- `topic` (string): Persistent topic name
+- `partitions` (integer): Partition count
+- `retention` (string): Retention window like 7d or size like 10G
+
 **Commands:**
 - `bin/pulsar-admin topics create persistent://public/default/my-topic`
 - `bin/pulsar-admin topics create-partitioned-topic persistent://public/default/my-topic -p 3`
@@ -68,3 +91,7 @@ Manage topics: create, partition, apply retention/TTL, inspect stats and delete.
 - bin/pulsar-admin topics create-partitioned-topic persistent://public/default/events -p 6
 - bin/pulsar-admin topics stats persistent://public/default/events | jq '.msgRateIn,.storageSize'
 - bin/pulsar-admin topics truncate persistent://public/default/events
+
+## References
+- [Pulsar Topics Concepts](https://pulsar.apache.org/docs/3.0.x/concepts-messaging/#topics)
+- [pulsar-admin topics reference](https://pulsar.apache.org/docs/3.0.x/reference-pulsar-admin-topics/)

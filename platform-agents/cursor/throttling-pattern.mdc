@@ -1,14 +1,32 @@
 ---
-description: "Configure and verify API rate limiting at the edge with nginx limit_req zones and at the application layer with Redis fixed-window counters. Defines burst allowances, emits 429 responses with Retry-After headers, and validates limit enforcement under load with ab and k6."
+description: "Configure and verify API rate limiting at the edge with nginx limit_req zones and at the application layer with Redis fixed-window counters. Defines burst allowances, emits 429 responses with Retry-After headers, and validates limit enforcement under load with ab and k6. Use when working with rate limit config, api or when the user mentions rate limit config, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Throttling Pattern
-
 Configure and verify API rate limiting at the edge with nginx limit_req zones and at the application layer with Redis fixed-window counters. Defines burst allowances, emits 429 responses with Retry-After headers, and validates limit enforcement under load with ab and k6.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ab -n 2000 -c 100 http://localhost:8080/api`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Throttling Pattern
 
@@ -85,6 +103,11 @@ curl -i http://localhost:8080/api | grep -i retry-after
 ### rate-limit-config
 Configure and verify API rate limiting with nginx and Redis
 
+**Parameters:**
+- `rate` (string): Limit like 10r/s in nginx
+- `burst` (integer): Burst allowance before throttling
+- `window_seconds` (integer): Redis window for fixed-window limits
+
 **Commands:**
 - `ab -n 2000 -c 100 http://localhost:8080/api`
 - `curl -i http://localhost:8080/api | grep -i 'HTTP/1.1 429'`
@@ -96,3 +119,7 @@ Configure and verify API rate limiting with nginx and Redis
 - curl -s -o /dev/null -w '%{http_code}\n' -X POST http://localhost:8080/api -d '{}'
 - redis-cli SET rate:user:42 1 EX 60 NX
 - ab -n 2000 -c 100 http://localhost:8080/api
+
+## References
+- [nginx limit_req module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)
+- [Redis INCR pattern](https://redis.io/docs/latest/develop/use/patterns/rate-limiting/)

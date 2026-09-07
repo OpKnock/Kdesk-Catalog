@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.java **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Kafka Monitoring
-
 Monitor Kafka brokers and clients: JMX metrics with JmxTool, broker API versions, log dir health, and JMX-to-Prometheus exporter setup.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kafka-broker-api-versions.sh --bootstrap-server localhost:90`, `kafka-run-class.sh kafka.tools.JmxTool --object-name kafka.s`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka Monitoring
 
@@ -82,6 +100,10 @@ kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test
 ### broker-health
 Query broker health, API versions, and log directories.
 
+**Parameters:**
+- `broker` (integer): Broker id to inspect.
+- `bootstrap` (string): Bootstrap server address.
+
 **Commands:**
 - `kafka-broker-api-versions.sh --bootstrap-server localhost:9092`
 - `kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --broker-list 1`
@@ -96,6 +118,10 @@ Query broker health, API versions, and log directories.
 ### jmx-metrics
 Pull broker JMX metrics with kafka.tools.JmxTool and export to Prometheus.
 
+**Parameters:**
+- `object_name` (string): JMX MBean pattern, e.g. kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec.
+- `jmx_url` (string): JMX RMI URL of the broker.
+
 **Commands:**
 - `kafka-run-class.sh kafka.tools.JmxTool --object-name kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec --date-format 'yyyy-MM-dd HH:mm:ss' --jmx-url service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi`
 - `kafka-run-class.sh kafka.tools.JmxTool --object-name kafka.server:type=KafkaRequestHandlerPool,name=RequestHandlerAvgIdlePercent --reporting-interval 10000`
@@ -105,3 +131,7 @@ Pull broker JMX metrics with kafka.tools.JmxTool and export to Prometheus.
 - kafka-run-class.sh kafka.tools.JmxTool --object-name kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec --date-format 'yyyy-MM-dd HH:mm:ss' --jmx-url service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi
 - java -javaagent:jmx_prometheus_javaagent.jar=7071:config.yaml -jar kafka-server.jar config/server.properties
 - curl -s localhost:7071/metrics | grep BytesInPerSec
+
+## References
+- [Kafka Monitoring](https://kafka.apache.org/documentation/#monitoring)
+- [JMX Exporter](https://github.com/prometheus/jmx_exporter)

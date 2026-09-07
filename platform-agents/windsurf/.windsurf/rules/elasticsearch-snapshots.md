@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Elasticsearch snapshot and restore: register snapshot repositories, create and list snapshots, and restore indices from backups."
+description: "Elasticsearch snapshot and restore: register snapshot repositories, create and list snapshots, and restore indices from backups. Use when working with snapshot lifecycle, api or when the user mentions snapshot lifecycle, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Elasticsearch Snapshots
-
 Elasticsearch snapshot and restore: register snapshot repositories, create and list snapshots, and restore indices from backups.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X PUT 'localhost:9200/_snapshot/my_backup' -H 'Cont`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Elasticsearch Snapshots
 
@@ -71,6 +89,11 @@ curl -s 'localhost:9200/_cat/indices/restored_orders?v' | jq
 ### snapshot-lifecycle
 Manage snapshot repositories, take snapshots, list them, and restore data.
 
+**Parameters:**
+- `repository` (string): Snapshot repository name
+- `snapshot` (string): Snapshot name, e.g. snap_20240101
+- `indices` (array): Indices to snapshot or restore
+
 **Commands:**
 - `curl -s -X PUT 'localhost:9200/_snapshot/my_backup' -H 'Content-Type: application/json' -d '{"type":"s3","settings":{"bucket":"es-backups","region":"us-east-1"}}' | jq`
 - `curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date +%Y%m%d)' -H 'Content-Type: application/json' -d '{"indices":"orders,users","ignore_unavailable":true}' | jq`
@@ -82,3 +105,7 @@ Manage snapshot repositories, take snapshots, list them, and restore data.
 - curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date +%Y%m%d)' -H 'Content-Type: application/json' -d '{"indices":"orders"}' | jq
 - curl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false' | jq '.snapshots | length'
 - curl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H 'Content-Type: application/json' -d '{"indices":"orders"}' | jq
+
+## References
+- [Snapshot and Restore](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshot-restore.html)
+- [S3 Repository Plugin](https://www.elastic.co/guide/en/elasticsearch/plugins/current/repository-s3.html)

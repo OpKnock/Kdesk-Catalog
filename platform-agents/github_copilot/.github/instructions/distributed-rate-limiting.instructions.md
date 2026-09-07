@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Distributed Rate Limiting
-
 Designs and operates distributed rate limits across API gateways and services using Redis sliding-window counters, with load-test verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli --scan --pattern 'rl:*' | head -20`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Distributed Rate Limiting
 
@@ -74,6 +92,11 @@ for i in $(seq 1 250); do curl -s -o /dev/null -w '%{http_code}\n' https://httpb
 ### redis-window-limits
 Inspect Redis-based rate limit counters, exercise limited endpoints, and measure effective limiting under load.
 
+**Parameters:**
+- `limit-key` (string): Redis key prefix for rate limit counters, e.g. rl:
+- `client-identifier` (string): API key or user id identifying the rate limit bucket
+- `requests-per-second` (integer): Target RPS for load verification
+
 **Commands:**
 - `redis-cli --scan --pattern 'rl:*' | head -20`
 - `redis-cli GET rl:{client}:{route}:count`
@@ -85,3 +108,6 @@ Inspect Redis-based rate limit counters, exercise limited endpoints, and measure
 - redis-cli --scan --pattern 'rl:*' | head -20
 - curl -i https://httpbin.org/headers | grep -i 'x-ratelimit'
 - ab -n 2000 -c 50 https://httpbin.org/get | grep -E 'Requests per second|Failed requests'
+
+## References
+- [Redis rate limiting patterns](https://redis.io/glossary/rate-limiting/)

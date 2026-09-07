@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Accelerates local Kubernetes development with Skaffold continuous build/deploy loops, artifact building, profile management, and CI integration."
+description: "Accelerates local Kubernetes development with Skaffold continuous build/deploy loops, artifact building, profile management, and CI integration. Use when working with Devops Skaffold Agent or when the user mentions Devops Skaffold Agent."
 globs: ["**/*.r", "**/*.{yaml,yml}"]
 ---
 
 # DevOps Skaffold Agent
 
 Accelerates local Kubernetes development with Skaffold continuous build/deploy loops, artifact building, profile management, and CI integration.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `skaffold dev`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -30,3 +52,7 @@ Skaffold agent for local Kubernetes development.
 - skaffold deploy
 - skaffold run
 - skaffold delete
+
+## References
+- [Skaffold Documentation](https://skaffold.dev/docs/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

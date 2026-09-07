@@ -1,13 +1,31 @@
 ---
 name: "express-routing"
-description: "Build REST APIs with Express: scaffold projects, run the dev server, add middleware, and test routes with supertest."
+description: "Build REST APIs with Express: scaffold projects, run the dev server, add middleware, and test routes with supertest. Use when working with express routing, api or when the user mentions express routing, api."
 ---
-
-# Express Routing
 
 Build REST APIs with Express: scaffold projects, run the dev server, add middleware, and test routes with supertest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx express-generator --view=ejs myapp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Express v2
 
@@ -95,6 +113,11 @@ test('returns 404 for missing order', async () => {
 ### express-routing
 Scaffold, run, extend, and test Express applications.
 
+**Parameters:**
+- `port` (integer): Port for the Express server
+- `view-engine` (string): ejs, pug, or none for API-only
+- `dev-tool` (string): nodemon or node --watch for dev restarts
+
 **Commands:**
 - `npx express-generator --view=ejs myapp`
 - `npm install express morgan cors helmet`
@@ -107,3 +130,7 @@ Scaffold, run, extend, and test Express applications.
 - npx express-generator --view=ejs myapp && cd myapp && npm install && npm start
 - npm install express morgan cors helmet && npm run dev
 - curl -s localhost:3000/api/orders | jq
+
+## References
+- [Express Documentation](https://expressjs.com/)
+- [Supertest](https://github.com/ladjs/supertest)

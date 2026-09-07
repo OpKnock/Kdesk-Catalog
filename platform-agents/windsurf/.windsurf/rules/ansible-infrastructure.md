@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets."
+description: "Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets. Use when working with playbooks, ad hoc, infrastructure or when the user mentions playbooks, ad hoc, infrastructure."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# ansible-infrastructure
-
 Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ansible-playbook -i inventory/prod.ini site.yml`, `ansible all -m ping -i inventory/prod.ini`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Ansible
 
@@ -100,6 +118,11 @@ Gate merges on both.
 ### playbooks
 Write and run Ansible playbooks against inventories.
 
+**Parameters:**
+- `inventory` (string): Inventory file or directory
+- `tags` (string): Comma-separated tags to run
+- `limit` (string): Host pattern subset to target
+
 **Commands:**
 - `ansible-playbook -i inventory/prod.ini site.yml`
 - `ansible-playbook site.yml --tags deploy`
@@ -115,6 +138,11 @@ Write and run Ansible playbooks against inventories.
 ### ad-hoc
 Run one-off modules across hosts without a playbook.
 
+**Parameters:**
+- `module` (string): Module like service, apt, ping, shell
+- `args` (string): Module arguments as key=value string
+- `become` (string): Elevate privileges with -b
+
 **Commands:**
 - `ansible all -m ping -i inventory/prod.ini`
 - `ansible web -m service -a 'name=nginx state=restarted' -b`
@@ -126,3 +154,8 @@ Run one-off modules across hosts without a playbook.
 - ansible web -m service -a 'name=nginx state=started' -b --become-user=root
 - ansible all -m ping --one-line
 - ansible db -m command -a 'free -m'
+
+## References
+- [Ansible Docs](https://docs.ansible.com/ansible/latest/index.html)
+- [Ansible CLI](https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html)
+- [Ansible Galaxy](https://galaxy.ansible.com/)

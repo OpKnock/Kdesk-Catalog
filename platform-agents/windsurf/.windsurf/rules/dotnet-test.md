@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Runs .NET test suites with dotnet test, xUnit/NUnit/MSTest filters, code coverage, and CI output."
+description: "Runs .NET test suites with dotnet test, xUnit/NUnit/MSTest filters, code coverage, and CI output. Use when working with dotnet testing, coverage and reporting, test suite scaffolding or when the user mentions dotnet testing, coverage and reporting, test suite scaffolding."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# dotnet-test
-
 Runs .NET test suites with dotnet test, xUnit/NUnit/MSTest filters, code coverage, and CI output.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `dotnet test`, `dotnet test --collect:"XPlat Code Coverage"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # dotnet test
 
@@ -87,6 +105,11 @@ public class OrderTests
 ### dotnet-testing
 Build and run .NET test projects with filters.
 
+**Parameters:**
+- `filter` (string): Test filter expression
+- `noBuild` (boolean): Skip build step
+- `verbosity` (string): Output verbosity: quiet, minimal, detailed
+
 **Commands:**
 - `dotnet test`
 - `dotnet test --filter "FullyQualifiedName~OrderService"`
@@ -102,6 +125,10 @@ Build and run .NET test projects with filters.
 ### coverage-and-reporting
 Collect coverage and generate test reports.
 
+**Parameters:**
+- `collector` (string): Coverage collector, e.g. XPlat Code Coverage
+- `logger` (string): Logger format, e.g. trx
+
 **Commands:**
 - `dotnet test --collect:"XPlat Code Coverage"`
 - `dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage`
@@ -116,6 +143,10 @@ Collect coverage and generate test reports.
 ### test-suite-scaffolding
 Create new test projects for frameworks.
 
+**Parameters:**
+- `framework` (string): xunit, nunit, or mstest
+- `output` (string): Output directory
+
 **Commands:**
 - `dotnet new xunit -o tests/MyApp.Tests`
 - `dotnet new nunit -o tests/MyApp.Tests`
@@ -126,3 +157,8 @@ Create new test projects for frameworks.
 - dotnet new xunit -o tests/MyApp.Tests
 - dotnet add tests/MyApp.Tests reference src/MyApp/MyApp.csproj
 - dotnet new nunit -o tests/MyApp.Tests
+
+## References
+- [dotnet test Documentation](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test)
+- [xUnit Documentation](https://xunit.net/docs)
+- [dotnet-coverage Tool](https://learn.microsoft.com/en-us/dotnet/core/additional-tools/dotnet-coverage)

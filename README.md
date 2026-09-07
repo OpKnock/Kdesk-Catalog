@@ -149,20 +149,41 @@ kdesk doctor --mode scan --project-root ./my-project
 
 ---
 
+## 🧠 **AI Agents That Read, Reason, and Act**
+
+> **Not chatbots. Real sub-agents that attach to your main AI model.**
+
+KDesk agents are strictly modeled after **[agency-agents](https://github.com/msitarzewski/agency-agents)** and skills after **[google/skills](https://github.com/google/skills)** — official `SKILL.md` spec (Agent Skills: `name` 1-64 `^[a-z0-9-]+$`, `description` 1-1024 + `Use when...` trigger, `license`, `compatibility`, `metadata`, `allowed-tools`). Every agent is a **Read → Reason → Act** loop, not a static prompt:
+
+```bash
+# 1. Read:  Glob *.yaml + Read SKILL.md + Grep drift (never assume)
+# 2. Reason: compare checksums, evaluate TrustScore, decide delegation
+# 3. Act:   Bash(curl:*) / Bash(kdesk:*) via safe_path guard + record evidence
+```
+
+**Proper sub-agents:** `universal-agents/**/sub_agents: [...]` + `delegation_pattern: parallel|sequential|conditional` are emitted as independent `.claude/agents/<name>.md` files (Claude Code) and `SKILL.md` directories (Agent Skills standard). The orchestrator (`catalog-auditor`) preloads them via `skills: [sub-agent-slug]` and delegates in real time via `Task` tool with `subagent_type` (or `claude -p --agent <name>`). See `workflows/governance/catalog-audit.workflow.json` for `parallel`/`conditional`/`sequential` live execution.
+
+**Works with any platform (45+):** Same `SKILL.md` is read by 40+ tools — Claude Code (`.claude/skills/<slug>/SKILL.md`), Codex CLI (`.agents/skills/`), Gemini CLI (`.gemini/skills/`), Cursor, Copilot, Windsurf, OpenCode, Jules, Aider, etc. (`kdesk/converters/shared.py:91`, `kdesk/converters/native.py:16`, `kdesk/converters/standard.py:23`). Run `scripts/universal-converter.py --platforms all` to regenerate 3094 defs → 136k files.
+
+**Try the live Read-Reason-Act demo:**
+```bash
+python scripts/demo_beyond_chatbot.py          # Read 3094 YAML → Reason drift/trust → Compare generations → Act via safe_path + WorkflowEngine (parallel/conditional)
+python -m kdesk.cli workflow --run catalog-audit # parallel_read: dry-run, compare: conditional, seq_fix: sequential
+```
+
 ## 🧠 **Key Features**
 
 | Feature | Description | Status |
 |---------|-------------|--------|
-| **🔄 Universal Converter** | 3,093 defs → 45+ native formats | ✅ |
+| **🤖 Read-Reason-Act Agents** | Sub-agents with `Read → Reason → Act` + Task delegation | ✅ |
+| **🔄 Universal Converter** | 3,094 defs → 45+ native formats (agency-agents + google/skills) | ✅ |
 | **🩺 Doctor** | Diagnose, scan, fix with evidence | ✅ |
 | **🔒 Security** | Path sandbox, symlink protection, dry-run | ✅ |
 | **🏪 Marketplace** | Semver, publish, search, resolve | ✅ |
-| **🩺 Doctor** | Diagnose, repair, verify with proof | ✅ |
-| **🔒 Security** | Path sandbox, symlink protection, dry-run | ✅ |
-| **📦 Marketplace** | Semver, publish, search, install | ✅ |
 | **🧪 Testing** | 96 tests, 96% coverage, mutation testing | ✅ |
 | **📦 Wheel install** | `pip install dist/*.whl` verified | ✅ |
 | **🌍 Cross-platform** | Ubuntu, macOS, Windows CI | ✅ |
+| **🔗 Sub-Agent Attach** | `skills:` preload + `Task(subagent_type)` real-time | ✅ |
 
 ---
 
@@ -170,11 +191,12 @@ kdesk doctor --mode scan --project-root ./my-project
 
 | Metric | Value |
 |--------|-------|
-| **Definitions** | 3,093 (1,858 agents + 1,235 skills) |
+| **Definitions** | 3,094 (1,859 agents + 1,235 skills) |
 | **Categories** | 45 (ML, DevOps, Security, Design, etc.) |
 | **Platforms** | 45+ (Claude, Cursor, Copilot, Windsurf, ...) |
+| **Sub-Agents** | 3094 Read-Reason-Act sub-agents (parallel/conditional/sequential) |
 | **Test Coverage** | 92% (core), 95% (security) |
-| **Tests** | 96 tests passing |
+| **Tests** | 116 tests passing (20 CLI contract + 96 core) |
 | **CI/CD** | 6 workflows, 3 OSes |
 | **Web Dashboard** | 1,073 lines JS, 483 lines CSS |
 

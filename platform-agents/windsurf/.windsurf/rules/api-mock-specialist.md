@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Generates mock API servers directly from OpenAPI documents using Stoplight Prism, with dynamic examples, validation, and path/query behavior configuration."
+description: "Generates mock API servers directly from OpenAPI documents using Stoplight Prism, with dynamic examples, validation, and path/query behavior configuration. Use when working with prism mocking, spec validation or when the user mentions prism mocking, spec validation."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# api-mock-specialist
-
 Generates mock API servers directly from OpenAPI documents using Stoplight Prism, with dynamic examples, validation, and path/query behavior configuration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @stoplight/prism-cli mock openapi.yaml`, `npx swagger-cli validate openapi.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Mock Specialist
 
@@ -58,6 +76,11 @@ Inline annotations in the spec control mock output per operation.
 ### prism-mocking
 Serve an OpenAPI-defined mock API with Prism
 
+**Parameters:**
+- `port` (integer): Port Prism listens on, default 4010
+- `dynamic` (boolean): -d uses spec examples over generated values
+- `spec` (string): Path to the OpenAPI document (yaml or json)
+
 **Commands:**
 - `npx @stoplight/prism-cli mock openapi.yaml`
 - `npx @stoplight/prism-cli mock -d -p 4010 openapi.yaml`
@@ -81,3 +104,7 @@ Validate the OpenAPI document before mocking it
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Prism Documentation](https://meta.stoplight.io/docs/prism/)
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)

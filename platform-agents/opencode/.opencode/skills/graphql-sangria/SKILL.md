@@ -1,13 +1,31 @@
 ---
 name: "graphql-sangria"
-description: "GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and test queries with the execution API."
+description: "GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and test queries with the execution API. Use when working with sangria schema, api or when the user mentions sangria schema, api."
 ---
-
-# Graphql Sangria
 
 GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and test queries with the execution API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sbt run`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL Sangria
 
@@ -80,6 +98,11 @@ println(result)
 ### sangria-schema
 Define Sangria schemas, execute queries, and export SDL.
 
+**Parameters:**
+- `schema-object` (string): Scala object exposing the Schema
+- `endpoint` (string): GraphQL HTTP endpoint
+- `main-class` (string): Sangria main class for SDL export
+
 **Commands:**
 - `sbt run`
 - `sbt compile`
@@ -91,3 +114,7 @@ Define Sangria schemas, execute queries, and export SDL.
 - sbt compile && sbt test
 - curl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{"query":"{ characters { name } }"}' | jq
 - sbt 'runMain example.SchemaExport'
+
+## References
+- [Sangria docs](https://sangria-graphql.org/learn/)
+- [Sangria GitHub](https://github.com/sangria-graphql/sangria)

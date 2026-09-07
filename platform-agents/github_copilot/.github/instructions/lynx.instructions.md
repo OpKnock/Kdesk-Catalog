@@ -2,11 +2,29 @@
 applyTo: "**/*.css **/*.java **/*.r **/*.sh **/*.{js,ts,jsx,tsx} **/*.{yaml,yml}"
 ---
 
-# Lynx
-
 End-to-end and unit testing with the Lynx test framework, writing assertions in plain JavaScript with instant watch mode.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx lynx --watch`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Lynx
 
@@ -76,6 +94,11 @@ test('adds a todo', async () => {
 ### lynx-tests
 Run, watch, and snapshot-test with the Lynx framework for browser and Node tests
 
+**Parameters:**
+- `headed` (boolean): Run browser tests with a visible UI window
+- `filter` (string): Run only tests whose names match the pattern
+- `browser` (string): Browser engine: chromium, firefox, or webkit
+
 **Commands:**
 - `npx lynx --watch`
 - `npx lynx --headed`
@@ -87,3 +110,7 @@ Run, watch, and snapshot-test with the Lynx framework for browser and Node tests
 - npx lynx --headed tests/auth.spec.js
 - npx lynx --watch --filter login
 - npx lynx --update-snapshots tests/snapshots/
+
+## References
+- [Lynx E2E framework docs](https://github.com/stackblitz/lynx)
+- [Lynx CLI reference](https://github.com/stackblitz/lynx/blob/main/README.md)

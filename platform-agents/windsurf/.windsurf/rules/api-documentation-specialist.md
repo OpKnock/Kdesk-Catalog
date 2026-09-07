@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI."
+description: "Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI. Use when working with sdk generation, portal publishing or when the user mentions sdk generation, portal publishing."
 globs: ["**/*.go", "**/*.html", "**/*.java", "**/*.py", "**/*.r", "**/*.rb", "**/*.sh", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 ---
 
-# api-documentation-specialist
-
 Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `openapi-generator generate -i openapi.yaml -g typescript-fet`, `redocly build-docs openapi.yaml -o docs/api.html`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Documentation Specialist
 
@@ -56,6 +74,10 @@ Exercise every example in the docs against a running mock (`prism mock openapi.y
 ### sdk-generation
 Generate typed client SDKs in multiple languages from one OpenAPI spec
 
+**Parameters:**
+- `lang` (string): Generator name: typescript-fetch, python, go, java, ruby
+- `outputDir` (string): SDK output directory
+
 **Commands:**
 - `openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts`
 - `openapi-generator generate -i openapi.yaml -g python -o sdk/python --package-name myapi`
@@ -71,6 +93,10 @@ Generate typed client SDKs in multiple languages from one OpenAPI spec
 ### portal-publishing
 Build and deploy interactive documentation sites with search and versioning
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+- `output` (string): HTML output path
+
 **Commands:**
 - `redocly build-docs openapi.yaml -o docs/api.html`
 - `redoc-cli bundle openapi.yaml -o redoc.html`
@@ -82,3 +108,8 @@ Build and deploy interactive documentation sites with search and versioning
 - redocly build-docs openapi.yaml -o public/api.html
 - redocly bundle openapi.yaml -o dist/bundled.yaml && redocly build-docs dist/bundled.yaml
 - npx @redocly/cli lint --config redocly.yaml openapi.yaml
+
+## References
+- [OpenAPI Generator Docs](https://openapi-generator.tech/docs/)
+- [Redocly Docs](https://redocly.com/docs/)
+- [Swagger UI](https://swagger.io/tools/swagger-ui/)

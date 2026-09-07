@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Authors and tests Prometheus alerting rules and Alertmanager config: rule files, promtool validation, unit tests, silences, and the HTTP API."
+description: "Authors and tests Prometheus alerting rules and Alertmanager config: rule files, promtool validation, unit tests, silences, and the HTTP API. Use when working with rules authoring, alertmanager, api or when the user mentions rules authoring, alertmanager, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Alerting Rules
-
 Authors and tests Prometheus alerting rules and Alertmanager config: rule files, promtool validation, unit tests, silences, and the HTTP API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `promtool check rules alerting-rules.yml`, `amtool check-config /etc/alertmanager/alertmanager.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Alerting Rules
 
@@ -86,6 +104,11 @@ tests:
 ### rules-authoring
 Author Prometheus alerting/recording rules and validate them.
 
+**Parameters:**
+- `rules_file` (string): Path to the alerting rules YAML
+- `test_file` (string): Path to promtool unit test YAML
+- `query` (string): PromQL expression to evaluate
+
 **Commands:**
 - `promtool check rules alerting-rules.yml`
 - `promtool test rules rules.test.yml`
@@ -101,6 +124,11 @@ Author Prometheus alerting/recording rules and validate them.
 ### alertmanager
 Configure Alertmanager routing, manage silences, and inspect the API.
 
+**Parameters:**
+- `expires` (string): Silence duration, e.g. 1h
+- `author` (string): Silence creator name
+- `matchers` (string): Label matchers like severity="critical"
+
 **Commands:**
 - `amtool check-config /etc/alertmanager/alertmanager.yml`
 - `amtool alert list`
@@ -112,3 +140,9 @@ Configure Alertmanager routing, manage silences, and inspect the API.
 - amtool check-config /etc/alertmanager/alertmanager.yml
 - amtool silence add --author=oncall --comment="draining node" 'instance="node1"'
 - curl -X GET http://localhost:9093/api/v2/alerts | jq '.[].labels.alertname'
+
+## References
+- [Alerting Rules](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)
+- [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/)
+- [promtool](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)
+- [Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/)

@@ -1,14 +1,32 @@
 ---
-description: "Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin."
+description: "Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin. Use when working with dependency check, code quality or when the user mentions dependency check, code quality."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Maven Dependency Scan
-
 Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mvn org.owasp:dependency-check-maven:check`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Maven Dependency Scan
 
@@ -71,6 +89,11 @@ recommends the upgraded version.
 ### dependency-check
 Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS findings
 
+**Parameters:**
+- `failBuildOnCVSS` (number): Fail the build when a vulnerability with CVSS score >= this value is found
+- `format` (string): Report format: HTML, JSON, XML, SARIF, CSV, or ALL
+- `suppressionFiles` (string): XML file listing false-positive suppressions
+
 **Commands:**
 - `mvn org.owasp:dependency-check-maven:check`
 - `mvn dependency-check:check -DfailBuildOnCVSS=7 -Dformat=ALL`
@@ -82,3 +105,7 @@ Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS f
 - mvn org.owasp:dependency-check-maven:check -Dformat=HTML
 - mvn dependency-check:aggregate -Dformat=ALL -DoutputDirectory=target/dc
 - mvn verify -Ddependency-check.failBuildOnCVSS=8
+
+## References
+- [OWASP Dependency-Check docs](https://jeremylong.github.io/DependencyCheck/)
+- [Dependency-Check Maven plugin](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)

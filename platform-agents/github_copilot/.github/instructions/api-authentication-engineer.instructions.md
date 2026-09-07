@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# api-authentication-engineer
-
 Implements API authentication: JWT issuance and validation, OAuth 2.0 flows, API keys, and mTLS with rotation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install jsonwebtoken`, `npm install openid-client`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Authentication Engineer
 
@@ -52,6 +70,10 @@ Verify expired tokens are rejected and scopes are enforced per route.
 ### jwt-implementation
 Issue, validate, and rotate JWTs for API access
 
+**Parameters:**
+- `audience` (string): Token audience
+- `expiry` (string): Token lifetime
+
 **Commands:**
 - `npm install jsonwebtoken`
 - `node -e "const j=require('jsonwebtoken');const t=j.sign({sub:'u1',scope:'read'},'secret',{expiresIn:'1h'});console.log(t)"`
@@ -67,6 +89,10 @@ Issue, validate, and rotate JWTs for API access
 ### oauth2-flows
 Configure OAuth 2.0 authorization code and client credentials flows
 
+**Parameters:**
+- `issuer` (string): OIDC issuer URL
+- `clientId` (string): OAuth client ID
+
 **Commands:**
 - `npm install openid-client`
 - `node -e "const {Issuer}=require('openid-client');Issuer.discover('http://localhost:8080/.well-known/openid-configuration').then(i=>console.log(i.metadata.token_endpoint))"`
@@ -78,3 +104,8 @@ Configure OAuth 2.0 authorization code and client credentials flows
 - node -e "const {Issuer}=require('openid-client');Issuer.discover('http://localhost:8080/.well-known/openid-configuration').then(i=>console.log(i.metadata.token_endpoint))"
 - kcadm.sh create clients -r demo -s clientId=api-client -s secret=change-me
 - curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d 'grant_type=client_credentials&client_id=api-client&client_secret=change-me'
+
+## References
+- [JWT Introduction](https://jwt.io/introduction)
+- [OAuth 2.0](https://oauth.net/2/)
+- [Keycloak Admin CLI](https://www.keycloak.org/docs/latest/server_admin/)

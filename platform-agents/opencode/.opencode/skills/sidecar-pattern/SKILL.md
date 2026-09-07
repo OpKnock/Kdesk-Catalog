@@ -1,13 +1,31 @@
 ---
 name: "sidecar-pattern"
-description: "Operates sidecar containers in Kubernetes pods. Inspects container lists to confirm sidecar presence, reads sidecar logs and local stats endpoints, and runs standalone Envoy for local proxy configuration iteration."
+description: "Operates sidecar containers in Kubernetes pods. Inspects container lists to confirm sidecar presence, reads sidecar logs and local stats endpoints, and runs standalone Envoy for local proxy configuration iteration. Use when working with sidecar ops, api or when the user mentions sidecar ops, api."
 ---
-
-# Sidecar Pattern
 
 Operates sidecar containers in Kubernetes pods. Inspects container lists to confirm sidecar presence, reads sidecar logs and local stats endpoints, and runs standalone Envoy for local proxy configuration iteration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl get pods -l app=api -o jsonpath='{.items[0].spec.con`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Sidecar Pattern
 
@@ -73,6 +91,11 @@ kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15090/stats/pr
 ### sidecar-ops
 Operates sidecar containers in Kubernetes pods. Inspects container lists to confirm sidecar presence, reads sidecar logs and local stats endpoints, and runs standalone Envoy for local proxy configuration iteration.
 
+**Parameters:**
+- `pod_name` (string): Kubernetes pod name containing the sidecar
+- `sidecar_name` (string): Sidecar container name (e.g., istio-proxy)
+- `config_path` (string): Path to Envoy config file for local testing
+
 **Commands:**
 - `kubectl get pods -l app=api -o jsonpath='{.items[0].spec.containers[*].name}'`
 - `kubectl logs pod/api-7d9f -c istio-proxy --tail=50`
@@ -85,3 +108,6 @@ Operates sidecar containers in Kubernetes pods. Inspects container lists to conf
 - kubectl logs pod/api-7d9f -c istio-proxy --tail=50
 - kubectl exec -it pod/api-7d9f -c istio-proxy -- curl -s localhost:15020/healthz
 - envoy --config-path envoy.yaml
+
+## References
+- [Azure sidecar pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar)

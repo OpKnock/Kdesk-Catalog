@@ -1,13 +1,31 @@
 ---
 name: "client-generation"
-description: "Generate API clients from OpenAPI specs with openapi-generator, swagger-codegen, and oapi-codegen across many languages."
+description: "Generate API clients from OpenAPI specs with openapi-generator, swagger-codegen, and oapi-codegen across many languages. Use when working with openapi generator, oapi codegen or when the user mentions openapi generator, oapi codegen."
 ---
-
-# Client Generation
 
 Generate API clients from OpenAPI specs with openapi-generator, swagger-codegen, and oapi-codegen across many languages.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @openapitools/openapi-generator-cli generate -i openapi.`, `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Client Generation
 
@@ -85,6 +103,11 @@ npx tsc --noEmit
 ### openapi-generator
 Generate typed API clients from OpenAPI/Swagger specs with OpenAPI Generator
 
+**Parameters:**
+- `spec` (string): Path or URL to the OpenAPI spec
+- `generator` (string): Generator name such as typescript-fetch, go, python, java
+- `output` (string): Output directory for generated code
+
 **Commands:**
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o src/client`
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o gen/go`
@@ -99,6 +122,10 @@ Generate typed API clients from OpenAPI/Swagger specs with OpenAPI Generator
 ### oapi-codegen
 Generate Go clients and servers with oapi-codegen
 
+**Parameters:**
+- `package_name` (string): Go package name for generated code
+- `generate` (string): Comma-separated generators: types, client, chi-server, spec
+
 **Commands:**
 - `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`
 - `oapi-codegen -package api -generate types,client openapi.yaml > gen/client.gen.go`
@@ -109,3 +136,7 @@ Generate Go clients and servers with oapi-codegen
 - oapi-codegen -package api -generate types,client openapi.yaml > gen/client.gen.go
 - oapi-codegen -package api -generate types,chi-server,spec openapi.yaml > gen/server.gen.go
 - go test ./...
+
+## References
+- [OpenAPI Generator Docs](https://openapi-generator.tech/docs/usage)
+- [oapi-codegen Docs](https://github.com/oapi-codegen/oapi-codegen)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Pulsar subscription types and management: Exclusive, Shared, Failover, Key_Shared plus cursor operations."
+description: "Pulsar subscription types and management: Exclusive, Shared, Failover, Key_Shared plus cursor operations. Use when working with pulsar subscription mgmt, api or when the user mentions pulsar subscription mgmt, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# Pulsar Subscriptions
-
 Pulsar subscription types and management: Exclusive, Shared, Failover, Key_Shared plus cursor operations.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bin/pulsar-admin topics subscriptions list my-topic`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Pulsar Subscriptions
 
@@ -62,6 +80,11 @@ bin/pulsar-admin topics unsubscribe my-topic -s my-sub
 ### pulsar-subscription-mgmt
 Create consumers with subscription types, list/peek/unsubscribe subscriptions, and manage cursors.
 
+**Parameters:**
+- `topic` (string): Topic name
+- `subscription` (string): Subscription name
+- `sub_type` (string): Exclusive, Shared, Failover or Key_Shared
+
 **Commands:**
 - `bin/pulsar-admin topics subscriptions list my-topic`
 - `bin/pulsar-admin topics peek-messages --subscription my-sub --count 5 my-topic`
@@ -73,3 +96,7 @@ Create consumers with subscription types, list/peek/unsubscribe subscriptions, a
 - bin/pulsar-client consume my-topic -s sub-a --subscription-type Exclusive --num-messages 3
 - bin/pulsar-admin topics peek-messages --subscription sub-a --count 2 my-topic
 - bin/pulsar-client consume my-topic -s sub-k --subscription-type Key_Shared --num-messages 4
+
+## References
+- [Pulsar Subscription Types](https://pulsar.apache.org/docs/3.0.x/concepts-messaging/#subscription-types)
+- [pulsar-admin topics](https://pulsar.apache.org/docs/3.0.x/reference-pulsar-admin-topics/)

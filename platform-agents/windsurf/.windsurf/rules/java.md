@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Develops Java backend services with Maven/Gradle, Spring Boot, and the JVM toolchain including build, test, and packaging."
+description: "Develops Java backend services with Maven/Gradle, Spring Boot, and the JVM toolchain including build, test, and packaging. Use when working with maven build, gradle build, backend or when the user mentions maven build, gradle build, backend."
 globs: ["**/*.java", "**/*.r", "**/*.sh"]
 ---
 
-# Java
-
 Develops Java backend services with Maven/Gradle, Spring Boot, and the JVM toolchain including build, test, and packaging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mvn clean package`, `gradle build`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Java
 
@@ -69,6 +87,10 @@ public class HealthController {
 ### maven-build
 Build and test Maven projects.
 
+**Parameters:**
+- `goal` (string): Maven goal to run
+- `test` (string): Test filter
+
 **Commands:**
 - `mvn clean package`
 - `mvn test`
@@ -84,6 +106,10 @@ Build and test Maven projects.
 ### gradle-build
 Build and test Gradle projects.
 
+**Parameters:**
+- `task` (string): Gradle task to run
+- `test` (string): Test class filter
+
 **Commands:**
 - `gradle build`
 - `gradle test`
@@ -95,3 +121,8 @@ Build and test Gradle projects.
 - gradle test --tests "com.example.OrderTest"
 - gradle build -x test
 - gradle bootJar
+
+## References
+- [Java SE Docs](https://docs.oracle.com/en/java/javase/)
+- [Spring Boot Docs](https://docs.spring.io/spring-boot/)
+- [Maven Docs](https://maven.apache.org/guides/)

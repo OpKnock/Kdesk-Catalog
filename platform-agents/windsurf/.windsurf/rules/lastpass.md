@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Manage credentials with the LastPass CLI (lpass): login, search entries, retrieve passwords, and generate new ones from the terminal."
+description: "Manage credentials with the LastPass CLI (lpass): login, search entries, retrieve passwords, and generate new ones from the terminal. Use when working with lpass session, lpass entries, api or when the user mentions lpass session, lpass entries, api."
 globs: ["**/*.go", "**/*.r", "**/*.rs", "**/*.sh"]
 ---
 
-# Lastpass
-
 Manage credentials with the LastPass CLI (lpass): login, search entries, retrieve passwords, and generate new ones from the terminal.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `lpass login alice@myapp.test`, `lpass ls`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # LastPass CLI (lpass)
 
@@ -75,6 +93,10 @@ lpass status && lpass ls -l | head -20
 ### lpass-session
 Login, logout, and status of the LastPass CLI.
 
+**Parameters:**
+- `email` (string): LastPass account email.
+- `trust` (boolean): Trust the device for this session.
+
 **Commands:**
 - `lpass login alice@myapp.test`
 - `lpass login --trust alice@myapp.test`
@@ -89,6 +111,11 @@ Login, logout, and status of the LastPass CLI.
 ### lpass-entries
 Search, show, and manage credential entries.
 
+**Parameters:**
+- `search` (string): Entry search term or full path.
+- `username` (string): Username for new entries.
+- `length` (integer): Generated password length.
+
 **Commands:**
 - `lpass ls`
 - `lpass ls -l`
@@ -101,3 +128,7 @@ Search, show, and manage credential entries.
 - lpass ls -l
 - lpass show --password github.com
 - lpass generate --no-symbols 24 github.com/root
+
+## References
+- [LastPass CLI](https://github.com/lastpass/lastpass-cli)
+- [lpass man page](https://lastpass.github.io/lastpass-cli/lpass.1.html)

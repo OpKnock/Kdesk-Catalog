@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites."
+description: "Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites. Use when working with spring boot lifecycle, api or when the user mentions spring boot lifecycle, api."
 globs: ["**/*.java", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Spring Boot
-
 Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s https://start.spring.io/starter.zip -d type=maven-pr`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Spring Boot
 
@@ -80,6 +98,11 @@ curl -s localhost:8080/actuator/health | jq .status
 ### spring-boot-lifecycle
 Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites.
 
+**Parameters:**
+- `java_version` (integer): Java version for the project (e.g., 17, 21)
+- `dependencies` (string): Comma-separated Spring Boot starters (e.g., web,actuator,data-jpa)
+- `test_class` (string): Specific test class to run
+
 **Commands:**
 - `curl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator -d javaVersion=21 -o demo.zip`
 - `./mvnw spring-boot:run`
@@ -95,3 +118,6 @@ Manages the Spring Boot application lifecycle with Maven. Generates projects fro
 - curl -s localhost:8080/actuator/health
 - ./mvnw test
 - ./mvnw package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar
+
+## References
+- [Spring Boot reference](https://docs.spring.io/spring-boot/index.html)

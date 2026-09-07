@@ -1,13 +1,31 @@
 ---
 name: "echo"
-description: "HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman Echo) and local containers to verify headers, methods, and payloads during API development."
+description: "HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman Echo) and local containers to verify headers, methods, and payloads during API development. Use when working with http echo, api or when the user mentions http echo, api."
 ---
-
-# Echo
 
 HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman Echo) and local containers to verify headers, methods, and payloads during API development.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl https://httpbin.org/get?foo=bar`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Echo
 
@@ -64,6 +82,11 @@ curl -X PUT https://httpbin.org/put -H 'X-Custom: value' | jq '.headers["X-Custo
 ### http-echo
 Use echo services and local echo containers to verify how requests arrive at a server.
 
+**Parameters:**
+- `method` (string): HTTP method to test: GET, POST, PUT, DELETE
+- `headers` (array): Custom headers to inspect in the echo response
+- `payload` (string): JSON body echoed back by the service
+
 **Commands:**
 - `curl https://httpbin.org/get?foo=bar`
 - `curl -X POST https://httpbin.org/post -d '{"hello":"world"}' -H 'Content-Type: application/json'`
@@ -75,3 +98,6 @@ Use echo services and local echo containers to verify how requests arrive at a s
 - curl -X POST https://httpbin.org/post -d '{"hello":"world"}' -H 'Content-Type: application/json' | jq '.json'
 - curl -s https://postman-echo.com/get?foo=bar | jq '.args'
 - curl -i -X PUT https://httpbin.org/put -H 'X-Custom: value' | head -20
+
+## References
+- [httpbin docs](https://httpbin.org/)

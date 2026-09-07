@@ -1,13 +1,31 @@
 ---
 name: "robotics-development"
-description: "Develops ROS 2 systems: topics, nodes, launch files, parameter control, and rosbag recording/playback."
+description: "Develops ROS 2 systems: topics, nodes, launch files, parameter control, and rosbag recording/playback. Use when working with ros2 cli, launch bags or when the user mentions ros2 cli, launch bags."
 ---
-
-# robotics-development
 
 Develops ROS 2 systems: topics, nodes, launch files, parameter control, and rosbag recording/playback.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ros2 topic list`, `ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Robotics Development
 
@@ -68,6 +86,11 @@ Run the stack in simulation, record a bag, replay, and compare metrics.
 ### ros2-cli
 Inspect and operate the ROS 2 graph.
 
+**Parameters:**
+- `topic` (string): Topic name
+- `node` (string): Node name
+- `field` (string): Message field to echo
+
 **Commands:**
 - `ros2 topic list`
 - `ros2 topic echo /odom --field linear.x`
@@ -83,6 +106,11 @@ Inspect and operate the ROS 2 graph.
 ### launch-bags
 Launch systems and record/playback data.
 
+**Parameters:**
+- `bag` (string): Bag directory
+- `rate` (number): Playback rate
+- `topics` (string): Topics to record
+
 **Commands:**
 - `ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py`
 - `ros2 bag record -a -o rosbag2_2026_08_10`
@@ -94,3 +122,8 @@ Launch systems and record/playback data.
 - ros2 bag record -a -o run_$(date +%F)
 - ros2 bag play rosbag2_2026_08_10 --rate 0.5
 - ros2 bag info rosbag2_2026_08_10 | head -20
+
+## References
+- [ROS 2 CLI](https://docs.ros.org/en/rolling/p/ros2cli/index.html)
+- [rosbag2](https://docs.ros.org/en/rolling/p/rosbag2/)
+- [ROS 2 Tutorials](https://docs.ros.org/en/rolling/Tutorials.html)

@@ -1,13 +1,31 @@
 ---
 name: "network-partition-testing"
-description: "Injects network faults with tc netem for latency and packet loss, drops traffic via iptables, and captures packets with tcpdump to validate service resilience under partitions."
+description: "Injects network faults with tc netem for latency and packet loss, drops traffic via iptables, and captures packets with tcpdump to validate service resilience under partitions. Use when working with network fault injection, api or when the user mentions network fault injection, api."
 ---
-
-# Network Partition Testing
 
 Injects network faults with tc netem for latency and packet loss, drops traffic via iptables, and captures packets with tcpdump to validate service resilience under partitions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `tc qdisc add dev eth0 root netem loss 100%`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Network Partition Testing
 
@@ -62,6 +80,11 @@ curl -s -o /dev/null -w "%{time_total}\n" http://10.0.0.2:8080/health
 ### network-fault-injection
 Inject link loss/latency with tc netem, drop traffic with iptables, and capture traffic with tcpdump.
 
+**Parameters:**
+- `interface` (string): Network interface to modify
+- `loss_percent` (integer): Packet loss percentage
+- `target_host` (string): Host IP for iptables/tcpdump rules
+
 **Commands:**
 - `tc qdisc add dev eth0 root netem loss 100%`
 - `tc qdisc change dev eth0 root netem loss 10% latency 200ms`
@@ -73,3 +96,7 @@ Inject link loss/latency with tc netem, drop traffic with iptables, and capture 
 - tc qdisc add dev eth0 root netem delay 500ms 100ms distribution normal
 - iptables -D INPUT -s 10.0.0.2 -j DROP
 - tc qdisc show dev eth0
+
+## References
+- [tc-netem man page](https://man7.org/linux/man-pages/man8/tc-netem.8.html)
+- [tcpdump man page](https://man7.org/linux/man-pages/man8/tcpdump.8.html)

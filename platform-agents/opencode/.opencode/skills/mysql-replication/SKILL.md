@@ -1,13 +1,31 @@
 ---
 name: "mysql-replication"
-description: "Set up and manage MySQL source/replica replication: binary log config, CHANGE REPLICATION SOURCE TO, and replica health checks."
+description: "Set up and manage MySQL source/replica replication: binary log config, CHANGE REPLICATION SOURCE TO, and replica health checks. Use when working with mysql replication setup, api or when the user mentions mysql replication setup, api."
 ---
-
-# Mysql Replication
 
 Set up and manage MySQL source/replica replication: binary log config, CHANGE REPLICATION SOURCE TO, and replica health checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mysql -u root -p -e "SHOW MASTER STATUS;"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # MySQL Replication
 
@@ -72,6 +90,11 @@ enforce_gtid_consistency=ON
 ### mysql-replication-setup
 Configure binary logging, start/stop replicas, and monitor replication lag using mysql client SQL.
 
+**Parameters:**
+- `source_host` (string): Host of the replication source
+- `source_log_file` (string): Binary log file from SHOW MASTER STATUS
+- `source_log_pos` (integer): Binary log position to replicate from
+
 **Commands:**
 - `mysql -u root -p -e "SHOW MASTER STATUS;"`
 - `mysql -u root -p -e "SHOW BINARY LOGS;"`
@@ -83,3 +106,7 @@ Configure binary logging, start/stop replicas, and monitor replication lag using
 - mysql -u root -p -e "CHANGE REPLICATION SOURCE TO SOURCE_HOST='10.0.0.2', SOURCE_USER='repl', SOURCE_PASSWORD='secret', SOURCE_LOG_FILE='mysql-bin.000123', SOURCE_LOG_POS=154;"
 - mysqldump -u root -p --all-databases --source-data=2 > dump.sql
 - mysql -u root -p -e "SELECT * FROM performance_schema.replication_connection_status\G"
+
+## References
+- [MySQL Replication docs](https://dev.mysql.com/doc/refman/8.0/en/replication.html)
+- [CHANGE REPLICATION SOURCE TO](https://dev.mysql.com/doc/refman/8.0/en/change-replication-source-to.html)

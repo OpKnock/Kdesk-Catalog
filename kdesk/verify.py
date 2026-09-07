@@ -126,12 +126,13 @@ class VerifyRunner:
                              "no invalid license classifications")
 
     def check_security(self) -> Dict[str, Any]:
-        catalog = Catalog.from_repo(self.root)
-        findings = SecurityScanner(catalog).scan()
+        if self.fast:
+            return self._skip("fast mode")
+        findings = SecurityScanner().scan(self.root)
         exceptions = SecurityExceptions.load(self.root / "reports" / "security-exceptions.json")
         blocking = [
-            f for f in findings
-            if f["severity"] in ("HIGH", "CRITICAL") and not exceptions.matches(f)
+            f for f in findings["findings"]
+            if f["severity"] in ("HIGH", "CRITICAL") and not exceptions.is_exception(f["match"])
         ]
         return self._verdict(not blocking,
                              f"{len(findings)} findings, {len(blocking)} blocking "

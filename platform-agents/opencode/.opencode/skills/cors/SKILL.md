@@ -1,13 +1,31 @@
 ---
 name: "cors"
-description: "Configure and debug Cross-Origin Resource Sharing: setting CORS headers, preflight handling, and origin allowlists."
+description: "Configure and debug Cross-Origin Resource Sharing: setting CORS headers, preflight handling, and origin allowlists. Use when working with cors headers, express cors, api or when the user mentions cors headers, express cors, api."
 ---
-
-# Cors
 
 Configure and debug Cross-Origin Resource Sharing: setting CORS headers, preflight handling, and origin allowlists.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -i -H "Origin: http://github.com" https://httpbin.org/g`, `npm install cors`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # CORS
 
@@ -80,6 +98,9 @@ curl -s -D - -o /dev/null -H "Origin: http://blocked-origin.test" http://localho
 ### cors-headers
 Configure CORS headers on API responses and test them with curl
 
+**Parameters:**
+- `origin` (string): Origin header to test, e.g. http://github.com
+
 **Commands:**
 - `curl -i -H "Origin: http://github.com" https://httpbin.org/get`
 - `curl -s -D - -o /dev/null -H "Origin: http://github.com" https://httpbin.org/get | grep -i access-control`
@@ -94,6 +115,9 @@ Configure CORS headers on API responses and test them with curl
 ### express-cors
 Configure CORS with the cors npm package and restrict allowed origins
 
+**Parameters:**
+- `allowed_origins` (string): Comma-separated list of allowed origins
+
 **Commands:**
 - `npm install cors`
 - `node server.js`
@@ -104,3 +128,7 @@ Configure CORS with the cors npm package and restrict allowed origins
 - npm install cors && node server.js
 - curl -i -H "Origin: http://localhost:3000" http://localhost:8080/api
 - curl -s -D - -o /dev/null -H "Origin: http://blocked-origin.test" http://localhost:8080/api | grep -i access-control-allow-origin
+
+## References
+- [MDN CORS Guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+- [cors npm package](https://www.npmjs.com/package/cors)

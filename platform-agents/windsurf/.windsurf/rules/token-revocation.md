@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Invalidate OAuth2 tokens on demand by calling the revocation endpoint and maintaining JWT jti blacklists in Redis. Revokes both access and refresh tokens, extracts jti claims from JWTs for immediate rejection, and verifies revoked tokens return 401 \u2014 essential for compromised sessions, global logout, and emergency freezes."
+description: "Invalidate OAuth2 tokens on demand by calling the revocation endpoint and maintaining JWT jti blacklists in Redis. Revokes both access and refresh tokens, extracts jti claims from JWTs for immediate rejection, and verifies revoked tokens return 401 \u2014 essential for compromised sessions, global logout, and emergency freezes. Use when working with token revoke, api or when the user mentions token revoke, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# Token Revocation
-
 Invalidate OAuth2 tokens on demand by calling the revocation endpoint and maintaining JWT jti blacklists in Redis. Revokes both access and refresh tokens, extracts jti claims from JWTs for immediate rejection, and verifies revoked tokens return 401 — essential for compromised sessions, global logout, and emergency freezes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X POST https://auth.your-app.test/revoke -d "token=$AC`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Token Revocation
 
@@ -66,6 +84,11 @@ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $ACCESS_TOKEN
 ### token-revoke
 Revoke access and refresh tokens, and enforce blacklists
 
+**Parameters:**
+- `token` (string): Token value to revoke
+- `token_type_hint` (string): access_token or refresh_token
+- `ttl_seconds` (integer): Blacklist entry lifetime
+
 **Commands:**
 - `curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1&client_secret=$CLIENT_SECRET" -o /dev/null -w '%{http_code}\n'`
 - `curl -X POST https://auth.your-app.test/revoke -d "token=$REFRESH_TOKEN&token_type_hint=refresh_token&client_id=app1" -o /dev/null -w '%{http_code}\n'`
@@ -76,3 +99,7 @@ Revoke access and refresh tokens, and enforce blacklists
 - curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1" -o /dev/null -w '%{http_code}\n'
 - redis-cli SET blacklist:$(echo -n $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq -r .jti) revoked EX 3600
 - curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer stale-token" http://localhost:8080/me
+
+## References
+- [RFC 7009 token revocation](https://www.rfc-editor.org/rfc/rfc7009)
+- [JWT claims (RFC 7519)](https://www.rfc-editor.org/rfc/rfc7519#section-4.1.7)

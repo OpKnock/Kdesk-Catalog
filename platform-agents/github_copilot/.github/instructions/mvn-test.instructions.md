@@ -2,11 +2,29 @@
 applyTo: "**/*.java **/*.r **/*.sh"
 ---
 
-# mvn-test
-
 Runs Java test suites with Maven Surefire and Failsafe, including test filters, parallel execution, and reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mvn test`, `mvn verify`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Maven Test
 
@@ -72,6 +90,11 @@ mvn clean test
 ### surefire-tests
 Run unit tests with Maven Surefire.
 
+**Parameters:**
+- `test` (string): Test class or method pattern
+- `quiet` (boolean): Quiet output (-q)
+- `failIfNoSpecifiedTests` (boolean): Fail when -Dtest matches nothing
+
 **Commands:**
 - `mvn test`
 - `mvn test -Dtest=OrderServiceTest`
@@ -86,6 +109,10 @@ Run unit tests with Maven Surefire.
 
 ### failsafe-integration
 Run integration tests with Maven Failsafe.
+
+**Parameters:**
+- `itTest` (string): Integration test pattern
+- `skipITs` (boolean): Skip integration tests
 
 **Commands:**
 - `mvn verify`
@@ -102,6 +129,10 @@ Run integration tests with Maven Failsafe.
 ### parallel-and-reports
 Parallel tests, coverage, and reports.
 
+**Parameters:**
+- `parallel` (string): Parallel mode: classes, methods
+- `threadCount` (number): Threads for parallel execution
+
 **Commands:**
 - `mvn test -Dparallel=classes -DthreadCount=4`
 - `mvn test -Djacoco=true verify jacoco:report`
@@ -113,3 +144,8 @@ Parallel tests, coverage, and reports.
 - mvn test -Dparallel=classes -DthreadCount=4
 - mvn surefire-report:report
 - mvn clean test
+
+## References
+- [Maven Surefire Plugin](https://maven.apache.org/surefire/maven-surefire-plugin/)
+- [Maven Failsafe Plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/)
+- [Maven CLI Reference](https://maven.apache.org/ref/3.9.0/mvn/index.html)

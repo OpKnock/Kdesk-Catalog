@@ -1,13 +1,31 @@
 ---
 name: "aria2"
-description: "Downloads files at high speed with aria2c: multi-connection, segmented downloads, batch URL lists, and BitTorrent/Metalink support."
+description: "Downloads files at high speed with aria2c: multi-connection, segmented downloads, batch URL lists, and BitTorrent/Metalink support. Use when working with fast downloads, torrent and metalink, devtools or when the user mentions fast downloads, torrent and metalink, devtools."
 ---
-
-# aria2
 
 Downloads files at high speed with aria2c: multi-connection, segmented downloads, batch URL lists, and BitTorrent/Metalink support.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aria2c -x 16 -s 16 http://localhost:8080/file.iso`, `aria2c --seed-time=0 ubuntu-24.04.iso.torrent`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # aria2 Downloads
 
@@ -60,6 +78,12 @@ aria2c --check-integrity --metalink-file=files.meta4
 ### fast-downloads
 Download files with multiple connections and segments.
 
+**Parameters:**
+- `url` (string): File URL
+- `connections` (integer): Connections per server (-x)
+- `out` (string): Output file name
+- `dir` (string): Download directory
+
 **Commands:**
 - `aria2c -x 16 -s 16 http://localhost:8080/file.iso`
 - `aria2c -d /downloads -o app.tar.gz http://localhost:8080/app.tar.gz`
@@ -76,6 +100,10 @@ Download files with multiple connections and segments.
 ### torrent-and-metalink
 Download BitTorrent and Metalink files with checksums.
 
+**Parameters:**
+- `torrent` (string): Torrent file path
+- `seed-time` (integer): Seed time in minutes (0 = no seeding)
+
 **Commands:**
 - `aria2c --seed-time=0 ubuntu-24.04.iso.torrent`
 - `aria2c --check-integrity --metalink-file=files.meta4`
@@ -87,3 +115,7 @@ Download BitTorrent and Metalink files with checksums.
 - aria2c --seed-time=0 ubuntu-24.04.iso.torrent
 - aria2c --check-integrity --metalink-file=files.meta4
 - aria2c --bt-max-peers=200 file.torrent
+
+## References
+- [aria2c Manual](https://aria2.github.io/manual/en/html/aria2c.html)
+- [aria2 GitHub](https://github.com/aria2/aria2)

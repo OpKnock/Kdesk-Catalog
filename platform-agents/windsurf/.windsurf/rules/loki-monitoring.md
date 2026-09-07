@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Operates Grafana Loki for log monitoring: LogQL queries, label discovery, and live log tails."
+description: "Operates Grafana Loki for log monitoring: LogQL queries, label discovery, and live log tails. Use when working with logcli, api, monitoring or when the user mentions logcli, api, monitoring."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# loki-monitoring
-
 Operates Grafana Loki for log monitoring: LogQL queries, label discovery, and live log tails.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `logcli query '{app="api"}' --since 1h`, `curl -G -s 'http://localhost:3100/loki/api/v1/query_range' -`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Loki
 
@@ -78,6 +96,11 @@ Verify expected log flow after a release.
 ### logcli
 Query Loki logs with logcli.
 
+**Parameters:**
+- `since` (string): Time window: 1h, 24h, 7d
+- `limit` (number): Max log lines
+- `selector` (string): Stream selector in braces
+
 **Commands:**
 - `logcli query '{app="api"}' --since 1h`
 - `logcli query '{app="api"} |= "error"' --since 24h --limit 100`
@@ -93,6 +116,11 @@ Query Loki logs with logcli.
 ### api
 Query Loki's HTTP API directly.
 
+**Parameters:**
+- `query` (string): LogQL expression
+- `start` (string): Range start (RFC3339 or unix)
+- `end` (string): Range end (RFC3339 or unix)
+
 **Commands:**
 - `curl -G -s 'http://localhost:3100/loki/api/v1/query_range' --data-urlencode 'query={app="api"}' --data-urlencode 'start=2026-08-10T08:00:00Z' --data-urlencode 'end=2026-08-10T09:00:00Z'`
 - `curl -s 'http://localhost:3100/ready'`
@@ -104,3 +132,8 @@ Query Loki's HTTP API directly.
 - curl -s 'http://localhost:3100/ready' | jq
 - curl -G -s 'http://localhost:3100/loki/api/v1/query_range' --data-urlencode 'query={app="api"} |= "ERROR"' --data-urlencode 'limit=50' | jq '.data.result[0].values | length'
 - curl -s 'http://localhost:3100/loki/api/v1/labels' | jq -r '.data[]'
+
+## References
+- [Loki LogQL](https://grafana.com/docs/loki/latest/query/log_queries/)
+- [logcli](https://grafana.com/docs/loki/latest/reference/cli/logcli/)
+- [Loki API](https://grafana.com/docs/loki/latest/reference/api/)

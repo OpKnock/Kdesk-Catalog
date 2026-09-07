@@ -1,14 +1,32 @@
 ---
-description: "Builds and operates Airflow DAGs: local setup, DAG testing, task runs, and backfills."
+description: "Builds and operates Airflow DAGs: local setup, DAG testing, task runs, and backfills. Use when working with airflow operations, data or when the user mentions airflow operations, data."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Airflow
-
 Builds and operates Airflow DAGs: local setup, DAG testing, task runs, and backfills.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `airflow db init`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Airflow
 
@@ -84,6 +102,11 @@ then re-runs the single task or backfills the range.
 ### airflow-operations
 Manage Airflow metadata, users, DAGs, and task runs from the CLI
 
+**Parameters:**
+- `conf` (string): JSON config passed to the triggered run
+- `log-level` (string): Logging level for the command, e.g. DEBUG
+- `subdir` (string): Directory to search for DAG files
+
 **Commands:**
 - `airflow db init`
 - `airflow users create --username admin --firstname A --lastname A --role Admin --email admin@localhost`
@@ -95,3 +118,7 @@ Manage Airflow metadata, users, DAGs, and task runs from the CLI
 - airflow dags list-import-errors
 - airflow dags backfill -s 2024-01-01 -e 2024-01-10 my_dag
 - airflow scheduler --num-runs 1
+
+## References
+- [Airflow docs](https://airflow.apache.org/docs/)
+- [Airflow best practices](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html)

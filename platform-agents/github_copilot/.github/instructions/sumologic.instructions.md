@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.json **/*.r **/*.sh"
 ---
 
-# Sumologic
-
 Ingest logs and run queries against Sumo Logic using HTTP collectors and the REST API. Pushes JSON events directly, starts search jobs with SPL-style syntax, fetches results, and manages collectors — all from the terminal without a collector agent.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X POST 'https://collectors.sumologic.com/receiver/v1/h`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Sumo Logic
 
@@ -63,6 +81,11 @@ curl -s -X POST 'https://api.sumologic.com/api/v1/search/jobs' -u "$ID:$KEY" -d 
 ### sumologic-api
 Ingest logs and run searches against Sumo Logic
 
+**Parameters:**
+- `query` (string): Sumo Logic query with SPL-style pipes
+- `from` (string): Start of time range, e.g. -1h
+- `http_source_url` (string): HTTP collector source URL (URL-encoded)
+
 **Commands:**
 - `curl -X POST 'https://collectors.sumologic.com/receiver/v1/http/$HTTP_SOURCE_URL_ENCODED' -H 'Content-Type: application/json' -d '{"event":"payment.completed","account":42}'`
 - `curl -s -X POST 'https://api.sumologic.com/api/v1/search/jobs' -u "$SUMOLOGIC_ACCESS_ID:$SUMOLOGIC_ACCESS_KEY" -H 'Content-Type: application/json' -d '{"query":"_sourceCategory=api ERROR | count by _sourceHost","from":"-1h","to":"now"}'`
@@ -73,3 +96,7 @@ Ingest logs and run searches against Sumo Logic
 - curl -X POST 'https://collectors.sumologic.com/receiver/v1/http/$HTTP_SOURCE_URL_ENCODED' -H 'Content-Type: application/json' -d '{"event":"order.created","order_id":7}'
 - curl -s -X POST 'https://api.sumologic.com/api/v1/search/jobs' -u "$ID:$KEY" -d '{"query":"_sourceCategory=api status>=500 | count by host","from":"-15m","to":"now"}'
 - curl -s 'https://api.sumologic.com/api/v1/collectors' -u "$ID:$KEY" | jq '.collectors | length'
+
+## References
+- [Sumo Logic docs](https://help.sumologic.com/docs/)
+- [HEC-style HTTP Source](https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/)

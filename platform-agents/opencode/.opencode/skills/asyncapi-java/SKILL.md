@@ -1,13 +1,31 @@
 ---
 name: "asyncapi-java"
-description: "Generates Java Spring Boot projects and POJO models from AsyncAPI documents, then builds, runs, and tests them with Maven."
+description: "Generates Java Spring Boot projects and POJO models from AsyncAPI documents, then builds, runs, and tests them with Maven. Use when working with spring generation, java models, api or when the user mentions spring generation, java models, api."
 ---
-
-# Asyncapi Java
 
 Generates Java Spring Boot projects and POJO models from AsyncAPI documents, then builds, runs, and tests them with Maven.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @asyncapi/generator asyncapi.yaml @asyncapi/java-spring-`, `npx @asyncapi/modelina generate --input asyncapi.yaml --outp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AsyncAPI Java
 
@@ -62,6 +80,10 @@ curl -s http://localhost:8080/actuator/health
 ### spring-generation
 Generate a Spring Boot async API project from a spec.
 
+**Parameters:**
+- `output` (string): Output directory for the generated project
+- `param` (string): Template params, e.g. server=kafka
+
 **Commands:**
 - `npx @asyncapi/generator asyncapi.yaml @asyncapi/java-spring-template -o ./generated`
 - `cd generated && ./mvnw clean package`
@@ -77,6 +99,10 @@ Generate a Spring Boot async API project from a spec.
 ### java-models
 Generate Java POJOs from the spec schema with Modelina.
 
+**Parameters:**
+- `package_name` (string): Java package for generated models
+- `type_mapping` (string): Custom type mapping, e.g. string=UUID
+
 **Commands:**
 - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./src/main/java --language Java`
 - `mvn compile`
@@ -87,3 +113,8 @@ Generate Java POJOs from the spec schema with Modelina.
 - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./src/main/java --language Java --packageName com.example.orders
 - mvn package
 - mvn dependency:tree | grep kafka
+
+## References
+- [Java Spring Template](https://github.com/asyncapi/java-spring-template)
+- [Modelina Java](https://www.asyncapi.com/docs/tools/modelina/languages/Java)
+- [Spring Boot Reference](https://docs.spring.io/spring-boot/docs/current/reference/html/)

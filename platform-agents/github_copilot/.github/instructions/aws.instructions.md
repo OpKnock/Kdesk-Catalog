@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# aws
-
 Operates AWS services with the AWS CLI: EC2, S3, IAM, Lambda, EKS, and CloudWatch across accounts and regions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aws s3 ls`, `aws lambda list-functions --region us-east-1`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AWS
 
@@ -66,6 +84,11 @@ kubectl get nodes
 ### aws-core
 Manage core AWS resources from the CLI.
 
+**Parameters:**
+- `region` (string): AWS region
+- `profile` (string): Named profile
+- `query` (string): JMESPath query
+
 **Commands:**
 - `aws s3 ls`
 - `aws s3 cp file.txt s3://my-bucket/`
@@ -80,6 +103,10 @@ Manage core AWS resources from the CLI.
 
 ### aws-serverless
 Deploy and manage Lambda functions.
+
+**Parameters:**
+- `function` (string): Lambda function name
+- `region` (string): AWS region
 
 **Commands:**
 - `aws lambda list-functions --region us-east-1`
@@ -96,6 +123,10 @@ Deploy and manage Lambda functions.
 ### aws-kubernetes
 Manage EKS clusters and kubeconfigs.
 
+**Parameters:**
+- `cluster` (string): EKS cluster name
+- `region` (string): AWS region
+
 **Commands:**
 - `aws eks update-kubeconfig --name my-cluster --region us-east-1`
 - `aws eks list-clusters`
@@ -105,3 +136,7 @@ Manage EKS clusters and kubeconfigs.
 **Examples:**
 - aws eks update-kubeconfig --name my-cluster --alias prod
 - aws eks list-nodegroups --cluster-name my-cluster
+
+## References
+- [AWS CLI Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/index.html)
+- [AWS SDK and Tools](https://docs.aws.amazon.com/cli/latest/userguide/)

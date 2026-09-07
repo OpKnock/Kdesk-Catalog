@@ -1,13 +1,31 @@
 ---
 name: "graphql-apollo"
-description: "Apollo GraphQL ecosystem: set up Apollo Server and Client, run codegen, and manage the schema registry with the Apollo CLI."
+description: "Apollo GraphQL ecosystem: set up Apollo Server and Client, run codegen, and manage the schema registry with the Apollo CLI. Use when working with apollo tooling, api or when the user mentions apollo tooling, api."
 ---
-
-# Graphql Apollo
 
 Apollo GraphQL ecosystem: set up Apollo Server and Client, run codegen, and manage the schema registry with the Apollo CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @apollo/server graphql`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL Apollo
 
@@ -69,6 +87,11 @@ curl -s -X POST http://localhost:4000/ -H 'Content-Type: application/json' -d '{
 ### apollo-tooling
 Scaffold Apollo Server, introspect schemas, and run codegen.
 
+**Parameters:**
+- `endpoint` (string): GraphQL endpoint URL
+- `target-language` (string): codegen target: typescript, swift, etc
+- `output-dir` (string): Codegen output directory
+
 **Commands:**
 - `npm install @apollo/server graphql`
 - `npx apollo server:init`
@@ -80,3 +103,7 @@ Scaffold Apollo Server, introspect schemas, and run codegen.
 - curl -s -X POST http://localhost:4000/ -H 'Content-Type: application/json' -d '{"query":"{ __schema { types { name } } }"}' | jq '.data.__schema.types[0].name'
 - npx apollo codegen:generate --target=typescript --outputFlat src/__generated__
 - npm install @apollo/server graphql && node index.js
+
+## References
+- [Apollo Server docs](https://www.apollographql.com/docs/apollo-server/)
+- [Apollo Client docs](https://www.apollographql.com/docs/react/)

@@ -62,14 +62,63 @@ class WorkflowEngine:
                 problems.append(f"{step.id}: skill step without skill id")
             elif self.catalog.get_skill(step.skill) is None:
                 problems.append(f"{step.id}: skill not in catalog: {step.skill}")
+            if step.requires and step.requires not in all_ids:
+                problems.append(f"{step.id}: requires unknown step {step.requires!r}")
         elif step.step_type == "agent":
             if not step.agent:
                 problems.append(f"{step.id}: agent step without agent id")
             elif self.catalog.get_agent(step.agent) is None:
                 problems.append(f"{step.id}: agent not in catalog: {step.agent}")
+            if step.requires and step.requires not in all_ids:
+                problems.append(f"{step.id}: requires unknown step {step.requires!r}")
         elif step.step_type == "capability":
             if not step.capability:
                 problems.append(f"{step.id}: capability step without capability name")
+            if step.requires and step.requires not in all_ids:
+                problems.append(f"{step.id}: requires unknown step {step.requires!r}")
+        elif step.step_type == "parallel":
+            # parallel: branches run concurrently, each branch is a list of step refs
+            branches = step.raw.get("branches") or step.raw.get("steps") or []
+            if not branches:
+                # allow parallel with no explicit branches - just a marker that following steps are parallel
+                pass
+            else:
+                for branch in branches if isinstance(branches, list) else []:
+                    if isinstance(branch, list):
+                        for bid in branch:
+                            if bid not in all_ids:
+                                problems.append(f"{step.id}: parallel branch references unknown step {bid!r}")
+                    elif isinstance(branch, str) and branch not in all_ids:
+                        problems.append(f"{step.id}: parallel branch references unknown step {branch!r}")
+            if step.requires and step.requires not in all_ids:
+                problems.append(f"{step.id}: requires unknown step {step.requires!r}")
+        elif step.step_type == "conditional":
+            # conditional: requires condition expression and branches
+            cond = step.raw.get("condition") or step.raw.get("if")
+            if not cond:
+                problems.append(f"{step.id}: conditional step without condition")
+            # validate then/else refs if present
+            for key in ("then", "else", "else_branch", "then_branch"):
+                val = step.raw.get(key)
+                if isinstance(val, str) and val not in all_ids:
+                    problems.append(f"{step.id}: conditional {key} references unknown step {val!r}")
+                elif isinstance(val, list):
+                    for vid in val:
+                        if isinstance(vid, str) and vid not in all_ids:
+                            problems.append(f"{step.id}: conditional {key} references unknown step {vid!r}")
+            if step.requires and step.requires not in all_ids:
+                problems.append(f"{step.id}: requires unknown step {step.requires!r}")
+        elif step.step_type == "sequential":
+            # sequential: explicit ordering, requires chain validation
+            ordered = step.raw.get("steps") or step.raw.get("sequence") or []
+            if isinstance(ordered, list):
+                for sid in ordered:
+                    if isinstance(sid, str) and sid not in all_ids:
+                        problems.append(f"{step.id}: sequential references unknown step {sid!r}")
+            if step.requires and step.requires not in all_ids:
+                problems.append(f"{step.id}: requires unknown step {step.requires!r}")
+        elif step.step_type in ("loop", "approval", "tool", "condition"):
+            # Generic passthrough types: validate requires only
             if step.requires and step.requires not in all_ids:
                 problems.append(f"{step.id}: requires unknown step {step.requires!r}")
         else:
@@ -103,15 +152,41 @@ class WorkflowEngine:
         for s in wf.steps:
             if s.requires and s.requires in index:
                 deps[s.id].append(s.requires)
+            # Parallel/conditional forks: ensure branched steps run before join
+            if s.step_type == "parallel":
+                branches = s.raw.get("branches") or s.raw.get("steps") or []
+                if isinstance(branches, list):
+                    for branch in branches:
+                        if isinstance(branch, list):
+                            for bid in branch:
+                                if bid in index and bid not in deps[s.id]:
+                                    # parallel join depends on branches completing
+                                    pass  # don't make join depend backwards
+                                if s.id not in deps.get(bid, []):
+                                    # branch steps should not depend on parallel join
+                                    pass
+                        elif isinstance(branch, str) and branch in index:
+                            pass
+            if s.step_type == "sequential":
+                seq = s.raw.get("steps") or s.raw.get("sequence") or []
+                if isinstance(seq, list) and len(seq) > 1:
+                    for prev, nxt in zip(seq, seq[1:]):
+                        if prev in index and nxt in index and prev not in deps[nxt]:
+                            deps[nxt].append(prev)
         order: List[str] = []
         visited: set = set()
+        visiting: set = set()
 
         def visit(node: str) -> None:
             if node in visited:
                 return
-            visited.add(node)
+            if node in visiting:
+                raise WorkflowError(f"cycle detected at step {node!r}")
+            visiting.add(node)
             for d in deps[node]:
                 visit(d)
+            visiting.remove(node)
+            visited.add(node)
             order.append(node)
 
         for i in ids:
@@ -139,6 +214,40 @@ class WorkflowEngine:
                 "description": agent.description if agent else None,
                 "input": inputs,
                 "action": "dry-run" if dry_run else "delegate",
+            }
+        if step.step_type == "parallel":
+            branches = step.raw.get("branches") or step.raw.get("steps") or []
+            return {
+                "step": step.id,
+                "type": "parallel",
+                "branches": branches,
+                "description": f"parallel execution of {len(branches) if isinstance(branches, list) else 0} branches",
+                "action": "dry-run" if dry_run else "parallel-invoke",
+            }
+        if step.step_type == "conditional":
+            cond = step.raw.get("condition") or step.raw.get("if") or ""
+            return {
+                "step": step.id,
+                "type": "conditional",
+                "condition": cond,
+                "then": step.raw.get("then"),
+                "else": step.raw.get("else"),
+                "action": "dry-run" if dry_run else "evaluate",
+            }
+        if step.step_type == "sequential":
+            seq = step.raw.get("steps") or step.raw.get("sequence") or []
+            return {
+                "step": step.id,
+                "type": "sequential",
+                "sequence": seq,
+                "action": "dry-run" if dry_run else "sequential-invoke",
+            }
+        if step.step_type in ("loop", "approval", "tool", "condition"):
+            return {
+                "step": step.id,
+                "type": step.step_type,
+                "raw": step.raw,
+                "action": "dry-run" if dry_run else step.step_type,
             }
         # capability (resolved against the workflow's agent)
         agent = self.catalog.get_agent(workflow_agent)

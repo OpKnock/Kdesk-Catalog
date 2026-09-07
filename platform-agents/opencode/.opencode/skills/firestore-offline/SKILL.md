@@ -1,13 +1,9 @@
 ---
 name: "firestore-offline"
-description: "Firestore offline persistence: enable local caching, debug cache reads, and design apps that work when connectivity drops."
+description: "Firestore offline persistence: enable local caching, debug cache reads, and design apps that work when connectivity drops. Use when working with offline persistence, api or when the user mentions offline persistence, api."
 ---
 
-# Firestore Offline
-
 Firestore offline persistence: enable local caching, debug cache reads, and design apps that work when connectivity drops.
-
-## Instructions
 
 # Firestore Offline
 
@@ -67,6 +63,11 @@ firebase emulators:start --only firestore
 ### offline-persistence
 Enable and debug offline persistence, and verify cache behavior in client SDKs.
 
+**Parameters:**
+- `cache-mode` (string): persistent or memory local cache mode
+- `tab-manager` (string): indexedDbLocalCache or multiTabLocalCache
+- `settings-file` (string): File where Firestore settings are configured
+
 **Commands:**
 - `node -e "const db=require('firebase/firestore');firebase.firestore().settings({persistence: true});firebase.firestore().enablePersistence().then(()=>console.log('offline ok'))"`
 - `node -e "const {initializeFirestore,persistentLocalCache,indexedDbLocalCache}=require('firebase/firestore');const db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:indexedDbLocalCache()})});console.log(db)"`
@@ -78,3 +79,7 @@ Enable and debug offline persistence, and verify cache behavior in client SDKs.
 - node -e "const {initializeFirestore,persistentLocalCache,indexedDbLocalCache}=require('firebase/firestore');const db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:indexedDbLocalCache()})});console.log(db)"
 - firebase emulators:start --only firestore
 - grep -rn 'enablePersistence\|persistentLocalCache' src/ | head -10
+
+## References
+- [Firestore offline data](https://firebase.google.com/docs/firestore/manage-data/enable-offline)
+- [Firestore cache semantics](https://firebase.google.com/docs/firestore/manage-data/enable-offline#monitor_network_status)

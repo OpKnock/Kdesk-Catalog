@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Test network segmentation, TLS strength, and scan coverage handling it scopes. and logs.'"
+description: "Test network segmentation, TLS strength, and scan coverage handling it scopes. and logs.'. Use when working with pci controls, compliance or when the user mentions pci controls, compliance."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# Pci
-
 Test network segmentation, TLS strength, and scan coverage handling it scopes. and logs.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.exampl`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # PCI DSS
 
@@ -69,6 +87,11 @@ in code, and a requirement-by-requirement status with fix steps.
 ### pci-controls
 Test network segmentation, TLS strength, and scan coverage for PCI scopes
 
+**Parameters:**
+- `script` (string): nmap NSE script to run, e.g. ssl-enum-ciphers
+- `open` (boolean): Report only open ports
+- `ssl` (boolean): Force TLS mode in nikto
+
 **Commands:**
 - `nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.example.com`
 - `sslscan payment.example.com`
@@ -80,3 +103,7 @@ Test network segmentation, TLS strength, and scan coverage for PCI scopes
 - nmap -p 1521,3306,5432 --open 10.0.0.0/24
 - curl -s -o /dev/null -w '%{ssl_version} %{http_version}\n' http://localhost:8080
 - rg -i "card|pan|track2|cvv" src/ --glob '!*.test.*'
+
+## References
+- [PCI DSS official](https://www.pcisecuritystandards.org/)
+- [PCI DSS v4 requirements](https://www.pcisecuritystandards.org/document_library/?category=PCI%20DSS)

@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Latency Injection
-
 Inject network latency and packet loss with Linux tc netem: add/change/remove qdisc rules and measure the impact with ping and curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `tc qdisc add dev eth0 root netem delay 200ms`, `tc qdisc show dev eth0`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Latency Injection
 
@@ -72,6 +90,12 @@ sudo tc qdisc del dev eth0 root netem
 ### netem-rules
 Add, change, and remove latency/loss rules on interfaces.
 
+**Parameters:**
+- `iface` (string): Network interface, e.g. eth0.
+- `delay` (integer): Delay in milliseconds.
+- `jitter` (integer): Jitter in milliseconds.
+- `loss` (integer): Packet loss percentage.
+
 **Commands:**
 - `tc qdisc add dev eth0 root netem delay 200ms`
 - `tc qdisc change dev eth0 root netem delay 200ms 50ms distribution normal`
@@ -87,6 +111,10 @@ Add, change, and remove latency/loss rules on interfaces.
 ### impact-measure
 Measure latency and application impact after injection.
 
+**Parameters:**
+- `host` (string): Target host for measurements.
+- `count` (integer): Number of probe packets.
+
 **Commands:**
 - `tc qdisc show dev eth0`
 - `ping -c 10 10.0.0.5 | tail -3`
@@ -97,3 +125,7 @@ Measure latency and application impact after injection.
 - ping -c 10 10.0.0.5 | tail -3
 - curl -s -o /dev/null -w 'total: %{time_total}s\n' http://10.0.0.5/
 - tc qdisc show dev eth0
+
+## References
+- [tc-netem man page](https://man7.org/linux/man-pages/man8/tc-netem.8.html)
+- [Network Emulation (netem)](https://wiki.linuxfoundation.org/networking/netem)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Administers RabbitMQ: queues, users, permissions, bindings, and server status via rabbitmqctl."
+description: "Administers RabbitMQ: queues, users, permissions, bindings, and server status via rabbitmqctl. Use when working with rabbitmqctl, database or when the user mentions rabbitmqctl, database."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# rabbitmqctl
-
 Administers RabbitMQ: queues, users, permissions, bindings, and server status via rabbitmqctl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `rabbitmqctl status`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # rabbitmqctl
 
@@ -65,6 +83,11 @@ then recommends purge, consumer fix, or queue redeclare.
 ### rabbitmqctl
 Manage vhosts, users, queues, and inspect server state
 
+**Parameters:**
+- `vhost` (string): Virtual host to scope the operation (-p)
+- `queue` (string): Queue name for purge/declare operations
+- `user` (string): User name for add/delete/list operations
+
 **Commands:**
 - `rabbitmqctl status`
 - `rabbitmqctl list_queues name messages consumers`
@@ -76,3 +99,7 @@ Manage vhosts, users, queues, and inspect server state
 - rabbitmqctl list_bindings -p app
 - rabbitmqctl purge_queue -p app jobs
 - rabbitmqctl list_connections state channels
+
+## References
+- [rabbitmqctl docs](https://www.rabbitmq.com/docs/rabbitmqctl.man)
+- [RabbitMQ operations](https://www.rabbitmq.com/docs/)

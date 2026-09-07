@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.py **/*.r **/*.sh"
 ---
 
-# Pytest Requests
-
 API testing with pytest and requests: fixtures, session reuse, assertions, and coverage-driven test suites.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install pytest requests pytest-cov`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # pytest + requests
 
@@ -74,6 +92,11 @@ def client():
 ### pytest-api-testing
 Write and run pytest suites for HTTP APIs using the requests library with fixtures and coverage.
 
+**Parameters:**
+- `test_path` (string): Path to tests directory or file
+- `marker` (string): pytest -k expression or marker
+- `coverage` (boolean): Enable coverage reporting
+
 **Commands:**
 - `pip install pytest requests pytest-cov`
 - `pytest tests/ -v`
@@ -85,3 +108,7 @@ Write and run pytest suites for HTTP APIs using the requests library with fixtur
 - pytest tests/test_orders.py -v
 - pytest --cov=src --cov-report=term-missing tests/
 - pytest -k "auth and not slow"
+
+## References
+- [pytest Documentation](https://docs.pytest.org/en/stable/)
+- [requests Documentation](https://requests.readthedocs.io/)

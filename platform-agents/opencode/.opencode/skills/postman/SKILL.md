@@ -1,13 +1,31 @@
 ---
 name: "postman"
-description: "Postman workflows: collections via the Postman CLI, newman runs in CI, environments, and API testing."
+description: "Postman workflows: collections via the Postman CLI, newman runs in CI, environments, and API testing. Use when working with postman collection testing, api or when the user mentions postman collection testing, api."
 ---
-
-# Postman
 
 Postman workflows: collections via the Postman CLI, newman runs in CI, environments, and API testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `newman run collection.json -e environment.json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Postman
 
@@ -60,6 +78,11 @@ postman collection run "My Collection" --environment "Staging"
 ### postman-collection-testing
 Run Postman collections locally and in CI with newman, manage environments and generate reports.
 
+**Parameters:**
+- `collection` (string): Collection file path or name
+- `environment` (string): Environment file or name
+- `reporters` (array): cli, json, junit, html reporters
+
 **Commands:**
 - `newman run collection.json -e environment.json`
 - `newman run collection.json --folder "auth" --env-var baseUrl=http://localhost:8080`
@@ -71,3 +94,7 @@ Run Postman collections locally and in CI with newman, manage environments and g
 - newman run api.postman_collection.json -e staging.postman_environment.json --bail
 - newman run collection.json --reporters junit --reporter-junit-export results.xml
 - postman collection run "Order API" --env-var token=abc123
+
+## References
+- [Postman CLI Docs](https://learning.postman.com/docs/postman-cli/postman-cli-overview/)
+- [newman Docs](https://learning.postman.com/docs/collections/running-collections/using-newman-cli/)

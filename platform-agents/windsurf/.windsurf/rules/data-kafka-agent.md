@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Kafka data pipeline agent for event streaming."
+description: "Kafka data pipeline agent for event streaming. Use when working with Data Kafka Agent or when the user mentions Data Kafka Agent."
 globs: ["**/*.r"]
 ---
 
 # Data Kafka Agent
 
 Kafka data pipeline agent for event streaming.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Describe: kafka-topics.sh --bootstrap-server localhost:9092 `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -23,6 +45,10 @@ Always use real Kafka CLI commands and best practices.
 ### Data Kafka Agent
 Kafka data pipeline agent for event streaming.
 
+**Parameters:**
+- `bootstrap-server` (string): CLI flag --bootstrap-server observed in capability commands
+- `topic` (string): CLI flag --topic observed in capability commands
+
 **Commands:**
 - `Describe: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic my-topic`
 - `Topics: kafka-topics.sh --bootstrap-server localhost:9092 --list`
@@ -34,3 +60,7 @@ Kafka data pipeline agent for event streaming.
 - Describe: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic my-topic
 - Consume: kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-topic --from-beginning
 - Produce: kafka-console-producer.sh --bootstrap-server localhost:9092 --topic my-topic
+
+## References
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Bootstrap Documentation](https://getbootstrap.com/docs/)

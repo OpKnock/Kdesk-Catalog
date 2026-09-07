@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# Rate Limiting
-
 Implements API rate limiting with Redis sliding windows, token buckets, and nginx/AWS strategies to protect services from abuse.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli incr ratelimit:user:42`, `nginx -t`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Rate Limiting
 
@@ -70,6 +88,10 @@ wrk -t4 -c100 -d10s http://localhost:8000/api
 ### redis-rate-limit
 Enforce rate limits with Redis primitives.
 
+**Parameters:**
+- `key` (string): Rate limit key
+- `window` (integer): Window in seconds
+
 **Commands:**
 - `redis-cli incr ratelimit:user:42`
 - `redis-cli expire ratelimit:user:42 60`
@@ -84,6 +106,10 @@ Enforce rate limits with Redis primitives.
 ### proxy-limiting
 Configure limits at the reverse proxy layer.
 
+**Parameters:**
+- `rate` (string): Limit like 10r/s
+- `zone` (string): nginx limit_req zone name
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -93,3 +119,7 @@ Configure limits at the reverse proxy layer.
 **Examples:**
 - ab -n 5000 -c 100 http://localhost:8000/
 - wrk -t4 -c100 -d10s http://localhost:8000/api
+
+## References
+- [Redis Rate Limiting Patterns](https://redis.io/docs/latest/develop/use/rate-limiting/)
+- [Nginx Rate Limiting](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)

@@ -1,14 +1,32 @@
 ---
-description: "Use ZooKeeper as a distributed configuration store: create and update ZNodes with zkCli, read config at startup, and subscribe to changes with watches."
+description: "Use ZooKeeper as a distributed configuration store: create and update ZNodes with zkCli, read config at startup, and subscribe to changes with watches. Use when working with zk config, api or when the user mentions zk config, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# ZooKeeper Config
-
 Use ZooKeeper as a distributed configuration store: create and update ZNodes with zkCli, read config at startup, and subscribe to changes with watches.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `zkCli.sh -server localhost:2181`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ZooKeeper Config
 
@@ -78,6 +96,11 @@ zkCli.sh get /config/app
 ### zk-config
 Read, write, and watch configuration in ZooKeeper
 
+**Parameters:**
+- `server` (string): ZooKeeper ensemble, e.g. host1:2181,host2:2181
+- `path` (string): ZNode path, e.g. /config/app
+- `data` (string): Node data, often JSON
+
 **Commands:**
 - `zkCli.sh -server localhost:2181`
 - `zkCli.sh create /config/app '{"port":8080}'`
@@ -89,3 +112,7 @@ Read, write, and watch configuration in ZooKeeper
 - zkCli.sh -server zk1:2181,zk2:2181,zk3:2181 create /config/feature-flags '{"newUi":true}'
 - zkCli.sh get -s /config/app
 - zkCli.sh deleteall /config/app
+
+## References
+- [ZooKeeper CLI Guide](https://zookeeper.apache.org/doc/current/zookeeperCLI.html)
+- [ZooKeeper Programmer Guide](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html)

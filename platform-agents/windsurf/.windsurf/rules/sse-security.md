@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration."
+description: "Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration. Use when working with sse hardening, api or when the user mentions sse hardening, api."
 globs: ["**/*.r", "**/*.rs", "**/*.sh"]
 ---
 
-# SSE Security
-
 Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SSE Security
 
@@ -70,6 +88,12 @@ curl -N -H "Authorization: Bearer $TOKEN" https://events.example.com/stream | he
 ### sse-hardening
 Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration.
 
+**Parameters:**
+- `token` (string): Bearer token for SSE authentication
+- `origin` (string): CORS origin header value
+- `last_event_id` (string): Last-Event-ID for reconnection resume
+- `max_duration` (integer): Maximum stream duration in seconds
+
 **Commands:**
 - `curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events`
 - `curl -N -H "Origin: https://app.example.com" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events`
@@ -81,3 +105,6 @@ Secures Server-Sent Events endpoints with authentication, origin validation, and
 - curl -N -H "Origin: https://app.example.com" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events
 - curl -N -H "Last-Event-ID: 42" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events
 - timeout 30 curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events
+
+## References
+- [MDN Using SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)

@@ -2,11 +2,29 @@
 applyTo: "**/*.html **/*.r **/*.sh **/*.{ts,tsx}"
 ---
 
-# vue
-
 Builds Vue 3 applications with the create-vue toolchain: SFCs, Pinia state, vue-router, and vue-tsc type checking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm create vue@latest my-app -- --typescript --router --pini`, `npx vue-tsc --noEmit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Vue
 
@@ -92,6 +110,11 @@ Test stores and composables; keep coverage above 80% for critical logic.
 ### scaffold
 Create Vue 3 projects and add libraries.
 
+**Parameters:**
+- `typescript` (string): Enable TypeScript support
+- `router` (string): Add vue-router
+- `pinia` (string): Add Pinia state store
+
 **Commands:**
 - `npm create vue@latest my-app -- --typescript --router --pinia --eslint`
 - `npm install`
@@ -107,6 +130,11 @@ Create Vue 3 projects and add libraries.
 ### typecheck-test
 Type-check, test, and analyze Vue components.
 
+**Parameters:**
+- `noEmit` (string): Type-check SFC templates without emitting
+- `coverage` (string): Enable Vitest coverage
+- `fix` (string): Auto-fix ESLint issues
+
 **Commands:**
 - `npx vue-tsc --noEmit`
 - `npm run test`
@@ -118,3 +146,8 @@ Type-check, test, and analyze Vue components.
 - npx vue-tsc --noEmit --strict
 - npx vitest run tests/unit/cart.spec.ts
 - npm run lint -- --fix
+
+## References
+- [Vue 3 Guide](https://vuejs.org/guide/introduction.html)
+- [create-vue](https://github.com/vuejs/create-vue)
+- [Pinia](https://pinia.vuejs.org/)

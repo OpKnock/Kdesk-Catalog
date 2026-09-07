@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Composes Kubernetes manifests with kustomize: overlays, bases, patches, generators, and kubectl apply -k workflows."
+description: "Composes Kubernetes manifests with kustomize: overlays, bases, patches, generators, and kubectl apply -k workflows. Use when working with build and apply, edit and patch, devops or when the user mentions build and apply, edit and patch, devops."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# kustomize-devops
-
 Composes Kubernetes manifests with kustomize: overlays, bases, patches, generators, and kubectl apply -k workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kustomize build ./overlays/prod`, `kustomize create --resources=base`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kustomize Configuration
 
@@ -71,6 +89,10 @@ overlays/
 ### build-and-apply
 Build overlays into final manifests and apply them directly.
 
+**Parameters:**
+- `path` (string): Overlay or base directory
+- `output-file` (string): Write built manifest to file
+
 **Commands:**
 - `kustomize build ./overlays/prod`
 - `kustomize build . | kubectl apply -f -`
@@ -86,6 +108,10 @@ Build overlays into final manifests and apply them directly.
 ### edit-and-patch
 Modify kustomization.yaml: add resources, patches, and set images.
 
+**Parameters:**
+- `image` (string): Image tag to set
+- `kind` (string): Resource kind for patches
+
 **Commands:**
 - `kustomize create --resources=base`
 - `kustomize edit add resource deployment.yaml`
@@ -98,3 +124,7 @@ Modify kustomization.yaml: add resources, patches, and set images.
 - kustomize edit set image myapp:1.2.0
 - kustomize edit add patch --kind Deployment --name web --path patch.yaml
 - kustomize edit add configmap app-config --from-literal=DEBUG=false
+
+## References
+- [Kustomize Documentation](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
+- [Kustomize GitHub](https://github.com/kubernetes-sigs/kustomize)

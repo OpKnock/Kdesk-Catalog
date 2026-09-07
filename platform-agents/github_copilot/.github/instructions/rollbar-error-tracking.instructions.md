@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.py **/*.r **/*.sh"
 ---
 
-# Rollbar Error Tracking
-
 Expert Rollbar skill for Python SDK reporting, deploy tracking, item and deploy REST API calls, and querying recent errors for triage.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install rollbar`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Rollbar Error Tracking
 
@@ -75,6 +93,11 @@ curl -X POST https://api.rollbar.com/api/1/item/ -H 'Content-Type: application/j
 ### rollbar-reporting
 Report errors and deploys to Rollbar and query items
 
+**Parameters:**
+- `access_token` (string): Server or read access token
+- `environment` (string): Environment name, e.g. prod or staging
+- `revision` (string): Git SHA associated with a deploy
+
 **Commands:**
 - `pip install rollbar`
 - `python -c 'import rollbar; rollbar.init("POST_SERVER_ITEM_ACCESS_TOKEN", "prod"); rollbar.report_message("booted", "info")'`
@@ -86,3 +109,7 @@ Report errors and deploys to Rollbar and query items
 - curl -s 'https://api.rollbar.com/api/1/items/?access_token=READ_TOKEN&environment=prod&level=error' | jq '.result.items | length'
 - python -c 'import rollbar; rollbar.report_exc_info()'
 - curl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{"access_token":"POST_SERVER_ITEM_ACCESS_TOKEN","environment":"prod","revision":"abc123"}'
+
+## References
+- [Rollbar Python SDK](https://docs.rollbar.com/docs/python)
+- [Rollbar API reference](https://docs.rollbar.com/reference)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking and serving, and Kubeflow Pipelines for orchestration."
+description: "Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking and serving, and Kubeflow Pipelines for orchestration. Use when working with data versioning, experiment tracking, pipeline orchestration or when the user mentions data versioning, experiment tracking, pipeline orchestration."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# ai-ml-pipeline
-
 Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking and serving, and Kubeflow Pipelines for orchestration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `dvc init`, `mlflow run . -P alpha=0.5`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AI/ML Pipeline
 
@@ -79,6 +97,10 @@ stages:
 ### data-versioning
 Track datasets and model artifacts with DVC so training runs reproduce from any git commit.
 
+**Parameters:**
+- `stage` (string): DVC stage file (e.g. train.dvc) to reproduce
+- `targets` (string): Space-separated stages for dvc repro
+
 **Commands:**
 - `dvc init`
 - `dvc add data/train.csv`
@@ -94,6 +116,11 @@ Track datasets and model artifacts with DVC so training runs reproduce from any 
 ### experiment-tracking
 Log parameters, metrics, and models with MLflow and serve models as REST endpoints.
 
+**Parameters:**
+- `experiment` (string): MLflow experiment name or ID
+- `run_id` (string): Run ID used to reference a registered model
+- `params` (string): Hyperparameters passed with -P key=value
+
 **Commands:**
 - `mlflow run . -P alpha=0.5`
 - `mlflow experiments create --experiment-name ab-test`
@@ -108,6 +135,10 @@ Log parameters, metrics, and models with MLflow and serve models as REST endpoin
 ### pipeline-orchestration
 Package and run component pipelines on Kubeflow Pipelines.
 
+**Parameters:**
+- `pipeline_file` (string): Path to the compiled pipeline YAML/JSON
+- `run_id` (string): Pipeline run identifier for logs
+
 **Commands:**
 - `kubectl apply -f pipeline.yaml`
 - `kfp pipeline upload`
@@ -118,3 +149,8 @@ Package and run component pipelines on Kubeflow Pipelines.
 - kfp pipeline upload --name iris-pipeline pipeline.yaml
 - kubectl logs -n kubeflow -l pipeline-run-id=run-123 --tail=200
 - kubectl get experiments.pipelines.kubeflow.org
+
+## References
+- [DVC Documentation](https://dvc.org/doc)
+- [MLflow Docs](https://mlflow.org/docs/latest/index.html)
+- [Kubeflow Pipelines](https://www.kubeflow.org/docs/components/pipelines/)

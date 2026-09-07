@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# Cost Azure
-
 Tracks Azure cloud spend with Cost Management queries, exports, budgets, and consumption APIs to keep billing under control.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `az cost-management query --type ActualCost --timeframe Month`, `az consumption budget create --budget-name engineering-month`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Azure Cost Optimization
 
@@ -66,6 +84,11 @@ az monitor metrics list --resource $RESOURCE_ID --metric PercentageCPU --interva
 ### cost-management
 Query Azure cost data and manage exports via az cost-management.
 
+**Parameters:**
+- `type` (string): ActualCost or AmortizedCost
+- `timeframe` (string): MonthToDate, LastMonth, or custom start/end
+- `scope` (string): Subscription or resource-group scope URI
+
 **Commands:**
 - `az cost-management query --type ActualCost --timeframe MonthToDate --scope /subscriptions/$SUBSCRIPTION_ID --aggregation '{"totalCost":{"name":"PreTaxCost","function":"Sum"}}'`
 - `az cost-management query --type ActualCost --timeframe LastMonth --scope /subscriptions/$SUBSCRIPTION_ID --grouping '{"type":"Dimension","name":"ServiceName"}'`
@@ -81,6 +104,11 @@ Query Azure cost data and manage exports via az cost-management.
 ### budgets
 Create Azure budgets and view consumption data.
 
+**Parameters:**
+- `budget-name` (string): Unique budget name
+- `amount` (number): Budget amount in USD
+- `time-grain` (string): monthly, quarterly, or annually
+
 **Commands:**
 - `az consumption budget create --budget-name engineering-monthly --amount 15000 --time-grain monthly --start-date 2026-08-01 --category cost`
 - `az consumption budget list`
@@ -92,3 +120,8 @@ Create Azure budgets and view consumption data.
 - az consumption budget create --budget-name eng-monthly --amount 15000 --time-grain monthly --start-date 2026-08-01
 - az consumption usage list --top 20 | jq '.[] | {name: .name.value, quantity: .quantity}'
 - az consumption budget show --budget-name eng-monthly
+
+## References
+- [Azure Cost Management + Billing](https://learn.microsoft.com/en-us/azure/cost-management-billing/)
+- [az cost-management CLI reference](https://learn.microsoft.com/en-us/cli/azure/cost-management)
+- [Azure Consumption CLI](https://learn.microsoft.com/en-us/cli/azure/consumption)

@@ -1,13 +1,31 @@
 ---
 name: "micronaut-kotlin"
-description: "Build Micronaut applications with the Kotlin language: scaffolding, controllers, coroutines, and Gradle/Kotlin DSL setup."
+description: "Build Micronaut applications with the Kotlin language: scaffolding, controllers, coroutines, and Gradle/Kotlin DSL setup. Use when working with micronaut kotlin scaffold, api or when the user mentions micronaut kotlin scaffold, api."
 ---
-
-# Micronaut Kotlin
 
 Build Micronaut applications with the Kotlin language: scaffolding, controllers, coroutines, and Gradle/Kotlin DSL setup.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mn create-app com.example.demo --lang kotlin --build gradle`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Micronaut Kotlin
 
@@ -72,6 +90,11 @@ plugins {
 ### micronaut-kotlin-scaffold
 Scaffold Kotlin Micronaut apps and services with the Micronaut CLI and manage the build.
 
+**Parameters:**
+- `lang` (string): kotlin (with kapt or ksp) or java
+- `features` (array): Micronaut features to include, e.g. kapt, data-jpa, kafka
+- `build` (string): gradle or maven
+
 **Commands:**
 - `mn create-app com.example.demo --lang kotlin --build gradle`
 - `mn create-controller com.example.HelloController --lang kotlin`
@@ -83,3 +106,7 @@ Scaffold Kotlin Micronaut apps and services with the Micronaut CLI and manage th
 - mn create-app com.example.orders --lang kotlin --features kapt
 - ./gradlew run
 - ./gradlew test --tests com.example.HelloControllerTest
+
+## References
+- [Micronaut Kotlin Guide](https://docs.micronaut.io/latest/guide/index.html)
+- [Micronaut CLI](https://micronaut-projects.github.io/micronaut-starter/latest/guide/)

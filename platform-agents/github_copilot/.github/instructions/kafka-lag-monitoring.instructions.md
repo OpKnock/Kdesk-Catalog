@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Kafka Lag Monitoring
-
 Monitor Kafka consumer lag: describe groups per topic/partition, inspect member assignment, reset offsets safely, and compute end-to-end lag from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kafka-consumer-groups.sh --bootstrap-server localhost:9092 -`, `kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka Lag Monitoring
 
@@ -83,6 +101,10 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 \
 ### lag-inspection
 Inspect consumer group lag per partition and per member.
 
+**Parameters:**
+- `group` (string): Consumer group ID.
+- `verbose` (boolean): Show per-member partition assignment.
+
 **Commands:**
 - `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments`
 - `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments --members --verbose`
@@ -97,6 +119,11 @@ Inspect consumer group lag per partition and per member.
 ### offset-ops
 Get raw offsets and reset group offsets for replay or repairs.
 
+**Parameters:**
+- `group` (string): Group to reset.
+- `topic` (string): Topic to reset offsets for.
+- `mode` (string): Reset mode: to-earliest, to-latest, to-datetime, shift-by.
+
 **Commands:**
 - `kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1`
 - `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group payments --topic orders --to-earliest --execute`
@@ -107,3 +134,7 @@ Get raw offsets and reset group offsets for replay or repairs.
 - kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1
 - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group payments --topic orders --to-earliest --execute
 - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group payments --topic orders --shift-by -100 --execute
+
+## References
+- [kafka-consumer-groups.sh](https://kafka.apache.org/documentation/#basic_ops_consumer_group)
+- [Kafka Lag Concepts](https://kafka.apache.org/documentation/#consumer_fetching)

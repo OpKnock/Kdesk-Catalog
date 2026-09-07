@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Authors and publishes reusable Node.js middleware packages: factory functions, options handling, npm packaging, and consumer-facing API design."
+description: "Authors and publishes reusable Node.js middleware packages: factory functions, options handling, npm packaging, and consumer-facing API design. Use when working with package authoring, consumer validation or when the user mentions package authoring, consumer validation."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# api-middleware-specialist
-
 Authors and publishes reusable Node.js middleware packages: factory functions, options handling, npm packaging, and consumer-facing API design.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm init -y`, `npm link`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Middleware Specialist
 
@@ -54,6 +72,11 @@ npm publish --access public
 ### package-authoring
 Create a publishable middleware package with a factory function and options object
 
+**Parameters:**
+- `options` (object): Middleware factory options with defaults and validation
+- `main` (string): Entry point in package.json consumed by require()
+- `peerDependencies` (object): Express/Fastify version ranges the middleware supports
+
 **Commands:**
 - `npm init -y`
 - `npm pack --dry-run`
@@ -78,3 +101,7 @@ Validate the packaged artifact works when installed in a consumer project
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [npm Publishing Docs](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry)
+- [npm-check-updates](https://github.com/raineorshine/npm-check-updates)

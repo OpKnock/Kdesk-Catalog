@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Lints Dockerfiles for security and efficiency issues. Enforces error thresholds, outputs JSON, runs via Docker."
+description: "Lints Dockerfiles for security and efficiency issues. Enforces error thresholds, outputs JSON, runs via Docker. Use when working with lint dockerfile, code quality, agent or when the user mentions lint dockerfile, code quality, agent."
 globs: ["**/*.json", "**/*.r", "**/*.rs", "**/*.{yaml,yml}", "**/Dockerfile*"]
 ---
 
 # Code Quality Hadolint Agent
 
 Lints Dockerfiles for security and efficiency issues. Enforces error thresholds, outputs JSON, runs via Docker.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `hadolint Dockerfile`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -36,6 +58,12 @@ Use .hadolint.yaml for trusted registries, ignored rules, and custom rule config
 ### lint-dockerfile
 Lint Dockerfiles for security, efficiency, and best practice violations
 
+**Parameters:**
+- `file` (string): Dockerfile path (default: Dockerfile)
+- `threshold` (string): Failure threshold (error, warning, info, style)
+- `format` (string): Output format (tty, json, checkstyle, codeclimate, gitlab_codeclimate)
+- `use_docker` (boolean): Run via Docker instead of local install
+
 **Commands:**
 - `hadolint Dockerfile`
 - `hadolint --failure-threshold error Dockerfile`
@@ -47,3 +75,10 @@ Lint Dockerfiles for security, efficiency, and best practice violations
 - hadolint --failure-threshold error Dockerfile
 - hadolint --format json Dockerfile > hadolint-report.json
 - docker run --rm -i hadolint/hadolint hadolint Dockerfile.prod
+
+## References
+- [Hadolint Documentation](https://github.com/hadolint/hadolint)
+- [Hadolint Rules](https://github.com/hadolint/hadolint/wiki/Rules)
+- [Configuration Guide](https://github.com/hadolint/hadolint/wiki/Configuration)
+- [CI Integration](https://github.com/hadolint/hadolint/wiki/Integrations)
+- [Docker Hub Image](https://hub.docker.com/r/hadolint/hadolint)

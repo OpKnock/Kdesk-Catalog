@@ -1,0 +1,81 @@
+{
+  "id": "catalog-audit",
+  "type": "workflow",
+  "name": "Catalog Audit — Beyond Chatbot Demo",
+  "version": "1.0.0",
+  "agent": "academic-computer-science-agent",
+  "description": "n8n-style agentic workflow: read → reason → compare → act. Demonstrates parallel, conditional, sequential delegation (fixed workflow engine).",
+  "input": {
+    "catalog_root": "."
+  },
+  "steps": [
+    {
+      "id": "read_catalog",
+      "type": "skill",
+      "skill": "academic-computer-science",
+      "description": "Read universal-agents YAML + provenance (Skill = n8n node)"
+    },
+    {
+      "id": "read_platforms",
+      "type": "skill",
+      "skill": "academic-data-science",
+      "description": "Read platform-agents outputs (45 platforms, 136k files)"
+    },
+    {
+      "id": "parallel_read",
+      "type": "parallel",
+      "branches": [
+        ["read_catalog"],
+        ["read_platforms"]
+      ],
+      "description": "Parallel branches run concurrently — fixed delegation logic"
+    },
+    {
+      "id": "compare",
+      "type": "conditional",
+      "condition": "drift > 0",
+      "then": "evaluate_trust",
+      "else": "evaluate_trust",
+      "description": "Conditional: if drift then fix else verify"
+    },
+    {
+      "id": "evaluate_trust",
+      "type": "capability",
+      "capability": "computer-science-expertise",
+      "requires": "parallel_read",
+      "tool": "computer-science-cli",
+      "description": "Evaluate TrustScore breakdown"
+    },
+    {
+      "id": "seq_fix",
+      "type": "sequential",
+      "steps": ["compare", "evaluate_trust"],
+      "description": "Sequential ordering with cycle detection"
+    },
+    {
+      "id": "guarded_write",
+      "type": "tool",
+      "tool": "safe_path",
+      "requires": "seq_fix",
+      "description": "Guarded write via safe_path (blocks traversal/symlink escape)"
+    }
+  ],
+  "output": {
+    "result": "{{guarded_write.output}}",
+    "drift": "{{compare.output}}",
+    "trust": "{{evaluate_trust.output}}"
+  },
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "workflow-v1",
+    "source_yaml": "governance/catalog-auditor.yaml",
+    "note": "Demonstrates fixed parallel/conditional/sequential validation and versioned capability execution"
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "workflow-v1",
+    "source": "universal-agents/governance/catalog-auditor.yaml",
+    "checksum": "demo-checksum-catalog-audit"
+  }
+}

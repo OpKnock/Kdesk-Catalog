@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Incident response from the terminal: triaging with journalctl and kubectl, capturing evidence with timestamps, and coordinating the timeline."
+description: "Incident response from the terminal: triaging with journalctl and kubectl, capturing evidence with timestamps, and coordinating the timeline. Use when working with incident triage, api or when the user mentions incident triage, api."
 globs: ["**/*.go", "**/*.r", "**/*.scala", "**/*.sh"]
 ---
 
-# Incident Response
-
 Incident response from the terminal: triaging with journalctl and kubectl, capturing evidence with timestamps, and coordinating the timeline.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `journalctl -u myapp --since '10 min ago' -f`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Incident Response
 
@@ -84,6 +102,11 @@ Agent: kubectl logs deployment/myapp --since=10m --timestamps |68:    tail -100
 ### incident-triage
 Collect logs, events, and system state to triage incidents fast.
 
+**Parameters:**
+- `service` (string): Service or pod name under investigation.
+- `since` (string): Time window, e.g. '10 min ago' or '1h'.
+- `tail` (integer): Lines of log tail.
+
 **Commands:**
 - `journalctl -u myapp --since '10 min ago' -f`
 - `kubectl get events --sort-by=.lastTimestamp`
@@ -95,3 +118,7 @@ Collect logs, events, and system state to triage incidents fast.
 - journalctl -u myapp -p err --since yesterday
 - kubectl describe pod myapp-abc123
 - free -m && df -h /
+
+## References
+- [PagerDuty Incident Response Docs](https://response.pagerduty.com/)
+- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)

@@ -1,13 +1,31 @@
 ---
 name: "firebase-auth"
-description: "Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation."
+description: "Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation. Use when working with auth admin, api or when the user mentions auth admin, api."
 ---
-
-# Firebase Auth
 
 Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `firebase auth:list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Firebase Auth
 
@@ -80,6 +98,11 @@ curl -s -X POST 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPa
 ### auth-admin
 Administer Firebase Auth users, issue custom tokens, and verify ID tokens.
 
+**Parameters:**
+- `email` (string): User email to create or delete
+- `id-token` (string): ID token to verify
+- `import-file` (string): JSON file with users to import
+
 **Commands:**
 - `firebase auth:list`
 - `firebase auth:import users.json`
@@ -92,3 +115,7 @@ Administer Firebase Auth users, issue custom tokens, and verify ID tokens.
 - firebase auth:list
 - firebase auth:import users.json
 - node -e "const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)"
+
+## References
+- [Firebase Auth REST API](https://firebase.google.com/docs/reference/rest/auth)
+- [Admin SDK verifyIdToken](https://firebase.google.com/docs/auth/admin/verify-id-tokens)

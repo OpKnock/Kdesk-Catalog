@@ -2,11 +2,7 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# scorecard
-
 Evaluates open-source project health and supply-chain risk with OSSF Scorecard, checking CI, code review, and dependency practices.
-
-## Instructions
 
 # OSSF Scorecard
 
@@ -65,6 +61,11 @@ scorecard --repo github.com/org/repo --format json
 ### repo-assessment
 Assess repositories locally or on GitHub.
 
+**Parameters:**
+- `repo` (string): GitHub repository in owner/name form
+- `checks` (array): Checks to run: Code-Review, Branch-Protection, Signed-Releases, etc.
+- `format` (string): Output: default, json, sarif
+
 **Commands:**
 - `scorecard --repo github.com/org/repo`
 - `scorecard --local .`
@@ -80,6 +81,10 @@ Assess repositories locally or on GitHub.
 ### dependency-assessment
 Score package dependencies for supply-chain risk.
 
+**Parameters:**
+- `package` (string): Package name for npm or pypi scoring
+- `format` (string): Output format for package scoring: json, csv, sarif, sonar.
+
 **Commands:**
 - `scorecard --npm=lodash`
 - `scorecard --pypi=requests`
@@ -90,3 +95,7 @@ Score package dependencies for supply-chain risk.
 - scorecard --npm=express
 - scorecard --pypi=requests
 - scorecard --npm=lodash --show-details
+
+## References
+- [OSSF Scorecard GitHub](https://github.com/ossf/scorecard)
+- [OpenSSF Scorecard Site](https://securityscorecards.dev/)

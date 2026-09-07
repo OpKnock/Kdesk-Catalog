@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "HTTP Strict Transport Security: verifying HSTS headers with curl, configuring Strict-Transport-Security in Nginx/Caddy, and checking preload status."
+description: "HTTP Strict Transport Security: verifying HSTS headers with curl, configuring Strict-Transport-Security in Nginx/Caddy, and checking preload status. Use when working with hsts header ops, api or when the user mentions hsts header ops, api."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# HSTS
-
 HTTP Strict Transport Security: verifying HSTS headers with curl, configuring Strict-Transport-Security in Nginx/Caddy, and checking preload status.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -sI https://api.your-app.test | grep -i strict-transpor`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # HSTS
 
@@ -86,6 +104,11 @@ Agent: curl -sI https://api.your-app.test | grep -i65:    strict-transport-secur
 ### hsts-header-ops
 Inspect and configure HSTS headers on servers and check preload eligibility.
 
+**Parameters:**
+- `domain` (string): Domain to check.
+- `max_age` (integer): HSTS max-age in seconds.
+- `include_subdomains` (boolean): Apply the policy to subdomains.
+
 **Commands:**
 - `curl -sI https://api.your-app.test | grep -i strict-transport-security`
 - `curl -s -o /dev/null -w '%{http_code}\n' https://api.your-app.test`
@@ -97,3 +120,7 @@ Inspect and configure HSTS headers on servers and check preload eligibility.
 - curl -sI https://api.your-app.test | grep -i "strict-transport-security"
 - curl -s "https://hstspreload.org/api/v2/status?domain=your-app.test" | jq .status
 - curl -sI http://api.your-app.test | grep -i strict-transport-security
+
+## References
+- [Strict-Transport-Security MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
+- [HSTS Preload](https://hstspreload.org/)

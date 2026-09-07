@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Designs and executes deployment strategies: rolling, blue/green, canary, and rollback on Kubernetes."
+description: "Designs and executes deployment strategies: rolling, blue/green, canary, and rollback on Kubernetes. Use when working with k8s deployments or when the user mentions k8s deployments."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# deployment-strategy-engineer
-
 Designs and executes deployment strategies: rolling, blue/green, canary, and rollback on Kubernetes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl set image deployment/web web=repo/app:v2.1.0`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Deployment Strategy Engineer
 
@@ -80,6 +98,11 @@ error rate spikes, rolls back and reports the root cause.
 ### k8s-deployments
 Execute and verify deployment strategies with kubectl and Helm
 
+**Parameters:**
+- `image` (string): Container and image reference for set image
+- `timeout` (string): Rollout wait timeout
+- `set` (string): Helm values to override, e.g. image.tag=v2
+
 **Commands:**
 - `kubectl set image deployment/web web=repo/app:v2.1.0`
 - `kubectl rollout status deployment/web --timeout=180s`
@@ -91,3 +114,7 @@ Execute and verify deployment strategies with kubectl and Helm
 - kubectl get rs -l app=web --sort-by=.metadata.creationTimestamp
 - kubectl rollout history deployment/web
 - kubectl rollout pause deployment/web
+
+## References
+- [Kubernetes deployment strategies](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Argo Rollouts docs](https://argoproj.github.io/argo-rollouts/)

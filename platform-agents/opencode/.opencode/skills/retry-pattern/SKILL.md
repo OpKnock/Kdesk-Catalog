@@ -1,13 +1,31 @@
 ---
 name: "retry-pattern"
-description: "Expert reference covering exponential backoff with tenacity, curl retry flags, Retry-After handling, and jitter to survive cascading failures."
+description: "Expert reference covering exponential backoff with tenacity, curl retry flags, Retry-After handling, and jitter to survive cascading failures. Use when working with exponential backoff, api or when the user mentions exponential backoff, api."
 ---
-
-# Retry Pattern
 
 Expert reference covering exponential backoff with tenacity, curl retry flags, Retry-After handling, and jitter to survive cascading failures.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl --retry 5 --retry-delay 2 --retry-all-errors --retry-co`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Retry Pattern
 
@@ -69,6 +87,11 @@ curl --retry 5 --retry-delay 2 --retry-all-errors -s https://api.your-app.test/h
 ### exponential-backoff
 Retry failing calls with exponential backoff, jitter, and Retry-After
 
+**Parameters:**
+- `max_attempts` (integer): Total attempts before giving up
+- `backoff_multiplier` (integer): Base delay in seconds for exponential growth
+- `jitter` (boolean): Randomize delay to avoid thundering herd
+
 **Commands:**
 - `curl --retry 5 --retry-delay 2 --retry-all-errors --retry-connrefused https://api.your-app.test/health`
 - `pip install tenacity`
@@ -79,3 +102,7 @@ Retry failing calls with exponential backoff, jitter, and Retry-After
 - curl --retry 5 --retry-delay 2 --retry-all-errors https://api.your-app.test/health
 - python -c 'from tenacity import retry, stop_after_attempt, wait_exponential; print(retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, max=10))(__import__("requests").get).__name__)'
 - curl -si https://api.your-app.test/429 | grep -i retry-after
+
+## References
+- [Azure retry pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+- [tenacity docs](https://tenacity.readthedocs.io/en/latest/)

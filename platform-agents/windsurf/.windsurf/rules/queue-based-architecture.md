@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups, and at-least-once semantics."
+description: "Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups, and at-least-once semantics. Use when working with sqs, redis streams or when the user mentions sqs, redis streams."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# queue-based-architecture
-
 Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups, and at-least-once semantics.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aws sqs create-queue --queue-name orders --attributes Visibi`, `redis-cli XADD orders:stream '*' order 42 sku A1`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Queue-Based Architecture
 
@@ -68,6 +86,11 @@ Send 10k messages, kill a consumer, restart, and verify zero loss with counts.
 ### sqs
 Manage SQS queues and messages.
 
+**Parameters:**
+- `queue-url` (string): SQS queue URL
+- `message-body` (string): Message payload
+- `max-number-of-messages` (number): Batch receive size
+
 **Commands:**
 - `aws sqs create-queue --queue-name orders --attributes VisibilityTimeout=60`
 - `aws sqs send-message --queue-url $QUEUE_URL --message-body '{"order":42}'`
@@ -83,6 +106,11 @@ Manage SQS queues and messages.
 ### redis-streams
 Use Redis Streams for consumer groups and replays.
 
+**Parameters:**
+- `stream` (string): Stream key
+- `group` (string): Consumer group name
+- `consumer` (string): Consumer name
+
 **Commands:**
 - `redis-cli XADD orders:stream '*' order 42 sku A1`
 - `redis-cli XGROUP CREATE orders:stream workers 0`
@@ -94,3 +122,8 @@ Use Redis Streams for consumer groups and replays.
 - redis-cli XGROUP CREATE orders:stream workers 0 MKSTREAM
 - redis-cli XREADGROUP GROUP workers w2 COUNT 5 STREAMS orders:stream '>'
 - redis-cli XINFO GROUPS orders:stream
+
+## References
+- [Amazon SQS](https://docs.aws.amazon.com/sqs/)
+- [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/)
+- [AWS Lambda + SQS](https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html)

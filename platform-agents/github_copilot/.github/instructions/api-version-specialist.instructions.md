@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# api-version-specialist
-
 Applies Semantic Versioning to API releases: semver range evaluation, npm versioning, git tags, and breaking-change classification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx semver 1.2.3 major`, `npm version major -m "chore: release v%s"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Version Specialist
 
@@ -51,6 +69,11 @@ git tag -l 'v*' --sort=-v:refname | head
 ### semver-tools
 Evaluate and apply semver versions
 
+**Parameters:**
+- `version` (string): Current version
+- `bump` (string): major, minor, or patch
+- `range` (string): Semver range expression
+
 **Commands:**
 - `npx semver 1.2.3 major`
 - `npx semver "1.2.3" -r ">=1.0.0 <2.0.0"`
@@ -75,3 +98,7 @@ Classify changes as breaking or non-breaking
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Semantic Versioning Spec](https://semver.org/)
+- [npm version Command](https://docs.npmjs.com/cli/v10/commands/npm-version)

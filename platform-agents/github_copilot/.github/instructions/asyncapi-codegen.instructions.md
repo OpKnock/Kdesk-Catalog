@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.html **/*.java **/*.py **/*.r **/*.sh **/*.{ts,tsx} **/*.{yaml,yml}"
 ---
 
-# Asyncapi Codegen
-
 Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates, and Modelina multi-language models.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @asyncapi/cli validate asyncapi.yaml`, `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-templ`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AsyncAPI Codegen
 
@@ -78,6 +96,10 @@ operations:
 ### validation
 Validate and lint AsyncAPI documents.
 
+**Parameters:**
+- `file` (string): Path or URL of the AsyncAPI document
+- `ruleset` (string): Custom lint ruleset file
+
 **Commands:**
 - `npx @asyncapi/cli validate asyncapi.yaml`
 - `npx @asyncapi/cli lint asyncapi.yaml`
@@ -91,6 +113,11 @@ Validate and lint AsyncAPI documents.
 
 ### generation
 Generate server/client code and docs from templates.
+
+**Parameters:**
+- `template` (string): Generator template name
+- `output` (string): Output directory (-o)
+- `param` (string): Template parameter in key=value form
 
 **Commands:**
 - `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write`
@@ -107,6 +134,10 @@ Generate server/client code and docs from templates.
 ### modelina
 Generate data models for multiple languages from the schema.
 
+**Parameters:**
+- `language` (string): Target language: TypeScript, Java, Go, Python, C#
+- `package_name` (string): Package name for generated code
+
 **Commands:**
 - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript`
 - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./src/main/java --language Java`
@@ -117,3 +148,9 @@ Generate data models for multiple languages from the schema.
 - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript --packageName com.example
 - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Java --type-mapping string=UUID
 - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Python --generate-optional
+
+## References
+- [AsyncAPI Generator](https://www.asyncapi.com/docs/tools/generator)
+- [AsyncAPI CLI](https://www.asyncapi.com/docs/tools/cli)
+- [Modelina](https://www.asyncapi.com/docs/tools/modelina)
+- [AsyncAPI Spec v3](https://www.asyncapi.com/docs/reference/specification/v3.0.0)

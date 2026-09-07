@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# sftp
-
 Interacts with remote filesystems over SFTP: interactive sessions, batch mode, uploads/downloads, and permission management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sftp user@host`, `sftp -b batch.txt user@host`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SFTP Operations
 
@@ -75,6 +93,10 @@ bye
 ### interactive-session
 Navigate remote directories, upload, and download files interactively.
 
+**Parameters:**
+- `host` (string): Remote host
+- `port` (integer): SSH port
+
 **Commands:**
 - `sftp user@host`
 - `sftp -oPort=2222 user@host`
@@ -91,6 +113,10 @@ Navigate remote directories, upload, and download files interactively.
 ### batch-and-management
 Run scripted transfers and manage remote files.
 
+**Parameters:**
+- `batch-file` (string): File with sftp commands
+- `remote-path` (string): Remote path for operations
+
 **Commands:**
 - `sftp -b batch.txt user@host`
 - `sftp -b - user@host <<< $'put f.txt\nbye'`
@@ -103,3 +129,7 @@ Run scripted transfers and manage remote files.
 - sftp -b batch.txt user@host
 - sftp user@host <<< $'mget /data/*.csv'
 - mkdir /backups/new
+
+## References
+- [sftp Manual (OpenBSD)](https://man.openbsd.org/sftp)
+- [sftp Linux Manual](https://man7.org/linux/man-pages/man1/sftp.1.html)

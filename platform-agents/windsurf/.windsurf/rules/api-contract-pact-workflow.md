@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Designs consumer-driven contract testing setups: Pact workflows, contract publishing, and provider verification pipelines."
+description: "Designs consumer-driven contract testing setups: Pact workflows, contract publishing, and provider verification pipelines. Use when working with pact workflow, schema validation or when the user mentions pact workflow, schema validation."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 ---
 
-# Api Contract Pact Workflow
-
 Designs consumer-driven contract testing setups: Pact workflows, contract publishing, and provider verification pipelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @pact-foundation/pact`, `npm install ajv`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Contract (Design)
 
@@ -54,6 +72,10 @@ Run `can-i-deploy` as the final gate in every release pipeline.
 ### pact-workflow
 Write consumer tests, publish contracts, and verify providers against them
 
+**Parameters:**
+- `broker` (string): Pact Broker URL
+- `participant` (string): Consumer or provider name
+
 **Commands:**
 - `npm install @pact-foundation/pact`
 - `npx pact-broker publish ./pacts -a 1.0.0 -b http://localhost:9292`
@@ -69,6 +91,10 @@ Write consumer tests, publish contracts, and verify providers against them
 ### schema-validation
 Validate API responses against JSON Schema from OpenAPI
 
+**Parameters:**
+- `schema` (string): JSON Schema to validate against
+- `data` (string): Response data
+
 **Commands:**
 - `npm install ajv`
 - `node -e "const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'object',required:['id']},{id:1}))"`
@@ -80,3 +106,8 @@ Validate API responses against JSON Schema from OpenAPI
 - node -e "const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'object',required:['id']},{id:1}))"
 - python -c "import jsonschema;jsonschema.validate({'x':1},{'type':'object','required':['id']})" 2>&1 | tail -1
 - node -e "const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'number',minimum:0},-1)===false?'rejected':'passed')"
+
+## References
+- [Pact Docs](https://docs.pact.io/)
+- [Pact Broker CLI](https://docs.pact.io/pact_broker/client_cli)
+- [AJV](https://ajv.js.org/)

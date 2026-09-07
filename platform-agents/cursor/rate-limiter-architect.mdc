@@ -1,14 +1,32 @@
 ---
-description: "Designs rate limiting systems with sliding windows, token buckets, and distributed Redis counters. Authors algorithms in Lua for atomicity, configures gateway (Kong, Envoy, nginx) and application-layer limits, and validates with load tests."
+description: "Designs rate limiting systems with sliding windows, token buckets, and distributed Redis counters. Authors algorithms in Lua for atomicity, configures gateway (Kong, Envoy, nginx) and application-layer limits, and validates with load tests. Use when working with algorithm design, gateway integration, tiered limits, load test validation or when the user mentions algorithm design, gateway integration, tiered limits, load test validation."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Rate Limiter Architect
-
 Designs rate limiting systems with sliding windows, token buckets, and distributed Redis counters. Authors algorithms in Lua for atomicity, configures gateway (Kong, Envoy, nginx) and application-layer limits, and validates with load tests.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli --eval sliding_window.lua rate:api:user123 1 1000 `, `deck file add-plugin kong.yaml --name=rate-limiting --config`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Rate Limiter Architect
 
@@ -109,6 +127,12 @@ EVAL "local t=redis.call('HGET',KEYS[1],'limit') local w=redis.call('HGET',KEYS[
 ### algorithm-design
 Designs and implements rate limiting algorithms (token bucket, sliding window, fixed window, leaky bucket) with atomic Redis Lua scripts.
 
+**Parameters:**
+- `algorithm` (string): Algorithm (sliding-window, token-bucket, fixed-window, leaky-bucket)
+- `key` (string): Redis key pattern
+- `limit` (number): Maximum requests
+- `window_or_rate` (number): Window seconds or refill rate
+
 **Commands:**
 - `redis-cli --eval sliding_window.lua rate:api:user123 1 1000 60`
 - `redis-cli --eval token_bucket.lua rate:api:user123 100 1000`
@@ -122,6 +146,11 @@ Designs and implements rate limiting algorithms (token bucket, sliding window, f
 
 ### gateway-integration
 Configures rate limiting at Kong, Envoy, and nginx gateways with declarative policies.
+
+**Parameters:**
+- `gateway` (string): Gateway (kong, envoy, nginx)
+- `policy` (string): Kong policy (local, redis, cluster)
+- `limit` (number): Request limit per window
 
 **Commands:**
 - `deck file add-plugin kong.yaml --name=rate-limiting --config.minute=1000 --config.policy=redis --config.redis_host=redis --config.fault_tolerant=true`
@@ -139,6 +168,11 @@ Configures rate limiting at Kong, Envoy, and nginx gateways with declarative pol
 ### tiered-limits
 Implements tiered rate limits (free/pro/enterprise) with dynamic configuration.
 
+**Parameters:**
+- `tier` (string): Tier name (free, pro, enterprise)
+- `limit` (number): Request limit for tier
+- `window_seconds` (number): Window in seconds
+
 **Commands:**
 - `redis-cli HSET tier:free limit 100 window 60`
 - `redis-cli HSET tier:pro limit 1000 window 60`
@@ -154,6 +188,11 @@ Implements tiered rate limits (free/pro/enterprise) with dynamic configuration.
 ### load-test-validation
 Validates rate limiting behavior under load with k6, hey, and header assertions.
 
+**Parameters:**
+- `tool` (string): Load test tool (hey, k6, vegeta)
+- `target_rate` (number): Target requests per second
+- `expected_429_rate` (number): Expected 429 percentage
+
 **Commands:**
 - `hey -n 2000 -c 50 -H "x-api-key: test-key" http://localhost:8000/api`
 - `k6 run rate-limit-test.js`
@@ -162,3 +201,17 @@ Validates rate limiting behavior under load with k6, hey, and header assertions.
 - hey -n 2000 -c 50 -H "x-api-key: test-key" http://localhost:8000/api
 - k6 run ./tests/rate-limit-test.js
 - curl -i -H "x-api-key: test-key" http://localhost:8000/api | grep -i "ratelimit\|retry"
+
+## References
+- [Rate Limiting Patterns](https://www.figma.com/blog/rate-limiting/)
+- [Redis Rate Limiting](https://redis.io/docs/latest/develop/use-cases/rate-limiting/)
+- [Kong Rate Limiting Plugin](https://docs.konghq.com/hub/kong-inc/rate-limiting/)
+- [Envoy Rate Limit Service](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rate_limit_filter)
+- [Rate Limit Headers Standard](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

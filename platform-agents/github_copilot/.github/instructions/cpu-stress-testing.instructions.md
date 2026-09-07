@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# Cpu Stress Testing
-
 Stress test CPU for load, capacity planning, and chaos scenarios with stress-ng, stress, and sysbench.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `stress-ng --cpu 8 --timeout 60s`, `top -bn1 | head -15`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # CPU Stress Testing
 
@@ -78,6 +96,10 @@ stress-ng --cpu 4 --cpu-load 95 --timeout 120s
 ### stress-tools
 Drive CPU to saturation with stress-ng, stress, and sysbench and monitor utilization
 
+**Parameters:**
+- `workers` (string): Number of CPU workers
+- `timeout` (string): Duration such as 60s or 1m
+
 **Commands:**
 - `stress-ng --cpu 8 --timeout 60s`
 - `stress-ng --cpu 4 --cpu-load 80 --timeout 30s`
@@ -92,6 +114,9 @@ Drive CPU to saturation with stress-ng, stress, and sysbench and monitor utiliza
 ### monitoring
 Monitor CPU utilization and thermal/load behavior during the stress window
 
+**Parameters:**
+- `interval` (string): Sample interval in seconds
+
 **Commands:**
 - `top -bn1 | head -15`
 - `mpstat -P ALL 1 5`
@@ -102,3 +127,7 @@ Monitor CPU utilization and thermal/load behavior during the stress window
 - top -bn1 | head -15
 - mpstat -P ALL 1 3
 - vmstat 1 5
+
+## References
+- [stress-ng reference](https://manpages.ubuntu.com/manpages/trusty/man1/stress-ng.1.html)
+- [sysbench documentation](https://github.com/akopytov/sysbench)

@@ -1,13 +1,31 @@
 ---
 name: "vault"
-description: "Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines."
+description: "Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines. Use when working with kv secrets, policies and tokens, dynamic secrets, audit and ops or when the user mentions kv secrets, policies and tokens, dynamic secrets, audit and ops."
 ---
-
-# vault
 
 Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `vault kv put secret/myapp db_password="hunter2" db_user="app`, `vault policy write app-readonly - <<'EOF'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Vault
 
@@ -67,6 +85,10 @@ vault status
 ### kv-secrets
 Store, read, and delete secrets in KV engines.
 
+**Parameters:**
+- `path` (string): Secret path, e.g. secret/myapp
+- `field` (string): Single field to read
+
 **Commands:**
 - `vault kv put secret/myapp db_password="hunter2" db_user="app"`
 - `vault kv get secret/myapp`
@@ -83,6 +105,10 @@ Store, read, and delete secrets in KV engines.
 ### policies-and-tokens
 Author policies and create scoped tokens.
 
+**Parameters:**
+- `policy` (string): Policy name
+- `ttl` (string): Token TTL, e.g. 1h
+
 **Commands:**
 - `vault policy write app-readonly - <<'EOF'`
 - `vault policy read app-readonly`
@@ -97,6 +123,10 @@ Author policies and create scoped tokens.
 
 ### dynamic-secrets
 Generate dynamic credentials for databases.
+
+**Parameters:**
+- `role` (string): Database role name
+- `lease` (string): Lease ID to renew or revoke
 
 **Commands:**
 - `vault secrets enable database`
@@ -113,6 +143,10 @@ Generate dynamic credentials for databases.
 ### audit-and-ops
 Check server status and enable audit logs.
 
+**Parameters:**
+- `auditType` (string): Audit backend: file, syslog, socket
+- `filePath` (string): Log path for the file audit backend.
+
 **Commands:**
 - `vault status`
 - `vault audit enable file file_path=/var/log/vault-audit.log`
@@ -124,3 +158,14 @@ Check server status and enable audit logs.
 - vault status
 - vault audit enable file file_path=/var/log/vault-audit.log
 - vault audit list
+
+## References
+- [Vault Documentation](https://developer.hashicorp.com/vault/docs)
+- [Vault KV Engine](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Server-side API filtering: implement query parameter filters, combine with pagination and sorting, and test filter edge cases with jq."
+description: "Server-side API filtering: implement query parameter filters, combine with pagination and sorting, and test filter edge cases with jq. Use when working with query filtering, api or when the user mentions query filtering, api."
 globs: ["**/*.java", "**/*.r", "**/*.sh", "**/*.{js,ts,jsx,tsx}"]
 ---
 
-# Filtering
-
 Server-side API filtering: implement query parameter filters, combine with pagination and sorting, and test filter edge cases with jq.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s 'http://localhost:8080/api/orders?status=paid' | jq `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Filtering
 
@@ -75,6 +93,11 @@ curl -s -o /dev/null -w '%{http_code}\n' 'http://localhost:8080/api/orders?total
 ### query-filtering
 Build and test filter query parameters across API data sets.
 
+**Parameters:**
+- `field` (string): Field to filter on
+- `operator` (string): eq, neq, gte, lte, in, contains
+- `value` (string): Filter value
+
 **Commands:**
 - `curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'`
 - `curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10' | jq '.meta'`
@@ -86,3 +109,6 @@ Build and test filter query parameters across API data sets.
 - curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10' | jq '.meta'
 - curl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500' | jq '.data[].total'
 - curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'
+
+## References
+- [JSON:API Filtering](https://jsonapi.org/recommendations/#filtering)

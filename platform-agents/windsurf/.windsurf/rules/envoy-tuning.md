@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Envoy proxy tuning: inspect listeners, clusters, and endpoints via admin API; tune buffer, timeout, and connection pool settings."
+description: "Envoy proxy tuning: inspect listeners, clusters, and endpoints via admin API; tune buffer, timeout, and connection pool settings. Use when working with envoy admin, api or when the user mentions envoy admin, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Envoy Tuning
-
 Envoy proxy tuning: inspect listeners, clusters, and endpoints via admin API; tune buffer, timeout, and connection pool settings.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s http://localhost:15000/listeners | jq`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Envoy Tuning
 
@@ -78,6 +96,11 @@ clusters:
 ### envoy-admin
 Query the Envoy admin API for listeners, clusters, and stats, and drain or reset connections.
 
+**Parameters:**
+- `admin-port` (integer): Envoy admin port (default 15000 in Istio, 9901 standalone)
+- `cluster-name` (string): Cluster name for stats filters
+- `filter` (string): Stats filter regex
+
 **Commands:**
 - `curl -s http://localhost:15000/listeners | jq`
 - `curl -s http://localhost:15000/clusters?format=json | jq '.cluster_statuses[] | {name: .name, membership: .membership.total_healthy_count}'`
@@ -89,3 +112,7 @@ Query the Envoy admin API for listeners, clusters, and stats, and drain or reset
 - curl -s http://localhost:15000/clusters?format=json | jq '.cluster_statuses[] | {name: .name, membership: .membership.total_healthy_count}'
 - curl -s http://localhost:15000/stats?filter=cluster.orders.upstream_rq_time | grep -E 'P50|P95'
 - curl -s http://localhost:15000/listeners | jq '.[].name'
+
+## References
+- [Envoy Admin Interface](https://www.envoyproxy.io/docs/envoy/latest/operations/admin)
+- [Envoy Tuning Guide](https://www.envoyproxy.io/docs/envoy/latest/faq/performance/how_to_benchmark_envoy)

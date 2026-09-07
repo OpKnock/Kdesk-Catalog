@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Migrates and evolves API caching layers \u2014 moving between cache stores, adding CDN edge caching, and consolidating invalidation."
+description: "Migrates and evolves API caching layers \u2014 moving between cache stores, adding CDN edge caching, and consolidating invalidation. Use when working with cache migration, cdn integration or when the user mentions cache migration, cdn integration."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# Api Cache Migration
-
 Migrates and evolves API caching layers — moving between cache stores, adding CDN edge caching, and consolidating invalidation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli --scan --pattern 'legacy:*' > keys.txt`, `aws cloudfront create-invalidation --distribution-id E12345 `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Cache (Migration & Edge)
 
@@ -59,6 +77,10 @@ Compare hit ratios and p95 latency before and after each migration step.
 ### cache-migration
 Migrate cache stores (e.g. in-memory to Redis) with data export/import and key renames
 
+**Parameters:**
+- `srcPattern` (string): Key pattern for the old cache namespace
+- `dstPrefix` (string): Prefix for the new namespace
+
 **Commands:**
 - `redis-cli --scan --pattern 'legacy:*' > keys.txt`
 - `redis-cli --pipe < dump.txt`
@@ -74,6 +96,10 @@ Migrate cache stores (e.g. in-memory to Redis) with data export/import and key r
 ### cdn-integration
 Wire a CDN (CloudFront or edge cache) in front of the API with purge operations
 
+**Parameters:**
+- `distributionId` (string): CloudFront distribution ID
+- `paths` (string): Paths to purge
+
 **Commands:**
 - `aws cloudfront create-invalidation --distribution-id E12345 --paths '/api/*'`
 - `aws cloudfront get-cache-policy --id 658327ea-f89d-4fab-a63d-7e88639e58f6`
@@ -85,3 +111,8 @@ Wire a CDN (CloudFront or edge cache) in front of the API with purge operations
 - aws cloudfront create-invalidation --distribution-id E12345 --paths '/api/products/*'
 - varnishadm ban 'req.url ~ ^/api/orders'
 - curl -s -X PURGE http://edge/api/products -o /dev/null -w '%{http_code}'
+
+## References
+- [Redis Migration Guide](https://redis.io/docs/latest/operate/oss_and_stack/management/)
+- [AWS CloudFront Docs](https://docs.aws.amazon.com/cloudfront/)
+- [Varnish Bans](https://varnish-cache.org/docs/trunk/users-guide/purging.html)

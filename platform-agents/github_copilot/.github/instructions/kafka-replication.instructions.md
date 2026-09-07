@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Kafka Replication
-
 Manage Kafka replica health, trigger leader elections, reassign partitions across brokers, and configure throttle rates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kafka-topics.sh --bootstrap-server localhost:9092 --describe`, `kafka-leader-election.sh --bootstrap-server localhost:9092 -`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka Replication
 
@@ -80,6 +98,10 @@ kafka-reassign-partitions.sh --bootstrap-server localhost:9092 \
 ### replica-health
 Inspect replication health: ISR state, under-replicated partitions, and unclean leaders.
 
+**Parameters:**
+- `topic` (string): Topic to inspect.
+- `bootstrap` (string): Bootstrap server address.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions`
@@ -94,6 +116,11 @@ Inspect replication health: ISR state, under-replicated partitions, and unclean 
 ### leader-and-reassign
 Trigger leader elections and reassign replicas around failed brokers.
 
+**Parameters:**
+- `election_type` (string): preferred or unclean.
+- `brokers` (string): Broker ids for reassignment.
+- `throttle_rate` (integer): Replication throttle bytes/sec.
+
 **Commands:**
 - `kafka-leader-election.sh --bootstrap-server localhost:9092 --election-type preferred --all-topic-partitions`
 - `kafka-leader-election.sh --bootstrap-server localhost:9092 --election-type preferred --topic orders --partition 0`
@@ -105,3 +132,7 @@ Trigger leader elections and reassign replicas around failed brokers.
 - kafka-leader-election.sh --bootstrap-server localhost:9092 --election-type preferred --all-topic-partitions
 - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --generate --topics-to-move-json-file topics.json --broker-list "1,2,3"
 - kafka-configs.sh --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --add-config "leader.replication.throttled.rate=10000000"
+
+## References
+- [Kafka Replication](https://kafka.apache.org/documentation/#replication)
+- [kafka-leader-election.sh](https://kafka.apache.org/documentation/#tools)

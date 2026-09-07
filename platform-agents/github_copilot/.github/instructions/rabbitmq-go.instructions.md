@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# Rabbitmq Go
-
 RabbitMQ clients in Go with amqp091-go: connection/channel management, publish/consume, and consumer recovery.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go get github.com/rabbitmq/amqp091-go`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # RabbitMQ Go
 
@@ -67,6 +85,11 @@ for d := range msgs {
 ### rabbitmq-go-client
 Write Go RabbitMQ publishers and consumers, manage channels and handle reconnects.
 
+**Parameters:**
+- `queue` (string): Queue name
+- `exchange` (string): Exchange name
+- `url` (string): amqp:// connection URL
+
 **Commands:**
 - `go get github.com/rabbitmq/amqp091-go`
 - `go mod tidy`
@@ -78,3 +101,7 @@ Write Go RabbitMQ publishers and consumers, manage channels and handle reconnect
 - go run publisher.go
 - rabbitmqctl list_queues name messages
 - go test ./... 
+
+## References
+- [amqp091-go GitHub](https://github.com/rabbitmq/amqp091-go)
+- [RabbitMQ Go guide](https://www.rabbitmq.com/clients/go-api-guide.html)

@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.rs **/*.sh"
 ---
 
-# Kafka Security
-
 Secure Kafka: SCRAM-SHA-256 credentials, ACLs for topics/groups/clusters, TLS client configs, and verifying authorized access.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kafka-configs.sh --bootstrap-server localhost:9092 --entity-`, `kafka-acls.sh --bootstrap-server localhost:9092 --add --allo`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka Security
 
@@ -81,6 +99,10 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 \
 ### authn
 Manage SCRAM users and SASL credentials for clients.
 
+**Parameters:**
+- `user` (string): Principal user name.
+- `mechanism` (string): SCRAM-SHA-256 or SCRAM-SHA-512.
+
 **Commands:**
 - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --add-config "SCRAM-SHA-256=[iterations=8192,password=secret]"`
 - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --add-config "SCRAM-SHA-512=[iterations=8192,password=secret]"`
@@ -94,6 +116,11 @@ Manage SCRAM users and SASL credentials for clients.
 ### authorization
 Grant and revoke ACLs on topics, consumer groups, and cluster operations.
 
+**Parameters:**
+- `principal` (string): User:<name> principal.
+- `operation` (string): Read, Write, Describe, Alter, Create, Delete.
+- `resource` (string): Topic, group, or --cluster resource.
+
 **Commands:**
 - `kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --operation Read --operation Write --topic orders`
 - `kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --group analytics --operation Read`
@@ -105,3 +132,7 @@ Grant and revoke ACLs on topics, consumer groups, and cluster operations.
 - kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --operation Read --operation Write --topic orders
 - kafka-acls.sh --bootstrap-server localhost:9092 --list --topic orders
 - kafka-acls.sh --bootstrap-server localhost:9092 --remove --allow-principal User:alice --operation Write --topic orders
+
+## References
+- [Kafka Security](https://kafka.apache.org/documentation/#security)
+- [kafka-acls.sh](https://kafka.apache.org/documentation/#security_authz_cli)

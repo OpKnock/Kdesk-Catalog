@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Openvas
-
 Runs vulnerability scans with Greenbone OpenVAS/GVM via gvm-cli and the OMP protocol.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `greenbone-nvt-sync`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # OpenVAS / GVM
 
@@ -65,6 +83,11 @@ so the agent can map each CVE to a remediation.
 ### gvm-scans
 Manage OpenVAS targets, tasks, and reports via gvm-cli/omp
 
+**Parameters:**
+- `socketpath` (string): Path to the gvmd unix socket (default /var/run/gvmd.sock)
+- `gmp-username` (string): GMP username for gvm-cli authentication
+- `gmp-password` (string): GMP password for gvm-cli authentication
+
 **Commands:**
 - `greenbone-nvt-sync`
 - `gvmd --list-scanners`
@@ -76,3 +99,7 @@ Manage OpenVAS targets, tasks, and reports via gvm-cli/omp
 - gvm-cli socket --xml "demo-get-tasks"
 - gvmd --create-task --name daily-scan --target web --scanner openvas
 - gvm-cli socket --xml "demo-get-results-task-id"
+
+## References
+- [Greenbone GVM docs](https://greenbone.github.io/docs/)
+- [OpenVAS protocol reference](https://greenbone.github.io/gmp/)

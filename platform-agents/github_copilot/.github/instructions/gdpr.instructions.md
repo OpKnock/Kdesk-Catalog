@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Gdpr
-
 Guides GDPR compliance work: data mapping, consent audit, breach response, and record keeping.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `rg -i -n "(email|phone|ssn|passport|birth[_-]?date|ip_addres`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GDPR
 
@@ -64,6 +82,11 @@ records, deletion flows), and concrete remediation steps per article.
 ### gdpr-audit
 Find personal data in code, audit consent, and verify security controls
 
+**Parameters:**
+- `glob` (string): File pattern filter for the personal-data scan
+- `audit` (boolean): Produce a report instead of interactive output
+- `source` (string): Directory to scan for secrets and personal data
+
 **Commands:**
 - `rg -i -n "(email|phone|ssn|passport|birth[_-]?date|ip_address)" src/ --glob '!*.test.*'`
 - `git grep -l -i "personal data" config/`
@@ -75,3 +98,7 @@ Find personal data in code, audit consent, and verify security controls
 - rg -n 'user\.email' src/ | wc -l
 - npx cookie-checker --scan .
 - openssl s_client -connect example.com:443 -servername example.com -brief
+
+## References
+- [GDPR text (EUR-Lex)](https://gdpr-info.eu/)
+- [EDPB guidelines](https://www.edpb.europa.eu/)

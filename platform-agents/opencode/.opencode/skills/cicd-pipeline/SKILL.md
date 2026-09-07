@@ -1,13 +1,31 @@
 ---
 name: "cicd-pipeline"
-description: "Designs pipeline-as-code flows, runs CI locally with act, and enforces pipeline quality gates with linters and security scanners."
+description: "Designs pipeline-as-code flows, runs CI locally with act, and enforces pipeline quality gates with linters and security scanners. Use when working with local pipeline runtime, pipeline quality gates, devops or when the user mentions local pipeline runtime, pipeline quality gates, devops."
 ---
-
-# Cicd Pipeline
 
 Designs pipeline-as-code flows, runs CI locally with act, and enforces pipeline quality gates with linters and security scanners.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `act -l`, `actionlint .github/workflows/ci.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Pipeline-as-Code Engineering
 
@@ -66,6 +84,11 @@ semgrep ci --config auto                # SAST on the repo
 ### local-pipeline-runtime
 Execute GitHub Actions workflows locally without a runner using nektos/act.
 
+**Parameters:**
+- `event` (string): Event to simulate, e.g. push, pull_request, schedule
+- `job` (string): Single job to execute, e.g. -j test
+- `secret-file` (string): File containing secrets for local run
+
 **Commands:**
 - `act -l`
 - `act push -j test`
@@ -81,6 +104,10 @@ Execute GitHub Actions workflows locally without a runner using nektos/act.
 ### pipeline-quality-gates
 Enforce pipeline quality with linting, shell checks, and image scanning in CI.
 
+**Parameters:**
+- `config-path` (string): Path to workflow or Dockerfile to lint
+- `severity` (string): Minimum severity threshold for scanners
+
 **Commands:**
 - `actionlint .github/workflows/ci.yml`
 - `shellcheck scripts/*.sh`
@@ -92,3 +119,8 @@ Enforce pipeline quality with linting, shell checks, and image scanning in CI.
 - actionlint .github/workflows/ci.yml
 - shellcheck deploy.sh && hadolint Dockerfile
 - trufflehog filesystem --only-verified .
+
+## References
+- [act - Run GitHub Actions locally](https://github.com/nektos/act)
+- [GitHub Actions Security Hardening](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
+- [Hadolint](https://github.com/hadolint/hadolint)

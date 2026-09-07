@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Health Check
-
 Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status verification, and Kubernetes readiness waits.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -f -s -o /dev/null -w '%{http_code}\n' http://localhost`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Health Check
 
@@ -82,6 +100,11 @@ Agent: curl -fsS http://localhost:8080/health && echo OK
 ### endpoint-probing
 Probe HTTP and TCP endpoints for availability from scripts and CI.
 
+**Parameters:**
+- `url` (string): Health endpoint URL.
+- `timeout` (integer): Probe timeout in seconds.
+- `expected_code` (integer): Expected HTTP status, default 200.
+
 **Commands:**
 - `curl -f -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/healthz`
 - `curl -fsS http://localhost:8080/health && echo OK`
@@ -93,3 +116,7 @@ Probe HTTP and TCP endpoints for availability from scripts and CI.
 - curl -fsS --max-time 3 http://localhost:8080/health || exit 1
 - nc -zv -w 3 localhost 5432
 - curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8080/health
+
+## References
+- [curl manual](https://curl.se/docs/manpage.html)
+- [kubectl wait reference](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_wait/)

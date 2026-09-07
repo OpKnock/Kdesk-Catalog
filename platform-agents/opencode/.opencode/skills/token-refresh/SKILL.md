@@ -1,13 +1,31 @@
 ---
 name: "token-refresh"
-description: "Keep OAuth2 access tokens fresh by exchanging refresh tokens at the token endpoint. Handles token rotation where the server issues a new refresh token per exchange, detects reuse rejection with invalid_grant errors, and automates refresh loops for CLIs and background services with configurable TTL thresholds."
+description: "Keep OAuth2 access tokens fresh by exchanging refresh tokens at the token endpoint. Handles token rotation where the server issues a new refresh token per exchange, detects reuse rejection with invalid_grant errors, and automates refresh loops for CLIs and background services with configurable TTL thresholds. Use when working with oauth refresh, api or when the user mentions oauth refresh, api."
 ---
-
-# Token Refresh
 
 Keep OAuth2 access tokens fresh by exchanging refresh tokens at the token endpoint. Handles token rotation where the server issues a new refresh token per exchange, detects reuse rejection with invalid_grant errors, and automates refresh loops for CLIs and background services with configurable TTL thresholds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST https://auth.your-app.test/token -d "grant_t`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Token Refresh
 
@@ -68,6 +86,11 @@ curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/me
 ### oauth-refresh
 Refresh access tokens with the OAuth2 refresh grant
 
+**Parameters:**
+- `refresh_token` (string): Long-lived token from the original grant
+- `client_id` (string): OAuth client identifier
+- `rotation` (boolean): Server returns a new refresh token per exchange
+
 **Commands:**
 - `curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token`
 - `curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" -o /dev/null -w '%{http_code}\n'`
@@ -78,3 +101,7 @@ Refresh access tokens with the OAuth2 refresh grant
 - curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token
 - curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1" -o /dev/null -w '%{http_code}\n'
 - oauth2l header cloud-platform
+
+## References
+- [OAuth2 refresh grant (RFC 6749 sec 6)](https://www.rfc-editor.org/rfc/rfc6749#section-6)
+- [oauth2l repo](https://github.com/google/oauth2l)

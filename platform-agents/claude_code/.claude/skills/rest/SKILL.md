@@ -1,13 +1,34 @@
 ---
 name: "rest"
-description: "Expert core reference covering resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq suited to daily API work."
+description: "Expert core reference covering resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq suited to daily API work. Use when working with rest crud, api or when the user mentions rest crud, api."
+license: "MIT"
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---
-
-# Rest
 
 Expert core reference covering resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq suited to daily API work.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST https://api.your-app.test/v1/orders -H 'Cont`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # REST APIs
 
@@ -71,6 +92,11 @@ curl -s https://api.your-app.test/v1/orders | jq '.items | length'
 ### rest-crud
 Execute and debug REST CRUD flows with curl and jq
 
+**Parameters:**
+- `url` (string): Endpoint URL including path and query
+- `method` (string): HTTP verb: GET, POST, PUT, PATCH, DELETE
+- `body` (string): JSON request body for mutating requests
+
 **Commands:**
 - `curl -s -X POST https://api.your-app.test/v1/orders -H 'Content-Type: application/json' -d '{"customer":7,"total":199}'`
 - `curl -s -X PUT https://api.your-app.test/v1/orders/7 -H 'Content-Type: application/json' -d '{"status":"shipped"}'`
@@ -82,3 +108,7 @@ Execute and debug REST CRUD flows with curl and jq
 - curl -s https://api.your-app.test/v1/orders | jq '.items[] | {id, total}'
 - curl -s -X PATCH https://api.your-app.test/v1/orders/7 -d '{"status":"canceled"}'
 - curl -s -o /dev/null -w '%{http_code}\n' https://api.your-app.test/v1/orders/999
+
+## References
+- [MDN HTTP methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
+- [curl man page](https://curl.se/docs/manpage.html)

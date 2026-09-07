@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.kt **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Ktlint
-
 Formats and lints Kotlin with ktlint: style enforcement, experimental rules, Gradle integration, and IDE setup.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ktlint src/`, `gradle ktlintCheck`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ktlint
 
@@ -68,6 +86,11 @@ ktlint_experimental = enabled
 ### ktlint-run
 Lint and format Kotlin files.
 
+**Parameters:**
+- `paths` (string): Files or directories
+- `format` (boolean): Auto-format
+- `experimental` (boolean): Enable experimental rules
+
 **Commands:**
 - `ktlint src/`
 - `ktlint --format src/`
@@ -83,6 +106,10 @@ Lint and format Kotlin files.
 ### ktlint-gradle
 Run ktlint through Gradle.
 
+**Parameters:**
+- `baseline` (string): Baseline file path
+- `android` (boolean): Apply Android-specific conventions
+
 **Commands:**
 - `gradle ktlintCheck`
 - `gradle ktlintFormat`
@@ -92,3 +119,7 @@ Run ktlint through Gradle.
 **Examples:**
 - gradle ktlintCheck --continue
 - gradle ktlintFormat -PktlintExperimental=true
+
+## References
+- [ktlint Docs](https://pinterest.github.io/ktlint/)
+- [Kotlin Official Style Guide](https://kotlinlang.org/docs/coding-conventions.html)

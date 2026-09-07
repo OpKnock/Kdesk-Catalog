@@ -1,13 +1,31 @@
 ---
 name: "httpie-devtools"
-description: "Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON, sessions, and file uploads."
+description: "Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON, sessions, and file uploads. Use when working with request syntax, sessions and output, devtools or when the user mentions request syntax, sessions and output, devtools."
 ---
-
-# httpie-devtools
 
 Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON, sessions, and file uploads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `http GET http://localhost:8080/items`, `http --session user-login POST http://localhost:8080/login e`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # HTTPie Requests
 
@@ -67,6 +85,11 @@ http -v GET https://api.example.com/health
 ### request-syntax
 Send requests with readable syntax and inspect responses.
 
+**Parameters:**
+- `method` (string): HTTP method
+- `url` (string): Request URL
+- `auth` (string): user:pass basic auth via -a
+
 **Commands:**
 - `http GET http://localhost:8080/items`
 - `http POST http://localhost:8080/items name=x price:=10`
@@ -83,6 +106,10 @@ Send requests with readable syntax and inspect responses.
 ### sessions-and-output
 Reuse sessions, control output, and handle JSON/files.
 
+**Parameters:**
+- `session` (string): Session name
+- `pretty` (string): Output style: all, colors, none
+
 **Commands:**
 - `http --session user-login POST http://localhost:8080/login email=a@b.c`
 - `http --session user-login GET http://localhost:8080/me`
@@ -95,3 +122,7 @@ Reuse sessions, control output, and handle JSON/files.
 - http --session user-login POST http://localhost:8080/login email=a@b.c
 - http -f POST http://localhost:8080/upload file@./report.pdf
 - http --offline POST http://localhost:8080/items name=x
+
+## References
+- [HTTPie CLI Docs](https://httpie.io/docs/cli)
+- [HTTPie GitHub](https://github.com/httpie/cli)

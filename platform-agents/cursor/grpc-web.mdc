@@ -1,14 +1,32 @@
 ---
-description: "gRPC-Web for browser clients: protoc-gen-grpc-web codegen, grpc-web npm client, and Envoy proxy configuration to bridge HTTP/1.1 browsers to HTTP/2 gRPC."
+description: "gRPC-Web for browser clients: protoc-gen-grpc-web codegen, grpc-web npm client, and Envoy proxy configuration to bridge HTTP/1.1 browsers to HTTP/2 gRPC. Use when working with grpc web bridge, api or when the user mentions grpc web bridge, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Grpc Web
-
 gRPC-Web for browser clients: protoc-gen-grpc-web codegen, grpc-web npm client, and Envoy proxy configuration to bridge HTTP/1.1 browsers to HTTP/2 gRPC.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -L -o protoc-gen-grpc-web https://github.com/grpc/grpc-`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC-Web
 
@@ -122,6 +140,11 @@ Agent: Verify Envoy's grpc_web filter is configured before router and upstream i
 ### grpc-web-bridge
 Generate grpc-web JS stubs and proxy browser traffic to gRPC backends with Envoy.
 
+**Parameters:**
+- `import_style` (string): JS import style: commonjs, commonjs+dts, typescript.
+- `mode` (string): Wire format: grpcwebtext (default) or grpcweb (binary).
+- `envoy_config` (string): Path to the Envoy config bridging the browser port to the gRPC upstream.
+
 **Commands:**
 - `curl -L -o protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/download/1.5.0/protoc-gen-grpc-web-1.5.0-linux-x86_64`
 - `chmod +x protoc-gen-grpc-web`
@@ -133,3 +156,7 @@ Generate grpc-web JS stubs and proxy browser traffic to gRPC backends with Envoy
 - protoc --plugin=protoc-gen-grpc-web=$(pwd)/protoc-gen-grpc-web --js_out=import_style=commonjs:. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:. helloworld.proto
 - npm install google-protobuf grpc-web
 - curl -I http://localhost:8080/helloworld.Greeter/SayHello
+
+## References
+- [gRPC-Web Basics](https://grpc.io/docs/platforms/web/basics/)
+- [grpc-web GitHub](https://github.com/grpc/grpc-web)

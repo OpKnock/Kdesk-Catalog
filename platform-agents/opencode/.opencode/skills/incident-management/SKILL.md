@@ -1,13 +1,31 @@
 ---
 name: "incident-management"
-description: "Runs incident response with PagerDuty CLI: declare, acknowledge, communicate, and resolve incidents with timeline notes."
+description: "Runs incident response with PagerDuty CLI: declare, acknowledge, communicate, and resolve incidents with timeline notes. Use when working with pagerduty, timeline or when the user mentions pagerduty, timeline."
 ---
-
-# incident-management
 
 Runs incident response with PagerDuty CLI: declare, acknowledge, communicate, and resolve incidents with timeline notes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pd incident:list --status=triggered`, `pd note:list INCIDENT_ID`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Incident Management
 
@@ -76,6 +94,11 @@ Use the sandbox environment to practice the full declare-acknowledge-resolve loo
 ### pagerduty
 Manage incidents end-to-end with the PagerDuty CLI.
 
+**Parameters:**
+- `status` (string): triggered, acknowledged, or resolved
+- `service-name` (string): Service to attach the incident to
+- `urgency` (string): high or low severity
+
 **Commands:**
 - `pd incident:list --status=triggered`
 - `pd incident:acknowledge INCIDENT_ID`
@@ -91,6 +114,11 @@ Manage incidents end-to-end with the PagerDuty CLI.
 ### timeline
 Keep an auditable incident timeline with notes and comms.
 
+**Parameters:**
+- `incident` (string): Incident id like PXXXXX
+- `note` (string): Timeline note content
+- `team` (string): Team name filter for incident queries
+
 **Commands:**
 - `pd note:list INCIDENT_ID`
 - `pd incident:update INCIDENT_ID --status=acknowledged`
@@ -102,3 +130,8 @@ Keep an auditable incident timeline with notes and comms.
 - pd note:list PXXXXX --format=json | jq '.notes[].content'
 - pd incident:update PXXXXX --status=acknowledged
 - pd schedule:oncall --time=2026-08-10T14:00:00Z
+
+## References
+- [PagerDuty CLI](https://github.com/PagerDuty/pagerduty-cli)
+- [PagerDuty Incident Management](https://support.pagerduty.com/docs/incidents)
+- [PagerDuty API](https://developer.pagerduty.com/api-reference)

@@ -1,13 +1,31 @@
 ---
 name: "feature-flags"
-description: "Feature flag management: launch, evaluate, and retire flags with LaunchDarkly, toggling features by environment and user segments."
+description: "Feature flag management: launch, evaluate, and retire flags with LaunchDarkly, toggling features by environment and user segments. Use when working with flag ops, api or when the user mentions flag ops, api."
 ---
-
-# Feature Flags
 
 Feature flag management: launch, evaluate, and retire flags with LaunchDarkly, toggling features by environment and user segments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST https://api.launchdarkly.com/api/v2/flags/de`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Feature Flags
 
@@ -57,6 +75,11 @@ curl -s https://app.launchdarkly.com/api/v2/flags/default/new-checkout -H 'Autho
 ### flag-ops
 Create and toggle flags in LaunchDarkly, evaluate via the SDK, and audit flag usage.
 
+**Parameters:**
+- `flag-key` (string): Flag identifier used in code and API
+- `percentage` (integer): Rollout percentage for the true variation
+- `context-key` (string): User or context key for evaluation
+
 **Commands:**
 - `curl -s -X POST https://api.launchdarkly.com/api/v2/flags/default -H 'Authorization: $LD_API_KEY' -H 'Content-Type: application/json' -d '{"name":"new-checkout","key":"new-checkout","variations":[{"value":false},{"value":true}]}' | jq '.key'`
 - `curl -s -X PATCH https://api.launchdarkly.com/api/v2/flags/default/new-checkout -H 'Authorization: $LD_API_KEY' -H 'Content-Type: application/json' -d '{"comment":"enable 10%","patch":[{"op":"replace","path":"/fallthrough/rollout","value":{"variations":[{"variation":0,"weight":90000},{"variation":1,"weight":10000}]}}]}' | jq '.key'`
@@ -68,3 +91,7 @@ Create and toggle flags in LaunchDarkly, evaluate via the SDK, and audit flag us
 - curl -s -X PATCH https://api.launchdarkly.com/api/v2/flags/default/new-checkout -H 'Authorization: $LD_API_KEY' -H 'Content-Type: application/json' -d '{"comment":"enable 10%","patch":[{"op":"replace","path":"/fallthrough/rollout","value":{"variations":[{"variation":0,"weight":90000},{"variation":1,"weight":10000}]}}]}' | jq '.key'
 - node -e "const {LDClient}=require('launchdarkly-node-server-sdk');const c=LDClient.init(process.env.LD_SDK_KEY);c.on('ready',()=>c.variation('new-checkout',{key:'user-1'},false).then(v=>{console.log('flag =',v);c.close()}))"
 - grep -rn 'new-checkout' src/ | head -20
+
+## References
+- [LaunchDarkly REST API](https://apidocs.launchdarkly.com/)
+- [LaunchDarkly Node SDK](https://docs.launchdarkly.com/sdk/server-side/node-js)

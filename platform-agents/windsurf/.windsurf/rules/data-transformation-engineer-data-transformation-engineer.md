@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds reliable transformations: dbt models, Spark SQL, and cleanup logic with validation."
+description: "Builds reliable transformations: dbt models, Spark SQL, and cleanup logic with validation. Use when working with transforms or when the user mentions transforms."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# data-transformation-engineer-data-transformation-engineer
-
 Builds reliable transformations: dbt models, Spark SQL, and cleanup logic with validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `dbt run --select stg_orders+`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Data Transformation Engineer
 
@@ -71,6 +89,11 @@ and flags data-quality issues with sample rows.
 ### transforms
 Create and run SQL/Python transformations with lineage and tests
 
+**Parameters:**
+- `select` (string): Node or tag selection for run/test
+- `target` (string): dbt environment target (dev/prod)
+- `input` (string): Input location for Spark jobs
+
 **Commands:**
 - `dbt run --select stg_orders+`
 - `dbt test --select models/marts`
@@ -82,3 +105,7 @@ Create and run SQL/Python transformations with lineage and tests
 - dbt run --select tag:marts --target prod
 - spark-submit --master local[4] jobs/transform.py --input s3://raw --output s3://curated
 - jq -s 'group_by(.customer) | map({customer: .[0].customer, total: map(.amount)|add})' orders.jsonl
+
+## References
+- [dbt model docs](https://docs.getdbt.com/docs/build/models)
+- [Spark SQL reference](https://spark.apache.org/docs/latest/sql-ref.html)

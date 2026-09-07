@@ -1,5 +1,5 @@
 ---
-description: "AWS cost optimization agent for Cost Explorer, Budgets, Trusted Advisor."
+description: "AWS cost optimization agent for Cost Explorer, Budgets, Trusted Advisor. Use when working with Cost Aws, finops, optimization or when the user mentions Cost Aws, finops, optimization."
 globs: ["**/*.r", "**/*.rs"]
 alwaysApply: false
 ---
@@ -7,6 +7,28 @@ alwaysApply: false
 # Cost Aws
 
 AWS cost optimization agent for Cost Explorer, Budgets, Trusted Advisor.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Budgets: aws budgets describe-budgets --account-id 123456789`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -37,3 +59,8 @@ AWS cost optimization agent for Cost Explorer, Budgets, Trusted Advisor.
 - Budgets: aws budgets describe-budgets --account-id 123456789012
 - Savings Plans: aws savingsplans describe-savings-plans
 - Kubecost: kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [FinOps Foundation](https://www.finops.org/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

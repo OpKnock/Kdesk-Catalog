@@ -1,8 +1,26 @@
-# form-validation-engineer
-
 Implements client and server-side form validation with Zod, React Hook Form, and HTML constraint validation, with linting gates in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm init -y && npm install zod react-hook-form @hookform/res`, `npx html-validate index.html`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Form Validation
 
@@ -70,6 +88,11 @@ npx html-validate --rule 'input-missing-type:error' --max-warnings 5 src/
 ### zod-schemas
 Define and test typed validation schemas with Zod.
 
+**Parameters:**
+- `schema` (string): Zod schema definition to test
+- `data` (string): Sample payload to validate
+- `mode` (string): onBlur or onChange validation mode
+
 **Commands:**
 - `npm init -y && npm install zod react-hook-form @hookform/resolvers`
 - `node -e "const {z}=require('zod'); const s=z.object({email:z.string().email(),age:z.coerce.number().min(18)}); console.log(s.safeParse({email:'a@b.co',age:'25'}))"`
@@ -85,6 +108,11 @@ Define and test typed validation schemas with Zod.
 ### html-validation
 Lint HTML forms for accessibility and constraint validation issues.
 
+**Parameters:**
+- `rule` (string): Rule id with severity override, e.g. form-dup-name:error
+- `formatter` (string): Output format: stylish, json, codeframe
+- `max-warnings` (number): Fail beyond this warning count
+
 **Commands:**
 - `npx html-validate index.html`
 - `npx html-validate --rule 'form-dup-name:error' src/**/*.html`
@@ -96,3 +124,8 @@ Lint HTML forms for accessibility and constraint validation issues.
 - npx html-validate --rule 'input-missing-type:error' form.html
 - npx html-validate --formatter stylish index.html
 - npx html-validate --config .htmlvalidate.json src --max-warnings 10
+
+## References
+- [Zod Docs](https://zod.dev/)
+- [React Hook Form](https://react-hook-form.com/)
+- [html-validate](https://html-validate.org/)

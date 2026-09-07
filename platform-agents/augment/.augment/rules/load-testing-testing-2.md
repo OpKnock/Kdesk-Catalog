@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Load-tests HTTP services with hey, ApacheBench, and wrk for quick throughput and latency measurements."
+description: "Load-tests HTTP services with hey, ApacheBench, and wrk for quick throughput and latency measurements. Use when working with quick load tools, result analysis, testing or when the user mentions quick load tools, result analysis, testing."
 ---
-
-# load-testing-testing-2
 
 Load-tests HTTP services with hey, ApacheBench, and wrk for quick throughput and latency measurements.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `hey -n 10000 -c 100 http://localhost:8080/v1/users`, `hey -n 1000 -c 50 http://localhost:8080/v1/users | grep -E '`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Load Testing
 
@@ -64,6 +82,11 @@ wrk -t4 -c100 -d30s https://api.example.com/v1/users | grep -E 'Requests/sec|Lat
 ### quick-load-tools
 Generate load with hey, ab, and wrk.
 
+**Parameters:**
+- `requests` (number): Total requests (-n)
+- `concurrency` (number): Concurrent clients (-c)
+- `duration` (string): Duration for wrk (-d30s)
+
 **Commands:**
 - `hey -n 10000 -c 100 http://localhost:8080/v1/users`
 - `ab -n 10000 -c 100 http://localhost:8080/v1/users`
@@ -79,6 +102,10 @@ Generate load with hey, ab, and wrk.
 ### result-analysis
 Parse and compare load-test results.
 
+**Parameters:**
+- `pattern` (string): Output line filter
+- `concurrency` (integer): Concurrent connections or workers (-c).
+
 **Commands:**
 - `hey -n 1000 -c 50 http://localhost:8080/v1/users | grep -E 'Requests|Total|Average|p99'`
 - `wrk -t4 -c100 -d30s http://localhost:8080/v1/users > baseline.txt`
@@ -89,3 +116,8 @@ Parse and compare load-test results.
 - hey -n 1000 -c 50 http://localhost:8080/v1/users | grep -E 'Average|p99'
 - wrk -t4 -c100 -d30s http://localhost:8080/v1/users > baseline.txt
 - diff <(wrk -t4 -c100 -d30s http://localhost:8080/v1/users) baseline.txt
+
+## References
+- [hey GitHub](https://github.com/rakyll/hey)
+- [ApacheBench Documentation](https://httpd.apache.org/docs/2.4/programs/ab.html)
+- [wrk GitHub](https://github.com/wg/wrk)

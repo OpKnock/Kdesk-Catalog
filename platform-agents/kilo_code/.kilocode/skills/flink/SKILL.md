@@ -1,13 +1,35 @@
 ---
 name: "flink"
-description: "Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL clients."
+description: "Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL clients. Use when working with flink cli or when the user mentions flink cli."
+license: "MIT"
+compatibility: "Requires flink, sql-client.sh."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "data"}
+allowed-tools: "Glob Grep Read Bash(flink:*) Bash(sql-client.sh:*)"
 ---
-
-# Flink
 
 Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL clients.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `flink run -d -p 4 ./target/streaming-job.jar --input kafka:/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Flink
 
@@ -64,6 +86,11 @@ with -s restore, and checks the job restarted in RUNNING state.
 ### flink-cli
 Submit, list, cancel, and snapshot Flink jobs
 
+**Parameters:**
+- `parallelism` (integer): Parallelism for the job (-p)
+- `main-class` (string): Main class for jobs with multiple entry points (-c)
+- `detached` (boolean): Submit in detached mode (-d), return immediately
+
 **Commands:**
 - `flink run -d -p 4 ./target/streaming-job.jar --input kafka://orders --output clickhouse://events`
 - `flink list -m localhost:8081`
@@ -75,3 +102,7 @@ Submit, list, cancel, and snapshot Flink jobs
 - flink run -d -c com.example.StreamingJob ./job.jar --parallelism 8
 - flink stop -p /tmp/savepoints demo-jobid
 - flink cancel -m localhost:8081 demo-jobid -s /tmp/savepoints
+
+## References
+- [Flink docs](https://nightlies.apache.org/flink/flink-docs-stable/)
+- [Flink operations](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/)

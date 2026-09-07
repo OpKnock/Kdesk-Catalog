@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Encrypts Kubernetes secrets at rest in git with Sealed Secrets and kubeseal: certificate management, encryption, and decryption workflows."
+description: "Encrypts Kubernetes secrets at rest in git with Sealed Secrets and kubeseal: certificate management, encryption, and decryption workflows. Use when working with sealing, certificate management, devops or when the user mentions sealing, certificate management, devops."
 ---
-
-# Sealed Secrets
 
 Encrypts Kubernetes secrets at rest in git with Sealed Secrets and kubeseal: certificate management, encryption, and decryption workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl create secret generic db-pass --from-literal=passwor`, `kubeseal --fetch-cert > pub-cert.pem`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Sealed Secrets for GitOps
 
@@ -69,6 +87,10 @@ kubectl get secret db-pass
 ### sealing
 Create SealedSecrets from plain secrets and apply them to clusters.
 
+**Parameters:**
+- `scope` (string): Sealing scope: strict, namespace-wide, cluster-wide
+- `input` (string): Input secret YAML file
+
 **Commands:**
 - `kubectl create secret generic db-pass --from-literal=password=s3cr3t --dry-run=client -o yaml > secret.yaml`
 - `kubeseal --format yaml demo-secret-yaml sealed-secret.yaml`
@@ -84,6 +106,10 @@ Create SealedSecrets from plain secrets and apply them to clusters.
 ### certificate-management
 Fetch and manage the sealing certificate for kubeseal.
 
+**Parameters:**
+- `cert-file` (string): Public cert file for offline sealing
+- `namespace` (string): Controller namespace
+
 **Commands:**
 - `kubeseal --fetch-cert > pub-cert.pem`
 - `kubeseal --controller-namespace kube-system --fetch-cert`
@@ -95,3 +121,7 @@ Fetch and manage the sealing certificate for kubeseal.
 - kubeseal --fetch-cert > pub-cert.pem
 - helm install sealed-secrets bitnami/sealed-secrets -n kube-system
 - kubeseal --cert pub-cert.pem -o yaml < secret.yaml
+
+## References
+- [Sealed Secrets GitHub](https://github.com/bitnami-labs/sealed-secrets)
+- [Sealed Secrets Helm Chart](https://artifacthub.io/packages/helm/bitnami/sealed-secrets)

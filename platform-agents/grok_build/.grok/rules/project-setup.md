@@ -1,8 +1,26 @@
-# project-setup
-
 Bootstraps new projects: git init, scaffolds (create-vite, cargo new, cookiecutter), venvs, repo creation, and CI skeleton.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx create-vite@latest frontend --template react-ts`, `git init -b main`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Project Bootstrapping
 
@@ -63,6 +81,10 @@ git commit -m 'chore: scaffold project'
 ### scaffolding
 Scaffold projects with ecosystem-standard generators.
 
+**Parameters:**
+- `name` (string): Project name
+- `template` (string): Scaffold template
+
 **Commands:**
 - `npx create-vite@latest frontend --template react-ts`
 - `cargo new my-service --bin`
@@ -79,6 +101,10 @@ Scaffold projects with ecosystem-standard generators.
 ### repo-and-hygiene
 Create repos and set up baseline project hygiene.
 
+**Parameters:**
+- `org` (string): GitHub org for repo creation
+- `repo-name` (string): Repository name
+
 **Commands:**
 - `git init -b main`
 - `gh repo create myorg/myapp --private --source=. --push`
@@ -91,3 +117,8 @@ Create repos and set up baseline project hygiene.
 - gh repo create myorg/myapp --private --source=. --push
 - git init -b main
 - echo 'node_modules/' > .gitignore
+
+## References
+- [create-vite](https://vite.dev/guide/)
+- [gh repo create](https://cli.github.com/manual/gh_repo_create)
+- [Cookiecutter](https://cookiecutter.readthedocs.io/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Run Redis high availability with Sentinel: monitor masters, trigger quorum-based failover, and discover the current master endpoint for clients."
+description: "Run Redis high availability with Sentinel: monitor masters, trigger quorum-based failover, and discover the current master endpoint for clients. Use when working with sentinel operations, api or when the user mentions sentinel operations, api."
 ---
-
-# Redis Sentinel
 
 Run Redis high availability with Sentinel: monitor masters, trigger quorum-based failover, and discover the current master endpoint for clients.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-sentinel /etc/redis/sentinel.conf`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Redis Sentinel
 
@@ -81,6 +99,11 @@ redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
 ### sentinel-operations
 Operate Redis Sentinel: monitor, failover, and inspect master/replica state
 
+**Parameters:**
+- `master_name` (string): Logical name of the monitored master, e.g. mymaster
+- `quorum` (integer): Number of sentinels that must agree before failover
+- `down_after_milliseconds` (integer): How long a master must be unreachable before it is flagged
+
 **Commands:**
 - `redis-sentinel /etc/redis/sentinel.conf`
 - `redis-cli -p 26379 SENTINEL masters`
@@ -93,3 +116,7 @@ Operate Redis Sentinel: monitor, failover, and inspect master/replica state
 - redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
 - redis-cli -p 26379 SENTINEL ckquorum mymaster
 - redis-cli -p 26379 SENTINEL failover mymaster
+
+## References
+- [Redis Sentinel docs](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)
+- [SENTINEL command reference](https://redis.io/docs/latest/commands/sentinel/)

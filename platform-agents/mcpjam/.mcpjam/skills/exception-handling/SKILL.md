@@ -1,13 +1,35 @@
 ---
 name: "exception-handling"
-description: "Patterns for consistent API error handling: structured RFC 7807 problem responses, centralized middleware to map domain exceptions to status codes, contextual logging without leaking internals, and test coverage for every error path."
+description: "Patterns for consistent API error handling: structured RFC 7807 problem responses, centralized middleware to map domain exceptions to status codes, contextual logging without leaking internals, and test coverage for every error path. Use when working with error response design, api or when the user mentions error response design, api."
+license: "MIT"
+compatibility: "Requires grep, node. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Read Bash(curl:*) Grep Bash(node:*)"
 ---
-
-# Exception Handling
 
 Patterns for consistent API error handling: structured RFC 7807 problem responses, centralized middleware to map domain exceptions to status codes, contextual logging without leaking internals, and test coverage for every error path.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s http://localhost:8080/api/orders/999999 | jq`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Exception Handling
 
@@ -84,6 +106,11 @@ curl -s -w '%{http_code}' http://localhost:8080/api/crash | grep -q 500
 ### error-response-design
 Define, emit, log, and test consistent error responses across API layers.
 
+**Parameters:**
+- `endpoint` (string): API path to exercise
+- `error-code` (string): Machine-readable error code like VALIDATION
+- `status` (integer): HTTP status for the error class
+
 **Commands:**
 - `curl -s http://localhost:8080/api/orders/999999 | jq`
 - `curl -s -w '\nHTTP %{http_code}\n' http://localhost:8080/api/orders/999999`
@@ -95,3 +122,6 @@ Define, emit, log, and test consistent error responses across API layers.
 - curl -s -w '\nHTTP %{http_code}\n' http://localhost:8080/api/orders/999999
 - curl -s -X POST http://localhost:8080/api/orders -H 'Content-Type: application/json' -d '{"invalid":true}' | jq '.error.code'
 - grep -rn 'NotFoundException' src/ | head -20
+
+## References
+- [RFC 7807 Problem Details](https://www.rfc-editor.org/rfc/rfc7807.html)

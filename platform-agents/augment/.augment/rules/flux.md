@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "GitOps delivery with Flux: bootstrap clusters, reconcile from git repositories, and manage Helm releases and Kustomizations."
+description: "GitOps delivery with Flux: bootstrap clusters, reconcile from git repositories, and manage Helm releases and Kustomizations. Use when working with flux gitops, api or when the user mentions flux gitops, api."
 ---
-
-# Flux
 
 GitOps delivery with Flux: bootstrap clusters, reconcile from git repositories, and manage Helm releases and Kustomizations.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `flux bootstrap github --owner=myorg --repository=infra --bra`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Flux
 
@@ -73,6 +91,11 @@ flux get kustomizations -o json | jq '.[] | {name: .metadata.name, ready: .statu
 ### flux-gitops
 Bootstrap Flux, create sources and kustomizations, and reconcile cluster state from git.
 
+**Parameters:**
+- `repository` (string): Git repository holding cluster manifests
+- `source-name` (string): Flux source (git) name
+- `path` (string): Manifests path inside the repository
+
 **Commands:**
 - `flux bootstrap github --owner=myorg --repository=infra --branch=main --path=./clusters/prod`
 - `flux create source git app-infra --url=https://github.com/myorg/app-infra --branch=main`
@@ -85,3 +108,7 @@ Bootstrap Flux, create sources and kustomizations, and reconcile cluster state f
 - flux bootstrap github --owner=myorg --repository=infra --branch=main --path=./clusters/prod
 - flux reconcile kustomization apps --with-source
 - flux get kustomizations
+
+## References
+- [Flux docs](https://fluxcd.io/flux/)
+- [Flux CLI reference](https://fluxcd.io/flux/cmd/)

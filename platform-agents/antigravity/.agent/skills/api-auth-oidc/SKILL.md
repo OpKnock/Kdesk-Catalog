@@ -1,13 +1,35 @@
 ---
 name: "api-auth-oidc"
-description: "API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation, and userinfo retrieval."
+description: "API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation, and userinfo retrieval. Use when working with oidc flow or when the user mentions oidc flow."
+license: "MIT"
+compatibility: "Requires node.js, python, jsonwebtoken, passport, keycloak. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---
-
-# Api Auth OIDC
 
 API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation, and userinfo retrieval.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s http://localhost:8080/realms/demo/.well-known/openid`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Auth (OpenID Connect)
 
@@ -68,6 +90,11 @@ curl -s http://localhost:8080/realms/demo/.well-known/openid-configuration | jq 
 ### oidc-flow
 Implement and test OpenID Connect flows
 
+**Parameters:**
+- `realm` (string): OIDC realm/tenant
+- `scope` (string): Scopes, e.g. openid profile email
+- `code_challenge` (string): PKCE S256 challenge
+
 **Commands:**
 - `curl -s http://localhost:8080/realms/demo/.well-known/openid-configuration | jq '.authorization_endpoint, .userinfo_endpoint'`
 - `curl -s 'http://localhost:8080/realms/demo/protocol/openid-connect/auth?client_id=spa&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20profile&code_challenge=CHALLENGE&code_challenge_method=S256' -o /dev/null -w '%{redirect_url}'`
@@ -79,3 +106,7 @@ Implement and test OpenID Connect flows
 - node -e "const c=require('crypto');const v=c.randomBytes(32).toString('base64url');console.log(v);console.log(c.createHash('sha256').update(v).digest('base64url'))"
 - curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d 'grant_type=authorization_code&client_id=spa&code=$CODE&redirect_uri=http://localhost:3000/cb&code_verifier=VERIFIER' | jq '.expires_in'
 - curl -s http://localhost:8080/realms/demo/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:3000 -o /dev/null -w '%{http_code}'
+
+## References
+- [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html)
+- [OAuth 2.0 PKCE (RFC 7636)](https://datatracker.ietf.org/doc/html/rfc7636)

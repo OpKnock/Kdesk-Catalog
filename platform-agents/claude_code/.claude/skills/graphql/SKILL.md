@@ -2,6 +2,7 @@
 name: "graphql"
 description: "General GraphQL development: introspect schemas, send queries and mutations with curl, and navigate SDL types from the command line. Use when working with graphql client, api or when the user mentions graphql client, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

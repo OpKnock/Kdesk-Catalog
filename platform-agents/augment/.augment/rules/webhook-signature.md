@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Computes and validates HMAC-SHA256 signatures on webhook payloads using openssl, Node.js crypto, and Python hmac. Sends signed webhooks with X-Hub-Signature-256 headers and verifies incoming signatures with constant-time comparison."
+description: "Computes and validates HMAC-SHA256 signatures on webhook payloads using openssl, Node.js crypto, and Python hmac. Sends signed webhooks with X-Hub-Signature-256 headers and verifies incoming signatures with constant-time comparison. Use when working with signature verification, api, webhook, security or when the user mentions signature verification, api, webhook, security."
 ---
-
-# Webhook Signature
 
 Computes and validates HMAC-SHA256 signatures on webhook payloads using openssl, Node.js crypto, and Python hmac. Sends signed webhooks with X-Hub-Signature-256 headers and verifies incoming signatures with constant-time comparison.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `openssl dgst -sha256 -hmac "whsec_abc123" -binary payload.js`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Webhook Signature
 
@@ -69,6 +87,11 @@ curl -s -X POST -H "X-Hub-Signature-256: sha256=deadbeef" -d @payload.json http:
 ### signature-verification
 Compute and validate webhook HMAC signatures
 
+**Parameters:**
+- `secret` (string): HMAC shared secret (whsec_...)
+- `algorithm` (string): sha256 or sha1 for legacy payloads
+- `payload` (string): Path to the raw payload file
+
 **Commands:**
 - `openssl dgst -sha256 -hmac "whsec_abc123" -binary payload.json | base64`
 - `node -e "const c=require(\"crypto\");const fs=require(\"fs\");const s=c.createHmac(\"sha256\",\"whsec_abc123\").update(fs.readFileSync(\"payload.json\")).digest(\"hex\");console.log(\"sha256=\"+s)"`
@@ -80,3 +103,8 @@ Compute and validate webhook HMAC signatures
 - echo -n "{\"event\":\"test\"}" | openssl dgst -sha256 -hmac "whsec_abc123" -binary | base64
 - curl -s -X POST -H "Content-Type: application/json" -H "X-Hub-Signature-256: sha256=$(echo -n "{\"event\":\"test\"}" | openssl dgst -sha256 -hmac "whsec_abc123" -binary | base64)" -d "{\"event\":\"test\"}" http://localhost:8080/webhooks/orders
 - node verify.js payload.json sha256=<computed>
+
+## References
+- [GitHub Validating Deliveries](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries)
+- [Stripe Webhook Signatures](https://docs.stripe.com/webhooks/signatures)
+- [RFC 7519 - JWS](https://datatracker.ietf.org/doc/html/rfc7519)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Scans Gradle dependencies for vulnerabilities and licenses with OWASP dependency-check and Gradle plugins."
+description: "Scans Gradle dependencies for vulnerabilities and licenses with OWASP dependency-check and Gradle plugins. Use when working with gradle scan, dependency analysis, code quality or when the user mentions gradle scan, dependency analysis, code quality."
 ---
-
-# Gradle Dependency Scan
 
 Scans Gradle dependencies for vulnerabilities and licenses with OWASP dependency-check and Gradle plugins.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gradle dependencyCheckAnalyze`, `gradle dependencyInsight --dependency log4j-core`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Gradle Dependency Scan
 
@@ -70,6 +88,10 @@ gradle dependencyUpdates
 ### gradle-scan
 Run vulnerability scans on Gradle projects.
 
+**Parameters:**
+- `failBuildOnCVSS` (number): CVSS threshold to fail build
+- `format` (string): Report format: html, json, sarif
+
 **Commands:**
 - `gradle dependencyCheckAnalyze`
 - `gradle dependencyCheckUpdate`
@@ -85,6 +107,10 @@ Run vulnerability scans on Gradle projects.
 ### dependency-analysis
 Inspect dependency trees and updates.
 
+**Parameters:**
+- `dependency` (string): Dependency coordinate to inspect
+- `configuration` (string): Gradle configuration to inspect
+
 **Commands:**
 - `gradle dependencyInsight --dependency log4j-core`
 - `gradle dependencies --configuration compileClasspath`
@@ -94,3 +120,7 @@ Inspect dependency trees and updates.
 **Examples:**
 - gradle dependencyInsight --dependency spring-web
 - gradle dependencies --write-verification-metadata sha256
+
+## References
+- [OWASP Dependency-Check](https://jeremylong.github.io/DependencyCheck/)
+- [Gradle Dependency Verification](https://docs.gradle.org/current/userguide/dependency_verification.html)

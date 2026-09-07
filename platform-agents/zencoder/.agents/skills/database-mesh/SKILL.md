@@ -1,11 +1,37 @@
 ---
 name: "database-mesh"
-description: "Build a distributed database mesh with sharding and replication."
+description: "Build a distributed database mesh with sharding and replication. Use when working with database mesh, database mesh, shardingsphere or when the user mentions database mesh, database mesh, shardingsphere."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "database"}
+allowed-tools: "Glob Grep Read Bash(proxy:*) Bash(shardingsphere:*) Bash(vitess:*)"
 ---
 
 # Database Mesh
 
 Build a distributed database mesh with sharding and replication.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `shardingsphere`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -23,6 +49,10 @@ Always recommend careful shard key selection.
 ### database-mesh
 Implement database mesh
 
+**Parameters:**
+- `architecture` (string): Architecture: sharding, read-replicas, multi-primary
+- `tool` (string): Tool: shardingsphere, vitess, proxy-sql
+
 **Commands:**
 - `shardingsphere`
 - `vitess`
@@ -32,3 +62,7 @@ Implement database mesh
 - ShardingSphere: docker run -d -p 3307:3307 apache/shardingsphere-proxy
 - Vitess: vtctldclient ApplyVSchema --vschema-file=vschema.json
 - Scale: ALTER VSCHEMA TABLE users ADD VINDEX hash(id)
+
+## References
+- [](https://shardingsphere.apache.org/)
+- [](https://vitess.io/docs/)

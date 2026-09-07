@@ -2,6 +2,7 @@
 name: "elasticsearch-shards"
 description: "Elasticsearch shard management: inspect shard distribution and sizes, diagnose unassigned shards, and reroute shards between nodes. Use when working with shard management, api or when the user mentions shard management, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

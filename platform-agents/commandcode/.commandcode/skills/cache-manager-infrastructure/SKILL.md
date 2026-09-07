@@ -1,11 +1,37 @@
 ---
 name: "cache-manager-infrastructure"
-description: "Manages Redis and Memcached cache clusters with real redis-cli and memcached-tool operations, memory tuning, and eviction analysis."
+description: "Manages Redis and Memcached cache clusters with real redis-cli and memcached-tool operations, memory tuning, and eviction analysis. Use when working with redis operations, memcached operations, memory tuning, ttl management or when the user mentions redis operations, memcached operations, memory tuning, ttl management."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "infrastructure"}
+allowed-tools: "Glob Grep Read Bash(echo:*) Bash(memcached-tool:*) Bash(redis-cli:*)"
 ---
 
 # Cache Infrastructure Manager
 
 Manages Redis and Memcached cache clusters with real redis-cli and memcached-tool operations, memory tuning, and eviction analysis.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli -h localhost -p 6379 INFO memory`, `echo "stats" | nc -w 1 localhost 11211`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -38,6 +64,10 @@ Anti-patterns:
 ### redis-operations
 Full Redis cluster operations: keys, memory, TTL, persistence, and replication
 
+**Parameters:**
+- `host` (string): Redis host
+- `port` (string): Redis port (default 6379)
+
 **Commands:**
 - `redis-cli -h localhost -p 6379 INFO memory`
 - `redis-cli --scan --pattern "session:*" | head -100`
@@ -54,6 +84,9 @@ Full Redis cluster operations: keys, memory, TTL, persistence, and replication
 ### memcached-operations
 Memcached stats, key inspection, and memory analysis with memcached-tool
 
+**Parameters:**
+- `server` (string): Memcached host:port
+
 **Commands:**
 - `echo "stats" | nc -w 1 localhost 11211`
 - `memcached-tool localhost:11211 stats`
@@ -68,6 +101,9 @@ Memcached stats, key inspection, and memory analysis with memcached-tool
 
 ### memory-tuning
 Analyze memory usage and tune eviction policies, maxmemory, and fragmentation
+
+**Parameters:**
+- `policy` (string): Eviction policy: allkeys-lru, volatile-lru, allkeys-lfu
 
 **Commands:**
 - `redis-cli CONFIG GET maxmemory`
@@ -84,6 +120,10 @@ Analyze memory usage and tune eviction policies, maxmemory, and fragmentation
 ### ttl-management
 Manage key expiry, find expired/expiring keys, and fix unbounded growth
 
+**Parameters:**
+- `key` (string): Cache key name
+- `ttl_seconds` (number): TTL in seconds
+
 **Commands:**
 - `redis-cli TTL session:user123`
 - `redis-cli --scan --pattern "*" | xargs -I{} redis-cli TTL {} | sort -n | head -20`
@@ -95,3 +135,15 @@ Manage key expiry, find expired/expiring keys, and fix unbounded growth
 - Check TTL: redis-cli TTL session:user123
 - Expire key: redis-cli EXPIRE cache:key 3600
 - Keyspace info: redis-cli INFO keyspace
+
+## References
+- [Redis CLI Documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/)
+- [Memcached Wiki](https://github.com/memcached/memcached/wiki)
+- [Redis Memory Optimization](https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/memory-optimization/)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

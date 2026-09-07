@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy, and Hubble observability."
+description: "Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy, and Hubble observability. Use when working with cilium install and verify, hubble observability, devops or when the user mentions cilium install and verify, hubble observability, devops."
 ---
-
-# cilium
 
 Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy, and Hubble observability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cilium install --version v1.16.4`, `hubble status`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Cilium Networking
 
@@ -81,6 +99,10 @@ spec:
 ### cilium-install-and-verify
 Install Cilium into a Kubernetes cluster and run connectivity and upgrade verification.
 
+**Parameters:**
+- `version` (string): Cilium version to install or upgrade to
+- `kubeconfig` (string): Path to kubeconfig when outside the cluster
+
 **Commands:**
 - `cilium install --version v1.16.4`
 - `cilium status --wait`
@@ -96,6 +118,10 @@ Install Cilium into a Kubernetes cluster and run connectivity and upgrade verifi
 ### hubble-observability
 Inspect service-to-service traffic flows with Hubble CLI and troubleshoot connectivity issues.
 
+**Parameters:**
+- `verdict` (string): Filter flows by verdict: FORWARDED, DROPPED, ERROR
+- `namespace` (string): Filter flows by namespace
+
 **Commands:**
 - `hubble status`
 - `hubble observe --pod default/web-0`
@@ -107,3 +133,8 @@ Inspect service-to-service traffic flows with Hubble CLI and troubleshoot connec
 - hubble observe --verdict DROPPED --last 100
 - hubble observe --to-pod kube-system/coredns-*
 - hubble status
+
+## References
+- [Cilium Documentation](https://docs.cilium.io/en/stable/)
+- [Cilium CLI GitHub](https://github.com/cilium/cilium-cli)
+- [Hubble UI](https://github.com/cilium/hubble)

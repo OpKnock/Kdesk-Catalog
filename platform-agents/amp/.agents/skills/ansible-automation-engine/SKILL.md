@@ -1,11 +1,37 @@
 ---
 name: "ansible-automation-engine"
-description: "Automates infrastructure configuration using Ansible playbooks, roles, and collections. Handles idempotent task execution, secret encryption with Ansible Vault, dynamic inventory management, and rolling update strategies."
+description: "Automates infrastructure configuration using Ansible playbooks, roles, and collections. Handles idempotent task execution, secret encryption with Ansible Vault, dynamic inventory management, and rolling update strategies. Use when working with configuration automation, ansible, idempotent or when the user mentions configuration automation, ansible, idempotent."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "devops"}
+allowed-tools: "Glob Grep Read Bash(ansible-doc:*) Bash(ansible-galaxy:*) Bash(ansible-inventory:*) Bash(ansible-playbook:*) Bash(ansible-vault:*)"
 ---
 
 # Ansible Automation Engine
 
 Automates infrastructure configuration using Ansible playbooks, roles, and collections. Handles idempotent task execution, secret encryption with Ansible Vault, dynamic inventory management, and rolling update strategies.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ansible-playbook`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -24,6 +50,10 @@ Always recommend idempotent tasks, proper variable precedence, and `ansible-lint
 ### configuration-automation
 Automate server configuration with Ansible playbooks
 
+**Parameters:**
+- `inventory` (string): Inventory file or dynamic inventory script
+- `become_method` (string): Privilege escalation method: sudo, su, pbrun
+
 **Commands:**
 - `ansible-playbook`
 - `ansible-galaxy`
@@ -35,3 +65,9 @@ Automate server configuration with Ansible playbooks
 - Run playbook: ansible-playbook -i inventory.ini site.yml
 - Encrypt secrets: ansible-vault encrypt secrets.yml
 - Install role: ansible-galaxy install geerlingguy.docker
+
+## References
+- [Ansible Documentation](https://docs.ansible.com/)
+- [Ansible Best Practices](https://docs.ansible.com/ansible/latest/tips_tricks/ansible_tips_tricks.html)
+- [Ansible Vault Guide](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
+- [Dynamic Inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_dynamic_inventory.html)

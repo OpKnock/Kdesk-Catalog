@@ -1,8 +1,26 @@
-# Grpc Reflection
-
 gRPC server reflection: enabling reflection on servers and discovering services, methods, and message schemas at runtime with grpcurl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `grpcurl -plaintext localhost:50051 list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC Reflection
 
@@ -94,6 +112,11 @@ Agent: grpcurl -plaintext localhost:50051 list | grep Order  # if missing, the s
 ### reflection-discovery
 Discover services, methods, and message types from a running gRPC server without proto files.
 
+**Parameters:**
+- `target` (string): gRPC endpoint host:port, e.g. localhost:50051.
+- `symbol` (string): Fully-qualified service, method, or message symbol to describe.
+- `use_tls` (boolean): Use TLS (default) or -plaintext for dev.
+
 **Commands:**
 - `grpcurl -plaintext localhost:50051 list`
 - `grpcurl -plaintext localhost:50051 describe helloworld.Greeter`
@@ -105,3 +128,7 @@ Discover services, methods, and message types from a running gRPC server without
 - grpcurl -plaintext localhost:50051 list | grep -i health
 - grpcurl -plaintext localhost:50051 describe helloworld.Greeter.SayHello
 - grpcurl -plaintext localhost:50051 list my.package.Service
+
+## References
+- [gRPC Server Reflection](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md)
+- [grpcurl README](https://github.com/fullstorydev/grpcurl)

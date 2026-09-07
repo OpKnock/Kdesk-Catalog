@@ -1,8 +1,26 @@
-# Compression
-
 Compress API responses to cut bandwidth and latency using gzip, Brotli, and zstd, with curl verification and server configuration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https:/`, `gzip -9 -k response.json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Compression
 
@@ -72,6 +90,10 @@ curl -s -o /dev/null -w "br: %{size_download}\n" -H "Accept-Encoding: br" https:
 ### compression-verify
 Verify compression headers and response size on API endpoints
 
+**Parameters:**
+- `url` (string): Endpoint to check
+- `accept_encoding` (string): Accept-Encoding header value
+
 **Commands:**
 - `curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https://httpbin.org/get | grep -i content-encoding`
 - `curl -s -H "Accept-Encoding: gzip, br" -o /dev/null -w "%{size_download} bytes\n" https://httpbin.org/get`
@@ -86,6 +108,10 @@ Verify compression headers and response size on API endpoints
 ### cli-tools
 Compress and decompress payloads with gzip, brotli, and zstd
 
+**Parameters:**
+- `file` (string): File to compress
+- `level` (string): Compression level, e.g. 9 for gzip, 11 for brotli
+
 **Commands:**
 - `gzip -9 -k response.json`
 - `gunzip -k response.json.gz`
@@ -96,3 +122,7 @@ Compress and decompress payloads with gzip, brotli, and zstd
 - gzip -9 -k response.json && ls -la response.json.gz
 - brotli -9 -o response.json.br response.json
 - zstd -19 response.json -o response.json.zst
+
+## References
+- [MDN Content-Encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding)
+- [Brotli GitHub](https://github.com/google/brotli)

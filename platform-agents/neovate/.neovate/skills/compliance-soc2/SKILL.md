@@ -1,11 +1,37 @@
 ---
 name: "compliance-soc2"
-description: "SOC 2 compliance automation agent for controls, evidence, audits."
+description: "SOC 2 compliance automation agent for controls, evidence, audits. Use when working with Compliance Soc2, audit or when the user mentions Compliance Soc2, audit."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "compliance"}
+allowed-tools: "Glob Grep Read Bash(Access:*) Bash(Audit:*) Bash(Evidence::*) Bash(Policy::*)"
 ---
 
 # Compliance Soc2
 
 SOC 2 compliance automation agent for controls, evidence, audits.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Audit log: aws cloudtrail lookup-events --lookup-attributes `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -37,3 +63,7 @@ SOC 2 compliance automation agent for controls, evidence, audits.
 - Access review: aws iam generate-credential-report
 - Policy: cat policies/access-control-policy.md
 - Audit log: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=ConsoleLogin
+
+## References
+- [AICPA SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- [AWS Documentation](https://docs.aws.amazon.com/)

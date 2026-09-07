@@ -1,8 +1,26 @@
-# tilt
-
 Develops Kubernetes apps with Tilt: resource definitions, live reload, Tiltfiles, CI mode, and dashboard workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `tilt up`, `tilt ci`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Tilt Development Sessions
 
@@ -68,6 +86,10 @@ resource('myapp', port_forwards=['8080:8080'], probes=[http_probe('/health')])
 ### dev-session
 Start dev sessions, watch logs, and manage running resources.
 
+**Parameters:**
+- `port` (integer): Dashboard port
+- `watch` (boolean): Watch file changes
+
 **Commands:**
 - `tilt up`
 - `tilt up --port 10350`
@@ -84,6 +106,10 @@ Start dev sessions, watch logs, and manage running resources.
 ### tiltfile-and-ci
 Author Tiltfiles and run sessions headlessly for CI.
 
+**Parameters:**
+- `tiltfile` (string): Tiltfile path
+- `resource` (string): Resource name for triggers
+
 **Commands:**
 - `tilt ci`
 - `tilt dump`
@@ -96,3 +122,7 @@ Author Tiltfiles and run sessions headlessly for CI.
 - tilt ci
 - tilt dump
 - tilt doctor
+
+## References
+- [Tilt Documentation](https://docs.tilt.dev/)
+- [Tiltfile Reference](https://docs.tilt.dev/api.html)

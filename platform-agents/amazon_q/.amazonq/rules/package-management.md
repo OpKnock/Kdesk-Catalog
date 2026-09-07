@@ -1,8 +1,26 @@
-# package-management
-
 Manages dependencies across ecosystems: npm/pnpm/yarn, pip/uv, cargo, and go modules — install, update, audit, and CI strategies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install`, `pip install -r requirements.txt`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Cross-Ecosystem Package Management
 
@@ -61,6 +79,10 @@ go get -u ./...
 ### js-package-managers
 Install and audit JavaScript dependencies with npm/pnpm/yarn.
 
+**Parameters:**
+- `package` (string): Package name
+- `audit-level` (string): Audit severity threshold
+
 **Commands:**
 - `npm install`
 - `npm ci`
@@ -77,6 +99,10 @@ Install and audit JavaScript dependencies with npm/pnpm/yarn.
 ### python-and-system
 Manage Python, Rust, and Go dependencies.
 
+**Parameters:**
+- `file` (string): Requirements/manifest file
+- `crate` (string): Crate name for cargo add
+
 **Commands:**
 - `pip install -r requirements.txt`
 - `pip-audit -r requirements.txt`
@@ -90,3 +116,9 @@ Manage Python, Rust, and Go dependencies.
 - pip-audit -r requirements.txt
 - cargo audit
 - go mod tidy
+
+## References
+- [npm CLI](https://docs.npmjs.com/cli/)
+- [pip-audit](https://github.com/pypa/pip-audit)
+- [cargo-audit](https://rustsec.org/)
+- [uv](https://docs.astral.sh/uv/)

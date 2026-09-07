@@ -1,13 +1,35 @@
 ---
 name: "gitlab-ci"
-description: "CI/CD pipelines with GitLab CI: validate pipeline YAML, run jobs via the API, manage runners, and debug job failures."
+description: "CI/CD pipelines with GitLab CI: validate pipeline YAML, run jobs via the API, manage runners, and debug job failures. Use when working with gitlab pipelines, api or when the user mentions gitlab pipelines, api."
+license: "MIT"
+compatibility: "Requires gitlab-runner. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(gitlab-runner:*)"
 ---
-
-# Gitlab Ci
 
 CI/CD pipelines with GitLab CI: validate pipeline YAML, run jobs via the API, manage runners, and debug job failures.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST --header 'Content-Type: application/json' --`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GitLab CI
 
@@ -80,6 +102,11 @@ curl -s -X POST --header "PRIVATE-TOKEN: $GITLAB_TOKEN" https://gitlab.example.c
 ### gitlab-pipelines
 Validate, run, and inspect GitLab CI pipelines and runners.
 
+**Parameters:**
+- `project-id` (string): GitLab project id or URL-encoded path
+- `pipeline-id` (integer): Pipeline to inspect
+- `runner-token` (string): Runner registration token
+
 **Commands:**
 - `curl -s -X POST --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: $GITLAB_TOKEN" https://gitlab.example.com/api/v4/projects/$PROJECT_ID/ci/lint -d '{"content": "$(cat .gitlab-ci.yml | python -c "import sys,json;print(json.dumps(sys.stdin.read()))")"}' | jq '.errors'`
 - `curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" http://localhost:8080/api/v4/projects/$PROJECT_ID/pipelines?ref=main | jq '.[0] | {id, status}'`
@@ -92,3 +119,7 @@ Validate, run, and inspect GitLab CI pipelines and runners.
 - curl -s -X POST --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: $GITLAB_TOKEN" https://gitlab.example.com/api/v4/projects/$PROJECT_ID/ci/lint -d '{"content": "$(cat .gitlab-ci.yml | python -c "import sys,json;print(json.dumps(sys.stdin.read()))")"}' | jq '.errors'
 - curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" http://localhost:8080/api/v4/projects/$PROJECT_ID/pipelines?ref=main | jq '.[0] | {id, status}'
 - gitlab-runner list
+
+## References
+- [GitLab CI/CD docs](https://docs.gitlab.com/ee/ci/)
+- [GitLab REST API pipelines](https://docs.gitlab.com/ee/api/pipelines.html)

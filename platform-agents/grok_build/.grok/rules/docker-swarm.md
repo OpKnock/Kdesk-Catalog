@@ -1,8 +1,26 @@
-# docker-swarm
-
 Deploys and manages Docker Swarm clusters: services, replicas, secrets, configs, stacks, and rolling updates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker swarm init --advertise-addr 10.0.0.5`, `docker service create --name web --replicas 3 --publish 80:8`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Docker Swarm Operations
 
@@ -66,6 +84,10 @@ docker service update   --image nginx:1.27   --update-order start-first   --upda
 ### swarm-cluster
 Initialize swarm, join workers and managers, and inspect cluster state.
 
+**Parameters:**
+- `advertise-addr` (string): IP to advertise for swarm communication
+- `node` (string): Node hostname for availability changes
+
 **Commands:**
 - `docker swarm init --advertise-addr 10.0.0.5`
 - `docker swarm join-token worker`
@@ -82,6 +104,11 @@ Initialize swarm, join workers and managers, and inspect cluster state.
 ### services-and-stacks
 Create and update services, deploy stacks, and roll out changes safely.
 
+**Parameters:**
+- `service` (string): Service name
+- `replicas` (integer): Replica count
+- `stack-file` (string): Compose file path for stack deploy
+
 **Commands:**
 - `docker service create --name web --replicas 3 --publish 80:80 nginx:1.26`
 - `docker service scale web=6`
@@ -95,3 +122,7 @@ Create and update services, deploy stacks, and roll out changes safely.
 - docker service create --name web --replicas 3 --publish 80:80 nginx:1.26
 - docker stack deploy -c docker-compose.yml prod
 - docker service update --image nginx:1.27 web
+
+## References
+- [Docker Swarm Mode](https://docs.docker.com/engine/swarm/)
+- [Docker Service Reference](https://docs.docker.com/engine/reference/commandline/service/)

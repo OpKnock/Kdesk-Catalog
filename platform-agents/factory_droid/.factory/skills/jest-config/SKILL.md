@@ -1,13 +1,35 @@
 ---
 name: "jest-config"
-description: "Configures Jest for JS/TS projects: presets, coverage thresholds, module mappers, reporters, and watch plugins."
+description: "Configures Jest for JS/TS projects: presets, coverage thresholds, module mappers, reporters, and watch plugins. Use when working with jest initialization, config options, coverage and reporters, testing or when the user mentions jest initialization, config options, coverage and reporters, testing."
+license: "MIT"
+compatibility: "Requires npx."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "testing"}
+allowed-tools: "Glob Grep Read Bash(npx:*)"
 ---
-
-# jest-config
 
 Configures Jest for JS/TS projects: presets, coverage thresholds, module mappers, reporters, and watch plugins.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx jest --init`, `npx jest --env=jsdom`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Jest Configuration
 
@@ -75,6 +97,10 @@ module.exports = {
 ### jest-initialization
 Initialize and inspect Jest configuration.
 
+**Parameters:**
+- `showConfig` (boolean): Print resolved config
+- `debug` (boolean): Print config debugging info
+
 **Commands:**
 - `npx jest --init`
 - `npx jest --showConfig`
@@ -89,6 +115,11 @@ Initialize and inspect Jest configuration.
 
 ### config-options
 Configure environments, mappers, and transforms.
+
+**Parameters:**
+- `env` (string): Test environment: node, jsdom
+- `testMatch` (array): Test file patterns
+- `moduleNameMapper` (object): Module alias mapping
 
 **Commands:**
 - `npx jest --env=jsdom`
@@ -105,6 +136,10 @@ Configure environments, mappers, and transforms.
 ### coverage-and-reporters
 Coverage thresholds and custom reporters.
 
+**Parameters:**
+- `coverageThreshold` (object): Global or per-file thresholds
+- `coverageReporters` (array): Report formats: lcov, html, text
+
 **Commands:**
 - `npx jest --coverage --coverageThreshold='{"global":{"lines":80}}'`
 - `npx jest --coverageReporters=lcov,text-summary`
@@ -115,3 +150,7 @@ Coverage thresholds and custom reporters.
 - npx jest --coverage --coverageThreshold='{"global":{"lines":80}}'
 - npx jest --coverageReporters=lcov,text-summary
 - npx jest --reporters=default --reporters=jest-junit
+
+## References
+- [Jest Configuration](https://jestjs.io/docs/configuration)
+- [Jest CLI Options](https://jestjs.io/docs/cli)

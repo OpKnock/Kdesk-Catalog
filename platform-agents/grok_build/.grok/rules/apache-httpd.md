@@ -1,8 +1,26 @@
-# Apache Httpd
-
 Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd basic auth, and graceful reloads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `apachectl -t`, `htpasswd -c /etc/httpd/conf/.htpasswd alice`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Apache HTTP Server
 
@@ -78,6 +96,10 @@ apachectl -t && apachectl graceful
 ### config-management
 Validate, dump, and hot-reload the Apache configuration.
 
+**Parameters:**
+- `config_file` (string): Alternate config file via -f
+- `module` (string): Module name to check via DUMP_MODULES
+
 **Commands:**
 - `apachectl -t`
 - `apachectl -S`
@@ -93,6 +115,11 @@ Validate, dump, and hot-reload the Apache configuration.
 ### vhost-and-auth
 Configure virtual hosts and protect directories with htpasswd.
 
+**Parameters:**
+- `file` (string): htpasswd file path
+- `user` (string): Username to add/remove
+- `bcrypt` (boolean): -B enables bcrypt hashing
+
 **Commands:**
 - `htpasswd -c /etc/httpd/conf/.htpasswd alice`
 - `htpasswd -b /etc/httpd/conf/.htpasswd bob bobpass`
@@ -104,3 +131,8 @@ Configure virtual hosts and protect directories with htpasswd.
 - htpasswd -c .htpasswd admin && apachectl -t && apachectl graceful
 - curl -I -u alice:secret http://localhost/private/
 - htpasswd -bB /etc/httpd/conf/.htpasswd deploy deploypass
+
+## References
+- [Apache httpd Docs](https://httpd.apache.org/docs/2.4/)
+- [htpasswd](https://httpd.apache.org/docs/2.4/programs/htpasswd.html)
+- [Apache Invocation](https://httpd.apache.org/docs/2.4/invoking.html)

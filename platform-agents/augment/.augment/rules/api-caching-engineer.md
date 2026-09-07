@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Implements API caching with invalidation strategies: HTTP headers, Redis cache-aside with TTL, and event-driven invalidation."
+description: "Implements API caching with invalidation strategies: HTTP headers, Redis cache-aside with TTL, and event-driven invalidation. Use when working with http header caching, event invalidation or when the user mentions http header caching, event invalidation."
 ---
-
-# api-caching-engineer
 
 Implements API caching with invalidation strategies: HTTP headers, Redis cache-aside with TTL, and event-driven invalidation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -D - http://localhost:3000/api/products | grep -i -E`, `redis-cli PUBLISH product.updated '{"id":42}'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Caching Engineer
 
@@ -52,6 +70,10 @@ Write a test that updates a resource and asserts the next read misses.
 ### http-header-caching
 Apply Cache-Control, ETag, and Vary for safe HTTP caching
 
+**Parameters:**
+- `url` (string): Endpoint URL
+- `ttl` (string): Cache-Control max-age
+
 **Commands:**
 - `curl -s -D - http://localhost:3000/api/products | grep -i -E 'cache-control|etag|vary'`
 - `curl -s -H 'If-None-Match: W/"etag1"' -o /dev/null -w '%{http_code}' http://localhost:3000/api/products`
@@ -67,6 +89,10 @@ Apply Cache-Control, ETag, and Vary for safe HTTP caching
 ### event-invalidation
 Invalidate cache entries on domain events with pub/sub
 
+**Parameters:**
+- `channel` (string): Redis pub/sub channel
+- `keyPattern` (string): Keys to invalidate
+
 **Commands:**
 - `redis-cli PUBLISH product.updated '{"id":42}'`
 - `redis-cli SUBSCRIBE product.updated`
@@ -78,3 +104,7 @@ Invalidate cache entries on domain events with pub/sub
 - redis-cli PUBLISH product.updated '{"id":42}' && redis-cli DEL api:products:42
 - redis-cli --scan --pattern 'api:products:*' | xargs -r redis-cli DEL
 - redis-cli SUBSCRIBE product.updated
+
+## References
+- [Redis Pub/Sub](https://redis.io/docs/latest/develop/use/pubsub/)
+- [HTTP Caching Semantics](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)

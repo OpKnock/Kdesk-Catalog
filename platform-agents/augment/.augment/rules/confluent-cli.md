@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Manages Confluent Cloud/Platform Kafka clusters via the confluent CLI: topics, schemas, and connectors."
+description: "Manages Confluent Cloud/Platform Kafka clusters via the confluent CLI: topics, schemas, and connectors. Use when working with confluent cli, database or when the user mentions confluent cli, database."
 ---
-
-# confluent-cli
 
 Manages Confluent Cloud/Platform Kafka clusters via the confluent CLI: topics, schemas, and connectors.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `confluent login --prompt`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Confluent CLI
 
@@ -70,6 +88,11 @@ produce/consume roundtrip with the CLI.
 ### confluent-cli
 Authenticate and manage Kafka clusters, topics, and schema registry
 
+**Parameters:**
+- `partitions` (integer): Partition count for topic creation
+- `from-beginning` (boolean): Consume from the earliest offset
+- `schema` (string): Schema file path for schema create
+
 **Commands:**
 - `confluent login --prompt`
 - `confluent kafka cluster list`
@@ -81,3 +104,7 @@ Authenticate and manage Kafka clusters, topics, and schema registry
 - confluent kafka topic list
 - confluent kafka topic produce orders --parse-key --delimiter :
 - confluent schema-registry schema create --subject orders-value --schema orders.avsc
+
+## References
+- [Confluent CLI docs](https://docs.confluent.io/confluent-cli/)
+- [Schema Registry docs](https://docs.confluent.io/cloud/current/sr/)

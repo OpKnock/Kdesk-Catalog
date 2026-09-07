@@ -2,6 +2,7 @@
 name: "mqtt-paho-go"
 description: "Write MQTT clients in Go with eclipse/paho.mqtt.golang: connect options, pub/sub, tokens and TLS. Use when working with paho go client, api or when the user mentions paho go client, api."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(go:*)"
 ---

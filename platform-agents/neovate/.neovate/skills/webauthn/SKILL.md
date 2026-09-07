@@ -1,13 +1,35 @@
 ---
 name: "webauthn"
-description: "Implements passwordless authentication using WebAuthn/FIDO2. Generates registration options, verifies attestation responses, asserts logins with @simplewebauthn, and inspects authenticator certificates with openssl."
+description: "Implements passwordless authentication using WebAuthn/FIDO2. Generates registration options, verifies attestation responses, asserts logins with @simplewebauthn, and inspects authenticator certificates with openssl. Use when working with webauthn flow, api or when the user mentions webauthn flow, api."
+license: "MIT"
+compatibility: "Requires node, npm, openssl, curl. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*) Bash(openssl:*)"
 ---
-
-# Webauthn
 
 Implements passwordless authentication using WebAuthn/FIDO2. Generates registration options, verifies attestation responses, asserts logins with @simplewebauthn, and inspects authenticator certificates with openssl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @simplewebauthn/server @simplewebauthn/browser`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # WebAuthn
 
@@ -69,6 +91,11 @@ curl -s -X POST http://localhost:8080/auth/register/options -d "{\"username\":\"
 ### webauthn-flow
 Implement and test WebAuthn registration and login
 
+**Parameters:**
+- `rpID` (string): Relying Party ID, e.g. auth.example.com
+- `origin` (string): Allowed origin for the WebAuthn ceremony
+- `userVerification` (string): required, preferred, or discouraged
+
 **Commands:**
 - `npm install @simplewebauthn/server @simplewebauthn/browser`
 - `openssl x509 -in attestation.der -inform DER -text -noout`
@@ -80,3 +107,8 @@ Implement and test WebAuthn registration and login
 - curl -s -X POST http://localhost:8080/auth/login/options -d "{\"username\":\"alice\"}" | jq ".publicKey.allowCredentials[0].id"
 - node scripts/verify-assertion.mjs assertion.json challenge.json
 - openssl x509 -in attestation.der -inform DER -noout -subject -issuer
+
+## References
+- [WebAuthn Guide](https://webauthn.guide/)
+- [@simplewebauthn Docs](https://simplewebauthn.dev/docs/)
+- [W3C WebAuthn spec](https://www.w3.org/TR/webauthn-2/)

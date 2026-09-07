@@ -1,13 +1,35 @@
 ---
 name: "etl-pipeline"
-description: "Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling."
+description: "Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling. Use when working with etl pipeline, data or when the user mentions etl pipeline, data."
+license: "MIT"
+compatibility: "Requires psql, python, spark-submit."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "data"}
+allowed-tools: "Glob Grep Read Bash(jq:*) Bash(psql:*) Bash(python:*) Bash(spark-submit:*)"
 ---
-
-# Etl Pipeline
 
 Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python -m etl_pkg run --env prod --date 2024-01-15`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ETL Pipeline
 
@@ -66,6 +88,11 @@ and duration; if a step fails, isolates the step and error from logs.
 ### etl-pipeline
 Implement and run ETL jobs with Python, Spark, and CLI tools
 
+**Parameters:**
+- `env` (string): Environment: dev, staging, prod
+- `date` (string): Logical execution date for the pipeline
+- `incremental` (boolean): Process only the delta since the last run
+
 **Commands:**
 - `python -m etl_pkg run --env prod --date 2024-01-15`
 - `spark-submit --master yarn --deploy-mode cluster jobs/extract.py --input s3://raw/ --output s3://curated/`
@@ -77,3 +104,7 @@ Implement and run ETL jobs with Python, Spark, and CLI tools
 - python -m etl_pkg run --env staging --date 2024-01-15 --incremental
 - spark-submit --master local[4] jobs/transform.py
 - airflow dags trigger etl_pipeline --conf '{"date": "2024-01-15"}'
+
+## References
+- [Apache Spark SQL guide](https://spark.apache.org/docs/latest/sql-programming-guide.html)
+- [Airflow ETL best practices](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html)

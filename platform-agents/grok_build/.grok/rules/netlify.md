@@ -1,8 +1,26 @@
-# Netlify
-
 Deploys frontend apps with Netlify: CLI deploys, build configuration, environment variables, and edge functions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g netlify-cli`, `netlify env:set API_KEY abc123`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Netlify
 
@@ -72,6 +90,10 @@ netlify functions:serve
 ### netlify-cli
 Build, deploy, and manage Netlify sites.
 
+**Parameters:**
+- `dir` (string): Publish directory
+- `prod` (boolean): Deploy to production
+
 **Commands:**
 - `npm install -g netlify-cli`
 - `netlify init`
@@ -87,6 +109,10 @@ Build, deploy, and manage Netlify sites.
 ### netlify-config
 Manage environment variables and site settings.
 
+**Parameters:**
+- `key` (string): Env var name
+- `value` (string): Env var value
+
 **Commands:**
 - `netlify env:set API_KEY abc123`
 - `netlify env:list`
@@ -98,3 +124,7 @@ Manage environment variables and site settings.
 - netlify env:set --context production API_URL https://api.example.com
 - netlify functions:serve
 - netlify status
+
+## References
+- [Netlify Docs](https://docs.netlify.com)
+- [Netlify CLI](https://cli.netlify.com)

@@ -1,13 +1,35 @@
 ---
 name: "provider-driven-contract"
-description: "Provider-driven contract testing with Pact: publish pacts, verify against providers, and gate deploys."
+description: "Provider-driven contract testing with Pact: publish pacts, verify against providers, and gate deploys. Use when working with pact contract testing, api or when the user mentions pact contract testing, api."
+license: "MIT"
+compatibility: "Requires pact-broker, pact-provider-verifier. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(pact-broker:*) Bash(pact-provider-verifier:*)"
 ---
-
-# Provider Driven Contract
 
 Provider-driven contract testing with Pact: publish pacts, verify against providers, and gate deploys.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pact-broker publish ./pacts -b http://localhost:9292 -c 1.0.`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Provider-Driven Contracts
 
@@ -59,6 +81,11 @@ pact-broker can-i-deploy --pacticipant orders-api --version 1.0.0 --to prod -b h
 ### pact-contract-testing
 Publish pact files to a broker, verify provider endpoints, and run can-i-deploy checks.
 
+**Parameters:**
+- `broker_url` (string): Pact broker base URL
+- `version` (string): Consumer/provider version
+- `pacts_dir` (string): Directory with generated pact files
+
 **Commands:**
 - `pact-broker publish ./pacts -b http://localhost:9292 -c 1.0.0 -a main`
 - `pact-broker list-latest-pact-versions -b http://localhost:9292`
@@ -70,3 +97,7 @@ Publish pact files to a broker, verify provider endpoints, and run can-i-deploy 
 - pact-broker publish ./pacts -b http://localhost:9292 -c 1.0.0
 - pact-provider-verifier --provider-base-url=http://localhost:8080 --pact-urls=./pacts/*.json --provider-version 1.0.0
 - pact-broker can-i-deploy --pacticipant orders-api --version 1.0.0 --to prod
+
+## References
+- [Pact Docs](https://docs.pact.io/)
+- [Pact Broker Client](https://github.com/pact-foundation/pact_broker-client)

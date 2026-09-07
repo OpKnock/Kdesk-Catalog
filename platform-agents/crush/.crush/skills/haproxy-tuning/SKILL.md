@@ -1,13 +1,35 @@
 ---
 name: "haproxy-tuning"
-description: "HAProxy performance tuning: config validation, runtime stats via the socket, maxconn adjustments, keepalive tuning, and connection limits."
+description: "HAProxy performance tuning: config validation, runtime stats via the socket, maxconn adjustments, keepalive tuning, and connection limits. Use when working with haproxy tuning, api or when the user mentions haproxy tuning, api."
+license: "MIT"
+compatibility: "Requires echo, haproxy."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(echo:*) Bash(haproxy:*)"
 ---
-
-# Haproxy Tuning
 
 HAProxy performance tuning: config validation, runtime stats via the socket, maxconn adjustments, keepalive tuning, and connection limits.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `haproxy -c -f /etc/haproxy/haproxy.cfg`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # HAProxy Tuning
 
@@ -95,6 +117,11 @@ Agent: Raise maxconn, check backend server maxconn, and add timeout queue:
 ### haproxy-tuning
 Validate, start, and tune HAProxy using config checks and the stats socket.
 
+**Parameters:**
+- `config_file` (string): Path to haproxy.cfg.
+- `stats_socket` (string): Path to the admin socket, e.g. /var/run/haproxy.sock.
+- `maxconn` (integer): Global connection limit to set at runtime.
+
 **Commands:**
 - `haproxy -c -f /etc/haproxy/haproxy.cfg`
 - `haproxy -f /etc/haproxy/haproxy.cfg -D -p /run/haproxy.pid`
@@ -106,3 +133,7 @@ Validate, start, and tune HAProxy using config checks and the stats socket.
 - echo 'show servers state' | socat stdio /var/run/haproxy.sock
 - echo 'set timeout client 60s' | socat stdio /var/run/haproxy.sock
 - haproxy -c -f /etc/haproxy/haproxy.cfg -f /etc/haproxy/errors/ -d
+
+## References
+- [HAProxy Configuration Manual](https://docs.haproxy.org/current/configuration.html)
+- [HAProxy Runtime API](https://docs.haproxy.org/current/management.html)

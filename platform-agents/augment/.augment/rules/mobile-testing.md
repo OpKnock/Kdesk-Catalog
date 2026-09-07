@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Tests mobile apps with Maestro flows, Appium, Detox, adb, and simctl across iOS and Android devices."
+description: "Tests mobile apps with Maestro flows, Appium, Detox, adb, and simctl across iOS and Android devices. Use when working with maestro, device tools, mobile or when the user mentions maestro, device tools, mobile."
 ---
-
-# Mobile Testing
 
 Tests mobile apps with Maestro flows, Appium, Detox, adb, and simctl across iOS and Android devices.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `maestro test flows/smoke.yaml`, `adb devices`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Mobile Testing
 
@@ -82,6 +100,11 @@ Run the critical set in CI for every merge.
 ### maestro
 Author and run declarative mobile UI flows.
 
+**Parameters:**
+- `device` (string): Target device id
+- `include-tags` (string): Only run flows with these tags
+- `env` (string): Environment variables for flows
+
 **Commands:**
 - `maestro test flows/smoke.yaml`
 - `maestro record flow.yaml`
@@ -97,6 +120,11 @@ Author and run declarative mobile UI flows.
 ### device-tools
 Control emulators and simulators with adb and simctl.
 
+**Parameters:**
+- `device` (string): Device or simulator name/id
+- `command` (string): adb shell or simctl command
+- `package` (string): Android package name
+
 **Commands:**
 - `adb devices`
 - `adb shell input tap 540 960`
@@ -108,3 +136,8 @@ Control emulators and simulators with adb and simctl.
 - adb install -r app-debug.apk
 - adb logcat -s TestRunner -v brief
 - xcrun simctl io 'iPhone 15' screenshot screen.png
+
+## References
+- [Maestro](https://maestro.mobile.dev/)
+- [Appium](https://appium.io/docs/en/2.0/)
+- [Detox](https://wix.github.io/Detox/)

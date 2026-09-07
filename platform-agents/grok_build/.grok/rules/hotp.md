@@ -1,8 +1,26 @@
-# HOTP
-
 HMAC-based One-Time Passwords (RFC 4226): generating counters-based codes with oathtool, computing HMAC-SHA1 in OpenSSL/Python, and verifying HOTP values.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `oathtool --hotp --counter 0 12345678901234567890`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # HOTP
 
@@ -79,6 +97,11 @@ Agent: Compare counters:
 ### hotp-generation
 Generate and verify counter-based one-time passwords with oathtool and OpenSSL.
 
+**Parameters:**
+- `secret` (string): Shared secret (plain or base32-encoded with -b).
+- `counter` (integer): Event counter value for the code.
+- `digits` (integer): Code length, default 6.
+
 **Commands:**
 - `oathtool --hotp --counter 0 12345678901234567890`
 - `oathtool --hotp --counter 5 -b 12345678901234567890`
@@ -90,3 +113,7 @@ Generate and verify counter-based one-time passwords with oathtool and OpenSSL.
 - oathtool --hotp --counter 1 12345678901234567890
 - python3 -c "import pyotp; print(pyotp.HOTP('JBSWY3DPEHPK3PXP').at(42))"
 - oathtool --hotp --base32 --counter 3 JBSWY3DPEHPK3PXP
+
+## References
+- [RFC 4226 HOTP](https://datatracker.ietf.org/doc/html/rfc4226)
+- [oathtool manual](https://www.nongnu.org/oath-toolkit/oathtool.1.html)

@@ -1,8 +1,26 @@
-# Logging Elasticsearch Ops
-
 Centralized logging with the ELK stack: Elasticsearch index setup, Filebeat shipping, Logstash pipelines, and querying logs with curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X PUT 'localhost:9200/app-logs?pretty' -H 'Content-`, `filebeat -e -c filebeat.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Logging v2 (ELK Stack)
 
@@ -94,6 +112,10 @@ curl -s 'localhost:9200/app-logs/_count?q=level:error'
 ### elasticsearch-ops
 Create indices and query log documents in Elasticsearch.
 
+**Parameters:**
+- `index` (string): Elasticsearch index name.
+- `query` (string): Lucene query string, e.g. level:ERROR.
+
 **Commands:**
 - `curl -s -X PUT 'localhost:9200/app-logs?pretty' -H 'Content-Type: application/json'`
 - `curl -s 'localhost:9200/app-logs/_search?q=level:ERROR&size=10' | jq '.hits.hits[]._source'`
@@ -108,6 +130,9 @@ Create indices and query log documents in Elasticsearch.
 ### ship-process
 Ship logs with Filebeat and process with Logstash pipelines.
 
+**Parameters:**
+- `config` (string): Filebeat or Logstash config file.
+
 **Commands:**
 - `filebeat -e -c filebeat.yml`
 - `filebeat test config -c filebeat.yml`
@@ -119,3 +144,8 @@ Ship logs with Filebeat and process with Logstash pipelines.
 - filebeat -e -c filebeat.yml
 - filebeat test output -c filebeat.yml
 - logstash --config.test_and_exit -f logstash.conf
+
+## References
+- [Elasticsearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
+- [Filebeat Docs](https://www.elastic.co/guide/en/beats/filebeat/current/)
+- [Logstash Docs](https://www.elastic.co/guide/en/logstash/current/)

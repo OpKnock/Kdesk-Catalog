@@ -1,13 +1,35 @@
 ---
 name: "state"
-description: "Implements the State pattern in TypeScript with Vitest: state machines that swap behavior as state changes."
+description: "Implements the State pattern in TypeScript with Vitest: state machines that swap behavior as state changes. Use when working with ts vitest, state or when the user mentions ts vitest, state."
+license: "MIT"
+compatibility: "Requires npm, npx."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "patterns"}
+allowed-tools: "Glob Grep Read Bash(npm:*) Bash(npx:*)"
 ---
-
-# State
 
 Implements the State pattern in TypeScript with Vitest: state machines that swap behavior as state changes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm init -y && npm install -D typescript vitest`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # State Pattern
 
@@ -86,6 +108,11 @@ Cover all legal transitions plus each invalid one.
 ### ts-vitest
 Implement and test state machine examples.
 
+**Parameters:**
+- `t` (string): Test name filter
+- `coverage` (string): Coverage collection
+- `strict` (string): Strict TypeScript check
+
 **Commands:**
 - `npm init -y && npm install -D typescript vitest`
 - `npx tsc --noEmit --strict state.ts`
@@ -97,3 +124,7 @@ Implement and test state machine examples.
 - npx vitest run tests/state.test.ts
 - npx tsc --noEmit --strict state.ts machine.ts
 - npx vitest run -t 'publish'
+
+## References
+- [Refactoring Guru: State](https://refactoring.guru/design-patterns/state)
+- [Vitest](https://vitest.dev/guide/)

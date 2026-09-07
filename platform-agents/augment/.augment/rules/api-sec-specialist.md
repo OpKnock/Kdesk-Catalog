@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI, baseline scans, active scan rules, and HTML/JSON vulnerability reports."
+description: "Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI, baseline scans, active scan rules, and HTML/JSON vulnerability reports. Use when working with zap api scan, zap automation or when the user mentions zap api scan, zap automation."
 ---
-
-# api-sec-specialist
 
 Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI, baseline scans, active scan rules, and HTML/JSON vulnerability reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t htt`, `curl -s http://localhost:8080/v3/api-docs -o openapi.json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Security Specialist
 
@@ -51,6 +69,11 @@ docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://api.example.com
 ### zap-api-scan
 Run ZAP automated scans against APIs
 
+**Parameters:**
+- `target` (string): API URL or spec file
+- `format` (string): openapi, soap, graphql
+- `level` (string): Alert threshold: WARN, FAIL, PASS
+
 **Commands:**
 - `docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t http://localhost:8080/v3/api-docs -f openapi -O -r zap_api_report.html`
 - `docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t http://localhost:8080 -r zap_baseline.html`
@@ -73,3 +96,7 @@ Automate ZAP scans in CI pipelines
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [ZAP API Scan Docs](https://www.zaproxy.org/docs/docker/api-scan/)
+- [ZAP User Guide](https://www.zaproxy.org/docs/desktop/start/)

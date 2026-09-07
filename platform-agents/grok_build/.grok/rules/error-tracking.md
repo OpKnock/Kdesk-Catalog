@@ -1,8 +1,26 @@
-# Error Tracking
-
 Error tracking and release monitoring with Sentry: upload source maps, query issues, manage releases, and analyze crash reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sentry-cli releases new -p my-project 1.2.3`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Error Tracking
 
@@ -63,6 +81,11 @@ curl -s -X POST 'https://sentry.io/api/0/store/' -H 'Content-Type: application/j
 ### sentry-ops
 Manage Sentry releases, upload artifacts, query issues, and inspect events.
 
+**Parameters:**
+- `project` (string): Sentry project slug
+- `release` (string): Release version, e.g. 1.2.3
+- `query` (string): Issue search query like is:unresolved
+
 **Commands:**
 - `sentry-cli releases new -p my-project 1.2.3`
 - `sentry-cli releases set-commits --auto 1.2.3`
@@ -75,3 +98,7 @@ Manage Sentry releases, upload artifacts, query issues, and inspect events.
 - sentry-cli releases new -p my-project 1.2.3 && sentry-cli releases set-commits --auto 1.2.3
 - sentry-cli sourcemaps upload -p my-project --release 1.2.3 ./dist/assets
 - curl -s 'https://sentry.io/api/0/projects/org/project/issues/?query=is:unresolved&statsPeriod=24h' -H 'Authorization: Bearer $SENTRY_TOKEN' | jq '.[] | {title: .title, count: .count}'
+
+## References
+- [Sentry CLI Reference](https://docs.sentry.io/cli/)
+- [Sentry Releases API](https://docs.sentry.io/api/releases/)

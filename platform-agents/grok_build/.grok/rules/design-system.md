@@ -1,8 +1,26 @@
-# design-system
-
 Builds design systems: Storybook components, design tokens, Chromatic visual tests, and docs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx storybook@latest init --yes`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Design System
 
@@ -73,6 +91,11 @@ change set with links for review.
 ### storybook-workflow
 Create, test, and publish component libraries with Storybook
 
+**Parameters:**
+- `project-token` (string): Chromatic project token for visual tests
+- `exit-zero-on-changes` (boolean): Don't fail CI when visual changes exist
+- `port` (integer): Dev server port for Storybook
+
 **Commands:**
 - `npx storybook@latest init --yes`
 - `npm run storybook -- --port 6006`
@@ -84,3 +107,8 @@ Create, test, and publish component libraries with Storybook
 - npx storybook addon install @storybook/addon-a11y
 - npx chromatic --auto-accept-changes
 - npx tokens-transformer tokens.json tokens/
+
+## References
+- [Storybook docs](https://storybook.js.org/docs/)
+- [Chromatic docs](https://www.chromatic.com/docs/)
+- [Style Dictionary docs](https://styledictionary.com/)

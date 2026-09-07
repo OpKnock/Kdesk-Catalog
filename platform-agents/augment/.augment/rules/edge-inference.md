@@ -1,11 +1,33 @@
 ---
 type: agent_requested
-description: "Edge inference server agent. Manages edge ML inference server."
+description: "Edge inference server agent. Manages edge ML inference server. Use when working with Ml Edge Inference Server Agent or when the user mentions Ml Edge Inference Server Agent."
 ---
 
 # Edge Inference
 
 Edge inference server agent. Manages edge ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X POST http://localhost:8080/v1/predict -H 'Content-Ty`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -27,3 +49,8 @@ Edge inference server agent. Manages edge ML inference server.
 - curl http://localhost:8080/predict --data '{"input": "Hello"}'
 - python test_edge_server.py --endpoint http://localhost:8080
 - python config_edge.py --model model.tflite --device raspberry-pi
+
+## References
+- [KubeEdge](https://github.com/kubeedge/kubeedge)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Federated identity and SSO: configure Keycloak clients and realms, exchange tokens via OIDC, and test IdP-driven login flows."
+description: "Federated identity and SSO: configure Keycloak clients and realms, exchange tokens via OIDC, and test IdP-driven login flows. Use when working with oidc sso, api or when the user mentions oidc sso, api."
 ---
-
-# Federated Identity
 
 Federated identity and SSO: configure Keycloak clients and realms, exchange tokens via OIDC, and test IdP-driven login flows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s 'http://localhost:8080/realms/master/protocol/openid`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Federated Identity
 
@@ -61,6 +79,11 @@ curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/userinfo' -H 
 ### oidc-sso
 Manage Keycloak realms/clients, get tokens via the OIDC flow, and verify user federation.
 
+**Parameters:**
+- `realm` (string): Keycloak realm name
+- `client-id` (string): OIDC client registered in the realm
+- `idp` (string): External IdP like Google, GitHub, or SAML provider
+
 **Commands:**
 - `curl -s 'http://localhost:8080/realms/master/protocol/openid-connect/token' -d 'grant_type=client_credentials&client_id=admin-cli&client_secret=secret' | jq -r '.access_token'`
 - `curl -s -X POST 'http://localhost:8080/admin/realms' -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -d '{"realm":"acme","enabled":true}' | jq`
@@ -72,3 +95,7 @@ Manage Keycloak realms/clients, get tokens via the OIDC flow, and verify user fe
 - curl -s 'http://localhost:8080/realms/acme/.well-known/openid-configuration' | jq '.authorization_endpoint, .token_endpoint, .jwks_uri'
 - curl -s 'http://localhost:8080/realms/acme/protocol/openid-connect/token' -d 'grant_type=password&client_id=web&username=alice&password=secret' | jq -r '.access_token'
 - curl -s -X POST 'http://localhost:8080/admin/realms' -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -d '{"realm":"acme","enabled":true}' | jq
+
+## References
+- [Keycloak Admin REST API](https://www.keycloak.org/docs-api/latest/rest-api/)
+- [OIDC Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html)

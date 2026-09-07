@@ -1,8 +1,26 @@
-# Singleton
-
 Implements the Singleton pattern in Java with javac: controlled single instance creation and its thread-safety trade-offs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `javac -d out Singleton.java Main.java`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Singleton Pattern
 
@@ -68,6 +86,11 @@ Test that repeated getInstance returns identical references.
 ### java
 Implement and verify singleton examples.
 
+**Parameters:**
+- `cp` (string): Classpath directory
+- `Xlint` (string): Compiler warnings
+- `ea` (string): Enable assertions
+
 **Commands:**
 - `javac -d out Singleton.java Main.java`
 - `java -cp out Main`
@@ -79,3 +102,7 @@ Implement and verify singleton examples.
 - javac -d out Singleton.java && java -cp out com.example.Main
 - javac -Xlint:all -d out *.java
 - java -cp out com.example.Main | grep -c 'same instance'
+
+## References
+- [Refactoring Guru: Singleton](https://refactoring.guru/design-patterns/singleton)
+- [JLS Enum](https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html)

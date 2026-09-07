@@ -1,13 +1,35 @@
 ---
 name: "elasticsearch"
-description: "Operates Elasticsearch: index management, document CRUD, search, and cluster health via the REST API."
+description: "Operates Elasticsearch: index management, document CRUD, search, and cluster health via the REST API. Use when working with elasticsearch rest, database or when the user mentions elasticsearch rest, database."
+license: "MIT"
+compatibility: "Requires network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "database"}
+allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---
-
-# elasticsearch
 
 Operates Elasticsearch: index management, document CRUD, search, and cluster health via the REST API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X PUT 'localhost:9200/orders?pretty'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Elasticsearch
 
@@ -58,6 +80,11 @@ health status.
 ### elasticsearch-rest
 Manage indices, documents, and searches with curl against Elasticsearch
 
+**Parameters:**
+- `query` (string): Query DSL JSON for the search request
+- `size` (integer): Number of results to return
+- `pretty` (boolean): Pretty-print the JSON response
+
 **Commands:**
 - `curl -X PUT 'localhost:9200/orders?pretty'`
 - `curl -X POST 'localhost:9200/orders/_doc?pretty' -H 'Content-Type: application/json' -d '{"order_id": 1, "amount": 99.5}'`
@@ -69,3 +96,7 @@ Manage indices, documents, and searches with curl against Elasticsearch
 - curl -X DELETE 'localhost:9200/orders'
 - curl 'localhost:9200/orders/_search' -H 'Content-Type: application/json' -d '{"query": {"match": {"customer": "jane"}}, "size": 5}'
 - curl 'localhost:9200/_cat/health?v'
+
+## References
+- [Elasticsearch guide](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
+- [Elasticsearch search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html)

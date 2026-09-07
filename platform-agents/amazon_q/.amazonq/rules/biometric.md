@@ -1,8 +1,26 @@
-# Biometric
-
 Implements biometric authentication with WebAuthn/FIDO2: attestation, credential registration, assertion verification, and testing with libfido2.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `fido2-cred -M -r -i client.data /dev/hidraw0`, `fido2-assert -G -r -i client.data /dev/hidraw0`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Biometric
 
@@ -52,6 +70,10 @@ openssl x509 -in attestation.der -inform DER -noout -subject -issuer
 ### webauthn-registration
 Test WebAuthn registration flows at the hardware level.
 
+**Parameters:**
+- `device` (string): HID device path, e.g. /dev/hidraw0
+- `client_data` (string): Client data JSON file
+
 **Commands:**
 - `fido2-cred -M -r -i client.data /dev/hidraw0`
 - `fido2-cred -M -r -i client.data -o cred /dev/hidraw0`
@@ -67,6 +89,10 @@ Test WebAuthn registration flows at the hardware level.
 ### assertion
 Perform biometric assertions for authentication.
 
+**Parameters:**
+- `device` (string): HID device path
+- `assertion_file` (string): Output assertion file
+
 **Commands:**
 - `fido2-assert -G -r -i client.data /dev/hidraw0`
 - `fido2-assert -G -r -i client.data -o assert /dev/hidraw0`
@@ -81,6 +107,10 @@ Perform biometric assertions for authentication.
 ### attestation
 Inspect attestation and key metadata.
 
+**Parameters:**
+- `cert_file` (string): Attestation certificate file
+- `format` (string): DER or PEM
+
 **Commands:**
 - `openssl x509 -in attestation.der -inform DER -noout -text`
 - `openssl x509 -in attestation.der -inform DER -noout -subject -issuer`
@@ -92,3 +122,8 @@ Inspect attestation and key metadata.
 - openssl x509 -in attestation.der -inform DER -noout -subject -issuer
 - fido2-token -I /dev/hidraw0
 - lsusb | grep -i fido
+
+## References
+- [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/)
+- [libfido2](https://github.com/Yubico/libfido2)
+- [OWASP Biometrics](https://owasp.org/www-community/controls/Biometric_Authentication)

@@ -2,6 +2,7 @@
 name: "sumologic"
 description: "Ingest logs and run queries against Sumo Logic using HTTP collectors and the REST API. Pushes JSON events directly, starts search jobs with SPL-style syntax, fetches results, and manages collectors \u2014 all from the terminal without a collector agent. Use when working with sumologic api or when the user mentions sumologic api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

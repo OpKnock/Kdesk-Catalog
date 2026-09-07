@@ -1,13 +1,35 @@
 ---
 name: "oauth2-auth-architect"
-description: "Designs OAuth2/OpenID Connect flows: token endpoints, PKCE, scopes, and Keycloak realm administration."
+description: "Designs OAuth2/OpenID Connect flows: token endpoints, PKCE, scopes, and Keycloak realm administration. Use when working with oauth2c, keycloak or when the user mentions oauth2c, keycloak."
+license: "MIT"
+compatibility: "Requires node.js, python, openssl, jwt-cli, postman, keycloak."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(kcadm.sh:*) Bash(oauth2c:*)"
 ---
-
-# oauth2-auth-architect
 
 Designs OAuth2/OpenID Connect flows: token endpoints, PKCE, scopes, and Keycloak realm administration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `oauth2c auth-code --issuer http://localhost:8080 --client-id`, `kcadm.sh config credentials --server http://localhost:8080 -`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # OAuth2 Architecture
 
@@ -69,6 +91,11 @@ Verify 401 on expired and wrong-audience tokens.
 ### oauth2c
 Exercise OAuth2 flows end-to-end with oauth2c.
 
+**Parameters:**
+- `issuer` (string): OIDC issuer URL
+- `client-id` (string): OAuth client id
+- `pkce` (string): Use PKCE for the flow
+
 **Commands:**
 - `oauth2c auth-code --issuer http://localhost:8080 --client-id my-client --client-secret secret --scopes openid,email`
 - `oauth2c client-credentials --issuer http://localhost:8080 --client-id svc --client-secret secret`
@@ -84,6 +111,11 @@ Exercise OAuth2 flows end-to-end with oauth2c.
 ### keycloak
 Administer Keycloak realms, clients, and users.
 
+**Parameters:**
+- `realm` (string): Keycloak realm
+- `clientId` (string): Client identifier
+- `server` (string): Keycloak server URL
+
 **Commands:**
 - `kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin`
 - `kcadm.sh get realms`
@@ -95,3 +127,8 @@ Administer Keycloak realms, clients, and users.
 - kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password $KC_PASS
 - kcadm.sh create clients -r my-realm -s clientId=web-app -s publicClient=true
 - kcadm.sh get users -r my-realm -q username=ada
+
+## References
+- [OAuth 2.0 RFC 6749](https://www.rfc-editor.org/rfc/rfc6749)
+- [oauth2c](https://github.com/cloudentity/oauth2c)
+- [Keycloak Admin CLI](https://www.keycloak.org/docs/latest/server_admin/index.html)

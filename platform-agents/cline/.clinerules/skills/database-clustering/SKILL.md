@@ -1,11 +1,37 @@
 ---
 name: "database-clustering"
-description: "Set up database clusters."
+description: "Set up database clusters. Use when working with db clustering, database clustering, patroni, galera or when the user mentions db clustering, database clustering, patroni, galera."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "database"}
+allowed-tools: "Glob Grep Read Bash(keepalived:*) Bash(patroni:*) Bash(pgbouncer:*)"
 ---
 
 # Database Clustering
 
 Set up database clusters.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `patroni`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -23,6 +49,10 @@ Always recommend quorum-based decisions.
 ### db-clustering
 Set up database clusters
 
+**Parameters:**
+- `cluster_type` (string): Type: primary-replica, multi-primary, shared-nothing
+- `tool` (string): Tool: patroni, galera, citus, cockroachdb
+
 **Commands:**
 - `patroni`
 - `pgbouncer`
@@ -32,3 +62,7 @@ Set up database clusters
 - Patroni: patroni postgres0.yml
 - Galera: wsrep_cluster_address=gcomm://node1,node2,node3
 - Check: patronictl list
+
+## References
+- [](https://github.com/zalando/patroni)
+- [](https://www.postgresql.org/docs/current/auth-peer.html)

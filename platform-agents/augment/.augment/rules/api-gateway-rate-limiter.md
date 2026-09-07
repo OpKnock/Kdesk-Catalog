@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Implements distributed rate limiting at the API gateway layer using Kong plugins, Envoy filters, Traefik middleware, and Redis-backed counters. Configures tiered limits, custom key extractors, and validates behavior under load."
+description: "Implements distributed rate limiting at the API gateway layer using Kong plugins, Envoy filters, Traefik middleware, and Redis-backed counters. Configures tiered limits, custom key extractors, and validates behavior under load. Use when working with kong rate limiting, envoy rate limiting, traefik rate limiting, api gateway or when the user mentions kong rate limiting, envoy rate limiting, traefik rate limiting, api gateway."
 ---
-
-# API Gateway Rate Limiter
 
 Implements distributed rate limiting at the API gateway layer using Kong plugins, Envoy filters, Traefik middleware, and Redis-backed counters. Configures tiered limits, custom key extractors, and validates behavior under load.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `deck file add-plugin kong.yaml --name=rate-limiting --config`, `kubectl apply -f envoy-ratelimit-config.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Gateway Rate Limiter
 
@@ -105,6 +123,12 @@ http_filters:
 ### kong-rate-limiting
 Configures Kong rate-limiting plugin with local, Redis, and cluster policies.
 
+**Parameters:**
+- `policy` (string): Rate limiting policy (local, redis, cluster)
+- `limit` (number): Request limit per window
+- `window` (string): Window size (second, minute, hour, day, month, year)
+- `limit_by` (string): Key to limit by (consumer, credential, ip, service, header)
+
 **Commands:**
 - `deck file add-plugin kong.yaml --name=rate-limiting --config.minute=1000 --config.policy=redis --config.redis_host=redis --config.redis_port=6379 --config.fault_tolerant=true`
 - `deck file add-plugin kong.yaml --name=rate-limiting --config.hour=10000 --config.policy=cluster --config.hide_client_headers=false`
@@ -117,6 +141,11 @@ Configures Kong rate-limiting plugin with local, Redis, and cluster policies.
 
 ### envoy-rate-limiting
 Configures Envoy global and local rate limit filters with Redis-backed rate limit service.
+
+**Parameters:**
+- `domain` (string): Rate limit domain identifier
+- `descriptor_key` (string): Request attribute to rate limit on (header, path, remote_address)
+- `rate_limit_service` (string): Rate limit service gRPC endpoint
 
 **Commands:**
 - `kubectl apply -f envoy-ratelimit-config.yaml`
@@ -131,6 +160,11 @@ Configures Envoy global and local rate limit filters with Redis-backed rate limi
 ### traefik-rate-limiting
 Configures Traefik rate limit middleware with in-memory or Redis backend.
 
+**Parameters:**
+- `average` (number): Average requests per second
+- `burst` (number): Burst allowance
+- `source_criterion` (string): Rate limit key source (ip, requestHeader, requestHost)
+
 **Commands:**
 - `kubectl apply -f traefik-middleware-ratelimit.yaml`
 - `kubectl apply -f traefik-ingressroute.yaml`
@@ -140,3 +174,10 @@ Configures Traefik rate limit middleware with in-memory or Redis backend.
 - kubectl apply -f ./traefik/middleware-ratelimit.yaml
 - kubectl apply -f ./traefik/ingressroute-api.yaml
 - curl -i http://localhost:8080/api/health
+
+## References
+- [Kong Rate Limiting Plugin](https://docs.konghq.com/hub/kong-inc/rate-limiting/)
+- [Envoy Rate Limit Service](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rate_limit_filter)
+- [Traefik Rate Limit Middleware](https://doc.traefik.io/traefik/middlewares/ratelimit/)
+- [Redis Rate Limiting Patterns](https://redis.io/docs/latest/develop/use-cases/rate-limiting/)
+- [Rate Limiting Strategies](https://aws.amazon.com/blogs/architecture/rate-limiting-strategies-for-scalable-apis/)

@@ -1,13 +1,35 @@
 ---
 name: "pass"
-description: "Manages secrets using the password store utility: initializes GPG-encrypted stores, generates and inserts passwords and API tokens, and syncs via git enabling CLI-centric secret management."
+description: "Manages secrets using the password store utility: initializes GPG-encrypted stores, generates and inserts passwords and API tokens, and syncs via git enabling CLI-centric secret management. Use when working with pass passwordstore, api or when the user mentions pass passwordstore, api."
+license: "MIT"
+compatibility: "Requires pass."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(pass:*)"
 ---
-
-# Pass
 
 Manages secrets using the password store utility: initializes GPG-encrypted stores, generates and inserts passwords and API tokens, and syncs via git enabling CLI-centric secret management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pass init "FINGERPRINT"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # pass
 
@@ -68,6 +90,11 @@ username: alice
 ### pass-passwordstore
 Initialize the password store, generate and manage secrets with pass, and sync via git.
 
+**Parameters:**
+- `path` (string): Store path, e.g. dev/apitoken
+- `length` (integer): Generated password length
+- `no_symbols` (boolean): Exclude symbols from generation
+
 **Commands:**
 - `pass init "FINGERPRINT"`
 - `pass generate -n Email/example 20`
@@ -79,3 +106,7 @@ Initialize the password store, generate and manage secrets with pass, and sync v
 - pass generate --no-symbols -l 24 server/root
 - pass ls
 - pass git push
+
+## References
+- [pass Official Site](https://www.passwordstore.org/)
+- [pass man page](https://git.zx2c4.com/password-store/about/)

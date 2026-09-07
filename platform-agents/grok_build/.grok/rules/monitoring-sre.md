@@ -1,8 +1,26 @@
-# Monitoring
-
 Builds monitoring stacks with Prometheus, Grafana, and exporters, querying metrics and alerting on SLO burn.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `promtool check config prometheus.yml`, `grafana-cli plugins install grafana-piechart-panel`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Monitoring
 
@@ -65,6 +83,10 @@ groups:
 ### prometheus-operations
 Query, reload, and inspect Prometheus targets.
 
+**Parameters:**
+- `query` (string): PromQL expression
+- `url` (string): Prometheus base URL
+
 **Commands:**
 - `promtool check config prometheus.yml`
 - `promtool query 'up' --url=http://localhost:9090`
@@ -80,6 +102,10 @@ Query, reload, and inspect Prometheus targets.
 ### grafana-management
 Provision dashboards, datasources, and plugins.
 
+**Parameters:**
+- `token` (string): Grafana service account token
+- `dashboardJson` (string): Dashboard JSON file path
+
 **Commands:**
 - `grafana-cli plugins install grafana-piechart-panel`
 - `grafana-cli admin reset-admin-password newpass`
@@ -93,6 +119,10 @@ Provision dashboards, datasources, and plugins.
 ### exporter-setup
 Collect host and app metrics with exporters.
 
+**Parameters:**
+- `target` (string): Probe target for blackbox exporter
+- `module` (string): Blackbox probe module
+
 **Commands:**
 - `node_exporter --web.listen-address=:9100`
 - `curl -s localhost:9100/metrics | head -20`
@@ -103,3 +133,8 @@ Collect host and app metrics with exporters.
 **Examples:**
 - node_exporter --web.listen-address=:9100
 - curl -s 'http://localhost:9115/probe?target=http://localhost:8080&module=http_2xx' | jq .
+
+## References
+- [Prometheus Documentation](https://prometheus.io/docs/)
+- [Grafana Documentation](https://grafana.com/docs/)
+- [Node Exporter Docs](https://github.com/prometheus/node_exporter)

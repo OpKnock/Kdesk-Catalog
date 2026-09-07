@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Lints JavaScript and TypeScript with ESLint: full lint runs, autofix, custom rulesets, and CI integration."
+description: "Lints JavaScript and TypeScript with ESLint: full lint runs, autofix, custom rulesets, and CI integration. Use when working with eslint lint, eslint rules, code quality or when the user mentions eslint lint, eslint rules, code quality."
 ---
-
-# eslint
 
 Lints JavaScript and TypeScript with ESLint: full lint runs, autofix, custom rulesets, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `eslint src/ --ext .js,.mjs`, `npx eslint --rule "no-console: error" src/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ESLint
 
@@ -69,6 +87,11 @@ rules: {
 ### eslint-lint
 Lint and fix code with real CLI flags.
 
+**Parameters:**
+- `paths` (string): Files or directories
+- `fix` (boolean): Autofix problems
+- `max-warnings` (integer): Warnings allowed before error
+
 **Commands:**
 - `eslint src/ --ext .js,.mjs`
 - `eslint src/main.js --fix`
@@ -84,6 +107,10 @@ Lint and fix code with real CLI flags.
 ### eslint-rules
 Inspect and apply specific rules.
 
+**Parameters:**
+- `rule` (string): Inline rule override
+- `plugin` (string): Plugin namespace to enable, e.g. react
+
 **Commands:**
 - `npx eslint --rule "no-console: error" src/`
 - `eslint --rulesdir ./rules src/`
@@ -93,3 +120,7 @@ Inspect and apply specific rules.
 **Examples:**
 - npx eslint --fix --ext .jsx,.tsx src/components/
 - eslint --no-eslintrc --parser-options "ecmaVersion: latest" src/
+
+## References
+- [ESLint Docs](https://eslint.org/docs/latest/)
+- [ESLint Rules](https://eslint.org/docs/latest/rules/)

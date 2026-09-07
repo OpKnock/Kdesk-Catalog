@@ -2,6 +2,7 @@
 name: "fiber"
 description: "Build high-performance Go HTTP APIs with Fiber: run the server, wire middleware, and test routes. Use when working with fiber routing, api or when the user mentions fiber routing, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*) Bash(go:*)"
 ---

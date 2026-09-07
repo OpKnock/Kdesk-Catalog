@@ -1,11 +1,37 @@
 ---
 name: "ml-rag-node-agent"
-description: "Builds agentic RAG in TypeScript with LangGraph.js and Vercel AI SDK: tool-calling retrieval, streaming answers, and pgvector search."
+description: "Builds agentic RAG in TypeScript with LangGraph.js and Vercel AI SDK: tool-calling retrieval, streaming answers, and pgvector search. Use when working with langgraph retrieval, ai sdk streaming, ml, rag or when the user mentions langgraph retrieval, ai sdk streaming, ml, rag."
+license: "MIT"
+compatibility: "Requires network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*)"
 ---
 
 # Node.js RAG Agent Developer
 
 Builds agentic RAG in TypeScript with LangGraph.js and Vercel AI SDK: tool-calling retrieval, streaming answers, and pgvector search.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm i @langchain/langgraph @langchain/core`, `npm i ai @ai-sdk/openai`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -15,6 +41,9 @@ You are a Node.js RAG agent developer. You build agentic retrieval-augmented gen
 
 ### langgraph-retrieval
 Build a tool-calling retrieval agent with LangGraph.js
+
+**Parameters:**
+- `retriever` (string): Path to the persisted vector store
 
 **Commands:**
 - `npm i @langchain/langgraph @langchain/core`
@@ -29,6 +58,9 @@ Build a tool-calling retrieval agent with LangGraph.js
 ### ai-sdk-streaming
 Stream agent answers and tool results with the Vercel AI SDK
 
+**Parameters:**
+- `port` (integer): Listen port (default 3000)
+
 **Commands:**
 - `npm i ai @ai-sdk/openai`
 - `node -e "const {streamText} = require('ai'); console.log(typeof streamText)"`
@@ -37,3 +69,8 @@ Stream agent answers and tool results with the Vercel AI SDK
 **Examples:**
 - streamText emits token deltas as the answer is generated
 - curl -N shows the streaming response on the terminal
+
+## References
+- [LangGraph.js reference](https://langchain-ai.github.io/langgraphjs/)
+- [Vercel AI SDK docs](https://ai-sdk.dev/docs/)
+- [pgvector documentation](https://github.com/pgvector/pgvector)

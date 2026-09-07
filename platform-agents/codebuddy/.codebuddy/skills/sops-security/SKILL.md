@@ -1,13 +1,35 @@
 ---
 name: "sops-security"
-description: "Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management."
+description: "Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management. Use when working with file encryption, editing and kms, git integration, security or when the user mentions file encryption, editing and kms, git integration, security."
+license: "MIT"
+compatibility: "Requires git, sops."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(git:*) Bash(sops:*)"
 ---
-
-# sops-security
 
 Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sops -e secrets.yaml > secrets.enc.yaml`, `sops secrets.enc.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SOPS
 
@@ -74,6 +96,11 @@ creation_rules:
 ### file-encryption
 Encrypt and decrypt config files with key providers.
 
+**Parameters:**
+- `ageRecipients` (array): age1... recipient keys
+- `pgpFingerprints` (array): PGP key fingerprints
+- `inPlace` (boolean): Encrypt the file in place (-i)
+
 **Commands:**
 - `sops -e secrets.yaml > secrets.enc.yaml`
 - `sops -d secrets.enc.yaml`
@@ -88,6 +115,10 @@ Encrypt and decrypt config files with key providers.
 
 ### editing-and-kms
 Edit encrypted values and use cloud KMS keys.
+
+**Parameters:**
+- `kms` (array): KMS ARNs for encryption keys
+- `set` (object): Path-value pairs to set on the file
 
 **Commands:**
 - `sops secrets.enc.yaml`
@@ -104,6 +135,10 @@ Edit encrypted values and use cloud KMS keys.
 ### git-integration
 Use sops with git diff and merge tools.
 
+**Parameters:**
+- `config` (string): Path to .sops.yaml config file
+- `encryptionTarget` (string): File to encrypt with the configured sops keys.
+
 **Commands:**
 - `git config --global diff.sopsdiffer.textconv "sops -d"`
 - `git config --global merge.sopsmerge.driver "sops merge-file --output %A %O %A %B"`
@@ -114,3 +149,7 @@ Use sops with git diff and merge tools.
 - git config --global diff.sopsdiffer.textconv "sops -d"
 - sops updatekeys secrets.enc.yaml
 - sops --config .sops.yaml -e secrets.yaml
+
+## References
+- [SOPS GitHub](https://github.com/getsops/sops)
+- [SOPS Keys Documentation](https://getsops.io/docs/)

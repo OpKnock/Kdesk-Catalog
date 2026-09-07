@@ -1,8 +1,26 @@
-# Argocd
-
 Operates Argo CD for GitOps deployments: app creation, sync policies, health checks, rollbacks, and CLI auth.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `argocd app create my-api --repo https://github.com/org/my-ap`, `argocd app set my-api --sync-policy automated`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Argo CD
 
@@ -69,6 +87,12 @@ spec:
 ### app-lifecycle
 Create, sync, and manage Argo CD applications.
 
+**Parameters:**
+- `repo` (string): Git repository URL
+- `path` (string): Manifest/helm path in the repo
+- `namespace` (string): Destination namespace
+- `prune` (boolean): Delete resources removed from git during sync
+
 **Commands:**
 - `argocd app create my-api --repo https://github.com/org/my-api --path manifests --dest-server https://kubernetes.default.svc --dest-namespace prod`
 - `argocd app list`
@@ -83,6 +107,10 @@ Create, sync, and manage Argo CD applications.
 
 ### sync-policies
 Configure automated sync, pruning, and self-heal behavior.
+
+**Parameters:**
+- `sync_policy` (string): manual or automated
+- `timeout` (number): Sync/wait timeout in seconds
 
 **Commands:**
 - `argocd app set my-api --sync-policy automated`
@@ -99,6 +127,10 @@ Configure automated sync, pruning, and self-heal behavior.
 ### rollback-and-ops
 Roll back deployments and manage CLI sessions.
 
+**Parameters:**
+- `revision` (number): History index to roll back to
+- `server` (string): Argo CD server URL for login
+
 **Commands:**
 - `argocd login argocd.staging.your-app.test --sso`
 - `argocd app rollback my-api 3`
@@ -110,3 +142,8 @@ Roll back deployments and manage CLI sessions.
 - argocd login argocd.staging.your-app.test --username admin --insecure
 - argocd app history my-api | head -5
 - argocd app rollback my-api 2 --prune
+
+## References
+- [Argo CD Docs](https://argo-cd.readthedocs.io/)
+- [Argo CD CLI](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/)
+- [Declarative GitOps](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/)

@@ -1,13 +1,35 @@
 ---
 name: "api-security-engineer"
-description: "Engineers API security controls: OWASP Top 10 coverage, security headers, authentication middleware, dependency scanning with npm audit, and SAST with semgrep."
+description: "Engineers API security controls: OWASP Top 10 coverage, security headers, authentication middleware, dependency scanning with npm audit, and SAST with semgrep. Use when working with security headers, dependency sast or when the user mentions security headers, dependency sast."
+license: "MIT"
+compatibility: "Requires node.js, python, owasp-zap, helmet, cors, express-rate-limit. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*) Bash(pip:*) Bash(semgrep:*)"
 ---
-
-# api-security-engineer
 
 Engineers API security controls: OWASP Top 10 coverage, security headers, authentication middleware, dependency scanning with npm audit, and SAST with semgrep.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install helmet`, `npm audit --audit-level=high`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Security Engineer
 
@@ -54,6 +76,11 @@ semgrep --config=p/owasp-top-ten .
 ### security-headers
 Apply and verify security response headers
 
+**Parameters:**
+- `header` (string): Header to verify
+- `url` (string): Endpoint to check
+- `middleware` (string): Security middleware name
+
 **Commands:**
 - `npm install helmet`
 - `curl -sI http://localhost:8080/ | grep -iE 'strict-transport-security|content-security-policy|x-content-type-options|referrer-policy'`
@@ -68,6 +95,11 @@ Apply and verify security response headers
 ### dependency-sast
 Scan dependencies and source code
 
+**Parameters:**
+- `severity` (string): Audit threshold: low, moderate, high, critical
+- `config` (string): Semgrep ruleset
+- `path` (string): Scan target directory
+
 **Commands:**
 - `npm audit --audit-level=high`
 - `npm audit fix --dry-run`
@@ -79,3 +111,7 @@ Scan dependencies and source code
 - npm audit reports vulnerable dependencies
 - semgrep with owasp-top-ten rules scans source
 - --json output feeds CI dashboards
+
+## References
+- [OWASP API Security Top 10](https://owasp.org/API-Security/editions/2023/en/0x11-t10/)
+- [Semgrep Docs](https://semgrep.dev/docs/)

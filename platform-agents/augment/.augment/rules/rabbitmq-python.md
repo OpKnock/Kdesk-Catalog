@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume and rabbitmqadmin."
+description: "RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume and rabbitmqadmin. Use when working with rabbitmq python client, api or when the user mentions rabbitmq python client, api."
 ---
-
-# Rabbitmq Python
 
 RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume and rabbitmqadmin.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install pika`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # RabbitMQ Python
 
@@ -67,6 +85,11 @@ ch.start_consuming()
 ### rabbitmq-python-client
 Install pika, write publishers/consumers, and manage queues with rabbitmqadmin.
 
+**Parameters:**
+- `queue` (string): Queue name
+- `host` (string): RabbitMQ host
+- `durable` (boolean): Survive broker restarts
+
 **Commands:**
 - `pip install pika`
 - `python3 publisher.py`
@@ -78,3 +101,7 @@ Install pika, write publishers/consumers, and manage queues with rabbitmqadmin.
 - python3 consumer.py
 - rabbitmqadmin declare queue name=alerts arguments='{"x-message-ttl":60000}'
 - python3 -c "import pika; print(pika.__version__)"
+
+## References
+- [Pika GitHub](https://github.com/pika/pika)
+- [RabbitMQ Python guide](https://www.rabbitmq.com/clients/pika.html)

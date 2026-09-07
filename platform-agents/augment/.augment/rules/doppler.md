@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Centralizes environment variables and secrets across projects and environments (dev/staging/prod) with Doppler CLI, injecting into processes, CI, and platform sync."
+description: "Centralizes environment variables and secrets across projects and environments (dev/staging/prod) with Doppler CLI, injecting into processes, CI, and platform sync. Use when working with secrets management, api or when the user mentions secrets management, api."
 ---
-
-# Doppler
 
 Centralizes environment variables and secrets across projects and environments (dev/staging/prod) with Doppler CLI, injecting into processes, CI, and platform sync.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `doppler setup`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Doppler
 
@@ -73,6 +91,11 @@ doppler secrets get API_KEY --config prod --plain | wc -c
 ### secrets-management
 Manage Doppler projects, configs, and secrets from the CLI; run processes with injected environment variables.
 
+**Parameters:**
+- `project` (string): Doppler project name
+- `config` (string): Environment config: dev, staging, prod
+- `secret-key` (string): Name of the secret to get, set, or delete
+
 **Commands:**
 - `doppler setup`
 - `doppler secrets get DOPPLER_TOKEN`
@@ -86,3 +109,6 @@ Manage Doppler projects, configs, and secrets from the CLI; run processes with i
 - doppler setup && doppler secrets get DOPPLER_TOKEN
 - doppler run --config dev -- npm test
 - doppler secrets download --format=env --no-file | grep API_KEY
+
+## References
+- [Doppler CLI Reference](https://docs.doppler.com/docs/cli)

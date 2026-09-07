@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Start and configure the it monitoring server. Query task and worker state through the it HTTP API. with optional basic auth."
+description: "Start and configure the it monitoring server. Query task and worker state through the it HTTP API. with optional basic auth. Use when working with flower server, flower api, backend or when the user mentions flower server, flower api, backend."
 ---
-
-# flower
 
 Start and configure the it monitoring server. Query task and worker state through the it HTTP API. with optional basic auth.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install flower`, `curl http://localhost:5555/api/workers`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Flower
 
@@ -57,6 +75,11 @@ curl http://localhost:5555/api/task/info/<task_id>
 ### flower-server
 Start and configure the Flower monitoring server.
 
+**Parameters:**
+- `port` (integer): Web UI port
+- `basic_auth` (string): user:password for the UI
+- `address` (string): Bind address
+
 **Commands:**
 - `pip install flower`
 - `celery -A proj flower --port=5555`
@@ -72,6 +95,10 @@ Start and configure the Flower monitoring server.
 ### flower-api
 Query task and worker state through the Flower HTTP API.
 
+**Parameters:**
+- `task_id` (string): Celery task UUID
+- `task_type` (string): Filter by task name
+
 **Commands:**
 - `curl http://localhost:5555/api/workers`
 - `curl http://localhost:5555/api/tasks`
@@ -83,3 +110,7 @@ Query task and worker state through the Flower HTTP API.
 - curl -s http://localhost:5555/api/workers | python -m json.tool
 - curl -s http://localhost:5555/api/queues/length
 - curl -s http://localhost:5555/api/tasks | jq -r "keys[]" | head
+
+## References
+- [Flower Docs](https://flower.readthedocs.io)
+- [Flower on PyPI](https://pypi.org/project/flower/)

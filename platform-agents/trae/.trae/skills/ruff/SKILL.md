@@ -1,13 +1,35 @@
 ---
 name: "ruff"
-description: "Ultra-fast Python linter and formatter: runs hundreds of rules at once and fixes files in place."
+description: "Ultra-fast Python linter and formatter: runs hundreds of rules at once and fixes files in place. Use when working with ruff lint and format, code quality or when the user mentions ruff lint and format, code quality."
+license: "MIT"
+compatibility: "Requires ruff."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "code-quality"}
+allowed-tools: "Glob Grep Read Bash(ruff:*)"
 ---
-
-# ruff
 
 Ultra-fast Python linter and formatter: runs hundreds of rules at once and fixes files in place.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ruff check src/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Ruff
 
@@ -100,6 +122,11 @@ and lists remaining issues with file:line.
 ### ruff-lint-and-format
 Lint, auto-fix, and format Python code with Ruff
 
+**Parameters:**
+- `select` (string): Comma-separated rule codes to enable, e.g. E,F,I,B,UP
+- `output-format` (string): text, json, github, gitlab, sarif, or junit
+- `target-version` (string): Python version for the rules, e.g. py311
+
 **Commands:**
 - `ruff check src/`
 - `ruff check --fix src/`
@@ -111,3 +138,7 @@ Lint, auto-fix, and format Python code with Ruff
 - ruff check --statistics src/
 - ruff format --check .
 - ruff check --fix-only --diff src/
+
+## References
+- [Ruff docs](https://docs.astral.sh/ruff/)
+- [Ruff rules catalog](https://docs.astral.sh/ruff/rules/)

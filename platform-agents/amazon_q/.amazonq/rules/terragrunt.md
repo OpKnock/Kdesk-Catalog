@@ -1,8 +1,26 @@
-# terragrunt
-
 Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies, run-all, and input validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `terragrunt plan`, `terragrunt state list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Terragrunt
 
@@ -78,6 +96,10 @@ inputs = {
 ### run-and-dependencies
 Plan/apply modules and manage cross-module dependencies.
 
+**Parameters:**
+- `command` (string): Terraform command to wrap
+- `run-all` (boolean): Run across all modules in dependency order
+
 **Commands:**
 - `terragrunt plan`
 - `terragrunt apply -auto-approve`
@@ -94,6 +116,10 @@ Plan/apply modules and manage cross-module dependencies.
 ### config-and-state
 Generate remote state configs and read outputs across modules.
 
+**Parameters:**
+- `backend-config` (string): Backend config file
+- `target` (string): Resource or module target
+
 **Commands:**
 - `terragrunt state list`
 - `terragrunt output`
@@ -106,3 +132,7 @@ Generate remote state configs and read outputs across modules.
 - terragrunt output -json
 - terragrunt init --backend-config backend.tfvars
 - terragrunt hclfmt
+
+## References
+- [Terragrunt Documentation](https://terragrunt.gruntwork.io/docs/)
+- [Terragrunt Configuration](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/)

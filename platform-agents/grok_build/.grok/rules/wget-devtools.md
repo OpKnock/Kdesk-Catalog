@@ -1,8 +1,26 @@
-# wget-devtools
-
 Downloads web resources with wget: recursive site mirroring, resuming, URL lists, rate limiting, and authentication.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `wget http://localhost:8080/file.zip`, `wget -r -l 2 -np http://localhost:8080/docs/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # wget Downloads
 
@@ -59,6 +77,11 @@ wget --no-check-certificate https://selfsigned.local/file.zip
 ### download-operations
 Download files with output control and resume.
 
+**Parameters:**
+- `url` (string): Download URL
+- `output` (string): Output file name
+- `dir` (string): Output directory
+
 **Commands:**
 - `wget http://localhost:8080/file.zip`
 - `wget -O app.tar.gz http://localhost:8080/app.tar.gz`
@@ -75,6 +98,11 @@ Download files with output control and resume.
 ### mirroring-and-auth
 Mirror sites recursively and authenticate downloads.
 
+**Parameters:**
+- `level` (integer): Recursion depth (-l)
+- `accept` (string): Accepted extensions (-A)
+- `reject` (string): Rejected extensions (-R)
+
 **Commands:**
 - `wget -r -l 2 -np http://localhost:8080/docs/`
 - `wget --mirror -p --convert-links -P ./site http://localhost:8080`
@@ -87,3 +115,7 @@ Mirror sites recursively and authenticate downloads.
 - wget -r -l 2 -np http://localhost:8080/docs/
 - wget --mirror -p --convert-links -P ./site http://localhost:8080
 - wget -r -A pdf,epub http://localhost:8080/books/
+
+## References
+- [GNU wget Manual](https://www.gnu.org/software/wget/manual/wget.html)
+- [wget Linux Manual](https://man7.org/linux/man-pages/man1/wget.1.html)

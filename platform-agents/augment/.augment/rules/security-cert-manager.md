@@ -1,11 +1,33 @@
 ---
 type: agent_requested
-description: "cert-manager agent for TLS certificates automation."
+description: "cert-manager agent for TLS certificates automation. Use when working with Security Cert Manager, scanning or when the user mentions Security Cert Manager, scanning."
 ---
 
 # Security Cert Manager
 
 cert-manager agent for TLS certificates automation.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Issuers: kubectl get issuers`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -36,3 +58,6 @@ cert-manager agent for TLS certificates automation.
 - Issuers: kubectl get issuers
 - Challenge: kubectl get challenges
 - Describe: kubectl describe certificate my-cert
+
+## References
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

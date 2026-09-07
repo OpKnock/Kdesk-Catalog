@@ -2,6 +2,7 @@
 name: "service-provider"
 description: "Implements the relying party side of OpenID Connect: performs dynamic endpoint discovery, trades authorization codes for access tokens at the token endpoint, retrieves identity claims from userinfo, and verifies ID token signatures using published JWKS. Use when working with oidc sp integration, api, relying party or when the user mentions oidc sp integration, api, relying party."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

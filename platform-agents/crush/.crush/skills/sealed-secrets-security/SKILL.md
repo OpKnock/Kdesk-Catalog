@@ -1,13 +1,35 @@
 ---
 name: "sealed-secrets-security"
-description: "Encrypts Kubernetes Secrets into SealedSecrets so they can be stored in Git and decrypted only by the in-cluster controller."
+description: "Encrypts Kubernetes Secrets into SealedSecrets so they can be stored in Git and decrypted only by the in-cluster controller. Use when working with kubeseal sealing, controller management, security or when the user mentions kubeseal sealing, controller management, security."
+license: "MIT"
+compatibility: "Requires helm, kubectl, kubeseal. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(helm:*) Bash(kubectl:*) Bash(kubeseal:*)"
 ---
-
-# sealed-secrets-security
 
 Encrypts Kubernetes Secrets into SealedSecrets so they can be stored in Git and decrypted only by the in-cluster controller.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubeseal --format yaml demo-secret-yaml sealed-secret.yaml`, `helm repo add sealed-secrets https://bitnami-labs.github.io/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Sealed Secrets
 
@@ -59,6 +81,10 @@ kubectl get secrets -l sealed-secrets.bitnami.com/namespace=default
 ### kubeseal-sealing
 Seal secrets with kubeseal and manage scopes.
 
+**Parameters:**
+- `scope` (string): Sealing scope: strict, namespace-wide, cluster-wide
+- `format` (string): Output format: yaml or json
+
 **Commands:**
 - `kubeseal --format yaml demo-secret-yaml sealed-secret.yaml`
 - `kubeseal --scope cluster-wide -f secret.yaml`
@@ -74,6 +100,10 @@ Seal secrets with kubeseal and manage scopes.
 ### controller-management
 Install the controller and inspect sealed/decrypted secrets.
 
+**Parameters:**
+- `namespace` (string): Namespace filter for sealed secrets
+- `certFile` (string): Where kubeseal --fetch-cert writes the controller public cert.
+
 **Commands:**
 - `helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets`
 - `helm install sealed-secrets sealed-secrets/sealed-secrets -n kube-system`
@@ -85,3 +115,7 @@ Install the controller and inspect sealed/decrypted secrets.
 - helm install sealed-secrets sealed-secrets/sealed-secrets -n kube-system
 - kubectl get sealedsecrets -A
 - kubeseal --fetch-cert > pub-cert.pem
+
+## References
+- [Sealed Secrets GitHub](https://github.com/bitnami-labs/sealed-secrets)
+- [Sealed Secrets Helm Chart](https://artifacthub.io/packages/helm/sealed-secrets/sealed-secrets)

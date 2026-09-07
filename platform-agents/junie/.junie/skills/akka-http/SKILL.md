@@ -1,13 +1,35 @@
 ---
 name: "akka-http"
-description: "Builds streaming, reactive HTTP services in Scala with Akka HTTP: route DSL, JSON marshalling, TestKit testing, and sbt workflows."
+description: "Builds streaming, reactive HTTP services in Scala with Akka HTTP: route DSL, JSON marshalling, TestKit testing, and sbt workflows. Use when working with project scaffold, test and build, api or when the user mentions project scaffold, test and build, api."
+license: "MIT"
+compatibility: "Requires java, sbt. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(java:*) Bash(sbt:*)"
 ---
-
-# Akka Http
 
 Builds streaming, reactive HTTP services in Scala with Akka HTTP: route DSL, JSON marshalling, TestKit testing, and sbt workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sbt new akka/akka-http-quickstart-scala.g8`, `sbt test`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Akka HTTP
 
@@ -69,6 +91,10 @@ val route =
 ### project-scaffold
 Create an Akka HTTP project from the giter8 template and manage deps.
 
+**Parameters:**
+- `name` (string): Project name for the giter8 template
+- `port` (number): Port for the HTTP server binding
+
 **Commands:**
 - `sbt new akka/akka-http-quickstart-scala.g8`
 - `sbt update`
@@ -84,6 +110,10 @@ Create an Akka HTTP project from the giter8 template and manage deps.
 ### test-and-build
 Test routes with akka-http-testkit, package, and run in CI.
 
+**Parameters:**
+- `test_filter` (string): Test name pattern for testOnly
+- `assembly_output` (string): Path to the fat jar
+
 **Commands:**
 - `sbt test`
 - `sbt "testOnly com.acme.RouteSpec"`
@@ -95,3 +125,8 @@ Test routes with akka-http-testkit, package, and run in CI.
 - sbt test
 - sbt assembly && java -jar target/scala-2.13/my-api-assembly-0.1.0.jar
 - sbt "testOnly *HealthSpec*"
+
+## References
+- [Akka HTTP Docs](https://doc.akka.io/docs/akka-http/current/)
+- [Akka HTTP TestKit](https://doc.akka.io/docs/akka-http/current/routing-dsl/testkit.html)
+- [Akka Quickstart](https://doc.akka.io/docs/akka-http/current/introduction.html)

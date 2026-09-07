@@ -2,6 +2,7 @@
 name: "curl-devtools"
 description: "Makes HTTP requests with curl: headers, methods, auth, redirects, timeouts, retries, and output formatting for API debugging. Use when working with http requests, downloads and metrics, devtools or when the user mentions http requests, downloads and metrics, devtools."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "devtools"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

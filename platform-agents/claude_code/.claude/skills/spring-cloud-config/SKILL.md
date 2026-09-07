@@ -2,6 +2,7 @@
 name: "spring-cloud-config"
 description: "Manages externalized configuration for Spring microservices through Config Server: retrieves merged properties per environment, encrypts secrets at rest, and signals clients to refresh without restart. Use when working with config server client, api, spring cloud, config server or when the user mentions config server client, api, spring cloud, config server."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

@@ -1,8 +1,26 @@
-# commitlint
-
 Enforces conventional commit message standards with commitlint: configs, hooks, and CI validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx commitlint --from HEAD~1 --to HEAD`, `npm install --save-dev @commitlint/cli @commitlint/config-co`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # commitlint
 
@@ -73,6 +91,10 @@ module.exports = {
 ### commitlint-cli
 Lint commit messages from stdin or files.
 
+**Parameters:**
+- `from` (string): Lower commit boundary
+- `to` (string): Upper commit boundary
+
 **Commands:**
 - `npx commitlint --from HEAD~1 --to HEAD`
 - `npx commitlint --from HEAD~10`
@@ -87,6 +109,10 @@ Lint commit messages from stdin or files.
 ### commitlint-config
 Configure rules and plugins.
 
+**Parameters:**
+- `config` (string): Config file path
+- `rule` (string): Rule name to override
+
 **Commands:**
 - `npm install --save-dev @commitlint/cli @commitlint/config-conventional`
 - `npx commitlint --init`
@@ -96,3 +122,7 @@ Configure rules and plugins.
 **Examples:**
 - npx commitlint --print-config | head -40
 - echo "module.exports = {extends: [\"@commitlint/config-conventional\"]}" > commitlint.config.cjs
+
+## References
+- [commitlint Docs](https://commitlint.js.org)
+- [Conventional Commits](https://www.conventionalcommits.org)

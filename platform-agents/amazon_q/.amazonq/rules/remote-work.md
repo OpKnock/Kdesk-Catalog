@@ -1,8 +1,26 @@
-# remote-work
-
 Runs distributed-team operations: async documentation, calendar visibility, and GitHub-first collaboration rituals.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `markdownlint README.md`, `gcalcli agenda 'tomorrow'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Remote Work
 
@@ -59,6 +77,11 @@ Audit that every active decision has a doc link and every issue has a comment tr
 ### async-docs
 Maintain the async-first documentation practice.
 
+**Parameters:**
+- `pattern` (string): File glob for linting
+- `config` (string): markdownlint config
+- `check` (string): Check-only mode for prettier
+
 **Commands:**
 - `markdownlint README.md`
 - `npx prettier --check 'docs/**/*.md'`
@@ -74,6 +97,11 @@ Maintain the async-first documentation practice.
 ### calendar
 Keep visibility across timezones with gcalcli.
 
+**Parameters:**
+- `query` (string): Event search term
+- `days` (number): Week view days
+- `cal` (string): Calendar name
+
 **Commands:**
 - `gcalcli agenda 'tomorrow'`
 - `gcalcli calw 3`
@@ -85,3 +113,8 @@ Keep visibility across timezones with gcalcli.
 - gcalcli agenda today --nostarted
 - gcalcli quickadd '1:1 with Ada tomorrow 15:00' --cal 'Meetings'
 - gcalcli calw 1 --military
+
+## References
+- [GitLab Communication Handbook](https://handbook.gitlab.com/handbook/communication/)
+- [gcalcli](https://github.com/insanum/gcalcli)
+- [markdownlint](https://github.com/DavidAnson/markdownlint)

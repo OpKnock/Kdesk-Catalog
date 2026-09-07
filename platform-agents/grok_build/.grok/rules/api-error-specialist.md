@@ -1,8 +1,26 @@
-# api-error-specialist
-
 Deep expertise in API error handling: full error taxonomy, monitoring and alerting, and developer-facing error catalogs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `node -e "const t=['AUTH','VALIDATION','RATE','NOT_FOUND','CO`, `sentry-cli send-event -m 'test' --release 1.2.3`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Error Specialist
 
@@ -46,6 +64,10 @@ Alert on error-rate deltas vs. baseline, not absolute counts.
 ### error-taxonomy
 Design a comprehensive error code taxonomy covering client, server, and integration failures
 
+**Parameters:**
+- `prefix` (string): Error family prefix
+- `schema` (string): Error schema path
+
 **Commands:**
 - `node -e "const t=['AUTH','VALIDATION','RATE','NOT_FOUND','CONFLICT','UPSTREAM','TIMEOUT'];console.log(t.map(c=>c+'_XXXX').join('\n'))"`
 - `python -c "import json;print(json.dumps({'prefix':'VALIDATION_','range':[1000,1999]}))"`
@@ -61,6 +83,10 @@ Design a comprehensive error code taxonomy covering client, server, and integrat
 ### error-monitoring
 Track error rates, correlate with deploys, and alert on regressions
 
+**Parameters:**
+- `release` (string): Release version
+- `metric` (string): Metric to query
+
 **Commands:**
 - `sentry-cli send-event -m 'test' --release 1.2.3`
 - `curl -s -X POST http://localhost:3000/api/monitor/errors -H 'Content-Type: application/json' -d '{"code":"TIMEOUT","count":42}'`
@@ -72,3 +98,8 @@ Track error rates, correlate with deploys, and alert on regressions
 - sentry-cli send-event -m 'manual test' --release 1.2.3
 - curl -s http://localhost:3000/metrics | grep error_rate | head
 - sentry-cli releases list | head -5
+
+## References
+- [Sentry CLI](https://docs.sentry.io/cli/)
+- [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)
+- [OpenTelemetry Errors](https://opentelemetry.io/docs/specs/otel/)

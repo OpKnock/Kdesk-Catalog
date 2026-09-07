@@ -1,8 +1,26 @@
-# Bitwarden
-
 Manages passwords and secrets with the Bitwarden CLI: login, item CRUD, generation, exports, and sync.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bw login`, `bw get password https://api.your-app.test`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Bitwarden
 
@@ -57,6 +75,10 @@ bw export --format json --output vault.json --session $BW_SESSION
 ### auth-session
 Log in, unlock, and manage CLI sessions.
 
+**Parameters:**
+- `email` (string): Account email
+- `raw` (boolean): Print raw session token
+
 **Commands:**
 - `bw login`
 - `bw unlock`
@@ -71,6 +93,10 @@ Log in, unlock, and manage CLI sessions.
 
 ### item-management
 Create, read, update, and delete vault items.
+
+**Parameters:**
+- `search` (string): Search query
+- `item_id` (string): Item ID or search term
 
 **Commands:**
 - `bw get password https://api.your-app.test`
@@ -87,6 +113,10 @@ Create, read, update, and delete vault items.
 ### generation-export
 Generate passwords and export vaults.
 
+**Parameters:**
+- `length` (number): Password length (-l)
+- `export_format` (string): json or csv
+
 **Commands:**
 - `bw generate -l 20 -n -s`
 - `bw generate -u -l 24`
@@ -98,3 +128,7 @@ Generate passwords and export vaults.
 - bw generate -l 24 -n -s --base64
 - bw export --format json --output vault.json
 - bw get totp google
+
+## References
+- [Bitwarden CLI Docs](https://bitwarden.com/help/cli/)
+- [Bitwarden API](https://bitwarden.com/help/api/)

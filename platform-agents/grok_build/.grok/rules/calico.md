@@ -1,8 +1,26 @@
-# calico
-
 Kubernetes networking and security with Calico: network policies, IPAM, and node status via calicoctl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `calicoctl node status`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Calico
 
@@ -73,6 +91,11 @@ applies the correct policy and verifies traffic.
 ### calicoctl
 Manage Calico network policies, IP pools, and node health
 
+**Parameters:**
+- `namespace` (string): Namespace scope for policies
+- `output` (string): Output format: yaml, json, wide
+- `filename` (string): Policy manifest file for apply/delete (-f)
+
 **Commands:**
 - `calicoctl node status`
 - `calicoctl get nodes`
@@ -84,3 +107,7 @@ Manage Calico network policies, IP pools, and node health
 - calicoctl get ippool -o wide
 - calicoctl delete networkpolicy deny-all --namespace=default
 - calicoctl get bgppeer -o yaml
+
+## References
+- [Calico docs](https://docs.tigera.io/calico/)
+- [Calico network policy guide](https://docs.tigera.io/calico/latest/network-policy/)

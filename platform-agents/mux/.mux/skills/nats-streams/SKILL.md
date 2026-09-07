@@ -1,13 +1,35 @@
 ---
 name: "nats-streams"
-description: "Administers JetStream streams with subject coverage, retention limits, replication, backups, and views. Creates replicated streams, verifies subject matching, and manages stream storage lifecycle."
+description: "Administers JetStream streams with subject coverage, retention limits, replication, backups, and views. Creates replicated streams, verifies subject matching, and manages stream storage lifecycle. Use when working with jetstream stream admin, api or when the user mentions jetstream stream admin, api."
+license: "MIT"
+compatibility: "Requires nats."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(nats:*)"
 ---
-
-# Nats Streams
 
 Administers JetStream streams with subject coverage, retention limits, replication, backups, and views. Creates replicated streams, verifies subject matching, and manages stream storage lifecycle.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nats stream add ORDERS --subjects 'orders.*' --replicas 3`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # NATS Streams
 
@@ -71,6 +93,11 @@ replicas: 3
 ### jetstream-stream-admin
 Administer JetStream streams: coverage checks, limits, views, backups and replication.
 
+**Parameters:**
+- `stream` (string): Stream name
+- `replicas` (integer): Replication factor 1-5
+- `max_age` (string): Retention window e.g. 72h
+
 **Commands:**
 - `nats stream add ORDERS --subjects 'orders.*' --replicas 3`
 - `nats stream check coverage ORDERS 'orders.>'`
@@ -82,3 +109,7 @@ Administer JetStream streams: coverage checks, limits, views, backups and replic
 - nats stream check coverage ORDERS 'orders.*' --detail
 - nats stream view ORDERS 10
 - nats stream report
+
+## References
+- [JetStream Streams Concepts](https://docs.nats.io/nats-concepts/jetstream/streams)
+- [nats stream CLI](https://docs.nats.io/using-nats/command-line/)

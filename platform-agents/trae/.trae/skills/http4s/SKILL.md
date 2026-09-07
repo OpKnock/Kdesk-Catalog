@@ -1,13 +1,35 @@
 ---
 name: "http4s"
-description: "http4s pure-functional HTTP in Scala: sbt project scaffolding, streaming routes, and running servers with curl verification."
+description: "http4s pure-functional HTTP in Scala: sbt project scaffolding, streaming routes, and running servers with curl verification. Use when working with http4s sbt, api or when the user mentions http4s sbt, api."
+license: "MIT"
+compatibility: "Requires sbt. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(sbt:*)"
 ---
-
-# http4s
 
 http4s pure-functional HTTP in Scala: sbt project scaffolding, streaming routes, and running servers with curl verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sbt new http4s/http4s.g8 --name=http4s-quickstart`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # http4s
 
@@ -102,6 +124,11 @@ Agent: Use the json4s/circe entity encoder:
 ### http4s-sbt
 Scaffold, build, and run http4s applications with sbt.
 
+**Parameters:**
+- `port` (integer): Server port, default 8080.
+- `scala_version` (string): Scala version for the build (e.g. 2.13 or 3).
+- `project_name` (string): Project name from the giter8 template.
+
 **Commands:**
 - `sbt new http4s/http4s.g8 --name=http4s-quickstart`
 - `sbt run`
@@ -113,3 +140,7 @@ Scaffold, build, and run http4s applications with sbt.
 - sbt new http4s/http4s.g8 --name=api
 - sbt "run --port 9090"
 - curl -s http://localhost:8080/
+
+## References
+- [http4s Docs](https://http4s.org/)
+- [http4s Quickstart](https://http4s.org/docs/quickstart/)

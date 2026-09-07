@@ -1,11 +1,33 @@
 ---
 type: agent_requested
-description: "Ollama inference server agent Manages Ollama inference server."
+description: "Ollama inference server agent Manages Ollama inference server. Use when working with Ml Ollama Inference Server Agent V2 or when the user mentions Ml Ollama Inference Server Agent V2."
 ---
 
 # Ollama Inference 2
 
 Ollama inference server agent Manages Ollama inference server.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ollama serve`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -27,3 +49,7 @@ Ollama inference server agent. Manages Ollama inference server.
 - ollama run llama2
 - curl http://localhost:11434/api/generate --data '{"model": "llama2", "prompt": "Hello"}'
 - ollama list
+
+## References
+- [Ollama Documentation](https://docs.ollama.com/)
+- [curl Documentation](https://curl.se/docs/)

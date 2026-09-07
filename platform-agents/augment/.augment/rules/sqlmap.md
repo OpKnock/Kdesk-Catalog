@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Automated SQL injection testing with sqlmap: detection, database enumeration, and data extraction."
+description: "Automated SQL injection testing with sqlmap: detection, database enumeration, and data extraction. Use when working with sqlmap injection, code quality or when the user mentions sqlmap injection, code quality."
 ---
-
-# Sqlmap
 
 Automated SQL injection testing with sqlmap: detection, database enumeration, and data extraction.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sqlmap -u "http://localhost:8080/item?id=1" --batch`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # sqlmap
 
@@ -68,6 +86,11 @@ tables, and dumps rows with the extracted payload used.
 ### sqlmap-injection
 Detect and exploit SQL injection, enumerate databases and tables, and dump data
 
+**Parameters:**
+- `level` (integer): Test intensity 1-5 (5 = full payload set)
+- `risk` (integer): Risk of payloads 1-3 (3 includes time-based/OR payloads)
+- `tamper` (string): Tamper scripts to bypass WAF, e.g. space2comment
+
 **Commands:**
 - `sqlmap -u "http://localhost:8080/item?id=1" --batch`
 - `sqlmap -u "http://localhost:8080/item?id=1" --dbs`
@@ -79,3 +102,7 @@ Detect and exploit SQL injection, enumerate databases and tables, and dump data
 - sqlmap -u "http://target?id=1" --current-user --current-db
 - sqlmap -u "http://target?id=1" --os-shell
 - sqlmap -u "http://target?id=1" --batch --smart
+
+## References
+- [sqlmap wiki](https://github.com/sqlmapproject/sqlmap/wiki)
+- [sqlmap usage](https://sqlmap.org/)

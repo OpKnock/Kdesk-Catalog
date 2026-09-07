@@ -1,8 +1,26 @@
-# load-testing-engineer
-
 Designs and executes load tests with k6, Vegeta, and wrk: scenarios, thresholds, and CI-integrated performance gates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `k6 run --vus 50 --duration 1m load-test.js`, `echo 'GET http://localhost:8080/' | vegeta attack -rate=200 `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Load Testing
 
@@ -81,6 +99,11 @@ Gate the pipeline on thresholds.
 ### k6
 Write and run scripted load tests with k6.
 
+**Parameters:**
+- `vus` (number): Virtual users
+- `duration` (string): Test duration like 1m30s
+- `summary-trend-stats` (string): Percentiles shown in the summary
+
 **Commands:**
 - `k6 run --vus 50 --duration 1m load-test.js`
 - `k6 inspect load-test.js`
@@ -96,6 +119,11 @@ Write and run scripted load tests with k6.
 ### vegeta
 Attack endpoints with Vegeta and generate reports.
 
+**Parameters:**
+- `rate` (number): Requests per second
+- `duration` (string): Attack duration
+- `targets` (string): Targets file with methods and URLs
+
 **Commands:**
 - `echo 'GET http://localhost:8080/' | vegeta attack -rate=200 -duration=30s | vegeta report`
 - `echo 'POST http://localhost:8080/api' | vegeta attack -header 'Content-Type: application/json' -body payload.json -rate=100 -duration=60s | vegeta report -type=json > report.json`
@@ -107,3 +135,8 @@ Attack endpoints with Vegeta and generate reports.
 - echo 'GET http://localhost:8080/healthz' | vegeta attack -rate=1000 -duration=10s | vegeta report
 - vegeta attack -targets=targets.txt -rate=300 -duration=1m | vegeta report -type=json | jq '.latencies'
 - echo 'GET http://localhost:8080/' | vegeta attack -rate=100 -duration=30s | vegeta plot > plot.html
+
+## References
+- [k6 Docs](https://grafana.com/docs/k6/latest/)
+- [Vegeta](https://vegeta.io/)
+- [wrk](https://github.com/wg/wrk)

@@ -1,13 +1,35 @@
 ---
 name: "api-version-git-cliff"
-description: "Maintains API changelogs and version history: git-cliff generation from commits, conventional commits, and changelog-driven release notes."
+description: "Maintains API changelogs and version history: git-cliff generation from commits, conventional commits, and changelog-driven release notes. Use when working with git cliff, conventional commits or when the user mentions git cliff, conventional commits."
+license: "MIT"
+compatibility: "Requires node.js, python, openapi, postman."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(git:*) Bash(npx:*)"
 ---
-
-# Api Version Git Cliff
 
 Maintains API changelogs and version history: git-cliff generation from commits, conventional commits, and changelog-driven release notes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx git-cliff --init`, `npx commitizen init cz-conventional-changelog --save-dev --s`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Version v4 - Changelogs
 
@@ -56,6 +78,11 @@ BREAKING CHANGE: remove v1 legacy fields
 ### git-cliff
 Generate changelogs from git history
 
+**Parameters:**
+- `tag` (string): Version tag to generate for
+- `output` (string): Changelog output file
+- `range` (string): Commit range
+
 **Commands:**
 - `npx git-cliff --init`
 - `npx git-cliff -o CHANGELOG.md`
@@ -80,3 +107,7 @@ Structure commits for changelog generation
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [git-cliff Docs](https://git-cliff.org/docs/)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)

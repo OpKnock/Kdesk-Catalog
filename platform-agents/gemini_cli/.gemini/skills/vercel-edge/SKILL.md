@@ -1,13 +1,35 @@
 ---
 name: "vercel-edge"
-description: "Deploys and manages Vercel edge functions using the Vercel CLI. Handles authentication, local development with vercel dev, environment variables per environment, preview and production deployments, and rollbacks."
+description: "Deploys and manages Vercel edge functions using the Vercel CLI. Handles authentication, local development with vercel dev, environment variables per environment, preview and production deployments, and rollbacks. Use when working with deploy vercel, api, deployment, edge or when the user mentions deploy vercel, api, deployment, edge."
+license: "MIT"
+compatibility: "Requires vercel."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(vercel:*)"
 ---
-
-# Vercel Edge
 
 Deploys and manages Vercel edge functions using the Vercel CLI. Handles authentication, local development with vercel dev, environment variables per environment, preview and production deployments, and rollbacks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `vercel login`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Vercel Edge
 
@@ -79,6 +101,11 @@ curl http://localhost:3000/api/hello
 ### deploy-vercel
 Deploy projects and manage edge functions
 
+**Parameters:**
+- `prod` (boolean): Deploy to production instead of preview
+- `prebuilt` (boolean): Deploy prebuilt output, skipping the build step
+- `yes` (boolean): Skip confirmation prompts
+
 **Commands:**
 - `vercel login`
 - `vercel dev`
@@ -90,3 +117,8 @@ Deploy projects and manage edge functions
 - vercel deploy --prebuilt
 - vercel env pull
 - vercel rollback
+
+## References
+- [Vercel Docs](https://vercel.com/docs)
+- [Edge Functions Docs](https://vercel.com/docs/functions/edge-functions)
+- [Vercel CLI reference](https://vercel.com/docs/cli)

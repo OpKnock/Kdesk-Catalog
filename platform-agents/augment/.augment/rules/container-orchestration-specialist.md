@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Operates Kubernetes clusters: deployments, rollouts, scaling, scheduling, and resource management."
+description: "Operates Kubernetes clusters: deployments, rollouts, scaling, scheduling, and resource management. Use when working with k8s operations or when the user mentions k8s operations."
 ---
-
-# container-orchestration-specialist
 
 Operates Kubernetes clusters: deployments, rollouts, scaling, scheduling, and resource management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl get pods -A -o wide`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Container Orchestration
 
@@ -77,6 +95,11 @@ executes the rollback or config fix and confirms rollout status.
 ### k8s-operations
 Manage workloads, rollouts, scaling, and node health in Kubernetes
 
+**Parameters:**
+- `namespace` (string): Namespace scope, e.g. -n prod
+- `timeout` (string): Rollout wait timeout, e.g. 120s
+- `ignore-daemonsets` (boolean): Allow drain to proceed with daemonsets running
+
 **Commands:**
 - `kubectl get pods -A -o wide`
 - `kubectl apply -f k8s/deploy.yaml`
@@ -88,3 +111,8 @@ Manage workloads, rollouts, scaling, and node health in Kubernetes
 - kubectl rollout undo deployment/web
 - kubectl drain node-1 --ignore-daemonsets --delete-emptydir-data
 - kubectl get events -A --sort-by=.lastTimestamp | tail -20
+
+## References
+- [Kubernetes docs](https://kubernetes.io/docs/)
+- [kubectl reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm docs](https://helm.sh/docs/)

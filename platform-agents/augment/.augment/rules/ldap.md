@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Query and administer OpenLDAP directories using ldapsearch, ldapadd, and ldapmodify to manage entries, apply LDIF-based changes, and perform authenticated binds."
+description: "Query and administer OpenLDAP directories using ldapsearch, ldapadd, and ldapmodify to manage entries, apply LDIF-based changes, and perform authenticated binds. Use when working with ldap query, ldap write, api or when the user mentions ldap query, ldap write, api."
 ---
-
-# Ldap
 
 Query and administer OpenLDAP directories using ldapsearch, ldapadd, and ldapmodify to manage entries, apply LDIF-based changes, and perform authenticated binds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ldapsearch -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,`, `ldapadd -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # LDAP (OpenLDAP)
 
@@ -92,6 +110,12 @@ ldapsearch -x -b 'ou=people,dc=myapp,dc=test' '(uid=alice)' dn
 ### ldap-query
 Search and read directory entries with ldapsearch.
 
+**Parameters:**
+- `base` (string): Search base DN.
+- `filter` (string): LDAP filter, e.g. (uid=alice).
+- `bind_dn` (string): Bind DN for authenticated search.
+- `password` (string): Bind password (-w).
+
 **Commands:**
 - `ldapsearch -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret -b 'dc=myapp,dc=test' '(uid=alice)'`
 - `ldapsearch -x -LLL -b 'ou=people,dc=myapp,dc=test' '(&(objectClass=inetOrgPerson)(mail=*@myapp.test))' cn mail`
@@ -106,6 +130,10 @@ Search and read directory entries with ldapsearch.
 ### ldap-write
 Add, modify, and delete entries with LDIF files.
 
+**Parameters:**
+- `ldif` (string): LDIF file path for add/modify.
+- `dn` (string): Entry DN for delete/password ops.
+
 **Commands:**
 - `ldapadd -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret -f alice.ldif`
 - `ldapmodify -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret -f change.ldif`
@@ -116,3 +144,7 @@ Add, modify, and delete entries with LDIF files.
 - ldapadd -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret -f alice.ldif
 - ldapmodify -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret -f change.ldif
 - ldapdelete -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret 'uid=bob,ou=people,dc=myapp,dc=test'
+
+## References
+- [OpenLDAP Admin Guide](https://www.openldap.org/doc/admin24/)
+- [ldapsearch man page](https://man7.org/linux/man-pages/man1/ldapsearch.1.html)

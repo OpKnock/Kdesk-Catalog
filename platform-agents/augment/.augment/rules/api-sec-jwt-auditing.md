@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm confusion tests, and auth header verification with jwt-cli."
+description: "Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm confusion tests, and auth header verification with jwt-cli. Use when working with jwt auditing, auth header checks or when the user mentions jwt auditing, auth header checks."
 ---
-
-# Api Sec JWT Auditing
 
 Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm confusion tests, and auth header verification with jwt-cli.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g jwt-cli`, `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:80`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Security v2 - Auth Tokens
 
@@ -53,6 +71,11 @@ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOKEN" https
 ### jwt-auditing
 Inspect and validate JWTs
 
+**Parameters:**
+- `token` (string): JWT to decode
+- `secret` (string): HMAC signing secret
+- `claims` (object): Claims object to encode
+
 **Commands:**
 - `npm install -g jwt-cli`
 - `jwt decode $TOKEN`
@@ -76,3 +99,7 @@ Verify bearer and basic auth enforcement
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [jwt-cli GitHub](https://github.com/mike-engel/jwt-cli)
+- [JWT.io Introduction](https://jwt.io/introduction)

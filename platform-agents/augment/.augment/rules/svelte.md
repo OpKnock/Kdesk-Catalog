@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Builds reactive Svelte 5 apps with runes, SvelteKit routing, and the sv CLI: dev, check, and build workflows."
+description: "Builds reactive Svelte 5 apps with runes, SvelteKit routing, and the sv CLI: dev, check, and build workflows. Use when working with sv cli, check build, frontend or when the user mentions sv cli, check build, frontend."
 ---
-
-# svelte
 
 Builds reactive Svelte 5 apps with runes, SvelteKit routing, and the sv CLI: dev, check, and build workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx sv create my-app --template minimal --types ts`, `npx svelte-check --tsconfig ./tsconfig.json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Svelte
 
@@ -89,6 +107,11 @@ Run both before release; build failures here are usually adapter config.
 ### sv-cli
 Create and manage Svelte projects with the sv CLI.
 
+**Parameters:**
+- `template` (string): minimal, demo, or skeleton starter
+- `types` (string): ts or js type setup
+- `add` (string): Package/adapter to add via sv add
+
 **Commands:**
 - `npx sv create my-app --template minimal --types ts`
 - `npm run dev`
@@ -104,6 +127,11 @@ Create and manage Svelte projects with the sv CLI.
 ### check-build
 Type-check and build SvelteKit applications.
 
+**Parameters:**
+- `tsconfig` (string): Path to tsconfig for svelte-check
+- `fail-on-warnings` (string): Exit non-zero on warnings
+- `adapter` (string): Deployment adapter: node, vercel, netlify, static
+
 **Commands:**
 - `npx svelte-check --tsconfig ./tsconfig.json`
 - `npm run check`
@@ -115,3 +143,8 @@ Type-check and build SvelteKit applications.
 - npx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings
 - npx svelte-kit sync
 - npm run check && npm run build
+
+## References
+- [Svelte Docs](https://svelte.dev/docs)
+- [SvelteKit Docs](https://svelte.dev/docs/kit)
+- [sv CLI](https://svelte.dev/docs/cli)

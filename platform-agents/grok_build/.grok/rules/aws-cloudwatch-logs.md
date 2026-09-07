@@ -1,8 +1,26 @@
-# Aws Cloudwatch Logs
-
 Manages CloudWatch Logs: log groups and streams, putting events, filtering with patterns, and tailing logs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aws logs create-log-group --log-group-name /aws/api/prod`, `aws logs filter-log-events --log-group-name /aws/api/prod --`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AWS CloudWatch Logs
 
@@ -52,6 +70,10 @@ aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001
 ### log-groups
 Create and manage log groups and streams.
 
+**Parameters:**
+- `log_group` (string): Log group name
+- `retention` (number): Retention in days
+
 **Commands:**
 - `aws logs create-log-group --log-group-name /aws/api/prod`
 - `aws logs create-log-stream --log-group-name /aws/api/prod --log-stream-name api-001`
@@ -66,6 +88,11 @@ Create and manage log groups and streams.
 
 ### query-logs
 Filter and search log events.
+
+**Parameters:**
+- `filter_pattern` (string): CloudWatch Logs filter pattern
+- `start_time` (number): Start time in ms epoch
+- `since` (string): Relative window for tail (1h, 30m)
 
 **Commands:**
 - `aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERROR"`
@@ -82,6 +109,10 @@ Filter and search log events.
 ### ingest
 Put log events and test ingestion.
 
+**Parameters:**
+- `message` (string): Log event message
+- `tags` (string): Key=value tags
+
 **Commands:**
 - `aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date +%s)*1000)),message='health ok'`
 - `aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date +%s)*1000)),message='ERROR timeout'`
@@ -92,3 +123,8 @@ Put log events and test ingestion.
 - aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date +%s)*1000)),message='{"event":"deploy"}'
 - aws logs tag-log-group --log-group-name /aws/api/prod --tags team=api
 - aws logs list-tags-log-group --log-group-name /aws/api/prod
+
+## References
+- [CloudWatch Logs Docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html)
+- [Filter Pattern Syntax](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html)
+- [AWS CLI logs Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/logs/index.html)

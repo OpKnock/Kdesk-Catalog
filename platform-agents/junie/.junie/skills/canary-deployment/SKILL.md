@@ -1,13 +1,35 @@
 ---
 name: "canary-deployment"
-description: "Implements canary releases on Kubernetes with Argo Rollouts: weighted traffic splitting, analysis, and promotion/rollback."
+description: "Implements canary releases on Kubernetes with Argo Rollouts: weighted traffic splitting, analysis, and promotion/rollback. Use when working with argo rollouts, weighted traffic, analysis, api or when the user mentions argo rollouts, weighted traffic, analysis, api."
+license: "MIT"
+compatibility: "Requires kubectl. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(kubectl:*)"
 ---
-
-# Canary Deployment
 
 Implements canary releases on Kubernetes with Argo Rollouts: weighted traffic splitting, analysis, and promotion/rollback.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl argo rollouts get rollout my-api`, `kubectl apply -f rollout-canary.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Canary Deployment
 
@@ -72,6 +94,10 @@ strategy:
 ### argo-rollouts
 Manage canary Rollouts and traffic weights.
 
+**Parameters:**
+- `rollout` (string): Rollout name
+- `timeout` (number): Status timeout seconds
+
 **Commands:**
 - `kubectl argo rollouts get rollout my-api`
 - `kubectl argo rollouts status rollout my-api`
@@ -86,6 +112,10 @@ Manage canary Rollouts and traffic weights.
 
 ### weighted-traffic
 Configure weighted canary steps.
+
+**Parameters:**
+- `weight` (number): Traffic percentage for the canary
+- `pause_duration` (number): Pause seconds between steps
 
 **Commands:**
 - `kubectl apply -f rollout-canary.yaml`
@@ -102,6 +132,10 @@ Configure weighted canary steps.
 ### analysis
 Run metric analysis jobs that gate promotion.
 
+**Parameters:**
+- `metric` (string): Analysis metric name (error-rate, latency)
+- `threshold` (number): Success threshold
+
 **Commands:**
 - `kubectl get analysisrun -n app`
 - `kubectl get analysisrun canary-1 --namespace app -o yaml`
@@ -113,3 +147,8 @@ Run metric analysis jobs that gate promotion.
 - kubectl get analysisrun -n app -o custom-columns=NAME:.metadata.name,PHASE:.status.phase
 - kubectl describe analysisrun -l app=my-api | grep -E 'Status|Failed'
 - kubectl argo rollouts abort rollout my-api
+
+## References
+- [Argo Rollouts Docs](https://argo-rollouts.readthedocs.io/)
+- [Canary Release (Fowler)](https://martinfowler.com/bliki/CanaryRelease.html)
+- [Flagger](https://docs.flagger.app/)

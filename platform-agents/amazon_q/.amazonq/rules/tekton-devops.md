@@ -1,8 +1,26 @@
-# tekton-devops
-
 Builds CI/CD pipelines on Kubernetes with Tekton: Tasks, Pipelines, Triggers, and the tkn CLI for runs and logs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl apply -f task-build.yaml`, `tkn pipelinerun list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Tekton Pipelines
 
@@ -70,6 +88,11 @@ spec:
 ### tasks-and-pipelines
 Create Tasks/Pipelines and start runs with parameters.
 
+**Parameters:**
+- `pipeline` (string): Pipeline name
+- `params` (object): Parameters passed with -p
+- `workspace` (string): Workspace binding
+
 **Commands:**
 - `kubectl apply -f task-build.yaml`
 - `tkn task create -f task-build.yaml`
@@ -86,6 +109,10 @@ Create Tasks/Pipelines and start runs with parameters.
 ### runs-and-logs
 Monitor, inspect, and cancel pipeline runs.
 
+**Parameters:**
+- `run` (string): PipelineRun name
+- `follow` (boolean): Stream logs
+
 **Commands:**
 - `tkn pipelinerun list`
 - `tkn pipelinerun logs ci-run-123 -f`
@@ -98,3 +125,8 @@ Monitor, inspect, and cancel pipeline runs.
 - tkn pipelinerun logs ci-run-123 -f
 - tkn pipelinerun describe ci-run-123
 - tkn pipelinerun cancel ci-run-123
+
+## References
+- [Tekton Documentation](https://tekton.dev/docs/)
+- [tkn CLI](https://tekton.dev/docs/cli/)
+- [Tekton Catalog](https://github.com/tektoncd/catalog)

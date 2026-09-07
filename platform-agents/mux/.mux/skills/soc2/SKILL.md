@@ -1,13 +1,35 @@
 ---
 name: "soc2"
-description: "Readiness support for SOC 2 Type I/II: mapping Trust Services Criteria to controls and collecting evidence."
+description: "Readiness support for SOC 2 Type I/II: mapping Trust Services Criteria to controls and collecting evidence. Use when working with soc2 evidence or when the user mentions soc2 evidence."
+license: "MIT"
+compatibility: "Requires kubectl, terraform. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "compliance"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(gh:*) Bash(kubectl:*) Bash(rg:*) Bash(terraform:*)"
 ---
-
-# Soc2
 
 Readiness support for SOC 2 Type I/II: mapping Trust Services Criteria to controls and collecting evidence.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh api repos/$GITHUB_REPO/actions/workflows --paginate | jq `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SOC 2
 
@@ -72,6 +94,11 @@ assignments, and gaps flagged for the readiness call.
 ### soc2-evidence
 Gather evidence for the five Trust Services Criteria categories
 
+**Parameters:**
+- `paginate` (boolean): Fetch all pages of the GitHub API result
+- `report-path` (string): Output file for the evidence report
+- `no-color` (boolean): Plain terraform output for logs
+
 **Commands:**
 - `gh api repos/$GITHUB_REPO/actions/workflows --paginate | jq '.workflows[].path'`
 - `terraform plan -no-color -out=/tmp/plan.tfplan && terraform show -json /tmp/plan.tfplan`
@@ -83,3 +110,7 @@ Gather evidence for the five Trust Services Criteria categories
 - gh api repos/$GITHUB_REPO/actions/runs --paginate | jq '.workflow_runs[0:5]'
 - gitleaks detect --source . --report-path gitleaks-soc2.json
 - kubectl get secrets -A | grep -c -v NAME
+
+## References
+- [AICPA SOC 2 overview](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- [Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2-soc-3-greater-than-trust-services-criteria)

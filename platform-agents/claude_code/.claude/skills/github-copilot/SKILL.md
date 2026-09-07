@@ -2,6 +2,7 @@
 name: "github-copilot"
 description: "Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions. Use when working with copilot cli, auth and config, devtools or when the user mentions copilot cli, auth and config, devtools."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "devtools"}
 allowed-tools: "Glob Grep Read Bash(gh:*)"
 ---

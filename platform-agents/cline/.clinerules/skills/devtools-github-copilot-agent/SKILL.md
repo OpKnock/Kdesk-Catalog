@@ -1,11 +1,37 @@
 ---
 name: "devtools-github-copilot-agent"
-description: "GitHub Copilot agent. Manages Copilot configuration and usage."
+description: "GitHub Copilot agent. Manages Copilot configuration and usage. Use when working with Devtools Github Copilot Agent or when the user mentions Devtools Github Copilot Agent."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "devtools"}
+allowed-tools: "Glob Grep Read Bash(gh:*)"
 ---
 
 # Devtools Github Copilot Agent
 
 GitHub Copilot agent. Manages Copilot configuration and usage.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh copilot explain demo-code`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -25,3 +51,6 @@ GitHub Copilot agent. Manages Copilot configuration and usage.
 - gh extension install github/gh-copilot
 - gh copilot suggest demo-task
 - gh copilot explain demo-code
+
+## References
+- [GitHub Copilot Documentation](https://docs.github.com/copilot)

@@ -1,8 +1,26 @@
-# helm
-
 Packages, installs, and manages Kubernetes applications with Helm: charts, repos, releases, values, linting, and rollbacks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `helm install myapp ./chart`, `helm create mychart`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Helm Package Management
 
@@ -70,6 +88,11 @@ mychart/
 ### releases
 Install, upgrade, rollback, and uninstall chart releases.
 
+**Parameters:**
+- `release` (string): Release name
+- `chart` (string): Chart path, repo/chart, or URL
+- `values` (string): Values file path
+
 **Commands:**
 - `helm install myapp ./chart`
 - `helm upgrade --install myapp ./chart --values prod.yaml --namespace app`
@@ -86,6 +109,10 @@ Install, upgrade, rollback, and uninstall chart releases.
 ### chart-development
 Create, lint, template, and package charts, plus manage repos.
 
+**Parameters:**
+- `version` (string): Chart or app version
+- `repo` (string): Repository name for search/add
+
 **Commands:**
 - `helm create mychart`
 - `helm lint ./mychart`
@@ -99,3 +126,8 @@ Create, lint, template, and package charts, plus manage repos.
 - helm create mychart
 - helm template myapp ./mychart --debug
 - helm package ./mychart --version 1.2.0
+
+## References
+- [Helm Documentation](https://helm.sh/docs/)
+- [Helm Charts Best Practices](https://helm.sh/docs/chart_best_practices/)
+- [Artifact Hub](https://artifacthub.io/)

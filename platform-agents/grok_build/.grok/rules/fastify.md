@@ -1,8 +1,26 @@
-# Fastify
-
 Build high-performance Node.js APIs with Fastify: plugins, schema validation, hooks, and benchmarking with autocannon.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm create fastify@latest my-app`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Fastify
 
@@ -74,6 +92,11 @@ curl -s localhost:3000/api/orders/1 | jq
 ### fastify-development
 Scaffold, run, extend, and benchmark Fastify applications.
 
+**Parameters:**
+- `port` (integer): Fastify listen port
+- `connections` (integer): autocannon concurrent connections
+- `duration` (integer): Benchmark duration in seconds
+
 **Commands:**
 - `npm create fastify@latest my-app`
 - `npm install fastify @fastify/cors @fastify/jwt`
@@ -86,3 +109,7 @@ Scaffold, run, extend, and benchmark Fastify applications.
 - npm create fastify@latest my-app && cd my-app && npm run dev
 - npx autocannon -c 50 -d 10 http://localhost:3000/api/orders
 - npm install @fastify/cors @fastify/jwt && npm start
+
+## References
+- [Fastify Documentation](https://fastify.dev/docs/latest/)
+- [autocannon](https://github.com/mcollina/autocannon)

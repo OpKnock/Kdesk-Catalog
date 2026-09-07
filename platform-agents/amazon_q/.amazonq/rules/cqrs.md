@@ -1,8 +1,26 @@
-# Cqrs
-
 Implement Command Query Responsibility Segregation with EventStoreDB: append events, project read models, and query them.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -d --name eventstore -p 2113:2113 eventstore/even`, `curl http://localhost:2113/streams/order-1 -H "Accept: appli`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # CQRS
 
@@ -76,6 +94,10 @@ curl -s http://localhost:2113/streams/order-1 -H "Accept: application/json" | jq
 ### eventstore
 Run EventStoreDB and append/read events via its HTTP API
 
+**Parameters:**
+- `stream` (string): Event stream name such as order-1
+- `event_type` (string): Event type such as OrderPlaced
+
 **Commands:**
 - `docker run -d --name eventstore -p 2113:2113 eventstore/eventstore:latest --insecure`
 - `curl -X POST http://localhost:2113/streams/order-1 -H "Content-Type: application/json" -H "ES-EventType: OrderPlaced" -H "ES-EventId: $(uuidgen)" -d '{"data":{"amount":100}}'`
@@ -90,6 +112,9 @@ Run EventStoreDB and append/read events via its HTTP API
 ### read-models
 Project events into queryable read models and consume streams
 
+**Parameters:**
+- `projection_name` (string): Continuous projection name
+
 **Commands:**
 - `curl http://localhost:2113/streams/order-1 -H "Accept: application/json" | jq '.entries[].data'`
 - `curl -X POST http://localhost:2113/projections/continuous -H "Content-Type: application/json" -H "ES-ExpectedVersion: -1" -d @projection.json`
@@ -100,3 +125,7 @@ Project events into queryable read models and consume streams
 - curl http://localhost:2113/projection/order-totals/state -H "Accept: application/json" | jq '.total'
 - curl http://localhost:2113/streams/order-1 -H "Accept: application/json" | jq '.entries[].data'
 - curl -s -o /dev/null -w "%{http_code}" http://localhost:2113/streams/order-1
+
+## References
+- [EventStoreDB Docs](https://www.eventstore.com/docs)
+- [CQRS Pattern](https://martinfowler.com/bliki/CQRS.html)

@@ -1,8 +1,26 @@
-# Kustomize
-
 Manage Kubernetes manifests with Kustomize: overlays per environment, image/namespace overrides, and build-to-apply workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kustomize build .`, `kustomize create --resources=../base`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kustomize
 
@@ -92,6 +110,10 @@ kustomize build overlays/prod | kubectl apply --dry-run=client -f -
 ### kustomize-build
 Build and apply kustomized manifests.
 
+**Parameters:**
+- `dir` (string): Kustomization directory.
+- `restrictor` (string): LoadRestrictionsNone allows files outside the root.
+
 **Commands:**
 - `kustomize build .`
 - `kubectl apply -k .`
@@ -106,6 +128,11 @@ Build and apply kustomized manifests.
 ### kustomize-edit
 Edit kustomization.yaml: images, namespaces, and common labels.
 
+**Parameters:**
+- `image` (string): image=image:tag pair.
+- `namespace` (string): Namespace to set for all resources.
+- `nameprefix` (string): Prefix added to resource names.
+
 **Commands:**
 - `kustomize create --resources=../base`
 - `kustomize edit set image myapp=myapp:v2.0`
@@ -117,3 +144,7 @@ Edit kustomization.yaml: images, namespaces, and common labels.
 - kustomize create --resources=../base
 - kustomize edit set image myapp=myapp:v2.0
 - kustomize edit set namespace production
+
+## References
+- [Kustomize](https://kubectl.docs.kubernetes.io/)
+- [Kustomize CLI Reference](https://kubectl.docs.kubernetes.io/references/kustomize/)

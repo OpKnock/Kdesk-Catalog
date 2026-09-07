@@ -1,8 +1,26 @@
-# cosign
-
 Generate key pairs, sign images, and verify signatures against keys or keyless providers. Attach and verify SLSA provenance and custom attestations. provenance.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cosign generate-key-pair`, `cosign attest --key cosign.key --type slsaprovenance --predi`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # cosign
 
@@ -59,6 +77,11 @@ cosign triangulate ghcr.io/org/app:latest
 ### image-signing
 Generate key pairs, sign images, and verify signatures against keys or keyless providers.
 
+**Parameters:**
+- `image` (string): Container image reference to sign or verify
+- `key` (string): Path to the signing private key or public key
+- `tlogUpload` (boolean): Whether to upload to the transparency log
+
 **Commands:**
 - `cosign generate-key-pair`
 - `cosign sign --key cosign.key ghcr.io/org/app:latest`
@@ -74,6 +97,10 @@ Generate key pairs, sign images, and verify signatures against keys or keyless p
 ### attestations
 Attach and verify SLSA provenance and custom attestations.
 
+**Parameters:**
+- `type` (string): Attestation type: slsaprovenance, spdx, custom
+- `predicate` (string): Path to the JSON predicate file
+
 **Commands:**
 - `cosign attest --key cosign.key --type slsaprovenance --predicate provenance.json ghcr.io/org/app:latest`
 - `cosign verify-attestation --key cosign.pub ghcr.io/org/app:latest`
@@ -83,3 +110,7 @@ Attach and verify SLSA provenance and custom attestations.
 **Examples:**
 - cosign attest --key cosign.key --type slsaprovenance --predicate provenance.json ghcr.io/org/app:latest
 - cosign verify-attestation --type slsaprovenance --key cosign.pub ghcr.io/org/app:latest
+
+## References
+- [cosign Documentation](https://docs.sigstore.dev/cosign/)
+- [Sigstore Overview](https://docs.sigstore.dev/)

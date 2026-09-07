@@ -1,13 +1,35 @@
 ---
 name: "kafka"
-description: "Core Kafka operations: run a local cluster, manage topics, produce and consume messages, and inspect consumer groups from the command line."
+description: "Core Kafka operations: run a local cluster, manage topics, produce and consume messages, and inspect consumer groups from the command line. Use when working with core cluster, core messaging, api or when the user mentions core cluster, core messaging, api."
+license: "MIT"
+compatibility: "Requires kafka-broker-api-versions.sh, kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh, kafka-server-start.sh, kafka-storage.sh."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(kafka-broker-api-versions.sh:*) Bash(kafka-console-consumer.sh:*) Bash(kafka-console-producer.sh:*) Bash(kafka-consumer-groups.sh:*) Bash(kafka-server-start.sh:*) Bash(kafka-storage.sh:*) Bash(kafka-topics.sh:*)"
 ---
-
-# Kafka
 
 Core Kafka operations: run a local cluster, manage topics, produce and consume messages, and inspect consumer groups from the command line.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kafka-server-start.sh config/kraft/server.properties`, `kafka-topics.sh --bootstrap-server localhost:9092 --create -`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka (Core)
 
@@ -80,6 +102,9 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --fro
 ### core-cluster
 Start and verify a Kafka broker (KRaft mode).
 
+**Parameters:**
+- `config` (string): Server properties file.
+
 **Commands:**
 - `kafka-server-start.sh config/kraft/server.properties`
 - `kafka-storage.sh format -t $(kafka-storage.sh random-uuid) -c config/kraft/server.properties`
@@ -94,6 +119,11 @@ Start and verify a Kafka broker (KRaft mode).
 ### core-messaging
 Create topics, produce and consume messages, and inspect groups.
 
+**Parameters:**
+- `topic` (string): Topic name.
+- `partitions` (integer): Partition count.
+- `from_beginning` (boolean): Read all historical messages.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 3 --replication-factor 1`
 - `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events`
@@ -105,3 +135,7 @@ Create topics, produce and consume messages, and inspect groups.
 - kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 3 --replication-factor 1
 - kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning
+
+## References
+- [Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Kafka Quickstart](https://kafka.apache.org/quickstart)

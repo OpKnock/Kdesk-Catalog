@@ -1,11 +1,37 @@
 ---
 name: "security-cloud-security"
-description: "Security cloud-security expertise and best practices."
+description: "Security cloud-security expertise and best practices. Use when working with cloud security expertise, cloud security, skill or when the user mentions cloud security expertise, cloud security, skill."
+license: "MIT"
+compatibility: "Requires cloud-security."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(cloud-security-api:*) Bash(cloud-security-cli:*)"
 ---
 
 # Security Cloud Security
 
 Security cloud-security expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cloud-security-cli`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 

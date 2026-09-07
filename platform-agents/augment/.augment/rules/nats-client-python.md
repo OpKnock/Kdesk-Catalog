@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "NATS clients in Python with nats-py: async connect, pub/sub, JetStream consumers, and request-reply."
+description: "NATS clients in Python with nats-py: async connect, pub/sub, JetStream consumers, and request-reply. Use when working with nats python client, api or when the user mentions nats python client, api."
 ---
-
-# Nats Client Python
 
 NATS clients in Python with nats-py: async connect, pub/sub, JetStream consumers, and request-reply.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install nats-py`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # NATS Python Client
 
@@ -75,6 +93,11 @@ msgs = await pull.fetch(10)
 ### nats-python-client
 Install nats-py and write async Python clients for core NATS and JetStream.
 
+**Parameters:**
+- `url` (string): Server URL including user/pass if needed
+- `subject` (string): Subject or wildcard filter
+- `queue` (string): Queue group name
+
 **Commands:**
 - `pip install nats-py`
 - `python3 -m pip show nats-py`
@@ -86,3 +109,7 @@ Install nats-py and write async Python clients for core NATS and JetStream.
 - python3 sub.py
 - python3 -m asyncio
 - python3 req.py
+
+## References
+- [nats.py GitHub](https://github.com/nats-io/nats.py)
+- [nats-py on PyPI](https://pypi.org/project/nats-py/)

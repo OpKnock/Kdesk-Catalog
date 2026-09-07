@@ -1,13 +1,35 @@
 ---
 name: "idempotency"
-description: "Idempotency in practice: Stripe-style Idempotency-Key usage, retry loops with curl, storing responses in Redis, and verifying identical replays."
+description: "Idempotency in practice: Stripe-style Idempotency-Key usage, retry loops with curl, storing responses in Redis, and verifying identical replays. Use when working with idempotency http, api or when the user mentions idempotency http, api."
+license: "MIT"
+compatibility: "Requires redis-cli. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(redis-cli:*)"
 ---
-
-# Idempotency
 
 Idempotency in practice: Stripe-style Idempotency-Key usage, retry loops with curl, storing responses in Redis, and verifying identical replays.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X POST https://api.stripe.com/v1/charges -u sk_test_x:`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Idempotency
 
@@ -84,6 +106,11 @@ Agent:70:    Reuse one key for all attempts:
 ### idempotency-http
 Send idempotent HTTP requests, cache responses, and verify replay behavior.
 
+**Parameters:**
+- `key` (string): Idempotency key value.
+- `endpoint` (string): Mutating endpoint URL.
+- `cache_ttl` (integer): Response cache TTL in seconds.
+
 **Commands:**
 - `curl -X POST https://api.stripe.com/v1/charges -u sk_test_x: -H "Idempotency-Key: abc123" -d amount=100 -d currency=usd`
 - `curl -s -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments -d amount=100 -o r1.json`
@@ -95,3 +122,7 @@ Send idempotent HTTP requests, cache responses, and verify replay behavior.
 - curl --retry 3 --retry-all-errors -X POST -H "Idempotency-Key: 9x" http://localhost:8080/v1/payments -d amount=10
 - redis-cli GET idem:k1
 - curl -s -o /dev/null -w '%{http_code}' -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments -d amount=200
+
+## References
+- [Stripe Idempotent Requests](https://docs.stripe.com/api/idempotent_requests)
+- [Redis SETEX](https://redis.io/commands/setex/)

@@ -1,11 +1,33 @@
 ---
 type: agent_requested
-description: "Deploys RAG on Google Cloud: Vertex AI search and embeddings, AlloyDB pgvector storage, Cloud Run serving, and Workflows orchestration."
+description: "Deploys RAG on Google Cloud: Vertex AI search and embeddings, AlloyDB pgvector storage, Cloud Run serving, and Workflows orchestration. Use when working with vertex embeddings, alloydb pgvector, cloud run api, ml or when the user mentions vertex embeddings, alloydb pgvector, cloud run api, ml."
 ---
 
 # GCP RAG Deployer
 
 Deploys RAG on Google Cloud: Vertex AI search and embeddings, AlloyDB pgvector storage, Cloud Run serving, and Workflows orchestration.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install google-cloud-aiplatform`, `gcloud alloydb clusters create rag-cluster --region us-centr`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -15,6 +37,10 @@ You are the GCP RAG deployer. You deploy RAG on Google Cloud: Vertex AI search a
 
 ### vertex-embeddings
 Embed documents with Vertex AI text-embedding models
+
+**Parameters:**
+- `project` (string): GCP project id
+- `location` (string): GCP region (default us-central1)
 
 **Commands:**
 - `pip install google-cloud-aiplatform`
@@ -27,6 +53,9 @@ Embed documents with Vertex AI text-embedding models
 
 ### alloydb-pgvector
 Store and query vectors in AlloyDB with the pgvector extension
+
+**Parameters:**
+- `cluster` (string): AlloyDB cluster name
 
 **Commands:**
 - `gcloud alloydb clusters create rag-cluster --region us-central1 --password admin --network default`
@@ -41,6 +70,9 @@ Store and query vectors in AlloyDB with the pgvector extension
 ### cloud-run-api
 Serve the RAG API on Cloud Run
 
+**Parameters:**
+- `region` (string): Cloud Run region (default us-central1)
+
 **Commands:**
 - `gcloud builds submit --tag gcr.io/my-project/rag-api`
 - `gcloud run deploy rag-api --image gcr.io/my-project/rag-api --region us-central1 --allow-unauthenticated`
@@ -49,3 +81,8 @@ Serve the RAG API on Cloud Run
 **Examples:**
 - gcloud run deploy rag-api publishes the container on Cloud Run
 - curl /health confirms the service is live
+
+## References
+- [Vertex AI embeddings docs](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings)
+- [AlloyDB pgvector guide](https://cloud.google.com/alloydb/docs/pgvector)
+- [Cloud Run deploy docs](https://cloud.google.com/run/docs/deploying)

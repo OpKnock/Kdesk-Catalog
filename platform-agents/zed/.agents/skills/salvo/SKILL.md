@@ -1,13 +1,35 @@
 ---
 name: "salvo"
-description: "Expert Salvo (Rust) reference covering handler functions, Router chains, middleware, and Server startup suited to building async web APIs in Rust."
+description: "Expert Salvo (Rust) reference covering handler functions, Router chains, middleware, and Server startup suited to building async web APIs in Rust. Use when working with salvo web, api or when the user mentions salvo web, api."
+license: "MIT"
+compatibility: "Requires cargo. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(cargo:*) Bash(curl:*)"
 ---
-
-# Salvo
 
 Expert Salvo (Rust) reference covering handler functions, Router chains, middleware, and Server startup suited to building async web APIs in Rust.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cargo new salvo-app && cd salvo-app && cargo add salvo`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Salvo (Rust web framework)
 
@@ -82,6 +104,11 @@ curl -s -X POST http://localhost:5800/api/echo -d 'ping'
 ### salvo-web
 Build async Rust web APIs with the Salvo framework
 
+**Parameters:**
+- `path` (string): Router path like hello or api/<id>
+- `port` (integer): Bind port passed to TcpListener
+- `handler` (string): Handler function name registered on the router
+
 **Commands:**
 - `cargo new salvo-app && cd salvo-app && cargo add salvo`
 - `cargo run`
@@ -93,3 +120,7 @@ Build async Rust web APIs with the Salvo framework
 - cargo run
 - curl -s http://localhost:5800/hello
 - curl -s -X POST http://localhost:5800/api/echo -d 'ping'
+
+## References
+- [Salvo documentation](https://docs.rs/salvo/latest/salvo/)
+- [Salvo repo](https://github.com/salvo-rs/salvo)

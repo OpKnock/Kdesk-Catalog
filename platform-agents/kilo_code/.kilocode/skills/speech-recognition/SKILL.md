@@ -1,13 +1,35 @@
 ---
 name: "speech-recognition"
-description: "Transcribes audio to text with OpenAI Whisper and Vosk, converting formats, tuning models, and producing SRT/VTT subtitles."
+description: "Transcribes audio to text with OpenAI Whisper and Vosk, converting formats, tuning models, and producing SRT/VTT subtitles. Use when working with whisper transcription, vosk offline, audio preparation or when the user mentions whisper transcription, vosk offline, audio preparation."
+license: "MIT"
+compatibility: "Requires python, whisper, pyttsx3, vosk, deepgram."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "ai"}
+allowed-tools: "Glob Grep Read Bash(ffmpeg:*) Bash(ffprobe:*) Bash(python:*) Bash(vosk-transcriber:*) Bash(whisper:*)"
 ---
-
-# speech-recognition
 
 Transcribes audio to text with OpenAI Whisper and Vosk, converting formats, tuning models, and producing SRT/VTT subtitles.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `whisper audio.mp3 --model small`, `vosk-transcriber -i audio.wav -o transcript.txt`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Speech Recognition
 
@@ -57,6 +79,11 @@ vosk-transcriber -i audio.wav --lang de
 ### whisper-transcription
 Transcribe audio files with Whisper models and options.
 
+**Parameters:**
+- `model` (string): Model size: tiny, base, small, medium, large, large-v3
+- `language` (string): Source language code, e.g. en, de, zh
+- `outputFormat` (string): Output: txt, vtt, srt, json
+
 **Commands:**
 - `whisper audio.mp3 --model small`
 - `whisper audio.mp3 --language en --task transcribe`
@@ -72,6 +99,10 @@ Transcribe audio files with Whisper models and options.
 ### vosk-offline
 Stream and transcribe with the lightweight Vosk models.
 
+**Parameters:**
+- `input` (string): Input audio file
+- `lang` (string): Language model, e.g. en-us, de, zh-cn
+
 **Commands:**
 - `vosk-transcriber -i audio.wav -o transcript.txt`
 - `vosk-transcriber -i audio.wav --model en-us --lang en`
@@ -86,6 +117,10 @@ Stream and transcribe with the lightweight Vosk models.
 ### audio-preparation
 Convert and inspect audio before transcription.
 
+**Parameters:**
+- `input` (string): Source media file
+- `sampleRate` (number): Target sample rate, e.g. 16000
+
 **Commands:**
 - `ffmpeg -i input.m4a -ar 16000 -ac 1 output.wav`
 - `ffprobe -show_format input.mp3`
@@ -96,3 +131,8 @@ Convert and inspect audio before transcription.
 - ffmpeg -i input.m4a -ar 16000 -ac 1 output.wav
 - ffprobe -show_format input.mp3
 - ffmpeg -i video.mp4 -vn audio.wav
+
+## References
+- [Whisper GitHub](https://github.com/openai/whisper)
+- [Vosk Documentation](https://alphacephei.com/vosk/)
+- [ffmpeg Documentation](https://ffmpeg.org/documentation.html)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Architects layer 4/7 load balancing with HAProxy and Envoy: routing, health checks, and capacity verification with load tools."
+description: "Architects layer 4/7 load balancing with HAProxy and Envoy: routing, health checks, and capacity verification with load tools. Use when working with envoy, capacity or when the user mentions envoy, capacity."
 ---
-
-# load-balancer-engineer
 
 Architects layer 4/7 load balancing with HAProxy and Envoy: routing, health checks, and capacity verification with load tools.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `envoy -c envoy.yaml`, `hey -n 5000 -c 100 http://127.0.0.1:8080/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Load Balancer Engineering
 
@@ -101,6 +119,11 @@ Record the capacity baseline per release.
 ### envoy
 Configure and run Envoy proxies.
 
+**Parameters:**
+- `config-path` (string): Envoy bootstrap config file
+- `mode` (string): validate or serve mode
+- `admin-port` (number): Envoy admin listener port
+
 **Commands:**
 - `envoy -c envoy.yaml`
 - `envoy --config-path envoy.yaml --mode validate`
@@ -116,6 +139,11 @@ Configure and run Envoy proxies.
 ### capacity
 Verify balancer capacity with load generation.
 
+**Parameters:**
+- `requests` (number): Total request count
+- `concurrency` (number): Concurrent connections
+- `method` (string): HTTP method and payload
+
 **Commands:**
 - `hey -n 5000 -c 100 http://127.0.0.1:8080/`
 - `ab -n 10000 -c 200 -k http://127.0.0.1:8080/api`
@@ -127,3 +155,8 @@ Verify balancer capacity with load generation.
 - ab -n 10000 -c 200 -k http://127.0.0.1:8080/ | grep -E 'Requests per second|Failed requests'
 - hey -n 3000 -c 100 -z 30s http://127.0.0.1:8080/
 - curl -sI -H 'Host: api.example.com' http://127.0.0.1:8080/ | head -5
+
+## References
+- [Envoy Proxy Docs](https://www.envoyproxy.io/docs)
+- [Envoy Admin API](https://www.envoyproxy.io/docs/envoy/latest/operations/admin)
+- [HAProxy Management](https://www.haproxy.org/download/2.9/doc/management.txt)

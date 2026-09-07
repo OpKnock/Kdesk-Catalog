@@ -2,6 +2,7 @@
 name: "device-auth"
 description: "Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices: device code request, token polling, and slow-down error handling. Use when working with device flow, api or when the user mentions device flow, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

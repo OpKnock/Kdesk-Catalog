@@ -1,8 +1,26 @@
-# eslint-config
-
 Designs and maintains ESLint flat configs and shareable config packages with rulesets, overrides, and presets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install --save-dev eslint @eslint/js typescript-eslint`, `npx eslint --rule "semi: [error, never]" src/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # ESLint Config
 
@@ -65,6 +83,10 @@ npx eslint --rule "semi: [error, never]" src/
 ### eslint-config-authoring
 Author flat config and legacy config files.
 
+**Parameters:**
+- `config` (string): Config file path
+- `target` (string): File to resolve config for
+
 **Commands:**
 - `npm install --save-dev eslint @eslint/js typescript-eslint`
 - `npx eslint --init`
@@ -80,6 +102,10 @@ Author flat config and legacy config files.
 ### config-testing
 Validate configs and lint output.
 
+**Parameters:**
+- `rule` (string): Inline rule override
+- `ext` (string): File extensions to lint
+
 **Commands:**
 - `npx eslint --rule "semi: [error, never]" src/`
 - `npx eslint --rulesdir ./custom-rules src/`
@@ -89,3 +115,7 @@ Validate configs and lint output.
 **Examples:**
 - npx eslint --rule "quotes: [error, single]" src/
 - npx eslint --no-eslintrc --config base.js src/
+
+## References
+- [ESLint Config Guide](https://eslint.org/docs/latest/use/configure/)
+- [typescript-eslint Docs](https://typescript-eslint.io)

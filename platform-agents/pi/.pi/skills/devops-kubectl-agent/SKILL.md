@@ -1,11 +1,37 @@
 ---
 name: "devops-kubectl-agent"
-description: "Manages Kubernetes clusters and workloads with kubectl including resource inspection, manifest application, debugging, scaling, and rollout management."
+description: "Manages Kubernetes clusters and workloads with kubectl including resource inspection, manifest application, debugging, scaling, and rollout management. Use when working with kubernetes management, devops, agent or when the user mentions kubernetes management, devops, agent."
+license: "MIT"
+compatibility: "Requires network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "devops"}
+allowed-tools: "Glob Grep Read Bash(kubectl:*)"
 ---
 
 # DevOps Kubectl Agent
 
 Manages Kubernetes clusters and workloads with kubectl including resource inspection, manifest application, debugging, scaling, and rollout management.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl get`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -27,6 +53,11 @@ Output: workload inventory, rollout/scale results, log-based diagnosis, and reco
 ### kubernetes-management
 Manage Kubernetes clusters and workloads with kubectl
 
+**Parameters:**
+- `namespace` (string): Kubernetes namespace (default: default)
+- `resource_type` (string): Resource type (pod, deployment, service, etc.)
+- `resource_name` (string): Resource name
+
 **Commands:**
 - `kubectl get`
 - `kubectl apply`
@@ -45,3 +76,9 @@ Manage Kubernetes clusters and workloads with kubectl
 - Debug: kubectl exec -it myapp-xyz -n production -- /bin/sh
 - Scale: kubectl scale deployment myapp --replicas=5 -n production
 - Rollout status: kubectl rollout status deployment/myapp -n production
+
+## References
+- [kubectl Documentation](https://kubernetes.io/docs/reference/kubectl/)
+- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+- [Kubernetes Debugging](https://kubernetes.io/docs/tasks/debug/debug-application/)
+- [Kubectl Rollout](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/)

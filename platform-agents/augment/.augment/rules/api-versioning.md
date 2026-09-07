@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Implements general API versioning across backend services: strategy selection, version headers, backward compatibility, and version-aware routing."
+description: "Implements general API versioning across backend services: strategy selection, version headers, backward compatibility, and version-aware routing. Use when working with version headers, compatibility, backend or when the user mentions version headers, compatibility, backend."
 ---
-
-# Api Versioning
 
 Implements general API versioning across backend services: strategy selection, version headers, backward compatibility, and version-aware routing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -H 'Accept: application/vnd.github.v3+json' https://`, `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:30`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Versioning
 
@@ -51,6 +69,11 @@ curl -s -H 'X-API-Version: 2' http://localhost:3000/api/users | jq '.version'
 ### version-headers
 Serve versions via headers and negotiation
 
+**Parameters:**
+- `header` (string): Version header name
+- `version` (string): Version value
+- `media-type` (string): Vendor media type
+
 **Commands:**
 - `curl -s -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/octocat/Hello-World | jq '.full_name'`
 - `curl -s -H 'X-API-Version: 2' http://localhost:3000/api/users | jq '.version'`
@@ -74,3 +97,7 @@ Maintain backward compatibility
 **Examples:**
 - general-cli --help
 - general-api --help
+
+## References
+- [Microsoft API Versioning Guidance](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#versioning)
+- [GitHub REST Versions](https://docs.github.com/en/rest/about-the-rest-api/api-versions)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites and handshakes, and verify proper SNI and chain validation."
+description: "TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites and handshakes, and verify proper SNI and chain validation. Use when working with tls verification, api or when the user mentions tls verification, api."
 ---
-
-# Encryption In Transit
 
 TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites and handshakes, and verify proper SNI and chain validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `echo | openssl s_client -connect httpbin.org:443 -servername`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Encryption in Transit
 
@@ -68,6 +86,11 @@ add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" alway
 ### tls-verification
 Probe TLS endpoints, inspect certificates and ciphers, and validate chains.
 
+**Parameters:**
+- `host` (string): Hostname of the TLS endpoint
+- `port` (integer): TLS port, usually 443
+- `sni-host` (string): SNI name for virtual-hosted endpoints
+
 **Commands:**
 - `echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl x509 -noout -dates -subject -issuer`
 - `echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'`
@@ -79,3 +102,6 @@ Probe TLS endpoints, inspect certificates and ciphers, and validate chains.
 - echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl x509 -noout -dates -subject -issuer
 - echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'
 - curl -sI https://httpbin.org | grep -i 'strict-transport-security'
+
+## References
+- [openssl s_client man page](https://docs.openssl.org/master/man1/openssl-s_client/)

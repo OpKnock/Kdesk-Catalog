@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Authors and publishes project documentation sites with MkDocs: scaffolds, previews with hot reload, builds strictly, and deploys to GitHub Pages."
+description: "Authors and publishes project documentation sites with MkDocs: scaffolds, previews with hot reload, builds strictly, and deploys to GitHub Pages. Use when working with mkdocs publishing, api or when the user mentions mkdocs publishing, api."
 ---
-
-# Documentation
 
 Authors and publishes project documentation sites with MkDocs: scaffolds, previews with hot reload, builds strictly, and deploys to GitHub Pages.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mkdocs new my-docs`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Documentation
 
@@ -86,6 +104,11 @@ markdown_extensions:
 ### mkdocs-publishing
 Scaffold, serve, build, and deploy MkDocs documentation projects.
 
+**Parameters:**
+- `project-dir` (string): Directory where the docs project lives
+- `dev-addr` (string): Host:port for the local preview server
+- `strict-mode` (boolean): Treat warnings as errors during build
+
 **Commands:**
 - `mkdocs new my-docs`
 - `mkdocs serve --dev-addr 127.0.0.1:8000`
@@ -98,3 +121,7 @@ Scaffold, serve, build, and deploy MkDocs documentation projects.
 - mkdocs new my-docs && cd my-docs && mkdocs serve
 - mkdocs build --strict
 - mkdocs gh-deploy --force
+
+## References
+- [MkDocs Documentation](https://www.mkdocs.org/)
+- [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)

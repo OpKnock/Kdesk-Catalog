@@ -1,13 +1,35 @@
 ---
 name: "totp"
-description: "Generate and verify RFC 6238 time-based one-time passwords using oathtool and Python's pyotp. Produces 6 or 8-digit codes from base32 secrets, verifies with configurable time windows for clock skew, and outputs otpauth URIs for QR code enrollment \u2014 all without a physical authenticator device."
+description: "Generate and verify RFC 6238 time-based one-time passwords using oathtool and Python's pyotp. Produces 6 or 8-digit codes from base32 secrets, verifies with configurable time windows for clock skew, and outputs otpauth URIs for QR code enrollment \u2014 all without a physical authenticator device. Use when working with totp codes, api or when the user mentions totp codes, api."
+license: "MIT"
+compatibility: "Requires oathtool, python."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(oathtool:*) Bash(python:*)"
 ---
-
-# Totp
 
 Generate and verify RFC 6238 time-based one-time passwords using oathtool and Python's pyotp. Produces 6 or 8-digit codes from base32 secrets, verifies with configurable time windows for clock skew, and outputs otpauth URIs for QR code enrollment — all without a physical authenticator device.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `oathtool --totp --base32 "JBSWY3DPEHPK3PXP"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # TOTP
 
@@ -66,6 +88,11 @@ python -c "import pyotp; print(pyotp.TOTP('JBSWY3DPEHPK3PXP').verify('$CODE'))"
 ### totp-codes
 Generate and verify RFC 6238 TOTP codes
 
+**Parameters:**
+- `secret_base32` (string): Base32-encoded shared secret
+- `digits` (integer): Code length, 6 or 8
+- `window` (integer): Steps before/after current allowed for verification
+
 **Commands:**
 - `oathtool --totp --base32 "JBSWY3DPEHPK3PXP"`
 - `oathtool --totp -d 8 --base32 "JBSWY3DPEHPK3PXP"`
@@ -77,3 +104,7 @@ Generate and verify RFC 6238 TOTP codes
 - oathtool --totp --base32 "JBSWY3DPEHPK3PXP"
 - python -c 'import pyotp; print(pyotp.TOTP("JBSWY3DPEHPK3PXP").now())'
 - python -c 'import pyotp; print(pyotp.TOTP("JBSWY3DPEHPK3PXP", interval=30).verify(input()))'
+
+## References
+- [RFC 6238 TOTP](https://www.rfc-editor.org/rfc/rfc6238)
+- [oathtool manual](https://www.nongnu.org/oath-toolkit/oathtool.1.html)

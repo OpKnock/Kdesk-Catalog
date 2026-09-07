@@ -1,8 +1,26 @@
-# Api Monitor Logcli
-
 Monitors API logs with Loki and LogCLI: label-based querying, logQL pipelines, error-rate derivation, and alerting on log patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `logcli query '{app="api-gateway"}' --from=2h`, `logcli query '{app="api"} | json | latency_ms > 1000 | drop `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Monitor v4 - Loki/LogCLI
 
@@ -51,6 +69,11 @@ groups:
 ### logcli
 Query and tail API logs stored in Loki
 
+**Parameters:**
+- `query` (string): LogQL query with label matchers and pipeline stages
+- `from` (string): Start time (2h, 2024-06-01T00:00:00Z)
+- `limit` (integer): Maximum number of log entries returned
+
 **Commands:**
 - `logcli query '{app="api-gateway"}' --from=2h`
 - `logcli query 'rate({app="api"} |= "ERROR" [5m])'`
@@ -74,3 +97,7 @@ Parse and filter structured API logs with LogQL
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [LogCLI Docs](https://grafana.com/docs/loki/latest/tools/logcli/)
+- [LogQL Reference](https://grafana.com/docs/loki/latest/query/)

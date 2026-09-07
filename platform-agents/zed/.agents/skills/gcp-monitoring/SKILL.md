@@ -1,13 +1,35 @@
 ---
 name: "gcp-monitoring"
-description: "GCP Cloud Monitoring operations: query metric time series, create alerting policies, and check uptime from the gcloud CLI."
+description: "GCP Cloud Monitoring operations: query metric time series, create alerting policies, and check uptime from the gcloud CLI. Use when working with gcp monitoring, api or when the user mentions gcp monitoring, api."
+license: "MIT"
+compatibility: "Requires gcloud."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(gcloud:*)"
 ---
-
-# Gcp Monitoring
 
 GCP Cloud Monitoring operations: query metric time series, create alerting policies, and check uptime from the gcloud CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gcloud monitoring time-series list --filter='metric.type="ru`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GCP Monitoring
 
@@ -64,6 +86,11 @@ curl -s -X POST https://monitoring.googleapis.com/v3/projects/my-project/timeSer
 ### gcp-monitoring
 Query metrics, manage alerting policies, and verify uptime checks.
 
+**Parameters:**
+- `metric-type` (string): Metric descriptor like run.googleapis.com/request_count
+- `filter` (string): Time series filter expression
+- `duration` (string): Alert condition duration like 300s
+
 **Commands:**
 - `gcloud monitoring time-series list --filter='metric.type="run.googleapis.com/request_count" AND resource.labels.service_name="orders"' --format='table(metric.labels.response_code, pointCount)'`
 - `gcloud monitoring time-series list --filter='metric.type="cloudfunctions.googleapis.com/function/execution_times"' --format='json' | jq '.timeSeries[0].points[0].value'`
@@ -75,3 +102,7 @@ Query metrics, manage alerting policies, and verify uptime checks.
 - gcloud monitoring time-series list --filter='metric.type="run.googleapis.com/request_count" AND resource.labels.service_name="orders"' --format='table(metric.labels.response_code, pointCount)'
 - gcloud monitoring channels create --display-name=ops-email --type=email --channel-labels=address=oncall@localhost
 - gcloud monitoring uptime-checks create --display-name=orders --resource-type=url --resource-url=http://localhost:8080/health --timeout=5s
+
+## References
+- [Cloud Monitoring docs](https://cloud.google.com/monitoring/docs)
+- [gcloud monitoring reference](https://cloud.google.com/sdk/gcloud/reference/monitoring)

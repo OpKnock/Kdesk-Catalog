@@ -1,11 +1,37 @@
 ---
 name: "governance-register-model-py"
-description: "ML governance agent for advanced model management."
+description: "ML governance agent for advanced model management. Use when working with Ml Governance V2 or when the user mentions Ml Governance V2."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(governance:*) Bash(python:*)"
 ---
 
 # Governance Register Model Py
 
 ML governance agent for advanced model management.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python register_model.py --model model --version 2.0 --stage`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -25,6 +51,9 @@ Always use real governance tools. Never suggest fictional tools.
 ### Ml Governance V2
 ML governance agent for advanced model management.
 
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
+
 **Commands:**
 - `python register_model.py --model model --version 2.0 --stage staging`
 - `python promote_model.py --model model --from staging --to production --approved-by reviewer`
@@ -37,3 +66,8 @@ ML governance agent for advanced model management.
 - Model Registry: from mlflow.tracking import MlflowClient; client = MlflowClient(); client.create_registered_model('my-model')
 - Neptune: import neptune; run = neptune.init_model(name='my-model'); run['model'].upload('model.pkl')
 - Vertex AI: from google.cloud import aiplatform; model = aiplatform.Model('my-model')
+
+## References
+- [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)
+- [Python Documentation](https://docs.python.org/3/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)

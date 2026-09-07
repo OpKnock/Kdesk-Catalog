@@ -1,8 +1,26 @@
-# Data Retention
-
 Expires, archives, and rotates API data with S3 lifecycle policies, MongoDB TTL indexes, and log rotation configs for compliance and cost control.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aws s3api put-bucket-lifecycle-configuration --bucket my-buc`, `mongosh --quiet --eval 'db.events.createIndex({createdAt:1},`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Data Retention
 
@@ -89,6 +107,10 @@ mongosh --quiet --eval 'db.events.getIndexes()' | jq '.[] | select(.expireAfterS
 ### s3-lifecycle
 Configure S3 bucket lifecycle policies for tiering and expiring objects
 
+**Parameters:**
+- `bucket` (string): S3 bucket name
+- `days` (string): Expiration or transition days
+
 **Commands:**
 - `aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-configuration file://lifecycle.json`
 - `aws s3api get-bucket-lifecycle-configuration --bucket my-bucket`
@@ -103,6 +125,10 @@ Configure S3 bucket lifecycle policies for tiering and expiring objects
 ### mongo-ttl
 Use MongoDB TTL indexes and logrotate to expire API data and logs
 
+**Parameters:**
+- `expire_seconds` (string): TTL in seconds, e.g. 86400 for one day
+- `collection` (string): MongoDB collection to expire
+
 **Commands:**
 - `mongosh --quiet --eval 'db.events.createIndex({createdAt:1},{expireAfterSeconds:86400})'`
 - `mongosh --quiet --eval 'db.events.getIndexes()'`
@@ -113,3 +139,7 @@ Use MongoDB TTL indexes and logrotate to expire API data and logs
 - mongosh --quiet --eval 'db.events.createIndex({createdAt:1},{expireAfterSeconds:2592000})'
 - mongosh --quiet --eval 'db.events.getIndexes()' | jq
 - logrotate -d /etc/logrotate.d/api
+
+## References
+- [S3 Lifecycle Docs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html)
+- [MongoDB TTL Indexes](https://www.mongodb.com/docs/manual/core/index-ttl/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement processes with RFC 8594 Deprecation header conventions."
+description: "Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement processes with RFC 8594 Deprecation header conventions. Use when working with deprecation headers, lifecycle track or when the user mentions deprecation headers, lifecycle track."
 ---
-
-# api-version-management
 
 Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement processes with RFC 8594 Deprecation header conventions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -sI http://localhost:8080/v1/users | grep -iE '^(deprec`, `git tag -a v1.0.0 -m 'v1 initial release'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Version Management
 
@@ -50,6 +68,11 @@ curl -sI https://api.example.com/v1/users | grep -iE '^(deprecation|sunset|link)
 ### deprecation-headers
 Signal deprecation with standard headers
 
+**Parameters:**
+- `header` (string): deprecation, sunset, or link
+- `version` (string): Affected version
+- `date` (string): Sunset date in RFC 1123 format
+
 **Commands:**
 - `curl -sI http://localhost:8080/v1/users | grep -iE '^(deprecation|sunset|link):'`
 - `curl -s -D- http://localhost:8080/v1/users | grep -i '^link:'`
@@ -73,3 +96,7 @@ Track versions through the lifecycle
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [RFC 8594 - Sunset Header](https://www.rfc-editor.org/rfc/rfc8594)
+- [GitHub Deprecation Policy](https://docs.github.com/en/rest/about-the-rest-api/breaking-changes)

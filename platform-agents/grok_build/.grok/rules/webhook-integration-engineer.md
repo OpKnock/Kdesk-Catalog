@@ -1,8 +1,26 @@
-# Webhook Integration Engineer
-
 Builds reliable webhook systems with signature verification (HMAC-SHA256), retry logic with exponential backoff, idempotency keys, and delivery observability. Integrates with Stripe, GitHub, Svix, and ngrok for local testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cat payload.json | openssl dgst -sha256 -hmac "$WEBHOOK_SECR`, `curl -X POST https://api.your-app.test/webhook -H "Content-T`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Webhook Integration Engineer
 
@@ -114,6 +132,11 @@ async function deliverWithRetry(url, payload, idempotencyKey, maxRetries = 5) {
 ### signature-verification
 Implements HMAC-SHA256 signature verification for incoming webhooks from Stripe, GitHub, and custom providers.
 
+**Parameters:**
+- `secret` (string): Webhook signing secret
+- `payload_file` (string): Path to webhook payload file
+- `signature_header` (string): Signature header value (e.g., Stripe-Signature, X-Hub-Signature-256)
+
 **Commands:**
 - `cat payload.json | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" -binary | base64`
 - `node -e "const crypto=require(\"crypto\"); console.log(crypto.createHmac(\"sha256\", process.env.SECRET).update(require(\"fs\").readFileSync(\"payload.json\")).digest(\"base64\"))"`
@@ -127,6 +150,11 @@ Implements HMAC-SHA256 signature verification for incoming webhooks from Stripe,
 ### retry-and-idempotency
 Configures exponential backoff retry with jitter, idempotency keys, and dead-letter handling.
 
+**Parameters:**
+- `max_retries` (number): Maximum retry attempts
+- `base_delay_ms` (number): Base delay for exponential backoff
+- `idempotency_key` (string): Unique key for deduplication
+
 **Commands:**
 - `curl -X POST https://api.your-app.test/webhook -H "Content-Type: application/json" -H "Idempotency-Key: $(uuidgen)" -d @payload.json`
 - `node -e "const fetch=require(\"node-fetch\"); async function send() { let i=0; while(true){ if(i===5) break; try{ const r=await fetch(\"https://api.your-app.test/webhook\",{method:\"POST\",headers:{\"Content-Type\":\"application/json\",\"Idempotency-Key\":\"key-123\"},body:JSON.stringify({event:\"test\"})}); if(r.ok) return; }catch(e){ await new Promise(function(resolve){setTimeout(resolve,Math.pow(2,i)*100+Math.random()*100);}); } i++; } } send()"`
@@ -137,6 +165,10 @@ Configures exponential backoff retry with jitter, idempotency keys, and dead-let
 
 ### local-testing
 Tests webhooks locally with ngrok, smee.io, and webhook.site for inspection.
+
+**Parameters:**
+- `port` (number): Local server port
+- `tunnel_url` (string): Public tunnel URL (ngrok, smee)
 
 **Commands:**
 - `ngrok http 3000`
@@ -151,6 +183,10 @@ Tests webhooks locally with ngrok, smee.io, and webhook.site for inspection.
 ### delivery-observability
 Implements webhook delivery logging, metrics, and alerting for failed deliveries.
 
+**Parameters:**
+- `status` (string): Filter by status (success, failed, pending)
+- `delivery_id` (string): Delivery ID to retry
+
 **Commands:**
 - `curl -X GET https://api.your-app.test/webhooks/deliveries?status=failed`
 - `curl -X POST https://api.your-app.test/webhooks/deliveries/abc123/retry`
@@ -158,3 +194,17 @@ Implements webhook delivery logging, metrics, and alerting for failed deliveries
 **Examples:**
 - curl -s "https://api.your-app.test/webhooks/deliveries?status=failed&limit=20" | jq
 - curl -X POST "https://api.your-app.test/webhooks/deliveries/abc123/retry"
+
+## References
+- [Webhook Best Practices](https://docs.svix.com/receiving/introduction)
+- [Stripe Webhooks](https://stripe.com/docs/webhooks)
+- [GitHub Webhooks](https://docs.github.com/en/developers/webhooks-and-events/webhooks)
+- [Svix Documentation](https://docs.svix.com/)
+- [RFC 8941 Structured Headers](https://www.rfc-editor.org/rfc/rfc8941)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

@@ -1,13 +1,35 @@
 ---
 name: "stylelint"
-description: "Lints CSS/SCSS and CSS-in-JS with Stylelint, enforcing order, naming, and browser-compatibility rules."
+description: "Lints CSS/SCSS and CSS-in-JS with Stylelint, enforcing order, naming, and browser-compatibility rules. Use when working with stylelint css, code quality or when the user mentions stylelint css, code quality."
+license: "MIT"
+compatibility: "Requires npx."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "code-quality"}
+allowed-tools: "Glob Grep Read Bash(npx:*)"
 ---
-
-# stylelint
 
 Lints CSS/SCSS and CSS-in-JS with Stylelint, enforcing order, naming, and browser-compatibility rules.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx stylelint "src/**/*.css"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Stylelint
 
@@ -79,6 +101,11 @@ Reports violations as `file:line:col severity message rule-name`, then applies
 ### stylelint-css
 Check and fix CSS/SCSS with Stylelint and its standard configs
 
+**Parameters:**
+- `fix` (boolean): Auto-fix fixable violations
+- `config` (string): Path to the stylelint config file
+- `stdin-filename` (string): Filename to associate with piped stdin content
+
 **Commands:**
 - `npx stylelint "src/**/*.css"`
 - `npx stylelint --fix "src/**/*.{css,scss}"`
@@ -90,3 +117,7 @@ Check and fix CSS/SCSS with Stylelint and its standard configs
 - npx stylelint --ignore-path .gitignore "**/*.css"
 - npx stylelint --fix src/styles/
 - echo '.a {color:red}' | npx stylelint --stdin-filename app.css
+
+## References
+- [Stylelint docs](https://stylelint.io/)
+- [Stylelint rules](https://stylelint.io/user-guide/rules/)

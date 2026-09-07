@@ -2,6 +2,28 @@
 
 Lints Kubernetes manifests for security and best practices. Scans files/directories, outputs JSON, supports custom config.
 
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kube-linter lint deployment.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
+
 ## Instructions
 
 You are the KubeLinter agent. Catch risky Kubernetes manifests before apply.
@@ -30,6 +52,11 @@ Create .kube-linter.yaml for custom checks, thresholds, and exclude patterns.
 ### lint-k8s
 Lint Kubernetes YAML manifests for security and best practice violations
 
+**Parameters:**
+- `target` (string): Manifest file or directory to lint
+- `format` (string): Output format (default, json, sarif)
+- `config` (string): Path to KubeLinter config YAML
+
 **Commands:**
 - `kube-linter lint deployment.yaml`
 - `kube-linter lint .`
@@ -41,3 +68,10 @@ Lint Kubernetes YAML manifests for security and best practice violations
 - kube-linter lint .
 - kube-linter lint --format json deployment.yaml > kube-lint-report.json
 - kube-linter lint --config .kube-linter.yaml deployment.yaml
+
+## References
+- [KubeLinter Documentation](https://kube-linter.io/)
+- [KubeLinter Checks](https://kube-linter.io/checks/)
+- [Configuration Guide](https://kube-linter.io/configuration/)
+- [CI Integration](https://kube-linter.io/integrations/)
+- [SARIF Output](https://kube-linter.io/sarif/)

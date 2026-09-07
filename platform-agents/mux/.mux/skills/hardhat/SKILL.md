@@ -1,13 +1,35 @@
 ---
 name: "hardhat"
-description: "Develops and tests Solidity with Hardhat: compile, test, deploy scripts, network management, and Etherscan verification."
+description: "Develops and tests Solidity with Hardhat: compile, test, deploy scripts, network management, and Etherscan verification. Use when working with hardhat dev, hardhat deploy, code quality or when the user mentions hardhat dev, hardhat deploy, code quality."
+license: "MIT"
+compatibility: "Requires npx."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "code-quality"}
+allowed-tools: "Glob Grep Read Bash(npx:*)"
 ---
-
-# Hardhat
 
 Develops and tests Solidity with Hardhat: compile, test, deploy scripts, network management, and Etherscan verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx hardhat init`, `npx hardhat run scripts/deploy.js`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Hardhat
 
@@ -78,6 +100,10 @@ module.exports = {
 ### hardhat-dev
 Compile, test, and run local nodes.
 
+**Parameters:**
+- `test-file` (string): Test file filter
+- `network` (string): Network name for tests
+
 **Commands:**
 - `npx hardhat init`
 - `npx hardhat compile`
@@ -93,6 +119,11 @@ Compile, test, and run local nodes.
 ### hardhat-deploy
 Deploy and verify contracts.
 
+**Parameters:**
+- `script` (string): Script path
+- `network` (string): Target network
+- `address` (string): Contract address to verify
+
 **Commands:**
 - `npx hardhat run scripts/deploy.js`
 - `npx hardhat run scripts/deploy.js --network sepolia`
@@ -104,3 +135,7 @@ Deploy and verify contracts.
 - npx hardhat verify --network sepolia 0x1234 --constructor-args args.js
 - npx hardhat console --network mainnet
 - npx hardhat run scripts/deploy.ts --network hardhat
+
+## References
+- [Hardhat Docs](https://hardhat.org/docs)
+- [Hardhat Network](https://hardhat.org/hardhat-network/docs/overview)

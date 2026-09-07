@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Open, run, and filter it tests. Parallelize runs and record to it Cloud. Component testing and debugging helpers. recording."
+description: "Open, run, and filter it tests. Parallelize runs and record to it Cloud. Component testing and debugging helpers. recording. Use when working with cypress runs, parallel and record, component and debug, testing or when the user mentions cypress runs, parallel and record, component and debug, testing."
 ---
-
-# cypress
 
 Open, run, and filter it tests. Parallelize runs and record to it Cloud. Component testing and debugging helpers. recording.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx cypress open`, `npx cypress run --record --key $CYPRESS_RECORD_KEY`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Cypress
 
@@ -71,6 +89,10 @@ describe('login', () => {
 ### cypress-runs
 Open, run, and filter Cypress tests.
 
+**Parameters:**
+- `spec` (string): Test file or glob pattern
+- `browser` (string): Browser: chrome, firefox, edge, electron
+
 **Commands:**
 - `npx cypress open`
 - `npx cypress run`
@@ -86,6 +108,11 @@ Open, run, and filter Cypress tests.
 ### parallel-and-record
 Parallelize runs and record to Cypress Cloud.
 
+**Parameters:**
+- `recordKey` (string): Cypress Cloud record key
+- `tag` (string): Run tag for filtering
+- `group` (string): Group name for parallel runs
+
 **Commands:**
 - `npx cypress run --record --key $CYPRESS_RECORD_KEY`
 - `npx cypress run --parallel --record`
@@ -100,6 +127,10 @@ Parallelize runs and record to Cypress Cloud.
 ### component-and-debug
 Component testing and debugging helpers.
 
+**Parameters:**
+- `env` (object): Environment variables for tests
+- `config` (object): Runtime config overrides
+
 **Commands:**
 - `npx cypress run --component`
 - `npx cypress run --env grep='login'`
@@ -110,3 +141,7 @@ Component testing and debugging helpers.
 - npx cypress run --component
 - npx cypress run --env grep='login'
 - npx cypress run --config video=false
+
+## References
+- [Cypress Documentation](https://docs.cypress.io/)
+- [Cypress CLI Reference](https://docs.cypress.io/app/references/command-line)

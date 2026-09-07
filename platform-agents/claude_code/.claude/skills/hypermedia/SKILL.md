@@ -2,6 +2,7 @@
 name: "hypermedia"
 description: "Hypermedia APIs (HAL, JSON:API, HATEOAS): discovering links with curl, following affordances, and designing self-describing responses. Use when working with hypermedia consumption, api or when the user mentions hypermedia consumption, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

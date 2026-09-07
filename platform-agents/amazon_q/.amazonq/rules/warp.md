@@ -1,8 +1,26 @@
-# Warp
-
 Creates HTTP APIs with the Warp web framework in Rust. Uses filter-based routing with combinators, adds warp and tokio dependencies via cargo, runs the server, and tests with cargo test and curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cargo new my-api`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Warp (Rust)
 
@@ -85,6 +103,10 @@ async fn test_health() {
 ### warp-api
 Create and run Warp-based Rust HTTP services
 
+**Parameters:**
+- `port` (integer): Bind port for the warp server (default 3030)
+- `features` (string): Cargo features for tokio, e.g. tokio/full
+
 **Commands:**
 - `cargo new my-api`
 - `cargo add warp tokio`
@@ -96,3 +118,8 @@ Create and run Warp-based Rust HTTP services
 - cargo add warp tokio --features tokio/full
 - cargo build --release
 - curl -s -X POST http://localhost:3030/items -H "Content-Type: application/json" -d "{\"name\":\"widget"}"
+
+## References
+- [warp docs.rs](https://docs.rs/warp)
+- [warp GitHub](https://github.com/seanmonstar/warp)
+- [Tokio docs](https://docs.rs/tokio)

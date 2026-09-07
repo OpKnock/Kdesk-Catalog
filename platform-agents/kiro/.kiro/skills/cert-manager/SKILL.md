@@ -1,13 +1,35 @@
 ---
 name: "cert-manager"
-description: "Automates TLS certificates in Kubernetes with cert-manager: issuers, certificates, and cmctl status."
+description: "Automates TLS certificates in Kubernetes with cert-manager: issuers, certificates, and cmctl status. Use when working with cert manager, devops or when the user mentions cert manager, devops."
+license: "MIT"
+compatibility: "Requires cmctl, kubectl. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "devops"}
+allowed-tools: "Glob Grep Read Bash(cmctl:*) Bash(kubectl:*)"
 ---
-
-# cert-manager
 
 Automates TLS certificates in Kubernetes with cert-manager: issuers, certificates, and cmctl status.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl apply -f https://github.com/cert-manager/cert-manage`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # cert-manager
 
@@ -79,6 +101,11 @@ For an unissued certificate: describes the cert and issuer, finds the error
 ### cert-manager
 Manage issuers, certificates, and verify issuance
 
+**Parameters:**
+- `namespace` (string): Namespace for the certificate/issuer
+- `dry-run` (string): client/server dry-run validation
+- `wait` (boolean): Wait for certificate readiness
+
 **Commands:**
 - `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml`
 - `kubectl apply -f issuer.yaml`
@@ -90,3 +117,7 @@ Manage issuers, certificates, and verify issuance
 - kubectl get issuers -n cert-manager
 - cmctl check api
 - kubectl create -f certificate.yaml --dry-run=client -o yaml
+
+## References
+- [cert-manager docs](https://cert-manager.io/docs/)
+- [cmctl reference](https://cert-manager.io/docs/reference/cmctl/)

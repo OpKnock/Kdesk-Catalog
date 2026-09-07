@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Manipulates container images and registries with google/crane: copy, move, tag, export, and validate image manifests and digests."
+description: "Manipulates container images and registries with google/crane: copy, move, tag, export, and validate image manifests and digests. Use when working with registry operations, manifest and digest, devops or when the user mentions registry operations, manifest and digest, devops."
 ---
-
-# crane
 
 Manipulates container images and registries with google/crane: copy, move, tag, export, and validate image manifests and digests.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `crane copy nginx:latest ghcr.io/nginx:latest`, `crane manifest nginx:latest | jq .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # crane Registry Tooling
 
@@ -66,6 +84,11 @@ crane auth login ghcr.io -u user -p pass
 ### registry-operations
 Copy, move, tag, and delete images across registries without a full daemon.
 
+**Parameters:**
+- `src` (string): Source image or repo reference
+- `dest` (string): Destination repo reference
+- `tag` (string): Tag to apply
+
 **Commands:**
 - `crane copy nginx:latest ghcr.io/nginx:latest`
 - `crane move old.example.com/app:v1 new.example.com/app:v1`
@@ -82,6 +105,10 @@ Copy, move, tag, and delete images across registries without a full daemon.
 ### manifest-and-digest
 Inspect manifests, digests, and export images for offline analysis.
 
+**Parameters:**
+- `image` (string): Image reference to inspect
+- `output` (string): Output tar file for export
+
 **Commands:**
 - `crane manifest nginx:latest | jq .`
 - `crane digest nginx:latest`
@@ -93,3 +120,7 @@ Inspect manifests, digests, and export images for offline analysis.
 - crane digest nginx:latest
 - crane export nginx:latest /tmp/nginx.tar
 - crane manifest nginx:latest | jq -r .mediaType
+
+## References
+- [crane CLI Reference](https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md)
+- [go-containerregistry Project](https://github.com/google/go-containerregistry)

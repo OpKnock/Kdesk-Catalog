@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Designs advanced GraphQL schemas \u2014 interfaces, unions, custom scalars \u2014 and federated graphs with Apollo Federation subgraphs."
+description: "Designs advanced GraphQL schemas \u2014 interfaces, unions, custom scalars \u2014 and federated graphs with Apollo Federation subgraphs. Use when working with schema design, federation or when the user mentions schema design, federation."
 ---
-
-# Api Graphql Schema Design
 
 Designs advanced GraphQL schemas — interfaces, unions, custom scalars — and federated graphs with Apollo Federation subgraphs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx graphql-codegen init`, `rover subgraph publish my-graph@prod --name inventory --sche`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API GraphQL (Schema Design & Federation)
 
@@ -64,6 +82,10 @@ Use `rover subgraph check` against the prod schema before publishing to catch br
 ### schema-design
 Model enterprise GraphQL schemas with shared type patterns and schema-first authoring
 
+**Parameters:**
+- `schema` (string): Path to GraphQL SDL schema file
+- `config` (string): graphql-codegen config path
+
 **Commands:**
 - `npx graphql-codegen init`
 - `npx graphql-codegen --config codegen.yml`
@@ -79,6 +101,10 @@ Model enterprise GraphQL schemas with shared type patterns and schema-first auth
 ### federation
 Compose subgraphs into a supergraph with Apollo Federation and Rover
 
+**Parameters:**
+- `graphRef` (string): Apollo graph ref like my-graph@prod
+- `subgraph` (string): Subgraph name
+
 **Commands:**
 - `rover subgraph publish my-graph@prod --name inventory --schema ./inventory.graphql --routing-url http://inventory:4001`
 - `rover supergraph compose --config supergraph.yaml --output supergraph.graphql`
@@ -90,3 +116,8 @@ Compose subgraphs into a supergraph with Apollo Federation and Rover
 - rover supergraph compose --config supergraph.yaml --output supergraph.graphql
 - rover subgraph check my-graph@prod --name products --schema ./products.graphql
 - rover dev --supergraph-config supergraph.yaml --watch
+
+## References
+- [Apollo Federation Docs](https://www.apollographql.com/docs/federation/)
+- [Rover CLI](https://www.apollographql.com/docs/rover/)
+- [GraphQL Code Generator](https://the-guild.dev/graphql/codegen/docs)

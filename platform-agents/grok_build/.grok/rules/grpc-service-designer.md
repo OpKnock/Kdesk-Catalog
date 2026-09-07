@@ -1,8 +1,26 @@
-# grpc-service-designer
-
 Designs gRPC services with protobuf and buf: linting conventions, breaking-change checks, and live server probing with grpcurl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `buf lint`, `grpcurl -plaintext localhost:50051 list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC Service Design
 
@@ -86,6 +104,11 @@ Add buf lint and buf breaking to CI, plus grpcurl smoke calls in staging.
 ### buf
 Lint, format, and check protobuf definitions for breaking changes.
 
+**Parameters:**
+- `against` (string): Baseline source to diff for breaking changes
+- `path` (string): Subset of files to lint/generate
+- `template` (string): buf.gen.yaml generation template
+
 **Commands:**
 - `buf lint`
 - `buf breaking --against '.git#branch=main,subdir=proto'`
@@ -101,6 +124,11 @@ Lint, format, and check protobuf definitions for breaking changes.
 ### grpcurl
 Probe gRPC servers, list services, and call methods.
 
+**Parameters:**
+- `plaintext` (string): Skip TLS for local development
+- `import-path` (string): Proto import roots for reflection fallback
+- `d` (string): JSON request message
+
 **Commands:**
 - `grpcurl -plaintext localhost:50051 list`
 - `grpcurl -plaintext localhost:50051 describe acme.orders.v1.OrderService`
@@ -112,3 +140,8 @@ Probe gRPC servers, list services, and call methods.
 - grpcurl -plaintext localhost:50051 list | grep acme
 - grpcurl -plaintext -d '{"id":"42","fields":{"name":true}}' localhost:50051 acme.orders.v1.OrderService/GetOrder
 - grpcurl -plaintext -rpc-header 'authorization: Bearer eyJ...' localhost:50051 acme.orders.v1.OrderService/GetOrder -d '{}'
+
+## References
+- [Protobuf Docs](https://protobuf.dev/)
+- [Buf Docs](https://buf.build/docs/)
+- [grpcurl](https://github.com/fullstorydev/grpcurl)

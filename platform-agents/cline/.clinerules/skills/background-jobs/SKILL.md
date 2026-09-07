@@ -1,13 +1,35 @@
 ---
 name: "background-jobs"
-description: "Designs and operates async background job systems across BullMQ, Celery, and Sidekiq with retries, delays, priorities, and worker lifecycle management."
+description: "Designs and operates async background job systems across BullMQ, Celery, and Sidekiq with retries, delays, priorities, and worker lifecycle management. Use when working with job queues, job monitoring, backend or when the user mentions job queues, job monitoring, backend."
+license: "MIT"
+compatibility: "Requires celery, redis-cli, sidekiq."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(celery:*) Bash(redis-cli:*) Bash(sidekiq:*)"
 ---
-
-# Background Jobs
 
 Designs and operates async background job systems across BullMQ, Celery, and Sidekiq with retries, delays, priorities, and worker lifecycle management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `celery -A proj worker --loglevel=info --concurrency=4`, `celery -A proj inspect registered`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Background Jobs
 
@@ -96,6 +118,11 @@ beat_schedule = {
 ### job-queues
 Create queues, run workers, and manage job lifecycle across BullMQ, Celery, and Sidekiq.
 
+**Parameters:**
+- `concurrency` (integer): Number of worker processes to spawn
+- `queues` (string): Comma-separated queue names to process
+- `loglevel` (string): Logging level: info, debug, warning, error
+
 **Commands:**
 - `celery -A proj worker --loglevel=info --concurrency=4`
 - `celery -A proj purge -f`
@@ -111,6 +138,10 @@ Create queues, run workers, and manage job lifecycle across BullMQ, Celery, and 
 ### job-monitoring
 Inspect queue depth, stalled jobs, and retry state.
 
+**Parameters:**
+- `job-id` (string): Job identifier to inspect
+- `queue` (string): Queue name to inspect
+
 **Commands:**
 - `celery -A proj inspect registered`
 - `celery -A proj inspect active_queues`
@@ -120,3 +151,8 @@ Inspect queue depth, stalled jobs, and retry state.
 **Examples:**
 - celery -A proj inspect stats
 - redis-cli lrange bull:email:wait 0 10
+
+## References
+- [BullMQ Docs](https://docs.bullmq.io)
+- [Celery Docs](https://docs.celeryq.dev/en/stable/)
+- [Sidekiq Docs](https://github.com/sidekiq/sidekiq/wiki)

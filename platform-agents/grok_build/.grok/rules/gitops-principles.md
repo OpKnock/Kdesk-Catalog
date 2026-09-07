@@ -1,8 +1,26 @@
-# Gitops Principles
-
 GitOps principles and workflows: declarative cluster state in git, pull-based sync, and safe rollback practices with kubectl and flux.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl apply --dry-run=client -f manifests/ -o yaml > /dev/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GitOps Principles
 
@@ -65,6 +83,11 @@ kubectl diff -f manifests/ | head -40
 ### gitops-workflow
 Apply GitOps practices: declarative manifests, sync reconciliation, and rollbacks.
 
+**Parameters:**
+- `manifest-dir` (string): Directory with declarative manifests
+- `deployment` (string): Deployment to verify or roll back
+- `namespace` (string): Target namespace
+
 **Commands:**
 - `kubectl apply --dry-run=client -f manifests/ -o yaml > /dev/null && echo 'valid'`
 - `kubectl diff -f manifests/`
@@ -77,3 +100,7 @@ Apply GitOps practices: declarative manifests, sync reconciliation, and rollback
 - kubectl diff -f manifests/ && kubectl apply -f manifests/
 - kubectl rollout undo deployment/orders -n app
 - flux reconcile kustomization apps --with-source
+
+## References
+- [GitOps Principles (CNCF)](https://opengitops.dev/)
+- [Weaveworks GitOps guide](https://www.weave.works/technologies/gitops/)

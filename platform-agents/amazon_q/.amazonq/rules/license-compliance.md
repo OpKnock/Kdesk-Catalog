@@ -1,8 +1,26 @@
-# license-compliance
-
 Audits dependency licenses across ecosystems with licensee, license-checker, and go-licenses, enforcing allowlists in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `licensee detect .`, `license-checker --failOn 'GPL;LGPL' --summary`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # License Compliance
 
@@ -72,6 +90,11 @@ Both should pass on main; fail on known-bad branches.
 ### audit
 Detect licenses for codebases and packages.
 
+**Parameters:**
+- `exclude` (string): Licenses to exclude from report
+- `production` (string): Only production dependencies
+- `allowed_licenses` (string): Comma-separated allowlist (go-licenses)
+
 **Commands:**
 - `licensee detect .`
 - `licensee detect --json`
@@ -87,6 +110,11 @@ Detect licenses for codebases and packages.
 ### enforce
 Gate builds on license policy.
 
+**Parameters:**
+- `failOn` (string): Licenses that fail the check
+- `onlyAllow` (string): Allowed license list
+- `unlicensed` (string): Report unlicensed code
+
 **Commands:**
 - `license-checker --failOn 'GPL;LGPL' --summary`
 - `licensee detect --unlicensed --no-remote`
@@ -98,3 +126,8 @@ Gate builds on license policy.
 - license-checker --failOn GPL --summary
 - npx license-checker --onlyAllow 'MIT;Apache-2.0;ISC;BSD-2-Clause;BSD-3-Clause'
 - go-licenses csv ./... | grep -i 'gpl'
+
+## References
+- [licensee](https://github.com/licensee/licensee)
+- [license-checker](https://github.com/davglass/license-checker)
+- [SPDX License List](https://spdx.org/licenses/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Verifies SLSA provenance of artifacts and container images with slsa-verifier before deployment."
+description: "Verifies SLSA provenance of artifacts and container images with slsa-verifier before deployment. Use when working with artifact verification, image verification, security or when the user mentions artifact verification, image verification, security."
 ---
-
-# slsa-verifier
 
 Verifies SLSA provenance of artifacts and container images with slsa-verifier before deployment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `slsa-verifier verify-artifact dist.tgz --provenance-path dis`, `slsa-verifier verify-image ghcr.io/org/app:latest --source-u`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # slsa-verifier
 
@@ -67,6 +85,11 @@ slsa-verifier verify-artifact --provenance-path p.json dist.tgz \
 ### artifact-verification
 Verify binaries and archives against SLSA provenance.
 
+**Parameters:**
+- `provenancePath` (string): Path to the intoto.jsonl provenance file
+- `sourceUri` (string): Expected source repo URI
+- `sourceTag` (string): Expected git tag of the build
+
 **Commands:**
 - `slsa-verifier verify-artifact dist.tgz --provenance-path dist.intoto.jsonl --source-uri github.com/org/repo`
 - `slsa-verifier verify-artifact dist.zip --provenance-path provenance.json --source-uri github.com/org/repo --source-tag v1.2.3`
@@ -81,6 +104,10 @@ Verify binaries and archives against SLSA provenance.
 ### image-verification
 Verify container images with SLSA provenance.
 
+**Parameters:**
+- `image` (string): Container image reference with tag or digest
+- `provenance` (string): Expected SLSA provenance attestation name.
+
 **Commands:**
 - `slsa-verifier verify-image ghcr.io/org/app:latest --source-uri github.com/org/repo`
 - `slsa-verifier verify-image ghcr.io/org/app:latest --source-uri github.com/org/repo --source-tag v1.2.3`
@@ -89,3 +116,7 @@ Verify container images with SLSA provenance.
 **Examples:**
 - slsa-verifier verify-image ghcr.io/org/app:v1.0.0 --source-uri github.com/org/repo --source-tag v1.0.0
 - slsa-verifier verify-image ghcr.io/org/app:latest --source-uri github.com/org/repo
+
+## References
+- [slsa-verifier GitHub](https://github.com/slsa-framework/slsa-verifier)
+- [SLSA Specification](https://slsa.dev/spec/v1.0/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Core MQTT protocol expertise: pub/sub semantics, QoS levels, retained messages, wildcards, and client tooling."
+description: "Core MQTT protocol expertise: pub/sub semantics, QoS levels, retained messages, wildcards, and client tooling. Use when working with mqtt protocol, api or when the user mentions mqtt protocol, api."
 ---
-
-# Mqtt
 
 Core MQTT protocol expertise: pub/sub semantics, QoS levels, retained messages, wildcards, and client tooling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mosquitto_pub -t sensors/temp -m "21.5"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # MQTT
 
@@ -69,6 +87,11 @@ mosquitto_sub -t '#' -v
 ### mqtt-protocol
 Work with MQTT fundamentals using mosquitto clients: QoS, retained messages, wildcard subscriptions and will messages.
 
+**Parameters:**
+- `topic` (string): Topic with optional + or # wildcards
+- `qos` (integer): QoS level 0, 1, or 2
+- `retain` (boolean): Keep the last message on the topic for new subscribers
+
 **Commands:**
 - `mosquitto_pub -t sensors/temp -m "21.5"`
 - `mosquitto_sub -t 'sensors/#' -v`
@@ -80,3 +103,7 @@ Work with MQTT fundamentals using mosquitto clients: QoS, retained messages, wil
 - mosquitto_pub -t 'sensors/+/temp' -m 21.5 -q 1
 - mosquitto_sub -t '#' -v
 - mosquitto_pub -t status -m online -r
+
+## References
+- [MQTT.org](https://mqtt.org/)
+- [MQTT Essentials](https://www.hivemq.com/blog/mqtt-essentials-part-1-introducing-mqtt/)

@@ -1,13 +1,35 @@
 ---
 name: "graphql-server"
-description: "Designs and runs GraphQL servers with Apollo Server, GraphQL Yoga, and gqlgen including resolvers, schema stitching, and query cost limiting."
+description: "Designs and runs GraphQL servers with Apollo Server, GraphQL Yoga, and gqlgen including resolvers, schema stitching, and query cost limiting. Use when working with graphql servers, graphql querying, backend or when the user mentions graphql servers, graphql querying, backend."
+license: "MIT"
+compatibility: "Requires node, npm, npx. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(go:*) Bash(node:*) Bash(npm:*) Bash(npx:*)"
 ---
-
-# Graphql Server
 
 Designs and runs GraphQL servers with Apollo Server, GraphQL Yoga, and gqlgen including resolvers, schema stitching, and query cost limiting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @apollo/server graphql`, `curl -X POST http://localhost:4000/graphql -H "Content-Type:`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL Server
 
@@ -82,6 +104,10 @@ type Post {
 ### graphql-servers
 Scaffold and run popular GraphQL server frameworks.
 
+**Parameters:**
+- `port` (integer): Server listen port
+- `framework` (string): apollo, yoga, or gqlgen
+
 **Commands:**
 - `npm install @apollo/server graphql`
 - `npx apollo init`
@@ -97,6 +123,10 @@ Scaffold and run popular GraphQL server frameworks.
 ### graphql-querying
 Run introspection and test queries against a server.
 
+**Parameters:**
+- `query` (string): GraphQL query string
+- `endpoint` (string): GraphQL endpoint URL
+
 **Commands:**
 - `curl -X POST http://localhost:4000/graphql -H "Content-Type: application/json" -d "{\"query\":\"{ __schema { queryType { name } } }\"}"`
 - `curl -X POST http://localhost:4000/graphql -H "Content-Type: application/json" -d "{\"query\":\"{ users { id name } }\"}"`
@@ -106,3 +136,8 @@ Run introspection and test queries against a server.
 **Examples:**
 - curl -s -X POST localhost:4000/graphql -d "{\"query\":\"{ __typename }\"}"
 - npx graphql-codegen --config codegen.yml
+
+## References
+- [GraphQL Spec](https://spec.graphql.org)
+- [Apollo Server Docs](https://www.apollographql.com/docs/apollo-server/)
+- [gqlgen Docs](https://gqlgen.com)

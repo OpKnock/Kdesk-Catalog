@@ -1,13 +1,35 @@
 ---
 name: "api-middleware-pino-logging"
-description: "Builds observability-focused middleware for Node APIs: structured JSON logging with pino, request IDs, latency capture, and pretty console output in development."
+description: "Builds observability-focused middleware for Node APIs: structured JSON logging with pino, request IDs, latency capture, and pretty console output in development. Use when working with pino logging, log querying or when the user mentions pino logging, log querying."
+license: "MIT"
+compatibility: "Requires node.js, python, express, fastify, koa. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(cat:*) Bash(curl:*) Bash(jq:*) Bash(node:*) Bash(npm:*)"
 ---
-
-# Api Middleware Pino Logging
 
 Builds observability-focused middleware for Node APIs: structured JSON logging with pino, request IDs, latency capture, and pretty console output in development.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install pino pino-http pino-pretty`, `npm install -g pino-pretty`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Middleware v2 - Observability
 
@@ -57,6 +79,11 @@ app.use(pinoHttp({
 ### pino-logging
 Add structured logging middleware with correlation IDs and latency measurement
 
+**Parameters:**
+- `base` (object): Static fields merged into every log line (service name, env)
+- `genReqId` (function): Generate or extract the request correlation ID
+- `customLogLevel` (function): Map status codes to log levels
+
 **Commands:**
 - `npm install pino pino-http pino-pretty`
 - `node app.js | npx pino-pretty`
@@ -80,3 +107,7 @@ Query and filter structured logs in production and development
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [pino-http Docs](https://github.com/pinojs/pino-http)
+- [pino Docs](https://getpino.io/#/docs/)

@@ -1,8 +1,26 @@
-# Koa
-
 Build async web applications with Koa: middleware composition, routers, body parsing, and error handling with the koa ecosystem.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm init -y`, `curl -i http://localhost:3000/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Koa
 
@@ -87,6 +105,10 @@ node --check app.js   # syntax check
 ### koa-app
 Scaffold and run a Koa application with router and bodyparser.
 
+**Parameters:**
+- `port` (integer): Listen port, default 3000.
+- `framework` (string): Package set: koa, koa-router, koa-bodyparser.
+
 **Commands:**
 - `npm init -y`
 - `npm install koa koa-router koa-bodyparser`
@@ -102,6 +124,11 @@ Scaffold and run a Koa application with router and bodyparser.
 ### verify-endpoints
 Test Koa endpoints with curl including JSON bodies and errors.
 
+**Parameters:**
+- `endpoint` (string): Path to test.
+- `method` (string): HTTP method.
+- `body` (string): JSON request body.
+
 **Commands:**
 - `curl -i http://localhost:3000/`
 - `curl -i -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"name":"alice"}'`
@@ -112,3 +139,7 @@ Test Koa endpoints with curl including JSON bodies and errors.
 - curl -i http://localhost:3000/
 - curl -i -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"name":"alice"}'
 - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/not-found
+
+## References
+- [Koa Documentation](https://koajs.com/)
+- [koa-router](https://github.com/koajs/router)

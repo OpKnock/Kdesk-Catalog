@@ -1,13 +1,35 @@
 ---
 name: "kafka-connect"
-description: "Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle via the REST API, and status/offset inspection."
+description: "Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle via the REST API, and status/offset inspection. Use when working with worker runtime, connector rest, api or when the user mentions worker runtime, connector rest, api."
+license: "MIT"
+compatibility: "Requires connect-distributed.sh, connect-standalone.sh, kafka-topics.sh. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(connect-distributed.sh:*) Bash(connect-standalone.sh:*) Bash(curl:*) Bash(kafka-topics.sh:*)"
 ---
-
-# Kafka Connect
 
 Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle via the REST API, and status/offset inspection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `connect-distributed.sh config/connect-distributed.properties`, `curl -s http://localhost:8083/connectors`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka Connect
 
@@ -84,6 +106,10 @@ kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic connect-off
 ### worker-runtime
 Start Kafka Connect in standalone or distributed mode.
 
+**Parameters:**
+- `config` (string): Worker properties file.
+- `connector_config` (string): Standalone connector properties file.
+
 **Commands:**
 - `connect-distributed.sh config/connect-distributed.properties`
 - `connect-standalone.sh config/connect-standalone.properties config/connector-file-source.properties`
@@ -98,6 +124,10 @@ Start Kafka Connect in standalone or distributed mode.
 ### connector-rest
 Manage connectors through the Connect REST API (port 8083 by default).
 
+**Parameters:**
+- `connector` (string): Connector name.
+- `payload` (string): JSON config file posted to /connectors.
+
 **Commands:**
 - `curl -s http://localhost:8083/connectors`
 - `curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @file-source.json`
@@ -109,3 +139,7 @@ Manage connectors through the Connect REST API (port 8083 by default).
 - curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @file-source.json
 - curl -s http://localhost:8083/connectors/file-source/status | jq .tasks
 - curl -s http://localhost:8083/connector-plugins | jq '.[].class'
+
+## References
+- [Kafka Connect Guide](https://kafka.apache.org/documentation/#connect)
+- [Connect REST API](https://docs.confluent.io/platform/current/connect/references/restapi.html)

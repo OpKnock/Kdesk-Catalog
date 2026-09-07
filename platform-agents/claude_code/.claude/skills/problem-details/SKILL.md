@@ -2,6 +2,7 @@
 name: "problem-details"
 description: "RFC 7807 problem details: structured error responses, media types, instances, and client handling. Use when working with problem details responses, api or when the user mentions problem details responses, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

@@ -1,8 +1,26 @@
-# retry-strategy-engineer
-
 Engineers retry policies: curl retry flags, exponential backoff, jitter, and network fault injection with tc-netem.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl --retry 5 --retry-delay 2 --retry-all-errors -fsS http:`, `tc qdisc add dev eth0 root netem loss 10%`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Retry Strategy
 
@@ -60,6 +78,11 @@ Inject 10-30% loss, verify recovery within the retry budget, then remove the qdi
 ### curl-retry
 Test and apply curl-level retry policies.
 
+**Parameters:**
+- `retry` (number): Max retry count
+- `retry-delay` (number): Delay between retries
+- `retry-all-errors` (string): Retry on 4xx/5xx and transport errors
+
 **Commands:**
 - `curl --retry 5 --retry-delay 2 --retry-all-errors -fsS http://localhost:8080/healthz`
 - `curl --retry 3 --retry-connrefused --retry-delay 1 http://service:8080/`
@@ -75,6 +98,11 @@ Test and apply curl-level retry policies.
 ### netem
 Inject network faults to test resilience.
 
+**Parameters:**
+- `device` (string): Network device
+- `loss` (number): Packet loss percentage
+- `delay` (string): Latency and jitter
+
 **Commands:**
 - `tc qdisc add dev eth0 root netem loss 10%`
 - `tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal`
@@ -86,3 +114,8 @@ Inject network faults to test resilience.
 - tc qdisc add dev eth0 root netem loss 10% delay 100ms
 - tc qdisc change dev eth0 root netem loss 50%
 - tc qdisc del dev eth0 root && tc qdisc show dev eth0
+
+## References
+- [curl --retry](https://curl.se/docs/manpage.html#--retry)
+- [tc-netem](https://man7.org/linux/man-pages/man8/tc-netem.8.html)
+- [AWS retry guide](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/retries.html)

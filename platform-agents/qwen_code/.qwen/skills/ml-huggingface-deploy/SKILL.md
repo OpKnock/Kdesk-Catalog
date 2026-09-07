@@ -1,11 +1,37 @@
 ---
 name: "ml-huggingface-deploy"
-description: "Hugging Face deployment agent for ML Hugging Face deployment."
+description: "Hugging Face deployment agent for ML Hugging Face deployment. Use when working with Ml Huggingface Deploy, deployment or when the user mentions Ml Huggingface Deploy, deployment."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(Deploy::*) Bash(Status::*) Bash(Upload::*)"
 ---
 
 # Ml Huggingface Deploy
 
 Hugging Face deployment agent for ML Hugging Face deployment.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Status: huggingface-cli status my_model`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -25,3 +51,7 @@ Hugging Face deployment agent for ML Hugging Face deployment.
 - Upload: huggingface-cli upload my_model
 - Deploy: huggingface-cli deploy my_model --instance-type gpu.t4.medium
 - Status: huggingface-cli status my_model
+
+## References
+- [Hugging Face Documentation](https://huggingface.co/docs/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

@@ -1,13 +1,35 @@
 ---
 name: "kubernetes-deployment-advanced-rollouts"
-description: "Advanced Kubernetes deployment strategies: canary and blue/green rollouts, rollbacks to revisions, and rollout pausing/resuming."
+description: "Advanced Kubernetes deployment strategies: canary and blue/green rollouts, rollbacks to revisions, and rollout pausing/resuming. Use when working with advanced rollouts, canary bluegreen, api or when the user mentions advanced rollouts, canary bluegreen, api."
+license: "MIT"
+compatibility: "Requires kubectl. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(kubectl:*)"
 ---
-
-# Kubernetes Deployment Advanced Rollouts
 
 Advanced Kubernetes deployment strategies: canary and blue/green rollouts, rollbacks to revisions, and rollout pausing/resuming.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl rollout history deployment/nginx`, `kubectl apply -f canary-deployment.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kubernetes Deployments (Advanced)
 
@@ -92,6 +114,10 @@ curl -H 'Host: nginx-canary' http://<ingress>/ | grep Server
 ### advanced-rollouts
 Manage revisions: history, rollback, pause, and resume.
 
+**Parameters:**
+- `name` (string): Deployment name.
+- `revision` (integer): Revision number for history/undo.
+
 **Commands:**
 - `kubectl rollout history deployment/nginx`
 - `kubectl rollout history deployment/nginx --revision=3`
@@ -108,6 +134,10 @@ Manage revisions: history, rollback, pause, and resume.
 ### canary-bluegreen
 Implement canary and blue/green release patterns with labels and services.
 
+**Parameters:**
+- `canary_replicas` (integer): Replica count for the canary.
+- `track` (string): Service selector track: blue or green.
+
 **Commands:**
 - `kubectl apply -f canary-deployment.yaml`
 - `kubectl get deployments -l app=nginx --show-labels`
@@ -119,3 +149,7 @@ Implement canary and blue/green release patterns with labels and services.
 - kubectl apply -f canary-deployment.yaml
 - kubectl scale deployment nginx-canary --replicas=1
 - kubectl patch service nginx -p '{"spec":{"selector":{"track":"green"}}}'
+
+## References
+- [Deployment Strategies](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy)
+- [Canary Deployments](https://kubernetes.io/blog/2020/01/22/managed-canary-deployments-with-argo-rollouts/)

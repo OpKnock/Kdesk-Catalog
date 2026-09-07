@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Defines AWS infrastructure as code with the AWS CDK: init, synth, diff, deploy, and destroy."
+description: "Defines AWS infrastructure as code with the AWS CDK: init, synth, diff, deploy, and destroy. Use when working with aws cdk, devops or when the user mentions aws cdk, devops."
 ---
-
-# cdk
 
 Defines AWS infrastructure as code with the AWS CDK: init, synth, diff, deploy, and destroy.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cdk init app --language typescript`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AWS CDK
 
@@ -81,6 +99,11 @@ created resources with their ARNs.
 ### aws-cdk
 Manage CDK apps across their full lifecycle
 
+**Parameters:**
+- `language` (string): App language: typescript, python, java, go
+- `require-approval` (string): Deploy approval: never, any-change, broadening
+- `context` (string): Context values, e.g. env=prod
+
 **Commands:**
 - `cdk init app --language typescript`
 - `cdk bootstrap aws://ACCOUNT_ID/eu-west-1`
@@ -92,3 +115,7 @@ Manage CDK apps across their full lifecycle
 - cdk list
 - cdk deploy MyStack --context env=prod
 - cdk destroy --all --force
+
+## References
+- [AWS CDK docs](https://docs.aws.amazon.com/cdk/v2/guide/home.html)
+- [CDK CLI reference](https://docs.aws.amazon.com/cdk/v2/guide/cli.html)

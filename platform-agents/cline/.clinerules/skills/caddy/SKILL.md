@@ -1,13 +1,35 @@
 ---
 name: "caddy"
-description: "Serves sites and reverse proxies with Caddy: Caddyfile authoring, automatic HTTPS, file servers, and reloads."
+description: "Serves sites and reverse proxies with Caddy: Caddyfile authoring, automatic HTTPS, file servers, and reloads. Use when working with serve, config, tls, api or when the user mentions serve, config, tls, api."
+license: "MIT"
+compatibility: "Requires caddy. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(caddy:*) Bash(curl:*)"
 ---
-
-# Caddy
 
 Serves sites and reverse proxies with Caddy: Caddyfile authoring, automatic HTTPS, file servers, and reloads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `caddy run`, `caddy validate --config Caddyfile`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Caddy
 
@@ -67,6 +89,11 @@ api.your-app.test {
 ### serve
 Run Caddy as a file server or site server.
 
+**Parameters:**
+- `root` (string): Document root
+- `listen` (string): Listen address
+- `config` (string): Caddyfile path
+
 **Commands:**
 - `caddy run`
 - `caddy file-server --root ./public --listen :8080`
@@ -81,6 +108,10 @@ Run Caddy as a file server or site server.
 
 ### config
 Validate and adapt Caddyfile configs.
+
+**Parameters:**
+- `config` (string): Caddyfile path
+- `pretty` (boolean): Pretty-print adapted JSON
 
 **Commands:**
 - `caddy validate --config Caddyfile`
@@ -97,6 +128,10 @@ Validate and adapt Caddyfile configs.
 ### tls
 Manage automatic HTTPS and certificates.
 
+**Parameters:**
+- `domain` (string): Domain for cert management
+- `ca` (string): CA file path
+
 **Commands:**
 - `caddy cert-manager list`
 - `caddy trust`
@@ -108,3 +143,7 @@ Manage automatic HTTPS and certificates.
 - caddy trust --ca /etc/caddy/ca.crt
 - caddy cert-manager list --domain api.your-app.test
 - caddy list-modules | grep -i tls
+
+## References
+- [Caddy Docs](https://caddyserver.com/docs/)
+- [Caddy CLI Reference](https://caddyserver.com/docs/command-line)

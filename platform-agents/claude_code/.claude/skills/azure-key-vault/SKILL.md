@@ -2,6 +2,7 @@
 name: "azure-key-vault"
 description: "Centralizes credentials and cryptographic material in a managed HSM-backed store using the Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric keys, and configures access policies or RBAC for service identities. Use when working with vault lifecycle, secrets, keys access, api or when the user mentions vault lifecycle, secrets, keys access, api."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(az:*)"
 ---

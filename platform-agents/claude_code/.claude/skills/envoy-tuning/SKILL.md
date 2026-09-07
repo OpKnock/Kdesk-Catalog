@@ -2,6 +2,7 @@
 name: "envoy-tuning"
 description: "Envoy proxy tuning: inspect listeners, clusters, and endpoints via admin API; tune buffer, timeout, and connection pool settings. Use when working with envoy admin, api or when the user mentions envoy admin, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

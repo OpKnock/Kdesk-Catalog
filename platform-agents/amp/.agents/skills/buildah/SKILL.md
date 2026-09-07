@@ -1,13 +1,35 @@
 ---
 name: "buildah"
-description: "Builds OCI container images without a daemon using buildah: containerfiles, commits, and pushes."
+description: "Builds OCI container images without a daemon using buildah: containerfiles, commits, and pushes. Use when working with buildah images, devops or when the user mentions buildah images, devops."
+license: "MIT"
+compatibility: "Requires buildah. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "devops"}
+allowed-tools: "Glob Grep Read Bash(buildah:*)"
 ---
-
-# buildah
 
 Builds OCI container images without a daemon using buildah: containerfiles, commits, and pushes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `buildah bud -t myapp:latest .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Buildah
 
@@ -72,6 +94,11 @@ intermediate build containers.
 ### buildah-images
 Create, modify, commit, and push container images
 
+**Parameters:**
+- `tag` (string): Image tag, e.g. myapp:latest
+- `file` (string): Containerfile path (-f)
+- `layers` (boolean): Use layer caching during bud
+
 **Commands:**
 - `buildah bud -t myapp:latest .`
 - `buildah from alpine:3.19`
@@ -83,3 +110,7 @@ Create, modify, commit, and push container images
 - buildah bud -f Containerfile.dev -t myapp:dev .
 - buildah images
 - buildah rm -a && buildah rmi -a
+
+## References
+- [buildah docs](https://buildah.io/)
+- [buildah command reference](https://github.com/containers/buildah/blob/main/docs/buildah.1.md)

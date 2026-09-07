@@ -1,13 +1,35 @@
 ---
 name: "api-rate-engineer"
-description: "Implements API rate limiting with nginx limit_req and limit_conn modules: shared memory zones, burst queues, delayed processing, and 429 responses."
+description: "Implements API rate limiting with nginx limit_req and limit_conn modules: shared memory zones, burst queues, delayed processing, and 429 responses. Use when working with nginx limit req, limit conn or when the user mentions nginx limit req, limit conn."
+license: "MIT"
+compatibility: "Requires redis, node.js, python, nginx, express-rate-limit. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(ab:*) Bash(curl:*) Bash(for:*) Bash(nginx:*)"
 ---
-
-# api-rate-engineer
 
 Implements API rate limiting with nginx limit_req and limit_conn modules: shared memory zones, burst queues, delayed processing, and 429 responses.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nginx -t`, `nginx -t -c /etc/nginx/nginx.conf`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Rate Engineer
 
@@ -59,6 +81,11 @@ server {
 ### nginx-limit-req
 Configure request rate limiting zones in nginx
 
+**Parameters:**
+- `zone-name` (string): Zone identifier with size like api:10m
+- `rate` (string): Rate like 10r/s or 60r/m
+- `burst` (integer): Queue size for exceeded requests
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -82,3 +109,7 @@ Cap concurrent connections per client
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [nginx limit_req Module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)
+- [nginx limit_conn Module](https://nginx.org/en/docs/http/ngx_http_limit_conn_module.html)

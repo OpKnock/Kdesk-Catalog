@@ -1,8 +1,26 @@
-# diversity-equity-inclusion
-
 Analyzes workforce DEI data with real tooling: org audit logs, survey analytics, representation metrics, and inclusive communication.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh api orgs/{org}/members --paginate | jq 'length'`, `jq 'group_by(.department) | map({dept: .[0].department, avg:`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Diversity, Equity & Inclusion Analytics
 
@@ -59,6 +77,10 @@ grep -rniE 'guys|manpower|sanity check' --include='*.md' .
 ### org-data-analytics
 Pull and analyze org and team composition data from GitHub.
 
+**Parameters:**
+- `org` (string): GitHub org name
+- `owner-repo` (string): owner/repo for contributor analysis
+
 **Commands:**
 - `gh api orgs/{org}/members --paginate | jq 'length'`
 - `gh api orgs/{org}/teams --paginate | jq '.[].name'`
@@ -74,6 +96,10 @@ Pull and analyze org and team composition data from GitHub.
 ### survey-and-text-analysis
 Process engagement survey data and audit language in code/docs.
 
+**Parameters:**
+- `pattern` (string): Regex to audit for inclusive language
+- `file` (string): Survey JSON file
+
 **Commands:**
 - `jq 'group_by(.department) | map({dept: .[0].department, avg: ([.[].score] | add / length)})' survey.json`
 - `jq '[.responses[] | select(.score <= 2)] | length' survey.json`
@@ -85,3 +111,8 @@ Process engagement survey data and audit language in code/docs.
 - jq 'group_by(.department) | map({dept: .[0].department, avg: ([.[].score] | add / length)})' survey.json
 - grep -rniE 'blacklist|whitelist' --include='*.md' .
 - jq '[.responses[] | select(.score <= 2)] | length' survey.json
+
+## References
+- [GitHub REST API Orgs](https://docs.github.com/en/rest/orgs/orgs)
+- [EEOC Employer Guidance](https://www.eeoc.gov/employers)
+- [Inclusive Language Guide](https://developers.google.com/style/inclusive-documentation)

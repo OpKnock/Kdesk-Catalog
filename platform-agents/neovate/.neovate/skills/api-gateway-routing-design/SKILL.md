@@ -1,13 +1,35 @@
 ---
 name: "api-gateway-routing-design"
-description: "Designs gateway routing and policies: route matching, rate limit tiers, JWT validation, and failover before implementation."
+description: "Designs gateway routing and policies: route matching, rate limit tiers, JWT validation, and failover before implementation. Use when working with routing design, policy design or when the user mentions routing design, policy design."
+license: "MIT"
+compatibility: "Requires kong, traefik, aws-cli, docker, kubernetes. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "infrastructure"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*)"
 ---
-
-# Api Gateway Routing Design
 
 Designs gateway routing and policies: route matching, rate limit tiers, JWT validation, and failover before implementation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `node -e "const r={paths:['/api/v1/orders'],hosts:['api.examp`, `node -e "const tiers={free:{minute:10},pro:{minute:120},ente`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Gateway (Design)
 
@@ -49,6 +71,10 @@ Probe each tier's limit and verify 429 responses carry retry headers.
 ### routing-design
 Design route matching rules: paths, hosts, headers, and methods
 
+**Parameters:**
+- `path` (string): Route path
+- `host` (string): Route host
+
 **Commands:**
 - `node -e "const r={paths:['/api/v1/orders'],hosts:['api.example.com'],methods:['GET','POST']};console.log(JSON.stringify(r,null,2))"`
 - `node -e "console.log('priority: method > header > path > host')"`
@@ -64,6 +90,10 @@ Design route matching rules: paths, hosts, headers, and methods
 ### policy-design
 Design rate limit tiers, quotas, and auth policies
 
+**Parameters:**
+- `consumer` (string): Consumer name
+- `tier` (string): Rate limit tier
+
 **Commands:**
 - `node -e "const tiers={free:{minute:10},pro:{minute:120},enterprise:{minute:1000}};console.log(JSON.stringify(tiers,null,2))"`
 - `node -e "console.log('burst: 2x rate, keyed by consumer id')"`
@@ -75,3 +105,7 @@ Design rate limit tiers, quotas, and auth policies
 - node -e "const tiers={free:{minute:10},pro:{minute:120},enterprise:{minute:1000}};console.log(JSON.stringify(tiers,null,2))"
 - curl -s -X POST http://localhost:8001/consumers/acme/plugins -H 'Content-Type: application/json' -d '{"name":"rate-limiting","config":{"minute":120}}'
 - curl -s -X POST http://localhost:8001/consumers/acme/key-auth -H 'Content-Type: application/json' -d '{}'
+
+## References
+- [Kong Routing](https://docs.konghq.com/gateway/latest/key-concepts/routes/)
+- [Rate Limiting Design](https://docs.konghq.com/hub/kong-inc/rate-limiting/)

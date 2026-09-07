@@ -1,11 +1,33 @@
 ---
 type: agent_requested
-description: "Runs and debugs CI/CD pipelines across GitHub Actions, GitLab CI, Jenkins, and CircleCI with real pipeline validation tools."
+description: "Runs and debugs CI/CD pipelines across GitHub Actions, GitLab CI, Jenkins, and CircleCI with real pipeline validation tools. Use when working with pipeline validation, pipeline execution, failure diagnosis, caching optimization or when the user mentions pipeline validation, pipeline execution, failure diagnosis, caching optimization."
 ---
 
 # CI/CD Pipeline Runner
 
 Runs and debugs CI/CD pipelines across GitHub Actions, GitLab CI, Jenkins, and CircleCI with real pipeline validation tools.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `actionlint .github/workflows/*.yml`, `gh workflow run deploy.yml --ref main`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -36,6 +58,10 @@ Common failure patterns:
 ### pipeline-validation
 Validate pipeline configurations with actionlint, gitlab-ci-lint, and Jenkins pipeline linter
 
+**Parameters:**
+- `workflow_dir` (string): Path to .github/workflows directory
+- `gitlab_ci_file` (string): Path to .gitlab-ci.yml file
+
 **Commands:**
 - `actionlint .github/workflows/*.yml`
 - `curl --header "Content-Type: application/json" --data @pipeline.json https://gitlab.com/api/v4/ci/lint`
@@ -49,6 +75,10 @@ Validate pipeline configurations with actionlint, gitlab-ci-lint, and Jenkins pi
 
 ### pipeline-execution
 Trigger and monitor pipeline runs using gh, gitlab, jenkins-cli, and circleci CLIs
+
+**Parameters:**
+- `workflow` (string): Workflow name or file
+- `ref` (string): Branch or tag to run against
 
 **Commands:**
 - `gh workflow run deploy.yml --ref main`
@@ -65,6 +95,9 @@ Trigger and monitor pipeline runs using gh, gitlab, jenkins-cli, and circleci CL
 ### failure-diagnosis
 Diagnose pipeline failures from logs with grep, jq, and rerun logic
 
+**Parameters:**
+- `run_id` (string): Pipeline run ID
+
 **Commands:**
 - `gh run view --log-failed`
 - `gh run rerun --failed`
@@ -79,6 +112,9 @@ Diagnose pipeline failures from logs with grep, jq, and rerun logic
 ### caching-optimization
 Optimize CI cache and artifacts for faster pipeline runs
 
+**Parameters:**
+- `repo` (string): Owner/repo of the project
+
 **Commands:**
 - `gh api repos/{owner}/{repo}/actions/caches`
 - `actionlint -format json .github/workflows/*.yml | jq -r '.[].message'`
@@ -87,3 +123,15 @@ Optimize CI cache and artifacts for faster pipeline runs
 **Examples:**
 - List caches: gh api repos/{owner}/{repo}/actions/caches
 - Detailed lint: actionlint -format json .github/workflows/*.yml
+
+## References
+- [actionlint Documentation](https://github.com/rhysd/actionlint)
+- [GitLab CI Lint API](https://docs.gitlab.com/ee/api/lint.html)
+- [Jenkins Pipeline Linter](https://www.jenkins.io/doc/book/pipeline/development/)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Profiles API request latency with curl timing statistics, response-size analysis, gzip validation, and HTTP/2 checks to identify optimization targets."
+description: "Profiles API request latency with curl timing statistics, response-size analysis, gzip validation, and HTTP/2 checks to identify optimization targets. Use when working with curl profiling, bottleneck identification or when the user mentions curl profiling, bottleneck identification."
 ---
-
-# api-perf-specialist
 
 Profiles API request latency with curl timing statistics, response-size analysis, gzip validation, and HTTP/2 checks to identify optimization targets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -w "dns:%{time_namelookup}s connect:%{time_connect}s tl`, `curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Perf Specialist
 
@@ -51,6 +69,11 @@ curl -w "dns:%{time_namelookup}s connect:%{time_connect}s tls:%{time_appconnect}
 ### curl-profiling
 Measure DNS, TCP, TLS, TTFB, and total time per request
 
+**Parameters:**
+- `write-out-format` (string): curl -w format string with timing variables
+- `url` (string): Endpoint under test
+- `headers` (array): Extra headers like Accept-Encoding or Authorization
+
 **Commands:**
 - `curl -w "dns:%{time_namelookup}s connect:%{time_connect}s tls:%{time_appconnect}s ttfb:%{time_starttransfer}s total:%{time_total}s size:%{size_download}\n" -o /dev/null -s https://api.example.com/v1/items`
 - `curl -s -o /dev/null -w '%{http_code} %{time_total} %{speed_download} bytes/s\n' http://localhost:8080/`
@@ -75,3 +98,7 @@ Compare endpoints and payloads to rank bottlenecks
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [curl -w Variables](https://curl.se/docs/manpage.html#-w)
+- [WebPageTest Docs](https://docs.webpagetest.org/)

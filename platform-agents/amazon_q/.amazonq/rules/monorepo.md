@@ -1,8 +1,26 @@
-# monorepo
-
 Manages monorepo builds with pnpm workspaces, Turborepo, and Nx: task orchestration, affected builds, versioning, and changesets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pnpm -r test`, `npx turbo run build`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Monorepo Engineering
 
@@ -62,6 +80,10 @@ npx changeset publish
 ### workspace-commands
 Run commands across workspace packages with pnpm.
 
+**Parameters:**
+- `filter` (string): Package filter, e.g. @org/api
+- `recursive` (boolean): Run in all workspaces (-r)
+
 **Commands:**
 - `pnpm -r test`
 - `pnpm --filter @org/api test`
@@ -77,6 +99,10 @@ Run commands across workspace packages with pnpm.
 ### task-orchestration
 Orchestrate build tasks and version packages with Turborepo/Nx and changesets.
 
+**Parameters:**
+- `task` (string): Task name, e.g. build, test, lint
+- `affected` (boolean): Run only for changed packages
+
 **Commands:**
 - `npx turbo run build`
 - `npx turbo run lint --filter=@org/api`
@@ -89,3 +115,9 @@ Orchestrate build tasks and version packages with Turborepo/Nx and changesets.
 - npx turbo run build
 - npx turbo run test --affected --base=origin/main
 - npx changeset version
+
+## References
+- [Turborepo Documentation](https://turborepo.dev/docs)
+- [Nx Documentation](https://nx.dev/)
+- [pnpm Workspaces](https://pnpm.io/workspaces)
+- [Changesets](https://github.com/changesets/changesets)

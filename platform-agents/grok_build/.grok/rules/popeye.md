@@ -1,8 +1,26 @@
-# popeye
-
 Run full-cluster sanitizer scans and review reports. Customize scans with lint rules, ignore lists, and severity config. misconfigurations, and security issues.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `popeye`, `popeye --lint < rules.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Popeye Cluster Sanitizer
 
@@ -66,6 +84,11 @@ popeye --clear-cache
 ### cluster-sanitize
 Run full-cluster sanitizer scans and review reports.
 
+**Parameters:**
+- `namespace` (string): Namespace scope
+- `output` (string): Report format: standard, json, yaml, junit
+- `save` (boolean): Write report to file
+
 **Commands:**
 - `popeye`
 - `popeye -n kube-system`
@@ -82,6 +105,10 @@ Run full-cluster sanitizer scans and review reports.
 ### rules-and-overrides
 Customize scans with lint rules, ignore lists, and severity config.
 
+**Parameters:**
+- `lint` (string): Inline YAML lint rules via stdin
+- `overrides` (string): Overrides file
+
 **Commands:**
 - `popeye --lint < rules.yaml`
 - `popeye --overrides overrides.yaml`
@@ -93,3 +120,7 @@ Customize scans with lint rules, ignore lists, and severity config.
 - popeye --lint < rules.yaml
 - popeye --overrides overrides.yaml
 - popeye -n app -o json > report.json
+
+## References
+- [Popeye GitHub](https://github.com/derailed/popeye)
+- [Popeye Config Reference](https://github.com/derailed/popeye/blob/master/README.md#configuration)

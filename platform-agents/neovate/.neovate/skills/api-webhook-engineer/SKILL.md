@@ -1,13 +1,35 @@
 ---
 name: "api-webhook-engineer"
-description: "Implements webhook delivery in Node.js: receiver endpoints, retry with backoff, delivery logging, and idempotent handling of events."
+description: "Implements webhook delivery in Node.js: receiver endpoints, retry with backoff, delivery logging, and idempotent handling of events. Use when working with webhook receiver, retry policy or when the user mentions webhook receiver, retry policy."
+license: "MIT"
+compatibility: "Requires node.js, python, ngrok, redis, stripe-cli. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*)"
 ---
-
-# api-webhook-engineer
 
 Implements webhook delivery in Node.js: receiver endpoints, retry with backoff, delivery logging, and idempotent handling of events.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install express`, `npm install p-retry`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Webhook Engineer
 
@@ -58,6 +80,11 @@ app.post('/webhooks', async (req, res) => {
 ### webhook-receiver
 Build a webhook receiver endpoint
 
+**Parameters:**
+- `event` (string): Event type name
+- `payload` (object): Event payload
+- `idempotency-key` (string): Delivery identifier
+
 **Commands:**
 - `npm install express`
 - `node server.js`
@@ -81,3 +108,7 @@ Retry failed deliveries with backoff
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Webhooks Guide (Svix)](https://www.svix.com/resources/guides/)
+- [Express Docs](https://expressjs.com/)

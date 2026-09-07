@@ -2,6 +2,7 @@
 name: "oncall-rotation"
 description: "Queries PagerDuty on-call schedules, creates overrides for shift swaps, and lists current on-call personnel via the REST API with UTC time windows. Use when working with oncall schedule management, api or when the user mentions oncall schedule management, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

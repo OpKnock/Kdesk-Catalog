@@ -2,6 +2,7 @@
 name: "curl"
 description: "Tests and debugs REST APIs from the terminal with curl: methods, headers, JSON bodies, auth, TLS options, timing, and output formatting. Use when working with requests, debugging, api or when the user mentions requests, debugging, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

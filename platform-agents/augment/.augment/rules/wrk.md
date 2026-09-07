@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Benchmark HTTP APIs with wrk, a lightweight multi-threaded HTTP load generator. Tune threads and connections, script requests with Lua, read latency distributions, and run repeatable benchmarks in CI."
+description: "Benchmark HTTP APIs with wrk, a lightweight multi-threaded HTTP load generator. Tune threads and connections, script requests with Lua, read latency distributions, and run repeatable benchmarks in CI. Use when working with wrk benchmark, api or when the user mentions wrk benchmark, api."
 ---
-
-# Wrk
 
 Benchmark HTTP APIs with wrk, a lightweight multi-threaded HTTP load generator. Tune threads and connections, script requests with Lua, read latency distributions, and run repeatable benchmarks in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `wrk -t12 -c400 -d30s http://localhost:8080/api/users`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # wrk
 
@@ -70,6 +88,11 @@ wrk -t4 -c100 -d10s --latency http://localhost:8080/api/health | grep -E 'Reques
 ### wrk-benchmark
 Run and interpret wrk HTTP benchmarks
 
+**Parameters:**
+- `threads` (integer): Number of threads (-t)
+- `connections` (integer): Number of open connections (-c)
+- `duration` (string): Benchmark duration, e.g. 30s
+
 **Commands:**
 - `wrk -t12 -c400 -d30s http://localhost:8080/api/users`
 - `wrk -t4 -c100 -d60s --latency http://localhost:8080/api/users`
@@ -81,3 +104,7 @@ Run and interpret wrk HTTP benchmarks
 - wrk -t4 -c200 -d30s --latency http://localhost:8080/api/health | grep -E 'Requests/sec|p99'
 - wrk -t2 -c20 -d15s -s upload.lua http://localhost:8080/api/files
 - wrk -t12 -c400 -d60s -R 2000 --latency https://httpbin.org/get
+
+## References
+- [wrk GitHub](https://github.com/wg/wrk)
+- [wrk SCRIPTING.md](https://github.com/wg/wrk/blob/master/SCRIPTING)

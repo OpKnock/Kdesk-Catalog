@@ -1,8 +1,26 @@
-# docker-compose-devops
-
 Authors and operates multi-container applications with Docker Compose: services, networks, volumes, healthchecks, and profiles.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker compose up -d`, `docker compose logs -f api`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Docker Compose Applications
 
@@ -82,6 +100,10 @@ volumes:
 ### compose-lifecycle
 Build, start, stop, and tear down multi-service stacks defined in compose.yaml.
 
+**Parameters:**
+- `services` (string): Service names to target, e.g. api db
+- `volume-cleanup` (boolean): Remove named volumes with -v on down
+
 **Commands:**
 - `docker compose up -d`
 - `docker compose up --build`
@@ -98,6 +120,10 @@ Build, start, stop, and tear down multi-service stacks defined in compose.yaml.
 ### inspect-and-interact
 Tail logs, exec into services, and validate the compose file.
 
+**Parameters:**
+- `service` (string): Service to exec into or tail logs for
+- `follow` (boolean): Stream logs with -f
+
 **Commands:**
 - `docker compose logs -f api`
 - `docker compose ps`
@@ -110,3 +136,8 @@ Tail logs, exec into services, and validate the compose file.
 - docker compose logs -f api
 - docker compose exec api sh -c 'npm test'
 - docker compose config --services
+
+## References
+- [Docker Compose Overview](https://docs.docker.com/compose/)
+- [Compose Specification](https://compose-spec.io/)
+- [Compose CLI Reference](https://docs.docker.com/reference/cli/docker/compose/)

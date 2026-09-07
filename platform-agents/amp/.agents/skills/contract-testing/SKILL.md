@@ -1,13 +1,35 @@
 ---
 name: "contract-testing"
-description: "Contract testing APIs with Pact: consumer expectations, provider verification, and mock services with pact-js."
+description: "Contract testing APIs with Pact: consumer expectations, provider verification, and mock services with pact-js. Use when working with pact consumer, pact verify, api or when the user mentions pact consumer, pact verify, api."
+license: "MIT"
+compatibility: "Requires npm, npx."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(npm:*) Bash(npx:*)"
 ---
-
-# Contract Testing
 
 Contract testing APIs with Pact: consumer expectations, provider verification, and mock services with pact-js.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @pact-foundation/pact @pact-foundation/pact-node`, `npx @pact-foundation/pact-cli verify --provider-base-url htt`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Contract Testing (Pact)
 
@@ -86,6 +108,10 @@ npm run test:provider
 ### pact-consumer
 Write consumer contract tests with pact-js against a mock provider
 
+**Parameters:**
+- `consumer_name` (string): Consumer application name
+- `provider_name` (string): Provider application name
+
 **Commands:**
 - `npm install @pact-foundation/pact @pact-foundation/pact-node`
 - `npx jest --config jest.config.js`
@@ -100,6 +126,10 @@ Write consumer contract tests with pact-js against a mock provider
 ### pact-verify
 Run provider verification against published pacts and mock the provider for local checks
 
+**Parameters:**
+- `pact_urls` (string): Glob or URL list of pact files
+- `provider_base_url` (string): Base URL of the running provider
+
 **Commands:**
 - `npx @pact-foundation/pact-cli verify --provider-base-url http://localhost:8080 --pact-urls ./pacts/*.json`
 - `npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version 1.0.0`
@@ -110,3 +140,7 @@ Run provider verification against published pacts and mock the provider for loca
 - npx @pact-foundation/pact-cli verify --provider-base-url http://localhost:8080 --pact-urls ./pacts/*.json
 - npx @pact-foundation/pact-cli can-i-deploy --pacticipant WebApp --version 1.0.0 --to-environment production
 - npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version 1.0.0
+
+## References
+- [Pact Docs](https://docs.pact.io/)
+- [Pact JS GitHub](https://github.com/pact-foundation/pact-js)

@@ -2,6 +2,7 @@
 name: "gin"
 description: "Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test handlers. Use when working with gin development, api or when the user mentions gin development, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*) Bash(go:*)"
 ---

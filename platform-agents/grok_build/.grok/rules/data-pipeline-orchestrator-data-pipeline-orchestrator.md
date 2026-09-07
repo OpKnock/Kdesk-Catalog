@@ -1,8 +1,26 @@
-# data-pipeline-orchestrator-data-pipeline-orchestrator
-
 Orchestrates data pipelines with Dagster, Prefect, and Airflow: job definitions, schedules, and runs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `dagster dev`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Data Pipeline Orchestrator
 
@@ -70,6 +88,11 @@ re-runs the step or backfills the failed window.
 ### dagster-orchestration
 Develop and run Dagster assets and jobs
 
+**Parameters:**
+- `module` (string): Python module with definitions (-m)
+- `select` (string): Asset selection, e.g. asset_name+ or tag:daily
+- `config` (string): Run config YAML file
+
 **Commands:**
 - `dagster dev`
 - `dagster asset list`
@@ -81,3 +104,8 @@ Develop and run Dagster assets and jobs
 - dagster materialize -m assets.py --select 'orders_asset+'
 - dagster job execute -j etl_job --config run.yaml
 - dagster run list --status success
+
+## References
+- [Dagster docs](https://docs.dagster.io/)
+- [Prefect docs](https://docs.prefect.io/)
+- [Airflow orchestration docs](https://airflow.apache.org/docs/apache-airflow/stable/)

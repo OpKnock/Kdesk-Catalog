@@ -1,13 +1,35 @@
 ---
 name: "search-engine-optimization"
-description: "Audits and improves site SEO with Lighthouse CI, crawler checks, sitemap generation, and Core Web Vitals measurement from the CLI."
+description: "Audits and improves site SEO with Lighthouse CI, crawler checks, sitemap generation, and Core Web Vitals measurement from the CLI. Use when working with lighthouse audit, crawling and content or when the user mentions lighthouse audit, crawling and content."
+license: "MIT"
+compatibility: "Requires elasticsearch, meilisearch, typesense, node.js, algolia, python. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "frontend"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(npx:*)"
 ---
-
-# search-engine-optimization
 
 Audits and improves site SEO with Lighthouse CI, crawler checks, sitemap generation, and Core Web Vitals measurement from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx lighthouse http://localhost:8080 --only-categories=seo,p`, `curl -s http://localhost:8080/robots.txt`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Search Engine Optimization
 
@@ -77,6 +99,11 @@ curl -s https://example.com | grep -o '<title>[^<]*</title>'
 ### lighthouse-audit
 Run Lighthouse audits for SEO, performance, and accessibility scores.
 
+**Parameters:**
+- `url` (string): Page URL to audit
+- `categories` (array): Lighthouse categories to include, e.g. seo, performance, accessibility
+- `output-path` (string): Where to write the JSON report
+
 **Commands:**
 - `npx lighthouse http://localhost:8080 --only-categories=seo,performance --output=json --output-path=lh.json`
 - `npx lhci autorun`
@@ -91,6 +118,10 @@ Run Lighthouse audits for SEO, performance, and accessibility scores.
 ### crawling-and-content
 Validate meta tags, robots.txt, sitemaps, and HTTP headers with curl and htmlhint.
 
+**Parameters:**
+- `path` (string): URL path or local file to inspect
+- `header` (string): HTTP header to filter, e.g. cache-control
+
 **Commands:**
 - `curl -s http://localhost:8080/robots.txt`
 - `curl -s http://localhost:8080/sitemap.xml | head -20`
@@ -102,3 +133,8 @@ Validate meta tags, robots.txt, sitemaps, and HTTP headers with curl and htmlhin
 - curl -sI http://localhost:8080 | grep -i '^content-encoding'
 - curl -s http://localhost:8080/sitemap.xml | grep -c 'http://localhost:8080'
 - npx htmlhint public/index.html
+
+## References
+- [Lighthouse Documentation](https://developer.chrome.com/docs/lighthouse/overview)
+- [Google Search Central](https://developers.google.com/search/docs)
+- [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)

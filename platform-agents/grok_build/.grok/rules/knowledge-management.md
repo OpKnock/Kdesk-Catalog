@@ -1,8 +1,26 @@
-# knowledge-management
-
 Builds team documentation and knowledge bases with MkDocs and Docusaurus: authoring, serving, and publishing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mkdocs new docs`, `npx create-docusaurus@latest my-docs classic --typescript`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Knowledge Management
 
@@ -74,6 +92,11 @@ Verify all internal links resolve before merge.
 ### mkdocs
 Author and publish documentation sites with MkDocs.
 
+**Parameters:**
+- `strict` (string): Fail on warnings
+- `site-dir` (string): Output directory for the site
+- `serve` (string): Dev server with host:port
+
 **Commands:**
 - `mkdocs new docs`
 - `mkdocs serve -a localhost:8000`
@@ -89,6 +112,11 @@ Author and publish documentation sites with MkDocs.
 ### docusaurus
 Build React-powered knowledge bases with Docusaurus.
 
+**Parameters:**
+- `template` (string): classic or plain template
+- `port` (number): Dev server port
+- `locale` (string): Translation locale
+
 **Commands:**
 - `npx create-docusaurus@latest my-docs classic --typescript`
 - `npm run start`
@@ -100,3 +128,8 @@ Build React-powered knowledge bases with Docusaurus.
 - npx create-docusaurus@latest my-docs classic --typescript --skip-install
 - npm run build && npx docusaurus serve --port 3001
 - npm run write-translations -- --locale de
+
+## References
+- [MkDocs](https://www.mkdocs.org/)
+- [Docusaurus](https://docusaurus.io/docs)
+- [Markdown Guide](https://www.markdownguide.org/)

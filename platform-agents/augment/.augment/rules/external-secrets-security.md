@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Synchronizes secrets from external providers (AWS, Vault, GCP, Azure) into Kubernetes with External Secrets Operator and secret stores."
+description: "Synchronizes secrets from external providers (AWS, Vault, GCP, Azure) into Kubernetes with External Secrets Operator and secret stores. Use when working with secretstore management, externalsecret sync, security or when the user mentions secretstore management, externalsecret sync, security."
 ---
-
-# external-secrets-security
 
 Synchronizes secrets from external providers (AWS, Vault, GCP, Azure) into Kubernetes with External Secrets Operator and secret stores.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `helm repo add external-secrets https://charts.external-secre`, `kubectl apply -f externalsecret.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # External Secrets
 
@@ -79,6 +97,10 @@ spec:
 ### secretstore-management
 Deploy and inspect SecretStores and ClusterSecretStores.
 
+**Parameters:**
+- `name` (string): SecretStore name
+- `provider` (string): Backend provider: aws, vault, gcp, azure, onepassword
+
 **Commands:**
 - `helm repo add external-secrets https://charts.external-secrets.io`
 - `helm install external-secrets external-secrets/external-secrets -n external-secrets --create-namespace`
@@ -94,6 +116,10 @@ Deploy and inspect SecretStores and ClusterSecretStores.
 ### externalsecret-sync
 Create ExternalSecrets, sync them, and read generated Kubernetes Secrets.
 
+**Parameters:**
+- `name` (string): ExternalSecret name
+- `namespace` (string): Namespace where the secret should sync
+
 **Commands:**
 - `kubectl apply -f externalsecret.yaml`
 - `kubectl get externalsecrets -A`
@@ -105,3 +131,7 @@ Create ExternalSecrets, sync them, and read generated Kubernetes Secrets.
 - kubectl apply -f externalsecret.yaml
 - kubectl get externalsecrets -A
 - kubectl describe externalsecret db-credentials
+
+## References
+- [External Secrets Documentation](https://external-secrets.io/)
+- [Provider Reference](https://external-secrets.io/latest/provider/)

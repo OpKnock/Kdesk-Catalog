@@ -1,8 +1,26 @@
-# Golangci Lint
-
 Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `golangci-lint run`, `golangci-lint linters`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # golangci-lint
 
@@ -73,6 +91,11 @@ issues:
 ### golangci-run
 Run golangci-lint with linter selection.
 
+**Parameters:**
+- `paths` (string): Packages to lint
+- `fix` (boolean): Apply fixes
+- `out-format` (string): colored-line-number, github-actions, json
+
 **Commands:**
 - `golangci-lint run`
 - `golangci-lint run ./...`
@@ -88,6 +111,10 @@ Run golangci-lint with linter selection.
 ### golangci-config
 Manage linter configuration.
 
+**Parameters:**
+- `enable` (string): Linters to enable
+- `disable` (string): Linters to disable
+
 **Commands:**
 - `golangci-lint linters`
 - `golangci-lint version`
@@ -97,3 +124,7 @@ Manage linter configuration.
 **Examples:**
 - golangci-lint linters | grep enabled
 - golangci-lint run --disable errcheck
+
+## References
+- [golangci-lint Docs](https://golangci-lint.run)
+- [golangci-lint on GitHub](https://github.com/golangci/golangci-lint)

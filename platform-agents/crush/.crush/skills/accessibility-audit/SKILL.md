@@ -1,13 +1,35 @@
 ---
 name: "accessibility-audit"
 description: "Run an accessibility scan of a single URL and capture violations in machine-readable format. Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI. producing WCAG 2.x violation reports and CI gates. Use when auditing a site or app against WCAG 2.x. Don't use for fixing individual accessibility defects or for manual keyboard-navigation testing."
+license: "MIT"
+compatibility: "Requires node.js, axe-core, lighthouse, jest-axe, storybook."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "frontend"}
+allowed-tools: "Glob Grep Read Bash(npm:*) Bash(npx:*) Bash(pa11y:*) Bash(pa11y-ci:*)"
 ---
-
-# accessibility-audit
 
 Run an accessibility scan of a single URL and capture violations in machine-readable format. Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI. producing WCAG 2.x violation reports and CI gates. Use when auditing a site or app against WCAG 2.x. Don't use for fixing individual accessibility defects or for manual keyboard-navigation testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx pa11y http://localhost:8080 --reporter=json`, `npm install --save-dev pa11y-ci`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Accessibility Audit
 
@@ -72,6 +94,11 @@ npx pa11y-ci --sitemap https://example.com/sitemap.xml
 ### audit-page
 Run an accessibility scan of a single URL and capture violations in machine-readable format.
 
+**Parameters:**
+- `url` (string): Target page URL to audit
+- `standard` (string): WCAG conformance level: WCAG2A, WCAG2AA, WCAG2AAA
+- `threshold` (number): Maximum number of errors before the run fails
+
 **Commands:**
 - `npx pa11y http://localhost:8080 --reporter=json`
 - `npx lighthouse http://localhost:8080 --output=json --output-path=./lighthouse-report.json`
@@ -87,6 +114,10 @@ Run an accessibility scan of a single URL and capture violations in machine-read
 ### ci-integration
 Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI.
 
+**Parameters:**
+- `config` (string): Path to .pa11yci or lighthouserc config file
+- `sitemap` (string): Sitemap URL to crawl for multi-page audits
+
 **Commands:**
 - `npm install --save-dev pa11y-ci`
 - `npx pa11y-ci`
@@ -97,3 +128,9 @@ Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI.
 - npx pa11y-ci --sitemap http://localhost:8080/sitemap.xml
 - npx lhci healthcheck && npx lhci autorun
 - npm install --save-dev @lhci/cli
+
+## References
+- [pa11y Documentation](https://pa11y.org/)
+- [axe-core Docs](https://www.deque.com/axe/core-documentation/)
+- [Lighthouse Accessibility Audits](https://developer.chrome.com/docs/lighthouse/accessibility/)
+- [WCAG 2.2 Guidelines](https://www.w3.org/TR/WCAG22/)

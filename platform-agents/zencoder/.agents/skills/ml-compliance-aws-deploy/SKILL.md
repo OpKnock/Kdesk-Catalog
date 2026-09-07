@@ -1,11 +1,37 @@
 ---
 name: "ml-compliance-aws-deploy"
-description: "AWS Compliance deployment agent for ML compliance on AWS."
+description: "AWS Compliance deployment agent for ML compliance on AWS. Use when working with Ml Compliance Aws Deploy or when the user mentions Ml Compliance Aws Deploy."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(Audit::*) Bash(Config::*) Bash(Security:*)"
 ---
 
 # Ml Compliance Aws Deploy
 
 AWS Compliance deployment agent for ML compliance on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Security Hub: aws securityhub get-findings --filters '{"Reco`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -25,3 +51,6 @@ AWS Compliance deployment agent for ML compliance on AWS.
 - Config: aws configservice describe-compliance-by-config-rule
 - Security Hub: aws securityhub get-findings --filters '{"RecordState": [{"Value": "ACTIVE", "Comparison": "EQUALS"}]}'
 - Audit: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=InvokeEndpoint
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)

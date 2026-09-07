@@ -2,6 +2,7 @@
 name: "datadog-logs"
 description: "Collects, searches, aggregates, and processes application logs with the Datadog Logs API v1/v2, covering ingestion, pipelines, and index management. Use when working with log search, log pipelines, api or when the user mentions log search, log pipelines, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

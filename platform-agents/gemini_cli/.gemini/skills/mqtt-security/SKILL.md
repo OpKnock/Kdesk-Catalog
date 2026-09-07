@@ -1,13 +1,35 @@
 ---
 name: "mqtt-security"
-description: "Secure MQTT deployments: TLS listeners, client certificates, username/password auth, and broker ACLs."
+description: "Secure MQTT deployments: TLS listeners, client certificates, username/password auth, and broker ACLs. Use when working with mqtt security config, api or when the user mentions mqtt security config, api."
+license: "MIT"
+compatibility: "Requires mosquitto_passwd, mosquitto_pub, mosquitto_sub, openssl."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(mosquitto_passwd:*) Bash(mosquitto_pub:*) Bash(mosquitto_sub:*) Bash(openssl:*)"
 ---
-
-# Mqtt Security
 
 Secure MQTT deployments: TLS listeners, client certificates, username/password auth, and broker ACLs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -ou`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # MQTT Security
 
@@ -77,6 +99,11 @@ topic readwrite sensors/#
 ### mqtt-security-config
 Generate certificates, configure mosquitto TLS/auth/ACL settings and verify secured connections.
 
+**Parameters:**
+- `cafile` (string): Path to the CA certificate bundle
+- `port` (integer): TLS listener port, typically 8883
+- `acl_file` (string): Path to the mosquitto ACL file
+
 **Commands:**
 - `openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 365 -subj "/CN=myca"`
 - `mosquitto_passwd -b /etc/mosquitto/passwd alice secret123`
@@ -88,3 +115,7 @@ Generate certificates, configure mosquitto TLS/auth/ACL settings and verify secu
 - mosquitto_pub -h localhost -p 8883 --cafile ca.crt -t test -m hi -u alice -P secret123
 - openssl s_client -connect localhost:8883 -showcerts -cafile ca.crt
 - mosquitto -c /etc/mosquitto/mosquitto.conf -v
+
+## References
+- [mosquitto.conf man page](https://mosquitto.org/man/mosquitto-conf-5.html)
+- [MQTT Security Fundamentals](https://docs.vernemq.com/configuration/authentication)

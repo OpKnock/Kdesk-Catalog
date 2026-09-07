@@ -2,6 +2,7 @@
 name: "debezium"
 description: "Registers, inspects, and troubleshoots Kafka Connect connectors that stream row-level changes from MySQL, PostgreSQL, and MongoDB via Debezium CDC. Use when working with connector management, api or when the user mentions connector management, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

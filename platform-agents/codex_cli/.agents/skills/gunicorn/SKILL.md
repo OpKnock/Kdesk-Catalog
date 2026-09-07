@@ -1,13 +1,35 @@
 ---
 name: "gunicorn"
-description: "Serves Python WSGI apps in production with gunicorn: workers, preloading, timeouts, and systemd/container integration."
+description: "Serves Python WSGI apps in production with gunicorn: workers, preloading, timeouts, and systemd/container integration. Use when working with gunicorn serving, gunicorn monitoring, backend or when the user mentions gunicorn serving, gunicorn monitoring, backend."
+license: "MIT"
+compatibility: "Requires gunicorn, kill. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(gunicorn:*) Bash(kill:*) Bash(ps:*)"
 ---
-
-# gunicorn
 
 Serves Python WSGI apps in production with gunicorn: workers, preloading, timeouts, and systemd/container integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gunicorn myapp:app`, `kill -HUP $(cat /tmp/gunicorn.pid)`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Gunicorn
 
@@ -71,6 +93,11 @@ preload_app = True
 ### gunicorn-serving
 Run WSGI applications with tuned worker configurations.
 
+**Parameters:**
+- `workers` (integer): Number of worker processes
+- `bind` (string): Host:port to bind
+- `worker-class` (string): sync, gthread, gevent, eventlet
+
 **Commands:**
 - `gunicorn myapp:app`
 - `gunicorn -w 4 -b 0.0.0.0:8000 myapp:app`
@@ -86,6 +113,10 @@ Run WSGI applications with tuned worker configurations.
 ### gunicorn-monitoring
 Send signals and check worker health.
 
+**Parameters:**
+- `pid-file` (string): Path to pidfile
+- `signal` (string): Signal to send: HUP, TERM, INT
+
 **Commands:**
 - `kill -HUP $(cat /tmp/gunicorn.pid)`
 - `kill -TERM $(cat /tmp/gunicorn.pid)`
@@ -96,3 +127,7 @@ Send signals and check worker health.
 - kill -HUP 12345
 - systemctl reload myapp
 - curl -sI http://localhost:8000 | head -1
+
+## References
+- [Gunicorn Docs](https://docs.gunicorn.org/en/stable/)
+- [Gunicorn Deployment](https://docs.gunicorn.org/en/stable/deploy.html)

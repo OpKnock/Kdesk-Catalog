@@ -1,8 +1,26 @@
-# performance
-
 Web performance analysis: Lighthouse audits, load testing, and request timing measurements.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx lighthouse http://localhost:8080 --output=json --output-`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Performance
 
@@ -78,6 +96,11 @@ Returns Lighthouse scores per category with the top 5 performance opportunities
 ### web-performance
 Measure page performance with Lighthouse, curl timing, and load tests
 
+**Parameters:**
+- `only-categories` (string): Lighthouse categories to audit: performance, accessibility, seo, best-practices
+- `budget-path` (string): JSON file with performance budgets (timings, sizes)
+- `output-path` (string): Where to write the report (html/json)
+
 **Commands:**
 - `npx lighthouse http://localhost:8080 --output=json --output-path=./lh-report.json`
 - `curl -o /dev/null -s -w 'total: %{time_total}s ttfb: %{time_starttransfer}s
@@ -90,3 +113,7 @@ Measure page performance with Lighthouse, curl timing, and load tests
 - npx lighthouse http://localhost:8080 --chrome-flags='--headless' --output=html
 - curl -w '%{http_code} %{time_total}' -o /dev/null http://localhost:8080/api/health
 - wrk -t8 -c200 -d60s http://localhost:8080/api --latency
+
+## References
+- [Lighthouse docs](https://developer.chrome.com/docs/lighthouse/)
+- [Web.dev measure](https://web.dev/measure/)

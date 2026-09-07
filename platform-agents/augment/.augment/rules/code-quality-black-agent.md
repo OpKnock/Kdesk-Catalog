@@ -1,11 +1,33 @@
 ---
 type: agent_requested
-description: "Formats Python code deterministically with Black. Checks, diffs, and applies formatting with configurable line length."
+description: "Formats Python code deterministically with Black. Checks, diffs, and applies formatting with configurable line length. Use when working with format python, code quality, agent or when the user mentions format python, code quality, agent."
 ---
 
 # Code Quality Black Agent
 
 Formats Python code deterministically with Black. Checks, diffs, and applies formatting with configurable line length.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `black --check .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -35,6 +57,11 @@ Add `[tool.black]` section to pyproject.toml for line-length, target-version, an
 ### format-python
 Format Python code with Black, check compliance, and show diffs
 
+**Parameters:**
+- `target` (string): File or directory to format (default: .)
+- `line_length` (number): Maximum line length (default: 88)
+- `check_only` (boolean): Only check, do not modify files
+
 **Commands:**
 - `black --check .`
 - `black --diff .`
@@ -45,3 +72,10 @@ Format Python code with Black, check compliance, and show diffs
 - black --check .
 - black --diff .
 - black --line-length 100 .
+
+## References
+- [Black Documentation](https://black.readthedocs.io/)
+- [Black Configuration](https://black.readthedocs.io/en/stable/configuration_and_operation.html)
+- [Python Style Guide (PEP 8)](https://peps.python.org/pep-0008/)
+- [Black in CI](https://black.readthedocs.io/en/stable/integrations/continuous_integration.html)
+- [Black vs Other Formatters](https://black.readthedocs.io/en/stable/the_black_code_style.html)

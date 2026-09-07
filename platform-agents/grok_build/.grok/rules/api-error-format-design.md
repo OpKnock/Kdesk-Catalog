@@ -1,8 +1,26 @@
-# Api Error Format Design
-
 Designs error formats and schemas: RFC 9457 problem details modeling, status mapping, and OpenAPI error components.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `node -e "const p={type:'https://api.example/errors',title:'B`, `node -e "const s={components:{schemas:{Problem:{type:'object`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Error (Format Design)
 
@@ -43,6 +61,10 @@ Validate the spec with swagger-cli after adding error components.
 ### format-design
 Model problem-details schemas and map domain codes to HTTP statuses
 
+**Parameters:**
+- `status` (string): HTTP status
+- `code` (string): Domain error code
+
 **Commands:**
 - `node -e "const p={type:'https://api.example/errors',title:'Bad Request',status:400,code:'VALIDATION_1001',instance:'/api/users'};console.log(JSON.stringify(p,null,2))"`
 - `python -c "import json;p={'title':'Not Found','status':404,'code':'NOT_FOUND'};print(json.dumps(p))"`
@@ -58,6 +80,9 @@ Model problem-details schemas and map domain codes to HTTP statuses
 ### schema-authoring
 Author reusable error schemas in OpenAPI components
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+
 **Commands:**
 - `node -e "const s={components:{schemas:{Problem:{type:'object',properties:{title:{type:'string'},status:{type:'integer'},code:{type:'string'}}}},required:['title','status','code']}};console.log(JSON.stringify(s,null,2))"`
 - `swagger-cli validate openapi.yaml`
@@ -69,3 +94,7 @@ Author reusable error schemas in OpenAPI components
 - node -e "const s={components:{schemas:{Problem:{type:'object',properties:{title:{type:'string'},status:{type:'integer'},code:{type:'string'}}}}}};console.log(JSON.stringify(s,null,2))"
 - swagger-cli validate openapi.yaml && redocly lint openapi.yaml
 - npx @stoplight/spectral-cli lint --ruleset error-rules.yaml openapi.yaml
+
+## References
+- [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)
+- [OpenAPI Components](https://spec.openapis.org/oas/v3.1.0#components-object)

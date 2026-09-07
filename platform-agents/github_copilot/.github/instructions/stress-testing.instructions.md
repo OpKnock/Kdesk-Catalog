@@ -4,6 +4,28 @@ applyTo: "**/*.java **/*.r **/*.sh **/*.{js,ts,jsx,tsx}"
 
 Push APIs to their limits with ab, wrk, hey, siege, and k6. Generates sustained load, reports throughput and latency percentiles, and identifies breaking points before users encounter them. Use for capacity planning, autoscaling verification, and reproducing concurrency issues.
 
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
+
 # Stress Testing
 
 Hand-crafted skill for pushing APIs to their limits.

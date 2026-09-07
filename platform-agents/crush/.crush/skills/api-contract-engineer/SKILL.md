@@ -1,13 +1,35 @@
 ---
 name: "api-contract-engineer"
-description: "Hands-on implementation of contract testing: Pact consumer tests, provider verification, and schema validation wired into CI."
+description: "Hands-on implementation of contract testing: Pact consumer tests, provider verification, and schema validation wired into CI. Use when working with pact implementation, schema validation or when the user mentions pact implementation, schema validation."
+license: "MIT"
+compatibility: "Requires pact, openapi, node.js, python, postman."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "testing"}
+allowed-tools: "Glob Grep Read Bash(node:*) Bash(npm:*) Bash(npx:*) Bash(pip:*)"
 ---
-
-# api-contract-engineer
 
 Hands-on implementation of contract testing: Pact consumer tests, provider verification, and schema validation wired into CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @pact-foundation/pact`, `npm install ajv`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Contract Engineer
 
@@ -53,6 +75,11 @@ Run consumer tests on every PR; verification in the provider pipeline.
 ### pact-implementation
 Write and run Pact consumer and provider tests in Node and Python
 
+**Parameters:**
+- `consumer` (string): Consumer app name
+- `provider` (string): Provider app name
+- `version` (string): Consumer version
+
 **Commands:**
 - `npm install @pact-foundation/pact`
 - `npx jest --testMatch '**/pact/*.test.js'`
@@ -68,6 +95,10 @@ Write and run Pact consumer and provider tests in Node and Python
 ### schema-validation
 Validate live API responses against OpenAPI-derived JSON Schemas in tests
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+- `response` (string): Response JSON to validate
+
 **Commands:**
 - `npm install ajv`
 - `npm install @apidevtools/swagger-parser`
@@ -79,3 +110,8 @@ Validate live API responses against OpenAPI-derived JSON Schemas in tests
 - node -e "const P=require('@apidevtools/swagger-parser');P.validate('openapi.yaml').then(()=>console.log('valid'))"
 - node -e "const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'object',required:['id']},{id:1}))"
 - python -c "from openapi_schema_validator import validate;validate({'id':1},{'type':'object','required':['id']});print('ok')"
+
+## References
+- [Pact JS](https://docs.pact.io/implementation_guides/javascript/)
+- [Pact Broker](https://docs.pact.io/pact_broker/)
+- [swagger-parser](https://apitools.dev/swagger-parser/)

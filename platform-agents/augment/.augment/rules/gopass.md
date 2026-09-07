@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Initialize stores, insert/read secrets, manage recipients, and generate passwords. secrets and recipients, and use templates for structured entries.'"
+description: "Initialize stores, insert/read secrets, manage recipients, and generate passwords. secrets and recipients, and use templates for structured entries.'. Use when working with gopass store, api or when the user mentions gopass store, api."
 ---
-
-# Gopass
 
 Initialize stores, insert/read secrets, manage recipients, and generate passwords. secrets and recipients, and use templates for structured entries.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gopass init --store=team`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gopass
 
@@ -87,6 +105,11 @@ gopass templates show db
 ### gopass-store
 Initialize stores, insert/read secrets, manage recipients, and generate passwords.
 
+**Parameters:**
+- `store` (string): Store name (root or named store)
+- `path` (string): Secret path like team/db/postgres
+- `length` (integer): Generated password length
+
 **Commands:**
 - `gopass init --store=team`
 - `gopass insert team/db/postgres`
@@ -100,3 +123,7 @@ Initialize stores, insert/read secrets, manage recipients, and generate password
 - gopass generate team/aws/access-key 24
 - gopass show team/db/postgres
 - gopass recipients add alice@localhost --store=team && gopass sync --store=team
+
+## References
+- [gopass documentation](https://www.gopass.pw/docs/)
+- [gopass usage guide](https://www.gopass.pw/docs/features/)

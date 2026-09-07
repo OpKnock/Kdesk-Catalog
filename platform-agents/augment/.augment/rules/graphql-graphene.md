@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "GraphQL in Python with Graphene: define schema and resolvers with Python classes, integrate with Django/Flask, and run queries."
+description: "GraphQL in Python with Graphene: define schema and resolvers with Python classes, integrate with Django/Flask, and run queries. Use when working with graphene schema, api or when the user mentions graphene schema, api."
 ---
-
-# Graphql Graphene
 
 GraphQL in Python with Graphene: define schema and resolvers with Python classes, integrate with Django/Flask, and run queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install graphene django-graphql-graphene`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL Graphene
 
@@ -80,6 +98,11 @@ python -c "from myapp.schema import schema; r=schema.execute('{ order(id: \"1\")
 ### graphene-schema
 Define Graphene schemas, wire Django/Flask integration, and test queries.
 
+**Parameters:**
+- `schema-module` (string): Python module path to the Schema
+- `output-file` (string): SDL export path
+- `endpoint` (string): GraphQL HTTP endpoint
+
 **Commands:**
 - `pip install graphene django-graphql-graphene`
 - `python -c "import graphene; s=graphene.Schema(query=Query); print(s.execute('{ hello }').data)"`
@@ -91,3 +114,7 @@ Define Graphene schemas, wire Django/Flask integration, and test queries.
 - python -c "import graphene; s=graphene.Schema(query=Query); print(s.execute('{ hello }').data)"
 - python manage.py graphql_schema --schema myapp.schema.schema --out schema.graphql
 - curl -s -X POST http://localhost:8000/graphql -H 'Content-Type: application/json' -d '{"query":"{ hello }"}' | jq
+
+## References
+- [Graphene docs](https://docs.graphene-python.org/)
+- [Graphene Django](https://docs.graphene-python.org/projects/django/en/latest/)

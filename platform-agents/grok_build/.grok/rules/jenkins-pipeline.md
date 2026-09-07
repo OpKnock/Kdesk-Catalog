@@ -1,8 +1,26 @@
-# Jenkins Pipeline
-
 Jenkins pipeline operations: triggering builds via jenkins-cli and curl, running Groovy scripts, listing jobs, and checking build status.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `java -jar jenkins-cli.jar -s http://localhost:8080 list-jobs`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Jenkins Pipeline
 
@@ -83,6 +101,11 @@ Agent: curl -u admin:token -X POST 'http://localhost:8080/job/deploy/buildWithPa
 ### jenkins-cli
 Trigger, monitor, and script Jenkins jobs from the terminal.
 
+**Parameters:**
+- `job` (string): Jenkins job name.
+- `build_number` (integer): Build number to inspect.
+- `params` (string): Build parameters as key=value pairs.
+
 **Commands:**
 - `java -jar jenkins-cli.jar -s http://localhost:8080 list-jobs`
 - `java -jar jenkins-cli.jar -s http://localhost:8080 build MyJob -s -v`
@@ -94,3 +117,7 @@ Trigger, monitor, and script Jenkins jobs from the terminal.
 - curl -u admin:token -X POST 'http://localhost:8080/job/MyJob/buildWithParameters?TARGET=staging'
 - curl -s 'http://localhost:8080/job/MyJob/lastSuccessfulBuild/artifact/report.json' | jq .
 - java -jar jenkins-cli.jar -s http://localhost:8080 console MyJob 42
+
+## References
+- [Jenkins CLI Docs](https://www.jenkins.io/doc/book/managing/cli/)
+- [Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/)

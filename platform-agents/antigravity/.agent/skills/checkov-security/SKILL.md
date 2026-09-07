@@ -1,13 +1,35 @@
 ---
 name: "checkov-security"
-description: "Scans Terraform, CloudFormation, Kubernetes, Dockerfile, and other IaC for misconfigurations with 1000+ built-in policies and SARIF/JUnit output."
+description: "Scans Terraform, CloudFormation, Kubernetes, Dockerfile, and other IaC for misconfigurations with 1000+ built-in policies and SARIF/JUnit output. Use when working with iac scanning, reporting, security or when the user mentions iac scanning, reporting, security."
+license: "MIT"
+compatibility: "Requires checkov."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(checkov:*)"
 ---
-
-# checkov-security
 
 Scans Terraform, CloudFormation, Kubernetes, Dockerfile, and other IaC for misconfigurations with 1000+ built-in policies and SARIF/JUnit output.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `checkov -d .`, `checkov -d . -o sarif --output-file-path scan.sarif`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Checkov
 
@@ -83,6 +105,11 @@ check:
 ### iac-scanning
 Scan directories, files, and frameworks for policy violations.
 
+**Parameters:**
+- `directory` (string): Root directory to scan recursively
+- `framework` (string): Framework filter: terraform, cloudformation, kubernetes, dockerfile, secrets, all
+- `check` (string): Comma-separated check IDs to include or skip
+
 **Commands:**
 - `checkov -d .`
 - `checkov -f main.tf`
@@ -98,6 +125,10 @@ Scan directories, files, and frameworks for policy violations.
 ### reporting
 Emit reports in CI-friendly formats and enforce severity gates.
 
+**Parameters:**
+- `output` (string): Output format: cli, json, sarif, junitxml, github_failed_only
+- `softFail` (boolean): Return exit code 0 even if checks fail
+
 **Commands:**
 - `checkov -d . -o sarif --output-file-path scan.sarif`
 - `checkov -d . -o junitxml --output-file-path reports/`
@@ -108,3 +139,7 @@ Emit reports in CI-friendly formats and enforce severity gates.
 - checkov -d . -o sarif --output-file-path results/scan.sarif
 - checkov -d . -o junitxml --output-file-path test-results/
 - checkov -d . --soft-fail
+
+## References
+- [Checkov Documentation](https://www.checkov.io/)
+- [Checkov GitHub](https://github.com/bridgecrewio/checkov)

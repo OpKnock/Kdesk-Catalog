@@ -2,6 +2,7 @@
 name: "azure-api-management"
 description: "Operates Azure API Management gateways end-to-end: provisioning service tiers, importing OpenAPI definitions, applying policies (rate limit, CORS, transformation), managing subscription keys, and validating gateway routing with live curl calls. Use when working with apim service, api import, subscriptions or when the user mentions apim service, api import, subscriptions."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(az:*) Bash(curl:*)"
 ---

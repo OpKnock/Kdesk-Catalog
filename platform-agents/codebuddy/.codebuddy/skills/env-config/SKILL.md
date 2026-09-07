@@ -1,13 +1,35 @@
 ---
 name: "env-config"
-description: "Environment configuration management: load .env files, validate required variables, and inject config per environment without leaking secrets."
+description: "Environment configuration management: load .env files, validate required variables, and inject config per environment without leaking secrets. Use when working with env management, api or when the user mentions env management, api."
+license: "MIT"
+compatibility: "Requires env, grep, node, python."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Read Bash(env:*) Grep Bash(node:*) Bash(python:*)"
 ---
-
-# Env Config
 
 Environment configuration management: load .env files, validate required variables, and inject config per environment without leaking secrets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `node -r dotenv/config index.js`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Env Config
 
@@ -68,6 +90,11 @@ curl -s localhost:4000/health | jq '.env'
 ### env-management
 Load, validate, and debug environment variables across dev/staging/prod.
 
+**Parameters:**
+- `env-file` (string): Path to the .env file
+- `var-name` (string): Variable to validate or print
+- `required-vars` (array): List of variables that must be set for the app to start
+
 **Commands:**
 - `node -r dotenv/config index.js`
 - `node -e "require('dotenv').config(); console.log(process.env.NODE_ENV)"`
@@ -79,3 +106,6 @@ Load, validate, and debug environment variables across dev/staging/prod.
 - node -r dotenv/config index.js
 - grep -E '^[A-Z_]+=' .env | sed 's/=.*/=[REDACTED]/'
 - env | grep -iE '^(DATABASE|API_KEY|PORT)=' | cut -d= -f1
+
+## References
+- [The Twelve-Factor App: Config](https://12factor.net/config)

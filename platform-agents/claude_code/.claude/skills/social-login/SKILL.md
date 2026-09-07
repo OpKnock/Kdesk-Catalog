@@ -2,6 +2,7 @@
 name: "social-login"
 description: "Implements OAuth2 social sign-in with GitHub and Google. Completes authorization code exchanges, fetches profile data from userinfo endpoints, maps provider identities to local accounts by stable provider ID, and verifies state parameters to prevent CSRF. Use when working with oauth social login, api or when the user mentions oauth social login, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

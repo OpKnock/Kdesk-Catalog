@@ -1,8 +1,26 @@
-# Incident
-
 Coordinates incident response with PagerDuty, incident.io, and status pages, managing acknowledgements, escalations, and postmortems.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pd incident list --status trigger`, `incidentio incident declare --summary 'API latency spike' --`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Incident Response
 
@@ -63,6 +81,10 @@ curl -s -X POST https://api.statuspage.io/v1/pages/PAGE_ID/incidents \
 ### pagerduty-management
 List, acknowledge, and resolve PagerDuty incidents.
 
+**Parameters:**
+- `status` (string): Filter: trigger, acknowledged, resolved
+- `incidentId` (string): PagerDuty incident ID
+
 **Commands:**
 - `pd incident list --status trigger`
 - `pd incident show INCIDENT_ID`
@@ -77,6 +99,11 @@ List, acknowledge, and resolve PagerDuty incidents.
 
 ### incidentio-declarations
 Declare and manage incidents with incident.io CLI.
+
+**Parameters:**
+- `summary` (string): Incident summary
+- `severity` (string): Severity: critical, major, minor
+- `status` (string): Status: open, mitigating, monitoring, resolved
 
 **Commands:**
 - `incidentio incident declare --summary 'API latency spike' --severity critical`
@@ -93,6 +120,10 @@ Declare and manage incidents with incident.io CLI.
 ### status-pages
 Post status updates and component maintenance.
 
+**Parameters:**
+- `pageId` (string): StatusPage page ID
+- `apiKey` (string): StatusPage OAuth API key
+
 **Commands:**
 - `curl -s -X POST https://api.statuspage.io/v1/pages/PAGE_ID/incidents -d '{"incident":{"name":"...","status":"investigating"}}' -H "Authorization: OAuth $KEY"`
 - `curl -s https://api.statuspage.io/v1/pages/PAGE_ID/incidents -H "Authorization: OAuth $KEY" | jq .`
@@ -101,3 +132,8 @@ Post status updates and component maintenance.
 **Examples:**
 - curl -s https://api.statuspage.io/v1/pages/PAGE_ID/incidents -H "Authorization: OAuth $KEY" | jq .
 - curl -s -X PATCH https://api.statuspage.io/v1/pages/PAGE_ID/incidents/ID -d '{"incident":{"status":"monitoring"}}' -H "Authorization: OAuth $KEY" | jq .
+
+## References
+- [PagerDuty API Documentation](https://developer.pagerduty.com/docs/)
+- [incident.io Documentation](https://incident.io/docs/)
+- [Atlassian Statuspage API](https://developer.atlassian.com/cloud/statuspage/rest/)

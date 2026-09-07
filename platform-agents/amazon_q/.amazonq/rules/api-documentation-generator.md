@@ -1,8 +1,26 @@
-# api-documentation-generator
-
 Automates documentation generation: extracts OpenAPI from code, bundles specs, builds static sites, and publishes in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install @nestjs/swagger`, `npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Documentation Generator
 
@@ -49,6 +67,10 @@ Compare generated docs against the running API automatically.
 ### spec-extraction
 Extract OpenAPI specs from code with decorators and tooling
 
+**Parameters:**
+- `framework` (string): FastAPI, NestJS, Express
+- `output` (string): Spec output path
+
 **Commands:**
 - `npm install @nestjs/swagger`
 - `npm install swagger-autogen`
@@ -64,6 +86,10 @@ Extract OpenAPI specs from code with decorators and tooling
 ### publish-pipeline
 Build and publish documentation sites in CI
 
+**Parameters:**
+- `spec` (string): Source OpenAPI spec
+- `outputDir` (string): Static site output
+
 **Commands:**
 - `npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml`
 - `npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html`
@@ -75,3 +101,8 @@ Build and publish documentation sites in CI
 - npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml && npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html
 - npx @redocly/cli lint dist/bundled.yaml
 - npm install -g docusaurus && npx docusaurus build
+
+## References
+- [swagger-autogen](https://github.com/davibaltar/swagger-autogen)
+- [FastAPI OpenAPI](https://fastapi.tiangolo.com/advanced/openapi-callbacks/)
+- [Docusaurus](https://docusaurus.io/docs)

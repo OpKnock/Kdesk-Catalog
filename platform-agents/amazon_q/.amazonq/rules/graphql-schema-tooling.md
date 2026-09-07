@@ -1,8 +1,26 @@
-# Graphql Schema Tooling
-
 GraphQL schema quality tooling: lint SDL with graphql-schema-linter, detect breaking changes with graphql-inspector, and validate operations against schemas.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx graphql-schema-linter schema.graphql --rules=fields-have`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL v2
 
@@ -72,6 +90,11 @@ echo 'type Bad{field:String}' > /tmp/bad.graphql && npx graphql-schema-linter /t
 ### schema-tooling
 Lint schemas, diff versions for breaking changes, and validate operations.
 
+**Parameters:**
+- `schema-file` (string): SDL file path
+- `old-schema` (string): Previous schema version for diffing
+- `documents-glob` (string): Glob of operation documents
+
 **Commands:**
 - `npx graphql-schema-linter schema.graphql --rules=fields-have-descriptions,types-have-descriptions`
 - `npx graphql-schema-linter --format json schema.graphql > lint.json`
@@ -83,3 +106,7 @@ Lint schemas, diff versions for breaking changes, and validate operations.
 - npx graphql-schema-linter schema.graphql --rules=fields-have-descriptions,types-have-descriptions
 - npx graphql-inspector diff schema-old.graphql schema-new.graphql | jq
 - npx graphql-inspector validate schema.graphql 'src/**/*.graphql'
+
+## References
+- [graphql-schema-linter](https://github.com/cjoudrey/graphql-schema-linter)
+- [graphql-inspector](https://the-guild.dev/graphql/inspector/docs)

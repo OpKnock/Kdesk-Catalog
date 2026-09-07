@@ -2,6 +2,7 @@
 name: "sse-security"
 description: "Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration. Use when working with sse hardening, api or when the user mentions sse hardening, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*) Bash(timeout:*)"
 ---

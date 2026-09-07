@@ -1,11 +1,37 @@
 ---
 name: "compliance-scout"
-description: "ScoutSuite agent for multi-cloud security auditing."
+description: "ScoutSuite agent for multi-cloud security auditing. Use when working with Compliance Scout, audit or when the user mentions Compliance Scout, audit."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "compliance"}
+allowed-tools: "Glob Grep Read Bash(AWS::*) Bash(Azure::*) Bash(GCP::*) Bash(Report::*)"
 ---
 
 # Compliance Scout
 
 ScoutSuite agent for multi-cloud security auditing.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `AWS: scout aws`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -27,3 +53,8 @@ ScoutSuite agent for multi-cloud security auditing.
 - Azure: scout azure
 - GCP: scout gcp
 - Report: scout aws --report-dir /path/to/reports
+
+## References
+- [ScoutSuite Documentation](https://github.com/nccgroup/ScoutSuite)
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Azure Documentation](https://learn.microsoft.com/azure/)

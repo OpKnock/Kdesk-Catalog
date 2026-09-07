@@ -1,8 +1,26 @@
-# open-source-contributing
-
 Contributes to open source with GitHub flow: forking, issues, PRs, reviews, and rebasing workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh repo fork owner/repo --clone`, `git checkout -b fix/issue-123`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Open Source Contributing
 
@@ -82,6 +100,11 @@ Pass the project's own checks before opening the PR.
 ### gh-flow
 Drive contributions with the GitHub CLI.
 
+**Parameters:**
+- `repo` (string): owner/repo
+- `label` (string): Issue label filter
+- `issue` (number): Issue number
+
 **Commands:**
 - `gh repo fork owner/repo --clone`
 - `gh issue list --repo owner/repo --label 'good first issue'`
@@ -97,6 +120,11 @@ Drive contributions with the GitHub CLI.
 ### git-hygiene
 Keep contribution branches clean.
 
+**Parameters:**
+- `branch` (string): Feature branch name
+- `upstream` (string): Upstream remote name
+- `base` (string): Base branch for logs
+
 **Commands:**
 - `git checkout -b fix/issue-123`
 - `git fetch upstream && git rebase upstream/main`
@@ -108,3 +136,8 @@ Keep contribution branches clean.
 - git fetch upstream && git rebase upstream/main && git push --force-with-lease
 - git commit --amend --no-edit
 - git log --oneline --graph --decorate -10
+
+## References
+- [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow)
+- [GitHub CLI](https://cli.github.com/manual/)
+- [Contributing guide](https://opensource.guide/how-to-contribute/)

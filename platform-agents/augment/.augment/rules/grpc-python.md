@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "gRPC services and clients in Python with grpcio and grpcio-tools: python -m grpc_tools.protoc codegen, async/await servers, and interceptors."
+description: "gRPC services and clients in Python with grpcio and grpcio-tools: python -m grpc_tools.protoc codegen, async/await servers, and interceptors. Use when working with python grpc, api or when the user mentions python grpc, api."
 ---
-
-# Grpc Python
 
 gRPC services and clients in Python with grpcio and grpcio-tools: python -m grpc_tools.protoc codegen, async/await servers, and interceptors.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install grpcio grpcio-tools`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC Python
 
@@ -96,6 +114,11 @@ Agent: Switch to grpc.aio or increase ThreadPoolExecutor workers:
 ### python-grpc
 Generate Python stubs with grpc_tools and implement sync or asyncio gRPC servers.
 
+**Parameters:**
+- `proto_file` (string): Proto file to compile.
+- `out_dir` (string): Output directory for generated _pb2.py files.
+- `grpc_port` (integer): Port for the server thread, default 50051.
+
 **Commands:**
 - `pip install grpcio grpcio-tools`
 - `python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. helloworld.proto`
@@ -107,3 +130,7 @@ Generate Python stubs with grpc_tools and implement sync or asyncio gRPC servers
 - python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. -I . helloworld.proto
 - python server.py & python client.py
 - python -m grpc_tools.protoc --help
+
+## References
+- [gRPC Python Docs](https://grpc.io/docs/languages/python/)
+- [grpcio on PyPI](https://pypi.org/project/grpcio/)

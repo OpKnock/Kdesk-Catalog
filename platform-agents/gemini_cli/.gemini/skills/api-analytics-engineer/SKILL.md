@@ -1,13 +1,35 @@
 ---
 name: "api-analytics-engineer"
-description: "Implement API analytics with usage tracking, performance metrics, and developer dashboards: instrument endpoints, store metrics, and build dashboards."
+description: "Implement API analytics with usage tracking, performance metrics, and developer dashboards: instrument endpoints, store metrics, and build dashboards. Use when working with analytics pipeline or when the user mentions analytics pipeline."
+license: "MIT"
+compatibility: "Requires prometheus, grafana, elasticsearch, node.js, python, kibana. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "sre"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(docker:*) Bash(promtool:*)"
 ---
-
-# api-analytics-engineer
 
 Implement API analytics with usage tracking, performance metrics, and developer dashboards: instrument endpoints, store metrics, and build dashboards.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `promtool check config prometheus.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Analytics Engineer
 
@@ -73,6 +95,11 @@ curl -s 'http://localhost:9090/api/v1/query?query=up' | jq '.data.result'
 ### analytics-pipeline
 Instrument APIs and build analytics dashboards
 
+**Parameters:**
+- `query` (string): PromQL expression
+- `start` (string): RFC3339 start time for range queries
+- `step` (string): Resolution step, e.g. 30s
+
 **Commands:**
 - `promtool check config prometheus.yml`
 - `curl -X POST http://localhost:9090/-/reload`
@@ -84,3 +111,7 @@ Instrument APIs and build analytics dashboards
 - curl -s 'http://localhost:9090/api/v1/query?query=histogram_quantile(0.99,%20sum(rate(http_request_duration_seconds_bucket[5m]))%20by%20(le))' | jq '.data.result'
 - curl -s 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total{status=~"5.."}[5m]))' | jq '.data.result[0].value[1]'
 - promtool query instant 'http_requests_total' http://localhost:9090
+
+## References
+- [Prometheus Querying](https://prometheus.io/docs/prometheus/latest/querying/basics/)
+- [Grafana Docs](https://grafana.com/docs/grafana/latest/)

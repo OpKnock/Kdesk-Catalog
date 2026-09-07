@@ -1,8 +1,26 @@
-# database-replication
-
 Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `patronictl -c patroni.yml list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Database Replication
 
@@ -65,6 +83,11 @@ planned switchover with verification of the new leader.
 ### replication-topology
 Build and operate replicated topologies with failover
 
+**Parameters:**
+- `config` (string): Patroni config file (-c)
+- `master` (string): Current master node name
+- `candidate` (string): Node to promote
+
 **Commands:**
 - `patronictl -c patroni.yml list`
 - `patronictl -c patroni.yml failover postgres --master node1 --candidate node2`
@@ -76,3 +99,8 @@ Build and operate replicated topologies with failover
 - patronictl -c patroni.yml switchover postgres --master node1 --candidate node2 --force
 - psql -h node2 -c "SELECT pg_is_in_recovery();"
 - kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --all-groups
+
+## References
+- [Patroni docs](https://patroni.readthedocs.io/)
+- [PostgreSQL replication docs](https://www.postgresql.org/docs/current/high-availability.html)
+- [MongoDB replica sets](https://www.mongodb.com/docs/manual/replication/)

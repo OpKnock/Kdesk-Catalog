@@ -1,13 +1,35 @@
 ---
 name: "aws-cloudfront"
-description: "Manages AWS CloudFront distributions: creation, cache invalidation, origin configuration, and edge behavior testing."
+description: "Manages AWS CloudFront distributions: creation, cache invalidation, origin configuration, and edge behavior testing. Use when working with distribution lifecycle, invalidation, api or when the user mentions distribution lifecycle, invalidation, api."
+license: "MIT"
+compatibility: "Requires aws. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(aws:*) Bash(curl:*)"
 ---
-
-# Aws Cloudfront
 
 Manages AWS CloudFront distributions: creation, cache invalidation, origin configuration, and edge behavior testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aws cloudfront create-distribution --origin-domain-name my-b`, `aws cloudfront create-invalidation --distribution-id E2EXAMP`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AWS CloudFront
 
@@ -57,6 +79,10 @@ curl -sI https://d111111abcdef8.cloudfront.net/index.html | grep -iE 'x-cache|ag
 ### distribution-lifecycle
 Create and manage CloudFront distributions.
 
+**Parameters:**
+- `origin_domain` (string): Origin domain name
+- `distribution_id` (string): CloudFront distribution ID
+
 **Commands:**
 - `aws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.com`
 - `aws cloudfront get-distribution --id E2EXAMPLE`
@@ -72,6 +98,10 @@ Create and manage CloudFront distributions.
 ### invalidation
 Invalidate cached objects at edge locations.
 
+**Parameters:**
+- `paths` (string): Object paths to invalidate
+- `distribution_id` (string): Distribution ID
+
 **Commands:**
 - `aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/*"`
 - `aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/index.html" "/assets/*"`
@@ -83,3 +113,7 @@ Invalidate cached objects at edge locations.
 - aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/css/*" "/js/*"
 - aws cloudfront list-invalidations --distribution-id E2EXAMPLE --max-items 5
 - curl -sI https://d111111abcdef8.cloudfront.net/app.js | grep -i x-cache
+
+## References
+- [CloudFront Developer Guide](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/)
+- [AWS CLI cloudfront Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudfront/index.html)

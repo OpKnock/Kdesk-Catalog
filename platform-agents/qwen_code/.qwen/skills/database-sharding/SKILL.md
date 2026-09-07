@@ -1,13 +1,35 @@
 ---
 name: "database-sharding"
-description: "Shards large datasets: MongoDB sharded clusters, Vitess keyspaces, and partition strategy design."
+description: "Shards large datasets: MongoDB sharded clusters, Vitess keyspaces, and partition strategy design. Use when working with mongo sharding or when the user mentions mongo sharding."
+license: "MIT"
+compatibility: "Requires postgresql, mongodb, vitess, citus, cockroachdb."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "data"}
+allowed-tools: "Glob Grep Read Bash(mongosh:*)"
 ---
-
-# database-sharding
 
 Shards large datasets: MongoDB sharded clusters, Vitess keyspaces, and partition strategy design.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mongosh --quiet --eval "sh.enableSharding('app')"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Database Sharding
 
@@ -68,6 +90,11 @@ across shards plus balance status.
 ### mongo-sharding
 Enable sharding and manage shard keys in MongoDB
 
+**Parameters:**
+- `namespace` (string): database.collection to shard
+- `shardkey` (string): Shard key document, e.g. {customer_id: 'hashed'}
+- `mongos` (string): mongos connection string for sharding commands
+
 **Commands:**
 - `mongosh --quiet --eval "sh.enableSharding('app')"`
 - `mongosh --quiet --eval "sh.shardCollection('app.orders', {customer_id: 'hashed'})"`
@@ -79,3 +106,7 @@ Enable sharding and manage shard keys in MongoDB
 - mongosh --quiet --eval "sh.status().shards"
 - mongosh --quiet --eval "sh.disableBalancing('app.orders')"
 - mongosh --quiet --eval "db.orders.getShardDistribution()"
+
+## References
+- [MongoDB sharding docs](https://www.mongodb.com/docs/manual/sharding/)
+- [Vitess docs](https://vitess.io/docs/)

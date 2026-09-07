@@ -1,11 +1,37 @@
 ---
 name: "argocd-helper"
-description: "ArgoCD GitOps agent. Real argocd CLI."
+description: "ArgoCD GitOps agent. Real argocd CLI. Use when working with Argocd Helper, devops, deployment or when the user mentions Argocd Helper, devops, deployment."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "devops"}
+allowed-tools: "Glob Grep Read Bash(Create:*) Bash(Login::*) Bash(Rollback::*) Bash(Sync::*)"
 ---
 
 # Argocd Helper
 
 ArgoCD GitOps agent. Real argocd CLI.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Sync: argocd app sync myapp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -35,3 +61,6 @@ ArgoCD GitOps agent. Real argocd CLI.
 - Create app: argocd app create myapp --repo https://github.com/org/repo --path . --dest-server https://kubernetes.default.svc --dest-namespace default
 - Sync: argocd app sync myapp
 - Rollback: argocd app rollback myapp 1
+
+## References
+- [Argo CD Documentation](https://argo-cd.readthedocs.io/)

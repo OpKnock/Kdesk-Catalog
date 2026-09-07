@@ -2,6 +2,7 @@
 name: "oauth2-introspection"
 description: "Validates OAuth2 access and refresh tokens against RFC 7662 introspection endpoints. Checks token active status, scopes, and expiration with client credentials authentication. Use when working with token introspection, api or when the user mentions token introspection, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

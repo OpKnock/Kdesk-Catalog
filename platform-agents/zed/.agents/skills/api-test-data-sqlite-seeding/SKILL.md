@@ -1,13 +1,35 @@
 ---
 name: "api-test-data-sqlite-seeding"
-description: "Seeds database test data with SQL scripts and Node scripts: sqlite3 import, PostgreSQL COPY/INSERT, fixtures, and repeatable seed flows."
+description: "Seeds database test data with SQL scripts and Node scripts: sqlite3 import, PostgreSQL COPY/INSERT, fixtures, and repeatable seed flows. Use when working with sqlite seeding, postgres seeding or when the user mentions sqlite seeding, postgres seeding."
+license: "MIT"
+compatibility: "Requires faker, node.js, python, factory-boy, json-schema-faker."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "testing"}
+allowed-tools: "Glob Grep Read Bash(node:*) Bash(pg_dump:*) Bash(psql:*) Bash(sqlite3:*)"
 ---
-
-# Api Test Data Sqlite Seeding
 
 Seeds database test data with SQL scripts and Node scripts: sqlite3 import, PostgreSQL COPY/INSERT, fixtures, and repeatable seed flows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sqlite3 test.db "CREATE TABLE users (id INTEGER PRIMARY KEY,`, `psql -d app -f seed.sql`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Test Data v2 - Database Seeding
 
@@ -52,6 +74,11 @@ psql -d app -c "TRUNCATE users RESTART IDENTITY"
 ### sqlite-seeding
 Seed SQLite databases for API tests
 
+**Parameters:**
+- `db-file` (string): SQLite database file
+- `table` (string): Target table
+- `sql` (string): SQL statement
+
 **Commands:**
 - `sqlite3 test.db "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT)"`
 - `sqlite3 test.db "INSERT INTO users (name, email) VALUES ('alice', 'a@localhost'), ('bob', 'b@localhost')"`
@@ -76,3 +103,7 @@ Seed PostgreSQL for integration tests
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [SQLite CLI Docs](https://www.sqlite.org/cli.html)
+- [PostgreSQL COPY](https://www.postgresql.org/docs/current/sql-copy.html)

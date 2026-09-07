@@ -1,8 +1,26 @@
-# documentation-devtools
-
 Builds project documentation sites with MkDocs, Sphinx, and Docusaurus: setup, build, serve, deploy, and API docs generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `mkdocs new mydocs`, `sphinx-quickstart docs`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Documentation Engineering
 
@@ -71,6 +89,10 @@ plugins:
 ### mkdocs
 Create and build Python-based documentation sites from Markdown.
 
+**Parameters:**
+- `project` (string): Project directory name
+- `strict` (boolean): Fail on warnings
+
 **Commands:**
 - `mkdocs new mydocs`
 - `mkdocs serve`
@@ -87,6 +109,10 @@ Create and build Python-based documentation sites from Markdown.
 ### sphinx-and-docusaurus
 Generate API docs with Sphinx and JS sites with Docusaurus.
 
+**Parameters:**
+- `source-dir` (string): Docs source directory
+- `build-dir` (string): HTML output directory
+
 **Commands:**
 - `sphinx-quickstart docs`
 - `sphinx-build -b html docs docs/_build`
@@ -99,3 +125,8 @@ Generate API docs with Sphinx and JS sites with Docusaurus.
 - sphinx-quickstart docs
 - sphinx-build -b html docs docs/_build
 - npm run build --prefix site
+
+## References
+- [MkDocs Documentation](https://www.mkdocs.org/)
+- [Sphinx Documentation](https://www.sphinx-doc.org/en/master/)
+- [Docusaurus](https://docusaurus.io/docs)

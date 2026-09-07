@@ -1,8 +1,26 @@
-# Toxiproxy
-
 Inject network faults into connections with it.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `toxiproxy-cli create -l localhost:26379 -u localhost:6379 re`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Toxiproxy
 
@@ -70,6 +88,11 @@ toxiproxy-cli delete redis
 ### toxiproxy-faults
 Inject network faults into connections with Toxiproxy
 
+**Parameters:**
+- `proxy_name` (string): Proxy name, e.g. redis
+- `listen` (string): Client-facing listen address
+- `upstream` (string): Real service address
+
 **Commands:**
 - `toxiproxy-cli create -l localhost:26379 -u localhost:6379 redis`
 - `toxiproxy-cli list`
@@ -82,3 +105,7 @@ Inject network faults into connections with Toxiproxy
 - toxiproxy-cli create -l localhost:26379 -u localhost:6379 redis
 - toxiproxy-cli toxic add -t latency -a latency=1000 -a jitter=100 redis
 - toxiproxy-cli toxic add -t bandwidth -a rate=50 redis
+
+## References
+- [Toxiproxy repo](https://github.com/Shopify/toxiproxy)
+- [Toxiproxy toxic types](https://github.com/Shopify/toxiproxy#toxics)

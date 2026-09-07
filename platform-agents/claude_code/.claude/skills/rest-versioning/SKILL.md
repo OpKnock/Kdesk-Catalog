@@ -2,6 +2,7 @@
 name: "rest-versioning"
 description: "Expert reference covering Accept-header and URL versioning, cursor pagination, conditional requests, and Prefer response selection. Use when working with rest versioning, api or when the user mentions rest versioning, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

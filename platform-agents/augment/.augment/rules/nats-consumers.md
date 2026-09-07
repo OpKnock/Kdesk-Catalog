@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Manage NATS JetStream consumers: create push/pull consumers, inspect delivery, and handle ack policies."
+description: "Manage NATS JetStream consumers: create push/pull consumers, inspect delivery, and handle ack policies. Use when working with jetstream consumers, api or when the user mentions jetstream consumers, api."
 ---
-
-# Nats Consumers
 
 Manage NATS JetStream consumers: create push/pull consumers, inspect delivery, and handle ack policies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nats consumer add ORDERS NEW --pull --deliver all --max-deli`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # NATS Consumers
 
@@ -59,6 +77,11 @@ nats consumer rm ORDERS NEW
 ### jetstream-consumers
 Create and manage JetStream consumers with the nats CLI: pull/push modes, ack policies, and inspection.
 
+**Parameters:**
+- `stream` (string): Stream name the consumer belongs to
+- `consumer` (string): Consumer durable name
+- `ack_policy` (string): explicit, all, none or at-least-once
+
 **Commands:**
 - `nats consumer add ORDERS NEW --pull --deliver all --max-deliver 5 --ack explicit`
 - `nats consumer add ORDERS PUSH --push --deliver subject ords.push`
@@ -70,3 +93,7 @@ Create and manage JetStream consumers with the nats CLI: pull/push modes, ack po
 - nats consumer add ORDERS WORKER --pull --ack explicit --max-deliver 3 --backoff 5s
 - nats consumer info ORDERS WORKER
 - nats consumer ls ORDERS --names
+
+## References
+- [NATS JetStream Consumers](https://docs.nats.io/using-nats/developer/develop_jetstream/consumers)
+- [nats CLI consumer docs](https://docs.nats.io/using-nats/command-line/)

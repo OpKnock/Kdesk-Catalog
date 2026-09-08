@@ -108,18 +108,22 @@ class SubAgentResolver:
 
         return plan
 
+    def _lookup(self, name: str):
+        """Sub-agents may be agents or skills — resolve either."""
+        return self.catalog.get_agent(name) or self.catalog.get_skill(name)
+
     def _run_sequential(self, plan: DelegationPlan, input_data: Dict,
                         executor) -> None:
         """Run sub-agents one at a time; stop on first failure."""
         for sa_name in plan.steps:
-            sa = self.catalog.get_agent(sa_name)
+            sa = self._lookup(sa_name)
             if not sa:
                 plan.results.append(DelegationStepResult(
                     agent=sa_name, status="skipped", error="not found"))
                 continue
 
-            # Check sub-agent's own sub_agents (recursive)
-            if sa.sub_agents:
+            # Check sub-agent's own sub_agents (recursive, agents only)
+            if getattr(sa, "sub_agents", None):
                 sub_plan = self.resolve(sa_name, input_data, executor)
                 if sub_plan and not sub_plan.all_succeeded:
                     plan.results.append(DelegationStepResult(
@@ -147,7 +151,7 @@ class SubAgentResolver:
                       executor) -> None:
         """Run all sub-agents concurrently; collect all results regardless of failures."""
         for sa_name in plan.steps:
-            sa = self.catalog.get_agent(sa_name)
+            sa = self._lookup(sa_name)
             if not sa:
                 plan.results.append(DelegationStepResult(
                     agent=sa_name, status="skipped", error="not found"))
@@ -171,7 +175,7 @@ class SubAgentResolver:
                          executor) -> None:
         """Run sub-agents until one succeeds (first-match wins)."""
         for sa_name in plan.steps:
-            sa = self.catalog.get_agent(sa_name)
+            sa = self._lookup(sa_name)
             if not sa:
                 plan.results.append(DelegationStepResult(
                     agent=sa_name, status="skipped", error="not found"))

@@ -1,6 +1,6 @@
 ---
 name: "Security Snyk Agent"
-description: "Snyk agent for security scanning."
+description: "Snyk agent for security scanning. Use when working with Security Snyk Agent or when the user mentions Security Snyk Agent."
 globs: ["**/*.go", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Security Snyk Agent
 
 Snyk agent for security scanning.
+
+## Agentic Workflow: Read -> Reason -> Act (security-snyk-agent)
+
+You are **Security Snyk Agent** (security/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-snyk-agent`
+- Domain: Snyk agent for security scanning.
+- **Security Snyk Agent**: Snyk agent for security scanning. — `snyk iac test`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `security-snyk-agent`
+- For `Security Snyk Agent`: Snyk agent for security scanning. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-snyk-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Snyk` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-snyk-agent:dd19b40b`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Snyk agent for security scanning.
 - snyk auth
 - snyk iac test
 - snyk container test demo-image:latest
+
+## References
+- [Snyk Documentation](https://docs.snyk.io/)
+- [Prometheus Documentation](https://prometheus.io/docs/introduction/overview/)
+- [OAuth 2.0](https://oauth.net/2/)

@@ -1,15 +1,31 @@
 ---
 name: "tilt"
-description: "Develops Kubernetes apps with Tilt: resource definitions, live reload, Tiltfiles, CI mode, and dashboard workflows."
+description: "Develops Kubernetes apps with Tilt: resource definitions, live reload, Tiltfiles, CI mode, and dashboard workflows. Use when working with dev session, tiltfile and ci, devops or when the user mentions dev session, tiltfile and ci, devops."
 type: knowledge
 triggers: ["tilt", "dev-session", "tiltfile-and-ci"]
 ---
 
-# tilt
-
 Develops Kubernetes apps with Tilt: resource definitions, live reload, Tiltfiles, CI mode, and dashboard workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tilt)
+
+You are **tilt** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `tilt`
+- Domain: Develops Kubernetes apps with Tilt: resource definitions, live reload, Tiltfiles, CI mode, and dashboard workflows.
+- **dev-session**: Start dev sessions, watch logs, and manage running resources. — `tilt up`
+- **tiltfile-and-ci**: Author Tiltfiles and run sessions headlessly for CI. — `tilt ci`
+- Check `knowledge` and `prerequisites: tilt`
+
+### 2. Reason — think for `tilt`
+- For `dev-session`: Start dev sessions, watch logs, and manage running resources. — decide which checks to run
+- For `tiltfile-and-ci`: Author Tiltfiles and run sessions headlessly for CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tilt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tilt` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tilt:fa5ac84a`
 
 # Tilt Development Sessions
 
@@ -75,6 +91,10 @@ resource('myapp', port_forwards=['8080:8080'], probes=[http_probe('/health')])
 ### dev-session
 Start dev sessions, watch logs, and manage running resources.
 
+**Parameters:**
+- `port` (integer): Dashboard port
+- `watch` (boolean): Watch file changes
+
 **Commands:**
 - `tilt up`
 - `tilt up --port 10350`
@@ -91,6 +111,10 @@ Start dev sessions, watch logs, and manage running resources.
 ### tiltfile-and-ci
 Author Tiltfiles and run sessions headlessly for CI.
 
+**Parameters:**
+- `tiltfile` (string): Tiltfile path
+- `resource` (string): Resource name for triggers
+
 **Commands:**
 - `tilt ci`
 - `tilt dump`
@@ -103,3 +127,7 @@ Author Tiltfiles and run sessions headlessly for CI.
 - tilt ci
 - tilt dump
 - tilt doctor
+
+## References
+- [Tilt Documentation](https://docs.tilt.dev/)
+- [Tiltfile Reference](https://docs.tilt.dev/api.html)

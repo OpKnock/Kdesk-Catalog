@@ -1,15 +1,31 @@
 ---
 name: "Compliance Logging"
-description: "Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping."
+description: "Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping. Use when working with auditd, journal rotation, api or when the user mentions auditd, journal rotation, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Compliance Logging
-
 Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (compliance-logging)
+
+You are **Compliance Logging** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `compliance-logging`
+- Domain: Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping.
+- **auditd**: Configure Linux audit rules for file, syscall, and identity monitoring — `auditctl -l`
+- **journal-rotation**: Capture service logs in systemd journal and enforce rotation policies — `journalctl -u api.service`
+- Check `knowledge` and `prerequisites: auditctl, ausearch, journalctl`
+
+### 2. Reason — think for `compliance-logging`
+- For `auditd`: Configure Linux audit rules for file, syscall, and identity monitoring — decide which checks to run
+- For `journal-rotation`: Capture service logs in systemd journal and enforce rotation policies — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `compliance-logging` tools
+- Tools: `Glob`, `Grep`, `Read`, `Auditctl`, `Ausearch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `compliance-logging:c03fa127`
 
 # Compliance Logging
 
@@ -91,6 +107,10 @@ journalctl -u api.service --since "10 min ago" | wc -l
 ### auditd
 Configure Linux audit rules for file, syscall, and identity monitoring
 
+**Parameters:**
+- `watch_path` (string): File or directory to audit
+- `key` (string): Audit rule key such as identity or api-config
+
 **Commands:**
 - `auditctl -l`
 - `auditctl -w /etc/passwd -p wa -k identity`
@@ -105,6 +125,10 @@ Configure Linux audit rules for file, syscall, and identity monitoring
 ### journal-rotation
 Capture service logs in systemd journal and enforce rotation policies
 
+**Parameters:**
+- `unit` (string): Systemd unit name such as api.service
+- `vacuum_size` (string): Journal size limit such as 500M
+
 **Commands:**
 - `journalctl -u api.service`
 - `journalctl -u api.service --since "1 hour ago"`
@@ -115,3 +139,7 @@ Capture service logs in systemd journal and enforce rotation policies
 - journalctl -u api.service -f
 - journalctl -u api.service --since today -o json | jq '.MESSAGE'
 - journalctl --disk-usage && journalctl --vacuum-size=500M
+
+## References
+- [Linux auditd documentation](https://linux-audit.com/)
+- [logrotate man page](https://man7.org/linux/man-pages/man5/logrotate.conf.5.html)

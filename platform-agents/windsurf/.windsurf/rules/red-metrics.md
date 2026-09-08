@@ -6,27 +6,23 @@ globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Build request-rate, error-ratio, and latency-percentile queries in PromQL to power RED dashboards and SLO alerting.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (red-metrics)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Red Metrics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -g 'http://localhost:9090/api/v1/query?query=sum%20by%2`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `red-metrics`
+- Domain: Build request-rate, error-ratio, and latency-percentile queries in PromQL to power RED dashboards and SLO alerting.
+- **red-metrics-promql**: Build RED metric queries: request rate, error rate, and latency percentiles via PromQL. — `curl -g 'http://localhost:9090/api/v1/query?query=sum%20by%20(service)(rate(http`
+- Check `knowledge` and `prerequisites: promtool`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `red-metrics`
+- For `red-metrics-promql`: Build RED metric queries: request rate, error rate, and latency percentiles via PromQL. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `red-metrics` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `red-metrics:1802e604`
 
 # RED Metrics
 

@@ -1,6 +1,6 @@
 ---
 name: "finance-banking"
-description: "Finance banking expertise and best practices."
+description: "Finance banking expertise and best practices. Use when working with banking expertise, finance, skill or when the user mentions banking expertise, finance, skill."
 type: knowledge
 triggers: ["finance-banking", "banking-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["finance-banking", "banking-expertise"]
 # Finance Banking
 
 Finance banking expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (finance-banking)
+
+You are **Finance Banking** (finance/banking) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — finance context for `finance-banking`
+- Domain: Finance banking expertise and best practices.
+- **banking-expertise**: finance banking expertise — `banking-cli`
+- Check `knowledge` and `prerequisites: banking`
+
+### 2. Reason — think for `finance-banking`
+- For `banking-expertise`: finance banking expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `finance-banking` tools
+- Tools: `Glob`, `Grep`, `Read`, `Banking-cli`, `Banking-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `finance-banking:24de4ad3`
 
 ## Instructions
 

@@ -1,6 +1,6 @@
 ---
 name: "code-quality-eslint-agent"
-description: "Lints JavaScript/TypeScript code with configurable rules. Auto-fixes safe issues, scopes to TS/TSX, exports JSON reports."
+description: "Lints JavaScript/TypeScript code with configurable rules. Auto-fixes safe issues, scopes to TS/TSX, exports JSON reports. Use when working with lint js ts, code quality, agent or when the user mentions lint js ts, code quality, agent."
 type: knowledge
 triggers: ["code-quality-eslint-agent", "lint-js-ts"]
 ---
@@ -8,6 +8,24 @@ triggers: ["code-quality-eslint-agent", "lint-js-ts"]
 # Code Quality ESLint Agent
 
 Lints JavaScript/TypeScript code with configurable rules. Auto-fixes safe issues, scopes to TS/TSX, exports JSON reports.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-eslint-agent)
+
+You are **Code Quality ESLint Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-eslint-agent`
+- Domain: Lints JavaScript/TypeScript code with configurable rules. Auto-fixes safe issues, scopes to TS/TSX, exports JSON reports.
+- **lint-js-ts**: Lint JavaScript and TypeScript with ESLint, auto-fix, and CI reporting — `npx eslint .`
+- Check `knowledge` and `prerequisites: nodejs, npm, eslint (install via `npm install eslint` or `npx eslint`)`
+
+### 2. Reason — think for `code-quality-eslint-agent`
+- For `lint-js-ts`: Lint JavaScript and TypeScript with ESLint, auto-fix, and CI reporting — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-eslint-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-eslint-agent:fc4d40b7`
 
 ## Instructions
 
@@ -38,6 +56,12 @@ Use eslint.config.js (flat config) or .eslintrc.* with extends, rules, overrides
 ### lint-js-ts
 Lint JavaScript and TypeScript with ESLint, auto-fix, and CI reporting
 
+**Parameters:**
+- `fix` (boolean): Auto-fix safe issues
+- `extensions` (string): File extensions to lint (e.g., .ts,.tsx)
+- `format` (string): Output format (stylish, json, compact, etc.)
+- `config` (string): Path to ESLint config file
+
 **Commands:**
 - `npx eslint .`
 - `npx eslint --fix .`
@@ -49,3 +73,10 @@ Lint JavaScript and TypeScript with ESLint, auto-fix, and CI reporting
 - npx eslint --fix .
 - npx eslint --ext .ts,.tsx .
 - npx eslint --format json . > eslint-report.json
+
+## References
+- [ESLint Documentation](https://eslint.org/)
+- [ESLint Rules Reference](https://eslint.org/docs/latest/rules/)
+- [Flat Config Guide](https://eslint.org/docs/latest/use/configure/configuration-files-new)
+- [TypeScript ESLint](https://typescript-eslint.io/)
+- [CI Integration](https://eslint.org/docs/latest/use/integrations)

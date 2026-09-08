@@ -1,15 +1,29 @@
 ---
 name: "mypy"
-description: "Static type checking of Python code with mypy, including strict mode, incremental builds, and CI integration."
+description: "Static type checking of Python code with mypy, including strict mode, incremental builds, and CI integration. Use when working with type check python, code quality or when the user mentions type check python, code quality."
 type: knowledge
 triggers: ["mypy", "type-check-python"]
 ---
 
-# mypy
-
 Static type checking of Python code with mypy, including strict mode, incremental builds, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mypy)
+
+You are **mypy** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `mypy`
+- Domain: Static type checking of Python code with mypy, including strict mode, incremental builds, and CI integration.
+- **type-check-python**: Run mypy with configurable strictness, scopes, and output formats — `mypy src/`
+- Check `knowledge` and `prerequisites: mypy`
+
+### 2. Reason — think for `mypy`
+- For `type-check-python`: Run mypy with configurable strictness, scopes, and output formats — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mypy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mypy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mypy:838f6537`
 
 # MyPy
 
@@ -79,6 +93,11 @@ plugins = pydantic.mypy
 ### type-check-python
 Run mypy with configurable strictness, scopes, and output formats
 
+**Parameters:**
+- `strict` (boolean): Enable all strict mode flags (no untyped defs, disallow Any, etc.)
+- `python-version` (string): Python version to type check against, e.g. 3.11
+- `ignore-missing-imports` (boolean): Silence errors for packages without type stubs
+
 **Commands:**
 - `mypy src/`
 - `mypy --strict src/`
@@ -90,3 +109,7 @@ Run mypy with configurable strictness, scopes, and output formats
 - mypy src tests
 - mypy --strict --show-error-codes src/
 - mypy --cache-dir=.mypy_cache --pretty src/
+
+## References
+- [mypy documentation](https://mypy.readthedocs.io/)
+- [mypy strict mode](https://mypy.readthedocs.io/en/stable/command_line.html)

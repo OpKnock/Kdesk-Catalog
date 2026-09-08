@@ -1,8 +1,24 @@
-# black
-
 Formats Python code with Black: deterministic formatting, config control, diff previews, and CI enforcement.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (black)
+
+You are **black** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `black`
+- Domain: Formats Python code with Black: deterministic formatting, config control, diff previews, and CI enforcement.
+- **black-format**: Format Python files and preview changes. — `black --safe src/`
+- **black-config**: Configure Black per project. — `black --version`
+- Check `knowledge` and `prerequisites: black`
+
+### 2. Reason — think for `black`
+- For `black-format`: Format Python files and preview changes. — decide which checks to run
+- For `black-config`: Configure Black per project. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `black` tools
+- Tools: `Glob`, `Grep`, `Read`, `Black` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `black:deac8220`
 
 # Black
 
@@ -63,6 +79,11 @@ extend-exclude = """
 ### black-format
 Format Python files and preview changes.
 
+**Parameters:**
+- `paths` (string): Files or directories
+- `line-length` (integer): Line length (default 88)
+- `check` (boolean): Check without writing
+
 **Commands:**
 - `black --safe src/`
 - `black --check src/`
@@ -78,6 +99,10 @@ Format Python files and preview changes.
 ### black-config
 Configure Black per project.
 
+**Parameters:**
+- `exclude` (string): Regex of files to exclude
+- `config` (string): pyproject.toml or setup.cfg path
+
 **Commands:**
 - `black --version`
 - `black --help | grep line-length`
@@ -87,3 +112,7 @@ Configure Black per project.
 **Examples:**
 - black --exclude "/migrations/" src/
 - python -m black src/
+
+## References
+- [Black Docs](https://black.readthedocs.io)
+- [Black on GitHub](https://github.com/psf/black)

@@ -1,6 +1,6 @@
 ---
 name: "microservices-deployment"
-description: "Microservices SDK deployment agent for ML Microservices SDK deployment."
+description: "Microservices SDK deployment agent for ML Microservices SDK deployment. Use when working with Ml Microservices Deploy Sdk, deployment or when the user mentions Ml Microservices Deploy Sdk, deployment."
 type: knowledge
 triggers: ["microservices-deployment", "ml microservices deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["microservices-deployment", "ml microservices deploy sdk"]
 # Microservices Deployment
 
 Microservices SDK deployment agent for ML Microservices SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (microservices-deployment)
+
+You are **Microservices Deployment** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `microservices-deployment`
+- Domain: Microservices SDK deployment agent for ML Microservices SDK deployment.
+- **Ml Microservices Deploy Sdk**: Microservices SDK deployment agent for ML Microservices SDK deployment. — `docker build -t microservices:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `microservices-deployment`
+- For `Ml Microservices Deploy Sdk`: Microservices SDK deployment agent for ML Microservices SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `microservices-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `microservices-deployment:a92b018b`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Microservices SDK deployment agent for ML Microservices SDK deployment.
 **Examples:**
 - Server: python -m microservices.server --port 8080
 - Docker: docker run -p 8080:8080 microservices-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

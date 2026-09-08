@@ -1,6 +1,6 @@
 ---
 name: "Backend Deno Agent"
-description: "Deno agent for TypeScript/JavaScript backend development."
+description: "Deno agent for TypeScript/JavaScript backend development. Use when working with Backend Deno Agent or when the user mentions Backend Deno Agent."
 globs: ["**/*.java", "**/*.r", "**/*.{js,ts,jsx,tsx}", "**/*.{ts,tsx}"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Backend Deno Agent
 
 Deno agent for TypeScript/JavaScript backend development.
+
+## Agentic Workflow: Read -> Reason -> Act (backend-deno-agent)
+
+You are **Backend Deno Agent** (backend/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `backend-deno-agent`
+- Domain: Deno agent for TypeScript/JavaScript backend development.
+- **Backend Deno Agent**: Deno agent for TypeScript/JavaScript backend development. — `deno compile --allow-net server.ts`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `backend-deno-agent`
+- For `Backend Deno Agent`: Deno agent for TypeScript/JavaScript backend development. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `backend-deno-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Deno` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `backend-deno-agent:341866fa`
 
 ## Instructions
 
@@ -17,6 +35,9 @@ You are the Deno expert, covering TypeScript/JavaScript backend development on D
 
 ### Backend Deno Agent
 Deno agent for TypeScript/JavaScript backend development.
+
+**Parameters:**
+- `allow-net` (string): CLI flag --allow-net observed in capability commands
 
 **Commands:**
 - `deno compile --allow-net server.ts`
@@ -31,3 +52,7 @@ Deno agent for TypeScript/JavaScript backend development.
 - deno fmt
 - deno lint
 - deno compile --allow-net server.ts
+
+## References
+- [Deno Documentation](https://docs.deno.com/)
+- [Deno Standard Library](https://deno.land/std@0.224.0)

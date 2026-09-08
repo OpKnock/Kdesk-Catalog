@@ -1,8 +1,24 @@
-# Api Integration Event Driven
-
 Designs integration architectures: event-driven patterns, webhook contracts, retry and queue designs for third-party APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-integration-event-driven)
+
+You are **Api Integration Event Driven** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-integration-event-driven`
+- Domain: Designs integration architectures: event-driven patterns, webhook contracts, retry and queue designs for third-party APIs.
+- **event-driven-design**: Model pub/sub flows and queues for integration workloads — `redis-cli LPUSH integration.events '{"type":"order.created"}'`
+- **retry-design**: Design retry and backoff strategies for upstream APIs — `node -e "const backoff=[100,250,500];const f=(tries)=>backoff[Math.min(tries,bac`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
+
+### 2. Reason — think for `api-integration-event-driven`
+- For `event-driven-design`: Model pub/sub flows and queues for integration workloads — decide which checks to run
+- For `retry-design`: Design retry and backoff strategies for upstream APIs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-integration-event-driven` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-integration-event-driven:850ca8b0`
 
 # API Integration (Design)
 
@@ -48,6 +64,10 @@ Kill the consumer mid-stream and verify replay from the last acked position.
 ### event-driven-design
 Model pub/sub flows and queues for integration workloads
 
+**Parameters:**
+- `queue` (string): Queue or stream name
+- `event` (string): Event payload
+
 **Commands:**
 - `redis-cli LPUSH integration.events '{"type":"order.created"}'`
 - `redis-cli BRPOP integration.events 0`
@@ -63,6 +83,10 @@ Model pub/sub flows and queues for integration workloads
 ### retry-design
 Design retry and backoff strategies for upstream APIs
 
+**Parameters:**
+- `retries` (string): Max retry count
+- `idempotencyKey` (string): Idempotency key header
+
 **Commands:**
 - `node -e "const backoff=[100,250,500];const f=(tries)=>backoff[Math.min(tries,backoff.length-1)];console.log([0,1,2,3].map(f))"`
 - `node -e "const jitter=(base)=>base*0.5+Math.random()*base;console.log([1,2,3].map(i=>jitter(2**i*100)))"`
@@ -74,3 +98,7 @@ Design retry and backoff strategies for upstream APIs
 - node -e "const backoff=[100,250,500];const f=(tries)=>backoff[Math.min(tries,backoff.length-1)];console.log([0,1,2,3].map(f))"
 - curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' -X POST http://localhost:3000/integrations/payment -H 'Idempotency-Key: test-1'
 - redis-cli SET idem:charge_1 'done' NX EX 86400
+
+## References
+- [Redis Streams](https://redis.io/docs/latest/data-types/streams/)
+- [Webhooks Best Practices](https://webhooks.fyi/)

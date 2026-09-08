@@ -1,15 +1,29 @@
 ---
 name: "Owasp Zap"
-description: "DAST security testing with OWASP ZAP: full scans, API scans, and automated findings reports."
+description: "DAST security testing with OWASP ZAP: full scans, API scans, and automated findings reports. Use when working with zap scans, code quality or when the user mentions zap scans, code quality."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Owasp Zap
-
 DAST security testing with OWASP ZAP: full scans, API scans, and automated findings reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (owasp-zap)
+
+You are **Owasp Zap** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `owasp-zap`
+- Domain: DAST security testing with OWASP ZAP: full scans, API scans, and automated findings reports.
+- **zap-scans**: Run ZAP daemon, full scans, API scans, and spidering against web targets — `zap.sh -daemon -port 8080 -config api.key=changeme`
+- Check `knowledge` and `prerequisites: zap-api-scan.py, zap-cli, zap-full-scan.py, zap.sh`
+
+### 2. Reason — think for `owasp-zap`
+- For `zap-scans`: Run ZAP daemon, full scans, API scans, and spidering against web targets — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `owasp-zap` tools
+- Tools: `Glob`, `Grep`, `Read`, `Zap.sh`, `Zap-full-scan.py` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `owasp-zap:2079c938`
 
 # OWASP ZAP
 
@@ -70,6 +84,11 @@ finding to the CWE and suggests a fix.
 ### zap-scans
 Run ZAP daemon, full scans, API scans, and spidering against web targets
 
+**Parameters:**
+- `target` (string): Target URL with scheme, e.g. https://app.example.com
+- `format` (string): API definition format for API scans: openapi, soap, graphql
+- `report` (string): Output report path (-r html, -J json, -x xml)
+
 **Commands:**
 - `zap.sh -daemon -port 8080 -config api.key=changeme`
 - `zap-full-scan.py -t https://target.com -r report.html`
@@ -81,3 +100,7 @@ Run ZAP daemon, full scans, API scans, and spidering against web targets
 - zap-full-scan.py -t http://localhost:8080 -J report.json
 - zap-api-scan.py -t http://localhost:8080/swagger.json -f openapi -a
 - zap-cli spider https://target.com
+
+## References
+- [ZAP Getting Started](https://www.zaproxy.org/getting-started/)
+- [ZAP full scan script docs](https://www.zaproxy.org/docs/docker/full-scan/)

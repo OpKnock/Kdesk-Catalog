@@ -1,6 +1,6 @@
 ---
 name: "Ml Triton Agent"
-description: "NVIDIA Triton Inference Server agent. Manages model inference serving."
+description: "NVIDIA Triton Inference Server agent. Manages model inference serving. Use when working with Ml Triton Agent, inference or when the user mentions Ml Triton Agent, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Triton Agent
 
 NVIDIA Triton Inference Server agent. Manages model inference serving.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-triton-agent)
+
+You are **Ml Triton Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-triton-agent`
+- Domain: NVIDIA Triton Inference Server agent. Manages model inference serving.
+- **Ml Triton Agent**: NVIDIA Triton Inference Server agent. Manages model inference serving. — `curl http://localhost:8000/v2/models/demo-model`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-triton-agent`
+- For `Ml Triton Agent`: NVIDIA Triton Inference Server agent. Manages model inference serving. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-triton-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Tritonserver` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-triton-agent:4e561a32`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ NVIDIA Triton Inference Server agent. Manages model inference serving.
 - curl http://localhost:8000/v2/health/ready
 - curl http://localhost:8000/v2/models/demo-model
 - tritonserver --help
+
+## References
+- [Triton Inference Server Documentation](https://docs.nvidia.com/deeplearning/triton-inference-server/)
+- [curl Documentation](https://curl.se/docs/)

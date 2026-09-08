@@ -1,8 +1,22 @@
-# Etcd Config
-
 etcd cluster configuration and operations: read and write keys, inspect member health, and manage leases and snapshots.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (etcd-config)
+
+You are **Etcd Config** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `etcd-config`
+- Domain: etcd cluster configuration and operations: read and write keys, inspect member health, and manage leases and snapshots.
+- **etcd-ops**: Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl. — `etcdctl put /config/database/url postgres://db:5432/app --endpoints=https://etcd`
+- Check `knowledge` and `prerequisites: etcdctl`
+
+### 2. Reason — think for `etcd-config`
+- For `etcd-ops`: Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `etcd-config` tools
+- Tools: `Glob`, `Grep`, `Read`, `Etcdctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `etcd-config:556f2c35`
 
 # etcd Config
 
@@ -64,6 +78,11 @@ etcdctl defrag --endpoints=https://etcd-1:2379
 ### etcd-ops
 Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl.
 
+**Parameters:**
+- `endpoints` (array): Comma-separated etcd endpoints
+- `key` (string): Key path to read or write
+- `prefix` (string): Prefix for range operations
+
 **Commands:**
 - `etcdctl put /config/database/url postgres://db:5432/app --endpoints=https://etcd-1:2379`
 - `etcdctl get /config --prefix --keys-only`
@@ -77,3 +96,7 @@ Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl.
 - etcdctl get /config --prefix --keys-only
 - etcdctl endpoint health --endpoints=https://etcd-1:2379,https://etcd-2:2379
 - etcdctl snapshot save backup.db && etcdctl snapshot status backup.db
+
+## References
+- [etcdctl documentation](https://etcd.io/docs/v3.5/dev-guide/interacting_v3/)
+- [etcd Operations Guide](https://etcd.io/docs/v3.5/op-guide/maintenance/)

@@ -5,27 +5,23 @@ description: "Copies files to and from remote hosts with scp: recursive dirs, cu
 
 Copies files to and from remote hosts with scp: recursive dirs, custom ports/keys, and multiple source files.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (scp)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **scp** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `scp file.txt user@host:/home/user/`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devtools context for `scp`
+- Domain: Copies files to and from remote hosts with scp: recursive dirs, custom ports/keys, and multiple source files.
+- **file-transfer**: Copy files and directories between local and remote hosts. — `scp file.txt user@host:/home/user/`
+- Check `knowledge` and `prerequisites: scp`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `scp`
+- For `file-transfer`: Copy files and directories between local and remote hosts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `scp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Scp` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `scp:9e5ceca0`
 
 # scp File Transfer
 

@@ -1,6 +1,6 @@
 ---
 name: "llamaindex-inference"
-description: "LlamaIndex deployment agent. Manages LlamaIndex ML deployment."
+description: "LlamaIndex deployment agent. Manages LlamaIndex ML deployment. Use when working with Ml Llamaindex Deploy Agent, inference or when the user mentions Ml Llamaindex Deploy Agent, inference."
 type: knowledge
 triggers: ["llamaindex-inference", "ml llamaindex deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["llamaindex-inference", "ml llamaindex deploy agent"]
 # Llamaindex Inference
 
 LlamaIndex deployment agent. Manages LlamaIndex ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (llamaindex-inference)
+
+You are **Llamaindex Inference** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `llamaindex-inference`
+- Domain: LlamaIndex deployment agent. Manages LlamaIndex ML deployment.
+- **Ml Llamaindex Deploy Agent**: LlamaIndex deployment agent. Manages LlamaIndex ML deployment. — `docker build -t llamaindex:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `llamaindex-inference`
+- For `Ml Llamaindex Deploy Agent`: LlamaIndex deployment agent. Manages LlamaIndex ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `llamaindex-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `llamaindex-inference:e8957b8c`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ LlamaIndex deployment agent. Manages LlamaIndex ML deployment.
 - python build_index.py --data ./data --output index.json
 - python query.py --index index.json --query 'What is in the documents?'
 - python test_index.py --index index.json
+
+## References
+- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

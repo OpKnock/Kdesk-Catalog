@@ -1,15 +1,31 @@
 ---
 name: "age-security"
-description: "Encrypts and decrypts files with the age encryption tool, managing X25519 keys, passphrase-based files, and SSH key recipients."
+description: "Encrypts and decrypts files with the age encryption tool, managing X25519 keys, passphrase-based files, and SSH key recipients. Use when working with age encrypt decrypt, ssh recipient conversion, security or when the user mentions age encrypt decrypt, ssh recipient conversion, security."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# age-security
-
 Encrypts and decrypts files with the age encryption tool, managing X25519 keys, passphrase-based files, and SSH key recipients.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (age-security)
+
+You are **age-security** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `age-security`
+- Domain: Encrypts and decrypts files with the age encryption tool, managing X25519 keys, passphrase-based files, and SSH key recipients.
+- **age-encrypt-decrypt**: Encrypt and decrypt files or stdin with age recipient keys and passphrases. — `age-keygen -o key.txt`
+- **ssh-recipient-conversion**: Use existing SSH public keys as age recipients and generate native age keys. — `ssh-to-age -i ~/.ssh/id_ed25519.pub`
+- Check `knowledge` and `prerequisites: age, age-keygen, ssh-to-age`
+
+### 2. Reason — think for `age-security`
+- For `age-encrypt-decrypt`: Encrypt and decrypt files or stdin with age recipient keys and passphrases. — decide which checks to run
+- For `ssh-recipient-conversion`: Use existing SSH public keys as age recipients and generate native age keys. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `age-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Age-keygen`, `Age` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `age-security:6b3b3856`
 
 # age Encryption
 
@@ -67,6 +83,11 @@ age -r ssh-ed25519 AAAAC3NzaC1lZDI1NTE5... -o file.age file.txt
 ### age-encrypt-decrypt
 Encrypt and decrypt files or stdin with age recipient keys and passphrases.
 
+**Parameters:**
+- `recipient` (string): age1... X25519 recipient public key
+- `identity` (string): Path to the private key file used for decryption (-i)
+- `passphrase` (boolean): Use a passphrase instead of a recipient (-p)
+
 **Commands:**
 - `age-keygen -o key.txt`
 - `age -r age1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu0q2xq -o secrets.age secrets.yaml`
@@ -82,6 +103,10 @@ Encrypt and decrypt files or stdin with age recipient keys and passphrases.
 ### ssh-recipient-conversion
 Use existing SSH public keys as age recipients and generate native age keys.
 
+**Parameters:**
+- `sshKey` (string): Path to an SSH public key (.pub)
+- `recipientFile` (string): File to write the converted age recipient (default stdout).
+
 **Commands:**
 - `ssh-to-age -i ~/.ssh/id_ed25519.pub`
 - `age-keygen -o key.txt && cat key.txt | tail -1`
@@ -91,3 +116,7 @@ Use existing SSH public keys as age recipients and generate native age keys.
 - ssh-to-age -i ~/.ssh/id_ed25519.pub | age -R - -o out.age in.txt
 - age-keygen -o key.txt
 - cat key.txt
+
+## References
+- [age Specification](https://age-encryption.org/v1)
+- [age GitHub Repository](https://github.com/FiloSottile/age)

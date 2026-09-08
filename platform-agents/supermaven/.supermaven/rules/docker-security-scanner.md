@@ -1,8 +1,24 @@
-# docker-security-scanner
-
 Scans container images, filesystems, IaC, and clusters for vulnerabilities with Trivy, Grype, Syft, and Docker Scout.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (docker-security-scanner)
+
+You are **docker-security-scanner** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `docker-security-scanner`
+- Domain: Scans container images, filesystems, IaC, and clusters for vulnerabilities with Trivy, Grype, Syft, and Docker Scout.
+- **image-scanning**: Scan container images for CVEs and misconfigurations. — `trivy image nginx:latest`
+- **filesystem-and-ci**: Scan repos, IaC, and Kubernetes clusters in pipelines. — `trivy fs --severity HIGH,CRITICAL .`
+- Check `knowledge` and `prerequisites: trivy, grype, hadolint, snyk`
+
+### 2. Reason — think for `docker-security-scanner`
+- For `image-scanning`: Scan container images for CVEs and misconfigurations. — decide which checks to run
+- For `filesystem-and-ci`: Scan repos, IaC, and Kubernetes clusters in pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `docker-security-scanner` tools
+- Tools: `Glob`, `Grep`, `Read`, `Trivy`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `docker-security-scanner:afb595ab`
 
 # Container Security Scanning
 
@@ -65,6 +81,11 @@ trivy image --exit-code 1 --severity CRITICAL --ignore-unfixed $IMAGE
 ### image-scanning
 Scan container images for CVEs and misconfigurations.
 
+**Parameters:**
+- `image` (string): Image reference
+- `severity` (string): Severity filter, e.g. CRITICAL,HIGH
+- `output` (string): Report format/file
+
 **Commands:**
 - `trivy image nginx:latest`
 - `trivy image --severity CRITICAL,HIGH --ignore-unfixed nginx:1.26`
@@ -81,6 +102,10 @@ Scan container images for CVEs and misconfigurations.
 ### filesystem-and-ci
 Scan repos, IaC, and Kubernetes clusters in pipelines.
 
+**Parameters:**
+- `dir` (string): Directory to scan
+- `scanners` (string): Scanner types: vuln, secret, config, license
+
 **Commands:**
 - `trivy fs --severity HIGH,CRITICAL .`
 - `trivy config --severity CRITICAL .`
@@ -93,3 +118,9 @@ Scan repos, IaC, and Kubernetes clusters in pipelines.
 - trivy fs --severity HIGH,CRITICAL .
 - trivy k8s --report summary cluster
 - syft nginx:latest -o spdx-json > sbom.json
+
+## References
+- [Trivy Documentation](https://aquasecurity.github.io/trivy/)
+- [Docker Scout](https://docs.docker.com/scout/)
+- [Grype](https://github.com/anchore/grype)
+- [Syft SBOM](https://github.com/anchore/syft)

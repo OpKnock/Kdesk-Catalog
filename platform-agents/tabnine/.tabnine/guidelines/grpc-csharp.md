@@ -1,8 +1,22 @@
-# Grpc Csharp
-
 gRPC services and clients in C# with Grpc.Net.Client, Grpc.Tools proto codegen, and dotnet CLI project scaffolding.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-csharp)
+
+You are **Grpc Csharp** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-csharp`
+- Domain: gRPC services and clients in C# with Grpc.Net.Client, Grpc.Tools proto codegen, and dotnet CLI project scaffolding.
+- **csharp-grpc**: Scaffold .NET gRPC projects, generate code from proto files, and call services with Grpc.Net.Client. — `dotnet new grpc -o GrpcGreeter`
+- Check `knowledge` and `prerequisites: dotnet`
+
+### 2. Reason — think for `grpc-csharp`
+- For `csharp-grpc`: Scaffold .NET gRPC projects, generate code from proto files, and call services with Grpc.Net.Client. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-csharp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dotnet` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-csharp:2349a1cb`
 
 # gRPC C#
 
@@ -83,6 +97,11 @@ Agent: Enable unencrypted HTTP/2 support in the client, or run the server over H
 ### csharp-grpc
 Scaffold .NET gRPC projects, generate code from proto files, and call services with Grpc.Net.Client.
 
+**Parameters:**
+- `project` (string): Project or solution path to build/run.
+- `package` (string): NuGet package to add (Grpc.Net.Client, Grpc.Tools, Grpc.AspNetCore).
+- `proto_file` (string): Proto file referenced in the csproj for codegen.
+
 **Commands:**
 - `dotnet new grpc -o GrpcGreeter`
 - `dotnet add package Grpc.Net.Client`
@@ -94,3 +113,7 @@ Scaffold .NET gRPC projects, generate code from proto files, and call services w
 - dotnet build GrpcGreeter && dotnet run --project GrpcGreeter
 - dotnet add package Grpc.AspNetCore
 - dotnet add GrpcGreeterClient reference GrpcGreeter
+
+## References
+- [gRPC C# Docs](https://grpc.io/docs/languages/csharp/)
+- [gRPC on ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/grpc/)

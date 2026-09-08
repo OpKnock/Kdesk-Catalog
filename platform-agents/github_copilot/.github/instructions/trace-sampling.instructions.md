@@ -4,27 +4,23 @@ applyTo: "**/*.r **/*.sh **/*.{yaml,yml}"
 
 Control trace volume with head and tail sampling strategies. Configures OpenTelemetry SDK samplers via environment variables (traceidratio, parentbased_traceidratio, always_on), sets Jaeger probabilistic or rate-limiting sampling, and describes collector-side tail sampling policies that retain errors while dropping successful traces.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (trace-sampling)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Trace Sampling** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `trace-sampling`
+- Domain: Control trace volume with head and tail sampling strategies. Configures OpenTelemetry SDK samplers via environment variables (traceidratio, parentbased_traceidratio, always_on), sets Jaeger probabilis
+- **sampling-strategy**: Configure head and tail trace sampling rates — `export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=0.1`
+- Check `knowledge` and `prerequisites: docker, export`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `trace-sampling`
+- For `sampling-strategy`: Configure head and tail trace sampling rates — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `trace-sampling` tools
+- Tools: `Glob`, `Grep`, `Read`, `Export`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `trace-sampling:be2d96da`
 
 # Trace Sampling
 

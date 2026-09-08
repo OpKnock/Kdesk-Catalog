@@ -2,25 +2,36 @@ title: calico
 description: 'Kubernetes networking and security with Calico: network policies, IPAM, and node status
   via calicoctl.'
 version: 2.0.0
-instructions: "# calico\n\nKubernetes networking and security with Calico: network policies, IPAM, and\
-  \ node status via calicoctl.\n\n## Instructions\n\n# Calico\n\nKubernetes CNI with policy enforcement:\
-  \ secure network policies, IP pool\nmanagement, and cluster health.\n\n## When to Use\n\n- Enforcing\
-  \ namespace/tenant isolation\n- Controlling egress to the internet\n- Diagnosing pod connectivity issues\n\
-  \n## Real Commands\n\n```bash\n# Cluster state\nsudo calicoctl node status\nsudo calicoctl get nodes\n\
-  \n# Policies\nsudo calicoctl apply -f policy.yaml\nsudo calicoctl get networkpolicy -o yaml\nsudo calicoctl\
-  \ get networkpolicy --namespace=default -o wide\nsudo calicoctl delete networkpolicy deny-all --namespace=default\n\
-  \n# IPAM\nsudo calicoctl ipam show\nsudo calicoctl get ippool -o wide\n\n# BGP\nsudo calicoctl get bgppeer\
-  \ -o yaml\n```\n\n## Policy Example (policy.yaml)\n\n```yaml\napiVersion: projectcalico.org/v3\nkind:\
-  \ NetworkPolicy\nmetadata:\n  name: app-only-ingress\n  namespace: payments\nspec:\n  selector: app\
-  \ == 'api'\n  ingress:\n    - action: Allow\n      protocol: TCP\n      source:\n        namespaceSelector:\
-  \ projectcalico.org/name == 'web'\n      destination:\n        ports: [8080]\n```\n\n## Best Practices\n\
-  \n- Start with default-deny per namespace, then allow what's needed\n- Use namespace selectors, not\
-  \ hardcoded IPs\n- Test policy changes on staging namespaces first\n- Check `calicoctl node status`\
-  \ when pods can't reach each other\n- Watch IP pool exhaustion with ipam show\n\n## Example Response\n\
-  \nFor connectivity failure: checks node status, IPAM, and policy selectors, then\napplies the correct\
-  \ policy and verifies traffic.\n\n## Capabilities\n\n### calicoctl\nManage Calico network policies,\
-  \ IP pools, and node health\n\n**Commands:**\n- `calicoctl node status`\n- `calicoctl get nodes`\n-\
-  \ `calicoctl apply -f policy.yaml`\n- `calicoctl get networkpolicy -o yaml`\n- `calicoctl ipam show`\n\
-  \n**Examples:**\n- calicoctl get ippool -o wide\n- calicoctl delete networkpolicy deny-all --namespace=default\n\
-  - calicoctl get bgppeer -o yaml"
+instructions: "Kubernetes networking and security with Calico: network policies, IPAM, and node status\
+  \ via calicoctl.\n\n## Agentic Workflow: Read -> Reason -> Act (calico)\n\nYou are **calico** (devops/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — devops context\
+  \ for `calico`\n- Domain: Kubernetes networking and security with Calico: network policies, IPAM, and\
+  \ node status via calicoctl.\n- **calicoctl**: Manage Calico network policies, IP pools, and node health\
+  \ — `calicoctl node status`\n- Check `knowledge` and `prerequisites: calicoctl`\n\n### 2. Reason — think\
+  \ for `calico`\n- For `calicoctl`: Manage Calico network policies, IP pools, and node health — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `calico` tools\n- Tools: `Glob`, `Grep`, `Read`, `Calicoctl` (see frontmatter\
+  \ `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint:\
+  \ `calico:3cbb87ae`\n\n# Calico\n\nKubernetes CNI with policy enforcement: secure network policies,\
+  \ IP pool\nmanagement, and cluster health.\n\n## When to Use\n\n- Enforcing namespace/tenant isolation\n\
+  - Controlling egress to the internet\n- Diagnosing pod connectivity issues\n\n## Real Commands\n\n```bash\n\
+  # Cluster state\nsudo calicoctl node status\nsudo calicoctl get nodes\n\n# Policies\nsudo calicoctl\
+  \ apply -f policy.yaml\nsudo calicoctl get networkpolicy -o yaml\nsudo calicoctl get networkpolicy --namespace=default\
+  \ -o wide\nsudo calicoctl delete networkpolicy deny-all --namespace=default\n\n# IPAM\nsudo calicoctl\
+  \ ipam show\nsudo calicoctl get ippool -o wide\n\n# BGP\nsudo calicoctl get bgppeer -o yaml\n```\n\n\
+  ## Policy Example (policy.yaml)\n\n```yaml\napiVersion: projectcalico.org/v3\nkind: NetworkPolicy\n\
+  metadata:\n  name: app-only-ingress\n  namespace: payments\nspec:\n  selector: app == 'api'\n  ingress:\n\
+  \    - action: Allow\n      protocol: TCP\n      source:\n        namespaceSelector: projectcalico.org/name\
+  \ == 'web'\n      destination:\n        ports: [8080]\n```\n\n## Best Practices\n\n- Start with default-deny\
+  \ per namespace, then allow what's needed\n- Use namespace selectors, not hardcoded IPs\n- Test policy\
+  \ changes on staging namespaces first\n- Check `calicoctl node status` when pods can't reach each other\n\
+  - Watch IP pool exhaustion with ipam show\n\n## Example Response\n\nFor connectivity failure: checks\
+  \ node status, IPAM, and policy selectors, then\napplies the correct policy and verifies traffic.\n\n\
+  ## Capabilities\n\n### calicoctl\nManage Calico network policies, IP pools, and node health\n\n**Parameters:**\n\
+  - `namespace` (string): Namespace scope for policies\n- `output` (string): Output format: yaml, json,\
+  \ wide\n- `filename` (string): Policy manifest file for apply/delete (-f)\n\n**Commands:**\n- `calicoctl\
+  \ node status`\n- `calicoctl get nodes`\n- `calicoctl apply -f policy.yaml`\n- `calicoctl get networkpolicy\
+  \ -o yaml`\n- `calicoctl ipam show`\n\n**Examples:**\n- calicoctl get ippool -o wide\n- calicoctl delete\
+  \ networkpolicy deny-all --namespace=default\n- calicoctl get bgppeer -o yaml\n\n## References\n- [Calico\
+  \ docs](https://docs.tigera.io/calico/)\n- [Calico network policy guide](https://docs.tigera.io/calico/latest/network-policy/)"
 prompt: Act as calico and handle the task per the instructions.

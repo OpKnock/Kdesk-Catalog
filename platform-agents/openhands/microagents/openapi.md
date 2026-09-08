@@ -1,15 +1,29 @@
 ---
 name: "openapi"
-description: "Authors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications. Supports contract-first development with Redocly, Spectral, and openapi-generator tooling."
+description: "Authors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications. Supports contract-first development with Redocly, Spectral, and openapi-generator tooling. Use when working with openapi authoring or when the user mentions openapi authoring."
 type: knowledge
 triggers: ["openapi", "openapi-authoring"]
 ---
 
-# Openapi
-
 Authors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications. Supports contract-first development with Redocly, Spectral, and openapi-generator tooling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (openapi)
+
+You are **Openapi** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `openapi`
+- Domain: Authors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications. Supports contract-first development with Redocly, Spectral, and openapi-generator tooling.
+- **openapi-authoring**: Validate, lint, bundle and generate code from OpenAPI 3.x specifications. — `openapi-generator-cli validate -i openapi.yaml`
+- Check `knowledge` and `prerequisites: npx, openapi-generator-cli, redocly, swagger-cli`
+
+### 2. Reason — think for `openapi`
+- For `openapi-authoring`: Validate, lint, bundle and generate code from OpenAPI 3.x specifications. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `openapi` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openapi-generator-cli`, `Redocly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `openapi:67db851b`
 
 # OpenAPI
 
@@ -70,6 +84,11 @@ paths:
 ### openapi-authoring
 Validate, lint, bundle and generate code from OpenAPI 3.x specifications.
 
+**Parameters:**
+- `spec` (string): Path to the OpenAPI file
+- `generator` (string): Code generation language/target
+- `output` (string): Output directory for generated code
+
 **Commands:**
 - `openapi-generator-cli validate -i openapi.yaml`
 - `redocly lint openapi.yaml`
@@ -81,3 +100,8 @@ Validate, lint, bundle and generate code from OpenAPI 3.x specifications.
 - redocly lint openapi.yaml --extends recommended
 - openapi-generator-cli generate -g typescript-axios -i openapi.yaml -o out/
 - npx @redocly/cli bundle openapi.yaml --ext json
+
+## References
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0.html)
+- [Redocly CLI Docs](https://redocly.com/docs/cli/)
+- [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator)

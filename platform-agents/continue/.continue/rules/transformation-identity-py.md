@@ -1,6 +1,6 @@
 ---
 name: "Transformation Identity Py"
-description: "Transformation deployment agent. Manages Transformation ML deployment."
+description: "Transformation deployment agent. Manages Transformation ML deployment. Use when working with Ml Transformation Deploy Agent or when the user mentions Ml Transformation Deploy Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Transformation Identity Py
 
 Transformation deployment agent. Manages Transformation ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (transformation-identity-py)
+
+You are **Transformation Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `transformation-identity-py`
+- Domain: Transformation deployment agent. Manages Transformation ML deployment.
+- **Ml Transformation Deploy Agent**: Transformation deployment agent. Manages Transformation ML deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `transformation-identity-py`
+- For `Ml Transformation Deploy Agent`: Transformation deployment agent. Manages Transformation ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `transformation-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `transformation-identity-py:926abe6e`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Transformation deployment agent. Manages Transformation ML deployment.
 - curl http://localhost:8080/transform --data '{"input": "data.csv"}'
 - python transform.py --input data.csv --output transformed.csv --method normalization
 - python pipeline.py --input data.csv --output processed.csv
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

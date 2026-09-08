@@ -2,14 +2,24 @@ title: Filtering
 description: 'Server-side API filtering: implement query parameter filters, combine with pagination and
   sorting, and test filter edge cases with jq.'
 version: 2.0.0
-instructions: "# Filtering\n\nServer-side API filtering: implement query parameter filters, combine with\
-  \ pagination and sorting, and test filter edge cases with jq.\n\n## Instructions\n\n# Filtering\n\n\
-  ## What this skill does\n\nFiltering lets clients narrow result sets server-side instead of downloading\
-  \ everything. This skill covers query-parameter filters, operator conventions (eq, gte, in), combining\
-  \ with sort/pagination, and testing them.\n\n## When to use\n\n- Endpoints that return large collections\n\
-  - Dashboards and reporting with many filter dimensions\n- Moving client-side filtering into the API\
-  \ for performance\n\n## Real commands\n\n```bash\n# Equality filter\ncurl -s 'http://localhost:8080/api/orders?status=paid'\
-  \ | jq '.data | length'\n\n# Range operators (gte/lte) and search\ncurl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500'\
+instructions: "Server-side API filtering: implement query parameter filters, combine with pagination and\
+  \ sorting, and test filter edge cases with jq.\n\n## Agentic Workflow: Read -> Reason -> Act (filtering)\n\
+  \nYou are **Filtering** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `filtering`\n- Domain: Server-side API filtering: implement query parameter\
+  \ filters, combine with pagination and sorting, and test filter edge cases with jq.\n- **query-filtering**:\
+  \ Build and test filter query parameters across API data sets. — `curl -s 'http://localhost:8080/api/orders?status=paid'\
+  \ | jq '.data | length'`\n- Check `knowledge` and `prerequisites: grep`\n\n### 2. Reason — think for\
+  \ `filtering`\n- For `query-filtering`: Build and test filter query parameters across API data sets.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `filtering` tools\n- Tools: `Glob`, `Read`, `Bash`, `Grep`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `filtering:82ac194f`\n\n# Filtering\n\n## What this skill does\n\nFiltering\
+  \ lets clients narrow result sets server-side instead of downloading everything. This skill covers query-parameter\
+  \ filters, operator conventions (eq, gte, in), combining with sort/pagination, and testing them.\n\n\
+  ## When to use\n\n- Endpoints that return large collections\n- Dashboards and reporting with many filter\
+  \ dimensions\n- Moving client-side filtering into the API for performance\n\n## Real commands\n\n```bash\n\
+  # Equality filter\ncurl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'\n\n\
+  # Range operators (gte/lte) and search\ncurl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500'\
   \ | jq '.data[].total'\ncurl -s 'http://localhost:8080/api/orders?q=alice' | jq '.data | length'\n\n\
   # Combine with sort + pagination\ncurl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10'\
   \ | jq '.meta'\n```\n\n## Implementation example\n\n```javascript\nconst OPERATORS = { eq: '=', neq:\
@@ -23,11 +33,13 @@ instructions: "# Filtering\n\nServer-side API filtering: implement query paramet
   \ with sort and pagination; document the whole matrix.\n- Index the filterable columns in the database.\n\
   - Use `contains` (ILIKE) sparingly; it bypasses indexes.\n- Cap `in` lists to a reasonable length (e.g.\
   \ 100 values).\n\n## Capabilities\n\n### query-filtering\nBuild and test filter query parameters across\
-  \ API data sets.\n\n**Commands:**\n- `curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data\
-  \ | length'`\n- `curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10'\
+  \ API data sets.\n\n**Parameters:**\n- `field` (string): Field to filter on\n- `operator` (string):\
+  \ eq, neq, gte, lte, in, contains\n- `value` (string): Filter value\n\n**Commands:**\n- `curl -s 'http://localhost:8080/api/orders?status=paid'\
+  \ | jq '.data | length'`\n- `curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10'\
   \ | jq '.meta'`\n- `curl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500' | jq '.data[].total'`\n\
   - `grep -rn 'filter' src/controllers/ | head -10`\n- `curl -s 'http://localhost:8080/api/orders?q=alice'\
   \ | jq '.data | length'`\n\n**Examples:**\n- curl -s 'http://localhost:8080/api/orders?status=paid&sort=-createdAt&page=2&limit=10'\
   \ | jq '.meta'\n- curl -s 'http://localhost:8080/api/orders?total_gte=100&total_lte=500' | jq '.data[].total'\n\
-  - curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'"
+  - curl -s 'http://localhost:8080/api/orders?status=paid' | jq '.data | length'\n\n## References\n- [JSON:API\
+  \ Filtering](https://jsonapi.org/recommendations/#filtering)"
 prompt: Act as Filtering and handle the task per the instructions.

@@ -1,14 +1,28 @@
 ---
-description: "Run it analysis with level control, baselines, and CI output. legacy code."
+description: "Run it analysis with level control, baselines, and CI output. legacy code. Use when working with phpstan analysis, code quality or when the user mentions phpstan analysis, code quality."
 globs: ["**/*.json", "**/*.php", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Phpstan
-
 Run it analysis with level control, baselines, and CI output. legacy code.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (phpstan)
+
+You are **Phpstan** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `phpstan`
+- Domain: Run it analysis with level control, baselines, and CI output. legacy code.
+- **phpstan-analysis**: Run PHPStan analysis with level control, baselines, and CI output — `vendor/bin/phpstan analyse src/`
+- Check `knowledge` and `prerequisites: vendor/bin/phpstan`
+
+### 2. Reason — think for `phpstan`
+- For `phpstan-analysis`: Run PHPStan analysis with level control, baselines, and CI output — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `phpstan` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vendor/bin/phpstan` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `phpstan:f8a8a3f5`
 
 # PHPStan
 
@@ -76,6 +90,11 @@ class, and suggests the config change or code fix.
 ### phpstan-analysis
 Run PHPStan analysis with level control, baselines, and CI output
 
+**Parameters:**
+- `level` (integer): Analysis strictness level 0-9 (or max)
+- `error-format` (string): Output format: table, raw, json, github, checkstyle
+- `generate-baseline` (boolean): Write current errors to phpstan-baseline.neon
+
 **Commands:**
 - `vendor/bin/phpstan analyse src/`
 - `vendor/bin/phpstan analyse -l 8 src/`
@@ -87,3 +106,7 @@ Run PHPStan analysis with level control, baselines, and CI output
 - vendor/bin/phpstan analyse --level=max src/
 - vendor/bin/phpstan analyse -c phpstan.neon --no-progress
 - vendor/bin/phpstan analyse --error-format=github src/
+
+## References
+- [PHPStan docs](https://phpstan.org/)
+- [PHPStan config reference](https://phpstan.org/config-reference)

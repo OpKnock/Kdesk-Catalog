@@ -4,27 +4,27 @@ applyTo: "**/*.go **/*.html **/*.java **/*.py **/*.r **/*.sh **/*.{ts,tsx} **/*.
 
 Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates, and Modelina multi-language models.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (asyncapi-codegen)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Asyncapi Codegen** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @asyncapi/cli validate asyncapi.yaml`, `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-templ`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `asyncapi-codegen`
+- Domain: Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates, and Modelina multi-language models.
+- **validation**: Validate and lint AsyncAPI documents. — `npx @asyncapi/cli validate asyncapi.yaml`
+- **generation**: Generate server/client code and docs from templates. — `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated -`
+- **modelina**: Generate data models for multiple languages from the schema. — `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --langua`
+- Check `knowledge` and `prerequisites: npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `asyncapi-codegen`
+- For `validation`: Validate and lint AsyncAPI documents. — decide which checks to run
+- For `generation`: Generate server/client code and docs from templates. — decide which checks to run
+- For `modelina`: Generate data models for multiple languages from the schema. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `asyncapi-codegen` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `asyncapi-codegen:7006c39f`
 
 # AsyncAPI Codegen
 

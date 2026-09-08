@@ -2,16 +2,25 @@ title: pre-commit
 description: 'Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook
   repos.'
 version: 2.0.0
-instructions: "# pre-commit\n\nManages git hooks with pre-commit: installing hooks, running checks, and\
-  \ maintaining hook repos.\n\n## Instructions\n\n# Pre-commit\n\nFramework for managing and maintaining\
-  \ multi-language git hooks, so every commit\nruns the same checks as CI.\n\n## When to Use\n\n- Standardizing\
-  \ checks (lint, format, secrets) across a team\n- Running Python and JS linters in one hook pipeline\n\
-  - Keeping hooks versioned and shareable\n\n## Real Commands\n\n```bash\n# Install the hooks into the\
-  \ repo\npre-commit install\n\n# Run all hooks on everything (CI / after config change)\npre-commit run\
-  \ --all-files\n\n# Run a single hook\npre-commit run ruff\n\n# Run only against specific files\npre-commit\
-  \ run --files src/foo.py\n\n# Update hook revisions\npre-commit autoupdate\n\n# Validate the config\
-  \ file\npre-commit validate-config\n\n# Clean cache when hooks misbehave\npre-commit clean\n```\n\n\
-  ## Config (.pre-commit-config.yaml)\n\n```yaml\nrepos:\n  - repo: https://github.com/pre-commit/pre-commit-hooks\n\
+instructions: "Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook\
+  \ repos.\n\n## Agentic Workflow: Read -> Reason -> Act (pre-commit)\n\nYou are **pre-commit** (code-quality/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — code-quality\
+  \ context for `pre-commit`\n- Domain: Manages git hooks with pre-commit: installing hooks, running checks,\
+  \ and maintaining hook repos.\n- **pre-commit-hooks**: Install, run, and manage pre-commit framework\
+  \ git hooks — `pre-commit install`\n- Check `knowledge` and `prerequisites: pre-commit`\n\n### 2. Reason\
+  \ — think for `pre-commit`\n- For `pre-commit-hooks`: Install, run, and manage pre-commit framework\
+  \ git hooks — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `pre-commit` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Pre-commit` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `pre-commit:f53c5120`\n\n# Pre-commit\n\nFramework for managing\
+  \ and maintaining multi-language git hooks, so every commit\nruns the same checks as CI.\n\n## When\
+  \ to Use\n\n- Standardizing checks (lint, format, secrets) across a team\n- Running Python and JS linters\
+  \ in one hook pipeline\n- Keeping hooks versioned and shareable\n\n## Real Commands\n\n```bash\n# Install\
+  \ the hooks into the repo\npre-commit install\n\n# Run all hooks on everything (CI / after config change)\n\
+  pre-commit run --all-files\n\n# Run a single hook\npre-commit run ruff\n\n# Run only against specific\
+  \ files\npre-commit run --files src/foo.py\n\n# Update hook revisions\npre-commit autoupdate\n\n# Validate\
+  \ the config file\npre-commit validate-config\n\n# Clean cache when hooks misbehave\npre-commit clean\n\
+  ```\n\n## Config (.pre-commit-config.yaml)\n\n```yaml\nrepos:\n  - repo: https://github.com/pre-commit/pre-commit-hooks\n\
   \    rev: v4.6.0\n    hooks:\n      - id: trailing-whitespace\n      - id: check-added-large-files\n\
   \      - id: end-of-file-fixer\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n    rev: v0.6.0\n\
   \    hooks:\n      - id: ruff\n        args: [--fix]\n      - id: ruff-format\n```\n\n## CI\n\n```yaml\n\
@@ -21,8 +30,11 @@ instructions: "# pre-commit\n\nManages git hooks with pre-commit: installing hoo
   - Keep fast hooks in pre-commit; move heavy suites to CI\n\n## Example Response\n\nAfter a failing commit,\
   \ reports which hook failed, what it modified, and the exact\ntail of the diff so the user can re-stage\
   \ and commit.\n\n## Capabilities\n\n### pre-commit-hooks\nInstall, run, and manage pre-commit framework\
-  \ git hooks\n\n**Commands:**\n- `pre-commit install`\n- `pre-commit run --all-files`\n- `pre-commit\
-  \ autoupdate`\n- `pre-commit run ruff --files src/`\n- `pre-commit validate-config`\n\n**Examples:**\n\
-  - pre-commit run --all-files --show-diff-on-failure\n- pre-commit run trailing-whitespace --files README.md\n\
-  - pre-commit clean && pre-commit install-hooks"
+  \ git hooks\n\n**Parameters:**\n- `files` (string): Only run hooks against these files\n- `show-diff-on-failure`\
+  \ (boolean): Print the diff when a hook modifies files\n- `all-files` (boolean): Run against all files\
+  \ instead of staged ones\n\n**Commands:**\n- `pre-commit install`\n- `pre-commit run --all-files`\n\
+  - `pre-commit autoupdate`\n- `pre-commit run ruff --files src/`\n- `pre-commit validate-config`\n\n\
+  **Examples:**\n- pre-commit run --all-files --show-diff-on-failure\n- pre-commit run trailing-whitespace\
+  \ --files README.md\n- pre-commit clean && pre-commit install-hooks\n\n## References\n- [pre-commit\
+  \ docs](https://pre-commit.com/)\n- [pre-commit supported hooks](https://pre-commit.com/hooks.html)"
 prompt: Act as pre-commit and handle the task per the instructions.

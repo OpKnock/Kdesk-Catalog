@@ -9,27 +9,27 @@ allowed-tools: "Glob Grep Read Bash(aws:*) Bash(curl:*)"
 
 Manages AWS AppSync GraphQL APIs: creating APIs, schema updates, resolvers, API keys, and executing GraphQL queries.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (aws-appsync)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Aws Appsync** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `aws appsync create-graphql-api --name MyApi --authentication`, `aws appsync start-schema-creation --api-id abc123xyz --defin`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `aws-appsync`
+- Domain: Manages AWS AppSync GraphQL APIs: creating APIs, schema updates, resolvers, API keys, and executing GraphQL queries.
+- **api-lifecycle**: Create and configure AppSync GraphQL APIs. — `aws appsync create-graphql-api --name MyApi --authentication-type API_KEY`
+- **schema-resolvers**: Update schemas and manage resolvers. — `aws appsync start-schema-creation --api-id abc123xyz --definition file://schema.`
+- **invoke-graphql**: Create API keys and execute GraphQL operations. — `aws appsync create-api-key --api-id abc123xyz`
+- Check `knowledge` and `prerequisites: aws`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `aws-appsync`
+- For `api-lifecycle`: Create and configure AppSync GraphQL APIs. — decide which checks to run
+- For `schema-resolvers`: Update schemas and manage resolvers. — decide which checks to run
+- For `invoke-graphql`: Create API keys and execute GraphQL operations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `aws-appsync` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-appsync:18aab69b`
 
 # AWS AppSync
 

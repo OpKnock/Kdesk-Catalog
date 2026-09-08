@@ -4,27 +4,23 @@ applyTo: "**/*.go **/*.java **/*.json **/*.r **/*.sh **/*.{js,ts,jsx,tsx}"
 
 Patterns for consistent API error handling: structured RFC 7807 problem responses, centralized middleware to map domain exceptions to status codes, contextual logging without leaking internals, and test coverage for every error path.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (exception-handling)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Exception Handling** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s http://localhost:8080/api/orders/999999 | jq`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `exception-handling`
+- Domain: Patterns for consistent API error handling: structured RFC 7807 problem responses, centralized middleware to map domain exceptions to status codes, contextual logging without leaking internals, and te
+- **error-response-design**: Define, emit, log, and test consistent error responses across API layers. — `curl -s http://localhost:8080/api/orders/999999 | jq`
+- Check `knowledge` and `prerequisites: grep, node`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `exception-handling`
+- For `error-response-design`: Define, emit, log, and test consistent error responses across API layers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `exception-handling` tools
+- Tools: `Glob`, `Read`, `Bash`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `exception-handling:0d355b5a`
 
 # Exception Handling
 

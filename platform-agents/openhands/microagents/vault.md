@@ -1,15 +1,33 @@
 ---
 name: "vault"
-description: "Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines."
+description: "Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines. Use when working with kv secrets, policies and tokens, dynamic secrets, audit and ops or when the user mentions kv secrets, policies and tokens, dynamic secrets, audit and ops."
 type: knowledge
 triggers: ["vault", "kv-secrets", "policies-and-tokens", "dynamic-secrets", "audit-and-ops"]
 ---
 
-# vault
-
 Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (vault)
+
+You are **vault** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `vault`
+- Domain: Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines.
+- **kv-secrets**: Store, read, and delete secrets in KV engines. — `vault kv put secret/myapp db_password="hunter2" db_user="app"`
+- **policies-and-tokens**: Author policies and create scoped tokens. — `vault policy write app-readonly - <<'EOF'`
+- **dynamic-secrets**: Generate dynamic credentials for databases. — `vault secrets enable database`
+- Check `knowledge` and `prerequisites: vault`
+
+### 2. Reason — think for `vault`
+- For `kv-secrets`: Store, read, and delete secrets in KV engines. — decide which checks to run
+- For `policies-and-tokens`: Author policies and create scoped tokens. — decide which checks to run
+- For `dynamic-secrets`: Generate dynamic credentials for databases. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vault` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vault` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vault:5a64aa0b`
 
 # Vault
 
@@ -69,6 +87,10 @@ vault status
 ### kv-secrets
 Store, read, and delete secrets in KV engines.
 
+**Parameters:**
+- `path` (string): Secret path, e.g. secret/myapp
+- `field` (string): Single field to read
+
 **Commands:**
 - `vault kv put secret/myapp db_password="hunter2" db_user="app"`
 - `vault kv get secret/myapp`
@@ -85,6 +107,10 @@ Store, read, and delete secrets in KV engines.
 ### policies-and-tokens
 Author policies and create scoped tokens.
 
+**Parameters:**
+- `policy` (string): Policy name
+- `ttl` (string): Token TTL, e.g. 1h
+
 **Commands:**
 - `vault policy write app-readonly - <<'EOF'`
 - `vault policy read app-readonly`
@@ -99,6 +125,10 @@ Author policies and create scoped tokens.
 
 ### dynamic-secrets
 Generate dynamic credentials for databases.
+
+**Parameters:**
+- `role` (string): Database role name
+- `lease` (string): Lease ID to renew or revoke
 
 **Commands:**
 - `vault secrets enable database`
@@ -115,6 +145,10 @@ Generate dynamic credentials for databases.
 ### audit-and-ops
 Check server status and enable audit logs.
 
+**Parameters:**
+- `auditType` (string): Audit backend: file, syslog, socket
+- `filePath` (string): Log path for the file audit backend.
+
 **Commands:**
 - `vault status`
 - `vault audit enable file file_path=/var/log/vault-audit.log`
@@ -126,3 +160,14 @@ Check server status and enable audit logs.
 - vault status
 - vault audit enable file file_path=/var/log/vault-audit.log
 - vault audit list
+
+## References
+- [Vault Documentation](https://developer.hashicorp.com/vault/docs)
+- [Vault KV Engine](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

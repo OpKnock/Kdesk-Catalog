@@ -1,15 +1,31 @@
 ---
 name: "terraform-infrastructure"
-description: "Manages infrastructure as code with Terraform: init, plan, apply, state, and modules across environments."
+description: "Manages infrastructure as code with Terraform: init, plan, apply, state, and modules across environments. Use when working with core, state, infrastructure or when the user mentions core, state, infrastructure."
 globs: ["**/*.r", "**/*.sh", "**/*.tf"]
 alwaysApply: false
 ---
 
-# terraform-infrastructure
-
 Manages infrastructure as code with Terraform: init, plan, apply, state, and modules across environments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (terraform-infrastructure)
+
+You are **terraform-infrastructure** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `terraform-infrastructure`
+- Domain: Manages infrastructure as code with Terraform: init, plan, apply, state, and modules across environments.
+- **core**: Run the core Terraform workflow. — `terraform init`
+- **state**: Inspect and repair Terraform state. — `terraform state list`
+- Check `knowledge` and `prerequisites: terraform`
+
+### 2. Reason — think for `terraform-infrastructure`
+- For `core`: Run the core Terraform workflow. — decide which checks to run
+- For `state`: Inspect and repair Terraform state. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `terraform-infrastructure` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terraform` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `terraform-infrastructure:be4a9228`
 
 # Terraform
 
@@ -100,6 +116,11 @@ Add Terratest or tofu test suites for module behavior.
 ### core
 Run the core Terraform workflow.
 
+**Parameters:**
+- `var-file` (string): Environment variable file
+- `out` (string): Save plan to a file
+- `target` (string): Target a specific resource/module
+
 **Commands:**
 - `terraform init`
 - `terraform plan -out=tfplan`
@@ -115,6 +136,11 @@ Run the core Terraform workflow.
 ### state
 Inspect and repair Terraform state.
 
+**Parameters:**
+- `address` (string): Resource address like aws_instance.web[0]
+- `import-id` (string): Provider resource id to import
+- `rm` (string): Remove resource from state
+
 **Commands:**
 - `terraform state list`
 - `terraform state show aws_instance.web[0]`
@@ -126,3 +152,8 @@ Inspect and repair Terraform state.
 - terraform state list | grep module.vpc
 - terraform state show aws_s3_bucket.logs
 - terraform import aws_iam_user.ci ci-bot
+
+## References
+- [Terraform CLI](https://developer.hashicorp.com/terraform/cli/commands)
+- [Terraform Language](https://developer.hashicorp.com/terraform/language)
+- [Terraform Best Practices](https://developer.hashicorp.com/terraform/tutorials/configuration-language/best-practices)

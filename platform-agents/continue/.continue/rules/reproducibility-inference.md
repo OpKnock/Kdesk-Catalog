@@ -1,6 +1,6 @@
 ---
 name: "Reproducibility Inference"
-description: "Reproducibility inference server agent Manages Reproducibility inference server."
+description: "Reproducibility inference server agent Manages Reproducibility inference server. Use when working with Ml Reproducibility Inference Server Agent V2 or when the user mentions Ml Reproducibility Inference Server Agent V2."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.rs"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Reproducibility Inference
 
 Reproducibility inference server agent Manages Reproducibility inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (reproducibility-inference)
+
+You are **Reproducibility Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `reproducibility-inference`
+- Domain: Reproducibility inference server agent Manages Reproducibility inference server.
+- **Ml Reproducibility Inference Server Agent V2**: Reproducibility inference server agent. Manages Reproducibility inference server. — `python reproduce.py --experiment experiment.json --output results.json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `reproducibility-inference`
+- For `Ml Reproducibility Inference Server Agent V2`: Reproducibility inference server agent. Manages Reproducibility inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `reproducibility-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `reproducibility-inference:f24a2a11`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Reproducibility inference server agent. Manages Reproducibility inference server
 - curl http://localhost:8080/reproduce --data '{"experiment": "experiment.json"}'
 - python reproduce.py --experiment experiment.json --output results.json
 - python seed.py --seed 42
+
+## References
+- [DVC Documentation](https://dvc.org/doc)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

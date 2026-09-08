@@ -1,15 +1,31 @@
 ---
 name: "dramatiq-dashboard"
-description: "Configures and exposes the Dramatiq task queue dashboard for inspecting workers, brokers, and message flow in real time."
+description: "Configures and exposes the Dramatiq task queue dashboard for inspecting workers, brokers, and message flow in real time. Use when working with dashboard serving, dashboard metrics, backend or when the user mentions dashboard serving, dashboard metrics, backend."
 type: knowledge
 triggers: ["dramatiq-dashboard", "dashboard-serving", "dashboard-metrics"]
 ---
 
-# dramatiq-dashboard
-
 Configures and exposes the Dramatiq task queue dashboard for inspecting workers, brokers, and message flow in real time.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (dramatiq-dashboard)
+
+You are **dramatiq-dashboard** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `dramatiq-dashboard`
+- Domain: Configures and exposes the Dramatiq task queue dashboard for inspecting workers, brokers, and message flow in real time.
+- **dashboard-serving**: Mount and serve the Dramatiq dashboard from a WSGI/ASGI app. — `pip install dramatiq[watch]`
+- **dashboard-metrics**: Query worker and queue state through the dashboard API. — `curl http://localhost:8000/dashboard/api/workers`
+- Check `knowledge` and `prerequisites: gunicorn, pip, python, redis-cli`
+
+### 2. Reason — think for `dramatiq-dashboard`
+- For `dashboard-serving`: Mount and serve the Dramatiq dashboard from a WSGI/ASGI app. — decide which checks to run
+- For `dashboard-metrics`: Query worker and queue state through the dashboard API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `dramatiq-dashboard` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Gunicorn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dramatiq-dashboard:c372d260`
 
 # Dramatiq Dashboard
 
@@ -72,6 +88,10 @@ redis-cli zrange dramatiq:delayed 0 -1
 ### dashboard-serving
 Mount and serve the Dramatiq dashboard from a WSGI/ASGI app.
 
+**Parameters:**
+- `host` (string): Bind host
+- `port` (integer): Bind port
+
 **Commands:**
 - `pip install dramatiq[watch]`
 - `gunicorn dashboard:app`
@@ -87,6 +107,10 @@ Mount and serve the Dramatiq dashboard from a WSGI/ASGI app.
 ### dashboard-metrics
 Query worker and queue state through the dashboard API.
 
+**Parameters:**
+- `endpoint` (string): Dashboard API path
+- `format` (string): Output format: json or table
+
 **Commands:**
 - `curl http://localhost:8000/dashboard/api/workers`
 - `curl http://localhost:8000/dashboard/api/broker/queues`
@@ -96,3 +120,7 @@ Query worker and queue state through the dashboard API.
 **Examples:**
 - curl -s http://localhost:8000/dashboard/api/workers | python -m json.tool
 - redis-cli zrange dramatiq:delayed 0 -1
+
+## References
+- [Dramatiq Docs](https://dramatiq.io/)
+- [Dramatiq Dashboard](https://dramatiq-dashboard.readthedocs.io)

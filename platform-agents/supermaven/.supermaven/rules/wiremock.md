@@ -1,8 +1,26 @@
-# wiremock
-
 Stubs HTTP APIs with WireMock standalone, managing mappings, requests journal, and delays via the admin API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (wiremock)
+
+You are **wiremock** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `wiremock`
+- Domain: Stubs HTTP APIs with WireMock standalone, managing mappings, requests journal, and delays via the admin API.
+- **wiremock-start**: Start WireMock standalone or in Docker. — `java -jar wiremock-standalone.jar --port 8080`
+- **stub-mappings**: Create and manage stub mappings via admin API. — `curl -X POST http://localhost:8080/__admin/mappings -d '{"request":{"method":"GE`
+- **requests-journal**: Verify received requests. — `curl -s http://localhost:8080/__admin/requests`
+- Check `knowledge` and `prerequisites: docker, java`
+
+### 2. Reason — think for `wiremock`
+- For `wiremock-start`: Start WireMock standalone or in Docker. — decide which checks to run
+- For `stub-mappings`: Create and manage stub mappings via admin API. — decide which checks to run
+- For `requests-journal`: Verify received requests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `wiremock` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `wiremock:d2724675`
 
 # WireMock
 
@@ -59,6 +77,10 @@ curl -X POST http://localhost:8080/__admin/requests/reset
 ### wiremock-start
 Start WireMock standalone or in Docker.
 
+**Parameters:**
+- `port` (number): Server port
+- `rootDir` (string): Stubs directory
+
 **Commands:**
 - `java -jar wiremock-standalone.jar --port 8080`
 - `docker run -d -p 8080:8080 --name wiremock wiremock/wiremock`
@@ -72,6 +94,11 @@ Start WireMock standalone or in Docker.
 
 ### stub-mappings
 Create and manage stub mappings via admin API.
+
+**Parameters:**
+- `request` (object): Request matcher
+- `response` (object): Response definition
+- `delay` (number): Fixed delay milliseconds
 
 **Commands:**
 - `curl -X POST http://localhost:8080/__admin/mappings -d '{"request":{"method":"GET","url":"/api/users"},"response":{"status":200,"jsonBody":{"users":[]}}}'`
@@ -88,6 +115,10 @@ Create and manage stub mappings via admin API.
 ### requests-journal
 Verify received requests.
 
+**Parameters:**
+- `method` (string): Method filter
+- `url` (string): URL filter
+
 **Commands:**
 - `curl -s http://localhost:8080/__admin/requests`
 - `curl -s http://localhost:8080/__admin/requests?limit=10`
@@ -98,3 +129,7 @@ Verify received requests.
 - curl -s http://localhost:8080/__admin/requests
 - curl -X POST http://localhost:8080/__admin/requests/reset
 - curl -s http://localhost:8080/__admin/requests/find -d '{"method":"POST","url":"/api/orders"}'
+
+## References
+- [WireMock Documentation](https://wiremock.org/docs/)
+- [WireMock Stubbing Reference](https://wiremock.org/docs/stubbing/)

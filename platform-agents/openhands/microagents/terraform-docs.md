@@ -1,15 +1,31 @@
 ---
 name: "terraform-docs"
-description: "Generates and maintains Terraform module documentation with terraform-docs: markdown tables, JSON, and CI enforcement of freshness."
+description: "Generates and maintains Terraform module documentation with terraform-docs: markdown tables, JSON, and CI enforcement of freshness. Use when working with docs generation, fmt and verify, devops or when the user mentions docs generation, fmt and verify, devops."
 type: knowledge
 triggers: ["terraform-docs", "docs-generation", "fmt-and-verify"]
 ---
 
-# terraform-docs
-
 Generates and maintains Terraform module documentation with terraform-docs: markdown tables, JSON, and CI enforcement of freshness.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (terraform-docs)
+
+You are **terraform-docs** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `terraform-docs`
+- Domain: Generates and maintains Terraform module documentation with terraform-docs: markdown tables, JSON, and CI enforcement of freshness.
+- **docs-generation**: Generate README and JSON docs from Terraform code. — `terraform-docs markdown table .`
+- **fmt-and-verify**: Format output and verify docs are up to date in CI. — `terraform-docs fmt ./README.md`
+- Check `knowledge` and `prerequisites: terraform-docs`
+
+### 2. Reason — think for `terraform-docs`
+- For `docs-generation`: Generate README and JSON docs from Terraform code. — decide which checks to run
+- For `fmt-and-verify`: Format output and verify docs are up to date in CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `terraform-docs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terraform-docs` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `terraform-docs:7fe3c966`
 
 # terraform-docs
 
@@ -73,6 +89,10 @@ settings:
 ### docs-generation
 Generate README and JSON docs from Terraform code.
 
+**Parameters:**
+- `output-file` (string): File to write docs to
+- `config` (string): Config file path
+
 **Commands:**
 - `terraform-docs markdown table .`
 - `terraform-docs markdown table --output-file README.md .`
@@ -88,6 +108,10 @@ Generate README and JSON docs from Terraform code.
 ### fmt-and-verify
 Format output and verify docs are up to date in CI.
 
+**Parameters:**
+- `check` (boolean): Fail if docs are stale
+- `show` (string): Sections to show: inputs, outputs, providers, requirements
+
 **Commands:**
 - `terraform-docs fmt ./README.md`
 - `terraform-docs markdown table --check .`
@@ -99,3 +123,7 @@ Format output and verify docs are up to date in CI.
 - terraform-docs fmt ./README.md
 - terraform-docs markdown table --check .
 - terraform-docs markdown table --show inputs,outputs .
+
+## References
+- [terraform-docs Documentation](https://terraform-docs.io/)
+- [terraform-docs GitHub](https://github.com/terraform-docs/terraform-docs)

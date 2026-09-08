@@ -2,13 +2,26 @@ title: Kafka Streams
 description: 'Build and run Kafka Streams applications: topology processing, state-store changelogs, application
   resets, and output topic verification.'
 version: 2.0.0
-instructions: "# Kafka Streams\n\nBuild and run Kafka Streams applications: topology processing, state-store\
-  \ changelogs, application resets, and output topic verification.\n\n## Instructions\n\n# Kafka Streams\n\
-  \nBuild stateful stream-processing apps on top of Kafka.\n\n## What this skill does\n\n- Runs Kafka\
-  \ Streams topologies built with the DSL (map, groupBy, count).\n- Manages state-store changelogs and\
-  \ repartition topics.\n- Resets applications for replays and verification of outputs.\n\n## When to\
-  \ use\n\n- Real-time aggregations (counts, averages, windows).\n- Enrichment/filtering pipelines that\
-  \ stay within Kafka.\n- Exactly-once processing semantics with the Streams DSL.\n\n## Real commands\n\
+instructions: "Build and run Kafka Streams applications: topology processing, state-store changelogs,\
+  \ application resets, and output topic verification.\n\n## Agentic Workflow: Read -> Reason -> Act (kafka-streams)\n\
+  \nYou are **Kafka Streams** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `kafka-streams`\n- Domain: Build and run Kafka Streams applications:\
+  \ topology processing, state-store changelogs, application resets, and output topic verification.\n\
+  - **streams-app**: Run Kafka Streams applications and manage their lifecycle. — `java -jar build/libs/kafka-streams-demo.jar\
+  \ config/streams.properties`\n- **output-verify**: Verify stream processing output and internal topology\
+  \ state. — `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic wordcount-ou`\n- Check\
+  \ `knowledge` and `prerequisites: ./gradlew, java, kafka-console-consumer.sh, kafka-consumer-groups.sh`\n\
+  \n### 2. Reason — think for `kafka-streams`\n- For `streams-app`: Run Kafka Streams applications and\
+  \ manage their lifecycle. — decide which checks to run\n- For `output-verify`: Verify stream processing\
+  \ output and internal topology state. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `kafka-streams` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Java`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `kafka-streams:8f27606f`\n\
+  \n# Kafka Streams\n\nBuild stateful stream-processing apps on top of Kafka.\n\n## What this skill does\n\
+  \n- Runs Kafka Streams topologies built with the DSL (map, groupBy, count).\n- Manages state-store changelogs\
+  \ and repartition topics.\n- Resets applications for replays and verification of outputs.\n\n## When\
+  \ to use\n\n- Real-time aggregations (counts, averages, windows).\n- Enrichment/filtering pipelines\
+  \ that stay within Kafka.\n- Exactly-once processing semantics with the Streams DSL.\n\n## Real commands\n\
   \n```bash\n# Run the app\njava -jar build/libs/kafka-streams-demo.jar config/streams.properties\n./gradlew\
   \ run\n\n# List Streams internal topics\nkafka-topics.sh --bootstrap-server localhost:9092 --list |\
   \ grep -E 'changelog|repartition'\n\n# Reset the app (stop it first) to replay from input topics\nkafka-streams-application-reset.sh\
@@ -31,20 +44,24 @@ instructions: "# Kafka Streams\n\nBuild and run Kafka Streams applications: topo
   - Set processing.guarantee=exactly_once_v2 for accurate counts.\n- Reset the app (not delete topics)\
   \ for deterministic replays.\n- Monitor the streams thread: LAG on changelogs signals state restore\
   \ in progress.\n\n## Capabilities\n\n### streams-app\nRun Kafka Streams applications and manage their\
-  \ lifecycle.\n\n**Commands:**\n- `java -jar build/libs/kafka-streams-demo.jar config/streams.properties`\n\
-  - `./gradlew run`\n- `kafka-streams-application-reset.sh --bootstrap-server localhost:9092 --application-id\
-  \ wordcount-app --input-topics lines --intermediate-topics wordcount-store-changelog`\n- `kafka-streams-application-reset.sh\
-  \ --bootstrap-server localhost:9092 --application-id wordcount-app --force`\n\n**Examples:**\n- java\
-  \ -jar build/libs/kafka-streams-demo.jar config/streams.properties\n- kafka-streams-application-reset.sh\
-  \ --bootstrap-server localhost:9092 --application-id wordcount-app --input-topics lines --intermediate-topics\
-  \ wordcount-store-changelog\n- ./gradlew run\n\n### output-verify\nVerify stream processing output and\
-  \ internal topology state.\n\n**Commands:**\n- `kafka-console-consumer.sh --bootstrap-server localhost:9092\
-  \ --topic wordcount-output --from-beginning --property print.key=true --property print.value=true`\n\
+  \ lifecycle.\n\n**Parameters:**\n- `application_id` (string): Streams application.id (group for internal\
+  \ topics).\n- `input_topics` (string): Comma-separated input topics.\n- `intermediate_topics` (string):\
+  \ Repartition/changelog topics to reset.\n\n**Commands:**\n- `java -jar build/libs/kafka-streams-demo.jar\
+  \ config/streams.properties`\n- `./gradlew run`\n- `kafka-streams-application-reset.sh --bootstrap-server\
+  \ localhost:9092 --application-id wordcount-app --input-topics lines --intermediate-topics wordcount-store-changelog`\n\
+  - `kafka-streams-application-reset.sh --bootstrap-server localhost:9092 --application-id wordcount-app\
+  \ --force`\n\n**Examples:**\n- java -jar build/libs/kafka-streams-demo.jar config/streams.properties\n\
+  - kafka-streams-application-reset.sh --bootstrap-server localhost:9092 --application-id wordcount-app\
+  \ --input-topics lines --intermediate-topics wordcount-store-changelog\n- ./gradlew run\n\n### output-verify\n\
+  Verify stream processing output and internal topology state.\n\n**Parameters:**\n- `output_topic` (string):\
+  \ Sink topic written by the topology.\n\n**Commands:**\n- `kafka-console-consumer.sh --bootstrap-server\
+  \ localhost:9092 --topic wordcount-output --from-beginning --property print.key=true --property print.value=true`\n\
   - `kafka-topics.sh --bootstrap-server localhost:9092 --list | grep -E 'wordcount|changelog|repartition'`\n\
   - `kafka-streams-application-reset.sh --bootstrap-server localhost:9092 --application-id wordcount-app\
   \ --list`\n- `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group wordcount-app`\n\
   \n**Examples:**\n- kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic wordcount-output\
   \ --from-beginning --property print.key=true\n- kafka-topics.sh --bootstrap-server localhost:9092 --list\
   \ | grep -E 'changelog|repartition'\n- kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe\
-  \ --group wordcount-app"
+  \ --group wordcount-app\n\n## References\n- [Kafka Streams](https://kafka.apache.org/documentation/streams/)\n\
+  - [Streams Developer Guide](https://kafka.apache.org/documentation/streams/developer-guide/)"
 prompt: Act as Kafka Streams and handle the task per the instructions.

@@ -6,27 +6,23 @@ applyTo: "**/*.r"
 
 Ollama agent for running large language models locally.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ml-ollama)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Ml Ollama** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `Pull: ollama pull llama2`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — ml context for `ml-ollama`
+- Domain: Ollama agent for running large language models locally.
+- **Ml Ollama**: Ollama agent for running large language models locally. — `Pull: ollama pull llama2`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ml-ollama`
+- For `Ml Ollama`: Ollama agent for running large language models locally. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ml-ollama` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pull`, `List` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-ollama:d34ac292`
 
 ## Instructions
 

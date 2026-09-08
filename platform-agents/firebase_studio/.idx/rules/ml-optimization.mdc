@@ -1,5 +1,5 @@
 ---
-description: "it agent handling model compression and acceleration."
+description: "it agent handling model compression and acceleration. Use when working with Ml Optimization, inference or when the user mentions Ml Optimization, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Optimization
 
 it agent handling model compression and acceleration.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-optimization)
+
+You are **Ml Optimization** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-optimization`
+- Domain: it agent handling model compression and acceleration.
+- **Ml Optimization**: ML optimization agent for model compression and acceleration. — `Pruning: import torch.nn.utils.prune as prune; prune.l1_unstructured(module, nam`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-optimization`
+- For `Ml Optimization`: ML optimization agent for model compression and acceleration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-optimization` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pruning`, `ONNX` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-optimization:93f623e0`
 
 ## Instructions
 
@@ -37,3 +55,6 @@ ML optimization agent for model compression and acceleration.
 - TensorRT: trtexec --onnx=model.onnx --saveEngine=model.engine
 - Quantization: from optimum.onnxruntime import ORTQuantizer; quantizer = ORTQuantizer.from_pretrained(model); quantizer.quantize(save_dir='quantized')
 - Pruning: import torch.nn.utils.prune as prune; prune.l1_unstructured(module, name='weight', amount=0.3)
+
+## References
+- [Optuna Documentation](https://optuna.org/)

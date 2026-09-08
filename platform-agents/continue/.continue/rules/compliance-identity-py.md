@@ -1,6 +1,6 @@
 ---
 name: "Compliance Identity Py"
-description: "Compliance deployment agent. Manages Compliance ML deployment."
+description: "Compliance deployment agent. Manages Compliance ML deployment. Use when working with Ml Compliance Deploy Agent or when the user mentions Ml Compliance Deploy Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Compliance Identity Py
 
 Compliance deployment agent. Manages Compliance ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (compliance-identity-py)
+
+You are **Compliance Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `compliance-identity-py`
+- Domain: Compliance deployment agent. Manages Compliance ML deployment.
+- **Ml Compliance Deploy Agent**: Compliance deployment agent. Manages Compliance ML deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `compliance-identity-py`
+- For `Ml Compliance Deploy Agent`: Compliance deployment agent. Manages Compliance ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `compliance-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Deploy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `compliance-identity-py:df143baf`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Compliance deployment agent. Manages Compliance ML deployment.
 - curl http://localhost:8080/compliance --data '{"model": "model.pkl"}'
 - python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
 - python audit.py --model model.pkl --data data.csv --output audit.json
+
+## References
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

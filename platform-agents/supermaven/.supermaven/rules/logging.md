@@ -1,8 +1,24 @@
-# Logging
-
 System and application logging basics: tail/grep log files, journald queries, syslog emission, and kernel message checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (logging)
+
+You are **Logging** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `logging`
+- Domain: System and application logging basics: tail/grep log files, journald queries, syslog emission, and kernel message checks.
+- **file-logs**: Tail, filter, and analyze application log files. — `tail -n 200 /var/log/nginx/access.log`
+- **journald-syslog**: Query journald and emit syslog messages. — `journalctl -u myapp --since yesterday`
+- Check `knowledge` and `prerequisites: dmesg, grep, journalctl, logger`
+
+### 2. Reason — think for `logging`
+- For `file-logs`: Tail, filter, and analyze application log files. — decide which checks to run
+- For `journald-syslog`: Query journald and emit syslog messages. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `logging` tools
+- Tools: `Glob`, `Read`, `Tail`, `Grep`, `Journalctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `logging:1fbf3612`
 
 # Logging (Basics)
 
@@ -64,6 +80,11 @@ logger -p user.notice 'test message' && journalctl -t  -n 1
 ### file-logs
 Tail, filter, and analyze application log files.
 
+**Parameters:**
+- `file` (string): Log file path.
+- `pattern` (string): Grep pattern.
+- `lines` (integer): Number of tail lines.
+
 **Commands:**
 - `tail -n 200 /var/log/nginx/access.log`
 - `tail -f /var/log/nginx/access.log`
@@ -78,6 +99,11 @@ Tail, filter, and analyze application log files.
 ### journald-syslog
 Query journald and emit syslog messages.
 
+**Parameters:**
+- `unit` (string): systemd unit name.
+- `priority` (string): Log priority: err, warn, info.
+- `since` (string): Time window, e.g. yesterday, 1 hour ago.
+
 **Commands:**
 - `journalctl -u myapp --since yesterday`
 - `journalctl -u myapp -f`
@@ -89,3 +115,7 @@ Query journald and emit syslog messages.
 - journalctl -u myapp --since yesterday
 - journalctl -p err -b
 - logger -p user.err 'disk usage over 90%' -t cron-check
+
+## References
+- [journalctl man page](https://man7.org/linux/man-pages/man1/journalctl.1.html)
+- [rsyslog documentation](https://www.rsyslog.com/doc/)

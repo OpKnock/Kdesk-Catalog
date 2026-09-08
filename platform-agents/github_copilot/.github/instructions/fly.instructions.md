@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh"
 
 Deploys applications to Fly.io with the flyctl CLI: app creation, scaling machines, volumes, secrets, and wireguard VPN.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (fly)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Fly** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `fly launch`, `fly machines list -a myapp`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — cloud context for `fly`
+- Domain: Deploys applications to Fly.io with the flyctl CLI: app creation, scaling machines, volumes, secrets, and wireguard VPN.
+- **fly-deploy**: Create apps, launch machines, and deploy. — `fly launch`
+- **fly-ops**: Manage machines, volumes, and secrets. — `fly machines list -a myapp`
+- Check `knowledge` and `prerequisites: fly`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `fly`
+- For `fly-deploy`: Create apps, launch machines, and deploy. — decide which checks to run
+- For `fly-ops`: Manage machines, volumes, and secrets. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `fly` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fly:f82b1264`
 
 # Fly.io
 

@@ -1,15 +1,31 @@
 ---
 name: "chi"
-description: "Build Go HTTP APIs with the chi router: routing, middleware, URL params, and subrouters."
+description: "Build Go HTTP APIs with the chi router: routing, middleware, URL params, and subrouters. Use when working with chi routing, chi testing, api or when the user mentions chi routing, chi testing, api."
 type: knowledge
 triggers: ["chi", "chi-routing", "chi-testing"]
 ---
 
-# Chi
-
 Build Go HTTP APIs with the chi router: routing, middleware, URL params, and subrouters.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (chi)
+
+You are **Chi** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `chi`
+- Domain: Build Go HTTP APIs with the chi router: routing, middleware, URL params, and subrouters.
+- **chi-routing**: Create chi routers with groups, middleware, and path parameters — `go get github.com/go-chi/chi/v5`
+- **chi-testing**: Test chi handlers and verify responses with curl — `go test ./...`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `chi`
+- For `chi-routing`: Create chi routers with groups, middleware, and path parameters — decide which checks to run
+- For `chi-testing`: Test chi handlers and verify responses with curl — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `chi` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `chi:7f254ce5`
 
 # Chi Router
 
@@ -98,6 +114,9 @@ go vet ./...
 ### chi-routing
 Create chi routers with groups, middleware, and path parameters
 
+**Parameters:**
+- `route` (string): Route pattern such as /api/users/{id}
+
 **Commands:**
 - `go get github.com/go-chi/chi/v5`
 - `go get github.com/go-chi/cors`
@@ -112,6 +131,9 @@ Create chi routers with groups, middleware, and path parameters
 ### chi-testing
 Test chi handlers and verify responses with curl
 
+**Parameters:**
+- `port` (string): Server listen port, default 3000
+
 **Commands:**
 - `go test ./...`
 - `curl -i http://localhost:3000/api/users`
@@ -122,3 +144,7 @@ Test chi handlers and verify responses with curl
 - curl -s http://localhost:3000/api/users | jq '.[0].name'
 - curl -s -o /dev/null -w "%{http_code}\n" -X POST -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:3000/api/users
 - go test -race ./...
+
+## References
+- [chi GitHub Repo](https://github.com/go-chi/chi)
+- [chi Middleware Docs](https://pkg.go.dev/github.com/go-chi/chi/v5/middleware)

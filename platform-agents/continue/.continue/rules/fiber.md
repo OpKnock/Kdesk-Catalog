@@ -1,15 +1,29 @@
 ---
 name: "Fiber"
-description: "Build high-performance Go HTTP APIs with Fiber: run the server, wire middleware, and test routes."
+description: "Build high-performance Go HTTP APIs with Fiber: run the server, wire middleware, and test routes. Use when working with fiber routing, api or when the user mentions fiber routing, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Fiber
-
 Build high-performance Go HTTP APIs with Fiber: run the server, wire middleware, and test routes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fiber)
+
+You are **Fiber** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `fiber`
+- Domain: Build high-performance Go HTTP APIs with Fiber: run the server, wire middleware, and test routes.
+- **fiber-routing**: Run Fiber apps, add middleware, and test endpoints. — `go get github.com/gofiber/fiber/v2`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `fiber`
+- For `fiber-routing`: Run Fiber apps, add middleware, and test endpoints. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fiber` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fiber:c3f94d53`
 
 # Fiber
 
@@ -89,6 +103,11 @@ func TestGetOrder(t *testing.T) {
 ### fiber-routing
 Run Fiber apps, add middleware, and test endpoints.
 
+**Parameters:**
+- `port` (integer): Fiber listen port
+- `route` (string): Path pattern to register
+- `middleware` (string): Middleware stack like logger, recover, cors
+
 **Commands:**
 - `go get github.com/gofiber/fiber/v2`
 - `go run main.go`
@@ -100,3 +119,7 @@ Run Fiber apps, add middleware, and test endpoints.
 - go get github.com/gofiber/fiber/v2 && go run main.go
 - go test ./... -v
 - curl -s localhost:3000/api/orders | jq
+
+## References
+- [Fiber Documentation](https://docs.gofiber.io/)
+- [Fiber GitHub](https://github.com/gofiber/fiber)

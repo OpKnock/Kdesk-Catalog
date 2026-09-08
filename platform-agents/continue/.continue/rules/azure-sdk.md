@@ -1,6 +1,6 @@
 ---
 name: "Azure Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Azure Deploy Sdk Agent V2 or when the user mentions Ml Azure Deploy Sdk Agent V2."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Azure Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (azure-sdk)
+
+You are **Azure Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `azure-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Azure Deploy Sdk Agent V2**: Azure SDK deployment agent for ML Azure SDK deployment. — `docker build -t azure:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `azure-sdk`
+- For `Ml Azure Deploy Sdk Agent V2`: Azure SDK deployment agent for ML Azure SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `azure-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Azure` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-sdk:96c83dfe`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Azure SDK deployment agent for ML Azure SDK deployment.
 **Examples:**
 - Server: python -m azure.server --port 8080
 - Docker: docker run -p 8080:8080 azure-server
+
+## References
+- [Azure Documentation](https://learn.microsoft.com/azure/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

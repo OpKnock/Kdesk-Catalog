@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(flux:*)"
 
 GitOps delivery with Flux: bootstrap clusters, reconcile from git repositories, and manage Helm releases and Kustomizations.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (flux)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Flux** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `flux bootstrap github --owner=myorg --repository=infra --bra`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `flux`
+- Domain: GitOps delivery with Flux: bootstrap clusters, reconcile from git repositories, and manage Helm releases and Kustomizations.
+- **flux-gitops**: Bootstrap Flux, create sources and kustomizations, and reconcile cluster state from git. — `flux bootstrap github --owner=myorg --repository=infra --branch=main --path=./cl`
+- Check `knowledge` and `prerequisites: flux`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `flux`
+- For `flux-gitops`: Bootstrap Flux, create sources and kustomizations, and reconcile cluster state from git. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `flux` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flux` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `flux:0fcda600`
 
 # Flux
 

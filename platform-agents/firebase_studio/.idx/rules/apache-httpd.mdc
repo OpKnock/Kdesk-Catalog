@@ -1,14 +1,30 @@
 ---
-description: "Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd basic auth, and graceful reloads."
+description: "Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd basic auth, and graceful reloads. Use when working with config management, vhost and auth, api or when the user mentions config management, vhost and auth, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Apache Httpd
-
 Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd basic auth, and graceful reloads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (apache-httpd)
+
+You are **Apache Httpd** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `apache-httpd`
+- Domain: Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd basic auth, and graceful reloads.
+- **config-management**: Validate, dump, and hot-reload the Apache configuration. — `apachectl -t`
+- **vhost-and-auth**: Configure virtual hosts and protect directories with htpasswd. — `htpasswd -c /etc/httpd/conf/.htpasswd alice`
+- Check `knowledge` and `prerequisites: apachectl, htpasswd, httpd`
+
+### 2. Reason — think for `apache-httpd`
+- For `config-management`: Validate, dump, and hot-reload the Apache configuration. — decide which checks to run
+- For `vhost-and-auth`: Configure virtual hosts and protect directories with htpasswd. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `apache-httpd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Apachectl`, `Httpd` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `apache-httpd:462b2819`
 
 # Apache HTTP Server
 
@@ -84,6 +100,10 @@ apachectl -t && apachectl graceful
 ### config-management
 Validate, dump, and hot-reload the Apache configuration.
 
+**Parameters:**
+- `config_file` (string): Alternate config file via -f
+- `module` (string): Module name to check via DUMP_MODULES
+
 **Commands:**
 - `apachectl -t`
 - `apachectl -S`
@@ -99,6 +119,11 @@ Validate, dump, and hot-reload the Apache configuration.
 ### vhost-and-auth
 Configure virtual hosts and protect directories with htpasswd.
 
+**Parameters:**
+- `file` (string): htpasswd file path
+- `user` (string): Username to add/remove
+- `bcrypt` (boolean): -B enables bcrypt hashing
+
 **Commands:**
 - `htpasswd -c /etc/httpd/conf/.htpasswd alice`
 - `htpasswd -b /etc/httpd/conf/.htpasswd bob bobpass`
@@ -110,3 +135,8 @@ Configure virtual hosts and protect directories with htpasswd.
 - htpasswd -c .htpasswd admin && apachectl -t && apachectl graceful
 - curl -I -u alice:secret http://localhost/private/
 - htpasswd -bB /etc/httpd/conf/.htpasswd deploy deploypass
+
+## References
+- [Apache httpd Docs](https://httpd.apache.org/docs/2.4/)
+- [htpasswd](https://httpd.apache.org/docs/2.4/programs/htpasswd.html)
+- [Apache Invocation](https://httpd.apache.org/docs/2.4/invoking.html)

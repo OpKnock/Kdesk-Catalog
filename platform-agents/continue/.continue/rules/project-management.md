@@ -1,15 +1,31 @@
 ---
 name: "project-management"
-description: "Manages projects with GitHub Projects and CLI trackers: issue planning, sprint views, and status automation via gh."
+description: "Manages projects with GitHub Projects and CLI trackers: issue planning, sprint views, and status automation via gh. Use when working with github projects, tracking or when the user mentions github projects, tracking."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# project-management
-
 Manages projects with GitHub Projects and CLI trackers: issue planning, sprint views, and status automation via gh.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (project-management)
+
+You are **project-management** (management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — management context for `project-management`
+- Domain: Manages projects with GitHub Projects and CLI trackers: issue planning, sprint views, and status automation via gh.
+- **github-projects**: Plan and track work with GitHub Projects. — `gh project list --owner @me`
+- **tracking**: Manage issues, milestones, and sprints. — `gh issue list --repo owner/repo --state open --label bug`
+- Check `knowledge` and `prerequisites: jira, asana, linear, github`
+
+### 2. Reason — think for `project-management`
+- For `github-projects`: Plan and track work with GitHub Projects. — decide which checks to run
+- For `tracking`: Manage issues, milestones, and sprints. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `project-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `project-management:5147b6b5`
 
 # Project Management
 
@@ -63,6 +79,11 @@ Audit that all open milestone issues have assignees and acceptance criteria.
 ### github-projects
 Plan and track work with GitHub Projects.
 
+**Parameters:**
+- `project` (number): Project number
+- `owner` (string): Project owner: @me or org
+- `label` (string): Issue labels, comma-separated
+
 **Commands:**
 - `gh project list --owner @me`
 - `gh project view 1 --owner @me`
@@ -78,6 +99,11 @@ Plan and track work with GitHub Projects.
 ### tracking
 Manage issues, milestones, and sprints.
 
+**Parameters:**
+- `milestone` (string): Milestone title
+- `repo` (string): owner/repo
+- `assignee` (string): Issue assignee filter
+
 **Commands:**
 - `gh issue list --repo owner/repo --state open --label bug`
 - `gh issue edit 42 --repo owner/repo --milestone 'Sprint 24'`
@@ -89,3 +115,8 @@ Manage issues, milestones, and sprints.
 - gh issue list --repo owner/repo --search 'label:bug is:open sort:created-asc'
 - gh issue edit 42 --repo owner/repo --add-label 'in-review'
 - gh api repos/{owner}/{repo}/milestones --jq '.[].title'
+
+## References
+- [GitHub Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects)
+- [GitHub CLI manual](https://cli.github.com/manual/)
+- [Milestones](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones)

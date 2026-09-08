@@ -1,6 +1,6 @@
 ---
 name: "game-development-godot"
-description: "Game-Development godot expertise and best practices."
+description: "Game-Development godot expertise and best practices. Use when working with godot expertise, game development, skill or when the user mentions godot expertise, game development, skill."
 type: knowledge
 triggers: ["game-development-godot", "godot-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["game-development-godot", "godot-expertise"]
 # Game-Development Godot
 
 Game-Development godot expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (game-development-godot)
+
+You are **Game-Development Godot** (game-development/godot) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — game-development context for `game-development-godot`
+- Domain: Game-Development godot expertise and best practices.
+- **godot-expertise**: game-development godot expertise — `godot-cli`
+- Check `knowledge` and `prerequisites: godot`
+
+### 2. Reason — think for `game-development-godot`
+- For `godot-expertise`: game-development godot expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `game-development-godot` tools
+- Tools: `Glob`, `Grep`, `Read`, `Godot-cli`, `Godot-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `game-development-godot:923caadc`
 
 ## Instructions
 

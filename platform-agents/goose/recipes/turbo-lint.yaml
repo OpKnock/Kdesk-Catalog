@@ -1,8 +1,17 @@
 title: turbo-lint
 description: Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution.
 version: 2.0.0
-instructions: "# turbo-lint\n\nRuns lint targets across Turborepo monorepos with caching, filters, and\
-  \ affected-scope execution.\n\n## Instructions\n\n# Turbo Lint\n\nRuns lint tasks across a Turborepo\
+instructions: "Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope\
+  \ execution.\n\n## Agentic Workflow: Read -> Reason -> Act (turbo-lint)\n\nYou are **turbo-lint** (code-quality/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — code-quality\
+  \ context for `turbo-lint`\n- Domain: Runs lint targets across Turborepo monorepos with caching, filters,\
+  \ and affected-scope execution.\n- **turbo-lint**: Execute lint tasks in a Turborepo with caching and\
+  \ filtering — `npx turbo lint`\n- Check `knowledge` and `prerequisites: npx`\n\n### 2. Reason — think\
+  \ for `turbo-lint`\n- For `turbo-lint`: Execute lint tasks in a Turborepo with caching and filtering\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `turbo-lint` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `turbo-lint:ea57cd1b`\n\n# Turbo Lint\n\nRuns lint tasks across a Turborepo\
   \ with content-based caching so unchanged packages\nare skipped entirely.\n\n## When to Use\n\n- Linting\
   \ all packages in a monorepo\n- Linting only affected packages per PR\n- Combining lint+test+build in\
   \ one cached pipeline\n\n## Real Commands\n\n```bash\n# Lint every package with a lint script\nnpx turbo\
@@ -17,8 +26,11 @@ instructions: "# turbo-lint\n\nRuns lint targets across Turborepo monorepos with
   \ Combine with `--continue` so one failing package doesn't mask others\n\n## Example Response\n\nShows\
   \ per-package task status (cached/full), durations, and error counts, with\n`TURBO_CACHED` markers for\
   \ skipped packages.\n\n## Capabilities\n\n### turbo-lint\nExecute lint tasks in a Turborepo with caching\
-  \ and filtering\n\n**Commands:**\n- `npx turbo lint`\n- `npx turbo run lint --filter=web`\n- `npx turbo\
-  \ run lint --affected`\n- `npx turbo lint --continue`\n- `npx turbo run lint --parallel --concurrency=6`\n\
-  \n**Examples:**\n- npx turbo run lint --filter=@acme/*\n- npx turbo run lint test --affected --base=main\n\
-  - npx turbo lint --output-logs=hash-only"
+  \ and filtering\n\n**Parameters:**\n- `filter` (string): Include only matching packages, e.g. web or\
+  \ @acme/*\n- `affected` (boolean): Run only packages affected by the change (uses git)\n- `output-logs`\
+  \ (string): new-only, full, hash-only, none - log verbosity\n\n**Commands:**\n- `npx turbo lint`\n-\
+  \ `npx turbo run lint --filter=web`\n- `npx turbo run lint --affected`\n- `npx turbo lint --continue`\n\
+  - `npx turbo run lint --parallel --concurrency=6`\n\n**Examples:**\n- npx turbo run lint --filter=@acme/*\n\
+  - npx turbo run lint test --affected --base=main\n- npx turbo lint --output-logs=hash-only\n\n## References\n\
+  - [Turborepo docs](https://turbo.build/repo/docs)\n- [Turbo filters](https://turbo.build/repo/docs/reference/filters)"
 prompt: Act as turbo-lint and handle the task per the instructions.

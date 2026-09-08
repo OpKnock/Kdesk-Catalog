@@ -1,8 +1,22 @@
-# SSE Security
-
 Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sse-security)
+
+You are **SSE Security** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `sse-security`
+- Domain: Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for los
+- **sse-hardening**: Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety — `curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `sse-security`
+- For `sse-hardening`: Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer to — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sse-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Timeout` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sse-security:21f0b7bd`
 
 # SSE Security
 
@@ -64,6 +78,12 @@ curl -N -H "Authorization: Bearer $TOKEN" https://events.example.com/stream | he
 ### sse-hardening
 Secures Server-Sent Events endpoints with authentication, origin validation, and reconnection safety. Requires Bearer tokens on stream connections, validates CORS headers, honors Last-Event-ID for lossless reconnects, and bounds stream duration.
 
+**Parameters:**
+- `token` (string): Bearer token for SSE authentication
+- `origin` (string): CORS origin header value
+- `last_event_id` (string): Last-Event-ID for reconnection resume
+- `max_duration` (integer): Maximum stream duration in seconds
+
 **Commands:**
 - `curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events`
 - `curl -N -H "Origin: https://app.example.com" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events`
@@ -75,3 +95,6 @@ Secures Server-Sent Events endpoints with authentication, origin validation, and
 - curl -N -H "Origin: https://app.example.com" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events
 - curl -N -H "Last-Event-ID: 42" -H "Authorization: Bearer $TOKEN" http://localhost:8080/events
 - timeout 30 curl -N -H "Authorization: Bearer $TOKEN" http://localhost:8080/events
+
+## References
+- [MDN Using SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)

@@ -1,15 +1,31 @@
 ---
 name: "scorecard"
-description: "Evaluates open-source project health and supply-chain risk with OSSF Scorecard, checking CI, code review, and dependency practices."
+description: "Evaluates open-source project health and supply-chain risk with OSSF Scorecard, checking CI, code review, and dependency practices. Use when working with repo assessment, dependency assessment, security or when the user mentions repo assessment, dependency assessment, security."
 type: knowledge
 triggers: ["scorecard", "repo-assessment", "dependency-assessment"]
 ---
 
-# scorecard
-
 Evaluates open-source project health and supply-chain risk with OSSF Scorecard, checking CI, code review, and dependency practices.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (scorecard)
+
+You are **scorecard** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `scorecard`
+- Domain: Evaluates open-source project health and supply-chain risk with OSSF Scorecard, checking CI, code review, and dependency practices.
+- **repo-assessment**: Assess repositories locally or on GitHub. — `scorecard --repo github.com/org/repo`
+- **dependency-assessment**: Score package dependencies for supply-chain risk. — `scorecard --npm=lodash`
+- Check `knowledge` and `prerequisites: scorecard`
+
+### 2. Reason — think for `scorecard`
+- For `repo-assessment`: Assess repositories locally or on GitHub. — decide which checks to run
+- For `dependency-assessment`: Score package dependencies for supply-chain risk. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `scorecard` tools
+- Tools: `Glob`, `Grep`, `Read`, `Scorecard` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `scorecard:55d658f2`
 
 # OSSF Scorecard
 
@@ -68,6 +84,11 @@ scorecard --repo github.com/org/repo --format json
 ### repo-assessment
 Assess repositories locally or on GitHub.
 
+**Parameters:**
+- `repo` (string): GitHub repository in owner/name form
+- `checks` (array): Checks to run: Code-Review, Branch-Protection, Signed-Releases, etc.
+- `format` (string): Output: default, json, sarif
+
 **Commands:**
 - `scorecard --repo github.com/org/repo`
 - `scorecard --local .`
@@ -83,6 +104,10 @@ Assess repositories locally or on GitHub.
 ### dependency-assessment
 Score package dependencies for supply-chain risk.
 
+**Parameters:**
+- `package` (string): Package name for npm or pypi scoring
+- `format` (string): Output format for package scoring: json, csv, sarif, sonar.
+
 **Commands:**
 - `scorecard --npm=lodash`
 - `scorecard --pypi=requests`
@@ -93,3 +118,7 @@ Score package dependencies for supply-chain risk.
 - scorecard --npm=express
 - scorecard --pypi=requests
 - scorecard --npm=lodash --show-details
+
+## References
+- [OSSF Scorecard GitHub](https://github.com/ossf/scorecard)
+- [OpenSSF Scorecard Site](https://securityscorecards.dev/)

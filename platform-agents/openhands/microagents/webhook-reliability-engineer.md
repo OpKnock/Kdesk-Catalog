@@ -1,15 +1,33 @@
 ---
 name: "webhook-reliability-engineer"
-description: "Design, deliver, and debug webhook integrations with retries, signatures, and visibility using svix, ngrok, and curl."
+description: "Design, deliver, and debug webhook integrations with retries, signatures, and visibility using svix, ngrok, and curl. Use when working with Expose local endpoints with ngrok, Manage endpoints with svix, Verify deliveries and retries with curl or when the user mentions Expose local endpoints with ngrok, Manage endpoints with svix, Verify deliveries and retries with curl."
 type: knowledge
 triggers: ["webhook-reliability-engineer", "expose local endpoints with ngrok", "manage endpoints with svix", "verify deliveries and retries with curl"]
 ---
 
-# webhook-reliability-engineer
-
 Design, deliver, and debug webhook integrations with retries, signatures, and visibility using svix, ngrok, and curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (webhook-reliability-engineer)
+
+You are **webhook-reliability-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `webhook-reliability-engineer`
+- Domain: Design, deliver, and debug webhook integrations with retries, signatures, and visibility using svix, ngrok, and curl.
+- **Expose local endpoints with ngrok**: Tunnel a local webhook receiver to a public HTTPS URL and inspect incoming traffic. — `ngrok http 3000`
+- **Manage endpoints with svix**: Create applications and endpoints, send test messages, and list deliveries from the svix CLI. — `svix login`
+- **Verify deliveries and retries with curl**: Simulate provider webhooks, check signature headers, and replay failed deliveries against your recei — `curl -s -i -X POST https://tunnel.ngrok.io/webhooks -H 'Content-Type: applicatio`
+- Check `knowledge` and `prerequisites: ngrok, node.js, python, redis`
+
+### 2. Reason — think for `webhook-reliability-engineer`
+- For `Expose local endpoints with ngrok`: Tunnel a local webhook receiver to a public HTTPS URL and inspect incoming traffic. — decide which checks to run
+- For `Manage endpoints with svix`: Create applications and endpoints, send test messages, and list deliveries from the svix CLI. — decide which checks to run
+- For `Verify deliveries and retries with curl`: Simulate provider webhooks, check signature headers, and replay failed deliveries against your receiver. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `webhook-reliability-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ngrok`, `Svix` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `webhook-reliability-engineer:0df6db80`
 
 # Webhook Reliability Engineering
 
@@ -68,6 +86,10 @@ Design webhook integrations that deliver events reliably, verify their authentic
 ### Expose local endpoints with ngrok
 Tunnel a local webhook receiver to a public HTTPS URL and inspect incoming traffic.
 
+**Parameters:**
+- `local port` (integer): Port your webhook receiver listens on.
+- `basic-auth` (string): user:pass credential protecting the public tunnel URL.
+
 **Commands:**
 - `ngrok http 3000`
 - `ngrok http --basic-auth=user:pass --host-header=rewrite 3000`
@@ -80,6 +102,10 @@ Tunnel a local webhook receiver to a public HTTPS URL and inspect incoming traff
 
 ### Manage endpoints with svix
 Create applications and endpoints, send test messages, and list deliveries from the svix CLI.
+
+**Parameters:**
+- `event-types` (string): Comma-separated event types the endpoint subscribes to.
+- `payload` (string): JSON payload sent with the test message.
 
 **Commands:**
 - `svix login`
@@ -95,6 +121,10 @@ Create applications and endpoints, send test messages, and list deliveries from 
 ### Verify deliveries and retries with curl
 Simulate provider webhooks, check signature headers, and replay failed deliveries against your receiver.
 
+**Parameters:**
+- `signature header` (string): Header name carrying the HMAC signature (svix-signature, x-hub-signature-256, etc.).
+- `retries` (integer): Number of retry attempts for curl-based delivery checks.
+
 **Commands:**
 - `curl -s -i -X POST https://tunnel.ngrok.io/webhooks -H 'Content-Type: application/json' -H 'svix-id: msg_1' -H 'svix-signature: v1,<sig>' -H 'svix-timestamp: 1720000000' -d '{"event":"build.failed"}'`
 - `curl -s -o /dev/null -w '%{http_code} %{time_total}s' --retry 3 --retry-delay 2 -X POST http://localhost:8080/webhooks -d '{}'`
@@ -103,3 +133,9 @@ Simulate provider webhooks, check signature headers, and replay failed deliverie
 **Examples:**
 - curl -s -i -X POST https://tunnel.ngrok.io/webhooks -H 'Content-Type: application/json' -H 'svix-id: msg_1' -H 'svix-signature: v1,<sig>' -H 'svix-timestamp: 1720000000' -d '{"event":"build.failed"}'
 - curl -s -o /dev/null -w '%{http_code} %{time_total}s' --retry 3 --retry-delay 2 -X POST http://localhost:8080/webhooks -d '{}'
+
+## References
+- [](https://ngrok.com/docs)
+- [](https://docs.svix.com)
+- [](https://docs.github.com/en/webhooks/webhook-events-and-payloads)
+- [](https://webhooks.fyi/)

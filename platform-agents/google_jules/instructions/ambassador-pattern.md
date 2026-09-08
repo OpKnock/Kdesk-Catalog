@@ -1,8 +1,24 @@
-# Ambassador Pattern
-
 Implements the Ambassador pattern: Emissary-ingress (Edge Stack) as API gateway with Mapping CRDs, plus per-pod ambassador sidecars.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ambassador-pattern)
+
+You are **Ambassador Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `ambassador-pattern`
+- Domain: Implements the Ambassador pattern: Emissary-ingress (Edge Stack) as API gateway with Mapping CRDs, plus per-pod ambassador sidecars.
+- **edge-stack**: Install and operate Emissary-ingress and its CRDs. — `kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes-crds.ya`
+- **sidecar-proxy**: Add ambassador sidecar containers to pods and debug their traffic. — `kubectl apply -f sidecar-pod.yaml`
+- Check `knowledge` and `prerequisites: kubectl`
+
+### 2. Reason — think for `ambassador-pattern`
+- For `edge-stack`: Install and operate Emissary-ingress and its CRDs. — decide which checks to run
+- For `sidecar-proxy`: Add ambassador sidecar containers to pods and debug their traffic. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ambassador-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ambassador-pattern:31ebe7b6`
 
 # Ambassador Pattern
 
@@ -62,6 +78,10 @@ spec:
 ### edge-stack
 Install and operate Emissary-ingress and its CRDs.
 
+**Parameters:**
+- `namespace` (string): Namespace where Edge Stack runs (default ambassador)
+- `mapping_name` (string): Name of the Mapping CRD to inspect
+
 **Commands:**
 - `kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes-crds.yaml`
 - `kubectl apply -f https://app.getambassador.io/yaml/edge-stack/latest/aes.yaml`
@@ -77,6 +97,10 @@ Install and operate Emissary-ingress and its CRDs.
 ### sidecar-proxy
 Add ambassador sidecar containers to pods and debug their traffic.
 
+**Parameters:**
+- `pod` (string): Pod name with the sidecar
+- `container` (string): Container name, e.g. ambassador-sidecar
+
 **Commands:**
 - `kubectl apply -f sidecar-pod.yaml`
 - `kubectl get pods -l app=my-api`
@@ -88,3 +112,8 @@ Add ambassador sidecar containers to pods and debug their traffic.
 - kubectl logs -f -c ambassador-sidecar my-api-7d9f5c64b9-x4k2n
 - kubectl exec -c my-api my-api-7d9f5c64b9-x4k2n -- env | grep AMBASSADOR
 - kubectl top pod my-api-7d9f5c64b9-x4k2n
+
+## References
+- [Emissary-ingress Docs](https://www.getambassador.io/docs/emissary/latest/)
+- [Ambassador Pattern (Microsoft)](https://learn.microsoft.com/en-us/azure/architecture/patterns/ambassador)
+- [Ambassador Pattern (Red Hat)](https://developers.redhat.com/articles/2023/02/06/ambassador-pattern-simplifies-burden-microservices)

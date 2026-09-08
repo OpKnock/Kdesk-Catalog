@@ -1,5 +1,5 @@
 ---
-description: "HuggingFace inference deployment agent. Manages HuggingFace Inference Endpoints."
+description: "HuggingFace inference deployment agent. Manages HuggingFace Inference Endpoints. Use when working with Ml Huggingface Inference Deploy Agent, deployment or when the user mentions Ml Huggingface Inference Deploy Agent, deployment."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Huggingface Inference
 
 HuggingFace inference deployment agent. Manages HuggingFace Inference Endpoints.
+
+## Agentic Workflow: Read -> Reason -> Act (huggingface-inference)
+
+You are **Huggingface Inference** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `huggingface-inference`
+- Domain: HuggingFace inference deployment agent. Manages HuggingFace Inference Endpoints.
+- **Ml Huggingface Inference Deploy Agent**: HuggingFace inference deployment agent. Manages HuggingFace Inference Endpoints. — `docker build -t huggingface:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `huggingface-inference`
+- For `Ml Huggingface Inference Deploy Agent`: HuggingFace inference deployment agent. Manages HuggingFace Inference Endpoints. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `huggingface-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Huggingface` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `huggingface-inference:ea1760bc`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ HuggingFace inference deployment agent. Manages HuggingFace Inference Endpoints.
 - python deploy.py --model bert --repo my-org/my-model
 - curl https://my-endpoint.huggingface.cloud/
 - huggingface-cli repo create --type model --name my-model
+
+## References
+- [Hugging Face Documentation](https://huggingface.co/docs/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

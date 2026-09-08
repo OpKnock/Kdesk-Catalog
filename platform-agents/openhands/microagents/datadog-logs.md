@@ -1,15 +1,31 @@
 ---
 name: "datadog-logs"
-description: "Collects, searches, aggregates, and processes application logs with the Datadog Logs API v1/v2, covering ingestion, pipelines, and index management."
+description: "Collects, searches, aggregates, and processes application logs with the Datadog Logs API v1/v2, covering ingestion, pipelines, and index management. Use when working with log search, log pipelines, api or when the user mentions log search, log pipelines, api."
 type: knowledge
 triggers: ["datadog-logs", "log-search", "log-pipelines"]
 ---
 
-# Datadog Logs
-
 Collects, searches, aggregates, and processes application logs with the Datadog Logs API v1/v2, covering ingestion, pipelines, and index management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (datadog-logs)
+
+You are **Datadog Logs** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `datadog-logs`
+- Domain: Collects, searches, aggregates, and processes application logs with the Datadog Logs API v1/v2, covering ingestion, pipelines, and index management.
+- **log-search**: Search and aggregate logs with the Datadog Logs Search API and ingest logs with the intake API — `curl -X POST "https://api.datadoghq.com/api/v2/logs/events/search" -H "Content-T`
+- **log-pipelines**: Manage log processing pipelines, processors, and indexes via the Logs Configuration API — `curl -X GET "https://api.datadoghq.com/api/v1/logs/config/pipelines" -H "DD-API-`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `datadog-logs`
+- For `log-search`: Search and aggregate logs with the Datadog Logs Search API and ingest logs with the intake API — decide which checks to run
+- For `log-pipelines`: Manage log processing pipelines, processors, and indexes via the Logs Configuration API — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `datadog-logs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `datadog-logs:ae2bc64f`
 
 # Datadog Logs
 
@@ -88,6 +104,11 @@ curl -s -X POST "https://api.datadoghq.com/api/v2/logs/events/search" \
 ### log-search
 Search and aggregate logs with the Datadog Logs Search API and ingest logs with the intake API
 
+**Parameters:**
+- `query` (string): Datadog Log Search query, e.g. service:api status:error
+- `from` (string): Start of the time window, e.g. now-1h
+- `to` (string): End of the time window, e.g. now
+
 **Commands:**
 - `curl -X POST "https://api.datadoghq.com/api/v2/logs/events/search" -H "Content-Type: application/json" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY" -d @search.json`
 - `curl -X POST "https://api.datadoghq.com/api/v2/logs/events/aggregate" -H "Content-Type: application/json" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY" -d @aggregate.json`
@@ -102,6 +123,10 @@ Search and aggregate logs with the Datadog Logs Search API and ingest logs with 
 ### log-pipelines
 Manage log processing pipelines, processors, and indexes via the Logs Configuration API
 
+**Parameters:**
+- `pipeline_id` (string): ID of the log pipeline to delete
+- `filter_query` (string): Query that selects which logs the pipeline processes
+
 **Commands:**
 - `curl -X GET "https://api.datadoghq.com/api/v1/logs/config/pipelines" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY"`
 - `curl -X POST "https://api.datadoghq.com/api/v1/logs/config/pipelines" -H "Content-Type: application/json" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY" -d @pipeline.json`
@@ -112,3 +137,7 @@ Manage log processing pipelines, processors, and indexes via the Logs Configurat
 - curl -X POST "https://api.datadoghq.com/api/v1/logs/config/pipelines" -H "Content-Type: application/json" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY" -d '{"name":"Parse Nginx","filter":{"query":"source:nginx"}}'
 - curl -X GET "https://api.datadoghq.com/api/v1/logs/config/pipelines" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY" | jq '.pipelines[].name'
 - curl -X DELETE "https://api.datadoghq.com/api/v1/logs/config/pipelines/abc123" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY"
+
+## References
+- [Datadog Logs Documentation](https://docs.datadoghq.com/logs/)
+- [Datadog Logs API](https://docs.datadoghq.com/api/latest/logs/)

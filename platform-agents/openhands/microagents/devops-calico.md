@@ -1,6 +1,6 @@
 ---
 name: "devops-calico"
-description: "Calico agent for Kubernetes networking and network policies."
+description: "Calico agent for Kubernetes networking and network policies. Use when working with Devops Calico, deployment or when the user mentions Devops Calico, deployment."
 type: knowledge
 triggers: ["devops-calico", "devops calico"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-calico", "devops calico"]
 # Devops Calico
 
 Calico agent for Kubernetes networking and network policies.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-calico)
+
+You are **Devops Calico** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-calico`
+- Domain: Calico agent for Kubernetes networking and network policies.
+- **Devops Calico**: Calico agent for Kubernetes networking and network policies. — `IPAM: calicoctl ipam show`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-calico`
+- For `Devops Calico`: Calico agent for Kubernetes networking and network policies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-calico` tools
+- Tools: `Glob`, `Grep`, `Read`, `IPAM`, `Apply` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-calico:cd7cca91`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Calico agent for Kubernetes networking and network policies.
 - Policies: calicoctl get networkpolicy
 - IPAM: calicoctl ipam show
 - Apply: calicoctl apply -f policy.yaml
+
+## References
+- [Calico Documentation](https://docs.tigera.io/calico/)

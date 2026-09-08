@@ -1,15 +1,29 @@
 ---
 name: "postgresql-replication"
-description: "PostgreSQL streaming replication: pg_basebackup, replication slots, WAL shipping, and failover."
+description: "PostgreSQL streaming replication: pg_basebackup, replication slots, WAL shipping, and failover. Use when working with postgres streaming replication, api or when the user mentions postgres streaming replication, api."
 type: knowledge
 triggers: ["postgresql-replication", "postgres-streaming-replication"]
 ---
 
-# Postgresql Replication
-
 PostgreSQL streaming replication: pg_basebackup, replication slots, WAL shipping, and failover.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (postgresql-replication)
+
+You are **Postgresql Replication** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `postgresql-replication`
+- Domain: PostgreSQL streaming replication: pg_basebackup, replication slots, WAL shipping, and failover.
+- **postgres-streaming-replication**: Set up streaming replicas with pg_basebackup, manage replication slots, and monitor replication stat — `pg_basebackup -h primary -D /var/lib/postgresql/standby -U replicator -R -X stre`
+- Check `knowledge` and `prerequisites: pg_basebackup, pg_ctl, psql`
+
+### 2. Reason — think for `postgresql-replication`
+- For `postgres-streaming-replication`: Set up streaming replicas with pg_basebackup, manage replication slots, and monitor replication status. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `postgresql-replication` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pg_basebackup`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `postgresql-replication:c60b1b73`
 
 # PostgreSQL Replication
 
@@ -68,6 +82,11 @@ FROM pg_stat_replication;
 ### postgres-streaming-replication
 Set up streaming replicas with pg_basebackup, manage replication slots, and monitor replication status.
 
+**Parameters:**
+- `primary_host` (string): Primary server hostname
+- `replication_user` (string): User with REPLICATION privilege
+- `data_dir` (string): Replica data directory
+
 **Commands:**
 - `pg_basebackup -h primary -D /var/lib/postgresql/standby -U replicator -R -X stream`
 - `psql -c "SELECT * FROM pg_replication_slots;"`
@@ -79,3 +98,7 @@ Set up streaming replicas with pg_basebackup, manage replication slots, and moni
 - pg_basebackup -h primary -D /var/lib/postgresql/replica -U replicator -R -X stream -P
 - psql -c "SELECT client_addr, state, write_lag, replay_lag FROM pg_stat_replication;"
 - psql -c "SELECT pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) AS lag FROM pg_stat_replication;"
+
+## References
+- [PostgreSQL Replication Docs](https://www.postgresql.org/docs/current/warm-standby.html)
+- [pg_basebackup reference](https://www.postgresql.org/docs/current/app-pgbasebackup.html)

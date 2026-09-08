@@ -1,15 +1,29 @@
 ---
 name: "gcp-cloud-logging"
-description: "GCP Cloud Logging operations: query logs with gcloud logging read, create log-based metrics, and export logs to storage sinks."
+description: "GCP Cloud Logging operations: query logs with gcloud logging read, create log-based metrics, and export logs to storage sinks. Use when working with gcp logging, api or when the user mentions gcp logging, api."
 type: knowledge
 triggers: ["gcp-cloud-logging", "gcp-logging"]
 ---
 
-# Gcp Cloud Logging
-
 GCP Cloud Logging operations: query logs with gcloud logging read, create log-based metrics, and export logs to storage sinks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gcp-cloud-logging)
+
+You are **Gcp Cloud Logging** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gcp-cloud-logging`
+- Domain: GCP Cloud Logging operations: query logs with gcloud logging read, create log-based metrics, and export logs to storage sinks.
+- **gcp-logging**: Read logs, create log-based metrics, and manage exports. — `gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --lim`
+- Check `knowledge` and `prerequisites: gcloud`
+
+### 2. Reason — think for `gcp-cloud-logging`
+- For `gcp-logging`: Read logs, create log-based metrics, and manage exports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gcp-cloud-logging` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gcloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gcp-cloud-logging:946232c5`
 
 # GCP Cloud Logging
 
@@ -69,6 +83,11 @@ print(json.dumps({"message": "order failed", "severity": "ERROR", "orderId": oid
 ### gcp-logging
 Read logs, create log-based metrics, and manage exports.
 
+**Parameters:**
+- `filter` (string): Logging filter expression
+- `limit` (integer): Number of entries to return
+- `sink-name` (string): Log sink name for exports
+
 **Commands:**
 - `gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'`
 - `gcloud logging read 'logName=projects/my-project/logs/requests' --freshness=1d --limit=20`
@@ -81,3 +100,7 @@ Read logs, create log-based metrics, and manage exports.
 - gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'
 - gcloud logging metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND httpRequest.status>=500'
 - gcloud logging tail 'severity=ERROR'
+
+## References
+- [Cloud Logging docs](https://cloud.google.com/logging/docs)
+- [gcloud logging reference](https://cloud.google.com/sdk/gcloud/reference/logging)

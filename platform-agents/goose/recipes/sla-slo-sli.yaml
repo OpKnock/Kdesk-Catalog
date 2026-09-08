@@ -2,8 +2,20 @@ title: sla-slo-sli
 description: Defines and measures service-level objectives with Prometheus SLIs, error-budget policies,
   and promtool rule validation.
 version: 2.0.0
-instructions: "# sla-slo-sli\n\nDefines and measures service-level objectives with Prometheus SLIs, error-budget\
-  \ policies, and promtool rule validation.\n\n## Instructions\n\n# SLA / SLO / SLI\n\nTurn availability\
+instructions: "Defines and measures service-level objectives with Prometheus SLIs, error-budget policies,\
+  \ and promtool rule validation.\n\n## Agentic Workflow: Read -> Reason -> Act (sla-slo-sli)\n\nYou are\
+  \ **sla-slo-sli** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — sre context for `sla-slo-sli`\n- Domain: Defines and measures service-level objectives with\
+  \ Prometheus SLIs, error-budget policies, and promtool rule validation.\n- **slo-rule-authoring**: Author\
+  \ and validate Prometheus SLO rules and alerts. — `promtool check rules slo-rules.yml`\n- **slo-inspection**:\
+  \ Query SLO state and error budgets from running Prometheus. — `curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_r`\n\
+  - Check `knowledge` and `prerequisites: prometheus, grafana, datadog, slo-lib`\n\n### 2. Reason — think\
+  \ for `sla-slo-sli`\n- For `slo-rule-authoring`: Author and validate Prometheus SLO rules and alerts.\
+  \ — decide which checks to run\n- For `slo-inspection`: Query SLO state and error budgets from running\
+  \ Prometheus. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `sla-slo-sli` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `sla-slo-sli:a2f3f88a`\n\n# SLA / SLO / SLI\n\nTurn availability\
   \ and latency targets into measured, alertable SLOs.\n\n## What This Skill Does\n\n- Translates business\
   \ targets into SLIs and SLO windows\n- Writes Prometheus recording rules for ratios and error budgets\n\
   - Validates rules and tests with promtool\n- Sets burn-rate alerts for fast page-on-alert behavior\n\
@@ -21,15 +33,19 @@ instructions: "# sla-slo-sli\n\nDefines and measures service-level objectives wi
   \ windows to 28-30 days aligned with error-budget reviews\n- Burn-rate alerts beat flat threshold alerts\n\
   - Document SLOs in the service catalog with the owning team\n- Review budgets weekly; adjust targets\
   \ only by policy, not silently\n\n## Capabilities\n\n### slo-rule-authoring\nAuthor and validate Prometheus\
-  \ SLO rules and alerts.\n\n**Commands:**\n- `promtool check rules slo-rules.yml`\n- `promtool test rules\
-  \ slo-tests.yml`\n- `promtool query 'http_request_duration_seconds_bucket{le=\"0.5\"}'`\n- `promtool\
-  \ query range 'up' --start=2024-01-01T00:00:00Z --end=2024-01-02T00:00:00Z --step=1h`\n\n**Examples:**\n\
-  - promtool check rules slo-rules.yml\n- promtool test rules slo-tests.yml\n- promtool query 'sum(rate(http_requests_total{job=\"\
-  api\"}[5m]))'\n\n### slo-inspection\nQuery SLO state and error budgets from running Prometheus.\n\n\
-  **Commands:**\n- `curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_rate1h'\
+  \ SLO rules and alerts.\n\n**Parameters:**\n- `ruleFile` (string): Prometheus rules file with SLO recording\
+  \ rules\n- `query` (string): PromQL query to evaluate\n\n**Commands:**\n- `promtool check rules slo-rules.yml`\n\
+  - `promtool test rules slo-tests.yml`\n- `promtool query 'http_request_duration_seconds_bucket{le=\"\
+  0.5\"}'`\n- `promtool query range 'up' --start=2024-01-01T00:00:00Z --end=2024-01-02T00:00:00Z --step=1h`\n\
+  \n**Examples:**\n- promtool check rules slo-rules.yml\n- promtool test rules slo-tests.yml\n- promtool\
+  \ query 'sum(rate(http_requests_total{job=\"api\"}[5m]))'\n\n### slo-inspection\nQuery SLO state and\
+  \ error budgets from running Prometheus.\n\n**Parameters:**\n- `endpoint` (string): Prometheus API endpoint\n\
+  - `metric` (string): SLO metric name to query\n\n**Commands:**\n- `curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_rate1h'\
   \ | jq .`\n- `curl -s 'http://localhost:9090/api/v1/query?query=error_budget_burn' | jq .`\n- `curl\
   \ -s 'http://localhost:9090/api/v1/targets' | jq '.data.activeTargets | length'`\n- `curl -s 'http://localhost:9090/api/v1/query_range?query=up&start=...&end=...&step=300'\
   \ | jq .`\n\n**Examples:**\n- curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_rate1h'\
   \ | jq -r '.data.result[0].value[1]'\n- curl -s 'http://localhost:9090/api/v1/query?query=error_budget_burn'\
-  \ | jq ."
+  \ | jq .\n\n## References\n- [Google SRE Workbook SLOs](https://sre.google/workbook/implementing-slos/)\n\
+  - [Prometheus Recording Rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)\n\
+  - [promtool Reference](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)"
 prompt: Act as sla-slo-sli and handle the task per the instructions.

@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(kics:*)"
 
 Scan directories or files across supported platforms. Emit reports and control exit codes handling CI integration. queries for cloud misconfigurations.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kics)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **kics** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kics scan -p .`, `kics scan -p . -o results.json --output-path results/`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `kics`
+- Domain: Scan directories or files across supported platforms. Emit reports and control exit codes handling CI integration. queries for cloud misconfigurations.
+- **kics-scan**: Scan directories or files across supported platforms. — `kics scan -p .`
+- **reporting-and-gating**: Emit reports and control exit codes for CI integration. — `kics scan -p . -o results.json --output-path results/`
+- Check `knowledge` and `prerequisites: kics`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kics`
+- For `kics-scan`: Scan directories or files across supported platforms. — decide which checks to run
+- For `reporting-and-gating`: Emit reports and control exit codes for CI integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kics` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kics` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kics:a886eb7e`
 
 # KICS
 

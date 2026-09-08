@@ -1,5 +1,5 @@
 ---
-description: "ECS inference agent. Manages ML inference on AWS ECS."
+description: "ECS inference agent. Manages ML inference on AWS ECS. Use when working with Ml Ecs Inference Agent or when the user mentions Ml Ecs Inference Agent."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Ecs Inference Agent
 
 ECS inference agent. Manages ML inference on AWS ECS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-ecs-inference-agent)
+
+You are **Ml Ecs Inference Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-ecs-inference-agent`
+- Domain: ECS inference agent. Manages ML inference on AWS ECS.
+- **Ml Ecs Inference Agent**: ECS inference agent. Manages ML inference on AWS ECS. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-ecs-inference-agent`
+- For `Ml Ecs Inference Agent`: ECS inference agent. Manages ML inference on AWS ECS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-ecs-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ecs` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-ecs-inference-agent:1d8f6526`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ ECS inference agent. Manages ML inference on AWS ECS.
 - aws ecs run-task --cluster my-cluster --task-definition my-task
 - aws ecs describe-services --cluster my-cluster --services my-service
 - aws ecs list-tasks --cluster my-cluster
+
+## References
+- [Amazon ECS Documentation](https://docs.aws.amazon.com/ecs/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

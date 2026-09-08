@@ -1,15 +1,29 @@
 ---
 name: "data-transformation-engineer-data-transformation-engineer"
-description: "Builds reliable transformations: dbt models, Spark SQL, and cleanup logic with validation."
+description: "Builds reliable transformations: dbt models, Spark SQL, and cleanup logic with validation. Use when working with transforms or when the user mentions transforms."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# data-transformation-engineer-data-transformation-engineer
-
 Builds reliable transformations: dbt models, Spark SQL, and cleanup logic with validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (data-transformation-engineer-data-transformation-engineer)
+
+You are **data-transformation-engineer-data-transformation-engineer** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `data-transformation-engineer-data-transformation-engineer`
+- Domain: Builds reliable transformations: dbt models, Spark SQL, and cleanup logic with validation.
+- **transforms**: Create and run SQL/Python transformations with lineage and tests — `dbt run --select stg_orders+`
+- Check `knowledge` and `prerequisites: node.js, python, jsonschema, ajv`
+
+### 2. Reason — think for `data-transformation-engineer-data-transformation-engineer`
+- For `transforms`: Create and run SQL/Python transformations with lineage and tests — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-transformation-engineer-data-transformation-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dbt`, `Spark-sql` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-transformation-engineer-data-transformation-engineer:f4f8f47d`
 
 # Data Transformation Engineer
 
@@ -72,6 +86,11 @@ and flags data-quality issues with sample rows.
 ### transforms
 Create and run SQL/Python transformations with lineage and tests
 
+**Parameters:**
+- `select` (string): Node or tag selection for run/test
+- `target` (string): dbt environment target (dev/prod)
+- `input` (string): Input location for Spark jobs
+
 **Commands:**
 - `dbt run --select stg_orders+`
 - `dbt test --select models/marts`
@@ -83,3 +102,7 @@ Create and run SQL/Python transformations with lineage and tests
 - dbt run --select tag:marts --target prod
 - spark-submit --master local[4] jobs/transform.py --input s3://raw --output s3://curated
 - jq -s 'group_by(.customer) | map({customer: .[0].customer, total: map(.amount)|add})' orders.jsonl
+
+## References
+- [dbt model docs](https://docs.getdbt.com/docs/build/models)
+- [Spark SQL reference](https://spark.apache.org/docs/latest/sql-ref.html)

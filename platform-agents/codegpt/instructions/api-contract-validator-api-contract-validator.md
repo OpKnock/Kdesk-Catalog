@@ -1,8 +1,24 @@
-# api-contract-validator-api-contract-validator
-
 Validates API contracts continuously: response schema checks at runtime, spec diffs in CI, and consumer contract verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-contract-validator-api-contract-validator)
+
+You are **api-contract-validator-api-contract-validator** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-contract-validator-api-contract-validator`
+- Domain: Validates API contracts continuously: response schema checks at runtime, spec diffs in CI, and consumer contract verification.
+- **runtime-validation**: Validate API responses at runtime against the OpenAPI contract — `npm install express-openapi-validator`
+- **spec-diff-checking**: Diff specs across versions in CI to block breaking changes — `openapi-diff v1.yaml v2.yaml`
+- Check `knowledge` and `prerequisites: pact, openapi, node.js, python`
+
+### 2. Reason — think for `api-contract-validator-api-contract-validator`
+- For `runtime-validation`: Validate API responses at runtime against the OpenAPI contract — decide which checks to run
+- For `spec-diff-checking`: Diff specs across versions in CI to block breaking changes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-contract-validator-api-contract-validator` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Openapi-diff` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-contract-validator-api-contract-validator:ea1d2090`
 
 # API Contract Validator
 
@@ -47,6 +63,10 @@ Add negative tests: send responses that violate the schema and assert 500-level 
 ### runtime-validation
 Validate API responses at runtime against the OpenAPI contract
 
+**Parameters:**
+- `spec` (string): OpenAPI spec for runtime validation
+- `endpoint` (string): Endpoint to validate
+
 **Commands:**
 - `npm install express-openapi-validator`
 - `node -e "const v=require('express-openapi-validator');console.log(typeof v.middleware)"`
@@ -62,6 +82,10 @@ Validate API responses at runtime against the OpenAPI contract
 ### spec-diff-checking
 Diff specs across versions in CI to block breaking changes
 
+**Parameters:**
+- `oldSpec` (string): Baseline spec
+- `newSpec` (string): Candidate spec
+
 **Commands:**
 - `openapi-diff v1.yaml v2.yaml`
 - `openapi-diff --fail-on-incompatible v1.yaml v2.yaml`
@@ -73,3 +97,8 @@ Diff specs across versions in CI to block breaking changes
 - openapi-diff --fail-on-incompatible v1.yaml v2.yaml
 - openapi-diff v1.yaml v2.yaml | grep -i 'breaking'
 - git diff v1.yaml v2.yaml --stat && openapi-diff v1.yaml v2.yaml
+
+## References
+- [express-openapi-validator](https://github.com/cdimascio/express-openapi-validator)
+- [openapi-diff](https://github.com/OpenAPITools/openapi-diff)
+- [supertest](https://github.com/ladjs/supertest)

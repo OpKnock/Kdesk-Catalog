@@ -1,6 +1,6 @@
 ---
 name: "Data Dbt Agent"
-description: "dbt (data build tool) agent. Manages SQL transformations, testing, and documentation."
+description: "dbt (data build tool) agent. Manages SQL transformations, testing, and documentation. Use when working with Data Dbt Agent or when the user mentions Data Dbt Agent."
 globs: ["**/*.r", "**/*.sql"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Data Dbt Agent
 
 dbt (data build tool) agent. Manages SQL transformations, testing, and documentation.
+
+## Agentic Workflow: Read -> Reason -> Act (data-dbt-agent)
+
+You are **Data Dbt Agent** (data/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `data-dbt-agent`
+- Domain: dbt (data build tool) agent. Manages SQL transformations, testing, and documentation.
+- **Data Dbt Agent**: dbt (data build tool) agent. Manages SQL transformations, testing, and documentation. — `dbt test`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `data-dbt-agent`
+- For `Data Dbt Agent`: dbt (data build tool) agent. Manages SQL transformations, testing, and documentation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-dbt-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dbt` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-dbt-agent:52891476`
 
 ## Instructions
 
@@ -33,3 +51,6 @@ dbt (data build tool) agent. Manages SQL transformations, testing, and documenta
 - dbt test
 - dbt docs generate
 - dbt docs serve
+
+## References
+- [dbt Documentation](https://docs.getdbt.com/)

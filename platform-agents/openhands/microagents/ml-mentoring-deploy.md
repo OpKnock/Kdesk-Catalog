@@ -1,6 +1,6 @@
 ---
 name: "ml-mentoring-deploy"
-description: "Mentoring deployment agent for ML mentoring service deployment."
+description: "Mentoring deployment agent for ML mentoring service deployment. Use when working with Ml Mentoring Deploy, inference or when the user mentions Ml Mentoring Deploy, inference."
 type: knowledge
 triggers: ["ml-mentoring-deploy", "ml mentoring deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-mentoring-deploy", "ml mentoring deploy"]
 # Ml Mentoring Deploy
 
 Mentoring deployment agent for ML mentoring service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-mentoring-deploy)
+
+You are **Ml Mentoring Deploy** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-mentoring-deploy`
+- Domain: Mentoring deployment agent for ML mentoring service deployment.
+- **Ml Mentoring Deploy**: Mentoring deployment agent for ML mentoring service deployment. — `Health: curl http://localhost:8080/health`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-mentoring-deploy`
+- For `Ml Mentoring Deploy`: Mentoring deployment agent for ML mentoring service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-mentoring-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Health`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-mentoring-deploy:1f9ab716`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ Mentoring deployment agent for ML mentoring service deployment.
 - Server: python -m ml_mentoring.server --port 8080
 - Session: python -m ml_mentoring.session --mentor alice --topic 'transformers'
 - Health: curl http://localhost:8080/health
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [Python Documentation](https://docs.python.org/3/)

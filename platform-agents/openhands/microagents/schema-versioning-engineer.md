@@ -1,15 +1,31 @@
 ---
 name: "schema-versioning-engineer"
-description: "Applies, rolls back, and audits database schema migrations across Flyway, Liquibase, and Atlas with safe deploy workflows."
+description: "Applies, rolls back, and audits database schema migrations across Flyway, Liquibase, and Atlas with safe deploy workflows. Use when working with flyway migrations, liquibase changesets or when the user mentions flyway migrations, liquibase changesets."
 type: knowledge
 triggers: ["schema-versioning-engineer", "flyway-migrations", "liquibase-changesets"]
 ---
 
-# schema-versioning-engineer
-
 Applies, rolls back, and audits database schema migrations across Flyway, Liquibase, and Atlas with safe deploy workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (schema-versioning-engineer)
+
+You are **schema-versioning-engineer** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `schema-versioning-engineer`
+- Domain: Applies, rolls back, and audits database schema migrations across Flyway, Liquibase, and Atlas with safe deploy workflows.
+- **flyway-migrations**: Manage SQL-based migrations with the Flyway CLI. — `flyway -url=jdbc:postgresql://localhost:5432/appdb -user=app -password=pass migr`
+- **liquibase-changesets**: Create and apply Liquibase changesets and track changelog state. — `liquibase --changeLogFile=db/changelog.xml update`
+- Check `knowledge` and `prerequisites: flyway, liquibase, kafka, openapi`
+
+### 2. Reason — think for `schema-versioning-engineer`
+- For `flyway-migrations`: Manage SQL-based migrations with the Flyway CLI. — decide which checks to run
+- For `liquibase-changesets`: Create and apply Liquibase changesets and track changelog state. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `schema-versioning-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flyway`, `Liquibase` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `schema-versioning-engineer:e4e7c47c`
 
 # Schema Versioning Engineering
 
@@ -73,6 +89,11 @@ db/migration/V2__add_orders_status.sql
 ### flyway-migrations
 Manage SQL-based migrations with the Flyway CLI.
 
+**Parameters:**
+- `url` (string): JDBC URL of the target database
+- `locations` (string): Migration script directory, e.g. filesystem:./db/migration
+- `target` (string): Migrate up to a specific version, e.g. 1.3
+
 **Commands:**
 - `flyway -url=jdbc:postgresql://localhost:5432/appdb -user=app -password=pass migrate`
 - `flyway -url=jdbc:postgresql://localhost:5432/appdb info`
@@ -88,6 +109,10 @@ Manage SQL-based migrations with the Flyway CLI.
 ### liquibase-changesets
 Create and apply Liquibase changesets and track changelog state.
 
+**Parameters:**
+- `changeLogFile` (string): Path to the changelog file
+- `count` (string): Number of changesets to roll back
+
 **Commands:**
 - `liquibase --changeLogFile=db/changelog.xml update`
 - `liquibase status`
@@ -99,3 +124,8 @@ Create and apply Liquibase changesets and track changelog state.
 - liquibase --changeLogFile=db/changelog.xml update
 - liquibase status --verbose
 - liquibase rollback-count 1
+
+## References
+- [Flyway Documentation](https://documentation.red-gate.com/flyway)
+- [Liquibase Documentation](https://docs.liquibase.com/home.html)
+- [Atlas Migration Docs](https://atlasgo.io/docs/migrations)

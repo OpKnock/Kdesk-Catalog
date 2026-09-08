@@ -1,6 +1,6 @@
 ---
 name: "Llama Cpp Inference 2"
-description: "llama.cpp inference server agent Manages llama.cpp inference server."
+description: "llama.cpp inference server agent Manages llama.cpp inference server. Use when working with Ml Llama Cpp Inference Server Agent V2 or when the user mentions Ml Llama Cpp Inference Server Agent V2."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Llama Cpp Inference 2
 
 llama.cpp inference server agent Manages llama.cpp inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (llama-cpp-inference-2)
+
+You are **Llama Cpp Inference 2** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `llama-cpp-inference-2`
+- Domain: llama.cpp inference server agent Manages llama.cpp inference server.
+- **Ml Llama Cpp Inference Server Agent V2**: llama.cpp inference server agent. Manages llama.cpp inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `llama-cpp-inference-2`
+- For `Ml Llama Cpp Inference Server Agent V2`: llama.cpp inference server agent. Manages llama.cpp inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `llama-cpp-inference-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Llama-cpp` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `llama-cpp-inference-2:61290099`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ llama.cpp inference server agent. Manages llama.cpp inference server.
 - curl http://localhost:8080/completion --data '{"prompt": "Hello"}'
 - ./main -m models/llama-2-7b.bin --interactive
 - ./quantize models/llama-2-7b.bin models/llama-2-7b-q4_0.bin q4_0
+
+## References
+- [llama.cpp Documentation](https://github.com/ggerganov/llama.cpp)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

@@ -1,6 +1,6 @@
 ---
 name: "Ml Exploration Deploy"
-description: "Exploration deployment agent for ML exploration service deployment."
+description: "Exploration deployment agent for ML exploration service deployment. Use when working with Ml Exploration Deploy or when the user mentions Ml Exploration Deploy."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Exploration Deploy
 
 Exploration deployment agent for ML exploration service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-exploration-deploy)
+
+You are **Ml Exploration Deploy** (ml/exploration) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-exploration-deploy`
+- Domain: Exploration deployment agent for ML exploration service deployment.
+- **Ml Exploration Deploy**: Exploration deployment agent for ML exploration service deployment. — `Server: python -m ml_exploration.server --port 8080`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-exploration-deploy`
+- For `Ml Exploration Deploy`: Exploration deployment agent for ML exploration service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-exploration-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Server`, `Health` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-exploration-deploy:2981d05a`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ Exploration deployment agent for ML exploration service deployment.
 - Server: python -m ml_exploration.server --port 8080
 - Explore: python -m ml_exploration.explore --dataset data.csv
 - Health: curl http://localhost:8080/health
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

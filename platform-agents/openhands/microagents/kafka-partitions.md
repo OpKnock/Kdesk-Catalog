@@ -1,15 +1,31 @@
 ---
 name: "kafka-partitions"
-description: "Manage Kafka topic partitions: sizing, expansion via kafka-topics alter, and rebalancing with kafka-reassign-partitions for even data distribution."
+description: "Manage Kafka topic partitions: sizing, expansion via kafka-topics alter, and rebalancing with kafka-reassign-partitions for even data distribution. Use when working with partition sizing, reassignment, api or when the user mentions partition sizing, reassignment, api."
 type: knowledge
 triggers: ["kafka-partitions", "partition-sizing", "reassignment"]
 ---
 
-# Kafka Partitions
-
 Manage Kafka topic partitions: sizing, expansion via kafka-topics alter, and rebalancing with kafka-reassign-partitions for even data distribution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-partitions)
+
+You are **Kafka Partitions** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka-partitions`
+- Domain: Manage Kafka topic partitions: sizing, expansion via kafka-topics alter, and rebalancing with kafka-reassign-partitions for even data distribution.
+- **partition-sizing**: Create and expand partitions with controlled replica placement. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --part`
+- **reassignment**: Generate and execute partition reassignment plans across brokers. — `kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --generate --topi`
+- Check `knowledge` and `prerequisites: kafka-reassign-partitions.sh, kafka-topics.sh`
+
+### 2. Reason — think for `kafka-partitions`
+- For `partition-sizing`: Create and expand partitions with controlled replica placement. — decide which checks to run
+- For `reassignment`: Generate and execute partition reassignment plans across brokers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-partitions` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-reassign-partitions.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-partitions:2410234f`
 
 # Kafka Partitions
 
@@ -78,6 +94,11 @@ kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders | he
 ### partition-sizing
 Create and expand partitions with controlled replica placement.
 
+**Parameters:**
+- `topic` (string): Topic name.
+- `partitions` (integer): Target partition count.
+- `replication_factor` (integer): Replication factor.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 12 --replication-factor 3`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 24`
@@ -92,6 +113,10 @@ Create and expand partitions with controlled replica placement.
 ### reassignment
 Generate and execute partition reassignment plans across brokers.
 
+**Parameters:**
+- `brokers` (string): Target broker ids, e.g. "1,2,3,4".
+- `plan_file` (string): Reassignment plan JSON.
+
 **Commands:**
 - `kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --generate --topics-to-move-json-file topics.json --broker-list "1,2,3,4"`
 - `kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json --execute`
@@ -102,3 +127,7 @@ Generate and execute partition reassignment plans across brokers.
 - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --generate --topics-to-move-json-file topics.json --broker-list "1,2,3,4"
 - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json --execute
 - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json --verify
+
+## References
+- [Kafka Partitions](https://kafka.apache.org/documentation/#intro_topics)
+- [Partition Reassignment](https://kafka.apache.org/documentation/#basic_ops_cluster_expansion)

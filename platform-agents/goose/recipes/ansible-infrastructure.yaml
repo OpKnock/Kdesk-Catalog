@@ -2,8 +2,20 @@ title: ansible-infrastructure
 description: 'Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules
   across fleets.'
 version: 2.0.0
-instructions: "# ansible-infrastructure\n\nAutomates server configuration with Ansible: inventory, playbooks,\
-  \ roles, and ad-hoc modules across fleets.\n\n## Instructions\n\n# Ansible\n\nAutomate server provisioning\
+instructions: "Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules\
+  \ across fleets.\n\n## Agentic Workflow: Read -> Reason -> Act (ansible-infrastructure)\n\nYou are **ansible-infrastructure**\
+  \ (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n\
+  ### 1. Read — infrastructure context for `ansible-infrastructure`\n- Domain: Automates server configuration\
+  \ with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets.\n- **playbooks**: Write\
+  \ and run Ansible playbooks against inventories. — `ansible-playbook -i inventory/prod.ini site.yml`\n\
+  - **ad-hoc**: Run one-off modules across hosts without a playbook. — `ansible all -m ping -i inventory/prod.ini`\n\
+  - Check `knowledge` and `prerequisites: ansible, ansible-playbook`\n\n### 2. Reason — think for `ansible-infrastructure`\n\
+  - For `playbooks`: Write and run Ansible playbooks against inventories. — decide which checks to run\n\
+  - For `ad-hoc`: Run one-off modules across hosts without a playbook. — decide which checks to run\n\
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute\
+  \ with `ansible-infrastructure` tools\n- Tools: `Glob`, `Grep`, `Read`, `Ansible-playbook`, `Ansible`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `ansible-infrastructure:fc553120`\n\n# Ansible\n\nAutomate server provisioning\
   \ and configuration with Ansible.\n\n## When to Use\n\n- Bootstrapping and configuring VM fleets\n-\
   \ Enforcing service state (installed, running, enabled)\n- Reproducible multi-environment deploys\n\n\
   ## Inventory\n\n```ini\n[web]\nweb-1 ansible_host=10.0.1.11\nweb-2 ansible_host=10.0.1.12\n\n[db]\n\
@@ -20,15 +32,20 @@ instructions: "# ansible-infrastructure\n\nAutomates server configuration with A
   \ converges to the same state.\n- Keep secrets in ansible-vault, never in vars files.\n- Use handlers\
   \ for restart-on-change, never restart unconditionally.\n- Run check mode in CI on every PR.\n\n## Testing\n\
   \n```bash\nansible-lint site.yml\nansible-playbook site.yml --syntax-check\n```\n\nGate merges on both.\n\
-  \n## Capabilities\n\n### playbooks\nWrite and run Ansible playbooks against inventories.\n\n**Commands:**\n\
-  - `ansible-playbook -i inventory/prod.ini site.yml`\n- `ansible-playbook site.yml --tags deploy`\n-\
-  \ `ansible-playbook site.yml --check --diff`\n- `ansible-playbook site.yml --limit web --start-at-task\
-  \ 'nginx: restart'`\n- `ansible-playbook site.yml -e env=staging`\n\n**Examples:**\n- ansible-playbook\
-  \ -i inventory/prod.ini site.yml --check\n- ansible-playbook site.yml --tags nginx,deploy --diff\n-\
-  \ ansible-playbook site.yml --limit 'web:!web-3'\n\n### ad-hoc\nRun one-off modules across hosts without\
-  \ a playbook.\n\n**Commands:**\n- `ansible all -m ping -i inventory/prod.ini`\n- `ansible web -m service\
-  \ -a 'name=nginx state=restarted' -b`\n- `ansible db -m shell -a 'df -h /data'`\n- `ansible all -m apt\
-  \ -a 'name=unattended-upgrades state=present' -b`\n- `ansible all -m gather_facts --limit web`\n\n**Examples:**\n\
-  - ansible web -m service -a 'name=nginx state=started' -b --become-user=root\n- ansible all -m ping\
-  \ --one-line\n- ansible db -m command -a 'free -m'"
+  \n## Capabilities\n\n### playbooks\nWrite and run Ansible playbooks against inventories.\n\n**Parameters:**\n\
+  - `inventory` (string): Inventory file or directory\n- `tags` (string): Comma-separated tags to run\n\
+  - `limit` (string): Host pattern subset to target\n\n**Commands:**\n- `ansible-playbook -i inventory/prod.ini\
+  \ site.yml`\n- `ansible-playbook site.yml --tags deploy`\n- `ansible-playbook site.yml --check --diff`\n\
+  - `ansible-playbook site.yml --limit web --start-at-task 'nginx: restart'`\n- `ansible-playbook site.yml\
+  \ -e env=staging`\n\n**Examples:**\n- ansible-playbook -i inventory/prod.ini site.yml --check\n- ansible-playbook\
+  \ site.yml --tags nginx,deploy --diff\n- ansible-playbook site.yml --limit 'web:!web-3'\n\n### ad-hoc\n\
+  Run one-off modules across hosts without a playbook.\n\n**Parameters:**\n- `module` (string): Module\
+  \ like service, apt, ping, shell\n- `args` (string): Module arguments as key=value string\n- `become`\
+  \ (string): Elevate privileges with -b\n\n**Commands:**\n- `ansible all -m ping -i inventory/prod.ini`\n\
+  - `ansible web -m service -a 'name=nginx state=restarted' -b`\n- `ansible db -m shell -a 'df -h /data'`\n\
+  - `ansible all -m apt -a 'name=unattended-upgrades state=present' -b`\n- `ansible all -m gather_facts\
+  \ --limit web`\n\n**Examples:**\n- ansible web -m service -a 'name=nginx state=started' -b --become-user=root\n\
+  - ansible all -m ping --one-line\n- ansible db -m command -a 'free -m'\n\n## References\n- [Ansible\
+  \ Docs](https://docs.ansible.com/ansible/latest/index.html)\n- [Ansible CLI](https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html)\n\
+  - [Ansible Galaxy](https://galaxy.ansible.com/)"
 prompt: Act as ansible-infrastructure and handle the task per the instructions.

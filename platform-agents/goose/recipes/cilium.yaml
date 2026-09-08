@@ -2,32 +2,50 @@ title: cilium
 description: Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy,
   and Hubble observability.
 version: 2.0.0
-instructions: "# cilium\n\nInstalls, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy,\
-  \ and Hubble observability.\n\n## Instructions\n\n# Cilium Networking\n\nDeploy and troubleshoot the\
-  \ Cilium CNI: eBPF data plane, network policies, and Hubble observability.\n\n## What This Skill Does\n\
-  \n- Installs Cilium with the cilium CLI and Helm\n- Verifies the data plane with `cilium status` and\
-  \ `cilium connectivity test`\n- Author CiliumNetworkPolicy (L3/L4/L7) policies\n- Observes and filters\
-  \ traffic with Hubble\n- Diagnoses dropped packets, DNS failures, and identity issues\n\n## When to\
-  \ Use\n\n- Installing a CNI with eBPF, kube-proxy replacement, or BGP\n- Pods cannot reach each other\
-  \ and you need flow-level answers\n- Enforcing zero-trust east-west policies\n\n## Real Commands\n\n\
-  ```bash\n# Install and verify\ncilium install --version v1.16.4\ncilium status --wait\ncilium connectivity\
-  \ test --timeout 10m\n\n# Inspect state\ncilium identity list\ncilium endpoint list\ncilium policy get\
-  \ default/allow-all\ncilium monitor --type drop\n\n# Hubble traffic flows\nhubble status\nhubble observe\
-  \ --pod default/web-0 --last 200\nhubble observe --verdict DROPPED --last 100\nhubble observe --to-namespace\
-  \ kube-system --type to-endpoint\n```\n\n## CiliumNetworkPolicy Example\n\n```yaml\napiVersion: cilium.io/v2\n\
-  kind: CiliumNetworkPolicy\nmetadata:\n  name: allow-nginx-ingress\n  namespace: default\nspec:\n  endpointSelector:\n\
-  \    matchLabels: { app: nginx }\n  ingress:\n    - fromEndpoints:\n        - matchLabels: { app: frontend\
-  \ }\n      toPorts:\n        - ports:\n            - port: \"80\"\n              protocol: TCP\n```\n\
-  \n## Best Practices\n\n- Run `cilium connectivity test` after every upgrade\n- Set `kubeProxyReplacement:\
-  \ strict` and verify with `cilium status | grep KubeProxyReplacement`\n- Use CiliumNetworkPolicy namespaces\
-  \ to segment tenants\n- Monitor drops with `cilium monitor --type drop` before changing policies\n-\
-  \ Keep Hubble relay storage sized for your flow volume\n\n## Capabilities\n\n### cilium-install-and-verify\n\
-  Install Cilium into a Kubernetes cluster and run connectivity and upgrade verification.\n\n**Commands:**\n\
-  - `cilium install --version v1.16.4`\n- `cilium status --wait`\n- `cilium connectivity test`\n- `cilium\
-  \ upgrade`\n- `cilium uninstall`\n\n**Examples:**\n- cilium install --version v1.16.4\n- cilium status\
-  \ --wait\n- cilium connectivity test --timeout 10m\n\n### hubble-observability\nInspect service-to-service\
-  \ traffic flows with Hubble CLI and troubleshoot connectivity issues.\n\n**Commands:**\n- `hubble status`\n\
-  - `hubble observe --pod default/web-0`\n- `hubble observe --verdict DROPPED`\n- `hubble observe --from-pod\
-  \ default/curl-0 --to-namespace kube-system`\n- `hubble flow`\n\n**Examples:**\n- hubble observe --verdict\
-  \ DROPPED --last 100\n- hubble observe --to-pod kube-system/coredns-*\n- hubble status"
+instructions: "Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy,\
+  \ and Hubble observability.\n\n## Agentic Workflow: Read -> Reason -> Act (cilium)\n\nYou are **cilium**\
+  \ (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — devops context for `cilium`\n- Domain: Installs, verifies, and debugs the Cilium CNI with eBPF data\
+  \ plane, CiliumNetworkPolicy, and Hubble observability.\n- **cilium-install-and-verify**: Install Cilium\
+  \ into a Kubernetes cluster and run connectivity and upgrade verification. — `cilium install --version\
+  \ v1.16.4`\n- **hubble-observability**: Inspect service-to-service traffic flows with Hubble CLI and\
+  \ troubleshoot connectivity issues. — `hubble status`\n- Check `knowledge` and `prerequisites: cilium,\
+  \ hubble`\n\n### 2. Reason — think for `cilium`\n- For `cilium-install-and-verify`: Install Cilium into\
+  \ a Kubernetes cluster and run connectivity and upgrade verification. — decide which checks to run\n\
+  - For `hubble-observability`: Inspect service-to-service traffic flows with Hubble CLI and troubleshoot\
+  \ connectivity issues. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `cilium` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Cilium`, `Hubble` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `cilium:c627917d`\n\n# Cilium Networking\n\nDeploy\
+  \ and troubleshoot the Cilium CNI: eBPF data plane, network policies, and Hubble observability.\n\n\
+  ## What This Skill Does\n\n- Installs Cilium with the cilium CLI and Helm\n- Verifies the data plane\
+  \ with `cilium status` and `cilium connectivity test`\n- Author CiliumNetworkPolicy (L3/L4/L7) policies\n\
+  - Observes and filters traffic with Hubble\n- Diagnoses dropped packets, DNS failures, and identity\
+  \ issues\n\n## When to Use\n\n- Installing a CNI with eBPF, kube-proxy replacement, or BGP\n- Pods cannot\
+  \ reach each other and you need flow-level answers\n- Enforcing zero-trust east-west policies\n\n##\
+  \ Real Commands\n\n```bash\n# Install and verify\ncilium install --version v1.16.4\ncilium status --wait\n\
+  cilium connectivity test --timeout 10m\n\n# Inspect state\ncilium identity list\ncilium endpoint list\n\
+  cilium policy get default/allow-all\ncilium monitor --type drop\n\n# Hubble traffic flows\nhubble status\n\
+  hubble observe --pod default/web-0 --last 200\nhubble observe --verdict DROPPED --last 100\nhubble observe\
+  \ --to-namespace kube-system --type to-endpoint\n```\n\n## CiliumNetworkPolicy Example\n\n```yaml\n\
+  apiVersion: cilium.io/v2\nkind: CiliumNetworkPolicy\nmetadata:\n  name: allow-nginx-ingress\n  namespace:\
+  \ default\nspec:\n  endpointSelector:\n    matchLabels: { app: nginx }\n  ingress:\n    - fromEndpoints:\n\
+  \        - matchLabels: { app: frontend }\n      toPorts:\n        - ports:\n            - port: \"\
+  80\"\n              protocol: TCP\n```\n\n## Best Practices\n\n- Run `cilium connectivity test` after\
+  \ every upgrade\n- Set `kubeProxyReplacement: strict` and verify with `cilium status | grep KubeProxyReplacement`\n\
+  - Use CiliumNetworkPolicy namespaces to segment tenants\n- Monitor drops with `cilium monitor --type\
+  \ drop` before changing policies\n- Keep Hubble relay storage sized for your flow volume\n\n## Capabilities\n\
+  \n### cilium-install-and-verify\nInstall Cilium into a Kubernetes cluster and run connectivity and upgrade\
+  \ verification.\n\n**Parameters:**\n- `version` (string): Cilium version to install or upgrade to\n\
+  - `kubeconfig` (string): Path to kubeconfig when outside the cluster\n\n**Commands:**\n- `cilium install\
+  \ --version v1.16.4`\n- `cilium status --wait`\n- `cilium connectivity test`\n- `cilium upgrade`\n-\
+  \ `cilium uninstall`\n\n**Examples:**\n- cilium install --version v1.16.4\n- cilium status --wait\n\
+  - cilium connectivity test --timeout 10m\n\n### hubble-observability\nInspect service-to-service traffic\
+  \ flows with Hubble CLI and troubleshoot connectivity issues.\n\n**Parameters:**\n- `verdict` (string):\
+  \ Filter flows by verdict: FORWARDED, DROPPED, ERROR\n- `namespace` (string): Filter flows by namespace\n\
+  \n**Commands:**\n- `hubble status`\n- `hubble observe --pod default/web-0`\n- `hubble observe --verdict\
+  \ DROPPED`\n- `hubble observe --from-pod default/curl-0 --to-namespace kube-system`\n- `hubble flow`\n\
+  \n**Examples:**\n- hubble observe --verdict DROPPED --last 100\n- hubble observe --to-pod kube-system/coredns-*\n\
+  - hubble status\n\n## References\n- [Cilium Documentation](https://docs.cilium.io/en/stable/)\n- [Cilium\
+  \ CLI GitHub](https://github.com/cilium/cilium-cli)\n- [Hubble UI](https://github.com/cilium/hubble)"
 prompt: Act as cilium and handle the task per the instructions.

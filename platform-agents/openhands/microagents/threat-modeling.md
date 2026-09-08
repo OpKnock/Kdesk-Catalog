@@ -1,15 +1,33 @@
 ---
 name: "threat-modeling"
-description: "Create structured threat models, diagram attacks, and document mitigations using OWASP Threat Dragon, threatspec, and pytm."
+description: "Create structured threat models, diagram attacks, and document mitigations using OWASP Threat Dragon, threatspec, and pytm. Use when working with Model threats with OWASP Threat Dragon, Document threats with threatspec, Generate models with pytm or when the user mentions Model threats with OWASP Threat Dragon, Document threats with threatspec, Generate models with pytm."
 type: knowledge
 triggers: ["threat-modeling", "model threats with owasp threat dragon", "document threats with threatspec", "generate models with pytm"]
 ---
 
-# threat-modeling
-
 Create structured threat models, diagram attacks, and document mitigations using OWASP Threat Dragon, threatspec, and pytm.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (threat-modeling)
+
+You are **threat-modeling** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `threat-modeling`
+- Domain: Create structured threat models, diagram attacks, and document mitigations using OWASP Threat Dragon, threatspec, and pytm.
+- **Model threats with OWASP Threat Dragon**: Run the OWASP Threat Dragon web app locally and draw STRIDE-based data-flow diagrams with per-elemen — `docker run -d --name threat-dragon -p 3000:3000 owasp/threat-dragon`
+- **Document threats with threatspec**: Annotate code with threatspec comments and compile them into reports, graphs, and CI check results. — `threatspec init`
+- **Generate models with pytm**: Describe architecture as Python objects in a threatmodel file, then render diagrams and full STRIDE- — `pytm --rm threatmodel.py --dfd diagram.png --report report.md`
+- Check `knowledge` and `prerequisites: drawio, threat-modeler, OWASP, STRIDE`
+
+### 2. Reason — think for `threat-modeling`
+- For `Model threats with OWASP Threat Dragon`: Run the OWASP Threat Dragon web app locally and draw STRIDE-based data-flow diagrams with per-element threat notes. — decide which checks to run
+- For `Document threats with threatspec`: Annotate code with threatspec comments and compile them into reports, graphs, and CI check results. — decide which checks to run
+- For `Generate models with pytm`: Describe architecture as Python objects in a threatmodel file, then render diagrams and full STRIDE-based reports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `threat-modeling` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Threatspec` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `threat-modeling:dab5f2bf`
 
 # Threat Modeling
 
@@ -62,6 +80,10 @@ Create and maintain threat models that capture data flows, trust boundaries, att
 ### Model threats with OWASP Threat Dragon
 Run the OWASP Threat Dragon web app locally and draw STRIDE-based data-flow diagrams with per-element threat notes.
 
+**Parameters:**
+- `host port` (integer): Local port mapped to the container (default 3000).
+- `container name` (string): Name for the running container so it can be stopped later.
+
 **Commands:**
 - `docker run -d --name threat-dragon -p 3000:3000 owasp/threat-dragon`
 - `docker logs -f threat-dragon`
@@ -74,6 +96,10 @@ Run the OWASP Threat Dragon web app locally and draw STRIDE-based data-flow diag
 
 ### Document threats with threatspec
 Annotate code with threatspec comments and compile them into reports, graphs, and CI check results.
+
+**Parameters:**
+- `output format` (string): Report format: markdown, html, json, csv.
+- `project path` (string): Root of the project containing the threatspec config.
 
 **Commands:**
 - `threatspec init`
@@ -89,6 +115,10 @@ Annotate code with threatspec comments and compile them into reports, graphs, an
 ### Generate models with pytm
 Describe architecture as Python objects in a threatmodel file, then render diagrams and full STRIDE-based reports.
 
+**Parameters:**
+- `dfd format` (string): Diagram output format: png, svg, pdf.
+- `levels` (string): Only report threats up to the given STRIDE level (L0-L3).
+
 **Commands:**
 - `pytm --rm threatmodel.py --dfd diagram.png --report report.md`
 - `pytm --rm threatmodel.py --dfd diagram.svg --format svg --levels L1`
@@ -98,3 +128,9 @@ Describe architecture as Python objects in a threatmodel file, then render diagr
 **Examples:**
 - pytm --rm threatmodel.py --dfd diagram.png --report report.md
 - pytm --rm threatmodel.py --list
+
+## References
+- [](https://github.com/OWASP/threat-dragon)
+- [](https://threatspec.org)
+- [](https://github.com/OWASP/pytm)
+- [](https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html)

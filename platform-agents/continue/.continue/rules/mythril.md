@@ -1,15 +1,29 @@
 ---
 name: "Mythril"
-description: "Security analysis of Ethereum smart contracts with Mythril, finding reentrancy, overflow, and other EVM vulnerabilities."
+description: "Security analysis of Ethereum smart contracts with Mythril, finding reentrancy, overflow, and other EVM vulnerabilities. Use when working with smart contract analysis, code quality or when the user mentions smart contract analysis, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Mythril
-
 Security analysis of Ethereum smart contracts with Mythril, finding reentrancy, overflow, and other EVM vulnerabilities.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mythril)
+
+You are **Mythril** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `mythril`
+- Domain: Security analysis of Ethereum smart contracts with Mythril, finding reentrancy, overflow, and other EVM vulnerabilities.
+- **smart-contract-analysis**: Run Mythril symbolic-execution analysis against Solidity contracts — `myth analyze contracts/Token.sol`
+- Check `knowledge` and `prerequisites: myth`
+
+### 2. Reason — think for `mythril`
+- For `smart-contract-analysis`: Run Mythril symbolic-execution analysis against Solidity contracts — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mythril` tools
+- Tools: `Glob`, `Grep`, `Read`, `Myth` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mythril:0d20eb7c`
 
 # Mythril
 
@@ -73,6 +87,11 @@ checks-effects-interactions fix.
 ### smart-contract-analysis
 Run Mythril symbolic-execution analysis against Solidity contracts
 
+**Parameters:**
+- `execution-timeout` (number): Timeout in seconds for each analysis run
+- `rpc` (string): RPC endpoint used when analyzing a deployed address
+- `solc-json` (string): JSON config file with compiler settings and remappings
+
 **Commands:**
 - `myth analyze contracts/Token.sol`
 - `myth analyze --execution-timeout 120 contract.sol`
@@ -84,3 +103,7 @@ Run Mythril symbolic-execution analysis against Solidity contracts
 - myth analyze --execution-timeout 90 contracts/Vault.sol
 - myth analyze -a 0xdeadbeef --infura-id $INFURA_ID
 - myth analyze --graph contracts/Tok.sol
+
+## References
+- [Mythril docs](https://mythril-classic.readthedocs.io/)
+- [Mythril GitHub](https://github.com/Consensys/mythril)

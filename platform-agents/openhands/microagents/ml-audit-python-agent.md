@@ -1,6 +1,6 @@
 ---
 name: "ml-audit-python-agent"
-description: "it handling audit logging."
+description: "it handling audit logging. Use when working with Ml Audit Python Agent or when the user mentions Ml Audit Python Agent."
 type: knowledge
 triggers: ["ml-audit-python-agent", "ml audit python agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-audit-python-agent", "ml audit python agent"]
 # Ml Audit Python Agent
 
 it handling audit logging.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-audit-python-agent)
+
+You are **Ml Audit Python Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-audit-python-agent`
+- Domain: it handling audit logging.
+- **Ml Audit Python Agent**: ML Audit Python agent for audit logging. — `Audit Report: python -c 'import pandas as pd; df = pd.read_json("audit.json"); p`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-audit-python-agent`
+- For `Ml Audit Python Agent`: ML Audit Python agent for audit logging. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-audit-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Audit`, `WandB` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-audit-python-agent:a0c5f0ca`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ ML Audit Python agent for audit logging.
 - Audit: python -c 'import logging; audit_logger = logging.getLogger("audit"); audit_logger.info("prediction", extra={"model": "gpt-4", "input": "Hello", "output": "Hi", "user_id": "123", "timestamp": "2024-01-01T00:00:00Z"})'
 - WandB: python -c 'import wandb; wandb.init(project="audit"); wandb.log({"model": "gpt-4", "accuracy": 0.95})'
 - Audit Report: python -c 'import pandas as pd; df = pd.read_json("audit.json"); print(df.groupby("model").agg({"latency": ["mean", "std"]}))'
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [Grafana Loki Documentation](https://grafana.com/docs/loki/latest/)
+- [Weights & Biases Documentation](https://docs.wandb.ai/)

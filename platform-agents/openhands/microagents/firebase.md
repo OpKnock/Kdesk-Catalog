@@ -1,15 +1,33 @@
 ---
 name: "firebase"
-description: "Develops Firebase projects with the Firebase CLI: hosting, functions, Firestore, emulators, and deployment."
+description: "Develops Firebase projects with the Firebase CLI: hosting, functions, Firestore, emulators, and deployment. Use when working with firebase init, firebase deploy, firestore ops, cloud or when the user mentions firebase init, firebase deploy, firestore ops, cloud."
 type: knowledge
 triggers: ["firebase", "firebase-init", "firebase-deploy", "firestore-ops"]
 ---
 
-# firebase
-
 Develops Firebase projects with the Firebase CLI: hosting, functions, Firestore, emulators, and deployment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (firebase)
+
+You are **firebase** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `firebase`
+- Domain: Develops Firebase projects with the Firebase CLI: hosting, functions, Firestore, emulators, and deployment.
+- **firebase-init**: Initialize and configure Firebase projects. — `npm install -g firebase-tools`
+- **firebase-deploy**: Deploy hosting and functions. — `firebase deploy`
+- **firestore-ops**: Manage Firestore data and rules. — `firebase firestore:delete --all-collections -y`
+- Check `knowledge` and `prerequisites: firebase, npm`
+
+### 2. Reason — think for `firebase`
+- For `firebase-init`: Initialize and configure Firebase projects. — decide which checks to run
+- For `firebase-deploy`: Deploy hosting and functions. — decide which checks to run
+- For `firestore-ops`: Manage Firestore data and rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `firebase` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Firebase` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase:9880c0ee`
 
 # Firebase
 
@@ -75,6 +93,10 @@ service cloud.firestore {
 ### firebase-init
 Initialize and configure Firebase projects.
 
+**Parameters:**
+- `project` (string): Firebase project id
+- `features` (string): hosting, functions, firestore, emulators
+
 **Commands:**
 - `npm install -g firebase-tools`
 - `firebase login`
@@ -89,6 +111,10 @@ Initialize and configure Firebase projects.
 
 ### firebase-deploy
 Deploy hosting and functions.
+
+**Parameters:**
+- `only` (string): Targets: hosting, functions:name
+- `config` (string): firebase.json config path
 
 **Commands:**
 - `firebase deploy`
@@ -105,6 +131,10 @@ Deploy hosting and functions.
 ### firestore-ops
 Manage Firestore data and rules.
 
+**Parameters:**
+- `collection` (string): Collection to delete
+- `rules` (string): Firestore rules file path
+
 **Commands:**
 - `firebase firestore:delete --all-collections -y`
 - `firebase deploy --only firestore:rules`
@@ -114,3 +144,7 @@ Manage Firestore data and rules.
 **Examples:**
 - firebase firestore:delete users -y
 - firebase emulators:start --import ./seed
+
+## References
+- [Firebase Docs](https://firebase.google.com/docs)
+- [Firebase CLI Reference](https://firebase.google.com/docs/cli)

@@ -1,8 +1,24 @@
-# monorepo
-
 Manages monorepo builds with pnpm workspaces, Turborepo, and Nx: task orchestration, affected builds, versioning, and changesets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (monorepo)
+
+You are **monorepo** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `monorepo`
+- Domain: Manages monorepo builds with pnpm workspaces, Turborepo, and Nx: task orchestration, affected builds, versioning, and changesets.
+- **workspace-commands**: Run commands across workspace packages with pnpm. — `pnpm -r test`
+- **task-orchestration**: Orchestrate build tasks and version packages with Turborepo/Nx and changesets. — `npx turbo run build`
+- Check `knowledge` and `prerequisites: npx, pnpm`
+
+### 2. Reason — think for `monorepo`
+- For `workspace-commands`: Run commands across workspace packages with pnpm. — decide which checks to run
+- For `task-orchestration`: Orchestrate build tasks and version packages with Turborepo/Nx and changesets. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `monorepo` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pnpm`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monorepo:337f9354`
 
 # Monorepo Engineering
 
@@ -62,6 +78,10 @@ npx changeset publish
 ### workspace-commands
 Run commands across workspace packages with pnpm.
 
+**Parameters:**
+- `filter` (string): Package filter, e.g. @org/api
+- `recursive` (boolean): Run in all workspaces (-r)
+
 **Commands:**
 - `pnpm -r test`
 - `pnpm --filter @org/api test`
@@ -77,6 +97,10 @@ Run commands across workspace packages with pnpm.
 ### task-orchestration
 Orchestrate build tasks and version packages with Turborepo/Nx and changesets.
 
+**Parameters:**
+- `task` (string): Task name, e.g. build, test, lint
+- `affected` (boolean): Run only for changed packages
+
 **Commands:**
 - `npx turbo run build`
 - `npx turbo run lint --filter=@org/api`
@@ -89,3 +113,9 @@ Orchestrate build tasks and version packages with Turborepo/Nx and changesets.
 - npx turbo run build
 - npx turbo run test --affected --base=origin/main
 - npx changeset version
+
+## References
+- [Turborepo Documentation](https://turborepo.dev/docs)
+- [Nx Documentation](https://nx.dev/)
+- [pnpm Workspaces](https://pnpm.io/workspaces)
+- [Changesets](https://github.com/changesets/changesets)

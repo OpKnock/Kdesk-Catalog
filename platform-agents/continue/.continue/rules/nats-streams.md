@@ -1,15 +1,29 @@
 ---
 name: "Nats Streams"
-description: "Administers JetStream streams with subject coverage, retention limits, replication, backups, and views. Creates replicated streams, verifies subject matching, and manages stream storage lifecycle."
+description: "Administers JetStream streams with subject coverage, retention limits, replication, backups, and views. Creates replicated streams, verifies subject matching, and manages stream storage lifecycle. Use when working with jetstream stream admin, api or when the user mentions jetstream stream admin, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Nats Streams
-
 Administers JetStream streams with subject coverage, retention limits, replication, backups, and views. Creates replicated streams, verifies subject matching, and manages stream storage lifecycle.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nats-streams)
+
+You are **Nats Streams** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nats-streams`
+- Domain: Administers JetStream streams with subject coverage, retention limits, replication, backups, and views. Creates replicated streams, verifies subject matching, and manages stream storage lifecycle.
+- **jetstream-stream-admin**: Administer JetStream streams: coverage checks, limits, views, backups and replication. — `nats stream add ORDERS --subjects 'orders.*' --replicas 3`
+- Check `knowledge` and `prerequisites: nats`
+
+### 2. Reason — think for `nats-streams`
+- For `jetstream-stream-admin`: Administer JetStream streams: coverage checks, limits, views, backups and replication. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nats-streams` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nats` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nats-streams:82afeb97`
 
 # NATS Streams
 
@@ -73,6 +87,11 @@ replicas: 3
 ### jetstream-stream-admin
 Administer JetStream streams: coverage checks, limits, views, backups and replication.
 
+**Parameters:**
+- `stream` (string): Stream name
+- `replicas` (integer): Replication factor 1-5
+- `max_age` (string): Retention window e.g. 72h
+
 **Commands:**
 - `nats stream add ORDERS --subjects 'orders.*' --replicas 3`
 - `nats stream check coverage ORDERS 'orders.>'`
@@ -84,3 +103,7 @@ Administer JetStream streams: coverage checks, limits, views, backups and replic
 - nats stream check coverage ORDERS 'orders.*' --detail
 - nats stream view ORDERS 10
 - nats stream report
+
+## References
+- [JetStream Streams Concepts](https://docs.nats.io/nats-concepts/jetstream/streams)
+- [nats stream CLI](https://docs.nats.io/using-nats/command-line/)

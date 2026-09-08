@@ -1,8 +1,24 @@
-# caching-infrastructure
-
 Operates Redis and Varnish caches: cache-aside patterns, invalidation, hit-rate analysis, and ban/purge workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (caching-infrastructure)
+
+You are **caching-infrastructure** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `caching-infrastructure`
+- Domain: Operates Redis and Varnish caches: cache-aside patterns, invalidation, hit-rate analysis, and ban/purge workflows.
+- **redis**: Manage cache keys, TTLs, and hit rates in Redis. — `redis-cli SET user:42 '{"name":"ada"}' EX 300`
+- **varnish**: Inspect and purge content on Varnish caches. — `varnishstat -1 | grep -E 'MAIN.cache_hit|MAIN.cache_miss'`
+- Check `knowledge` and `prerequisites: redis-cli, varnishadm, varnishstat`
+
+### 2. Reason — think for `caching-infrastructure`
+- For `redis`: Manage cache keys, TTLs, and hit rates in Redis. — decide which checks to run
+- For `varnish`: Inspect and purge content on Varnish caches. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `caching-infrastructure` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Varnishstat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `caching-infrastructure:0a884fca`
 
 # Caching
 
@@ -69,6 +85,11 @@ Assert expected TTLs and hit rates after load tests.
 ### redis
 Manage cache keys, TTLs, and hit rates in Redis.
 
+**Parameters:**
+- `key` (string): Cache key to operate on
+- `EX` (number): TTL in seconds
+- `pattern` (string): Glob pattern for key scans
+
 **Commands:**
 - `redis-cli SET user:42 '{"name":"ada"}' EX 300`
 - `redis-cli TTL user:42`
@@ -84,6 +105,11 @@ Manage cache keys, TTLs, and hit rates in Redis.
 ### varnish
 Inspect and purge content on Varnish caches.
 
+**Parameters:**
+- `secret` (string): Varnish CLI secret file
+- `ban` (string): VCL condition to invalidate matching objects
+- `n` (string): Cache instance name
+
 **Commands:**
 - `varnishstat -1 | grep -E 'MAIN.cache_hit|MAIN.cache_miss'`
 - `varnishadm -S /etc/varnish/secret -T 127.0.0.1:6082 ban 'req.url ~ ^/api'`
@@ -95,3 +121,8 @@ Inspect and purge content on Varnish caches.
 - varnishadm -S /etc/varnish/secret -T 127.0.0.1:6082 ban 'req.url ~ ^/products/[0-9]+'
 - varnishlog -q 'RespStatus >= 500' -d -n cache-1 | head -50
 - varnishstat -1 | grep -i hit
+
+## References
+- [Redis Caching Patterns](https://redis.io/docs/latest/develop/use/patterns/caching/)
+- [Varnish Docs](https://varnish-cache.org/docs/)
+- [Varnish Cache Hits](https://www.varnish-software.com/developers/tutorials/hitmiss-hithit-misshit/)

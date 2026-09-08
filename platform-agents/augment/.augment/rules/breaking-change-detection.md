@@ -5,27 +5,27 @@ description: "Detects breaking changes in OpenAPI specs with openapi-diff, Redoc
 
 Detects breaking changes in OpenAPI specs with openapi-diff, Redocly lint, and changelog-based CI gates.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (breaking-change-detection)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Breaking Change Detection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx openapi-diff old.yaml new.yaml`, `npx @redocly/cli lint openapi.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `breaking-change-detection`
+- Domain: Detects breaking changes in OpenAPI specs with openapi-diff, Redocly lint, and changelog-based CI gates.
+- **openapi-diff**: Diff OpenAPI specs for breaking changes. — `npx openapi-diff old.yaml new.yaml`
+- **redocly-lint**: Lint specs and enforce API style rules in CI. — `npx @redocly/cli lint openapi.yaml`
+- **ci-gates**: Wire compat checks into CI. — `git diff --exit-code v1.0.0 v1.1.0 -- openapi.yaml`
+- Check `knowledge` and `prerequisites: git, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `breaking-change-detection`
+- For `openapi-diff`: Diff OpenAPI specs for breaking changes. — decide which checks to run
+- For `redocly-lint`: Lint specs and enforce API style rules in CI. — decide which checks to run
+- For `ci-gates`: Wire compat checks into CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `breaking-change-detection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `breaking-change-detection:cd80f7fe`
 
 # Breaking Change Detection
 

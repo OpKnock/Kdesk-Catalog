@@ -1,8 +1,22 @@
-# Tekton
-
 Create and run Kubernetes-native CI/CD pipelines with Tekton using the tkn CLI. Applies Task and Pipeline definitions, starts runs with streaming logs, and inspects pipelinerun statuses and step output — replacing external CI systems with cluster-based execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tekton)
+
+You are **Tekton** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `tekton`
+- Domain: Create and run Kubernetes-native CI/CD pipelines with Tekton using the tkn CLI. Applies Task and Pipeline definitions, starts runs with streaming logs, and inspects pipelinerun statuses and step outpu
+- **tekton-pipelines**: Create and run Tekton pipelines with the tkn CLI — `kubectl apply -f tasks/build-image.yaml`
+- Check `knowledge` and `prerequisites: kubectl, tkn`
+
+### 2. Reason — think for `tekton`
+- For `tekton-pipelines`: Create and run Tekton pipelines with the tkn CLI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tekton` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Tkn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tekton:9fd9cb07`
 
 # Tekton
 
@@ -78,6 +92,11 @@ tkn taskrun list -n ci
 ### tekton-pipelines
 Create and run Tekton pipelines with the tkn CLI
 
+**Parameters:**
+- `namespace` (string): Namespace for tasks/pipelines
+- `pipeline` (string): Pipeline name to start
+- `run_name` (string): Pipelinerun name for logs
+
 **Commands:**
 - `kubectl apply -f tasks/build-image.yaml`
 - `tkn task list -n ci`
@@ -90,3 +109,7 @@ Create and run Tekton pipelines with the tkn CLI
 - tkn pipeline start build-deploy --showlog -n ci
 - tkn pipelinerun logs -f build-deploy-run-abc -n ci
 - kubectl apply -f pipeline.yaml
+
+## References
+- [Tekton CLI docs](https://tekton.dev/docs/cli/)
+- [Tekton pipeline docs](https://tekton.dev/docs/pipelines/)

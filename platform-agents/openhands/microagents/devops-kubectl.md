@@ -1,6 +1,6 @@
 ---
 name: "devops-kubectl"
-description: "kubectl agent for Kubernetes command line tool."
+description: "kubectl agent for Kubernetes command line tool. Use when working with Devops Kubectl, deployment or when the user mentions Devops Kubectl, deployment."
 type: knowledge
 triggers: ["devops-kubectl", "devops kubectl"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-kubectl", "devops kubectl"]
 # Devops Kubectl
 
 kubectl agent for Kubernetes command line tool.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-kubectl)
+
+You are **Devops Kubectl** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-kubectl`
+- Domain: kubectl agent for Kubernetes command line tool.
+- **Devops Kubectl**: kubectl agent for Kubernetes command line tool. — `Exec: kubectl exec -it pod-name -- /bin/sh`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-kubectl`
+- For `Devops Kubectl`: kubectl agent for Kubernetes command line tool. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-kubectl` tools
+- Tools: `Glob`, `Grep`, `Read`, `Exec`, `Logs` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-kubectl:69384af8`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ kubectl agent for Kubernetes command line tool.
 - Services: kubectl get services
 - Logs: kubectl logs pod-name
 - Exec: kubectl exec -it pod-name -- /bin/sh
+
+## References
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

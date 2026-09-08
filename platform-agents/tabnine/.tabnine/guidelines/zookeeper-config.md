@@ -1,8 +1,22 @@
-# ZooKeeper Config
-
 Use ZooKeeper as a distributed configuration store: create and update ZNodes with zkCli, read config at startup, and subscribe to changes with watches.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (zookeeper-config)
+
+You are **ZooKeeper Config** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `zookeeper-config`
+- Domain: Use ZooKeeper as a distributed configuration store: create and update ZNodes with zkCli, read config at startup, and subscribe to changes with watches.
+- **zk-config**: Read, write, and watch configuration in ZooKeeper — `zkCli.sh -server localhost:2181`
+- Check `knowledge` and `prerequisites: zkcli.sh`
+
+### 2. Reason — think for `zookeeper-config`
+- For `zk-config`: Read, write, and watch configuration in ZooKeeper — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `zookeeper-config` tools
+- Tools: `Glob`, `Grep`, `Read`, `zkCli.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `zookeeper-config:06187c6a`
 
 # ZooKeeper Config
 
@@ -72,6 +86,11 @@ zkCli.sh get /config/app
 ### zk-config
 Read, write, and watch configuration in ZooKeeper
 
+**Parameters:**
+- `server` (string): ZooKeeper ensemble, e.g. host1:2181,host2:2181
+- `path` (string): ZNode path, e.g. /config/app
+- `data` (string): Node data, often JSON
+
 **Commands:**
 - `zkCli.sh -server localhost:2181`
 - `zkCli.sh create /config/app '{"port":8080}'`
@@ -83,3 +102,7 @@ Read, write, and watch configuration in ZooKeeper
 - zkCli.sh -server zk1:2181,zk2:2181,zk3:2181 create /config/feature-flags '{"newUi":true}'
 - zkCli.sh get -s /config/app
 - zkCli.sh deleteall /config/app
+
+## References
+- [ZooKeeper CLI Guide](https://zookeeper.apache.org/doc/current/zookeeperCLI.html)
+- [ZooKeeper Programmer Guide](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html)

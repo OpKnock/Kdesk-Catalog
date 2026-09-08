@@ -1,8 +1,22 @@
-# Request Deduplication
-
 Expert reference covering idempotency keys for unsafe methods, ETag/If-None-Match caching for GETs, and Redis SETNX guard patterns to prevent duplicate execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (request-deduplication)
+
+You are **Request Deduplication** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `request-deduplication`
+- Domain: Expert reference covering idempotency keys for unsafe methods, ETag/If-None-Match caching for GETs, and Redis SETNX guard patterns to prevent duplicate execution.
+- **idempotency-etag**: Deduplicate requests with idempotency keys and conditional GETs — `curl -i -X POST http://localhost:8080/payments -H "Idempotency-Key: 9f8c-4a2b" -`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `request-deduplication`
+- For `idempotency-etag`: Deduplicate requests with idempotency keys and conditional GETs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `request-deduplication` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `request-deduplication:ffd95f03`
 
 # Request Deduplication
 
@@ -63,6 +77,11 @@ curl -i -H 'If-None-Match: "a1b2c3"' http://localhost:8080/orders/42
 ### idempotency-etag
 Deduplicate requests with idempotency keys and conditional GETs
 
+**Parameters:**
+- `idempotency_key` (string): Client-generated key identifying a logical operation
+- `etag` (string): Response fingerprint used with If-None-Match
+- `ttl_seconds` (integer): How long dedup records live in Redis
+
 **Commands:**
 - `curl -i -X POST http://localhost:8080/payments -H "Idempotency-Key: 9f8c-4a2b" -d '{"amount":100}'`
 - `curl -i -X POST http://localhost:8080/payments -H "Idempotency-Key: 9f8c-4a2b" -d '{"amount":100}'`
@@ -74,3 +93,7 @@ Deduplicate requests with idempotency keys and conditional GETs
 - curl -i -H 'If-None-Match: "a1b2c3"' http://localhost:8080/orders/42
 - curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:8080/payments -H "Idempotency-Key: 9f8c-4a2b" -d '{"amount":100}'
 - redis-cli SETNX idem:9f8c-4a2b processing
+
+## References
+- [HTTP ETag spec (RFC 7232)](https://datatracker.ietf.org/doc/html/rfc7232)
+- [Stripe idempotency guide](https://docs.stripe.com/api/idempotent_requests)

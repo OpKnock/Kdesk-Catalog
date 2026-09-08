@@ -1,5 +1,5 @@
 ---
-description: "it agent handling batch processing and ETL pipelines."
+description: "it agent handling batch processing and ETL pipelines. Use when working with Ml Batch, deployment or when the user mentions Ml Batch, deployment."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Batch
 
 it agent handling batch processing and ETL pipelines.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-batch)
+
+You are **Ml Batch** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-batch`
+- Domain: it agent handling batch processing and ETL pipelines.
+- **Ml Batch**: ML batch agent for batch processing and ETL pipelines. — `Prefect: prefect deployment create my_flow`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-batch`
+- For `Ml Batch`: ML batch agent for batch processing and ETL pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-batch` tools
+- Tools: `Glob`, `Grep`, `Read`, `Prefect`, `Luigi` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-batch:d9b331d4`
 
 ## Instructions
 
@@ -37,3 +55,8 @@ ML batch agent for batch processing and ETL pipelines.
 - Airflow: airflow dags trigger my_batch_dag
 - Luigi: luigi --module my_module MyTask --param value
 - Prefect: prefect deployment create my_flow
+
+## References
+- [Google Cloud Batch](https://cloud.google.com/batch/docs)
+- [Prefect Documentation](https://docs.prefect.io/)
+- [Apache Airflow Documentation](https://airflow.apache.org/docs/)

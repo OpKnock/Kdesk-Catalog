@@ -1,14 +1,32 @@
 ---
-description: "Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications."
+description: "Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications. Use when working with semver, api versioning, compat checks or when the user mentions semver, api versioning, compat checks."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Backward Compatibility
-
 Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (backward-compatibility)
+
+You are **Backward Compatibility** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `backward-compatibility`
+- Domain: Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specificati
+- **semver**: Apply semantic versioning rules to releases. — `npm version minor`
+- **api-versioning**: Version APIs via media types or URL prefixes. — `curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.your-app.test/use`
+- **compat-checks**: Detect breaking changes between specs. — `npx openapi-diff old.yaml new.yaml`
+- Check `knowledge` and `prerequisites: git, npm, npx`
+
+### 2. Reason — think for `backward-compatibility`
+- For `semver`: Apply semantic versioning rules to releases. — decide which checks to run
+- For `api-versioning`: Version APIs via media types or URL prefixes. — decide which checks to run
+- For `compat-checks`: Detect breaking changes between specs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `backward-compatibility` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `backward-compatibility:3bd8758d`
 
 # Backward Compatibility
 
@@ -61,6 +79,10 @@ npx @redocly/cli lint new.yaml
 ### semver
 Apply semantic versioning rules to releases.
 
+**Parameters:**
+- `version_bump` (string): major, minor, or patch
+- `range` (string): Semver range expression
+
 **Commands:**
 - `npm version minor`
 - `npm version major`
@@ -75,6 +97,10 @@ Apply semantic versioning rules to releases.
 
 ### api-versioning
 Version APIs via media types or URL prefixes.
+
+**Parameters:**
+- `accept_header` (string): Media type version header
+- `base_url` (string): API base URL
 
 **Commands:**
 - `curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.your-app.test/users`
@@ -91,6 +117,10 @@ Version APIs via media types or URL prefixes.
 ### compat-checks
 Detect breaking changes between specs.
 
+**Parameters:**
+- `old_spec` (string): Baseline OpenAPI spec
+- `new_spec` (string): Candidate OpenAPI spec
+
 **Commands:**
 - `npx openapi-diff old.yaml new.yaml`
 - `npx @redocly/cli lint new.yaml`
@@ -102,3 +132,9 @@ Detect breaking changes between specs.
 - npx openapi-diff old.yaml new.yaml | grep -i breaking
 - npx @redocly/cli lint --extends minimal new.yaml
 - npx openapi-changes compare old.yaml new.yaml --json
+
+## References
+- [Semantic Versioning](https://semver.org/)
+- [openapi-diff](https://github.com/OpenAPITools/openapi-diff)
+- [Redocly CLI](https://redocly.com/docs/cli/)
+- [RFC 9110 Content Negotiation](https://www.rfc-editor.org/rfc/rfc9110#name-content-negotiation)

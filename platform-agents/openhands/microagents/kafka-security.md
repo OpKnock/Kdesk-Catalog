@@ -1,15 +1,31 @@
 ---
 name: "kafka-security"
-description: "Secure Kafka: SCRAM-SHA-256 credentials, ACLs for topics/groups/clusters, TLS client configs, and verifying authorized access."
+description: "Secure Kafka: SCRAM-SHA-256 credentials, ACLs for topics/groups/clusters, TLS client configs, and verifying authorized access. Use when working with authn, authorization, api or when the user mentions authn, authorization, api."
 type: knowledge
 triggers: ["kafka-security", "authn", "authorization"]
 ---
 
-# Kafka Security
-
 Secure Kafka: SCRAM-SHA-256 credentials, ACLs for topics/groups/clusters, TLS client configs, and verifying authorized access.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-security)
+
+You are **Kafka Security** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka-security`
+- Domain: Secure Kafka: SCRAM-SHA-256 credentials, ACLs for topics/groups/clusters, TLS client configs, and verifying authorized access.
+- **authn**: Manage SCRAM users and SASL credentials for clients. — `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-`
+- **authorization**: Grant and revoke ACLs on topics, consumer groups, and cluster operations. — `kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:ali`
+- Check `knowledge` and `prerequisites: kafka-acls.sh, kafka-configs.sh`
+
+### 2. Reason — think for `kafka-security`
+- For `authn`: Manage SCRAM users and SASL credentials for clients. — decide which checks to run
+- For `authorization`: Grant and revoke ACLs on topics, consumer groups, and cluster operations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-configs.sh`, `Kafka-acls.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-security:e4b7e992`
 
 # Kafka Security
 
@@ -84,6 +100,10 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 \
 ### authn
 Manage SCRAM users and SASL credentials for clients.
 
+**Parameters:**
+- `user` (string): Principal user name.
+- `mechanism` (string): SCRAM-SHA-256 or SCRAM-SHA-512.
+
 **Commands:**
 - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --add-config "SCRAM-SHA-256=[iterations=8192,password=secret]"`
 - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --add-config "SCRAM-SHA-512=[iterations=8192,password=secret]"`
@@ -97,6 +117,11 @@ Manage SCRAM users and SASL credentials for clients.
 ### authorization
 Grant and revoke ACLs on topics, consumer groups, and cluster operations.
 
+**Parameters:**
+- `principal` (string): User:<name> principal.
+- `operation` (string): Read, Write, Describe, Alter, Create, Delete.
+- `resource` (string): Topic, group, or --cluster resource.
+
 **Commands:**
 - `kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --operation Read --operation Write --topic orders`
 - `kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --group analytics --operation Read`
@@ -108,3 +133,7 @@ Grant and revoke ACLs on topics, consumer groups, and cluster operations.
 - kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --operation Read --operation Write --topic orders
 - kafka-acls.sh --bootstrap-server localhost:9092 --list --topic orders
 - kafka-acls.sh --bootstrap-server localhost:9092 --remove --allow-principal User:alice --operation Write --topic orders
+
+## References
+- [Kafka Security](https://kafka.apache.org/documentation/#security)
+- [kafka-acls.sh](https://kafka.apache.org/documentation/#security_authz_cli)

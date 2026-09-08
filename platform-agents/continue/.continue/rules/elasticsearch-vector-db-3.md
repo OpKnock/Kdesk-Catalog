@@ -1,6 +1,6 @@
 ---
 name: "Elasticsearch Vector Db 3"
-description: "Elasticsearch server agent. Manages Elasticsearch ML server."
+description: "Elasticsearch server agent. Manages Elasticsearch ML server. Use when working with Ml Elasticsearch Server Agent, vector db or when the user mentions Ml Elasticsearch Server Agent, vector db."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Elasticsearch Vector Db 3
 
 Elasticsearch server agent. Manages Elasticsearch ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (elasticsearch-vector-db-3)
+
+You are **Elasticsearch Vector Db 3** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `elasticsearch-vector-db-3`
+- Domain: Elasticsearch server agent. Manages Elasticsearch ML server.
+- **Ml Elasticsearch Server Agent**: Elasticsearch server agent. Manages Elasticsearch ML server. — `python -m elasticsearch.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `elasticsearch-vector-db-3`
+- For `Ml Elasticsearch Server Agent`: Elasticsearch server agent. Manages Elasticsearch ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `elasticsearch-vector-db-3` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `elasticsearch-vector-db-3:bb0ff414`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Elasticsearch server agent. Manages Elasticsearch ML server.
 - python index_vectors.py --index my-index --vectors vectors.json
 - python search_vectors.py --index my-index --query query_vector --k 10
 - python delete_vectors.py --index my-index --ids ids.json
+
+## References
+- [Elasticsearch Guide](https://www.elastic.co/guide/en/elasticsearch/reference/current/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

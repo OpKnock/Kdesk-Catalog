@@ -4,27 +4,23 @@ applyTo: "**/*.go **/*.json **/*.r **/*.sh **/Dockerfile*"
 
 Production Docker deployments: builds multi-stage images, tags and pushes to registries, runs containers with proper restart policies, and rolls back.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (docker-deployment)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Docker Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker build -t ghcr.io/org/app:v1.2.3 .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `docker-deployment`
+- Domain: Production Docker deployments: builds multi-stage images, tags and pushes to registries, runs containers with proper restart policies, and rolls back.
+- **image-deploy**: Build, sign, push, run, and inspect Docker images and containers in deployment pipelines. — `docker build -t ghcr.io/org/app:v1.2.3 .`
+- Check `knowledge` and `prerequisites: docker`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `docker-deployment`
+- For `image-deploy`: Build, sign, push, run, and inspect Docker images and containers in deployment pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `docker-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `docker-deployment:2829df65`
 
 # Docker Deployment
 

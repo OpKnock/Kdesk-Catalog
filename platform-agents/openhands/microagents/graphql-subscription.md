@@ -1,15 +1,29 @@
 ---
 name: "graphql-subscription"
-description: "GraphQL subscriptions: set up realtime channels over WebSocket (graphql-ws), publish events, and test subscription flows."
+description: "GraphQL subscriptions: set up realtime channels over WebSocket (graphql-ws), publish events, and test subscription flows. Use when working with subscriptions, api or when the user mentions subscriptions, api."
 type: knowledge
 triggers: ["graphql-subscription", "subscriptions"]
 ---
 
-# Graphql Subscription
-
 GraphQL subscriptions: set up realtime channels over WebSocket (graphql-ws), publish events, and test subscription flows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-subscription)
+
+You are **Graphql Subscription** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `graphql-subscription`
+- Domain: GraphQL subscriptions: set up realtime channels over WebSocket (graphql-ws), publish events, and test subscription flows.
+- **subscriptions**: Connect to GraphQL subscription endpoints over WebSocket and verify event delivery. — `npm install graphql-ws @apollo/server @apollo/server/plugin/subscriptionCallback`
+- Check `knowledge` and `prerequisites: grep, node, npm`
+
+### 2. Reason — think for `graphql-subscription`
+- For `subscriptions`: Connect to GraphQL subscription endpoints over WebSocket and verify event delivery. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-subscription` tools
+- Tools: `Glob`, `Read`, `Bash`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-subscription:e71c29b4`
 
 # GraphQL Subscriptions
 
@@ -76,6 +90,11 @@ curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json
 ### subscriptions
 Connect to GraphQL subscription endpoints over WebSocket and verify event delivery.
 
+**Parameters:**
+- `subscription-query` (string): Subscription document
+- `ws-url` (string): WebSocket endpoint URL
+- `event-topic` (string): PubSub topic emitting the event
+
 **Commands:**
 - `npm install graphql-ws @apollo/server @apollo/server/plugin/subscriptionCallback`
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __type(name: \"Subscription\") { fields { name } } }"}' | jq '.data.__type.fields[].name'`
@@ -87,3 +106,7 @@ Connect to GraphQL subscription endpoints over WebSocket and verify event delive
 - node -e "const {createClient}=require('graphql-ws');const c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription { orderUpdated { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)"
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __type(name: \"Subscription\") { fields { name } } }"}' | jq '.data.__type.fields[].name'
 - grep -rn 'pubsub\|PubSub' src/ | head -10
+
+## References
+- [graphql-ws docs](https://the-guild.dev/graphql/ws)
+- [Apollo subscriptions](https://www.apollographql.com/docs/apollo-server/data/subscriptions/)

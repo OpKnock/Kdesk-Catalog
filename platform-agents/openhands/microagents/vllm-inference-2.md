@@ -1,6 +1,6 @@
 ---
 name: "vllm-inference-2"
-description: "vLLM inference server agent Manages vLLM inference server."
+description: "vLLM inference server agent Manages vLLM inference server. Use when working with Ml Vllm Inference Server Agent V2 or when the user mentions Ml Vllm Inference Server Agent V2."
 type: knowledge
 triggers: ["vllm-inference-2", "ml vllm inference server agent v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["vllm-inference-2", "ml vllm inference server agent v2"]
 # Vllm Inference 2
 
 vLLM inference server agent Manages vLLM inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (vllm-inference-2)
+
+You are **Vllm Inference 2** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `vllm-inference-2`
+- Domain: vLLM inference server agent Manages vLLM inference server.
+- **Ml Vllm Inference Server Agent V2**: vLLM inference server agent. Manages vLLM inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `vllm-inference-2`
+- For `Ml Vllm Inference Server Agent V2`: vLLM inference server agent. Manages vLLM inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vllm-inference-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Vllm` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vllm-inference-2:bad00eef`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ vLLM inference server agent. Manages vLLM inference server.
 - curl http://localhost:8000/v1/models
 - curl http://localhost:8000/v1/completions --data '{"model": "meta-llama/Llama-2-7b-hf", "prompt": "Hello"}'
 - python -m vllm.entrypoints.openai.api_server --help
+
+## References
+- [vLLM Documentation](https://docs.vllm.ai/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

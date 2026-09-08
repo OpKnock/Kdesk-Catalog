@@ -1,15 +1,29 @@
 ---
 name: "api-analytics-specialist"
-description: "Deep API analytics: PromQL expertise, query range analysis, log-based analytics with Elasticsearch, and correlating metrics with deployments."
+description: "Deep API analytics: PromQL expertise, query range analysis, log-based analytics with Elasticsearch, and correlating metrics with deployments. Use when working with analytics deep or when the user mentions analytics deep."
 type: knowledge
 triggers: ["api-analytics-specialist", "analytics-deep"]
 ---
 
-# api-analytics-specialist
-
 Deep API analytics: PromQL expertise, query range analysis, log-based analytics with Elasticsearch, and correlating metrics with deployments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-analytics-specialist)
+
+You are **api-analytics-specialist** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `api-analytics-specialist`
+- Domain: Deep API analytics: PromQL expertise, query range analysis, log-based analytics with Elasticsearch, and correlating metrics with deployments.
+- **analytics-deep**: Advanced analytics queries and log correlation — `curl -G 'http://localhost:9090/api/v1/query_range' --data-urlencode 'query=rate(`
+- Check `knowledge` and `prerequisites: prometheus, grafana, elasticsearch`
+
+### 2. Reason — think for `api-analytics-specialist`
+- For `analytics-deep`: Advanced analytics queries and log correlation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-analytics-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-analytics-specialist:c6c39cd9`
 
 # API Analytics Specialist
 
@@ -75,6 +89,11 @@ curl -s 'http://localhost:9090/api/v1/alerts' | jq '.data.alerts[] | {name: .lab
 ### analytics-deep
 Advanced analytics queries and log correlation
 
+**Parameters:**
+- `index` (string): Elasticsearch index pattern, e.g. api-logs-*
+- `query` (string): PromQL or ES query string
+- `range` (string): Time range for analysis
+
 **Commands:**
 - `curl -G 'http://localhost:9090/api/v1/query_range' --data-urlencode 'query=rate(http_requests_total[5m])' --data-urlencode 'start=2024-06-01T00:00:00Z' --data-urlencode 'end=2024-06-01T01:00:00Z' --data-urlencode 'step=60' | jq '.data.result[0].values | length'`
 - `curl -s -X PUT localhost:9200/api-logs-2024.06.01 | jq '.acknowledged'`
@@ -86,3 +105,7 @@ Advanced analytics queries and log correlation
 - curl -s 'http://localhost:9090/api/v1/query?query=changes(http_up[1h])' | jq '.data.result'
 - curl -s 'http://localhost:9200/api-logs-*/_search?q=method:POST%20AND%20status:[400%20TO%20499]&size=5' | jq '.hits.hits[]._source'
 - promtool query instant 'avg_over_time(http_request_duration_seconds_sum[1d])/avg_over_time(http_request_duration_seconds_count[1d])' http://localhost:9090
+
+## References
+- [PromQL Documentation](https://prometheus.io/docs/prometheus/latest/querying/functions/)
+- [Elasticsearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)

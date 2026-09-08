@@ -1,15 +1,29 @@
 ---
 name: "Redis Pubsub Python"
-description: "Publish and subscribe to Redis channels from Python using redis-py: pattern subscriptions with non-blocking get_message polling loops."
+description: "Publish and subscribe to Redis channels from Python using redis-py: pattern subscriptions with non-blocking get_message polling loops. Use when working with redis py pubsub, api or when the user mentions redis py pubsub, api."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Redis Pubsub Python
-
 Publish and subscribe to Redis channels from Python using redis-py: pattern subscriptions with non-blocking get_message polling loops.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (redis-pubsub-python)
+
+You are **Redis Pubsub Python** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `redis-pubsub-python`
+- Domain: Publish and subscribe to Redis channels from Python using redis-py: pattern subscriptions with non-blocking get_message polling loops.
+- **redis-py-pubsub**: Publish and subscribe from Python with the redis-py PubSub object — `pip install redis`
+- Check `knowledge` and `prerequisites: pip, python, redis-cli`
+
+### 2. Reason — think for `redis-pubsub-python`
+- For `redis-py-pubsub`: Publish and subscribe from Python with the redis-py PubSub object — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `redis-pubsub-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `redis-pubsub-python:ae0daead`
 
 # Redis Pub/Sub in Python
 
@@ -80,6 +94,11 @@ redis-cli publish news "hello from cli"
 ### redis-py-pubsub
 Publish and subscribe from Python with the redis-py PubSub object
 
+**Parameters:**
+- `timeout` (integer): get_message polling timeout in seconds before returning None
+- `channel` (string): Channel name for subscribe()
+- `pattern` (string): Glob pattern for psubscribe(), e.g. orders.*
+
 **Commands:**
 - `pip install redis`
 - `python -c 'import redis; r=redis.Redis(host="localhost", port=6379); print(r.publish("news", "breaking"))'`
@@ -91,3 +110,7 @@ Publish and subscribe from Python with the redis-py PubSub object
 - python -c 'import redis; r=redis.Redis(); print(r.publish("news", "hello"))'
 - python -c 'import redis; p=redis.Redis().pubsub(); p.psubscribe("orders.*"); print(p.get_message(timeout=3))'
 - redis-cli publish news "second message"
+
+## References
+- [redis-py repository](https://github.com/redis/redis-py)
+- [Redis pub/sub documentation](https://redis.io/docs/latest/develop/data-types/pubsub/)

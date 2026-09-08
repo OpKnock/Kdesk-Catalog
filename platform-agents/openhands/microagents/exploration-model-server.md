@@ -1,6 +1,6 @@
 ---
 name: "exploration-model-server"
-description: "Exploration server agent. Manages Exploration ML server."
+description: "Exploration server agent. Manages Exploration ML server. Use when working with Ml Exploration Server Agent or when the user mentions Ml Exploration Server Agent."
 type: knowledge
 triggers: ["exploration-model-server", "ml exploration server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["exploration-model-server", "ml exploration server agent"]
 # Exploration Model Server
 
 Exploration server agent. Manages Exploration ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (exploration-model-server)
+
+You are **Exploration Model Server** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `exploration-model-server`
+- Domain: Exploration server agent. Manages Exploration ML server.
+- **Ml Exploration Server Agent**: Exploration server agent. Manages Exploration ML server. — `python -m model.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `exploration-model-server`
+- For `Ml Exploration Server Agent`: Exploration server agent. Manages Exploration ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `exploration-model-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `exploration-model-server:8ab10652`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Exploration server agent. Manages Exploration ML server.
 - curl http://localhost:8080/explore --data '{"data": "data.csv"}'
 - python explore.py --data data.csv --output exploration.json
 - python visualize.py --data data.csv --output visualization.html
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)

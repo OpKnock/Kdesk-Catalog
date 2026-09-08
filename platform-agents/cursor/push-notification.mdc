@@ -6,27 +6,23 @@ alwaysApply: false
 
 Deliver mobile notifications via FCM v1, legacy FCM, and APNs HTTP/2 using curl with OAuth tokens and certificate-based auth.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (push-notification)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Push Notification** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `gcloud auth application-default print-access-token`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `push-notification`
+- Domain: Deliver mobile notifications via FCM v1, legacy FCM, and APNs HTTP/2 using curl with OAuth tokens and certificate-based auth.
+- **push-notification-delivery**: Send notifications via FCM and APNs using curl and the gcloud token flow. — `gcloud auth application-default print-access-token`
+- Check `knowledge` and `prerequisites: gcloud`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `push-notification`
+- For `push-notification-delivery`: Send notifications via FCM and APNs using curl and the gcloud token flow. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `push-notification` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gcloud`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `push-notification:a96f2a4c`
 
 # Push Notifications
 

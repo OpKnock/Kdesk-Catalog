@@ -1,15 +1,31 @@
 ---
 name: "frontend-testing"
-description: "Tests frontend applications end-to-end and at the component level with Playwright, Cypress, and Vitest."
+description: "Tests frontend applications end-to-end and at the component level with Playwright, Cypress, and Vitest. Use when working with playwright, vitest, frontend or when the user mentions playwright, vitest, frontend."
 type: knowledge
 triggers: ["frontend-testing", "playwright", "vitest"]
 ---
 
-# Frontend Testing
-
 Tests frontend applications end-to-end and at the component level with Playwright, Cypress, and Vitest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (frontend-testing)
+
+You are **Frontend Testing** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `frontend-testing`
+- Domain: Tests frontend applications end-to-end and at the component level with Playwright, Cypress, and Vitest.
+- **playwright**: Write and run browser end-to-end tests with Playwright. — `npx playwright install --with-deps`
+- **vitest**: Run fast component and unit tests with Vitest. — `npx vitest run`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `frontend-testing`
+- For `playwright`: Write and run browser end-to-end tests with Playwright. — decide which checks to run
+- For `vitest`: Run fast component and unit tests with Vitest. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `frontend-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `frontend-testing:36cd193e`
 
 # Frontend Testing
 
@@ -74,6 +90,11 @@ npx vitest run --coverage
 ### playwright
 Write and run browser end-to-end tests with Playwright.
 
+**Parameters:**
+- `project` (string): Browser project: chromium, firefox, webkit
+- `grep` (string): Run only tests matching a pattern
+- `workers` (number): Parallel worker count
+
 **Commands:**
 - `npx playwright install --with-deps`
 - `npx playwright test`
@@ -89,6 +110,11 @@ Write and run browser end-to-end tests with Playwright.
 ### vitest
 Run fast component and unit tests with Vitest.
 
+**Parameters:**
+- `coverage` (string): Enable coverage collection
+- `reporter` (string): default, json, junit, dot
+- `changed` (string): Test only files changed vs branch
+
 **Commands:**
 - `npx vitest run`
 - `npx vitest run --coverage`
@@ -100,3 +126,8 @@ Run fast component and unit tests with Vitest.
 - npx vitest run --coverage --reporter=json --outputFile=coverage.json
 - npx vitest run --changed main
 - npx vitest watch --exclude '**/e2e/**'
+
+## References
+- [Playwright Docs](https://playwright.dev/docs/intro)
+- [Cypress Docs](https://docs.cypress.io/)
+- [Vitest Docs](https://vitest.dev/guide/)

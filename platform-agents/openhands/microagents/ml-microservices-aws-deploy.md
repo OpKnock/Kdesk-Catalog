@@ -1,6 +1,6 @@
 ---
 name: "ml-microservices-aws-deploy"
-description: "AWS Microservices deployment agent for ML microservices on AWS."
+description: "AWS Microservices deployment agent for ML microservices on AWS. Use when working with Ml Microservices Aws Deploy, deployment or when the user mentions Ml Microservices Aws Deploy, deployment."
 type: knowledge
 triggers: ["ml-microservices-aws-deploy", "ml microservices aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-microservices-aws-deploy", "ml microservices aws deploy"]
 # Ml Microservices Aws Deploy
 
 AWS Microservices deployment agent for ML microservices on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-microservices-aws-deploy)
+
+You are **Ml Microservices Aws Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-microservices-aws-deploy`
+- Domain: AWS Microservices deployment agent for ML microservices on AWS.
+- **Ml Microservices Aws Deploy**: AWS Microservices deployment agent for ML microservices on AWS. — `ECS: aws ecs create-service --cluster my-cluster --service-name ml-service --tas`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-microservices-aws-deploy`
+- For `Ml Microservices Aws Deploy`: AWS Microservices deployment agent for ML microservices on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-microservices-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `ECS`, `API` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-microservices-aws-deploy:5aea2f95`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ AWS Microservices deployment agent for ML microservices on AWS.
 - App Mesh: aws appmesh create-mesh --mesh-name ml-mesh
 - ECS: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1
 - API Gateway: aws apigateway create-rest-api --name ml-api
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Amazon ECS Documentation](https://docs.aws.amazon.com/ecs/)

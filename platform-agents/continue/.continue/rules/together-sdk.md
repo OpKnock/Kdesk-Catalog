@@ -1,6 +1,6 @@
 ---
 name: "Together Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Together Deploy Sdk Agent or when the user mentions Ml Together Deploy Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Together Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (together-sdk)
+
+You are **Together Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `together-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Together Deploy Sdk Agent**: Together SDK deployment agent for ML Together SDK deployment. — `docker build -t together:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `together-sdk`
+- For `Ml Together Deploy Sdk Agent`: Together SDK deployment agent for ML Together SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `together-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Together` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `together-sdk:6a36f282`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Together SDK deployment agent for ML Together SDK deployment.
 **Examples:**
 - Server: python -m together.server --port 8080
 - Docker: docker run -p 8080:8080 together-server
+
+## References
+- [Together AI Documentation](https://docs.together.ai/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

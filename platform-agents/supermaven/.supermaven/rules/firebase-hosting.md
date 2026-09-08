@@ -1,8 +1,22 @@
-# Firebase Hosting
-
 Firebase Hosting: deploy sites, configure rewrites and headers, preview builds locally, and manage multiple sites per project.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (firebase-hosting)
+
+You are **Firebase Hosting** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `firebase-hosting`
+- Domain: Firebase Hosting: deploy sites, configure rewrites and headers, preview builds locally, and manage multiple sites per project.
+- **hosting-deploy**: Deploy, preview, and configure Firebase Hosting sites. — `firebase init hosting`
+- Check `knowledge` and `prerequisites: firebase`
+
+### 2. Reason — think for `firebase-hosting`
+- For `hosting-deploy`: Deploy, preview, and configure Firebase Hosting sites. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `firebase-hosting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Firebase` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-hosting:19096767`
 
 # Firebase Hosting
 
@@ -73,6 +87,11 @@ curl -sI https://preview-123-project.web.app | grep -i 'x-cache'
 ### hosting-deploy
 Deploy, preview, and configure Firebase Hosting sites.
 
+**Parameters:**
+- `channel` (string): Preview channel name like staging
+- `expires` (string): Channel expiry like 7d
+- `site` (string): Hosting site id
+
 **Commands:**
 - `firebase init hosting`
 - `firebase hosting:channel:deploy staging`
@@ -85,3 +104,7 @@ Deploy, preview, and configure Firebase Hosting sites.
 - firebase init hosting && firebase hosting:channel:deploy staging
 - firebase hosting:channel:deploy preview-123 --expires 7d
 - firebase hosting:deploy --only hosting
+
+## References
+- [Firebase Hosting docs](https://firebase.google.com/docs/hosting)
+- [Hosting full config](https://firebase.google.com/docs/hosting/full-config)

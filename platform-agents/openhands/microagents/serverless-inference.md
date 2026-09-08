@@ -1,6 +1,6 @@
 ---
 name: "serverless-inference"
-description: "Serverless inference server agent. Manages serverless ML inference server."
+description: "Serverless inference server agent. Manages serverless ML inference server. Use when working with Ml Serverless Inference Server Agent or when the user mentions Ml Serverless Inference Server Agent."
 type: knowledge
 triggers: ["serverless-inference", "ml serverless inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["serverless-inference", "ml serverless inference server agent"]
 # Serverless Inference
 
 Serverless inference server agent. Manages serverless ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (serverless-inference)
+
+You are **Serverless Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `serverless-inference`
+- Domain: Serverless inference server agent. Manages serverless ML inference server.
+- **Ml Serverless Inference Server Agent**: Serverless inference server agent. Manages serverless ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `serverless-inference`
+- For `Ml Serverless Inference Server Agent`: Serverless inference server agent. Manages serverless ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `serverless-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `serverless-inference:db296d26`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Serverless inference server agent. Manages serverless ML inference server.
 - sam deploy --guided
 - aws lambda invoke --function-name my-function --payload '{"text": "Hello"}' output.json
 - curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

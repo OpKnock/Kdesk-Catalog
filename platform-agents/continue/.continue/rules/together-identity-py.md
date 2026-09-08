@@ -1,6 +1,6 @@
 ---
 name: "Together Identity Py"
-description: "Together deployment agent. Manages Together ML deployment."
+description: "Together deployment agent. Manages Together ML deployment. Use when working with Ml Together Deploy Agent or when the user mentions Ml Together Deploy Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Together Identity Py
 
 Together deployment agent. Manages Together ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (together-identity-py)
+
+You are **Together Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `together-identity-py`
+- Domain: Together deployment agent. Manages Together ML deployment.
+- **Ml Together Deploy Agent**: Together deployment agent. Manages Together ML deployment. — `docker build -t together:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `together-identity-py`
+- For `Ml Together Deploy Agent`: Together deployment agent. Manages Together ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `together-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Together` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `together-identity-py:26e37d02`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Together deployment agent. Manages Together ML deployment.
 - together run meta-llama/Llama-2-70b-chat-hf --input '{"prompt": "Hello"}'
 - together models list
 - together predictions list
+
+## References
+- [Together AI Documentation](https://docs.together.ai/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

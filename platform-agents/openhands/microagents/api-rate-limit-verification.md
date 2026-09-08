@@ -1,15 +1,31 @@
 ---
 name: "api-rate-limit-verification"
-description: "Verifies rate limiting behavior under load: 429 response testing, header assertions, burst tolerance checks, and k6 scenarios that prove limits hold at scale."
+description: "Verifies rate limiting behavior under load: 429 response testing, header assertions, burst tolerance checks, and k6 scenarios that prove limits hold at scale. Use when working with limit verification, k6 limit tests or when the user mentions limit verification, k6 limit tests."
 type: knowledge
 triggers: ["api-rate-limit-verification", "limit-verification", "k6-limit-tests"]
 ---
 
-# Api Rate Limit Verification
-
 Verifies rate limiting behavior under load: 429 response testing, header assertions, burst tolerance checks, and k6 scenarios that prove limits hold at scale.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rate-limit-verification)
+
+You are **Api Rate Limit Verification** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-rate-limit-verification`
+- Domain: Verifies rate limiting behavior under load: 429 response testing, header assertions, burst tolerance checks, and k6 scenarios that prove limits hold at scale.
+- **limit-verification**: Assert 429s and rate limit headers under controlled load — `curl -s -o /dev/null -w '%{http_code}\n' -H 'X-Client-Id: test1' http://localhos`
+- **k6-limit-tests**: Script rate limit enforcement tests in k6 — `k6 run --vus 5 --iterations 300 ratelimit-test.js`
+- Check `knowledge` and `prerequisites: redis, node.js, python`
+
+### 2. Reason — think for `api-rate-limit-verification`
+- For `limit-verification`: Assert 429s and rate limit headers under controlled load — decide which checks to run
+- For `k6-limit-tests`: Script rate limit enforcement tests in k6 — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rate-limit-verification` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `For` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rate-limit-verification:1dd74d1c`
 
 # API Rate v4 - Limit Testing
 
@@ -56,6 +72,11 @@ if (res.status === 429) {
 ### limit-verification
 Assert 429s and rate limit headers under controlled load
 
+**Parameters:**
+- `client-key` (string): Header or identity that scopes the limit
+- `burst` (integer): Requests sent in the verification loop
+- `expected-limit` (integer): Limit the implementation should enforce
+
 **Commands:**
 - `curl -s -o /dev/null -w '%{http_code}\n' -H 'X-Client-Id: test1' http://localhost:3000/api`
 - `for i in $(seq 1 150); do curl -s -o /dev/null -w '%{http_code}\n' -H 'X-Client-Id: test1' http://localhost:3000/api; done | sort | uniq -c`
@@ -78,3 +99,7 @@ Script rate limit enforcement tests in k6
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [RFC 6585 - 429 Too Many Requests](https://www.rfc-editor.org/rfc/rfc6585)
+- [k6 HTTP Module](https://grafana.com/docs/k6/latest/javascript-api/k6-http/)

@@ -1,15 +1,31 @@
 ---
 name: "circuit-breaker-pattern"
-description: "Implement the circuit breaker pattern in Java with Resilience4j and in Go with gobreaker, including thresholds and fallbacks."
+description: "Implement the circuit breaker pattern in Java with Resilience4j and in Go with gobreaker, including thresholds and fallbacks. Use when working with resilience4j, gobreaker, api or when the user mentions resilience4j, gobreaker, api."
 type: knowledge
 triggers: ["circuit-breaker-pattern", "resilience4j", "gobreaker"]
 ---
 
-# Circuit Breaker Pattern
-
 Implement the circuit breaker pattern in Java with Resilience4j and in Go with gobreaker, including thresholds and fallbacks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (circuit-breaker-pattern)
+
+You are **Circuit Breaker Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `circuit-breaker-pattern`
+- Domain: Implement the circuit breaker pattern in Java with Resilience4j and in Go with gobreaker, including thresholds and fallbacks.
+- **resilience4j**: Add circuit breakers to Java apps with Resilience4j and configure thresholds — `mvn dependency:get -Dartifact=io.github.resilience4j:resilience4j-circuitbreaker`
+- **gobreaker**: Use sony/gobreaker circuit breaker in Go services with custom thresholds and fallbacks — `go get github.com/sony/gobreaker`
+- Check `knowledge` and `prerequisites: mvn`
+
+### 2. Reason — think for `circuit-breaker-pattern`
+- For `resilience4j`: Add circuit breakers to Java apps with Resilience4j and configure thresholds — decide which checks to run
+- For `gobreaker`: Use sony/gobreaker circuit breaker in Go services with custom thresholds and fallbacks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `circuit-breaker-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `circuit-breaker-pattern:8a0ae5db`
 
 # Circuit Breaker Pattern
 
@@ -86,6 +102,10 @@ hey -n 200 -c 20 http://localhost:8080/api/payments
 ### resilience4j
 Add circuit breakers to Java apps with Resilience4j and configure thresholds
 
+**Parameters:**
+- `artifact` (string): Resilience4j artifact coordinate
+- `version` (string): Resilience4j version such as 2.2.0
+
 **Commands:**
 - `mvn dependency:get -Dartifact=io.github.resilience4j:resilience4j-circuitbreaker:2.2.0`
 - `mvn dependency:get -Dartifact=io.github.resilience4j:resilience4j-spring-boot3:2.2.0`
@@ -100,6 +120,10 @@ Add circuit breakers to Java apps with Resilience4j and configure thresholds
 ### gobreaker
 Use sony/gobreaker circuit breaker in Go services with custom thresholds and fallbacks
 
+**Parameters:**
+- `failure_ratio` (string): Failure ratio that opens the circuit, e.g. 0.6
+- `timeout` (string): Timeout before probing closed again, e.g. 10s
+
 **Commands:**
 - `go get github.com/sony/gobreaker`
 - `go run ./cmd/server`
@@ -110,3 +134,7 @@ Use sony/gobreaker circuit breaker in Go services with custom thresholds and fal
 - go get github.com/sony/gobreaker
 - go test -run TestBreaker -v ./...
 - go run ./cmd/server
+
+## References
+- [Resilience4j Docs](https://resilience4j.readme.io/)
+- [Circuit Breaker Pattern](https://martinfowler.com/bliki/CircuitBreaker.html)

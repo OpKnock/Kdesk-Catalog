@@ -1,6 +1,6 @@
 ---
 name: "Ml Axolotl"
-description: "Axolotl agent for LLM fine-tuning."
+description: "Axolotl agent for LLM fine-tuning. Use when working with Ml Axolotl, inference or when the user mentions Ml Axolotl, inference."
 globs: ["**/*.py", "**/*.r", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Axolotl
 
 Axolotl agent for LLM fine-tuning.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-axolotl)
+
+You are **Ml Axolotl** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-axolotl`
+- Domain: Axolotl agent for LLM fine-tuning.
+- **Ml Axolotl**: Axolotl agent for LLM fine-tuning. — `Config: cat config.yaml`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-axolotl`
+- For `Ml Axolotl`: Axolotl agent for LLM fine-tuning. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-axolotl` tools
+- Tools: `Glob`, `Grep`, `Read`, `Config`, `Train` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-axolotl:4f67db17`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ Axolotl agent for LLM fine-tuning.
 - Inference: python -m axolotl.cli.inference config.yaml
 - Merge: python -m axolotl.cli.merge_lora config.yaml
 - Config: cat config.yaml
+
+## References
+- [Axolotl Fine-Tuning](https://axolotl.ray.io/)
+- [Python Documentation](https://docs.python.org/3/)

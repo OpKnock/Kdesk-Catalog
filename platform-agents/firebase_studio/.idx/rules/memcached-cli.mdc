@@ -1,14 +1,28 @@
 ---
-description: "Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats."
+description: "Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats. Use when working with memcached protocol, database or when the user mentions memcached protocol, database."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# memcached-cli
-
 Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (memcached-cli)
+
+You are **memcached-cli** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `memcached-cli`
+- Domain: Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats.
+- **memcached-protocol**: Set/get/delete keys and inspect stats via the memcached text protocol — `memcached -p 11211 -u memcached -m 64`
+- Check `knowledge` and `prerequisites: memcached, printf`
+
+### 2. Reason — think for `memcached-cli`
+- For `memcached-protocol`: Set/get/delete keys and inspect stats via the memcached text protocol — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `memcached-cli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Memcached`, `Printf` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `memcached-cli:54691be7`
 
 # Memcached CLI
 
@@ -70,6 +84,11 @@ stats to evaluate cache effectiveness.
 ### memcached-protocol
 Set/get/delete keys and inspect stats via the memcached text protocol
 
+**Parameters:**
+- `port` (integer): Listen port for the server (-p)
+- `memory` (integer): Max memory in MB (-m)
+- `expiration` (integer): TTL in seconds for set commands
+
 **Commands:**
 - `memcached -p 11211 -u memcached -m 64`
 - `printf 'set mykey 0 60 5\r\nhello\r\n' | nc localhost 11211`
@@ -81,3 +100,7 @@ Set/get/delete keys and inspect stats via the memcached text protocol
 - printf 'set session:abc 0 1800 11\r\nvalue=12345\r\n' | nc localhost 11211
 - memcached-tool 127.0.0.1:11211 stats
 - printf 'flush_all\r\n' | nc localhost 11211
+
+## References
+- [memcached wiki](https://github.com/memcached/memcached/wiki)
+- [memcached-tool reference](https://github.com/memcached/memcached/wiki/MemcacheTool)

@@ -1,6 +1,6 @@
 ---
 name: "innovation"
-description: "it SDK deployment agent handling ML it SDK deployment."
+description: "it SDK deployment agent handling ML it SDK deployment. Use when working with Ml Innovation Deploy Sdk or when the user mentions Ml Innovation Deploy Sdk."
 type: knowledge
 triggers: ["innovation", "ml innovation deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["innovation", "ml innovation deploy sdk"]
 # Innovation
 
 it SDK deployment agent handling ML it SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (innovation)
+
+You are **Innovation** (ml/innovation) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `innovation`
+- Domain: it SDK deployment agent handling ML it SDK deployment.
+- **Ml Innovation Deploy Sdk**: Innovation SDK deployment agent for ML Innovation SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `innovation`
+- For `Ml Innovation Deploy Sdk`: Innovation SDK deployment agent for ML Innovation SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `innovation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `innovation:53811ea6`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Innovation SDK deployment agent for ML Innovation SDK deployment.
 **Examples:**
 - Server: python -m innovation.server --port 8080
 - Docker: docker run -p 8080:8080 innovation-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

@@ -1,8 +1,24 @@
-# Nvm
-
 Installs and switches Node.js versions with nvm: version management, aliases, .nvmrc files, and per-project Node selection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nvm)
+
+You are **Nvm** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `nvm`
+- Domain: Installs and switches Node.js versions with nvm: version management, aliases, .nvmrc files, and per-project Node selection.
+- **version-management**: Install, list, and switch Node.js versions. — `nvm install 20`
+- **aliases-and-autoload**: Set default versions, create aliases, and use .nvmrc. — `nvm alias default 20`
+- Check `knowledge` and `prerequisites: nvm`
+
+### 2. Reason — think for `nvm`
+- For `version-management`: Install, list, and switch Node.js versions. — decide which checks to run
+- For `aliases-and-autoload`: Set default versions, create aliases, and use .nvmrc. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nvm` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nvm` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nvm:240a378f`
 
 # nvm Node Version Management
 
@@ -63,6 +79,10 @@ nvm uninstall 16
 ### version-management
 Install, list, and switch Node.js versions.
 
+**Parameters:**
+- `version` (string): Node version or alias, e.g. 20, --lts
+- `alias` (string): Alias name
+
 **Commands:**
 - `nvm install 20`
 - `nvm install --lts`
@@ -79,6 +99,10 @@ Install, list, and switch Node.js versions.
 ### aliases-and-autoload
 Set default versions, create aliases, and use .nvmrc.
 
+**Parameters:**
+- `name` (string): Alias or default name
+- `version` (string): Version the alias points to
+
 **Commands:**
 - `nvm alias default 20`
 - `nvm alias project-node 18.20.4`
@@ -91,3 +115,7 @@ Set default versions, create aliases, and use .nvmrc.
 - nvm alias default 20
 - nvm exec 18 node -v
 - nvm use 20 || nvm install 20
+
+## References
+- [nvm-sh GitHub](https://github.com/nvm-sh/nvm)
+- [Node.js Releases](https://nodejs.org/en/about/previous-releases)

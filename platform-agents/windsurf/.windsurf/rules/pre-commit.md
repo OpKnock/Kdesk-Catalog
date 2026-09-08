@@ -6,27 +6,23 @@ globs: ["**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook repos.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (pre-commit)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **pre-commit** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `pre-commit install`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `pre-commit`
+- Domain: Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook repos.
+- **pre-commit-hooks**: Install, run, and manage pre-commit framework git hooks — `pre-commit install`
+- Check `knowledge` and `prerequisites: pre-commit`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `pre-commit`
+- For `pre-commit-hooks`: Install, run, and manage pre-commit framework git hooks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `pre-commit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pre-commit` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pre-commit:f53c5120`
 
 # Pre-commit
 

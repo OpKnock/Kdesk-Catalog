@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(kafka-configs.sh:*) Bash(kafka-console-consu
 
 Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration via the Kafka CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kafka-data)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Kafka** (data/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kafka-topics.sh --bootstrap-server localhost:9092 --create -`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — data context for `kafka-data`
+- Domain: Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration via the Kafka CLI.
+- **kafka-cli**: Manage topics, produce/consume messages, and inspect consumer groups — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --part`
+- Check `knowledge` and `prerequisites: kafka-configs.sh, kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kafka-data`
+- For `kafka-cli`: Manage topics, produce/consume messages, and inspect consumer groups — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kafka-data` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-console-producer.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-data:9a113a64`
 
 # Kafka
 

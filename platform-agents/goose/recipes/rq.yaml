@@ -2,9 +2,19 @@ title: rq
 description: 'Runs Redis Queue (RQ) workers and jobs in Python: enqueue, retries, scheduling, dashboards,
   and worker management.'
 version: 2.0.0
-instructions: "# rq\n\nRuns Redis Queue (RQ) workers and jobs in Python: enqueue, retries, scheduling,\
-  \ dashboards, and worker management.\n\n## Instructions\n\n# RQ (Redis Queue)\n\nSimple Python task\
-  \ queue backed by Redis.\n\n## When to Use\n\n- Background jobs for Python services already using Redis\n\
+instructions: "Runs Redis Queue (RQ) workers and jobs in Python: enqueue, retries, scheduling, dashboards,\
+  \ and worker management.\n\n## Agentic Workflow: Read -> Reason -> Act (rq)\n\nYou are **rq** (backend/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — backend context\
+  \ for `rq`\n- Domain: Runs Redis Queue (RQ) workers and jobs in Python: enqueue, retries, scheduling,\
+  \ dashboards, and worker management.\n- **rq-workers**: Start and manage RQ worker processes. — `rq\
+  \ worker`\n- **rq-ops**: Inspect queues and manage jobs from the CLI. — `rq info`\n- Check `knowledge`\
+  \ and `prerequisites: python`\n\n### 2. Reason — think for `rq`\n- For `rq-workers`: Start and manage\
+  \ RQ worker processes. — decide which checks to run\n- For `rq-ops`: Inspect queues and manage jobs\
+  \ from the CLI. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `rq` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Rq`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `rq:66b1f0b3`\n\n# RQ (Redis Queue)\n\nSimple Python task queue\
+  \ backed by Redis.\n\n## When to Use\n\n- Background jobs for Python services already using Redis\n\
   - Lightweight alternative to Celery\n- Burst processing where worker lifetime is short\n\n## Setup\n\
   \n```bash\npip install rq\n```\n\n## Commands\n\n```bash\n# Start a worker\nrq worker\n\n# Specific\
   \ queues in priority order\nrq worker high default low\n\n# With built-in scheduler\nrq worker --with-scheduler\n\
@@ -16,12 +26,15 @@ instructions: "# rq\n\nRuns Redis Queue (RQ) workers and jobs in Python: enqueue
   \ interval=[10, 60, 300]))\nprint(job.id)\n```\n\n## Best Practices\n\n- Use retry with exponential\
   \ intervals for flaky work\n- Keep one worker per queue group; prioritize with queue lists\n- Use --with-scheduler\
   \ for periodic jobs\n- Monitor with rq info and the RQ dashboard\n- Set job timeouts explicitly to avoid\
-  \ stuck executions\n\n## Capabilities\n\n### rq-workers\nStart and manage RQ worker processes.\n\n**Commands:**\n\
-  - `rq worker`\n- `rq worker --url redis://localhost:6379/1`\n- `rq worker --with-scheduler`\n- `rq worker\
-  \ high default low`\n- `rq worker --name web-worker`\n\n**Examples:**\n- rq worker --burst\n- rq worker\
-  \ --max-jobs 500\n- rq worker -c rq_settings\n\n### rq-ops\nInspect queues and manage jobs from the\
-  \ CLI.\n\n**Commands:**\n- `rq info`\n- `rq info --only-queues`\n- `rq requeue --queue failed`\n- `python\
-  \ -c \"from rq import Queue; from redis import Redis; q=Queue(\\\"default\\\", connection=Redis());\
-  \ print(q.count)\"`\n- `rq empty --all`\n\n**Examples:**\n- rq info --interval 5\n- rq requeue --all\n\
-  - python -c \"from rq.job import Job; from redis import Redis; print(Job.fetch(\\\"job-id\\\", connection=Redis()).get_status())\""
+  \ stuck executions\n\n## Capabilities\n\n### rq-workers\nStart and manage RQ worker processes.\n\n**Parameters:**\n\
+  - `queues` (string): Queue names (space separated)\n- `burst` (boolean): Process until queues are empty\n\
+  \n**Commands:**\n- `rq worker`\n- `rq worker --url redis://localhost:6379/1`\n- `rq worker --with-scheduler`\n\
+  - `rq worker high default low`\n- `rq worker --name web-worker`\n\n**Examples:**\n- rq worker --burst\n\
+  - rq worker --max-jobs 500\n- rq worker -c rq_settings\n\n### rq-ops\nInspect queues and manage jobs\
+  \ from the CLI.\n\n**Parameters:**\n- `queue` (string): Queue name\n- `job-id` (string): Job identifier\n\
+  \n**Commands:**\n- `rq info`\n- `rq info --only-queues`\n- `rq requeue --queue failed`\n- `python -c\
+  \ \"from rq import Queue; from redis import Redis; q=Queue(\\\"default\\\", connection=Redis()); print(q.count)\"\
+  `\n- `rq empty --all`\n\n**Examples:**\n- rq info --interval 5\n- rq requeue --all\n- python -c \"from\
+  \ rq.job import Job; from redis import Redis; print(Job.fetch(\\\"job-id\\\", connection=Redis()).get_status())\"\
+  \n\n## References\n- [RQ Docs](https://python-rq.org)\n- [RQ on GitHub](https://github.com/rq/rq)"
 prompt: Act as rq and handle the task per the instructions.

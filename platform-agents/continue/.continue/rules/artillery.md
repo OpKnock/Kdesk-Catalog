@@ -1,15 +1,33 @@
 ---
 name: "artillery"
-description: "Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios, and HTML reports."
+description: "Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios, and HTML reports. Use when working with artillery load tests, reporting, scenario design, testing or when the user mentions artillery load tests, reporting, scenario design, testing."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# artillery
-
 Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios, and HTML reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (artillery)
+
+You are **artillery** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `artillery`
+- Domain: Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios, and HTML reports.
+- **artillery-load-tests**: Quick and scripted load tests with virtual users. — `npx artillery quick --count 100 -n 20 http://localhost:8080/v1/users`
+- **reporting**: Generate and inspect load-test reports. — `npx artillery report report.json`
+- **scenario-design**: Design multi-step user flows with variables and phases. — `npx artillery run -e prod --vars '{"api": "/v1/orders"}' scenarios.yml`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `artillery`
+- For `artillery-load-tests`: Quick and scripted load tests with virtual users. — decide which checks to run
+- For `reporting`: Generate and inspect load-test reports. — decide which checks to run
+- For `scenario-design`: Design multi-step user flows with variables and phases. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `artillery` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `artillery:0a8f6088`
 
 # Artillery
 
@@ -79,6 +97,11 @@ scenarios:
 ### artillery-load-tests
 Quick and scripted load tests with virtual users.
 
+**Parameters:**
+- `script` (string): YAML test script path
+- `environment` (string): Named environment from config
+- `count` (number): Virtual users for quick mode
+
 **Commands:**
 - `npx artillery quick --count 100 -n 20 http://localhost:8080/v1/users`
 - `npx artillery run load-test.yml`
@@ -94,6 +117,10 @@ Quick and scripted load tests with virtual users.
 ### reporting
 Generate and inspect load-test reports.
 
+**Parameters:**
+- `input` (string): JSON results file
+- `output` (string): HTML report output path
+
 **Commands:**
 - `npx artillery report report.json`
 - `npx artillery report --output perf-report.html report.json`
@@ -106,6 +133,10 @@ Generate and inspect load-test reports.
 ### scenario-design
 Design multi-step user flows with variables and phases.
 
+**Parameters:**
+- `payload` (string): CSV data file for virtual users
+- `vars` (object): Inline variables override
+
 **Commands:**
 - `npx artillery run -e prod --vars '{"api": "/v1/orders"}' scenarios.yml`
 - `npx artillery run --payload users.csv scenarios.yml`
@@ -114,3 +145,7 @@ Design multi-step user flows with variables and phases.
 **Examples:**
 - npx artillery run --payload users.csv scenarios.yml
 - npx artillery run -e prod scenarios.yml
+
+## References
+- [Artillery Documentation](https://www.artillery.io/docs/)
+- [Artillery Quick Reference](https://www.artillery.io/docs/reference/cli)

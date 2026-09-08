@@ -1,14 +1,32 @@
 ---
-description: "Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates, and Modelina multi-language models."
+description: "Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates, and Modelina multi-language models. Use when working with validation, generation, modelina, api or when the user mentions validation, generation, modelina, api."
 globs: ["**/*.go", "**/*.html", "**/*.java", "**/*.py", "**/*.r", "**/*.sh", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Asyncapi Codegen
-
 Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates, and Modelina multi-language models.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (asyncapi-codegen)
+
+You are **Asyncapi Codegen** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `asyncapi-codegen`
+- Domain: Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates, and Modelina multi-language models.
+- **validation**: Validate and lint AsyncAPI documents. — `npx @asyncapi/cli validate asyncapi.yaml`
+- **generation**: Generate server/client code and docs from templates. — `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated -`
+- **modelina**: Generate data models for multiple languages from the schema. — `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --langua`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `asyncapi-codegen`
+- For `validation`: Validate and lint AsyncAPI documents. — decide which checks to run
+- For `generation`: Generate server/client code and docs from templates. — decide which checks to run
+- For `modelina`: Generate data models for multiple languages from the schema. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `asyncapi-codegen` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `asyncapi-codegen:7006c39f`
 
 # AsyncAPI Codegen
 
@@ -80,6 +98,10 @@ operations:
 ### validation
 Validate and lint AsyncAPI documents.
 
+**Parameters:**
+- `file` (string): Path or URL of the AsyncAPI document
+- `ruleset` (string): Custom lint ruleset file
+
 **Commands:**
 - `npx @asyncapi/cli validate asyncapi.yaml`
 - `npx @asyncapi/cli lint asyncapi.yaml`
@@ -93,6 +115,11 @@ Validate and lint AsyncAPI documents.
 
 ### generation
 Generate server/client code and docs from templates.
+
+**Parameters:**
+- `template` (string): Generator template name
+- `output` (string): Output directory (-o)
+- `param` (string): Template parameter in key=value form
 
 **Commands:**
 - `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write`
@@ -109,6 +136,10 @@ Generate server/client code and docs from templates.
 ### modelina
 Generate data models for multiple languages from the schema.
 
+**Parameters:**
+- `language` (string): Target language: TypeScript, Java, Go, Python, C#
+- `package_name` (string): Package name for generated code
+
 **Commands:**
 - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript`
 - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./src/main/java --language Java`
@@ -119,3 +150,9 @@ Generate data models for multiple languages from the schema.
 - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript --packageName com.example
 - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Java --type-mapping string=UUID
 - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Python --generate-optional
+
+## References
+- [AsyncAPI Generator](https://www.asyncapi.com/docs/tools/generator)
+- [AsyncAPI CLI](https://www.asyncapi.com/docs/tools/cli)
+- [Modelina](https://www.asyncapi.com/docs/tools/modelina)
+- [AsyncAPI Spec v3](https://www.asyncapi.com/docs/reference/specification/v3.0.0)

@@ -3,14 +3,25 @@ description: Configure and verify API rate limiting at the edge with nginx limit
   application layer with Redis fixed-window counters. Defines burst allowances, emits 429 responses with
   Retry-After headers, and validates limit enforcement under load with ab and k6.
 version: 2.0.0
-instructions: "# Throttling Pattern\n\nConfigure and verify API rate limiting at the edge with nginx limit_req\
-  \ zones and at the application layer with Redis fixed-window counters. Defines burst allowances, emits\
-  \ 429 responses with Retry-After headers, and validates limit enforcement under load with ab and k6.\n\
-  \n## Instructions\n\n# Throttling Pattern\n\nHand-crafted skill for rate limiting APIs.\n\n## What this\
-  \ skill does\n\n- Configures nginx limit_req zones per key (IP, user, token)\n- Implements Redis fixed-window\
-  \ counters for app-level limits\n- Verifies 429 behavior under load\n\n## When to use\n\n- Protecting\
-  \ public endpoints from abuse\n- Enforcing per-customer quotas\n- Backstop for autoscaling during spikes\n\
-  \n## Real commands\n\n```bash\n# nginx: define the zone once, then apply\ncurl -i http://localhost:8080/api\
+instructions: "Configure and verify API rate limiting at the edge with nginx limit_req zones and at the\
+  \ application layer with Redis fixed-window counters. Defines burst allowances, emits 429 responses\
+  \ with Retry-After headers, and validates limit enforcement under load with ab and k6.\n\n## Agentic\
+  \ Workflow: Read -> Reason -> Act (throttling-pattern)\n\nYou are **Throttling Pattern** (api/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context\
+  \ for `throttling-pattern`\n- Domain: Configure and verify API rate limiting at the edge with nginx\
+  \ limit_req zones and at the application layer with Redis fixed-window counters. Defines burst allowances,\
+  \ emits 429 responses with Retry-Af\n- **rate-limit-config**: Configure and verify API rate limiting\
+  \ with nginx and Redis — `ab -n 2000 -c 100 http://localhost:8080/api`\n- Check `knowledge` and `prerequisites:\
+  \ redis-cli`\n\n### 2. Reason — think for `throttling-pattern`\n- For `rate-limit-config`: Configure\
+  \ and verify API rate limiting with nginx and Redis — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `throttling-pattern`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Ab`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n-\
+  \ Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `throttling-pattern:5e15072e`\n\
+  \n# Throttling Pattern\n\nHand-crafted skill for rate limiting APIs.\n\n## What this skill does\n\n\
+  - Configures nginx limit_req zones per key (IP, user, token)\n- Implements Redis fixed-window counters\
+  \ for app-level limits\n- Verifies 429 behavior under load\n\n## When to use\n\n- Protecting public\
+  \ endpoints from abuse\n- Enforcing per-customer quotas\n- Backstop for autoscaling during spikes\n\n\
+  ## Real commands\n\n```bash\n# nginx: define the zone once, then apply\ncurl -i http://localhost:8080/api\
   \ | grep -i 'HTTP/1.1 429'\n\n# Redis fixed window: count + TTL\nredis-cli INCR rate:user:42\nredis-cli\
   \ EXPIRE rate:user:42 60\nredis-cli SET rate:user:42 1 EX 60 NX   # atomic first-hit\n\n# Verify under\
   \ load\nab -n 2000 -c 100 http://localhost:8080/api\nk6 run --vus 200 --iterations 5000 throttle.js\n\
@@ -22,9 +33,12 @@ instructions: "# Throttling Pattern\n\nConfigure and verify API rate limiting at
   curl -i http://localhost:8080/api | grep -i retry-after\n```\n\n## Best practices\n\n- Rate limit by\
   \ authenticated user, not just IP, in production\n- Send 429 with Retry-After so clients back off politely\n\
   - Keep limit state out of the app hot path: edge proxy first\n\n## Capabilities\n\n### rate-limit-config\n\
-  Configure and verify API rate limiting with nginx and Redis\n\n**Commands:**\n- `ab -n 2000 -c 100 http://localhost:8080/api`\n\
+  Configure and verify API rate limiting with nginx and Redis\n\n**Parameters:**\n- `rate` (string): Limit\
+  \ like 10r/s in nginx\n- `burst` (integer): Burst allowance before throttling\n- `window_seconds` (integer):\
+  \ Redis window for fixed-window limits\n\n**Commands:**\n- `ab -n 2000 -c 100 http://localhost:8080/api`\n\
   - `curl -i http://localhost:8080/api | grep -i 'HTTP/1.1 429'`\n- `redis-cli INCR rate:user:42`\n- `redis-cli\
   \ EXPIRE rate:user:42 60`\n- `k6 run --vus 200 --iterations 5000 throttle.js`\n\n**Examples:**\n- curl\
   \ -s -o /dev/null -w '%{http_code}\\n' -X POST http://localhost:8080/api -d '{}'\n- redis-cli SET rate:user:42\
-  \ 1 EX 60 NX\n- ab -n 2000 -c 100 http://localhost:8080/api"
+  \ 1 EX 60 NX\n- ab -n 2000 -c 100 http://localhost:8080/api\n\n## References\n- [nginx limit_req module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)\n\
+  - [Redis INCR pattern](https://redis.io/docs/latest/develop/use/patterns/rate-limiting/)"
 prompt: Act as Throttling Pattern and handle the task per the instructions.

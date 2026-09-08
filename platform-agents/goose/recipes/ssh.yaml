@@ -2,9 +2,20 @@ title: ssh
 description: 'Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts,
   and verbose troubleshooting.'
 version: 2.0.0
-instructions: "# ssh\n\nConnects to remote hosts with ssh: config files, port forwarding, tunnels, keys,\
-  \ jump hosts, and verbose troubleshooting.\n\n## Instructions\n\n# SSH Connections\n\nConnect and tunnel\
-  \ to remote hosts securely.\n\n## What This Skill Does\n\n- Connects with keys, ports, and command execution\n\
+instructions: "Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts,\
+  \ and verbose troubleshooting.\n\n## Agentic Workflow: Read -> Reason -> Act (ssh)\n\nYou are **ssh**\
+  \ (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1.\
+  \ Read — devtools context for `ssh`\n- Domain: Connects to remote hosts with ssh: config files, port\
+  \ forwarding, tunnels, keys, jump hosts, and verbose troubleshooting.\n- **connections**: Connect with\
+  \ keys, ports, and options. — `ssh user@host`\n- **tunnels-and-forwarding**: Forward ports, set up SOCKS\
+  \ proxies, and tunnel traffic. — `ssh -L 8080:localhost:80 user@host`\n- Check `knowledge` and `prerequisites:\
+  \ ssh`\n\n### 2. Reason — think for `ssh`\n- For `connections`: Connect with keys, ports, and options.\
+  \ — decide which checks to run\n- For `tunnels-and-forwarding`: Forward ports, set up SOCKS proxies,\
+  \ and tunnel traffic. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `ssh` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Ssh` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `ssh:319acc93`\n\n# SSH Connections\n\nConnect and tunnel to remote\
+  \ hosts securely.\n\n## What This Skill Does\n\n- Connects with keys, ports, and command execution\n\
   - Configures per-host options in ~/.ssh/config\n- Forwards local/remote ports and SOCKS proxies\n- Uses\
   \ jump hosts and agent forwarding\n- Troubleshoots with verbose output\n\n## When to Use\n\n- Any remote\
   \ shell access\n- Exposing local services through tunnels\n- Multi-hop bastion environments\n\n## Real\
@@ -18,13 +29,16 @@ instructions: "# ssh\n\nConnects to remote hosts with ssh: config files, port fo
   \n- Use config aliases over long flag lists\n- Prefer -J for bastions; forward agent only when needed\n\
   - Add ExitOnForwardFailure to fail fast on tunnels\n- Use -N for tunnels with no shell\n- Verify fingerprints\
   \ (ssh-keygen -F) before first connect\n\n## Capabilities\n\n### connections\nConnect with keys, ports,\
-  \ and options.\n\n**Commands:**\n- `ssh user@host`\n- `ssh -p 2222 user@host`\n- `ssh -i ~/.ssh/id_ed25519\
-  \ user@host`\n- `ssh -t user@host 'sudo systemctl status nginx'`\n- `ssh -J jumpuser@bastion user@target`\n\
-  - `ssh -N -L 5432:localhost:5432 user@dbhost`\n\n**Examples:**\n- ssh -i ~/.ssh/id_ed25519 user@host\n\
-  - ssh -t user@host 'sudo systemctl status nginx'\n- ssh -J jumpuser@bastion user@target\n\n### tunnels-and-forwarding\n\
-  Forward ports, set up SOCKS proxies, and tunnel traffic.\n\n**Commands:**\n- `ssh -L 8080:localhost:80\
-  \ user@host`\n- `ssh -R 3000:localhost:3000 user@host`\n- `ssh -D 1080 -N user@host`\n- `ssh -L 3306:db.internal:3306\
-  \ user@bastion`\n- `ssh -o ExitOnForwardFailure=yes -L 8080:localhost:80 user@host`\n- `ssh -vvv user@host`\n\
-  \n**Examples:**\n- ssh -L 3306:db.internal:3306 user@bastion\n- ssh -D 1080 -N user@host\n- ssh -vvv\
-  \ user@host"
+  \ and options.\n\n**Parameters:**\n- `host` (string): Remote host\n- `port` (integer): SSH port\n- `key`\
+  \ (string): Identity file\n\n**Commands:**\n- `ssh user@host`\n- `ssh -p 2222 user@host`\n- `ssh -i\
+  \ ~/.ssh/id_ed25519 user@host`\n- `ssh -t user@host 'sudo systemctl status nginx'`\n- `ssh -J jumpuser@bastion\
+  \ user@target`\n- `ssh -N -L 5432:localhost:5432 user@dbhost`\n\n**Examples:**\n- ssh -i ~/.ssh/id_ed25519\
+  \ user@host\n- ssh -t user@host 'sudo systemctl status nginx'\n- ssh -J jumpuser@bastion user@target\n\
+  \n### tunnels-and-forwarding\nForward ports, set up SOCKS proxies, and tunnel traffic.\n\n**Parameters:**\n\
+  - `local-port` (integer): Local port for -L\n- `target` (string): Forward target host:port\n\n**Commands:**\n\
+  - `ssh -L 8080:localhost:80 user@host`\n- `ssh -R 3000:localhost:3000 user@host`\n- `ssh -D 1080 -N\
+  \ user@host`\n- `ssh -L 3306:db.internal:3306 user@bastion`\n- `ssh -o ExitOnForwardFailure=yes -L 8080:localhost:80\
+  \ user@host`\n- `ssh -vvv user@host`\n\n**Examples:**\n- ssh -L 3306:db.internal:3306 user@bastion\n\
+  - ssh -D 1080 -N user@host\n- ssh -vvv user@host\n\n## References\n- [ssh Manual](https://man.openbsd.org/ssh)\n\
+  - [ssh_config Manual](https://man.openbsd.org/ssh_config)"
 prompt: Act as ssh and handle the task per the instructions.

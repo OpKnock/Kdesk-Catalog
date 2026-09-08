@@ -1,6 +1,6 @@
 ---
 name: "Evolution Model Server"
-description: "Evolution server agent. Manages Evolution ML server."
+description: "Evolution server agent. Manages Evolution ML server. Use when working with Ml Evolution Server Agent or when the user mentions Ml Evolution Server Agent."
 globs: ["**/*.go", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Evolution Model Server
 
 Evolution server agent. Manages Evolution ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (evolution-model-server)
+
+You are **Evolution Model Server** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `evolution-model-server`
+- Domain: Evolution server agent. Manages Evolution ML server.
+- **Ml Evolution Server Agent**: Evolution server agent. Manages Evolution ML server. — `python -m model.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `evolution-model-server`
+- For `Ml Evolution Server Agent`: Evolution server agent. Manages Evolution ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `evolution-model-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `evolution-model-server:5f60b311`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Evolution server agent. Manages Evolution ML server.
 - curl http://localhost:8080/evolve --data '{"model": "model.pkl"}'
 - python evolve.py --model model.pkl --data data.csv --generations 10
 - python genetic_algorithm.py --population-size 100 --generations 50
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)

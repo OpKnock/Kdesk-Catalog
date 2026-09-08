@@ -4,27 +4,25 @@ applyTo: "**/*.json **/*.r **/*.rs **/*.sh **/*.{yaml,yml}"
 
 Verifies SLSA provenance of artifacts and container images with slsa-verifier before deployment.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (slsa-verifier)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **slsa-verifier** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `slsa-verifier verify-artifact dist.tgz --provenance-path dis`, `slsa-verifier verify-image ghcr.io/org/app:latest --source-u`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `slsa-verifier`
+- Domain: Verifies SLSA provenance of artifacts and container images with slsa-verifier before deployment.
+- **artifact-verification**: Verify binaries and archives against SLSA provenance. — `slsa-verifier verify-artifact dist.tgz --provenance-path dist.intoto.jsonl --sou`
+- **image-verification**: Verify container images with SLSA provenance. — `slsa-verifier verify-image ghcr.io/org/app:latest --source-uri github.com/org/re`
+- Check `knowledge` and `prerequisites: slsa-verifier`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `slsa-verifier`
+- For `artifact-verification`: Verify binaries and archives against SLSA provenance. — decide which checks to run
+- For `image-verification`: Verify container images with SLSA provenance. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `slsa-verifier` tools
+- Tools: `Glob`, `Grep`, `Read`, `Slsa-verifier` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `slsa-verifier:23fc9142`
 
 # slsa-verifier
 

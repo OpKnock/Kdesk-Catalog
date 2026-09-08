@@ -1,15 +1,29 @@
 ---
 name: "gremlin"
-description: "Gremlin chaos engineering platform operations: launching and halting CPU, disk, memory, and network attacks against production and staging hosts."
+description: "Gremlin chaos engineering platform operations: launching and halting CPU, disk, memory, and network attacks against production and staging hosts. Use when working with attack management, api or when the user mentions attack management, api."
 type: knowledge
 triggers: ["gremlin", "attack-management"]
 ---
 
-# Gremlin
-
 Gremlin chaos engineering platform operations: launching and halting CPU, disk, memory, and network attacks against production and staging hosts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gremlin)
+
+You are **Gremlin** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gremlin`
+- Domain: Gremlin chaos engineering platform operations: launching and halting CPU, disk, memory, and network attacks against production and staging hosts.
+- **attack-management**: Create, list, and halt chaos attacks and scenarios via the Gremlin CLI and API. — `gremlin i attack -t "disk" -a disk=50 -a path=/`
+- Check `knowledge` and `prerequisites: gremlin`
+
+### 2. Reason — think for `gremlin`
+- For `attack-management`: Create, list, and halt chaos attacks and scenarios via the Gremlin CLI and API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gremlin` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gremlin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gremlin:91f555ba`
 
 # Gremlin
 
@@ -105,6 +119,11 @@ Agent: sudo gremlin i attack -t "cpu" -a cpu=100 -a duration=300 -a host_id=prod
 ### attack-management
 Create, list, and halt chaos attacks and scenarios via the Gremlin CLI and API.
 
+**Parameters:**
+- `attack_type` (string): Type of attack: cpu, memory, disk, io, network, process-killer, dns, or shutdown.
+- `duration` (integer): Attack duration in seconds (default 600).
+- `host_id` (string): Target host ID to scope the attack to.
+
 **Commands:**
 - `gremlin i attack -t "disk" -a disk=50 -a path=/`
 - `gremlin i shutdown`
@@ -116,3 +135,7 @@ Create, list, and halt chaos attacks and scenarios via the Gremlin CLI and API.
 - sudo gremlin i attack -t "cpu" -a cpu=100 -a duration=60 -a cores=4
 - sudo gremlin i attack -t "memory" -a memory=90 -a duration=30
 - sudo gremlin i shutdown
+
+## References
+- [Gremlin Docs](https://www.gremlin.com/docs)
+- [Gremlin CLI Reference](https://www.gremlin.com/docs/cli)

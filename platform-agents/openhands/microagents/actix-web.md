@@ -1,15 +1,31 @@
 ---
 name: "actix-web"
-description: "Builds high-performance HTTP APIs in Rust with Actix Web: scaffolding, routing, JSON extractors, middleware, and release builds."
+description: "Builds high-performance HTTP APIs in Rust with Actix Web: scaffolding, routing, JSON extractors, middleware, and release builds. Use when working with project scaffold, serve and test, api or when the user mentions project scaffold, serve and test, api."
 type: knowledge
 triggers: ["actix-web", "project-scaffold", "serve-and-test"]
 ---
 
-# Actix Web
-
 Builds high-performance HTTP APIs in Rust with Actix Web: scaffolding, routing, JSON extractors, middleware, and release builds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (actix-web)
+
+You are **Actix Web** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `actix-web`
+- Domain: Builds high-performance HTTP APIs in Rust with Actix Web: scaffolding, routing, JSON extractors, middleware, and release builds.
+- **project-scaffold**: Create and configure a new Actix Web project with Cargo. — `cargo new my-api`
+- **serve-and-test**: Build, run, lint, and test the Actix server. — `cargo build --release`
+- Check `knowledge` and `prerequisites: cargo`
+
+### 2. Reason — think for `actix-web`
+- For `project-scaffold`: Create and configure a new Actix Web project with Cargo. — decide which checks to run
+- For `serve-and-test`: Build, run, lint, and test the Actix server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `actix-web` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `actix-web:cabea6b9`
 
 # Actix Web
 
@@ -86,6 +102,10 @@ async fn create(user: web::Json<User>) -> HttpResponse {
 ### project-scaffold
 Create and configure a new Actix Web project with Cargo.
 
+**Parameters:**
+- `features` (string): Cargo features for actix-web (openssl, client)
+- `crate` (string): Additional crate, e.g. actix-cors or serde_json
+
 **Commands:**
 - `cargo new my-api`
 - `cargo add actix-web`
@@ -101,6 +121,10 @@ Create and configure a new Actix Web project with Cargo.
 ### serve-and-test
 Build, run, lint, and test the Actix server.
 
+**Parameters:**
+- `port` (number): Bind port (default 8080)
+- `workers` (number): Actix worker threads via ACTIX_WORKERS env
+
 **Commands:**
 - `cargo build --release`
 - `cargo clippy -- -D warnings`
@@ -112,3 +136,8 @@ Build, run, lint, and test the Actix server.
 - cargo clippy --all-targets -- -D warnings
 - cargo test -- --nocapture
 - cargo build --release && ./target/release/my-api
+
+## References
+- [Actix Web Docs](https://actix.rs/docs)
+- [Actix Web API Reference](https://docs.rs/actix-web)
+- [Actix Examples](https://github.com/actix/examples)

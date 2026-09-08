@@ -1,6 +1,6 @@
 ---
 name: "ml-data-preparation"
-description: "it agent handling data cleaning and preprocessing."
+description: "it agent handling data cleaning and preprocessing. Use when working with Ml Data Preparation, inference or when the user mentions Ml Data Preparation, inference."
 type: knowledge
 triggers: ["ml-data-preparation", "ml data preparation"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-data-preparation", "ml data preparation"]
 # Ml Data Preparation
 
 it agent handling data cleaning and preprocessing.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-data-preparation)
+
+You are **Ml Data Preparation** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-data-preparation`
+- Domain: it agent handling data cleaning and preprocessing.
+- **Ml Data Preparation**: ML data preparation agent for data cleaning and preprocessing. — `Scikit-learn: from sklearn.preprocessing import StandardScaler; scaler = Standar`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-data-preparation`
+- For `Ml Data Preparation`: ML data preparation agent for data cleaning and preprocessing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-data-preparation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Scikit-learn`, `Validation` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-data-preparation:01fa5414`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ ML data preparation agent for data cleaning and preprocessing.
 - Scikit-learn: from sklearn.preprocessing import StandardScaler; scaler = StandardScaler(); X_scaled = scaler.fit_transform(X)
 - Augmentation: from albumentations import Compose; transform = Compose([Rotate(limit=45), HorizontalFlip()]); transformed = transform(image=image)
 - Validation: from sklearn.model_selection import train_test_split; X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+## References
+- [Amazon SageMaker Data Preparation](https://docs.aws.amazon.com/sagemaker/latest/dg/data-prep.html)

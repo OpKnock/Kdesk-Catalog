@@ -6,27 +6,25 @@ globs: ["**/*.r", "**/*.sh", "**/*.sql"]
 
 Seeds database test data with SQL scripts and Node scripts: sqlite3 import, PostgreSQL COPY/INSERT, fixtures, and repeatable seed flows.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-test-data-sqlite-seeding)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Test Data Sqlite Seeding** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `sqlite3 test.db "CREATE TABLE users (id INTEGER PRIMARY KEY,`, `psql -d app -f seed.sql`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `api-test-data-sqlite-seeding`
+- Domain: Seeds database test data with SQL scripts and Node scripts: sqlite3 import, PostgreSQL COPY/INSERT, fixtures, and repeatable seed flows.
+- **sqlite-seeding**: Seed SQLite databases for API tests — `sqlite3 test.db "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TE`
+- **postgres-seeding**: Seed PostgreSQL for integration tests — `psql -d app -f seed.sql`
+- Check `knowledge` and `prerequisites: faker, node.js, python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-test-data-sqlite-seeding`
+- For `sqlite-seeding`: Seed SQLite databases for API tests — decide which checks to run
+- For `postgres-seeding`: Seed PostgreSQL for integration tests — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-test-data-sqlite-seeding` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sqlite3`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-test-data-sqlite-seeding:406d3af5`
 
 # API Test Data v2 - Database Seeding
 

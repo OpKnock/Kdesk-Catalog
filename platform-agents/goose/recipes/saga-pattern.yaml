@@ -2,8 +2,18 @@ title: Saga Pattern
 description: Expert saga pattern skill covering choreographed and orchestrated sagas with Temporal CLI,
   workflow inspection, compensation design, and failure injection.
 version: 2.0.0
-instructions: "# Saga Pattern\n\nExpert saga pattern skill covering choreographed and orchestrated sagas\
-  \ with Temporal CLI, workflow inspection, compensation design, and failure injection.\n\n## Instructions\n\
+instructions: "Expert saga pattern skill covering choreographed and orchestrated sagas with Temporal CLI,\
+  \ workflow inspection, compensation design, and failure injection.\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (saga-pattern)\n\nYou are **Saga Pattern** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `saga-pattern`\n- Domain: Expert\
+  \ saga pattern skill covering choreographed and orchestrated sagas with Temporal CLI, workflow inspection,\
+  \ compensation design, and failure injection.\n- **temporal-saga**: Model distributed transactions as\
+  \ sagas and drive them with Temporal — `temporal server start-dev`\n- Check `knowledge` and `prerequisites:\
+  \ kubectl, temporal`\n\n### 2. Reason — think for `saga-pattern`\n- For `temporal-saga`: Model distributed\
+  \ transactions as sagas and drive them with Temporal — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `saga-pattern`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Temporal`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `saga-pattern:1d0b7168`\n\
   \n# Saga Pattern\n\nExpert skill for distributed transactions using the saga pattern.\n\n## What this\
   \ skill does\n\n- Breaks a distributed transaction into local steps with compensations\n- Orchestrates\
   \ steps with Temporal workflows and worker task queues\n- Inspects and terminates sagas with the Temporal\
@@ -24,10 +34,14 @@ instructions: "# Saga Pattern\n\nExpert saga pattern skill covering choreographe
   \ workflow show --workflow-id order-43   # verify compensation ran\n```\n\n## Best practices\n\n- Write\
   \ a compensation for every step that reserves or mutates state\n- Make compensations idempotent; they\
   \ may run twice\n- Prefer orchestrated sagas when steps change often\n\n## Capabilities\n\n### temporal-saga\n\
-  Model distributed transactions as sagas and drive them with Temporal\n\n**Commands:**\n- `temporal server\
-  \ start-dev`\n- `temporal workflow start --workflow-id order-42 --type OrderSaga --task-queue orders`\n\
-  - `temporal workflow show --workflow-id order-42`\n- `temporal workflow terminate --workflow-id order-42\
-  \ --reason 'manual cleanup'`\n- `kubectl get pods -n temporal`\n\n**Examples:**\n- temporal workflow\
-  \ start --workflow-id order-42 --type OrderSaga --task-queue orders\n- temporal workflow show --workflow-id\
-  \ order-42\n- temporal workflow describe --workflow-id order-42"
+  Model distributed transactions as sagas and drive them with Temporal\n\n**Parameters:**\n- `workflow_id`\
+  \ (string): Unique workflow identifier for the saga run\n- `workflow_type` (string): Workflow class/function\
+  \ name\n- `task_queue` (string): Temporal task queue the workers poll\n\n**Commands:**\n- `temporal\
+  \ server start-dev`\n- `temporal workflow start --workflow-id order-42 --type OrderSaga --task-queue\
+  \ orders`\n- `temporal workflow show --workflow-id order-42`\n- `temporal workflow terminate --workflow-id\
+  \ order-42 --reason 'manual cleanup'`\n- `kubectl get pods -n temporal`\n\n**Examples:**\n- temporal\
+  \ workflow start --workflow-id order-42 --type OrderSaga --task-queue orders\n- temporal workflow show\
+  \ --workflow-id order-42\n- temporal workflow describe --workflow-id order-42\n\n## References\n- [Microsoft\
+  \ saga pattern](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/saga/saga)\n\
+  - [Temporal CLI reference](https://docs.temporal.io/cli/)"
 prompt: Act as Saga Pattern and handle the task per the instructions.

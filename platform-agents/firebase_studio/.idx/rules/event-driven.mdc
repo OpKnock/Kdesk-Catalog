@@ -1,14 +1,30 @@
 ---
-description: "Architects event-driven systems with Kafka/Redpanda: topics, producers, consumers, consumer groups, and dead-letter handling."
+description: "Architects event-driven systems with Kafka/Redpanda: topics, producers, consumers, consumer groups, and dead-letter handling. Use when working with kafka topics, kafka streams, backend or when the user mentions kafka topics, kafka streams, backend."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Event Driven
-
 Architects event-driven systems with Kafka/Redpanda: topics, producers, consumers, consumer groups, and dead-letter handling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (event-driven)
+
+You are **Event Driven** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `event-driven`
+- Domain: Architects event-driven systems with Kafka/Redpanda: topics, producers, consumers, consumer groups, and dead-letter handling.
+- **kafka-topics**: Create, list, and describe Kafka topics. — `kafka-topics --bootstrap-server localhost:9092 --create --topic orders --partiti`
+- **kafka-streams**: Produce and consume messages, inspect consumer groups. — `kafka-console-producer --bootstrap-server localhost:9092 --topic orders`
+- Check `knowledge` and `prerequisites: kafka-console-consumer, kafka-console-producer, kafka-consumer-groups, kafka-get-offsets`
+
+### 2. Reason — think for `event-driven`
+- For `kafka-topics`: Create, list, and describe Kafka topics. — decide which checks to run
+- For `kafka-streams`: Produce and consume messages, inspect consumer groups. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `event-driven` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics`, `Kafka-console-producer` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `event-driven:cbbd581b`
 
 # Event-Driven Architecture
 
@@ -66,6 +82,10 @@ kafka-consumer-groups --group order-svc --reset-offsets --to-earliest --execute
 ### kafka-topics
 Create, list, and describe Kafka topics.
 
+**Parameters:**
+- `topic` (string): Topic name
+- `partitions` (integer): Partition count
+
 **Commands:**
 - `kafka-topics --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 1`
 - `kafka-topics --bootstrap-server localhost:9092 --list`
@@ -81,6 +101,10 @@ Create, list, and describe Kafka topics.
 ### kafka-streams
 Produce and consume messages, inspect consumer groups.
 
+**Parameters:**
+- `group` (string): Consumer group id
+- `from-beginning` (boolean): Read all messages from the start
+
 **Commands:**
 - `kafka-console-producer --bootstrap-server localhost:9092 --topic orders`
 - `kafka-console-consumer --bootstrap-server localhost:9092 --topic orders --from-beginning`
@@ -92,3 +116,7 @@ Produce and consume messages, inspect consumer groups.
 - kafka-console-consumer --topic orders --group debug-consumer --from-beginning
 - kafka-consumer-groups --group order-svc --reset-offsets --to-earliest --execute
 - kafka-console-producer --topic orders --property parse.key=true --property key.separator=:
+
+## References
+- [Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Redpanda Docs](https://docs.redpanda.com)

@@ -2,35 +2,53 @@ title: Avro Rpc
 description: 'Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and
   Java RPC server/client testing.'
 version: 2.0.0
-instructions: "# Avro Rpc\n\nImplements RPC services with Apache Avro: schema compilation, avro-tools\
-  \ operations, and Java RPC server/client testing.\n\n## Instructions\n\n# Avro RPC\n\n## What this skill\
-  \ does\n\nImplements RPC services with Apache Avro: writing schemas and IDL, compiling them with avro-tools,\
-  \ generating Java stubs, and running/test the server and client.\n\n## When to use\n\n- A typed, schema-driven\
-  \ RPC layer instead of raw JSON\n- Generating stubs from .avsc/.avpr for Java services\n- Evolving message\
-  \ formats safely (Avro schema resolution)\n\n## Real commands\n\n```bash\n# Compile a schema to Java\n\
-  java -jar avro-tools.jar compile schema user.avsc src/main/java\n\n# Generate a protocol from IDL\n\
-  java -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr\njava -jar avro-tools.jar compile protocol\
-  \ chat.avpr src/main/java\n\n# Convert data\njava -jar avro-tools.jar tojson user.avro\njava -jar avro-tools.jar\
-  \ fromjson user.json --schema-file user.avsc\n\n# Run the RPC server\nmvn exec:java -Dexec.mainClass=com.example.ChatServer\n\
-  ```\n\n## IDL example (chat.avdl)\n\n```avdl\n@namespace(\"com.example\")\nprotocol Chat {\n  string\
-  \ send(string message);\n}\n```\n\n## Testing\n\n- Start the server, run the client with mvn exec:java,\
-  \ assert the echo returns\n- Round-trip JSON: fromjson then tojson must match the input\n\n## Best practices\n\
-  \n- Keep .avsc/.avdl in src/main/avro and regenerate on build\n- Use schema evolution rules (defaults,\
-  \ unions) for backward compat\n- Prefer the Avro RPC handshake over ad-hoc endpoints for typed services\n\
-  \n## Capabilities\n\n### schema-tools\nCompile schemas and convert data with avro-tools.\n\n**Commands:**\n\
-  - `java -jar avro-tools.jar compile schema user.avsc .`\n- `java -jar avro-tools.jar tojson user.avro`\n\
-  - `java -jar avro-tools.jar fromjson user.json --schema-file user.avsc`\n- `java -jar avro-tools.jar\
+instructions: "Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and\
+  \ Java RPC server/client testing.\n\n## Agentic Workflow: Read -> Reason -> Act (avro-rpc)\n\nYou are\
+  \ **Avro Rpc** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n\
+  ### 1. Read — api context for `avro-rpc`\n- Domain: Implements RPC services with Apache Avro: schema\
+  \ compilation, avro-tools operations, and Java RPC server/client testing.\n- **schema-tools**: Compile\
+  \ schemas and convert data with avro-tools. — `java -jar avro-tools.jar compile schema user.avsc .`\n\
+  - **rpc-protocol**: Define and compile RPC protocols with avro-tools. — `java -jar avro-tools.jar compile\
+  \ protocol chat.avpr .`\n- **java-server**: Build and test a Java Avro RPC server. — `mvn package`\n\
+  - Check `knowledge` and `prerequisites: java, mvn`\n\n### 2. Reason — think for `avro-rpc`\n- For `schema-tools`:\
+  \ Compile schemas and convert data with avro-tools. — decide which checks to run\n- For `rpc-protocol`:\
+  \ Define and compile RPC protocols with avro-tools. — decide which checks to run\n- For `java-server`:\
+  \ Build and test a Java Avro RPC server. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `avro-rpc` tools\n-\
+  \ Tools: `Glob`, `Grep`, `Read`, `Java`, `Mvn` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `avro-rpc:a68a7717`\n\n# Avro RPC\n\
+  \n## What this skill does\n\nImplements RPC services with Apache Avro: writing schemas and IDL, compiling\
+  \ them with avro-tools, generating Java stubs, and running/test the server and client.\n\n## When to\
+  \ use\n\n- A typed, schema-driven RPC layer instead of raw JSON\n- Generating stubs from .avsc/.avpr\
+  \ for Java services\n- Evolving message formats safely (Avro schema resolution)\n\n## Real commands\n\
+  \n```bash\n# Compile a schema to Java\njava -jar avro-tools.jar compile schema user.avsc src/main/java\n\
+  \n# Generate a protocol from IDL\njava -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr\njava\
+  \ -jar avro-tools.jar compile protocol chat.avpr src/main/java\n\n# Convert data\njava -jar avro-tools.jar\
+  \ tojson user.avro\njava -jar avro-tools.jar fromjson user.json --schema-file user.avsc\n\n# Run the\
+  \ RPC server\nmvn exec:java -Dexec.mainClass=com.example.ChatServer\n```\n\n## IDL example (chat.avdl)\n\
+  \n```avdl\n@namespace(\"com.example\")\nprotocol Chat {\n  string send(string message);\n}\n```\n\n\
+  ## Testing\n\n- Start the server, run the client with mvn exec:java, assert the echo returns\n- Round-trip\
+  \ JSON: fromjson then tojson must match the input\n\n## Best practices\n\n- Keep .avsc/.avdl in src/main/avro\
+  \ and regenerate on build\n- Use schema evolution rules (defaults, unions) for backward compat\n- Prefer\
+  \ the Avro RPC handshake over ad-hoc endpoints for typed services\n\n## Capabilities\n\n### schema-tools\n\
+  Compile schemas and convert data with avro-tools.\n\n**Parameters:**\n- `schema_file` (string): Avro\
+  \ schema .avsc file\n- `output_dir` (string): Directory for compiled classes\n\n**Commands:**\n- `java\
+  \ -jar avro-tools.jar compile schema user.avsc .`\n- `java -jar avro-tools.jar tojson user.avro`\n-\
+  \ `java -jar avro-tools.jar fromjson user.json --schema-file user.avsc`\n- `java -jar avro-tools.jar\
   \ getmeta user.avro`\n- `java -jar avro-tools.jar cat user.avro`\n\n**Examples:**\n- java -jar avro-tools.jar\
   \ compile schema user.avsc src/main/java\n- java -jar avro-tools.jar tojson user.avro > user.json\n\
   - java -jar avro-tools.jar fromjson user.json --schema-file user.avsc > out.avro\n\n### rpc-protocol\n\
-  Define and compile RPC protocols with avro-tools.\n\n**Commands:**\n- `java -jar avro-tools.jar compile\
-  \ protocol chat.avpr .`\n- `java -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr`\n- `java\
-  \ -jar avro-tools.jar idl2schemata chat.avdl`\n- `java -jar avro-tools.jar jsonschema chat.avsc`\n\n\
-  **Examples:**\n- java -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr\n- java -jar avro-tools.jar\
-  \ compile protocol chat.avpr src/main/java\n- java -jar avro-tools.jar idl2schemata chat.avdl\n\n###\
-  \ java-server\nBuild and test a Java Avro RPC server.\n\n**Commands:**\n- `mvn package`\n- `mvn exec:java\
-  \ -Dexec.mainClass=com.example.ChatServer`\n- `mvn exec:java -Dexec.mainClass=com.example.ChatClient`\n\
+  Define and compile RPC protocols with avro-tools.\n\n**Parameters:**\n- `protocol_file` (string): .avpr\
+  \ protocol file or .avdl IDL\n- `output_dir` (string): Output for generated stubs\n\n**Commands:**\n\
+  - `java -jar avro-tools.jar compile protocol chat.avpr .`\n- `java -jar avro-tools.jar idl src/main/avro/chat.avdl\
+  \ chat.avpr`\n- `java -jar avro-tools.jar idl2schemata chat.avdl`\n- `java -jar avro-tools.jar jsonschema\
+  \ chat.avsc`\n\n**Examples:**\n- java -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr\n- java\
+  \ -jar avro-tools.jar compile protocol chat.avpr src/main/java\n- java -jar avro-tools.jar idl2schemata\
+  \ chat.avdl\n\n### java-server\nBuild and test a Java Avro RPC server.\n\n**Parameters:**\n- `main_class`\
+  \ (string): Server/client main class\n- `port` (number): RPC server port (default 8080)\n\n**Commands:**\n\
+  - `mvn package`\n- `mvn exec:java -Dexec.mainClass=com.example.ChatServer`\n- `mvn exec:java -Dexec.mainClass=com.example.ChatClient`\n\
   - `curl -s http://localhost:8080/health`\n- `mvn test`\n\n**Examples:**\n- mvn package && java -jar\
   \ target/chat-rpc-1.0.jar server\n- mvn exec:java -Dexec.mainClass=com.example.ChatClient -Dexec.args=localhost\n\
-  - mvn test -Dtest=ChatRpcTest"
+  - mvn test -Dtest=ChatRpcTest\n\n## References\n- [Apache Avro Docs](https://avro.apache.org/docs/current/)\n\
+  - [Avro Spec](https://avro.apache.org/docs/current/specification/)\n- [avro-tools Reference](https://avro.apache.org/docs/current/getting-started-java/)"
 prompt: Act as Avro Rpc and handle the task per the instructions.

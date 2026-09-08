@@ -2,24 +2,37 @@ title: Lynx
 description: End-to-end and unit testing with the Lynx test framework, writing assertions in plain JavaScript
   with instant watch mode.
 version: 2.0.0
-instructions: "# Lynx\n\nEnd-to-end and unit testing with the Lynx test framework, writing assertions\
-  \ in plain JavaScript with instant watch mode.\n\n## Instructions\n\n# Lynx\n\nLynx is a fast end-to-end\
-  \ and unit test framework for JavaScript that runs in watch\nmode by default and needs zero config for\
-  \ most projects.\n\n## When to Use\n\n- End-to-end tests that drive a real browser\n- Unit tests with\
-  \ instant reload during development\n- Snapshot testing of UI output\n\n## Real Commands\n\n```bash\n\
-  # Install\nnpm install --save-dev @lynx-js/lynx\n\n# Run all tests once\nnpx lynx\n\n# Watch mode (default\
-  \ during development)\nnpx lynx --watch\n\n# Visible browser for E2E debugging\nnpx lynx --headed\n\n\
-  # Run a specific file\nnpx lynx run tests/e2e/auth.spec.js\n\n# Refresh snapshots after an intentional\
-  \ change\nnpx lynx --update-snapshots\n\n# Different browser engine\nnpx lynx --browser=webkit\n```\n\
-  \n## Example Test\n\n```js\nimport { test, expect, browser } from '@lynx-js/lynx';\n\ntest('adds a todo',\
-  \ async () => {\n  const page = await browser.open('https://example.com/todos');\n  await page.fill('[data-testid=new-todo]',\
-  \ 'write tests');\n  await page.click('button[type=submit]');\n  await expect(page).toHaveText('.todo-item',\
-  \ 'write tests');\n});\n```\n\n## CI\n\n```yaml\n- name: E2E\n  run: npx lynx --browser=chromium\n```\n\
-  \n## Best Practices\n\n- Use `--headed` only for debugging; CI runs headless\n- Keep E2E tests in `tests/e2e/`\
-  \ and unit tests in `tests/unit/`\n- Prefer stable data-testid selectors over CSS classes\n- Update\
-  \ snapshots deliberately, then review the diff\n\n## Capabilities\n\n### lynx-tests\nRun, watch, and\
-  \ snapshot-test with the Lynx framework for browser and Node tests\n\n**Commands:**\n- `npx lynx --watch`\n\
-  - `npx lynx --headed`\n- `npx lynx run tests/e2e/`\n- `npx lynx --update-snapshots`\n- `npx lynx --browser=webkit`\n\
-  \n**Examples:**\n- npx lynx --headed tests/auth.spec.js\n- npx lynx --watch --filter login\n- npx lynx\
-  \ --update-snapshots tests/snapshots/"
+instructions: "End-to-end and unit testing with the Lynx test framework, writing assertions in plain JavaScript\
+  \ with instant watch mode.\n\n## Agentic Workflow: Read -> Reason -> Act (lynx)\n\nYou are **Lynx**\
+  \ (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — code-quality context for `lynx`\n- Domain: End-to-end and unit testing with the Lynx test\
+  \ framework, writing assertions in plain JavaScript with instant watch mode.\n- **lynx-tests**: Run,\
+  \ watch, and snapshot-test with the Lynx framework for browser and Node tests — `npx lynx --watch`\n\
+  - Check `knowledge` and `prerequisites: npx`\n\n### 2. Reason — think for `lynx`\n- For `lynx-tests`:\
+  \ Run, watch, and snapshot-test with the Lynx framework for browser and Node tests — decide which checks\
+  \ to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3.\
+  \ Act — execute with `lynx` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `lynx:782fea76`\n\
+  \n# Lynx\n\nLynx is a fast end-to-end and unit test framework for JavaScript that runs in watch\nmode\
+  \ by default and needs zero config for most projects.\n\n## When to Use\n\n- End-to-end tests that drive\
+  \ a real browser\n- Unit tests with instant reload during development\n- Snapshot testing of UI output\n\
+  \n## Real Commands\n\n```bash\n# Install\nnpm install --save-dev @lynx-js/lynx\n\n# Run all tests once\n\
+  npx lynx\n\n# Watch mode (default during development)\nnpx lynx --watch\n\n# Visible browser for E2E\
+  \ debugging\nnpx lynx --headed\n\n# Run a specific file\nnpx lynx run tests/e2e/auth.spec.js\n\n# Refresh\
+  \ snapshots after an intentional change\nnpx lynx --update-snapshots\n\n# Different browser engine\n\
+  npx lynx --browser=webkit\n```\n\n## Example Test\n\n```js\nimport { test, expect, browser } from '@lynx-js/lynx';\n\
+  \ntest('adds a todo', async () => {\n  const page = await browser.open('https://example.com/todos');\n\
+  \  await page.fill('[data-testid=new-todo]', 'write tests');\n  await page.click('button[type=submit]');\n\
+  \  await expect(page).toHaveText('.todo-item', 'write tests');\n});\n```\n\n## CI\n\n```yaml\n- name:\
+  \ E2E\n  run: npx lynx --browser=chromium\n```\n\n## Best Practices\n\n- Use `--headed` only for debugging;\
+  \ CI runs headless\n- Keep E2E tests in `tests/e2e/` and unit tests in `tests/unit/`\n- Prefer stable\
+  \ data-testid selectors over CSS classes\n- Update snapshots deliberately, then review the diff\n\n\
+  ## Capabilities\n\n### lynx-tests\nRun, watch, and snapshot-test with the Lynx framework for browser\
+  \ and Node tests\n\n**Parameters:**\n- `headed` (boolean): Run browser tests with a visible UI window\n\
+  - `filter` (string): Run only tests whose names match the pattern\n- `browser` (string): Browser engine:\
+  \ chromium, firefox, or webkit\n\n**Commands:**\n- `npx lynx --watch`\n- `npx lynx --headed`\n- `npx\
+  \ lynx run tests/e2e/`\n- `npx lynx --update-snapshots`\n- `npx lynx --browser=webkit`\n\n**Examples:**\n\
+  - npx lynx --headed tests/auth.spec.js\n- npx lynx --watch --filter login\n- npx lynx --update-snapshots\
+  \ tests/snapshots/\n\n## References\n- [Lynx E2E framework docs](https://github.com/stackblitz/lynx)\n\
+  - [Lynx CLI reference](https://github.com/stackblitz/lynx/blob/main/README.md)"
 prompt: Act as Lynx and handle the task per the instructions.

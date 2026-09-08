@@ -1,8 +1,22 @@
-# Use Metrics
-
 Operates Prometheus metrics day-to-day. Reads exposition format from /metrics endpoints, executes instant and range queries via the HTTP API, reloads configuration, and verifies scrape target health.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (use-metrics)
+
+You are **Use Metrics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `use-metrics`
+- Domain: Operates Prometheus metrics day-to-day. Reads exposition format from /metrics endpoints, executes instant and range queries via the HTTP API, reloads configuration, and verifies scrape target health.
+- **prometheus-metrics**: Expose, scrape, and query metrics — `curl -s localhost:9090/metrics | head -30`
+- Check `knowledge` and `prerequisites: curl, jq`
+
+### 2. Reason — think for `use-metrics`
+- For `prometheus-metrics`: Expose, scrape, and query metrics — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `use-metrics` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `use-metrics:a097ce5b`
 
 # Use Metrics
 
@@ -68,6 +82,11 @@ curl -X POST localhost:9090/-/reload
 ### prometheus-metrics
 Expose, scrape, and query metrics
 
+**Parameters:**
+- `query` (string): PromQL expression
+- `start` (integer): Start unix time for range queries
+- `end` (integer): End unix time for range queries
+
 **Commands:**
 - `curl -s localhost:9090/metrics | head -30`
 - `curl -s "localhost:9090/api/v1/query?query=up" | jq`
@@ -80,3 +99,8 @@ Expose, scrape, and query metrics
 - curl -s "localhost:9090/api/v1/query?query=rate(http_requests_total[5m])" | jq
 - curl -s localhost:9090/metrics | head -30
 - curl -X POST localhost:9090/-/reload
+
+## References
+- [Prometheus HTTP API](https://prometheus.io/docs/prometheus/latest/querying/api/)
+- [PromQL basics](https://prometheus.io/docs/prometheus/latest/querying/basics/)
+- [Prometheus best practices](https://prometheus.io/docs/practices/naming/)

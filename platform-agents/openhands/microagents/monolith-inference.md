@@ -1,6 +1,6 @@
 ---
 name: "monolith-inference"
-description: "Monolith inference server agent. Manages monolith ML inference server."
+description: "Monolith inference server agent. Manages monolith ML inference server. Use when working with Ml Monolith Inference Server Agent or when the user mentions Ml Monolith Inference Server Agent."
 type: knowledge
 triggers: ["monolith-inference", "ml monolith inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["monolith-inference", "ml monolith inference server agent"]
 # Monolith Inference
 
 Monolith inference server agent. Manages monolith ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (monolith-inference)
+
+You are **Monolith Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `monolith-inference`
+- Domain: Monolith inference server agent. Manages monolith ML inference server.
+- **Ml Monolith Inference Server Agent**: Monolith inference server agent. Manages monolith ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `monolith-inference`
+- For `Ml Monolith Inference Server Agent`: Monolith inference server agent. Manages monolith ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `monolith-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monolith-inference:c5af5f63`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Monolith inference server agent. Manages monolith ML inference server.
 - curl http://localhost:8080/predict --data '{"text": "Hello"}'
 - python test_app.py --endpoint http://localhost:8080
 - python app_config.py --model-path /models/model.pkl
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

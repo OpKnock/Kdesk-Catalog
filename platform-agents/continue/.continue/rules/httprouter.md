@@ -1,15 +1,29 @@
 ---
 name: "httprouter"
-description: "Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping, and benchmark-grade request dispatch."
+description: "Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping, and benchmark-grade request dispatch. Use when working with httprouter routing, api or when the user mentions httprouter routing, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# httprouter
-
 Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping, and benchmark-grade request dispatch.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (httprouter)
+
+You are **httprouter** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `httprouter`
+- Domain: Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping, and benchmark-grade request dispatch.
+- **httprouter-routing**: Build typed HTTP routes with httprouter and wrap handlers with middleware. — `go get github.com/julienschmidt/httprouter@latest`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `httprouter`
+- For `httprouter-routing`: Build typed HTTP routes with httprouter and wrap handlers with middleware. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `httprouter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `httprouter:12535fc3`
 
 # httprouter
 
@@ -108,6 +122,11 @@ Agent: router.GET("/users/:id", func(w, r, ps)65:    { id := ps.ByName("id") ...
 ### httprouter-routing
 Build typed HTTP routes with httprouter and wrap handlers with middleware.
 
+**Parameters:**
+- `path` (string): Route pattern, e.g. /users/:id.
+- `method` (string): HTTP method to register.
+- `port` (integer): Listen port, default 8080.
+
 **Commands:**
 - `go get github.com/julienschmidt/httprouter@latest`
 - `go build -o app .`
@@ -119,3 +138,7 @@ Build typed HTTP routes with httprouter and wrap handlers with middleware.
 - go run . & curl -s http://localhost:8080/hello/world
 - go test -bench=. -benchmem ./...
 - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/users/42
+
+## References
+- [httprouter GitHub](https://github.com/julienschmidt/httprouter)
+- [Go net/http docs](https://pkg.go.dev/net/http)

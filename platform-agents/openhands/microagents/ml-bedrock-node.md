@@ -1,6 +1,6 @@
 ---
 name: "ml-bedrock-node"
-description: "AWS Bedrock Node.js SDK agent for foundation model access."
+description: "AWS Bedrock Node.js SDK agent for foundation model access. Use when working with Ml Bedrock Node, deployment or when the user mentions Ml Bedrock Node, deployment."
 type: knowledge
 triggers: ["ml-bedrock-node", "ml bedrock node"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-bedrock-node", "ml bedrock node"]
 # Ml Bedrock Node
 
 AWS Bedrock Node.js SDK agent for foundation model access.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-bedrock-node)
+
+You are **Ml Bedrock Node** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-bedrock-node`
+- Domain: AWS Bedrock Node.js SDK agent for foundation model access.
+- **Ml Bedrock Node**: AWS Bedrock Node.js SDK agent for foundation model access. — `Invoke: const response = await client.send(new InvokeModelCommand({modelId: 'ant`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-bedrock-node`
+- For `Ml Bedrock Node`: AWS Bedrock Node.js SDK agent for foundation model access. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-bedrock-node` tools
+- Tools: `Glob`, `Grep`, `Read`, `Invoke`, `Client` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-bedrock-node:d16a41c5`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ AWS Bedrock Node.js SDK agent for foundation model access.
 - Client: import { BedrockRuntimeClient } from '@aws-sdk/client-bedrock-runtime'; const client = new BedrockRuntimeClient({region: 'us-east-1'})
 - Invoke: const response = await client.send(new InvokeModelCommand({modelId: 'anthropic.claude-sonnet-4-5-20250929-v1:0', body: JSON.stringify({messages: [{role: 'user', content: 'Hello'}]})}))
 - Stream: const response = await client.send(new InvokeModelWithResponseStreamCommand({modelId: 'anthropic.claude-sonnet-4-5-20250929-v1:0', body: '...'}))
+
+## References
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [npm Documentation](https://docs.npmjs.com/)

@@ -2,14 +2,43 @@ title: Kafka
 description: 'Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration
   via the Kafka CLI.'
 version: 2.0.0
-instructions: '# Kafka
+instructions: 'Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration
+  via the Kafka CLI.
 
 
-  Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration via the Kafka
-  CLI.
+  ## Agentic Workflow: Read -> Reason -> Act (kafka-data)
 
 
-  ## Instructions
+  You are **Kafka** (data/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — data context for `kafka-data`
+
+  - Domain: Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration
+  via the Kafka CLI.
+
+  - **kafka-cli**: Manage topics, produce/consume messages, and inspect consumer groups — `kafka-topics.sh
+  --bootstrap-server localhost:9092 --create --topic orders --part`
+
+  - Check `knowledge` and `prerequisites: kafka-configs.sh, kafka-console-consumer.sh, kafka-console-producer.sh,
+  kafka-consumer-groups.sh`
+
+
+  ### 2. Reason — think for `kafka-data`
+
+  - For `kafka-cli`: Manage topics, produce/consume messages, and inspect consumer groups — decide which
+  checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `kafka-data` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-console-producer.sh` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `kafka-data:9a113a64`
 
 
   # Kafka
@@ -115,6 +144,15 @@ instructions: '# Kafka
   Manage topics, produce/consume messages, and inspect consumer groups
 
 
+  **Parameters:**
+
+  - `partitions` (integer): Number of partitions for a new topic
+
+  - `replication-factor` (integer): Replication factor for a new topic
+
+  - `from-beginning` (boolean): Consume all messages from the topic start
+
+
   **Commands:**
 
   - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 --replication-factor
@@ -136,5 +174,12 @@ instructions: '# Kafka
   - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages
   10
 
-  - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 6'
+  - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 6
+
+
+  ## References
+
+  - [Kafka docs](https://kafka.apache.org/documentation/)
+
+  - [Kafka operations guide](https://kafka.apache.org/documentation/#operations)'
 prompt: Act as Kafka and handle the task per the instructions.

@@ -1,6 +1,6 @@
 ---
 name: "fine-tuning-agent-2"
-description: "Fine-tuning inference server agent. Manages Fine-tuning ML inference server."
+description: "Fine-tuning inference server agent. Manages Fine-tuning ML inference server. Use when working with Ml Fine Tuning Inference Server Agent or when the user mentions Ml Fine Tuning Inference Server Agent."
 type: knowledge
 triggers: ["fine-tuning-agent-2", "ml fine tuning inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["fine-tuning-agent-2", "ml fine tuning inference server agent"]
 # Fine Tuning Agent 2
 
 Fine-tuning inference server agent. Manages Fine-tuning ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (fine-tuning-agent-2)
+
+You are **Fine Tuning Agent 2** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `fine-tuning-agent-2`
+- Domain: Fine-tuning inference server agent. Manages Fine-tuning ML inference server.
+- **Ml Fine Tuning Inference Server Agent**: Fine-tuning inference server agent. Manages Fine-tuning ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `fine-tuning-agent-2`
+- For `Ml Fine Tuning Inference Server Agent`: Fine-tuning inference server agent. Manages Fine-tuning ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fine-tuning-agent-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fine-tuning-agent-2:eb62f9dc`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Fine-tuning inference server agent. Manages Fine-tuning ML inference server.
 - curl http://localhost:8080/predict --data '{"input": "Hello"}'
 - python predict.py --model fine_tuned_model.pkl --input data.csv --output predictions.csv
 - python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

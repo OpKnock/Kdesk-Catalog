@@ -5,27 +5,25 @@ description: "Runs CIS Kubernetes Benchmark checks against master, worker, etcd,
 
 Runs CIS Kubernetes Benchmark checks against master, worker, etcd, and control-plane components with the kube-bench auditor.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kube-bench)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **kube-bench** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kube-bench`, `kube-bench run --json`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `kube-bench`
+- Domain: Runs CIS Kubernetes Benchmark checks against master, worker, etcd, and control-plane components with the kube-bench auditor.
+- **benchmark-runs**: Run CIS checks against node roles and Kubernetes versions. — `kube-bench`
+- **reporting**: Produce JSON and JUnit reports for compliance evidence. — `kube-bench run --json`
+- Check `knowledge` and `prerequisites: kube-bench`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kube-bench`
+- For `benchmark-runs`: Run CIS checks against node roles and Kubernetes versions. — decide which checks to run
+- For `reporting`: Produce JSON and JUnit reports for compliance evidence. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kube-bench` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kube-bench` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kube-bench:c6f495a1`
 
 # kube-bench
 

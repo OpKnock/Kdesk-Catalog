@@ -3,15 +3,44 @@ description: Creates OpenTelemetry spans with semantic convention attributes usi
   HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary
   commands with exec, and exports via OTLP to collectors.
 version: 2.0.0
-instructions: '# Span Attributes
+instructions: 'Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches
+  HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary
+  commands with exec, and exports via OTLP to collectors.
 
 
-  Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes
-  (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with
-  exec, and exports via OTLP to collectors.
+  ## Agentic Workflow: Read -> Reason -> Act (span-attributes)
 
 
-  ## Instructions
+  You are **Span Attributes** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `span-attributes`
+
+  - Domain: Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP
+  attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands
+
+  - **otel-span-attrs**: Creates OpenTelemetry spans with semantic convention attributes using otel-cli.
+  Attaches HTTP attrib — `otel-cli span --name "http.request" --endpoint http://localhost:4318 --attrs
+  "ht`
+
+  - Check `knowledge` and `prerequisites: export, otel-cli`
+
+
+  ### 2. Reason — think for `span-attributes`
+
+  - For `otel-span-attrs`: Creates OpenTelemetry spans with semantic convention attributes using otel-cli.
+  Attaches HTTP attributes (method, status — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `span-attributes` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Otel-cli` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `span-attributes:2f386fc5`
 
 
   # Span Attributes
@@ -120,6 +149,17 @@ instructions: '# Span Attributes
   exec, and exports via OTLP to collectors.
 
 
+  **Parameters:**
+
+  - `endpoint` (string): OTLP collector endpoint (e.g., http://localhost:4318)
+
+  - `span_name` (string): Name of the span to create
+
+  - `http_method` (string): HTTP method for http span attributes
+
+  - `db_system` (string): Database system for db span attributes (e.g., postgresql)
+
+
   **Commands:**
 
   - `otel-cli span --name "http.request" --endpoint http://localhost:4318 --attrs "http.method=GET,http.route=/api/users,http.status_code=200"`
@@ -137,5 +177,10 @@ instructions: '# Span Attributes
   - otel-cli span --name "db.query" --endpoint http://localhost:4318 --attrs "db.system=postgresql,db.statement=SELECT
   * FROM users"
 
-  - otel-cli exec --name "batch.job" --endpoint http://localhost:4318 -- python etl.py'
+  - otel-cli exec --name "batch.job" --endpoint http://localhost:4318 -- python etl.py
+
+
+  ## References
+
+  - [OpenTelemetry span API spec](https://opentelemetry.io/docs/specs/otel/trace/api/)'
 prompt: Act as Span Attributes and handle the task per the instructions.

@@ -6,27 +6,23 @@ globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Diagnose and fix high-cardinality metric problems in Prometheus: find exploding label values, top series, and identify offending scrape targets.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (metrics-cardinality)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Metrics Cardinality** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `promtool tsdb analyze --help`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `metrics-cardinality`
+- Domain: Diagnose and fix high-cardinality metric problems in Prometheus: find exploding label values, top series, and identify offending scrape targets.
+- **cardinality-diagnosis**: Analyze a Prometheus TSDB to find high-cardinality series, top label combinations, and memory-heavy  — `promtool tsdb analyze --help`
+- Check `knowledge` and `prerequisites: promtool`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `metrics-cardinality`
+- For `cardinality-diagnosis`: Analyze a Prometheus TSDB to find high-cardinality series, top label combinations, and memory-heavy metrics. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `metrics-cardinality` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `metrics-cardinality:0c23edda`
 
 # Metrics Cardinality
 

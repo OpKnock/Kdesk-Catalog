@@ -1,6 +1,6 @@
 ---
 name: "Ml Embedding Azure Deploy"
-description: "Azure Embedding deployment agent for Azure embedding services."
+description: "Azure Embedding deployment agent for Azure embedding services. Use when working with Ml Embedding Azure Deploy or when the user mentions Ml Embedding Azure Deploy."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Embedding Azure Deploy
 
 Azure Embedding deployment agent for Azure embedding services.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-embedding-azure-deploy)
+
+You are **Ml Embedding Azure Deploy** (ml/embedding) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-embedding-azure-deploy`
+- Domain: Azure Embedding deployment agent for Azure embedding services.
+- **Ml Embedding Azure Deploy**: Azure Embedding deployment agent for Azure embedding services. — `Deploy: az cognitiveservices account create --name my-openai --kind OpenAI --sku`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-embedding-azure-deploy`
+- For `Ml Embedding Azure Deploy`: Azure Embedding deployment agent for Azure embedding services. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-embedding-azure-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Deploy`, `Embed` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-embedding-azure-deploy:3f60e9ed`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ Azure Embedding deployment agent for Azure embedding services.
 **Examples:**
 - Embed: az cognitive-services account list
 - Deploy: az cognitiveservices account create --name my-openai --kind OpenAI --sku S0 --location eastus
+
+## References
+- [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings)
+- [OpenAI API Documentation](https://platform.openai.com/docs/)

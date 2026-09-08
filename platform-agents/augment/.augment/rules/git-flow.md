@@ -5,27 +5,25 @@ description: "Applies the GitFlow branching model with git-flow extensions: feat
 
 Applies the GitFlow branching model with git-flow extensions: features, releases, hotfixes, and support branches.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (git-flow)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **git-flow** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `git flow feature start login-passwordless`, `git flow release start 1.2.0`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `git-flow`
+- Domain: Applies the GitFlow branching model with git-flow extensions: features, releases, hotfixes, and support branches.
+- **feature-branches**: Start, finish, and publish feature branches under git-flow. — `git flow feature start login-passwordless`
+- **releases-and-hotfixes**: Cut releases from develop and patch production from master/main. — `git flow release start 1.2.0`
+- Check `knowledge` and `prerequisites: git`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `git-flow`
+- For `feature-branches`: Start, finish, and publish feature branches under git-flow. — decide which checks to run
+- For `releases-and-hotfixes`: Cut releases from develop and patch production from master/main. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `git-flow` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `git-flow:a19d0550`
 
 # GitFlow Branching Model
 

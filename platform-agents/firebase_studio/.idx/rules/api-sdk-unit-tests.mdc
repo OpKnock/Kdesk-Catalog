@@ -1,14 +1,30 @@
 ---
-description: "Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated code quality gates, and regression suites."
+description: "Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated code quality gates, and regression suites. Use when working with sdk unit tests, integration tests or when the user mentions sdk unit tests, integration tests."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Api Sdk Unit Tests
-
 Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated code quality gates, and regression suites.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-sdk-unit-tests)
+
+You are **Api Sdk Unit Tests** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-sdk-unit-tests`
+- Domain: Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated code quality gates, and regression suites.
+- **sdk-unit-tests**: Write unit tests for SDK client code — `npm install vitest`
+- **integration-tests**: Run SDKs against a live mock server — `npx @stoplight/prism-cli mock openapi.yaml -p 4010 &`
+- Check `knowledge` and `prerequisites: openapi-generator, node.js, python`
+
+### 2. Reason — think for `api-sdk-unit-tests`
+- For `sdk-unit-tests`: Write unit tests for SDK client code — decide which checks to run
+- For `integration-tests`: Run SDKs against a live mock server — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-sdk-unit-tests` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sdk-unit-tests:bd36217c`
 
 # API SDK Engineer v2 - Testing
 
@@ -62,6 +78,11 @@ test('lists users', async () => {
 ### sdk-unit-tests
 Write unit tests for SDK client code
 
+**Parameters:**
+- `test-file` (string): Test file path
+- `mock-target` (string): URL intercepted by nock
+- `coverage` (boolean): Collect coverage
+
 **Commands:**
 - `npm install vitest`
 - `npx vitest run tests/sdk.test.ts`
@@ -86,3 +107,7 @@ Run SDKs against a live mock server
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Vitest Docs](https://vitest.dev/guide/)
+- [nock Docs](https://github.com/nock/nock)

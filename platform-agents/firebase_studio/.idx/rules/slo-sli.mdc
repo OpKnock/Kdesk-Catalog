@@ -1,14 +1,28 @@
 ---
-description: "Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and latency SLIs over 30-day windows, validates recording rules with promtool, and enables burn-rate alerting."
+description: "Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and latency SLIs over 30-day windows, validates recording rules with promtool, and enables burn-rate alerting. Use when working with slo computation, api or when the user mentions slo computation, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# SLO SLI
-
 Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and latency SLIs over 30-day windows, validates recording rules with promtool, and enables burn-rate alerting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (slo-sli)
+
+You are **SLO SLI** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `slo-sli`
+- Domain: Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and latency SLIs over 30-day windows, validates recording rules with promtool, and enabl
+- **slo-computation**: Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates a — `promtool query instant --url=http://localhost:9090 'rate(http_requests_total{job`
+- Check `knowledge` and `prerequisites: promtool`
+
+### 2. Reason — think for `slo-sli`
+- For `slo-computation`: Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and late — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `slo-sli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `slo-sli:dda9b885`
 
 # SLO / SLI
 
@@ -73,6 +87,11 @@ promtool query instant --url=http://localhost:9090 'slo:api:error_budget_remaini
 ### slo-computation
 Defines Service Level Indicators and computes SLO error budgets from Prometheus metrics. Evaluates availability and latency SLIs over 30-day windows, validates recording rules with promtool, and enables burn-rate alerting.
 
+**Parameters:**
+- `prometheus_url` (string): Prometheus server URL (e.g., http://localhost:9090)
+- `job_name` (string): Prometheus job label to query
+- `window` (string): Time window for SLI calculation (e.g., 30d, 5m)
+
 **Commands:**
 - `promtool query instant --url=http://localhost:9090 'rate(http_requests_total{job="api",code=~"5.."}[5m])'`
 - `curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total[1h]))' | jq '.data.result'`
@@ -85,3 +104,6 @@ Defines Service Level Indicators and computes SLO error budgets from Prometheus 
 - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total[1h]))' | jq '.data.result'
 - curl -g 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total{job="api",code!~"5.."}[30d])) / sum(rate(http_requests_total{job="api"}[30d]))' | jq '.data.result[0].value[1]'
 - promtool check rules slo.rules.yml
+
+## References
+- [Prometheus HTTP API](https://prometheus.io/docs/prometheus/latest/querying/api/)

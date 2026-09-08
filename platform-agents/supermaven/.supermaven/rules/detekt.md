@@ -1,8 +1,24 @@
-# Detekt
-
 Run it from the command line or Gradle. Manage existing debt with baselines. and Gradle integration.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (detekt)
+
+You are **Detekt** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `detekt`
+- Domain: Run it from the command line or Gradle. Manage existing debt with baselines. and Gradle integration.'
+- **detekt-cli**: Run detekt from the command line or Gradle. — `detekt --input src/main/kotlin`
+- **detekt-baseline**: Manage existing debt with baselines. — `detekt --baseline detekt-baseline.xml --input src/`
+- Check `knowledge` and `prerequisites: detekt, gradle`
+
+### 2. Reason — think for `detekt`
+- For `detekt-cli`: Run detekt from the command line or Gradle. — decide which checks to run
+- For `detekt-baseline`: Manage existing debt with baselines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `detekt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Detekt`, `Gradle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `detekt:46eb961d`
 
 # detekt
 
@@ -67,6 +83,11 @@ style:
 ### detekt-cli
 Run detekt from the command line or Gradle.
 
+**Parameters:**
+- `input` (string): Source directory
+- `config` (string): Config yaml path
+- `baseline` (string): Baseline xml path
+
 **Commands:**
 - `detekt --input src/main/kotlin`
 - `detekt --config detekt.yml --input src/`
@@ -82,6 +103,10 @@ Run detekt from the command line or Gradle.
 ### detekt-baseline
 Manage existing debt with baselines.
 
+**Parameters:**
+- `generate-config` (boolean): Generate default config
+- `input` (string): Source directory to scan
+
 **Commands:**
 - `detekt --baseline detekt-baseline.xml --input src/`
 - `detekt --build-upon-default-config`
@@ -91,3 +116,7 @@ Manage existing debt with baselines.
 **Examples:**
 - gradle detektBaseline && gradle detekt
 - detekt --generate-config --config detekt.yml
+
+## References
+- [detekt Docs](https://detekt.dev)
+- [detekt on GitHub](https://github.com/detekt/detekt)

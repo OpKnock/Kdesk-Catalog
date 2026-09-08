@@ -1,6 +1,6 @@
 ---
 name: "microservices-sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Microservices Deploy Sdk Agent or when the user mentions Ml Microservices Deploy Sdk Agent."
 type: knowledge
 triggers: ["microservices-sdk", "ml microservices deploy sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["microservices-sdk", "ml microservices deploy sdk agent"]
 # Microservices Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (microservices-sdk)
+
+You are **Microservices Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `microservices-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Microservices Deploy Sdk Agent**: Microservices SDK deployment agent for ML microservices SDK deployment. — `docker build -t microservices:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `microservices-sdk`
+- For `Ml Microservices Deploy Sdk Agent`: Microservices SDK deployment agent for ML microservices SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `microservices-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `microservices-sdk:17d488d1`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Microservices SDK deployment agent for ML microservices SDK deployment.
 **Examples:**
 - Server: python -m microservices.server --port 8080
 - Docker: docker run -p 8080:8080 microservices-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

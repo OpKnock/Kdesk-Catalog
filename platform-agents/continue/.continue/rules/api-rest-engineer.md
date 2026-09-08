@@ -1,15 +1,31 @@
 ---
 name: "api-rest-engineer"
-description: "Implements REST APIs in Node.js with Express: resource routing, status-code semantics, JSON error handling, and curl-based endpoint verification."
+description: "Implements REST APIs in Node.js with Express: resource routing, status-code semantics, JSON error handling, and curl-based endpoint verification. Use when working with express routing, status semantics or when the user mentions express routing, status semantics."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-rest-engineer
-
 Implements REST APIs in Node.js with Express: resource routing, status-code semantics, JSON error handling, and curl-based endpoint verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rest-engineer)
+
+You are **api-rest-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-rest-engineer`
+- Domain: Implements REST APIs in Node.js with Express: resource routing, status-code semantics, JSON error handling, and curl-based endpoint verification.
+- **express-routing**: Build REST resource routes with Express — `npm init -y && npm install express`
+- **status-semantics**: Apply correct HTTP status codes per operation — `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/api/users/999`
+- Check `knowledge` and `prerequisites: node.js, python, express, fastapi`
+
+### 2. Reason — think for `api-rest-engineer`
+- For `express-routing`: Build REST resource routes with Express — decide which checks to run
+- For `status-semantics`: Apply correct HTTP status codes per operation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rest-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rest-engineer:d96aced5`
 
 # API REST Engineer
 
@@ -54,6 +70,11 @@ curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/js
 ### express-routing
 Build REST resource routes with Express
 
+**Parameters:**
+- `resource` (string): Resource name in the route path
+- `id` (integer): Resource identifier
+- `body` (object): JSON payload for mutations
+
 **Commands:**
 - `npm init -y && npm install express`
 - `node app.js`
@@ -78,3 +99,7 @@ Apply correct HTTP status codes per operation
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Express Routing Guide](https://expressjs.com/en/guide/routing.html)
+- [MDN HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)

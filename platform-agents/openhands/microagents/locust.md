@@ -1,15 +1,33 @@
 ---
 name: "locust"
-description: "Runs distributed load tests with Locust user classes, headless mode, HTML reports, and master/worker clusters."
+description: "Runs distributed load tests with Locust user classes, headless mode, HTML reports, and master/worker clusters. Use when working with locust runs, reporting, distributed mode, testing or when the user mentions locust runs, reporting, distributed mode, testing."
 type: knowledge
 triggers: ["locust", "locust-runs", "reporting", "distributed-mode"]
 ---
 
-# locust
-
 Runs distributed load tests with Locust user classes, headless mode, HTML reports, and master/worker clusters.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (locust)
+
+You are **locust** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `locust`
+- Domain: Runs distributed load tests with Locust user classes, headless mode, HTML reports, and master/worker clusters.
+- **locust-runs**: Run Locust locally and headless. — `locust -f locustfile.py`
+- **reporting**: Export HTML reports and stats. — `locust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py`
+- **distributed-mode**: Run master/worker clusters. — `locust --master -f locustfile.py`
+- Check `knowledge` and `prerequisites: locust`
+
+### 2. Reason — think for `locust`
+- For `locust-runs`: Run Locust locally and headless. — decide which checks to run
+- For `reporting`: Export HTML reports and stats. — decide which checks to run
+- For `distributed-mode`: Run master/worker clusters. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `locust` tools
+- Tools: `Glob`, `Grep`, `Read`, `Locust` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `locust:be7c8233`
 
 # Locust
 
@@ -78,6 +96,11 @@ class CatalogUser(HttpUser):
 ### locust-runs
 Run Locust locally and headless.
 
+**Parameters:**
+- `file` (string): Locustfile path
+- `users` (number): Peak number of users (-u)
+- `spawnRate` (number): Users spawned per second (-r)
+
 **Commands:**
 - `locust -f locustfile.py`
 - `locust --headless -u 100 -r 10 -t 30s -f locustfile.py`
@@ -93,6 +116,10 @@ Run Locust locally and headless.
 ### reporting
 Export HTML reports and stats.
 
+**Parameters:**
+- `html` (string): HTML report output path
+- `csv` (string): CSV stats prefix
+
 **Commands:**
 - `locust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py`
 - `locust --headless -u 100 -r 10 --csv stats -t 1m -f locustfile.py`
@@ -105,6 +132,10 @@ Export HTML reports and stats.
 ### distributed-mode
 Run master/worker clusters.
 
+**Parameters:**
+- `masterHost` (string): Master host for workers
+- `expectWorkers` (number): Workers to wait for before starting
+
 **Commands:**
 - `locust --master -f locustfile.py`
 - `locust --worker --master-host=localhost -f locustfile.py`
@@ -115,3 +146,7 @@ Run master/worker clusters.
 - locust --master -f locustfile.py
 - locust --worker --master-host=localhost -f locustfile.py
 - locust --master --expect-workers=4 -u 400 -r 40 -t 5m
+
+## References
+- [Locust Documentation](https://docs.locust.io/en/stable/)
+- [Locust Quickstart](https://docs.locust.io/en/stable/quickstart.html)

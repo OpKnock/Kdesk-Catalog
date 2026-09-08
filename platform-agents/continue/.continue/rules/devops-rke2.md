@@ -1,6 +1,6 @@
 ---
 name: "Devops Rke2"
-description: "RKE2 agent for Rancher Kubernetes distribution."
+description: "RKE2 agent for Rancher Kubernetes distribution. Use when working with Devops Rke2, deployment or when the user mentions Devops Rke2, deployment."
 globs: ["**/*.r", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Devops Rke2
 
 RKE2 agent for Rancher Kubernetes distribution.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-rke2)
+
+You are **Devops Rke2** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-rke2`
+- Domain: RKE2 agent for Rancher Kubernetes distribution.
+- **Devops Rke2**: RKE2 agent for Rancher Kubernetes distribution. — `Install: curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION=v1.28.3+linux_amd6`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-rke2`
+- For `Devops Rke2`: RKE2 agent for Rancher Kubernetes distribution. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-rke2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Install`, `Status` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-rke2:6a2421a9`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ RKE2 agent for Rancher Kubernetes distribution.
 - Start: systemctl start rke2-server
 - Kubeconfig: export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
 - Status: systemctl status rke2-server
+
+## References
+- [RKE2 Documentation](https://docs.rke2.io/)
+- [curl Documentation](https://curl.se/docs/)

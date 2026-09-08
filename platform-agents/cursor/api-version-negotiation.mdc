@@ -8,27 +8,23 @@ alwaysApply: false
 
 Implements API version negotiation via Accept headers, URL paths, and query parameters with deprecation headers and backward compatibility guarantees.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-version-negotiation)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **API Version Negotiation** (backend/api) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-version-negotiation`
+- Domain: Implements API version negotiation via Accept headers, URL paths, and query parameters with deprecation headers and backward compatibility guarantees.
+- **versioning**: Implement API versioning — `curl`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-version-negotiation`
+- For `versioning`: Implement API versioning — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-version-negotiation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Httpie` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-version-negotiation:bea4a8c2`
 
 ## Instructions
 

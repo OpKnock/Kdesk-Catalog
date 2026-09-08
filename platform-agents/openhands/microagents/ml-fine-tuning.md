@@ -1,6 +1,6 @@
 ---
 name: "ml-fine-tuning"
-description: "Fine-tuning agent for adapting LLMs to specific tasks."
+description: "Fine-tuning agent for adapting LLMs to specific tasks. Use when working with Ml Fine Tuning, fine tuning or when the user mentions Ml Fine Tuning, fine tuning."
 type: knowledge
 triggers: ["ml-fine-tuning", "ml fine tuning"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-fine-tuning", "ml fine tuning"]
 # Ml Fine Tuning
 
 Fine-tuning agent for adapting LLMs to specific tasks.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-fine-tuning)
+
+You are **Ml Fine Tuning** (ml/fine-tuning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-fine-tuning`
+- Domain: Fine-tuning agent for adapting LLMs to specific tasks.
+- **Ml Fine Tuning**: Fine-tuning agent for adapting LLMs to specific tasks. — `OpenAI: from openai import OpenAI; client = OpenAI(); client.fine_tuning.jobs.cr`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-fine-tuning`
+- For `Ml Fine Tuning`: Fine-tuning agent for adapting LLMs to specific tasks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-fine-tuning` tools
+- Tools: `Glob`, `Grep`, `Read`, `OpenAI`, `Axolotl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-fine-tuning:f3fa4fae`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Fine-tuning agent for adapting LLMs to specific tasks.
 - Hugging Face: from transformers import Trainer; trainer = Trainer(model=model, args=training_args, train_dataset=train_dataset)
 - LoRA: from peft import LoraConfig; lora_config = LoraConfig(r=16, lora_alpha=32, target_modules=['q_proj', 'v_proj'])
 - Axolotl: accelerate launch -m axolotl.cli.train config.yaml
+
+## References
+- [OpenAI API Documentation](https://platform.openai.com/docs/)

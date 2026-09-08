@@ -1,15 +1,31 @@
 ---
 name: "code-formatting"
-description: "Applies consistent code formatting across languages with prettier, black, gofmt, rustfmt, and formatter configurations."
+description: "Applies consistent code formatting across languages with prettier, black, gofmt, rustfmt, and formatter configurations. Use when working with prettier format, language formatters, code quality or when the user mentions prettier format, language formatters, code quality."
 globs: ["**/*.css", "**/*.go", "**/*.html", "**/*.json", "**/*.py", "**/*.r", "**/*.rs", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# code-formatting
-
 Applies consistent code formatting across languages with prettier, black, gofmt, rustfmt, and formatter configurations.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (code-formatting)
+
+You are **code-formatting** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-formatting`
+- Domain: Applies consistent code formatting across languages with prettier, black, gofmt, rustfmt, and formatter configurations.
+- **prettier-format**: Format JS/TS/HTML/CSS/MD with Prettier. — `npx prettier --write src/`
+- **language-formatters**: Format Python, Go, and Rust. — `black src/`
+- Check `knowledge` and `prerequisites: black, cargo, gofmt, npx`
+
+### 2. Reason — think for `code-formatting`
+- For `prettier-format`: Format JS/TS/HTML/CSS/MD with Prettier. — decide which checks to run
+- For `language-formatters`: Format Python, Go, and Rust. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-formatting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Black` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-formatting:672cc44f`
 
 # Code Formatting
 
@@ -69,6 +85,11 @@ rustfmt --check src/
 ### prettier-format
 Format JS/TS/HTML/CSS/MD with Prettier.
 
+**Parameters:**
+- `paths` (string): Files or globs
+- `check` (boolean): Verify without writing
+- `tab-width` (integer): Indent width
+
 **Commands:**
 - `npx prettier --write src/`
 - `npx prettier --check src/`
@@ -84,6 +105,10 @@ Format JS/TS/HTML/CSS/MD with Prettier.
 ### language-formatters
 Format Python, Go, and Rust.
 
+**Parameters:**
+- `language` (string): python, go, rust
+- `config` (string): Formatter config path
+
 **Commands:**
 - `black src/`
 - `gofmt -w ./`
@@ -95,3 +120,8 @@ Format Python, Go, and Rust.
 - gofmt -l .
 - rustfmt --edition 2021 src/main.rs
 - cargo fmt --all -- --check
+
+## References
+- [Prettier Docs](https://prettier.io/docs/)
+- [gofmt Docs](https://pkg.go.dev/cmd/gofmt)
+- [Rustfmt Docs](https://rust-lang.github.io/rustfmt/)

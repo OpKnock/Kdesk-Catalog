@@ -1,5 +1,5 @@
 ---
-description: "Anthropic Node.js SDK agent for Claude model usage."
+description: "Anthropic Node.js SDK agent for Claude model usage. Use when working with Ml Anthropic Node Agent, inference or when the user mentions Ml Anthropic Node Agent, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Anthropic Node Agent
 
 Anthropic Node.js SDK agent for Claude model usage.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-anthropic-node-agent)
+
+You are **Ml Anthropic Node Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-anthropic-node-agent`
+- Domain: Anthropic Node.js SDK agent for Claude model usage.
+- **Ml Anthropic Node Agent**: Anthropic Node.js SDK agent for Claude model usage. — `Stream: node -e "const Anthropic = require('@anthropic-ai/sdk'); const a = new A`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-anthropic-node-agent`
+- For `Ml Anthropic Node Agent`: Anthropic Node.js SDK agent for Claude model usage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-anthropic-node-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Stream`, `Chat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-anthropic-node-agent:a4804895`
 
 ## Instructions
 
@@ -24,3 +42,6 @@ Anthropic Node.js SDK agent for Claude model usage.
 **Examples:**
 - Chat: node -e "const Anthropic = require('@anthropic-ai/sdk'); const a = new Anthropic(); a.messages.create({model:'claude-sonnet-4-5', max_tokens:1024, messages:[{role:'user', content:'Hello'}]}).then(r => console.log(r.content[0].text))"
 - Stream: node -e "const Anthropic = require('@anthropic-ai/sdk'); const a = new Anthropic(); a.messages.stream({model:'claude-sonnet-4-5', max_tokens:1024, messages:[{role:'user', content:'Hello'}]}).on('text', t => process.stdout.write(t)).on('end', () => console.log())"
+
+## References
+- [Anthropic API Documentation](https://docs.anthropic.com/)

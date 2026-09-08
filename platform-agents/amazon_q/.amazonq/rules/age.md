@@ -1,26 +1,24 @@
 Encrypts and decrypts files with age: key generation, recipient-based encryption, passphrase files, piping, and SSH-key conversion.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (age)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Age** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `age-keygen -o key.txt`, `age -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `age`
+- Domain: Encrypts and decrypts files with age: key generation, recipient-based encryption, passphrase files, piping, and SSH-key conversion.
+- **key-management**: Generate age keypairs, derive public keys, and convert SSH keys. — `age-keygen -o key.txt`
+- **encrypt-decrypt**: Encrypt and decrypt files and streams with recipients or passphrases. — `age -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p -o secret.`
+- Check `knowledge` and `prerequisites: age, age-keygen, chmod, ssh-to-age`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `age`
+- For `key-management`: Generate age keypairs, derive public keys, and convert SSH keys. — decide which checks to run
+- For `encrypt-decrypt`: Encrypt and decrypt files and streams with recipients or passphrases. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `age` tools
+- Tools: `Glob`, `Grep`, `Read`, `Age-keygen`, `Chmod` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `age:8ae71784`
 
 # age
 

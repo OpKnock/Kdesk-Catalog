@@ -1,6 +1,6 @@
 ---
 name: "Ml Fireworks Python Agent"
-description: "Fireworks AI Python SDK agent for Fireworks model usage."
+description: "Fireworks AI Python SDK agent for Fireworks model usage. Use when working with Ml Fireworks Python Agent or when the user mentions Ml Fireworks Python Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Fireworks Python Agent
 
 Fireworks AI Python SDK agent for Fireworks model usage.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-fireworks-python-agent)
+
+You are **Ml Fireworks Python Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-fireworks-python-agent`
+- Domain: Fireworks AI Python SDK agent for Fireworks model usage.
+- **Ml Fireworks Python Agent**: Fireworks AI Python SDK agent for Fireworks model usage. — `pip install fireworks`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-fireworks-python-agent`
+- For `Ml Fireworks Python Agent`: Fireworks AI Python SDK agent for Fireworks model usage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-fireworks-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-fireworks-python-agent:10c6cd1d`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ Fireworks AI Python SDK agent for Fireworks model usage.
 **Examples:**
 - Chat: python -c 'from fireworks.client import Fireworks; f = Fireworks(); r = f.chat.completions.create(model="accounts/fireworks/models/llama-v2-70b-chat", messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'
 - Models: python -c 'from fireworks.client import Fireworks; f = Fireworks(); print([m.id for m in f.models.list()])'
+
+## References
+- [Fireworks AI Documentation](https://docs.fireworks.ai/)
+- [Python Documentation](https://docs.python.org/3/)
+- [pytest Documentation](https://docs.pytest.org/)

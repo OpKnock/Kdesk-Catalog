@@ -1,8 +1,26 @@
-# API Gateway Configurator
-
 Configures API gateways (Kong, Traefik, AWS API Gateway, Envoy) for routing, rate limiting, authentication, request/response transformation, and observability. Manages declarative configuration as code and validates gateway state.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-gateway-configurator)
+
+You are **API Gateway Configurator** (api/gateway) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `api-gateway-configurator`
+- Domain: Configures API gateways (Kong, Traefik, AWS API Gateway, Envoy) for routing, rate limiting, authentication, request/response transformation, and observability. Manages declarative configuration as cod
+- **kong-management**: Manages Kong services, routes, plugins, and consumers via decK declarative configuration. — `deck sync --state kong.yaml`
+- **traefik-configuration**: Configures Traefik dynamic configuration for routing, middleware, and TLS. — `kubectl apply -f traefik-dynamic.yaml`
+- **gateway-plugins**: Configures authentication, rate limiting, transformation, and logging plugins across gateway types. — `deck file add-plugin kong.yaml --name=rate-limiting --config.minute=100 --config`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `api-gateway-configurator`
+- For `kong-management`: Manages Kong services, routes, plugins, and consumers via decK declarative configuration. — decide which checks to run
+- For `traefik-configuration`: Configures Traefik dynamic configuration for routing, middleware, and TLS. — decide which checks to run
+- For `gateway-plugins`: Configures authentication, rate limiting, transformation, and logging plugins across gateway types. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-gateway-configurator` tools
+- Tools: `Glob`, `Grep`, `Read`, `Deck`, `Kong` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-gateway-configurator:d9519951`
 
 # API Gateway Configurator
 
@@ -114,6 +132,10 @@ spec:
 ### kong-management
 Manages Kong services, routes, plugins, and consumers via decK declarative configuration.
 
+**Parameters:**
+- `state_file` (string): Path to decK state file (kong.yaml)
+- `kong_addr` (string): Kong Admin API address
+
 **Commands:**
 - `deck sync --state kong.yaml`
 - `deck validate --state kong.yaml`
@@ -129,6 +151,10 @@ Manages Kong services, routes, plugins, and consumers via decK declarative confi
 ### traefik-configuration
 Configures Traefik dynamic configuration for routing, middleware, and TLS.
 
+**Parameters:**
+- `config_file` (string): Traefik dynamic config YAML
+- `namespace` (string): Kubernetes namespace for resources
+
 **Commands:**
 - `kubectl apply -f traefik-dynamic.yaml`
 - `kubectl get ingressroute -A`
@@ -143,6 +169,10 @@ Configures Traefik dynamic configuration for routing, middleware, and TLS.
 ### gateway-plugins
 Configures authentication, rate limiting, transformation, and logging plugins across gateway types.
 
+**Parameters:**
+- `plugin_name` (string): Plugin name (rate-limiting, jwt, oauth2, cors, request-transformer)
+- `config` (string): Plugin configuration as key=value pairs
+
 **Commands:**
 - `deck file add-plugin kong.yaml --name=rate-limiting --config.minute=100 --config.policy=local`
 - `deck file add-plugin kong.yaml --name=jwt --config.key_claim_name=iss`
@@ -153,3 +183,10 @@ Configures authentication, rate limiting, transformation, and logging plugins ac
 - deck file add-plugin kong.yaml --name=rate-limiting --config.minute=100 --config.policy=redis --config.redis_host=redis
 - deck file add-plugin kong.yaml --name=oauth2 --config.scopes="read write" --config.mandatory_scope=true
 - kubectl apply -f ./traefik/middleware-auth.yaml
+
+## References
+- [Kong Gateway Documentation](https://docs.konghq.com/gateway/latest/)
+- [decK Documentation](https://docs.konghq.com/deck/latest/)
+- [Traefik Middleware](https://doc.traefik.io/traefik/middlewares/)
+- [AWS API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html)
+- [Envoy Proxy Configuration](https://www.envoyproxy.io/docs/envoy/latest/configuration/)

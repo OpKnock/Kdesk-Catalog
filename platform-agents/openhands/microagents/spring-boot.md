@@ -1,15 +1,29 @@
 ---
 name: "spring-boot"
-description: "Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites."
+description: "Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites. Use when working with spring boot lifecycle, api or when the user mentions spring boot lifecycle, api."
 type: knowledge
 triggers: ["spring-boot", "spring-boot-lifecycle"]
 ---
 
-# Spring Boot
-
 Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (spring-boot)
+
+You are **Spring Boot** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `spring-boot`
+- Domain: Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs 
+- **spring-boot-lifecycle**: Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, r — `curl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencie`
+- Check `knowledge` and `prerequisites: ./mvnw`
+
+### 2. Reason — think for `spring-boot`
+- For `spring-boot-lifecycle`: Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spring-boot` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `./mvnw` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spring-boot:610a31e2`
 
 # Spring Boot
 
@@ -81,6 +95,11 @@ curl -s localhost:8080/actuator/health | jq .status
 ### spring-boot-lifecycle
 Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered test suites.
 
+**Parameters:**
+- `java_version` (integer): Java version for the project (e.g., 17, 21)
+- `dependencies` (string): Comma-separated Spring Boot starters (e.g., web,actuator,data-jpa)
+- `test_class` (string): Specific test class to run
+
 **Commands:**
 - `curl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator -d javaVersion=21 -o demo.zip`
 - `./mvnw spring-boot:run`
@@ -96,3 +115,6 @@ Manages the Spring Boot application lifecycle with Maven. Generates projects fro
 - curl -s localhost:8080/actuator/health
 - ./mvnw test
 - ./mvnw package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar
+
+## References
+- [Spring Boot reference](https://docs.spring.io/spring-boot/index.html)

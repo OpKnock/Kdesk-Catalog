@@ -2,14 +2,28 @@ title: cert-manager-security
 description: Issues, renews, and troubleshoots TLS certificates in Kubernetes with cert-manager, ACME
   issuers, and the cmctl CLI.
 version: 2.0.0
-instructions: "# cert-manager-security\n\nIssues, renews, and troubleshoots TLS certificates in Kubernetes\
-  \ with cert-manager, ACME issuers, and the cmctl CLI.\n\n## Instructions\n\n# cert-manager\n\nAutomatic\
-  \ TLS certificate issuance and renewal in Kubernetes using cert-manager.\n\n## What This Skill Does\n\
-  \n- Installs cert-manager and verifies the API is available\n- Creates ClusterIssuers for ACME (Let's\
-  \ Encrypt), CA, and self-signed backends\n- Issues Certificate resources and tracks their lifecycle\n\
-  - Forces renewals and debugs ACME order/challenge failures\n\n## When to Use\n\n- A cluster needs automatic\
-  \ HTTPS for ingresses\n- Certificates fail to issue or renew\n- An issuer needs switching (staging to\
-  \ production Let's Encrypt)\n\n## Real Commands\n\n```bash\n# Install\nkubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml\n\
+instructions: "Issues, renews, and troubleshoots TLS certificates in Kubernetes with cert-manager, ACME\
+  \ issuers, and the cmctl CLI.\n\n## Agentic Workflow: Read -> Reason -> Act (cert-manager-security)\n\
+  \nYou are **cert-manager-security** (security/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — security context for `cert-manager-security`\n- Domain: Issues,\
+  \ renews, and troubleshoots TLS certificates in Kubernetes with cert-manager, ACME issuers, and the\
+  \ cmctl CLI.\n- **cmctl-management**: Inspect and manage certificates, issuers, and renewals with cmctl.\
+  \ — `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/`\n- **acme-issuer-setup**:\
+  \ Configure ClusterIssuers with Let's Encrypt and manage issuance resources. — `kubectl get clusterissuers`\n\
+  - Check `knowledge` and `prerequisites: cmctl, kubectl`\n\n### 2. Reason — think for `cert-manager-security`\n\
+  - For `cmctl-management`: Inspect and manage certificates, issuers, and renewals with cmctl. — decide\
+  \ which checks to run\n- For `acme-issuer-setup`: Configure ClusterIssuers with Let's Encrypt and manage\
+  \ issuance resources. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `cert-manager-security` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash`, `Cmctl` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `cert-manager-security:19ac58ac`\n\
+  \n# cert-manager\n\nAutomatic TLS certificate issuance and renewal in Kubernetes using cert-manager.\n\
+  \n## What This Skill Does\n\n- Installs cert-manager and verifies the API is available\n- Creates ClusterIssuers\
+  \ for ACME (Let's Encrypt), CA, and self-signed backends\n- Issues Certificate resources and tracks\
+  \ their lifecycle\n- Forces renewals and debugs ACME order/challenge failures\n\n## When to Use\n\n\
+  - A cluster needs automatic HTTPS for ingresses\n- Certificates fail to issue or renew\n- An issuer\
+  \ needs switching (staging to production Let's Encrypt)\n\n## Real Commands\n\n```bash\n# Install\n\
+  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml\n\
   cmctl check api\n\n# Issuer and certificate status\nkubectl get clusterissuers\nkubectl get certificates\
   \ -A\nkubectl describe certificate example-tls\ncmctl status certificate example-tls\n\n# Debug ACME\n\
   kubectl get orders.acme.cert-manager.io\nkubectl get challenges.acme.cert-manager.io\nkubectl get certificaterequests\
@@ -21,13 +35,16 @@ instructions: "# cert-manager-security\n\nIssues, renews, and troubleshoots TLS 
   \ the HTTP-01 solver via an ingress class annotation or DNS-01 for wildcards\n- Monitor certificate\
   \ expiry with cert-manager's built-in metrics\n- Pin the cert-manager release and upgrade via helm to\
   \ match CRD versions\n\n## Capabilities\n\n### cmctl-management\nInspect and manage certificates, issuers,\
-  \ and renewals with cmctl.\n\n**Commands:**\n- `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml`\n\
+  \ and renewals with cmctl.\n\n**Parameters:**\n- `name` (string): Certificate resource name\n- `namespace`\
+  \ (string): Namespace of the certificate\n\n**Commands:**\n- `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml`\n\
   - `kubectl get certificates -A`\n- `kubectl describe certificate example-tls`\n- `cmctl check api`\n\
   - `cmctl renew example-tls`\n- `cmctl status certificate example-tls`\n\n**Examples:**\n- kubectl get\
   \ certificates -A\n- cmctl status certificate example-tls\n- cmctl renew --all\n\n### acme-issuer-setup\n\
-  Configure ClusterIssuers with Let's Encrypt and manage issuance resources.\n\n**Commands:**\n- `kubectl\
-  \ get clusterissuers`\n- `kubectl apply -f cluster-issuer-letsencrypt.yaml`\n- `kubectl get orders.acme.cert-manager.io`\n\
-  - `kubectl get challenges.acme.cert-manager.io`\n- `kubectl get certificaterequests`\n\n**Examples:**\n\
-  - kubectl apply -f cluster-issuer-letsencrypt.yaml\n- kubectl get orders.acme.cert-manager.io -n istio-system\n\
-  - kubectl get certificaterequests -A"
+  Configure ClusterIssuers with Let's Encrypt and manage issuance resources.\n\n**Parameters:**\n- `issuerFile`\
+  \ (string): ClusterIssuer manifest path\n- `server` (string): ACME directory URL, e.g. https://acme-v02.api.letsencrypt.org/directory\n\
+  \n**Commands:**\n- `kubectl get clusterissuers`\n- `kubectl apply -f cluster-issuer-letsencrypt.yaml`\n\
+  - `kubectl get orders.acme.cert-manager.io`\n- `kubectl get challenges.acme.cert-manager.io`\n- `kubectl\
+  \ get certificaterequests`\n\n**Examples:**\n- kubectl apply -f cluster-issuer-letsencrypt.yaml\n- kubectl\
+  \ get orders.acme.cert-manager.io -n istio-system\n- kubectl get certificaterequests -A\n\n## References\n\
+  - [cert-manager Documentation](https://cert-manager.io/docs/)\n- [cmctl Reference](https://cert-manager.io/docs/usage/cmctl/)"
 prompt: Act as cert-manager-security and handle the task per the instructions.

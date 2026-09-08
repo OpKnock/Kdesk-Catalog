@@ -1,15 +1,31 @@
 ---
 name: "Lightstep Observability"
-description: "Send and query traces and metrics with Lightstep: OpenTelemetry collector configuration, OTLP ingestion, and Lightstep API queries."
+description: "Send and query traces and metrics with Lightstep: OpenTelemetry collector configuration, OTLP ingestion, and Lightstep API queries. Use when working with otel ingest, lightstep api or when the user mentions otel ingest, lightstep api."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Lightstep Observability
-
 Send and query traces and metrics with Lightstep: OpenTelemetry collector configuration, OTLP ingestion, and Lightstep API queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (lightstep-observability)
+
+You are **Lightstep Observability** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `lightstep-observability`
+- Domain: Send and query traces and metrics with Lightstep: OpenTelemetry collector configuration, OTLP ingestion, and Lightstep API queries.
+- **otel-ingest**: Run the OpenTelemetry Collector and emit OTLP telemetry. — `otelcol-contrib --config otelcol.yaml`
+- **lightstep-api**: Query Lightstep via the public API and the built-in CLI/curl. — `curl -s -H "Authorization: Bearer $LS_TOKEN" https://api.lightstep.com/public/v0`
+- Check `knowledge` and `prerequisites: docker, otel-cli, otelcol-contrib`
+
+### 2. Reason — think for `lightstep-observability`
+- For `otel-ingest`: Run the OpenTelemetry Collector and emit OTLP telemetry. — decide which checks to run
+- For `lightstep-api`: Query Lightstep via the public API and the built-in CLI/curl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `lightstep-observability` tools
+- Tools: `Glob`, `Grep`, `Read`, `Otelcol-contrib`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `lightstep-observability:0bb83971`
 
 # Lightstep Observability
 
@@ -93,6 +109,10 @@ curl -s http://localhost:4318/metrics   # collector is alive
 ### otel-ingest
 Run the OpenTelemetry Collector and emit OTLP telemetry.
 
+**Parameters:**
+- `config` (string): OpenTelemetry Collector config file.
+- `access_token` (string): Lightstep access token (LS_ACCESS_TOKEN).
+
 **Commands:**
 - `otelcol-contrib --config otelcol.yaml`
 - `docker run -p 4317:4317 -p 4318:4318 -e OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 -e LS_ACCESS_TOKEN=$LS_TOKEN otel/opentelemetry-collector-contrib:latest`
@@ -107,6 +127,10 @@ Run the OpenTelemetry Collector and emit OTLP telemetry.
 ### lightstep-api
 Query Lightstep via the public API and the built-in CLI/curl.
 
+**Parameters:**
+- `project` (string): Lightstep project name.
+- `operation` (string): Trace operation filter.
+
 **Commands:**
 - `curl -s -H "Authorization: Bearer $LS_TOKEN" https://api.lightstep.com/public/v0.2/projects/{project}/snapshots`
 - `curl -s -H "Authorization: Bearer $LS_TOKEN" "https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.checkout"`
@@ -117,3 +141,7 @@ Query Lightstep via the public API and the built-in CLI/curl.
 - curl -s -H "Authorization: Bearer $LS_TOKEN" https://api.lightstep.com/public/v0.2/projects/{project}/snapshots
 - curl -s http://localhost:4318/metrics
 - curl -s -H "Authorization: Bearer $LS_TOKEN" "https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.checkout"
+
+## References
+- [Lightstep Docs](https://docs.lightstep.com/)
+- [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)

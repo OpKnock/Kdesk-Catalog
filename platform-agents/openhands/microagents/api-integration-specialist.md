@@ -1,15 +1,31 @@
 ---
 name: "api-integration-specialist"
-description: "Deep expertise in API integrations: webhook signature verification, rate-limit handling, provider contracts, and integration testing."
+description: "Deep expertise in API integrations: webhook signature verification, rate-limit handling, provider contracts, and integration testing. Use when working with webhook security, provider testing or when the user mentions webhook security, provider testing."
 type: knowledge
 triggers: ["api-integration-specialist", "webhook-security", "provider-testing"]
 ---
 
-# api-integration-specialist
-
 Deep expertise in API integrations: webhook signature verification, rate-limit handling, provider contracts, and integration testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-integration-specialist)
+
+You are **api-integration-specialist** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-integration-specialist`
+- Domain: Deep expertise in API integrations: webhook signature verification, rate-limit handling, provider contracts, and integration testing.
+- **webhook-security**: Verify webhook signatures and secure secret rotation — `node -e "const c=require('crypto');const sig=c.createHmac('sha256','whsec_test')`
+- **provider-testing**: Test integrations against provider sandboxes and simulated failures — `stripe trigger payment_intent.failed`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
+
+### 2. Reason — think for `api-integration-specialist`
+- For `webhook-security`: Verify webhook signatures and secure secret rotation — decide which checks to run
+- For `provider-testing`: Test integrations against provider sandboxes and simulated failures — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-integration-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Stripe` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-integration-specialist:3b311673`
 
 # API Integration Specialist
 
@@ -55,6 +71,10 @@ Simulate duplicates, reorders, and tampered payloads in a test suite.
 ### webhook-security
 Verify webhook signatures and secure secret rotation
 
+**Parameters:**
+- `secret` (string): Webhook signing secret
+- `header` (string): Signature header name
+
 **Commands:**
 - `node -e "const c=require('crypto');const sig=c.createHmac('sha256','whsec_test').update('payload').digest('hex');console.log('sig:',sig)"`
 - `node -e "const c=require('crypto');const secret='whsec_test';const sig=c.createHmac('sha256',secret).update('{\"id\":1}').digest('hex');console.log(sig)"`
@@ -70,6 +90,10 @@ Verify webhook signatures and secure secret rotation
 ### provider-testing
 Test integrations against provider sandboxes and simulated failures
 
+**Parameters:**
+- `event` (string): Failure event to simulate
+- `failure` (string): Failure type
+
 **Commands:**
 - `stripe trigger payment_intent.failed`
 - `stripe trigger invoice.finalized`
@@ -81,3 +105,7 @@ Test integrations against provider sandboxes and simulated failures
 - stripe trigger payment_intent.failed
 - stripe trigger invoice.finalized
 - node -e "const p=require('p-retry');p(()=>{if(Math.random()<0.5)throw new Error('sim');return 'ok'},{retries:3}).then(console.log).catch(console.error)"
+
+## References
+- [Stripe Webhook Signatures](https://docs.stripe.com/webhooks/signatures)
+- [Webhooks Best Practices](https://webhooks.fyi/)

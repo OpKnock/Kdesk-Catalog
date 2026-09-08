@@ -4,27 +4,27 @@ applyTo: "**/*.go **/*.json **/*.py **/*.r **/*.sh"
 
 Works with BSON (binary JSON) data: conversion with bsondump, mongoexport/mongorestore round-trips, and Python bson handling.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (bson)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Bson** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `bsondump file.bson`, `mongoexport --collection=users --out=users.bson --uri mongod`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `bson`
+- Domain: Works with BSON (binary JSON) data: conversion with bsondump, mongoexport/mongorestore round-trips, and Python bson handling.
+- **bsondump**: Convert BSON files to JSON for inspection. — `bsondump file.bson`
+- **mongo-tools**: Export/import BSON with mongo tools. — `mongoexport --collection=users --out=users.bson --uri mongodb://localhost:27017/`
+- **python-bson**: Encode/decode BSON with pymongo's bson module. — `pip install pymongo`
+- Check `knowledge` and `prerequisites: bsondump, mongodump, mongoexport, mongorestore`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `bson`
+- For `bsondump`: Convert BSON files to JSON for inspection. — decide which checks to run
+- For `mongo-tools`: Export/import BSON with mongo tools. — decide which checks to run
+- For `python-bson`: Encode/decode BSON with pymongo's bson module. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `bson` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bsondump`, `Mongoexport` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bson:c73b62d4`
 
 # BSON
 

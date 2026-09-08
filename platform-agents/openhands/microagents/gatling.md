@@ -1,15 +1,29 @@
 ---
 name: "gatling"
-description: "Load and performance testing with Gatling: write Scala simulations, run scenarios with the CLI, and parse HTML/JSON reports."
+description: "Load and performance testing with Gatling: write Scala simulations, run scenarios with the CLI, and parse HTML/JSON reports. Use when working with gatling simulations, api or when the user mentions gatling simulations, api."
 type: knowledge
 triggers: ["gatling", "gatling-simulations"]
 ---
 
-# Gatling
-
 Load and performance testing with Gatling: write Scala simulations, run scenarios with the CLI, and parse HTML/JSON reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gatling)
+
+You are **Gatling** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gatling`
+- Domain: Load and performance testing with Gatling: write Scala simulations, run scenarios with the CLI, and parse HTML/JSON reports.
+- **gatling-simulations**: Author and run Gatling simulations, and inspect results. — `gatling.sh --simulation orders.Simulation --results-folder ./results`
+- Check `knowledge` and `prerequisites: gatling.sh, tail`
+
+### 2. Reason — think for `gatling`
+- For `gatling-simulations`: Author and run Gatling simulations, and inspect results. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gatling` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gatling.sh`, `Tail` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gatling:43d87403`
 
 # Gatling
 
@@ -77,6 +91,11 @@ jq '.stats' results/orderapi-20240101/js/global_stats.json
 ### gatling-simulations
 Author and run Gatling simulations, and inspect results.
 
+**Parameters:**
+- `simulation-class` (string): Fully qualified simulation class
+- `users` (integer): Number of virtual users
+- `duration` (string): Ramp/steady duration in the scenario
+
 **Commands:**
 - `gatling.sh --simulation orders.Simulation --results-folder ./results`
 - `gatling.sh --list`
@@ -88,3 +107,7 @@ Author and run Gatling simulations, and inspect results.
 - gatling.sh --simulation orders.Simulation --results-folder ./results
 - gatling.sh --list
 - gatling.sh --results-folder results --reports-only results/orderapi-20240101
+
+## References
+- [Gatling documentation](https://docs.gatling.io/)
+- [Gatling CLI reference](https://docs.gatling.io/reference/script/cli/)

@@ -1,6 +1,6 @@
 ---
 name: "Cloud Aws Agent"
-description: "AWS agent for cloud services management."
+description: "AWS agent for cloud services management. Use when working with Cloud Aws Agent or when the user mentions Cloud Aws Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Cloud Aws Agent
 
 AWS agent for cloud services management.
+
+## Agentic Workflow: Read -> Reason -> Act (cloud-aws-agent)
+
+You are **Cloud Aws Agent** (cloud/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `cloud-aws-agent`
+- Domain: AWS agent for cloud services management.
+- **Cloud Aws Agent**: AWS agent for cloud services management. — `aws s3 ls`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cloud-aws-agent`
+- For `Cloud Aws Agent`: AWS agent for cloud services management. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloud-aws-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloud-aws-agent:698a8469`
 
 ## Instructions
 
@@ -31,3 +49,7 @@ AWS agent for cloud services management.
 - aws lambda list-functions
 - aws rds describe-db-instances
 - aws cloudformation list-stacks
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/)

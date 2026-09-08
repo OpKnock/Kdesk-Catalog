@@ -1,6 +1,6 @@
 ---
 name: "fine-tuning-sdk"
-description: "Fine-tuning SDK deployment agent for ML Fine-tuning SDK deployment."
+description: "Fine-tuning SDK deployment agent for ML Fine-tuning SDK deployment. Use when working with Ml Fine Tuning Deploy Sdk Agent V2 or when the user mentions Ml Fine Tuning Deploy Sdk Agent V2."
 type: knowledge
 triggers: ["fine-tuning-sdk", "ml fine tuning deploy sdk agent v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["fine-tuning-sdk", "ml fine tuning deploy sdk agent v2"]
 # Fine Tuning Sdk
 
 Fine-tuning SDK deployment agent for ML Fine-tuning SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (fine-tuning-sdk)
+
+You are **Fine Tuning Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `fine-tuning-sdk`
+- Domain: Fine-tuning SDK deployment agent for ML Fine-tuning SDK deployment.
+- **Ml Fine Tuning Deploy Sdk Agent V2**: Fine-tuning SDK deployment agent for ML Fine-tuning SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `fine-tuning-sdk`
+- For `Ml Fine Tuning Deploy Sdk Agent V2`: Fine-tuning SDK deployment agent for ML Fine-tuning SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fine-tuning-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fine-tuning-sdk:acf46620`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Fine-tuning SDK deployment agent for ML Fine-tuning SDK deployment.
 **Examples:**
 - Server: python -m fine_tuning.server --port 8080
 - Docker: docker run -p 8080:8080 fine_tuning-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

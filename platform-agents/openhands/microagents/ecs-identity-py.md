@@ -1,6 +1,6 @@
 ---
 name: "ecs-identity-py"
-description: "ECS deployment agent. Manages ECS ML deployment."
+description: "ECS deployment agent. Manages ECS ML deployment. Use when working with Ml Ecs Deploy Agent or when the user mentions Ml Ecs Deploy Agent."
 type: knowledge
 triggers: ["ecs-identity-py", "ml ecs deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ecs-identity-py", "ml ecs deploy agent"]
 # Ecs Identity Py
 
 ECS deployment agent. Manages ECS ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ecs-identity-py)
+
+You are **Ecs Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ecs-identity-py`
+- Domain: ECS deployment agent. Manages ECS ML deployment.
+- **Ml Ecs Deploy Agent**: ECS deployment agent. Manages ECS ML deployment. — `docker build -t ecs:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ecs-identity-py`
+- For `Ml Ecs Deploy Agent`: ECS deployment agent. Manages ECS ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ecs-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ecs` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ecs-identity-py:7b916136`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ ECS deployment agent. Manages ECS ML deployment.
 - aws ecs run-task --cluster my-cluster --task-definition my-task
 - aws ecs describe-services --cluster my-cluster --services my-service
 - aws ecs list-tasks --cluster my-cluster
+
+## References
+- [Amazon ECS Documentation](https://docs.aws.amazon.com/ecs/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

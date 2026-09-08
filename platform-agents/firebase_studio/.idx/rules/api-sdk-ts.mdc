@@ -1,14 +1,30 @@
 ---
-description: "Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc API docs, and npm publishing flow."
+description: "Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc API docs, and npm publishing flow. Use when working with ts build, ts docs or when the user mentions ts build, ts docs."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 alwaysApply: false
 ---
 
-# Api Sdk Ts
-
 Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc API docs, and npm publishing flow.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-sdk-ts)
+
+You are **Api Sdk Ts** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-sdk-ts`
+- Domain: Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc API docs, and npm publishing flow.
+- **ts-build**: Bundle a TypeScript SDK with tsup — `npm install -D tsup typescript typedoc`
+- **ts-docs**: Generate API documentation with typedoc — `npx typedoc src/index.ts --out docs`
+- Check `knowledge` and `prerequisites: openapi-generator, node.js, python`
+
+### 2. Reason — think for `api-sdk-ts`
+- For `ts-build`: Bundle a TypeScript SDK with tsup — decide which checks to run
+- For `ts-docs`: Generate API documentation with typedoc — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-sdk-ts` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sdk-ts:835c237a`
 
 # API SDK v2 - TypeScript
 
@@ -61,6 +77,11 @@ export default defineConfig({
 ### ts-build
 Bundle a TypeScript SDK with tsup
 
+**Parameters:**
+- `entry` (string): Entry point file
+- `formats` (string): cjs, esm, iife
+- `outDir` (string): Output directory
+
 **Commands:**
 - `npm install -D tsup typescript typedoc`
 - `npx tsup src/index.ts --format cjs,esm --dts`
@@ -85,3 +106,7 @@ Generate API documentation with typedoc
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [tsup Docs](https://tsup.egoist.dev/)
+- [TypeDoc Docs](https://typedoc.org/)

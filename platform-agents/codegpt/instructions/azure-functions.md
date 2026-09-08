@@ -1,8 +1,26 @@
-# Azure Functions
-
 Builds, tests, and ships serverless functions on Azure using Core Tools: initializes projects, scaffolds HTTP and timer triggers, runs the local emulator, publishes to function apps, and validates endpoints with curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (azure-functions)
+
+You are **Azure Functions** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `azure-functions`
+- Domain: Builds, tests, and ships serverless functions on Azure using Core Tools: initializes projects, scaffolds HTTP and timer triggers, runs the local emulator, publishes to function apps, and validates end
+- **local-dev**: Create and run functions locally with Core Tools. — `func new --template "HttpTrigger" --name MyFunction`
+- **publish**: Deploy functions to Azure. — `func azure functionapp publish MyFunctionApp`
+- **test-function**: Invoke functions locally and in Azure. — `curl -X POST http://localhost:7071/api/MyFunction -d '{"name":"test"}'`
+- Check `knowledge` and `prerequisites: func`
+
+### 2. Reason — think for `azure-functions`
+- For `local-dev`: Create and run functions locally with Core Tools. — decide which checks to run
+- For `publish`: Deploy functions to Azure. — decide which checks to run
+- For `test-function`: Invoke functions locally and in Azure. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `azure-functions` tools
+- Tools: `Glob`, `Grep`, `Read`, `Func`, `Az` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-functions:08cf1af4`
 
 # Azure Functions
 
@@ -55,6 +73,11 @@ curl -s "https://api.your-app.test/api/MyFunction?name=azure"
 ### local-dev
 Create and run functions locally with Core Tools.
 
+**Parameters:**
+- `template` (string): Trigger template (HttpTrigger, TimerTrigger, etc.)
+- `runtime` (string): node, python, dotnet, java, powershell
+- `port` (number): Local runtime port
+
 **Commands:**
 - `func new --template "HttpTrigger" --name MyFunction`
 - `func new --template "TimerTrigger" --name DailyJob --runtime node`
@@ -69,6 +92,10 @@ Create and run functions locally with Core Tools.
 
 ### publish
 Deploy functions to Azure.
+
+**Parameters:**
+- `app_name` (string): Function app name in Azure
+- `publish_settings` (boolean): Publish local app settings
 
 **Commands:**
 - `func azure functionapp publish MyFunctionApp`
@@ -85,6 +112,10 @@ Deploy functions to Azure.
 ### test-function
 Invoke functions locally and in Azure.
 
+**Parameters:**
+- `url` (string): Function URL
+- `query` (string): Query parameters
+
 **Commands:**
 - `curl -X POST http://localhost:7071/api/MyFunction -d '{"name":"test"}'`
 - `curl -s http://localhost:7071/api/MyFunction?name=world`
@@ -96,3 +127,8 @@ Invoke functions locally and in Azure.
 - curl -s "http://localhost:7071/api/MyFunction?name=world"
 - curl -s "https://api.your-app.test/api/MyFunction?name=azure"
 - func start --functions MyFunction --verbose
+
+## References
+- [Azure Functions Docs](https://learn.microsoft.com/en-us/azure/azure-functions/)
+- [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+- [HTTP Trigger Reference](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-http-webhook-trigger)

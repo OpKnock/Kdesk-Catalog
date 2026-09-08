@@ -1,14 +1,30 @@
 ---
-description: "Builds API test suites with Postman and Newman: collections, environments, assertions, data-driven iterations, and CI execution with reporters."
+description: "Builds API test suites with Postman and Newman: collections, environments, assertions, data-driven iterations, and CI execution with reporters. Use when working with newman execution, postman assertions or when the user mentions newman execution, postman assertions."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# api-test-specialist
-
 Builds API test suites with Postman and Newman: collections, environments, assertions, data-driven iterations, and CI execution with reporters.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-test-specialist)
+
+You are **api-test-specialist** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-test-specialist`
+- Domain: Builds API test suites with Postman and Newman: collections, environments, assertions, data-driven iterations, and CI execution with reporters.
+- **newman-execution**: Run Postman collections in CI — `npm install -g newman`
+- **postman-assertions**: Write response assertions in collections — `node -e "const c=require('./collection.json'); const t=c.item[0].event[0].script`
+- Check `knowledge` and `prerequisites: jest, pytest, postman`
+
+### 2. Reason — think for `api-test-specialist`
+- For `newman-execution`: Run Postman collections in CI — decide which checks to run
+- For `postman-assertions`: Write response assertions in collections — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-test-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Newman` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-test-specialist:58cde01e`
 
 # API Test Specialist
 
@@ -60,6 +76,11 @@ pm.test("has data", () => {
 ### newman-execution
 Run Postman collections in CI
 
+**Parameters:**
+- `collection` (string): Collection file path
+- `environment` (string): Environment JSON
+- `reporters` (string): cli, json, html, junit
+
 **Commands:**
 - `npm install -g newman`
 - `newman run collection.json -e production.postman_environment.json -r cli,json --reporter-json-export results.json`
@@ -83,3 +104,7 @@ Write response assertions in collections
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Newman CLI](https://learning.postman.com/docs/collections/running-collections/using-newman-cli/)
+- [Postman Tests](https://learning.postman.com/docs/writing-scripts/test-scripts/)

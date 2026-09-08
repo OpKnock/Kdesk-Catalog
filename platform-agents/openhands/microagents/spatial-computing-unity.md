@@ -1,6 +1,6 @@
 ---
 name: "spatial-computing-unity"
-description: "Spatial-Computing unity expertise and best practices."
+description: "Spatial-Computing unity expertise and best practices. Use when working with unity expertise, spatial computing, skill or when the user mentions unity expertise, spatial computing, skill."
 type: knowledge
 triggers: ["spatial-computing-unity", "unity-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["spatial-computing-unity", "unity-expertise"]
 # Spatial-Computing Unity
 
 Spatial-Computing unity expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (spatial-computing-unity)
+
+You are **Spatial-Computing Unity** (spatial-computing/unity) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — spatial-computing context for `spatial-computing-unity`
+- Domain: Spatial-Computing unity expertise and best practices.
+- **unity-expertise**: spatial-computing unity expertise — `unity-cli`
+- Check `knowledge` and `prerequisites: unity`
+
+### 2. Reason — think for `spatial-computing-unity`
+- For `unity-expertise`: spatial-computing unity expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spatial-computing-unity` tools
+- Tools: `Glob`, `Grep`, `Read`, `Unity-cli`, `Unity-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spatial-computing-unity:276c1b5b`
 
 ## Instructions
 

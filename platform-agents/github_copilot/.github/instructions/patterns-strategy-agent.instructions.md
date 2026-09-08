@@ -6,27 +6,23 @@ applyTo: "**/*.go **/*.r"
 
 Strategy pattern agent for implementation.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (patterns-strategy-agent)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Patterns Strategy Agent** (patterns/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `interface Strategy { execute(a: number, b: number): number; `
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — patterns context for `patterns-strategy-agent`
+- Domain: Strategy pattern agent for implementation.
+- **Patterns Strategy Agent**: Strategy pattern agent for implementation. — `interface Strategy { execute(a: number, b: number): number; } class AddStrategy `
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `patterns-strategy-agent`
+- For `Patterns Strategy Agent`: Strategy pattern agent for implementation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `patterns-strategy-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Interface` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `patterns-strategy-agent:024a624f`
 
 ## Instructions
 

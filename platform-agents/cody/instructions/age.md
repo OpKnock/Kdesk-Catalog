@@ -1,8 +1,24 @@
-# Age
-
 Encrypts and decrypts files with age: key generation, recipient-based encryption, passphrase files, piping, and SSH-key conversion.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (age)
+
+You are **Age** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `age`
+- Domain: Encrypts and decrypts files with age: key generation, recipient-based encryption, passphrase files, piping, and SSH-key conversion.
+- **key-management**: Generate age keypairs, derive public keys, and convert SSH keys. — `age-keygen -o key.txt`
+- **encrypt-decrypt**: Encrypt and decrypt files and streams with recipients or passphrases. — `age -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p -o secret.`
+- Check `knowledge` and `prerequisites: age, age-keygen, chmod, ssh-to-age`
+
+### 2. Reason — think for `age`
+- For `key-management`: Generate age keypairs, derive public keys, and convert SSH keys. — decide which checks to run
+- For `encrypt-decrypt`: Encrypt and decrypt files and streams with recipients or passphrases. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `age` tools
+- Tools: `Glob`, `Grep`, `Read`, `Age-keygen`, `Chmod` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `age:8ae71784`
 
 # age
 
@@ -59,6 +75,10 @@ age-keygen -y -i key.txt   # derive the recipient
 ### key-management
 Generate age keypairs, derive public keys, and convert SSH keys.
 
+**Parameters:**
+- `output` (string): Path to write the generated key file
+- `identity` (string): Private key file to derive the public key from
+
 **Commands:**
 - `age-keygen -o key.txt`
 - `age-keygen -y -i key.txt`
@@ -74,6 +94,11 @@ Generate age keypairs, derive public keys, and convert SSH keys.
 ### encrypt-decrypt
 Encrypt and decrypt files and streams with recipients or passphrases.
 
+**Parameters:**
+- `recipient` (string): age1... recipient public key or --recipients-file
+- `identity` (string): Key file to decrypt with (-d -i)
+- `passphrase` (boolean): -p uses an interactive passphrase instead of keys
+
 **Commands:**
 - `age -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p -o secret.age secret.txt`
 - `age -d -i key.txt -o secret.txt secret.age`
@@ -85,3 +110,8 @@ Encrypt and decrypt files and streams with recipients or passphrases.
 - age -r age1... -o secret.age secret.txt
 - age -d -i key.txt secret.age
 - age -p -o kubeconfig.age kubeconfig
+
+## References
+- [age Specification](https://age-encryption.org/v1)
+- [age GitHub](https://github.com/FiloSottile/age)
+- [ssh-to-age](https://github.com/FiloSottile/age/tree/main/ssh-to-age)

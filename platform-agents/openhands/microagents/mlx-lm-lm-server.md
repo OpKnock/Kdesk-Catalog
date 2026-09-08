@@ -1,6 +1,6 @@
 ---
 name: "mlx-lm-lm-server"
-description: "MLX LM server agent. Manages MLX LM ML server."
+description: "MLX LM server agent. Manages MLX LM ML server. Use when working with Ml Mlx Lm Server Agent, inference or when the user mentions Ml Mlx Lm Server Agent, inference."
 type: knowledge
 triggers: ["mlx-lm-lm-server", "ml mlx lm server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["mlx-lm-lm-server", "ml mlx lm server agent"]
 # Mlx Lm Lm Server
 
 MLX LM server agent. Manages MLX LM ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (mlx-lm-lm-server)
+
+You are **Mlx Lm Lm Server** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `mlx-lm-lm-server`
+- Domain: MLX LM server agent. Manages MLX LM ML server.
+- **Ml Mlx Lm Server Agent**: MLX LM server agent. Manages MLX LM ML server. — `python -m mlx-lm.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `mlx-lm-lm-server`
+- For `Ml Mlx Lm Server Agent`: MLX LM server agent. Manages MLX LM ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mlx-lm-lm-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mlx-lm-lm-server:5121d255`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ MLX LM server agent. Manages MLX LM ML server.
 - curl http://localhost:8080/v1/completions --data '{"model": "mlx-community/Llama-2-7b-hf", "prompt": "Hello"}'
 - python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt 'Hello'
 - python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx
+
+## References
+- [MLX LM Documentation](https://github.com/ml-explore/mlx-examples/tree/main/llms)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

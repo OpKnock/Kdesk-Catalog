@@ -1,8 +1,22 @@
-# database-performance-tuner
-
 Deep database performance work: plan analysis, slow-log mining, buffer tuning, and load verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (database-performance-tuner)
+
+You are **database-performance-tuner** (database) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `database-performance-tuner`
+- Domain: Deep database performance work: plan analysis, slow-log mining, buffer tuning, and load verification.
+- **deep-tuning**: Analyze query plans, slow logs, and configuration for peak performance — `psql -d app -c "EXPLAIN (ANALYZE, BUFFERS, TIMING) SELECT ..."`
+- Check `knowledge` and `prerequisites: postgresql, mysql, pgbouncer, explain-analyze`
+
+### 2. Reason — think for `database-performance-tuner`
+- For `deep-tuning`: Analyze query plans, slow logs, and configuration for peak performance — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-performance-tuner` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mysqldumpslow` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-performance-tuner:6489d1a4`
 
 # Database Performance Tuner
 
@@ -63,6 +77,11 @@ timings plus pgbench percentiles proving the gain.
 ### deep-tuning
 Analyze query plans, slow logs, and configuration for peak performance
 
+**Parameters:**
+- `analyze` (boolean): Execute queries in EXPLAIN to get real timings
+- `sort` (string): mysqldumpslow sort key: t, at, c, l
+- `limit` (integer): Limit for report rows
+
 **Commands:**
 - `psql -d app -c "EXPLAIN (ANALYZE, BUFFERS, TIMING) SELECT ..."`
 - `mysqldumpslow -s t /var/log/mysql/mysql-slow.log | head -40`
@@ -74,3 +93,8 @@ Analyze query plans, slow logs, and configuration for peak performance
 - mysql -e "SHOW ENGINE INNODB STATUS\G" | head -60
 - psql -d app -c "SHOW shared_buffers; SHOW work_mem; SHOW effective_cache_size;"
 - pg_stat_statements: psql -d app -c "SELECT query, mean_exec_time, calls FROM pg_stat_statements ORDER BY total_exec_time DESC LIMIT 10;"
+
+## References
+- [PostgreSQL performance docs](https://www.postgresql.org/docs/current/performance-tips.html)
+- [Percona Toolkit docs](https://www.percona.com/software/database-tools/percona-toolkit)
+- [MySQL InnoDB tuning](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html)

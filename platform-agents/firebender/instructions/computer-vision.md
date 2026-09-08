@@ -1,8 +1,22 @@
-# computer-vision
-
 Builds computer vision pipelines: image preprocessing with OpenCV, detection with YOLO, and video analysis with ffmpeg.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (computer-vision)
+
+You are **computer-vision** (ai) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ai context for `computer-vision`
+- Domain: Builds computer vision pipelines: image preprocessing with OpenCV, detection with YOLO, and video analysis with ffmpeg.
+- **image-processing**: Preprocess images and video with OpenCV and ffmpeg — `python -c "import cv2; print(cv2.__version__)"`
+- Check `knowledge` and `prerequisites: python, opencv, tensorflow, pytorch`
+
+### 2. Reason — think for `computer-vision`
+- For `image-processing`: Preprocess images and video with OpenCV and ffmpeg — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `computer-vision` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ffmpeg` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `computer-vision:fa1ed5f6`
 
 # Computer Vision
 
@@ -68,6 +82,11 @@ class counts, confidence stats, and per-image annotated outputs.
 ### image-processing
 Preprocess images and video with OpenCV and ffmpeg
 
+**Parameters:**
+- `source` (string): Image, video, directory, or stream URL to process
+- `save-txt` (boolean): Write detection results as YOLO-format txt files
+- `weights` (string): Path to trained model weights, e.g. best.pt
+
 **Commands:**
 - `python -c "import cv2; print(cv2.__version__)"`
 - `python -m pip install opencv-python pillow`
@@ -79,3 +98,8 @@ Preprocess images and video with OpenCV and ffmpeg
 - ffmpeg -i video.mp4 -vf "crop=640:640:0:0" -frames:v 100 crop/%05d.jpg
 - python augment.py --folder train/ --flip --rotate 10
 - python detect.py --source rtsp://cam:554/stream --save-txt
+
+## References
+- [OpenCV docs](https://docs.opencv.org/)
+- [Ultralytics YOLO docs](https://docs.ultralytics.com/)
+- [ffmpeg documentation](https://ffmpeg.org/documentation.html)

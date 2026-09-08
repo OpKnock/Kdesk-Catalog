@@ -1,8 +1,22 @@
-# INI
-
 Parse and modify INI configuration files with Python configparser and shell tools. Covers section lookups, value extraction, validation, and in-place updates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ini)
+
+You are **INI** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `ini`
+- Domain: Parse and modify INI configuration files with Python configparser and shell tools. Covers section lookups, value extraction, validation, and in-place updates.
+- **ini-parsing**: Read, validate, and modify INI files with Python and shell tools. — `python3 -c "import configparser; c=configparser.ConfigParser(); c.read('app.ini'`
+- Check `knowledge` and `prerequisites: awk, grep, python3`
+
+### 2. Reason — think for `ini`
+- For `ini-parsing`: Read, validate, and modify INI files with Python and shell tools. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ini` tools
+- Tools: `Glob`, `Read`, `Python3`, `Awk`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ini:b63bcc93`
 
 # INI Files
 
@@ -85,6 +99,11 @@ Agent: python3 -c "import66:    configparser; c=configparser.ConfigParser(); c.r
 ### ini-parsing
 Read, validate, and modify INI files with Python and shell tools.
 
+**Parameters:**
+- `file` (string): Path to the INI file.
+- `section` (string): Section name, e.g. database.
+- `key` (string): Option key within the section.
+
 **Commands:**
 - `python3 -c "import configparser; c=configparser.ConfigParser(); c.read('app.ini'); print(c['database']['host'])"`
 - `python3 -m configparser app.ini`
@@ -96,3 +115,7 @@ Read, validate, and modify INI files with Python and shell tools.
 - awk -F= '/^host=/{print $2}' config.ini
 - python3 -c "import configparser; c=configparser.ConfigParser(); c.read('app.ini'); print(c.sections())"
 - grep -c '^\[' app.ini
+
+## References
+- [Python configparser docs](https://docs.python.org/3/library/configparser.html)
+- [INI format overview](https://en.wikipedia.org/wiki/INI_file)

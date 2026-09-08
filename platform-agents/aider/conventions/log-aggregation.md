@@ -1,8 +1,24 @@
-# Log Aggregation
-
 Collect logs from many sources into one place: Fluent Bit pipelines, journald/tail forwarding, and Kubernetes pod log collection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (log-aggregation)
+
+You are **Log Aggregation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `log-aggregation`
+- Domain: Collect logs from many sources into one place: Fluent Bit pipelines, journald/tail forwarding, and Kubernetes pod log collection.
+- **fluent-bit**: Run Fluent Bit with input/output pipelines. — `fluent-bit -c fluent-bit.conf`
+- **source-forwarding**: Forward logs from journald, docker, and Kubernetes. — `journalctl -u myapp --since '30 min ago' -f`
+- Check `knowledge` and `prerequisites: docker, fluent-bit, journalctl, kubectl`
+
+### 2. Reason — think for `log-aggregation`
+- For `fluent-bit`: Run Fluent Bit with input/output pipelines. — decide which checks to run
+- For `source-forwarding`: Forward logs from journald, docker, and Kubernetes. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `log-aggregation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fluent-bit`, `Journalctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `log-aggregation:3b6f40f0`
 
 # Log Aggregation
 
@@ -75,6 +91,11 @@ fluent-bit -i tail -p path=/var/log/app.log -o stdout --dry-run
 ### fluent-bit
 Run Fluent Bit with input/output pipelines.
 
+**Parameters:**
+- `input` (string): Input plugin: tail, systemd, docker, kube.
+- `path` (string): Log file path for tail input.
+- `output` (string): Output plugin: stdout, forward, elasticsearch, loki.
+
 **Commands:**
 - `fluent-bit -c fluent-bit.conf`
 - `fluent-bit -i tail -p path=/var/log/app.log -o stdout`
@@ -89,6 +110,10 @@ Run Fluent Bit with input/output pipelines.
 ### source-forwarding
 Forward logs from journald, docker, and Kubernetes.
 
+**Parameters:**
+- `unit` (string): systemd unit name.
+- `pod` (string): Kubernetes workload selector.
+
 **Commands:**
 - `journalctl -u myapp --since '30 min ago' -f`
 - `docker logs --tail 100 -f nginx`
@@ -99,3 +124,7 @@ Forward logs from journald, docker, and Kubernetes.
 - journalctl -u myapp --since '30 min ago' -f
 - kubectl logs --all-containers=true --since=1h deploy/api
 - docker logs --tail 100 -f nginx
+
+## References
+- [Fluent Bit Docs](https://docs.fluentbit.io/manual/)
+- [journalctl man page](https://man7.org/linux/man-pages/man1/journalctl.1.html)

@@ -2,8 +2,21 @@ title: crossplane
 description: 'Builds control planes with Crossplane: install providers, create composite resources (XRs),
   manage resource claims, and trace reconciliation.'
 version: 2.0.0
-instructions: "# crossplane\n\nBuilds control planes with Crossplane: install providers, create composite\
-  \ resources (XRs), manage resource claims, and trace reconciliation.\n\n## Instructions\n\n# Crossplane\
+instructions: "Builds control planes with Crossplane: install providers, create composite resources (XRs),\
+  \ manage resource claims, and trace reconciliation.\n\n## Agentic Workflow: Read -> Reason -> Act (crossplane)\n\
+  \nYou are **crossplane** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — devops context for `crossplane`\n- Domain: Builds control planes with Crossplane: install\
+  \ providers, create composite resources (XRs), manage resource claims, and trace reconciliation.\n-\
+  \ **provider-and-config**: Install providers and configure cloud credentials for Crossplane. — `helm\
+  \ install crossplane crossplane-stable/crossplane -n crossplane-system --crea`\n- **composites-and-claims**:\
+  \ Author and manage CompositeResourceDefinitions, Compositions, and Claims. — `kubectl apply -f xrd.yaml`\n\
+  - Check `knowledge` and `prerequisites: crossplane, helm, kubectl`\n\n### 2. Reason — think for `crossplane`\n\
+  - For `provider-and-config`: Install providers and configure cloud credentials for Crossplane. — decide\
+  \ which checks to run\n- For `composites-and-claims`: Author and manage CompositeResourceDefinitions,\
+  \ Compositions, and Claims. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `crossplane` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Bash`, `Crossplane` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `crossplane:21566ae6`\n\n# Crossplane\
   \ Control Planes\n\nProvision cloud infrastructure through Kubernetes APIs using Crossplane providers\
   \ and compositions.\n\n## What This Skill Does\n\n- Installs Crossplane and cloud providers via Helm\
   \ and provider packages\n- Stores cloud credentials in ProviderConfig secrets\n- Defines CompositeResourceDefinitions\
@@ -23,14 +36,18 @@ instructions: "# crossplane\n\nBuilds control planes with Crossplane: install pr
   \ referenced by ProviderConfig\n- Use `crossplane alpha trace` as the first debugging step\n- Enforce\
   \ `compositions` immutability with review; test on a sandbox account first\n- Monitor provider health:\
   \ `kubectl get providers -o jsonpath='{.items[*].status.conditions}'`\n\n## Capabilities\n\n### provider-and-config\n\
-  Install providers and configure cloud credentials for Crossplane.\n\n**Commands:**\n- `helm install\
-  \ crossplane crossplane-stable/crossplane -n crossplane-system --create-namespace`\n- `kubectl apply\
-  \ -f provider-aws.yaml`\n- `kubectl get providers`\n- `kubectl apply -f providerconfig-aws.yaml`\n-\
-  \ `kubectl get providerconfigs`\n\n**Examples:**\n- helm install crossplane crossplane-stable/crossplane\
-  \ -n crossplane-system --create-namespace\n- kubectl apply -f provider-aws.yaml\n- kubectl get providers\n\
-  \n### composites-and-claims\nAuthor and manage CompositeResourceDefinitions, Compositions, and Claims.\n\
-  \n**Commands:**\n- `kubectl apply -f xrd.yaml`\n- `kubectl apply -f composition.yaml`\n- `kubectl apply\
-  \ -f claim.yaml`\n- `kubectl get composite`\n- `kubectl get claims`\n- `crossplane alpha trace vpcclaim\
-  \ my-vpc`\n\n**Examples:**\n- kubectl apply -f xrd.yaml && kubectl apply -f composition.yaml\n- kubectl\
-  \ get claims\n- crossplane alpha trace vpc my-vpc"
+  Install providers and configure cloud credentials for Crossplane.\n\n**Parameters:**\n- `provider` (string):\
+  \ Provider package name, e.g. upbound/provider-aws\n- `namespace` (string): Namespace to install control\
+  \ plane into\n\n**Commands:**\n- `helm install crossplane crossplane-stable/crossplane -n crossplane-system\
+  \ --create-namespace`\n- `kubectl apply -f provider-aws.yaml`\n- `kubectl get providers`\n- `kubectl\
+  \ apply -f providerconfig-aws.yaml`\n- `kubectl get providerconfigs`\n\n**Examples:**\n- helm install\
+  \ crossplane crossplane-stable/crossplane -n crossplane-system --create-namespace\n- kubectl apply -f\
+  \ provider-aws.yaml\n- kubectl get providers\n\n### composites-and-claims\nAuthor and manage CompositeResourceDefinitions,\
+  \ Compositions, and Claims.\n\n**Parameters:**\n- `claim-kind` (string): Kind of claim, e.g. VPCClaim\n\
+  - `claim-name` (string): Name of the claim instance\n\n**Commands:**\n- `kubectl apply -f xrd.yaml`\n\
+  - `kubectl apply -f composition.yaml`\n- `kubectl apply -f claim.yaml`\n- `kubectl get composite`\n\
+  - `kubectl get claims`\n- `crossplane alpha trace vpcclaim my-vpc`\n\n**Examples:**\n- kubectl apply\
+  \ -f xrd.yaml && kubectl apply -f composition.yaml\n- kubectl get claims\n- crossplane alpha trace vpc\
+  \ my-vpc\n\n## References\n- [Crossplane Documentation](https://docs.crossplane.io/)\n- [Crossplane\
+  \ CLI](https://github.com/crossplane/crossplane/blob/main/docs/cli.md)\n- [Upbound Registry](https://marketplace.upbound.io/)"
 prompt: Act as crossplane and handle the task per the instructions.

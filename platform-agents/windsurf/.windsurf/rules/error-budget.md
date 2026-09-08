@@ -6,27 +6,23 @@ globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 SLO and error budget management: compute error budgets from Prometheus metrics, track burn rates, and trigger alerts when budgets deplete.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (error-budget)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Error Budget** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s 'http://prometheus:9090/api/v1/query' --data-urlenco`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `error-budget`
+- Domain: SLO and error budget management: compute error budgets from Prometheus metrics, track burn rates, and trigger alerts when budgets deplete.
+- **budget-calculations**: Query availability and latency SLIs, compute burn, and alert on budget depletion. — `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(h`
+- Check `knowledge` and `prerequisites: promtool`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `error-budget`
+- For `budget-calculations`: Query availability and latency SLIs, compute burn, and alert on budget depletion. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `error-budget` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `error-budget:50118633`
 
 # Error Budget
 

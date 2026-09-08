@@ -2,8 +2,20 @@ title: Nginx
 description: 'Engineers nginx as a reverse proxy and API gateway: location routing, headers, rate limiting,
   and caching layers.'
 version: 2.0.0
-instructions: "# Nginx\n\nEngineers nginx as a reverse proxy and API gateway: location routing, headers,\
-  \ rate limiting, and caching layers.\n\n## Instructions\n\n# Nginx (Networking)\n\nEngineer nginx as\
+instructions: "Engineers nginx as a reverse proxy and API gateway: location routing, headers, rate limiting,\
+  \ and caching layers.\n\n## Agentic Workflow: Read -> Reason -> Act (nginx-networking)\n\nYou are **Nginx**\
+  \ (networking/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1.\
+  \ Read — networking context for `nginx-networking`\n- Domain: Engineers nginx as a reverse proxy and\
+  \ API gateway: location routing, headers, rate limiting, and caching layers.\n- **proxy**: Route and\
+  \ transform traffic with nginx locations. — `nginx -t -c /etc/nginx/nginx.conf`\n- **gateway**: Apply\
+  \ rate limits, caching, and header policies. — `ab -n 200 -c 20 http://127.0.0.1/api/v1/search | grep\
+  \ -E 'Failed|Requests per se`\n- Check `knowledge` and `prerequisites: nginx, tail`\n\n### 2. Reason\
+  \ — think for `nginx-networking`\n- For `proxy`: Route and transform traffic with nginx locations. —\
+  \ decide which checks to run\n- For `gateway`: Apply rate limits, caching, and header policies. — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `nginx-networking` tools\n- Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Bash`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `nginx-networking:9dea52f2`\n\n# Nginx (Networking)\n\nEngineer nginx as\
   \ the L7 edge: proxies, limits, and cache.\n\n## When to Use\n\n- Reverse proxying to services with\
   \ path routing\n- Rate limiting public endpoints\n- Caching static and API responses\n\n## Proxy config\n\
   \n```nginx\nupstream api_servers {\n  least_conn;\n  server 10.0.1.11:8080 max_fails=3 fail_timeout=10s;\n\
@@ -18,16 +30,20 @@ instructions: "# Nginx\n\nEngineers nginx as a reverse proxy and API gateway: lo
   \ edge for tracing.\n- Rate limit at the edge AND at the app.\n- Test 429 responses in load tests.\n\
   - Keep upstream health checks tight (5s interval).\n\n## Testing\n\nRun ab/hey against limited endpoints\
   \ and confirm 429s beyond the burst.\n\n## Capabilities\n\n### proxy\nRoute and transform traffic with\
-  \ nginx locations.\n\n**Commands:**\n- `nginx -t -c /etc/nginx/nginx.conf`\n- `nginx -s reload`\n- `nginx\
-  \ -T | grep -E 'server_name|proxy_pass|location'`\n- `curl -sI -H 'Host: api.example.com' http://127.0.0.1/api/v1/healthz`\n\
-  - `curl -s -o /dev/null -w '%{http_code}\\n' http://127.0.0.1/api/v1/healthz`\n\n**Examples:**\n- nginx\
-  \ -T | grep proxy_pass | head -20\n- curl -sI http://127.0.0.1/api/ | head -8\n- nginx -t && nginx -s\
-  \ reload\n\n### gateway\nApply rate limits, caching, and header policies.\n\n**Commands:**\n- `ab -n\
-  \ 200 -c 20 http://127.0.0.1/api/v1/search | grep -E 'Failed|Requests per second'`\n- `curl -s -o /dev/null\
-  \ -w '%{size_download}' -H 'Cache-Control: max-age=60' http://127.0.0.1/static/app.js`\n- `curl -sI\
-  \ http://127.0.0.1/static/app.js | grep -i cache`\n- `ab -n 1000 -c 50 http://127.0.0.1/api/v1/ | grep\
-  \ -E 'Non-2xx|Requests per second'`\n- `tail -n 50 /var/log/nginx/access.log | awk '{print $9}' | sort\
-  \ | uniq -c`\n\n**Examples:**\n- ab -n 500 -c 50 http://127.0.0.1/api/ | grep 'Non-2xx responses'\n\
-  - curl -sI -H 'Host: api.example.com' http://127.0.0.1/api/v1/healthz | grep -i x-rate\n- tail -n 200\
-  \ /var/log/nginx/access.log | grep ' 429 ' | wc -l"
+  \ nginx locations.\n\n**Parameters:**\n- `config` (string): nginx config path\n- `host` (string): Host\
+  \ header for vhost routing\n- `url` (string): URL to probe\n\n**Commands:**\n- `nginx -t -c /etc/nginx/nginx.conf`\n\
+  - `nginx -s reload`\n- `nginx -T | grep -E 'server_name|proxy_pass|location'`\n- `curl -sI -H 'Host:\
+  \ api.example.com' http://127.0.0.1/api/v1/healthz`\n- `curl -s -o /dev/null -w '%{http_code}\\n' http://127.0.0.1/api/v1/healthz`\n\
+  \n**Examples:**\n- nginx -T | grep proxy_pass | head -20\n- curl -sI http://127.0.0.1/api/ | head -8\n\
+  - nginx -t && nginx -s reload\n\n### gateway\nApply rate limits, caching, and header policies.\n\n**Parameters:**\n\
+  - `requests` (number): Load test request count\n- `concurrency` (number): Load test concurrency\n- `header`\
+  \ (string): Header to inspect in response\n\n**Commands:**\n- `ab -n 200 -c 20 http://127.0.0.1/api/v1/search\
+  \ | grep -E 'Failed|Requests per second'`\n- `curl -s -o /dev/null -w '%{size_download}' -H 'Cache-Control:\
+  \ max-age=60' http://127.0.0.1/static/app.js`\n- `curl -sI http://127.0.0.1/static/app.js | grep -i\
+  \ cache`\n- `ab -n 1000 -c 50 http://127.0.0.1/api/v1/ | grep -E 'Non-2xx|Requests per second'`\n- `tail\
+  \ -n 50 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c`\n\n**Examples:**\n- ab -n 500\
+  \ -c 50 http://127.0.0.1/api/ | grep 'Non-2xx responses'\n- curl -sI -H 'Host: api.example.com' http://127.0.0.1/api/v1/healthz\
+  \ | grep -i x-rate\n- tail -n 200 /var/log/nginx/access.log | grep ' 429 ' | wc -l\n\n## References\n\
+  - [ngx_http_proxy_module](https://nginx.org/en/docs/http/ngx_http_proxy_module.html)\n- [ngx_http_limit_req_module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)\n\
+  - [ngx_http_headers_module](https://nginx.org/en/docs/http/ngx_http_headers_module.html)"
 prompt: Act as Nginx and handle the task per the instructions.

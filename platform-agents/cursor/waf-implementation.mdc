@@ -6,27 +6,27 @@ alwaysApply: false
 
 Deploy and tune a Web Application Firewall with ModSecurity and OWASP CRS, block OWASP Top 10 attacks, and reduce false positives.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (waf-implementation)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **waf-implementation** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker run -d --name crs -p 80:80 -p 443:443 -e PARANOIA=1 -`, `nginx -t`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `waf-implementation`
+- Domain: Deploy and tune a Web Application Firewall with ModSecurity and OWASP CRS, block OWASP Top 10 attacks, and reduce false positives.
+- **Deploy ModSecurity with OWASP CRS**: Start an OWASP CRS-enabled ModSecurity container in front of your app and verify it proxies traffic  — `docker run -d --name crs -p 80:80 -p 443:443 -e PARANOIA=1 -e BLOCKING_PARANOIA=`
+- **Configure and reload WAF rules**: Check nginx config, reload the WAF, and test that attack payloads are detected and blocked. — `nginx -t`
+- **Tune rules and reduce false positives**: Run in DetectionOnly mode, analyze audit log matches, and disable or adjust the rules that misfire o — `sed -i 's/SecRuleEngine On/SecRuleEngine DetectionOnly/' /etc/modsecurity.d/mods`
+- Check `knowledge` and `prerequisites: aws-waf, cloudflare, modsecurity, nginx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `waf-implementation`
+- For `Deploy ModSecurity with OWASP CRS`: Start an OWASP CRS-enabled ModSecurity container in front of your app and verify it proxies traffic and loads rules. — decide which checks to run
+- For `Configure and reload WAF rules`: Check nginx config, reload the WAF, and test that attack payloads are detected and blocked. — decide which checks to run
+- For `Tune rules and reduce false positives`: Run in DetectionOnly mode, analyze audit log matches, and disable or adjust the rules that misfire on legitimate traffic — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `waf-implementation` tools
+- Tools: `Glob`, `Read`, `Bash`, `Nginx`, `Sed` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `waf-implementation:28a7d8d5`
 
 # WAF Implementation
 

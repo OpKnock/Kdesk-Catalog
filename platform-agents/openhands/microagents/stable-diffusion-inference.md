@@ -1,6 +1,6 @@
 ---
 name: "stable-diffusion-inference"
-description: "Stable Diffusion deployment agent. Manages Stable Diffusion ML deployment."
+description: "Stable Diffusion deployment agent. Manages Stable Diffusion ML deployment. Use when working with Ml Stable Diffusion Deploy Agent, inference or when the user mentions Ml Stable Diffusion Deploy Agent, inference."
 type: knowledge
 triggers: ["stable-diffusion-inference", "ml stable diffusion deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["stable-diffusion-inference", "ml stable diffusion deploy agent"]
 # Stable Diffusion Inference
 
 Stable Diffusion deployment agent. Manages Stable Diffusion ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (stable-diffusion-inference)
+
+You are **Stable Diffusion Inference** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `stable-diffusion-inference`
+- Domain: Stable Diffusion deployment agent. Manages Stable Diffusion ML deployment.
+- **Ml Stable Diffusion Deploy Agent**: Stable Diffusion deployment agent. Manages Stable Diffusion ML deployment. — `docker build -t stable-diffusion:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `stable-diffusion-inference`
+- For `Ml Stable Diffusion Deploy Agent`: Stable Diffusion deployment agent. Manages Stable Diffusion ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `stable-diffusion-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `stable-diffusion-inference:aefa7c3e`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Stable Diffusion deployment agent. Manages Stable Diffusion ML deployment.
 - curl http://localhost:8080/generate --data '{"prompt": "a beautiful landscape"}'
 - python generate.py --prompt 'a beautiful landscape' --output image.png
 - python txt2img.py --prompt 'cat in space' --steps 50
+
+## References
+- [Stable Diffusion Documentation](https://github.com/Stability-AI/stablediffusion)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

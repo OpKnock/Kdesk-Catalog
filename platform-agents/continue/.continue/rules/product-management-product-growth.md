@@ -1,6 +1,6 @@
 ---
 name: "Product-Management Product Growth"
-description: "Product-Management product-growth expertise and best practices."
+description: "Product-Management product-growth expertise and best practices. Use when working with product growth expertise, product management, product growth, skill or when the user mentions product growth expertise, product management, product growth, skill."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Product-Management Product Growth
 
 Product-Management product-growth expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (product-management-product-growth)
+
+You are **Product-Management Product Growth** (product-management/product-growth) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — product-management context for `product-management-product-growth`
+- Domain: Product-Management product-growth expertise and best practices.
+- **product-growth-expertise**: product-management product-growth expertise — `product-growth-cli`
+- Check `knowledge` and `prerequisites: product-growth`
+
+### 2. Reason — think for `product-management-product-growth`
+- For `product-growth-expertise`: product-management product-growth expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `product-management-product-growth` tools
+- Tools: `Glob`, `Grep`, `Read`, `Product-growth-cli`, `Product-growth-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `product-management-product-growth:2eb97e95`
 
 ## Instructions
 

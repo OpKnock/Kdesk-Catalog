@@ -1,8 +1,24 @@
-# Netlify
-
 Deploys frontend apps with Netlify: CLI deploys, build configuration, environment variables, and edge functions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (netlify)
+
+You are **Netlify** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `netlify`
+- Domain: Deploys frontend apps with Netlify: CLI deploys, build configuration, environment variables, and edge functions.
+- **netlify-cli**: Build, deploy, and manage Netlify sites. — `npm install -g netlify-cli`
+- **netlify-config**: Manage environment variables and site settings. — `netlify env:set API_KEY abc123`
+- Check `knowledge` and `prerequisites: netlify, npm`
+
+### 2. Reason — think for `netlify`
+- For `netlify-cli`: Build, deploy, and manage Netlify sites. — decide which checks to run
+- For `netlify-config`: Manage environment variables and site settings. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `netlify` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Netlify` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `netlify:971acfb0`
 
 # Netlify
 
@@ -72,6 +88,10 @@ netlify functions:serve
 ### netlify-cli
 Build, deploy, and manage Netlify sites.
 
+**Parameters:**
+- `dir` (string): Publish directory
+- `prod` (boolean): Deploy to production
+
 **Commands:**
 - `npm install -g netlify-cli`
 - `netlify init`
@@ -87,6 +107,10 @@ Build, deploy, and manage Netlify sites.
 ### netlify-config
 Manage environment variables and site settings.
 
+**Parameters:**
+- `key` (string): Env var name
+- `value` (string): Env var value
+
 **Commands:**
 - `netlify env:set API_KEY abc123`
 - `netlify env:list`
@@ -98,3 +122,7 @@ Manage environment variables and site settings.
 - netlify env:set --context production API_URL https://api.example.com
 - netlify functions:serve
 - netlify status
+
+## References
+- [Netlify Docs](https://docs.netlify.com)
+- [Netlify CLI](https://cli.netlify.com)

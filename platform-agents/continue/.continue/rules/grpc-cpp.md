@@ -1,15 +1,29 @@
 ---
 name: "Grpc Cpp"
-description: "Build gRPC services and clients in C++: protoc codegen with grpc_cpp_plugin, CMake integration, and sync server patterns."
+description: "Build gRPC services and clients in C++: protoc codegen with grpc_cpp_plugin, CMake integration, and sync server patterns. Use when working with cpp grpc build, api or when the user mentions cpp grpc build, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{cpp,cc,h,hpp}"]
 alwaysApply: false
 ---
 
-# Grpc Cpp
-
 Build gRPC services and clients in C++: protoc codegen with grpc_cpp_plugin, CMake integration, and sync server patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-cpp)
+
+You are **Grpc Cpp** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-cpp`
+- Domain: Build gRPC services and clients in C++: protoc codegen with grpc_cpp_plugin, CMake integration, and sync server patterns.
+- **cpp-grpc-build**: Generate C++ gRPC stubs and build servers/clients with CMake and grpc_cpp_plugin. — `protoc -I . --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc=$(which grpc_cpp_p`
+- Check `knowledge` and `prerequisites: ./build/greeter_client, cmake, grpc_cpp_plugin, protoc`
+
+### 2. Reason — think for `grpc-cpp`
+- For `cpp-grpc-build`: Generate C++ gRPC stubs and build servers/clients with CMake and grpc_cpp_plugin. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-cpp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Protoc`, `Cmake` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-cpp:c40fc26b`
 
 # gRPC C++
 
@@ -101,6 +115,11 @@ Agent: Run protoc with an explicit plugin path:
 ### cpp-grpc-build
 Generate C++ gRPC stubs and build servers/clients with CMake and grpc_cpp_plugin.
 
+**Parameters:**
+- `proto_file` (string): Input .proto file for codegen.
+- `grpc_cpp_plugin_path` (string): Path to grpc_cpp_plugin (default from PATH).
+- `cmake_prefix` (string): CMAKE_PREFIX_PATH pointing at the gRPC install.
+
 **Commands:**
 - `protoc -I . --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc=$(which grpc_cpp_plugin) helloworld.proto`
 - `cmake -B build -DCMAKE_PREFIX_PATH=$(pwd)/cmake`
@@ -112,3 +131,7 @@ Generate C++ gRPC stubs and build servers/clients with CMake and grpc_cpp_plugin
 - cmake -B build -DgRPC_BUILD_TESTS=OFF && cmake --build build
 - ./build/greeter_server & ./build/greeter_client
 - protoc -I . --cpp_out=. helloworld.proto
+
+## References
+- [gRPC C++ Docs](https://grpc.io/docs/languages/cpp/)
+- [gRPC C++ Installation](https://grpc.io/docs/languages/cpp/quickstart/)

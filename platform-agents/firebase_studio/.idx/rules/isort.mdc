@@ -1,14 +1,30 @@
 ---
-description: "Sorts Python imports with isort: config profiles, black compatibility, section handling, and CI checks."
+description: "Sorts Python imports with isort: config profiles, black compatibility, section handling, and CI checks. Use when working with isort sort, isort config, code quality or when the user mentions isort sort, isort config, code quality."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# isort
-
 Sorts Python imports with isort: config profiles, black compatibility, section handling, and CI checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (isort)
+
+You are **isort** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `isort`
+- Domain: Sorts Python imports with isort: config profiles, black compatibility, section handling, and CI checks.
+- **isort-sort**: Sort imports with control over profiles. — `isort src/`
+- **isort-config**: Configure import sections and settings. — `isort --version`
+- Check `knowledge` and `prerequisites: isort`
+
+### 2. Reason — think for `isort`
+- For `isort-sort`: Sort imports with control over profiles. — decide which checks to run
+- For `isort-config`: Configure import sections and settings. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `isort` tools
+- Tools: `Glob`, `Grep`, `Read`, `Isort` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `isort:bcd4d0d5`
 
 # isort
 
@@ -76,6 +92,11 @@ from myapp import utils
 ### isort-sort
 Sort imports with control over profiles.
 
+**Parameters:**
+- `paths` (string): Files or directories
+- `profile` (string): black, django, google
+- `check-only` (boolean): Check without writing
+
 **Commands:**
 - `isort src/`
 - `isort --check-only src/`
@@ -91,6 +112,10 @@ Sort imports with control over profiles.
 ### isort-config
 Configure import sections and settings.
 
+**Parameters:**
+- `settings-path` (string): Config file path
+- `profile` (string): Sorting profile: black, django
+
 **Commands:**
 - `isort --version`
 - `isort --settings-path pyproject.toml src/`
@@ -100,3 +125,7 @@ Configure import sections and settings.
 **Examples:**
 - isort --show-config | grep -A5 profile
 - python -m isort src/
+
+## References
+- [isort Docs](https://pycqa.github.io/isort/)
+- [isort on GitHub](https://github.com/PyCQA/isort)

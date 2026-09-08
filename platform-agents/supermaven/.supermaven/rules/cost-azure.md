@@ -1,8 +1,24 @@
-# Cost Azure
-
 Tracks Azure cloud spend with Cost Management queries, exports, budgets, and consumption APIs to keep billing under control.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cost-azure)
+
+You are **Cost Azure** (finops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — finops context for `cost-azure`
+- Domain: Tracks Azure cloud spend with Cost Management queries, exports, budgets, and consumption APIs to keep billing under control.
+- **cost-management**: Query Azure cost data and manage exports via az cost-management. — `az cost-management query --type ActualCost --timeframe MonthToDate --scope /subs`
+- **budgets**: Create Azure budgets and view consumption data. — `az consumption budget create --budget-name engineering-monthly --amount 15000 --`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cost-azure`
+- For `cost-management`: Query Azure cost data and manage exports via az cost-management. — decide which checks to run
+- For `budgets`: Create Azure budgets and view consumption data. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cost-azure` tools
+- Tools: `Glob`, `Grep`, `Read`, `Az` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cost-azure:599281d1`
 
 # Azure Cost Optimization
 
@@ -62,6 +78,11 @@ az monitor metrics list --resource $RESOURCE_ID --metric PercentageCPU --interva
 ### cost-management
 Query Azure cost data and manage exports via az cost-management.
 
+**Parameters:**
+- `type` (string): ActualCost or AmortizedCost
+- `timeframe` (string): MonthToDate, LastMonth, or custom start/end
+- `scope` (string): Subscription or resource-group scope URI
+
 **Commands:**
 - `az cost-management query --type ActualCost --timeframe MonthToDate --scope /subscriptions/$SUBSCRIPTION_ID --aggregation '{"totalCost":{"name":"PreTaxCost","function":"Sum"}}'`
 - `az cost-management query --type ActualCost --timeframe LastMonth --scope /subscriptions/$SUBSCRIPTION_ID --grouping '{"type":"Dimension","name":"ServiceName"}'`
@@ -77,6 +98,11 @@ Query Azure cost data and manage exports via az cost-management.
 ### budgets
 Create Azure budgets and view consumption data.
 
+**Parameters:**
+- `budget-name` (string): Unique budget name
+- `amount` (number): Budget amount in USD
+- `time-grain` (string): monthly, quarterly, or annually
+
 **Commands:**
 - `az consumption budget create --budget-name engineering-monthly --amount 15000 --time-grain monthly --start-date 2026-08-01 --category cost`
 - `az consumption budget list`
@@ -88,3 +114,8 @@ Create Azure budgets and view consumption data.
 - az consumption budget create --budget-name eng-monthly --amount 15000 --time-grain monthly --start-date 2026-08-01
 - az consumption usage list --top 20 | jq '.[] | {name: .name.value, quantity: .quantity}'
 - az consumption budget show --budget-name eng-monthly
+
+## References
+- [Azure Cost Management + Billing](https://learn.microsoft.com/en-us/azure/cost-management-billing/)
+- [az cost-management CLI reference](https://learn.microsoft.com/en-us/cli/azure/cost-management)
+- [Azure Consumption CLI](https://learn.microsoft.com/en-us/cli/azure/consumption)

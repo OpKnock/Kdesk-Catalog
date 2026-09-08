@@ -1,8 +1,24 @@
-# Api Version Nginx Routing
-
 Routes multiple API versions at the gateway: nginx location-based version routing, Traefik rules, and Kong services per version.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-version-nginx-routing)
+
+You are **Api Version Nginx Routing** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-version-nginx-routing`
+- Domain: Routes multiple API versions at the gateway: nginx location-based version routing, Traefik rules, and Kong services per version.
+- **nginx-version-routing**: Route versioned paths with nginx — `nginx -t`
+- **kong-service-versions**: Register versioned services in Kong — `curl -s -X POST http://localhost:8001/services -d 'name=users-v1' -d 'url=http:/`
+- Check `knowledge` and `prerequisites: node.js, python, openapi`
+
+### 2. Reason — think for `api-version-nginx-routing`
+- For `nginx-version-routing`: Route versioned paths with nginx — decide which checks to run
+- For `kong-service-versions`: Register versioned services in Kong — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-version-nginx-routing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-version-nginx-routing:123b21a6`
 
 # API Version v5 - Gateway Routing
 
@@ -54,6 +70,11 @@ location /v2/ {
 ### nginx-version-routing
 Route versioned paths with nginx
 
+**Parameters:**
+- `version` (string): Version path segment
+- `upstream` (string): Backend upstream name
+- `config` (string): nginx config path
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -79,3 +100,7 @@ Register versioned services in Kong
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [nginx location Docs](https://nginx.org/en/docs/http/ngx_http_core_module.html#location)
+- [Kong Services and Routes](https://docs.konghq.com/gateway/latest/how-to/configure/services-and-routes/)

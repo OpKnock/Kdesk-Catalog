@@ -1,6 +1,6 @@
 ---
 name: "Security Cosign Keyless"
-description: "Cosign keyless signing for CI/CD pipelines."
+description: "Cosign keyless signing for CI/CD pipelines. Use when working with Security Cosign Keyless, scanning or when the user mentions Security Cosign Keyless, scanning."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Security Cosign Keyless
 
 Cosign keyless signing for CI/CD pipelines.
+
+## Agentic Workflow: Read -> Reason -> Act (security-cosign-keyless)
+
+You are **Security Cosign Keyless** (security/scanning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-cosign-keyless`
+- Domain: Cosign keyless signing for CI/CD pipelines.
+- **Security Cosign Keyless**: Cosign keyless signing for CI/CD pipelines. — `Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance ima`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `security-cosign-keyless`
+- For `Security Cosign Keyless`: Cosign keyless signing for CI/CD pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-cosign-keyless` tools
+- Tools: `Glob`, `Grep`, `Read`, `Attest`, `Verify` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-cosign-keyless:d920617d`
 
 ## Instructions
 
@@ -27,6 +45,11 @@ Always use real Cosign tools. Never suggest fictional tools.
 ### Security Cosign Keyless
 Cosign keyless signing for CI/CD pipelines.
 
+**Parameters:**
+- `certificate-identity` (string): CLI flag --certificate-identity observed in capability commands
+- `type` (string): CLI flag --type observed in capability commands
+- `yes` (boolean): CLI flag --yes observed in capability commands
+
 **Commands:**
 - `Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance image:tag`
 - `Verify: cosign verify --certificate-identity email@localhost --certificate-oidc-issuer https://iss`
@@ -38,3 +61,7 @@ Cosign keyless signing for CI/CD pipelines.
 - Verify: cosign verify --certificate-identity email@localhost --certificate-oidc-issuer https://issuer.com image:tag
 - Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance image:tag
 - Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@localhost image:tag
+
+## References
+- [Sigstore Keyless Signing](https://docs.sigstore.dev/cosign/keyless/)
+- [Sigstore cosign Documentation](https://docs.sigstore.dev/cosign/)

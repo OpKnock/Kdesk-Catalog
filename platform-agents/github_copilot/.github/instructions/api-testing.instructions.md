@@ -4,27 +4,27 @@ applyTo: "**/*.html **/*.json **/*.r **/*.sh"
 
 Tests REST APIs with curl, httpie, and Newman, covering auth, contracts, and response validation from the terminal.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-testing)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **api-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080`, `http GET http://localhost:8080/v1/users`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `api-testing`
+- Domain: Tests REST APIs with curl, httpie, and Newman, covering auth, contracts, and response validation from the terminal.
+- **curl-testing**: Craft and assert on API requests with curl. — `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/users`
+- **httpie-testing**: Human-friendly API testing with httpie. — `http GET http://localhost:8080/v1/users`
+- **newman-collections**: Run Postman collections with assertions in CI. — `newman run api.postman_collection.json`
+- Check `knowledge` and `prerequisites: http, newman`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-testing`
+- For `curl-testing`: Craft and assert on API requests with curl. — decide which checks to run
+- For `httpie-testing`: Human-friendly API testing with httpie. — decide which checks to run
+- For `newman-collections`: Run Postman collections with assertions in CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Http` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-testing:348794e5`
 
 # API Testing
 

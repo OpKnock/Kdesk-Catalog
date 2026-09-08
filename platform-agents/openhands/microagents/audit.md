@@ -1,6 +1,6 @@
 ---
 name: "audit"
-description: "it SDK deployment agent handling ML it SDK deployment."
+description: "it SDK deployment agent handling ML it SDK deployment. Use when working with Ml Audit Deploy Sdk or when the user mentions Ml Audit Deploy Sdk."
 type: knowledge
 triggers: ["audit", "ml audit deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["audit", "ml audit deploy sdk"]
 # Audit
 
 it SDK deployment agent handling ML it SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (audit)
+
+You are **Audit** (ml/audit) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `audit`
+- Domain: it SDK deployment agent handling ML it SDK deployment.
+- **Ml Audit Deploy Sdk**: Audit SDK deployment agent for ML Audit SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `audit`
+- For `Ml Audit Deploy Sdk`: Audit SDK deployment agent for ML Audit SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `audit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `audit:c35ff371`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Audit SDK deployment agent for ML Audit SDK deployment.
 **Examples:**
 - Server: python -m audit.server --port 8080
 - Docker: docker run -p 8080:8080 audit-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

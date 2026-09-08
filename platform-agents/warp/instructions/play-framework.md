@@ -1,8 +1,22 @@
-# Play Framework
-
 Play Framework (Scala): sbt project setup, routes, controllers, and test/build lifecycle.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (play-framework)
+
+You are **Play Framework** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `play-framework`
+- Domain: Play Framework (Scala): sbt project setup, routes, controllers, and test/build lifecycle.
+- **play-scala-workflow**: Scaffold Play Framework apps with sbt, add routes/controllers, and run the test-build cycle. — `sbt new playframework/play-scala-seed.g8`
+- Check `knowledge` and `prerequisites: sbt`
+
+### 2. Reason — think for `play-framework`
+- For `play-scala-workflow`: Scaffold Play Framework apps with sbt, add routes/controllers, and run the test-build cycle. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `play-framework` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sbt` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `play-framework:c6fb112d`
 
 # Play Framework
 
@@ -62,6 +76,11 @@ class UserController @Inject()(cc: ControllerComponents) extends AbstractControl
 ### play-scala-workflow
 Scaffold Play Framework apps with sbt, add routes/controllers, and run the test-build cycle.
 
+**Parameters:**
+- `port` (integer): HTTP port for sbt run
+- `seed` (string): giter8 seed template name
+- `sbt_task` (string): sbt task: compile, test, dist, run
+
 **Commands:**
 - `sbt new playframework/play-scala-seed.g8`
 - `sbt run`
@@ -73,3 +92,7 @@ Scaffold Play Framework apps with sbt, add routes/controllers, and run the test-
 - sbt run -Dhttp.port=9001
 - sbt test
 - sbt dist
+
+## References
+- [Play Framework Docs](https://www.playframework.com/documentation/latest/Home)
+- [play-scala-seed template](https://github.com/playframework/play-scala-seed.g8)

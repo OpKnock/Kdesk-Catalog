@@ -1,8 +1,26 @@
-# Azure Monitor
-
 Collects and evaluates Azure resource metrics and alerts via the Azure CLI: retrieves metric time series, defines metric and activity log alert rules with conditions, manages action groups, and queries the activity log for operational auditing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (azure-monitor)
+
+You are **Azure Monitor** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `azure-monitor`
+- Domain: Collects and evaluates Azure resource metrics and alerts via the Azure CLI: retrieves metric time series, defines metric and activity log alert rules with conditions, manages action groups, and querie
+- **metrics**: Retrieve resource metrics and definitions. — `az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456`
+- **alerts**: Create and manage metric/activity alerts. — `az monitor alert create --name api-5xx --resource-group api-rg --condition "perc`
+- **activity-log**: Query the activity log. — `az monitor activity-log list --resource /subscriptions/12345678-1234-1234-1234-1`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `azure-monitor`
+- For `metrics`: Retrieve resource metrics and definitions. — decide which checks to run
+- For `alerts`: Create and manage metric/activity alerts. — decide which checks to run
+- For `activity-log`: Query the activity log. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `azure-monitor` tools
+- Tools: `Glob`, `Grep`, `Read`, `Az` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-monitor:3345ee61`
 
 # Azure Monitor
 
@@ -51,6 +69,11 @@ az monitor activity-log list --status Failed --max-events 20
 ### metrics
 Retrieve resource metrics and definitions.
 
+**Parameters:**
+- `resource_id` (string): Azure resource ID
+- `metric_names` (string): Metric names
+- `interval` (string): Time granularity (PT1H, PT5M)
+
 **Commands:**
 - `az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --metric-names Requests`
 - `az monitor metrics list-definitions --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api`
@@ -64,6 +87,11 @@ Retrieve resource metrics and definitions.
 
 ### alerts
 Create and manage metric/activity alerts.
+
+**Parameters:**
+- `condition` (string): Alert condition string
+- `severity` (number): 0-4 severity
+- `action_group` (string): Action group ID
 
 **Commands:**
 - `az monitor alert create --name api-5xx --resource-group api-rg --condition "percentage CPU > 90 avg 5m" --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api`
@@ -80,6 +108,10 @@ Create and manage metric/activity alerts.
 ### activity-log
 Query the activity log.
 
+**Parameters:**
+- `status` (string): Filter by status (Failed, Succeeded)
+- `max_events` (number): Max events to return
+
 **Commands:**
 - `az monitor activity-log list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api`
 - `az monitor activity-log list --status Failed --max-events 20`
@@ -90,3 +122,7 @@ Query the activity log.
 - az monitor activity-log list --status Failed --max-events 50 | jq '.[].operationName.value'
 - az monitor activity-log list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --query '[].{t:eventTimestamp,o:operationName.value}' -o table
 - az monitor activity-log list --resource-group api-rg --start-time 2026-08-01T00:00:00Z --max-events 10
+
+## References
+- [Azure Monitor Docs](https://learn.microsoft.com/en-us/azure/azure-monitor/)
+- [Azure CLI monitor Reference](https://learn.microsoft.com/en-us/cli/azure/monitor)

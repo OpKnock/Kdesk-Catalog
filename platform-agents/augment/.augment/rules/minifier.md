@@ -5,27 +5,25 @@ description: "Minify and mangle JS bundles with terser and esbuild. Minify CSS/H
 
 Minify and mangle JS bundles with terser and esbuild. Minify CSS/HTML and apply gzip/brotli handling transfer size. and gzip/brotli compression.'
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (minifier)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **minifier** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `terser input.js -o output.min.js`, `npx cssnano styles.css styles.min.css`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devtools context for `minifier`
+- Domain: Minify and mangle JS bundles with terser and esbuild. Minify CSS/HTML and apply gzip/brotli handling transfer size. and gzip/brotli compression.'
+- **javascript-minification**: Minify and mangle JS bundles with terser and esbuild. — `terser input.js -o output.min.js`
+- **css-html-and-compression**: Minify CSS/HTML and apply gzip/brotli for transfer size. — `npx cssnano styles.css styles.min.css`
+- Check `knowledge` and `prerequisites: brotli, esbuild, gzip, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `minifier`
+- For `javascript-minification`: Minify and mangle JS bundles with terser and esbuild. — decide which checks to run
+- For `css-html-and-compression`: Minify CSS/HTML and apply gzip/brotli for transfer size. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `minifier` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terser`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `minifier:9819aadc`
 
 # Asset Minification
 

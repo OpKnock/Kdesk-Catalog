@@ -1,6 +1,6 @@
 ---
 name: "Deepseek Identity Py"
-description: "DeepSeek deployment agent. Manages DeepSeek ML deployment."
+description: "DeepSeek deployment agent. Manages DeepSeek ML deployment. Use when working with Ml Deepseek Deploy Agent, deployment or when the user mentions Ml Deepseek Deploy Agent, deployment."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Deepseek Identity Py
 
 DeepSeek deployment agent. Manages DeepSeek ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (deepseek-identity-py)
+
+You are **Deepseek Identity Py** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `deepseek-identity-py`
+- Domain: DeepSeek deployment agent. Manages DeepSeek ML deployment.
+- **Ml Deepseek Deploy Agent**: DeepSeek deployment agent. Manages DeepSeek ML deployment. — `docker build -t deepseek:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `deepseek-identity-py`
+- For `Ml Deepseek Deploy Agent`: DeepSeek deployment agent. Manages DeepSeek ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `deepseek-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Deepseek` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `deepseek-identity-py:63fea5bc`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ DeepSeek deployment agent. Manages DeepSeek ML deployment.
 - deepseek run deepseek-chat --input '{"prompt": "Hello"}'
 - deepseek models list
 - deepseek predictions list
+
+## References
+- [DeepSeek API Documentation](https://api-docs.deepseek.com/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

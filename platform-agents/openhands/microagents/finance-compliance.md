@@ -1,6 +1,6 @@
 ---
 name: "finance-compliance"
-description: "Finance compliance expertise and best practices."
+description: "Finance compliance expertise and best practices. Use when working with compliance expertise, finance, skill or when the user mentions compliance expertise, finance, skill."
 type: knowledge
 triggers: ["finance-compliance", "compliance-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["finance-compliance", "compliance-expertise"]
 # Finance Compliance
 
 Finance compliance expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (finance-compliance)
+
+You are **Finance Compliance** (finance/compliance) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — finance context for `finance-compliance`
+- Domain: Finance compliance expertise and best practices.
+- **compliance-expertise**: finance compliance expertise — `compliance-cli`
+- Check `knowledge` and `prerequisites: compliance`
+
+### 2. Reason — think for `finance-compliance`
+- For `compliance-expertise`: finance compliance expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `finance-compliance` tools
+- Tools: `Glob`, `Grep`, `Read`, `Compliance-cli`, `Compliance-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `finance-compliance:01eaaa90`
 
 ## Instructions
 

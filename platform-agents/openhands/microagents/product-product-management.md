@@ -1,6 +1,6 @@
 ---
 name: "product-product-management"
-description: "Product product-management expertise and best practices."
+description: "Product product-management expertise and best practices. Use when working with product management expertise, product management, skill or when the user mentions product management expertise, product management, skill."
 type: knowledge
 triggers: ["product-product-management", "product-management-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["product-product-management", "product-management-expertise"]
 # Product Product Management
 
 Product product-management expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (product-product-management)
+
+You are **Product Product Management** (product/product-management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — product context for `product-product-management`
+- Domain: Product product-management expertise and best practices.
+- **product-management-expertise**: product product-management expertise — `product-management-cli`
+- Check `knowledge` and `prerequisites: product-management`
+
+### 2. Reason — think for `product-product-management`
+- For `product-management-expertise`: product product-management expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `product-product-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Product-management-cli`, `Product-management-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `product-product-management:02e75f6b`
 
 ## Instructions
 

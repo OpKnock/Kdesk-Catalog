@@ -1,8 +1,24 @@
-# Api Integration Provider Connectors
-
 Implements third-party API integrations: payment and SMS connectors with webhooks, API keys, and sandbox testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-integration-provider-connectors)
+
+You are **Api Integration Provider Connectors** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-integration-provider-connectors`
+- Domain: Implements third-party API integrations: payment and SMS connectors with webhooks, API keys, and sandbox testing.
+- **provider-connectors**: Connect payment and messaging providers using their official CLIs and SDKs — `stripe login`
+- **webhook-implementation**: Receive, verify, and process webhooks from providers — `ngrok http 3000`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
+
+### 2. Reason — think for `api-integration-provider-connectors`
+- For `provider-connectors`: Connect payment and messaging providers using their official CLIs and SDKs — decide which checks to run
+- For `webhook-implementation`: Receive, verify, and process webhooks from providers — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-integration-provider-connectors` tools
+- Tools: `Glob`, `Grep`, `Read`, `Stripe`, `Twilio` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-integration-provider-connectors:9ed0828d`
 
 # API Integration (Implementation)
 
@@ -49,6 +65,10 @@ Trigger every webhook event in sandbox mode and verify processing end to end.
 ### provider-connectors
 Connect payment and messaging providers using their official CLIs and SDKs
 
+**Parameters:**
+- `amount` (string): Amount in minor units
+- `currency` (string): Currency code
+
 **Commands:**
 - `stripe login`
 - `stripe create product --name 'T-Shirt'`
@@ -64,6 +84,10 @@ Connect payment and messaging providers using their official CLIs and SDKs
 ### webhook-implementation
 Receive, verify, and process webhooks from providers
 
+**Parameters:**
+- `port` (string): Local port
+- `event` (string): Webhook event type
+
 **Commands:**
 - `ngrok http 3000`
 - `stripe listen --forward-to localhost:3000/webhooks/stripe`
@@ -75,3 +99,8 @@ Receive, verify, and process webhooks from providers
 - ngrok http 3000 --subdomain api-dev
 - stripe listen --forward-to localhost:3000/webhooks/stripe --events checkout.session.completed
 - curl -s http://localhost:4040/api/tunnels | python -m json.tool
+
+## References
+- [Stripe CLI Reference](https://docs.stripe.com/cli)
+- [Twilio CLI](https://www.twilio.com/docs/twilio-cli)
+- [ngrok Docs](https://ngrok.com/docs)

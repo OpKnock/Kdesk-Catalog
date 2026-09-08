@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(git:*)"
 
 Performs advanced git surgery: bisect debugging, reflog recovery, history rewriting with filter-repo, subtrees, worktrees, and partial clones.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (git-advanced)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **git-advanced** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `git bisect start`, `git filter-repo --path server/ --invert-paths`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `git-advanced`
+- Domain: Performs advanced git surgery: bisect debugging, reflog recovery, history rewriting with filter-repo, subtrees, worktrees, and partial clones.
+- **bisect-and-recovery**: Find the commit that introduced a bug and recover lost work. — `git bisect start`
+- **history-and-trees**: Rewrite history, split repos, and manage subtree and worktree workflows. — `git filter-repo --path server/ --invert-paths`
+- Check `knowledge` and `prerequisites: git`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `git-advanced`
+- For `bisect-and-recovery`: Find the commit that introduced a bug and recover lost work. — decide which checks to run
+- For `history-and-trees`: Rewrite history, split repos, and manage subtree and worktree workflows. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `git-advanced` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `git-advanced:510879b1`
 
 # Advanced Git Techniques
 

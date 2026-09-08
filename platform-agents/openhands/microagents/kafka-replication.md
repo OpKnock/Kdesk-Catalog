@@ -1,15 +1,31 @@
 ---
 name: "kafka-replication"
-description: "Manage Kafka replica health, trigger leader elections, reassign partitions across brokers, and configure throttle rates."
+description: "Manage Kafka replica health, trigger leader elections, reassign partitions across brokers, and configure throttle rates. Use when working with replica health, leader and reassign, api or when the user mentions replica health, leader and reassign, api."
 type: knowledge
 triggers: ["kafka-replication", "replica-health", "leader-and-reassign"]
 ---
 
-# Kafka Replication
-
 Manage Kafka replica health, trigger leader elections, reassign partitions across brokers, and configure throttle rates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-replication)
+
+You are **Kafka Replication** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka-replication`
+- Domain: Manage Kafka replica health, trigger leader elections, reassign partitions across brokers, and configure throttle rates.
+- **replica-health**: Inspect replication health: ISR state, under-replicated partitions, and unclean leaders. — `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`
+- **leader-and-reassign**: Trigger leader elections and reassign replicas around failed brokers. — `kafka-leader-election.sh --bootstrap-server localhost:9092 --election-type prefe`
+- Check `knowledge` and `prerequisites: kafka-configs.sh, kafka-leader-election.sh, kafka-reassign-partitions.sh, kafka-topics.sh`
+
+### 2. Reason — think for `kafka-replication`
+- For `replica-health`: Inspect replication health: ISR state, under-replicated partitions, and unclean leaders. — decide which checks to run
+- For `leader-and-reassign`: Trigger leader elections and reassign replicas around failed brokers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-replication` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-leader-election.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-replication:0d2abde4`
 
 # Kafka Replication
 
@@ -83,6 +99,10 @@ kafka-reassign-partitions.sh --bootstrap-server localhost:9092 \
 ### replica-health
 Inspect replication health: ISR state, under-replicated partitions, and unclean leaders.
 
+**Parameters:**
+- `topic` (string): Topic to inspect.
+- `bootstrap` (string): Bootstrap server address.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions`
@@ -97,6 +117,11 @@ Inspect replication health: ISR state, under-replicated partitions, and unclean 
 ### leader-and-reassign
 Trigger leader elections and reassign replicas around failed brokers.
 
+**Parameters:**
+- `election_type` (string): preferred or unclean.
+- `brokers` (string): Broker ids for reassignment.
+- `throttle_rate` (integer): Replication throttle bytes/sec.
+
 **Commands:**
 - `kafka-leader-election.sh --bootstrap-server localhost:9092 --election-type preferred --all-topic-partitions`
 - `kafka-leader-election.sh --bootstrap-server localhost:9092 --election-type preferred --topic orders --partition 0`
@@ -108,3 +133,7 @@ Trigger leader elections and reassign replicas around failed brokers.
 - kafka-leader-election.sh --bootstrap-server localhost:9092 --election-type preferred --all-topic-partitions
 - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --generate --topics-to-move-json-file topics.json --broker-list "1,2,3"
 - kafka-configs.sh --bootstrap-server localhost:9092 --entity-type brokers --entity-name 1 --alter --add-config "leader.replication.throttled.rate=10000000"
+
+## References
+- [Kafka Replication](https://kafka.apache.org/documentation/#replication)
+- [kafka-leader-election.sh](https://kafka.apache.org/documentation/#tools)

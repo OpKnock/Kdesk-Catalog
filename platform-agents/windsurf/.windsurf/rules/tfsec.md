@@ -6,27 +6,25 @@ globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh", "**/*.tf", "**/*.{yaml,ym
 
 Scans Terraform configurations with tfsec's focused security checks, severity gating, and SARIF/JUnit output.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (tfsec)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **tfsec** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `tfsec .`, `tfsec . --format sarif --out scan.sarif`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `tfsec`
+- Domain: Scans Terraform configurations with tfsec's focused security checks, severity gating, and SARIF/JUnit output.
+- **tfsec-scan**: Scan directories and files with severity and check filters. — `tfsec .`
+- **reporting-and-config**: Emit CI reports and manage custom configuration. — `tfsec . --format sarif --out scan.sarif`
+- Check `knowledge` and `prerequisites: tfsec`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `tfsec`
+- For `tfsec-scan`: Scan directories and files with severity and check filters. — decide which checks to run
+- For `reporting-and-config`: Emit CI reports and manage custom configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `tfsec` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tfsec` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tfsec:a52ea3cd`
 
 # tfsec
 

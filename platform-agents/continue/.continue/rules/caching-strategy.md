@@ -1,15 +1,31 @@
 ---
 name: "Caching Strategy"
-description: "Designs and tunes multi-layer caching systems with Redis, Memcached, and HTTP caches including invalidation, TTL, and cache-aside patterns."
+description: "Designs and tunes multi-layer caching systems with Redis, Memcached, and HTTP caches including invalidation, TTL, and cache-aside patterns. Use when working with redis caching, cache invalidation, backend or when the user mentions redis caching, cache invalidation, backend."
 globs: ["**/*.go", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Caching Strategy
-
 Designs and tunes multi-layer caching systems with Redis, Memcached, and HTTP caches including invalidation, TTL, and cache-aside patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (caching-strategy)
+
+You are **Caching Strategy** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `caching-strategy`
+- Domain: Designs and tunes multi-layer caching systems with Redis, Memcached, and HTTP caches including invalidation, TTL, and cache-aside patterns.
+- **redis-caching**: Operate Redis as a cache: set/get with TTL, scan keys, and inspect memory. — `redis-cli set user:123 "{\"name\":\"alice\"}" EX 300`
+- **cache-invalidation**: Invalidate entries on writes and handle stampede protection. — `redis-cli unlink user:123`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `caching-strategy`
+- For `redis-caching`: Operate Redis as a cache: set/get with TTL, scan keys, and inspect memory. — decide which checks to run
+- For `cache-invalidation`: Invalidate entries on writes and handle stampede protection. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `caching-strategy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `caching-strategy:74141456`
 
 # Caching Strategy
 
@@ -86,6 +102,11 @@ def get_user(user_id):
 ### redis-caching
 Operate Redis as a cache: set/get with TTL, scan keys, and inspect memory.
 
+**Parameters:**
+- `key` (string): Cache key to operate on
+- `ttl` (integer): Time to live in seconds
+- `pattern` (string): Glob pattern for key scans
+
 **Commands:**
 - `redis-cli set user:123 "{\"name\":\"alice\"}" EX 300`
 - `redis-cli --scan --pattern "user:*"`
@@ -101,6 +122,10 @@ Operate Redis as a cache: set/get with TTL, scan keys, and inspect memory.
 ### cache-invalidation
 Invalidate entries on writes and handle stampede protection.
 
+**Parameters:**
+- `pattern` (string): Key pattern to invalidate
+- `mode` (string): del, unlink, or pattern-based invalidation
+
 **Commands:**
 - `redis-cli unlink user:123`
 - `redis-cli pttl user:123`
@@ -110,3 +135,7 @@ Invalidate entries on writes and handle stampede protection.
 **Examples:**
 - redis-cli unlink user:123
 - redis-cli del "article:*"
+
+## References
+- [Redis Docs](https://redis.io/docs/)
+- [Memcached Wiki](https://github.com/memcached/memcached/wiki)

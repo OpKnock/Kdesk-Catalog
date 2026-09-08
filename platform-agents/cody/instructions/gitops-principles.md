@@ -1,8 +1,22 @@
-# Gitops Principles
-
 GitOps principles and workflows: declarative cluster state in git, pull-based sync, and safe rollback practices with kubectl and flux.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gitops-principles)
+
+You are **Gitops Principles** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gitops-principles`
+- Domain: GitOps principles and workflows: declarative cluster state in git, pull-based sync, and safe rollback practices with kubectl and flux.
+- **gitops-workflow**: Apply GitOps practices: declarative manifests, sync reconciliation, and rollbacks. — `kubectl apply --dry-run=client -f manifests/ -o yaml > /dev/null && echo 'valid'`
+- Check `knowledge` and `prerequisites: flux, kubectl`
+
+### 2. Reason — think for `gitops-principles`
+- For `gitops-workflow`: Apply GitOps practices: declarative manifests, sync reconciliation, and rollbacks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gitops-principles` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Flux` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gitops-principles:5b3b76fa`
 
 # GitOps Principles
 
@@ -65,6 +79,11 @@ kubectl diff -f manifests/ | head -40
 ### gitops-workflow
 Apply GitOps practices: declarative manifests, sync reconciliation, and rollbacks.
 
+**Parameters:**
+- `manifest-dir` (string): Directory with declarative manifests
+- `deployment` (string): Deployment to verify or roll back
+- `namespace` (string): Target namespace
+
 **Commands:**
 - `kubectl apply --dry-run=client -f manifests/ -o yaml > /dev/null && echo 'valid'`
 - `kubectl diff -f manifests/`
@@ -77,3 +96,7 @@ Apply GitOps practices: declarative manifests, sync reconciliation, and rollback
 - kubectl diff -f manifests/ && kubectl apply -f manifests/
 - kubectl rollout undo deployment/orders -n app
 - flux reconcile kustomization apps --with-source
+
+## References
+- [GitOps Principles (CNCF)](https://opengitops.dev/)
+- [Weaveworks GitOps guide](https://www.weave.works/technologies/gitops/)

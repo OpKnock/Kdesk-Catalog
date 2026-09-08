@@ -1,8 +1,24 @@
-# Api Doc Site Architecture
-
 Designs documentation site architecture: structure, navigation, code samples, and OpenAPI-based generation pipelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-doc-site-architecture)
+
+You are **Api Doc Site Architecture** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-doc-site-architecture`
+- Domain: Designs documentation site architecture: structure, navigation, code samples, and OpenAPI-based generation pipelines.
+- **site-architecture**: Structure docs sites: guides, reference, tutorials, and changelog — `mkdir -p docs/guides docs/reference docs/tutorials docs/changelog`
+- **generation-pipeline**: Generate reference docs from OpenAPI with Redocly — `npx @redocly/cli lint openapi.yaml`
+- Check `knowledge` and `prerequisites: swagger-cli, redoc-cli, openapi-generator`
+
+### 2. Reason — think for `api-doc-site-architecture`
+- For `site-architecture`: Structure docs sites: guides, reference, tutorials, and changelog — decide which checks to run
+- For `generation-pipeline`: Generate reference docs from OpenAPI with Redocly — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-doc-site-architecture` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mkdir`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-doc-site-architecture:e3906eb0`
 
 # API Doc (Site Design)
 
@@ -46,6 +62,10 @@ Preview docs locally and verify every link and example.
 ### site-architecture
 Structure docs sites: guides, reference, tutorials, and changelog
 
+**Parameters:**
+- `siteDir` (string): Docs root directory
+- `sections` (string): Site sections
+
 **Commands:**
 - `mkdir -p docs/guides docs/reference docs/tutorials docs/changelog`
 - `node -e "const fs=require('fs');fs.writeFileSync('docs/guides/quickstart.md','# Quickstart\n')"`
@@ -61,6 +81,10 @@ Structure docs sites: guides, reference, tutorials, and changelog
 ### generation-pipeline
 Generate reference docs from OpenAPI with Redocly
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+- `output` (string): Output HTML path
+
 **Commands:**
 - `npx @redocly/cli lint openapi.yaml`
 - `npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml`
@@ -72,3 +96,7 @@ Generate reference docs from OpenAPI with Redocly
 - npx @redocly/cli lint openapi.yaml && npx @redocly/cli build-docs openapi.yaml -o public/reference.html
 - npx @redocly/cli preview-docs openapi.yaml
 - npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml
+
+## References
+- [Redocly CLI](https://redocly.com/docs/cli/)
+- [Diátaxis Framework](https://diataxis.fr/)

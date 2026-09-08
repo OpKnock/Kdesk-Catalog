@@ -1,15 +1,33 @@
 ---
 name: "authentication"
-description: "Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl."
+description: "Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl. Use when working with oauth tokens, jwt verify, bearer testing, api or when the user mentions oauth tokens, jwt verify, bearer testing, api."
 type: knowledge
 triggers: ["authentication", "oauth-tokens", "jwt-verify", "bearer-testing"]
 ---
 
-# Authentication
-
 Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (authentication)
+
+You are **Authentication** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `authentication`
+- Domain: Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl.
+- **oauth-tokens**: Acquire and validate OAuth2/OIDC tokens. — `curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_creden`
+- **jwt-verify**: Inspect and verify JWTs with openssl and jq. — `openssl genrsa -out private.pem 2048`
+- **bearer-testing**: Test authenticated API calls with curl. — `curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me`
+- Check `knowledge` and `prerequisites: echo, openssl`
+
+### 2. Reason — think for `authentication`
+- For `oauth-tokens`: Acquire and validate OAuth2/OIDC tokens. — decide which checks to run
+- For `jwt-verify`: Inspect and verify JWTs with openssl and jq. — decide which checks to run
+- For `bearer-testing`: Test authenticated API calls with curl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `authentication` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Openssl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `authentication:0cbc65d2`
 
 # Authentication
 
@@ -64,6 +82,11 @@ openssl rsa -in private.pem -pubout -out public.pem
 ### oauth-tokens
 Acquire and validate OAuth2/OIDC tokens.
 
+**Parameters:**
+- `token_url` (string): OAuth2 token endpoint
+- `grant_type` (string): client_credentials, authorization_code, refresh_token
+- `scope` (string): Requested scopes
+
 **Commands:**
 - `curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials -d client_id=api -d client_secret=secret -d scope=api:read`
 - `curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=authorization_code -d code=xyz -d redirect_uri=https://app.your-app.test/callback -d client_id=api -d client_secret=secret`
@@ -77,6 +100,10 @@ Acquire and validate OAuth2/OIDC tokens.
 
 ### jwt-verify
 Inspect and verify JWTs with openssl and jq.
+
+**Parameters:**
+- `token` (string): JWT to inspect
+- `key_file` (string): Public key file for verification
 
 **Commands:**
 - `openssl genrsa -out private.pem 2048`
@@ -93,6 +120,10 @@ Inspect and verify JWTs with openssl and jq.
 ### bearer-testing
 Test authenticated API calls with curl.
 
+**Parameters:**
+- `url` (string): Protected endpoint
+- `method` (string): HTTP method
+
 **Commands:**
 - `curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me`
 - `curl -i https://api.your-app.test/v1/me`
@@ -103,3 +134,8 @@ Test authenticated API calls with curl.
 - curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me
 - curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me | head -20
 - curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/orders
+
+## References
+- [OAuth 2.0](https://oauth.net/2/)
+- [JWT Introduction](https://jwt.io/introduction)
+- [OWASP Auth Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)

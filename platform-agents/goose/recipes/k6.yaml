@@ -1,33 +1,50 @@
 title: k6
 description: Load-tests APIs with k6 scripts, scenarios, thresholds, and Grafana Cloud reporting.
 version: 2.0.0
-instructions: "# k6\n\nLoad-tests APIs with k6 scripts, scenarios, thresholds, and Grafana Cloud reporting.\n\
-  \n## Instructions\n\n# k6\n\nLoad testing with developer-friendly JavaScript scripts.\n\n## What This\
-  \ Skill Does\n\n- Runs scenarios with virtual users, iterations, and ramps\n- Asserts SLOs with thresholds\n\
-  - Exports JSON/cloud results\n- Archives tests for reproducibility\n\n## When to Use\n\n- Capacity planning\
-  \ and soak tests\n- SLO validation under load\n- API regression performance checks\n\n## Real Commands\n\
-  \n```bash\n# Run\nk6 run script.js\nk6 run -u 100 -d 30s script.js\nk6 run --iterations 1000 script.js\n\
-  k6 run --env BASE_URL=https://staging.example.com script.js\n\n# Outputs\nk6 run --summary-trend-stats=\"\
-  avg,p(95),p(99)\" script.js\nk6 run --out json=results.json script.js\n\n# Cloud\nk6 login cloud\nk6\
-  \ cloud run script.js\n```\n\n## Sample Script\n\n```js\nimport http from 'k6/http';\nimport { check,\
-  \ sleep } from 'k6';\n\nexport const options = {\n  scenarios: {\n    load: { executor: 'ramping-vus',\
-  \ stages: [\n      { duration: '1m', target: 50 },\n      { duration: '5m', target: 200 },\n      {\
-  \ duration: '1m', target: 0 }\n    ]}\n  },\n  thresholds: {\n    http_req_failed: ['rate<0.01'],\n\
-  \    http_req_duration: ['p(95)<500']\n  }\n};\n\nexport default function () {\n  const res = http.get(`${__ENV.BASE_URL}/v1/products`);\n\
-  \  check(res, { 'status is 200': (r) => r.status === 200 });\n  sleep(1);\n}\n```\n\n## Best Practices\n\
-  \n- Ramp VUs gradually; test both steady state and spikes\n- Set thresholds that mirror SLOs\n- Check\
-  \ p(95)/p(99), not just averages\n- Use __ENV for environment-specific URLs\n- Archive scripts for reproducible\
-  \ runs\n\n## Capabilities\n\n### k6-runs\nRun k6 test scripts with virtual users and durations.\n\n\
-  **Commands:**\n- `k6 run script.js`\n- `k6 run -u 100 -d 30s script.js`\n- `k6 run --vus 50 --duration\
-  \ 2m script.js`\n- `k6 run --iterations 1000 script.js`\n- `k6 run --env BASE_URL=http://localhost:8080\
-  \ script.js`\n\n**Examples:**\n- k6 run -u 100 -d 30s script.js\n- k6 run --iterations 1000 script.js\n\
-  - k6 run --env BASE_URL=http://localhost:8080 script.js\n\n### thresholds-and-reports\nAssert performance\
-  \ and export results.\n\n**Commands:**\n- `k6 run --summary-trend-stats=\"avg,p(95),p(99)\" script.js`\n\
-  - `k6 run --out json=results.json script.js`\n- `k6 run --out web-dashboard script.js`\n- `k6 run --tag\
-  \ env=staging script.js`\n- `k6 login cloud`\n\n**Examples:**\n- k6 run --summary-trend-stats=\"avg,p(95),p(99)\"\
-  \ script.js\n- k6 run --out json=results.json script.js\n- k6 run --out web-dashboard script.js\n\n\
-  ### cloud-integration\nRun tests in k6 Cloud and inspect archives.\n\n**Commands:**\n- `k6 cloud run\
-  \ script.js`\n- `k6 run --out cloud script.js`\n- `k6 archive script.js`\n- `k6 inspect script.js`\n\
-  - `k6 cloud start --name \"weekly capacity\" script.js`\n\n**Examples:**\n- k6 cloud run script.js\n\
-  - k6 archive script.js\n- k6 inspect script.js"
+instructions: "Load-tests APIs with k6 scripts, scenarios, thresholds, and Grafana Cloud reporting.\n\n\
+  ## Agentic Workflow: Read -> Reason -> Act (k6)\n\nYou are **k6** (testing/general) — a sub-agent that\
+  \ **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — testing context for `k6`\n- Domain:\
+  \ Load-tests APIs with k6 scripts, scenarios, thresholds, and Grafana Cloud reporting.\n- **k6-runs**:\
+  \ Run k6 test scripts with virtual users and durations. — `k6 run script.js`\n- **thresholds-and-reports**:\
+  \ Assert performance and export results. — `k6 run --summary-trend-stats=\"avg,p(95),p(99)\" script.js`\n\
+  - **cloud-integration**: Run tests in k6 Cloud and inspect archives. — `k6 cloud run script.js`\n- Check\
+  \ `knowledge` and `prerequisites: k6`\n\n### 2. Reason — think for `k6`\n- For `k6-runs`: Run k6 test\
+  \ scripts with virtual users and durations. — decide which checks to run\n- For `thresholds-and-reports`:\
+  \ Assert performance and export results. — decide which checks to run\n- For `cloud-integration`: Run\
+  \ tests in k6 Cloud and inspect archives. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `k6` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `K6` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `k6:fed60d0d`\n\n# k6\n\nLoad testing with\
+  \ developer-friendly JavaScript scripts.\n\n## What This Skill Does\n\n- Runs scenarios with virtual\
+  \ users, iterations, and ramps\n- Asserts SLOs with thresholds\n- Exports JSON/cloud results\n- Archives\
+  \ tests for reproducibility\n\n## When to Use\n\n- Capacity planning and soak tests\n- SLO validation\
+  \ under load\n- API regression performance checks\n\n## Real Commands\n\n```bash\n# Run\nk6 run script.js\n\
+  k6 run -u 100 -d 30s script.js\nk6 run --iterations 1000 script.js\nk6 run --env BASE_URL=https://staging.example.com\
+  \ script.js\n\n# Outputs\nk6 run --summary-trend-stats=\"avg,p(95),p(99)\" script.js\nk6 run --out json=results.json\
+  \ script.js\n\n# Cloud\nk6 login cloud\nk6 cloud run script.js\n```\n\n## Sample Script\n\n```js\nimport\
+  \ http from 'k6/http';\nimport { check, sleep } from 'k6';\n\nexport const options = {\n  scenarios:\
+  \ {\n    load: { executor: 'ramping-vus', stages: [\n      { duration: '1m', target: 50 },\n      {\
+  \ duration: '5m', target: 200 },\n      { duration: '1m', target: 0 }\n    ]}\n  },\n  thresholds: {\n\
+  \    http_req_failed: ['rate<0.01'],\n    http_req_duration: ['p(95)<500']\n  }\n};\n\nexport default\
+  \ function () {\n  const res = http.get(`${__ENV.BASE_URL}/v1/products`);\n  check(res, { 'status is\
+  \ 200': (r) => r.status === 200 });\n  sleep(1);\n}\n```\n\n## Best Practices\n\n- Ramp VUs gradually;\
+  \ test both steady state and spikes\n- Set thresholds that mirror SLOs\n- Check p(95)/p(99), not just\
+  \ averages\n- Use __ENV for environment-specific URLs\n- Archive scripts for reproducible runs\n\n##\
+  \ Capabilities\n\n### k6-runs\nRun k6 test scripts with virtual users and durations.\n\n**Parameters:**\n\
+  - `vus` (number): Virtual users\n- `duration` (string): Test duration, e.g. 30s, 2m\n- `iterations`\
+  \ (number): Total iterations\n\n**Commands:**\n- `k6 run script.js`\n- `k6 run -u 100 -d 30s script.js`\n\
+  - `k6 run --vus 50 --duration 2m script.js`\n- `k6 run --iterations 1000 script.js`\n- `k6 run --env\
+  \ BASE_URL=http://localhost:8080 script.js`\n\n**Examples:**\n- k6 run -u 100 -d 30s script.js\n- k6\
+  \ run --iterations 1000 script.js\n- k6 run --env BASE_URL=http://localhost:8080 script.js\n\n### thresholds-and-reports\n\
+  Assert performance and export results.\n\n**Parameters:**\n- `out` (string): Output destination, e.g.\
+  \ json=file, cloud\n- `tag` (string): Result tag, e.g. env=staging\n\n**Commands:**\n- `k6 run --summary-trend-stats=\"\
+  avg,p(95),p(99)\" script.js`\n- `k6 run --out json=results.json script.js`\n- `k6 run --out web-dashboard\
+  \ script.js`\n- `k6 run --tag env=staging script.js`\n- `k6 login cloud`\n\n**Examples:**\n- k6 run\
+  \ --summary-trend-stats=\"avg,p(95),p(99)\" script.js\n- k6 run --out json=results.json script.js\n\
+  - k6 run --out web-dashboard script.js\n\n### cloud-integration\nRun tests in k6 Cloud and inspect archives.\n\
+  \n**Parameters:**\n- `name` (string): Cloud run name\n- `out` (string): Result output destination: cloud\
+  \ or a local sink.\n\n**Commands:**\n- `k6 cloud run script.js`\n- `k6 run --out cloud script.js`\n\
+  - `k6 archive script.js`\n- `k6 inspect script.js`\n- `k6 cloud start --name \"weekly capacity\" script.js`\n\
+  \n**Examples:**\n- k6 cloud run script.js\n- k6 archive script.js\n- k6 inspect script.js\n\n## References\n\
+  - [k6 Documentation](https://grafana.com/docs/k6/)\n- [k6 CLI Reference](https://grafana.com/docs/k6/using-k6/k6-options/reference/)"
 prompt: Act as k6 and handle the task per the instructions.

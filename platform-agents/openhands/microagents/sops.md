@@ -1,15 +1,31 @@
 ---
 name: "sops"
-description: "Encrypts YAML/JSON/ENV files with SOPS keys (age, KMS, PGP): edit, set values, decrypt, and GitOps integration."
+description: "Encrypts YAML/JSON/ENV files with SOPS keys (age, KMS, PGP): edit, set values, decrypt, and GitOps integration. Use when working with encrypt decrypt, edit and manage, devops or when the user mentions encrypt decrypt, edit and manage, devops."
 type: knowledge
 triggers: ["sops", "encrypt-decrypt", "edit-and-manage"]
 ---
 
-# Sops
-
 Encrypts YAML/JSON/ENV files with SOPS keys (age, KMS, PGP): edit, set values, decrypt, and GitOps integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sops)
+
+You are **Sops** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `sops`
+- Domain: Encrypts YAML/JSON/ENV files with SOPS keys (age, KMS, PGP): edit, set values, decrypt, and GitOps integration.
+- **encrypt-decrypt**: Encrypt and decrypt files with configured key services. — `sops -e -i secrets.yaml`
+- **edit-and-manage**: Edit encrypted values in place and manage key services. — `sops secrets.yaml`
+- Check `knowledge` and `prerequisites: sops`
+
+### 2. Reason — think for `sops`
+- For `encrypt-decrypt`: Encrypt and decrypt files with configured key services. — decide which checks to run
+- For `edit-and-manage`: Edit encrypted values in place and manage key services. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sops` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sops:43c0193f`
 
 # SOPS Secret Encryption
 
@@ -73,6 +89,10 @@ creation_rules:
 ### encrypt-decrypt
 Encrypt and decrypt files with configured key services.
 
+**Parameters:**
+- `file` (string): File to encrypt/decrypt
+- `key` (string): age or key-service identifier
+
 **Commands:**
 - `sops -e -i secrets.yaml`
 - `sops -d secrets.yaml`
@@ -88,6 +108,10 @@ Encrypt and decrypt files with configured key services.
 ### edit-and-manage
 Edit encrypted values in place and manage key services.
 
+**Parameters:**
+- `path` (string): JSON path to value, e.g. ["db"]["password"]
+- `value` (string): New value
+
 **Commands:**
 - `sops secrets.yaml`
 - `sops --set '["db"]["password"] "newpass"' secrets.yaml`
@@ -100,3 +124,7 @@ Edit encrypted values in place and manage key services.
 - sops secrets.yaml
 - sops --set '["db"]["password"] "newpass"' secrets.yaml
 - sops updatekeys --yes secrets.yaml
+
+## References
+- [SOPS (getsops)](https://github.com/getsops/sops)
+- [SOPS for GitOps](https://fluxcd.io/flux/guides/mozilla-sops/)

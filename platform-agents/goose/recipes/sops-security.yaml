@@ -2,34 +2,53 @@ title: sops-security
 description: Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration
   for secrets management.
 version: 2.0.0
-instructions: "# sops-security\n\nEncrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using\
-  \ SOPS, with git integration for secrets management.\n\n## Instructions\n\n# SOPS\n\nSecrets as encrypted\
-  \ files: edit, commit, decrypt at deploy time.\n\n## What This Skill Does\n\n- Encrypts YAML, JSON,\
-  \ ENV, and binary files with per-value encryption\n- Uses age, PGP, KMS, or Vault key providers\n- Edits\
-  \ encrypted files in place without exposing values\n- Integrates with git diff for reviewable secret\
-  \ changes\n\n## When to Use\n\n- Secrets in GitOps repos with KMS-backed decryption\n- Team workflows\
-  \ that review secret changes in PRs\n- Replacing plaintext config files in CI\n\n## Real Commands\n\n\
-  ```bash\n# Encrypt with age\nsops -e --age age1q... secrets.yaml > secrets.enc.yaml\n\n# Encrypt in\
-  \ place\nsops -e -i secrets.yaml\n\n# Decrypt\nsops -d secrets.enc.yaml\n\n# Edit interactively (decrypts\
-  \ in memory)\nsops secrets.enc.yaml\n\n# Set values non-interactively\nsops --set '[\"db_password\"\
-  ] \"newpass\"' secrets.enc.yaml\n\n# KMS-backed\nsops -e --kms arn:aws:kms:us-east-1:123456789012:key/abcd\
+instructions: "Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration\
+  \ for secrets management.\n\n## Agentic Workflow: Read -> Reason -> Act (sops-security)\n\nYou are **sops-security**\
+  \ (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1.\
+  \ Read — security context for `sops-security`\n- Domain: Encrypts YAML/JSON/ENV files with age, PGP,\
+  \ KMS, or Vault keys using SOPS, with git integration for secrets management.\n- **file-encryption**:\
+  \ Encrypt and decrypt config files with key providers. — `sops -e secrets.yaml > secrets.enc.yaml`\n\
+  - **editing-and-kms**: Edit encrypted values and use cloud KMS keys. — `sops secrets.enc.yaml`\n- **git-integration**:\
+  \ Use sops with git diff and merge tools. — `git config --global diff.sopsdiffer.textconv \"sops -d\"\
+  `\n- Check `knowledge` and `prerequisites: git, sops`\n\n### 2. Reason — think for `sops-security`\n\
+  - For `file-encryption`: Encrypt and decrypt config files with key providers. — decide which checks\
+  \ to run\n- For `editing-and-kms`: Edit encrypted values and use cloud KMS keys. — decide which checks\
+  \ to run\n- For `git-integration`: Use sops with git diff and merge tools. — decide which checks to\
+  \ run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act\
+  \ — execute with `sops-security` tools\n- Tools: `Glob`, `Grep`, `Read`, `Sops`, `Bash` (see frontmatter\
+  \ `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint:\
+  \ `sops-security:a4c8b30f`\n\n# SOPS\n\nSecrets as encrypted files: edit, commit, decrypt at deploy\
+  \ time.\n\n## What This Skill Does\n\n- Encrypts YAML, JSON, ENV, and binary files with per-value encryption\n\
+  - Uses age, PGP, KMS, or Vault key providers\n- Edits encrypted files in place without exposing values\n\
+  - Integrates with git diff for reviewable secret changes\n\n## When to Use\n\n- Secrets in GitOps repos\
+  \ with KMS-backed decryption\n- Team workflows that review secret changes in PRs\n- Replacing plaintext\
+  \ config files in CI\n\n## Real Commands\n\n```bash\n# Encrypt with age\nsops -e --age age1q... secrets.yaml\
+  \ > secrets.enc.yaml\n\n# Encrypt in place\nsops -e -i secrets.yaml\n\n# Decrypt\nsops -d secrets.enc.yaml\n\
+  \n# Edit interactively (decrypts in memory)\nsops secrets.enc.yaml\n\n# Set values non-interactively\n\
+  sops --set '[\"db_password\"] \"newpass\"' secrets.enc.yaml\n\n# KMS-backed\nsops -e --kms arn:aws:kms:us-east-1:123456789012:key/abcd\
   \ secrets.yaml\n\n# Update keys after rotation\nsops updatekeys secrets.enc.yaml\n```\n\n## .sops.yaml\n\
   \n```yaml\ncreation_rules:\n  - path_regex: secrets/.*\\.yaml\n    age: age1q...\n  - path_regex: prod/.*\\\
   .env\n    kms: arn:aws:kms:us-east-1:123456789012:key/abcd\n```\n\n## Best Practices\n\n- Define creation_rules\
   \ so sops picks keys by path automatically\n- Never commit plaintext versions of encrypted files\n-\
   \ Rotate keys and run sops updatekeys on all files\n- Use KMS/age keys over PGP where possible for automation\n\
   - Configure the git diff textconv so PRs show readable diffs\n\n## Capabilities\n\n### file-encryption\n\
-  Encrypt and decrypt config files with key providers.\n\n**Commands:**\n- `sops -e secrets.yaml > secrets.enc.yaml`\n\
-  - `sops -d secrets.enc.yaml`\n- `sops -e --age age1q... secrets.yaml`\n- `sops -e --pgp ABCDEF... secrets.yaml`\n\
+  Encrypt and decrypt config files with key providers.\n\n**Parameters:**\n- `ageRecipients` (array):\
+  \ age1... recipient keys\n- `pgpFingerprints` (array): PGP key fingerprints\n- `inPlace` (boolean):\
+  \ Encrypt the file in place (-i)\n\n**Commands:**\n- `sops -e secrets.yaml > secrets.enc.yaml`\n- `sops\
+  \ -d secrets.enc.yaml`\n- `sops -e --age age1q... secrets.yaml`\n- `sops -e --pgp ABCDEF... secrets.yaml`\n\
   - `sops -e -i secrets.yaml`\n\n**Examples:**\n- sops -e secrets.yaml > secrets.enc.yaml\n- sops -d secrets.enc.yaml\n\
   - sops -e -i secrets.yaml\n\n### editing-and-kms\nEdit encrypted values and use cloud KMS keys.\n\n\
-  **Commands:**\n- `sops secrets.enc.yaml`\n- `sops --set '[\"db_password\"] \"newpass\"' secrets.enc.yaml`\n\
-  - `sops --set '[\"db\"][\"host\"] \"db.internal\"' secrets.enc.yaml`\n- `sops -e --kms arn:aws:kms:us-east-1:123456789012:key/abcd\
-  \ secrets.yaml`\n- `sops -k -e secrets.yaml`\n\n**Examples:**\n- sops secrets.enc.yaml\n- sops --set\
-  \ '[\"api_key\"] \"xyz\"' secrets.enc.yaml\n- sops -e --kms arn:aws:kms:... secrets.yaml\n\n### git-integration\n\
-  Use sops with git diff and merge tools.\n\n**Commands:**\n- `git config --global diff.sopsdiffer.textconv\
-  \ \"sops -d\"`\n- `git config --global merge.sopsmerge.driver \"sops merge-file --output %A %O %A %B\"\
-  `\n- `sops updatekeys secrets.enc.yaml`\n- `sops --config .sops.yaml -e secrets.yaml`\n\n**Examples:**\n\
+  **Parameters:**\n- `kms` (array): KMS ARNs for encryption keys\n- `set` (object): Path-value pairs to\
+  \ set on the file\n\n**Commands:**\n- `sops secrets.enc.yaml`\n- `sops --set '[\"db_password\"] \"newpass\"\
+  ' secrets.enc.yaml`\n- `sops --set '[\"db\"][\"host\"] \"db.internal\"' secrets.enc.yaml`\n- `sops -e\
+  \ --kms arn:aws:kms:us-east-1:123456789012:key/abcd secrets.yaml`\n- `sops -k -e secrets.yaml`\n\n**Examples:**\n\
+  - sops secrets.enc.yaml\n- sops --set '[\"api_key\"] \"xyz\"' secrets.enc.yaml\n- sops -e --kms arn:aws:kms:...\
+  \ secrets.yaml\n\n### git-integration\nUse sops with git diff and merge tools.\n\n**Parameters:**\n\
+  - `config` (string): Path to .sops.yaml config file\n- `encryptionTarget` (string): File to encrypt\
+  \ with the configured sops keys.\n\n**Commands:**\n- `git config --global diff.sopsdiffer.textconv \"\
+  sops -d\"`\n- `git config --global merge.sopsmerge.driver \"sops merge-file --output %A %O %A %B\"`\n\
+  - `sops updatekeys secrets.enc.yaml`\n- `sops --config .sops.yaml -e secrets.yaml`\n\n**Examples:**\n\
   - git config --global diff.sopsdiffer.textconv \"sops -d\"\n- sops updatekeys secrets.enc.yaml\n- sops\
-  \ --config .sops.yaml -e secrets.yaml"
+  \ --config .sops.yaml -e secrets.yaml\n\n## References\n- [SOPS GitHub](https://github.com/getsops/sops)\n\
+  - [SOPS Keys Documentation](https://getsops.io/docs/)"
 prompt: Act as sops-security and handle the task per the instructions.

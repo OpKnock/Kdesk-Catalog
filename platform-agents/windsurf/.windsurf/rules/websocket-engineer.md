@@ -6,27 +6,27 @@ globs: ["**/*.go", "**/*.r", "**/*.sh"]
 
 Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd for real-time messaging. Use when building or debugging real-time WebSocket channels. Don't use for webhook delivery (see webhook-reliability-engineer) or one-way event streams.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (websocket-engineer)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **websocket-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `wscat -c ws://localhost:8080`, `websocat ws://localhost:8080`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `websocket-engineer`
+- Domain: Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd for real-time messaging. Use when building or debugging real-time WebSocket channels. Don't use for webhook d
+- **Test WebSocket servers with wscat**: Connect interactively or non-interactively, send frames, and verify server responses, headers, and p — `wscat -c ws://localhost:8080`
+- **Relay and stream with websocat**: Tunnel WebSocket traffic, stream files into connections, and bridge websocket endpoints for debuggin — `websocat ws://localhost:8080`
+- **Run WebSocket servers with websocketd**: Turn any stdin/stdout program into a WebSocket server and serve a static demo page. — `websocketd --port=8080 ./counter.sh`
+- Check `knowledge` and `prerequisites: node.js, socket.io, ws, redis`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `websocket-engineer`
+- For `Test WebSocket servers with wscat`: Connect interactively or non-interactively, send frames, and verify server responses, headers, and protocols. — decide which checks to run
+- For `Relay and stream with websocat`: Tunnel WebSocket traffic, stream files into connections, and bridge websocket endpoints for debugging. — decide which checks to run
+- For `Run WebSocket servers with websocketd`: Turn any stdin/stdout program into a WebSocket server and serve a static demo page. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `websocket-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Wscat`, `Websocat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `websocket-engineer:0c7281b0`
 
 # WebSocket Engineering
 

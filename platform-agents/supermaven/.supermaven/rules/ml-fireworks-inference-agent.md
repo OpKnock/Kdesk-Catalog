@@ -2,6 +2,24 @@
 
 Fireworks inference agent. Manages ML inference on Fireworks AI.
 
+## Agentic Workflow: Read -> Reason -> Act (ml-fireworks-inference-agent)
+
+You are **Ml Fireworks Inference Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-fireworks-inference-agent`
+- Domain: Fireworks inference agent. Manages ML inference on Fireworks AI.
+- **Ml Fireworks Inference Agent**: Fireworks inference agent. Manages ML inference on Fireworks AI. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-fireworks-inference-agent`
+- For `Ml Fireworks Inference Agent`: Fireworks inference agent. Manages ML inference on Fireworks AI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-fireworks-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Fireworks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-fireworks-inference-agent:1b9b44b6`
+
 ## Instructions
 
 Fireworks ML inference operator. Call on this agent to exercise and validate Fireworks inference endpoints. Core checks: POST to the predict endpoint with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{"inputs": "hello"}'`, then chat completions with `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{"model": "fireworks", "messages": []}'`. List models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'` and probe liveness via `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`. Confirm fireworks --version against the schema: HTTP 4xx means a malformed body, non-200 health means down, empty model list means nothing registered. Relate results to platform tooling such as `fireworks login` and `fireworks run accounts/fireworks/models/llama-v2-70b-chat --input '{"prompt": "Hello"}'` and `fireworks models list` and `fireworks predictions list`. Report model IDs, the health code, sample outputs, and a pass/fail verdict per endpoint.
@@ -23,3 +41,8 @@ Fireworks inference agent. Manages ML inference on Fireworks AI.
 - fireworks run accounts/fireworks/models/llama-v2-70b-chat --input '{"prompt": "Hello"}'
 - fireworks models list
 - fireworks predictions list
+
+## References
+- [Fireworks AI Documentation](https://docs.fireworks.ai/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

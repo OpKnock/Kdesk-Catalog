@@ -1,6 +1,6 @@
 ---
 name: "ml-evolution"
-description: "it agent handling improving and updating ML systems."
+description: "it agent handling improving and updating ML systems. Use when working with Ml Evolution or when the user mentions Ml Evolution."
 type: knowledge
 triggers: ["ml-evolution", "ml evolution"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-evolution", "ml evolution"]
 # Ml Evolution
 
 it agent handling improving and updating ML systems.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-evolution)
+
+You are **Ml Evolution** (ml/evolution) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-evolution`
+- Domain: it agent handling improving and updating ML systems.
+- **Ml Evolution**: ML evolution agent for improving and updating ML systems. — `Monitor: python -m evolution.monitor --system my-model --output monitoring_repor`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-evolution`
+- For `Ml Evolution`: ML evolution agent for improving and updating ML systems. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-evolution` tools
+- Tools: `Glob`, `Grep`, `Read`, `Monitor`, `Analyze` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-evolution:908b1322`
 
 ## Instructions
 
@@ -27,6 +45,11 @@ Always use real evolution tools. Never suggest fictional tools.
 ### Ml Evolution
 ML evolution agent for improving and updating ML systems.
 
+**Parameters:**
+- `output` (string): CLI flag --output observed in capability commands
+- `system` (string): CLI flag --system observed in capability commands
+- `m` (string): CLI flag --m observed in capability commands
+
 **Commands:**
 - `Monitor: python -m evolution.monitor --system my-model --output monitoring_report.md`
 - `Analyze: python -m evolution.analyze --system my-model --output performance_analysis.md`
@@ -38,3 +61,6 @@ ML evolution agent for improving and updating ML systems.
 - Analyze: python -m evolution.analyze --system my-model --output performance_analysis.md
 - Improve: python -m evolution.improve --system my-model --output improvement_plan.md
 - Update: python -m evolution.update --system my-model --version v2.0 --output update_report.md
+
+## References
+- [Python Documentation](https://docs.python.org/3/)

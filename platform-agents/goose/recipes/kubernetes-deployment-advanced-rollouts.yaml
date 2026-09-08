@@ -2,8 +2,21 @@ title: Kubernetes Deployment Advanced Rollouts
 description: 'Advanced Kubernetes deployment strategies: canary and blue/green rollouts, rollbacks to
   revisions, and rollout pausing/resuming.'
 version: 2.0.0
-instructions: "# Kubernetes Deployment Advanced Rollouts\n\nAdvanced Kubernetes deployment strategies:\
-  \ canary and blue/green rollouts, rollbacks to revisions, and rollout pausing/resuming.\n\n## Instructions\n\
+instructions: "Advanced Kubernetes deployment strategies: canary and blue/green rollouts, rollbacks to\
+  \ revisions, and rollout pausing/resuming.\n\n## Agentic Workflow: Read -> Reason -> Act (kubernetes-deployment-advanced-rollouts)\n\
+  \nYou are **Kubernetes Deployment Advanced Rollouts** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `kubernetes-deployment-advanced-rollouts`\n\
+  - Domain: Advanced Kubernetes deployment strategies: canary and blue/green rollouts, rollbacks to revisions,\
+  \ and rollout pausing/resuming.\n- **advanced-rollouts**: Manage revisions: history, rollback, pause,\
+  \ and resume. — `kubectl rollout history deployment/nginx`\n- **canary-bluegreen**: Implement canary\
+  \ and blue/green release patterns with labels and services. — `kubectl apply -f canary-deployment.yaml`\n\
+  - Check `knowledge` and `prerequisites: kubectl`\n\n### 2. Reason — think for `kubernetes-deployment-advanced-rollouts`\n\
+  - For `advanced-rollouts`: Manage revisions: history, rollback, pause, and resume. — decide which checks\
+  \ to run\n- For `canary-bluegreen`: Implement canary and blue/green release patterns with labels and\
+  \ services. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `kubernetes-deployment-advanced-rollouts` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `kubernetes-deployment-advanced-rollouts:9ed5b168`\n\
   \n# Kubernetes Deployments (Advanced)\n\nProgressive delivery: canaries, blue/green, and controlled\
   \ rollbacks.\n\n## What this skill does\n\n- Inspects rollout history and rolls back to prior revisions.\n\
   - Pauses/resumes rollouts for manual verification gates.\n- Runs canary and blue/green patterns with\
@@ -24,15 +37,19 @@ instructions: "# Kubernetes Deployment Advanced Rollouts\n\nAdvanced Kubernetes 
   \n- Use rollout undo --to-revision=N instead of manual image reverts.\n- Keep a few old revisions (revisionHistoryLimit)\
   \ for quick rollbacks.\n- Combine canaries with metrics gates (Argo Rollouts) for automation.\n\n##\
   \ Capabilities\n\n### advanced-rollouts\nManage revisions: history, rollback, pause, and resume.\n\n\
-  **Commands:**\n- `kubectl rollout history deployment/nginx`\n- `kubectl rollout history deployment/nginx\
+  **Parameters:**\n- `name` (string): Deployment name.\n- `revision` (integer): Revision number for history/undo.\n\
+  \n**Commands:**\n- `kubectl rollout history deployment/nginx`\n- `kubectl rollout history deployment/nginx\
   \ --revision=3`\n- `kubectl rollout undo deployment/nginx`\n- `kubectl rollout undo deployment/nginx\
   \ --to-revision=2`\n- `kubectl rollout pause deployment/nginx`\n- `kubectl rollout resume deployment/nginx`\n\
   \n**Examples:**\n- kubectl rollout history deployment/nginx\n- kubectl rollout undo deployment/nginx\
   \ --to-revision=2\n- kubectl rollout pause deployment/nginx\n\n### canary-bluegreen\nImplement canary\
-  \ and blue/green release patterns with labels and services.\n\n**Commands:**\n- `kubectl apply -f canary-deployment.yaml`\n\
-  - `kubectl get deployments -l app=nginx --show-labels`\n- `kubectl scale deployment nginx-canary --replicas=1`\n\
-  - `kubectl apply -f blue-deployment.yaml && kubectl apply -f green-deployment.yaml`\n- `kubectl patch\
-  \ service nginx -p '{\"spec\":{\"selector\":{\"track\":\"green\"}}}'`\n\n**Examples:**\n- kubectl apply\
-  \ -f canary-deployment.yaml\n- kubectl scale deployment nginx-canary --replicas=1\n- kubectl patch service\
-  \ nginx -p '{\"spec\":{\"selector\":{\"track\":\"green\"}}}'"
+  \ and blue/green release patterns with labels and services.\n\n**Parameters:**\n- `canary_replicas`\
+  \ (integer): Replica count for the canary.\n- `track` (string): Service selector track: blue or green.\n\
+  \n**Commands:**\n- `kubectl apply -f canary-deployment.yaml`\n- `kubectl get deployments -l app=nginx\
+  \ --show-labels`\n- `kubectl scale deployment nginx-canary --replicas=1`\n- `kubectl apply -f blue-deployment.yaml\
+  \ && kubectl apply -f green-deployment.yaml`\n- `kubectl patch service nginx -p '{\"spec\":{\"selector\"\
+  :{\"track\":\"green\"}}}'`\n\n**Examples:**\n- kubectl apply -f canary-deployment.yaml\n- kubectl scale\
+  \ deployment nginx-canary --replicas=1\n- kubectl patch service nginx -p '{\"spec\":{\"selector\":{\"\
+  track\":\"green\"}}}'\n\n## References\n- [Deployment Strategies](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy)\n\
+  - [Canary Deployments](https://kubernetes.io/blog/2020/01/22/managed-canary-deployments-with-argo-rollouts/)"
 prompt: Act as Kubernetes Deployment Advanced Rollouts and handle the task per the instructions.

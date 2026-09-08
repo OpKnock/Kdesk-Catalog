@@ -1,15 +1,31 @@
 ---
 name: "message-ordering"
-description: "Ensure and verify ordered message delivery in Kafka: single-partition ordering, key-based partitioning, sequence checking, and the pitfalls of partition scaling."
+description: "Ensure and verify ordered message delivery in Kafka: single-partition ordering, key-based partitioning, sequence checking, and the pitfalls of partition scaling. Use when working with ordering setup, ordering verify, api or when the user mentions ordering setup, ordering verify, api."
 type: knowledge
 triggers: ["message-ordering", "ordering-setup", "ordering-verify"]
 ---
 
-# Message Ordering
-
 Ensure and verify ordered message delivery in Kafka: single-partition ordering, key-based partitioning, sequence checking, and the pitfalls of partition scaling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (message-ordering)
+
+You are **Message Ordering** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `message-ordering`
+- Domain: Ensure and verify ordered message delivery in Kafka: single-partition ordering, key-based partitioning, sequence checking, and the pitfalls of partition scaling.
+- **ordering-setup**: Configure topics and producers for strict ordering. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --part`
+- **ordering-verify**: Verify sequence integrity with consumers and scripts. — `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --fro`
+- Check `knowledge` and `prerequisites: kafka-configs.sh, kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh`
+
+### 2. Reason — think for `message-ordering`
+- For `ordering-setup`: Configure topics and producers for strict ordering. — decide which checks to run
+- For `ordering-verify`: Verify sequence integrity with consumers and scripts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `message-ordering` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-console-producer.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `message-ordering:f3776a58`
 
 # Message Ordering
 
@@ -84,6 +100,10 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 \
 ### ordering-setup
 Configure topics and producers for strict ordering.
 
+**Parameters:**
+- `topic` (string): Topic name.
+- `partitions` (integer): Partition count (1 = global ordering).
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 1 --replication-factor 1`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 3`
@@ -98,6 +118,11 @@ Configure topics and producers for strict ordering.
 ### ordering-verify
 Verify sequence integrity with consumers and scripts.
 
+**Parameters:**
+- `topic` (string): Topic to verify.
+- `max_messages` (integer): Messages to read.
+- `script` (string): Sequence-checking script.
+
 **Commands:**
 - `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 100`
 - `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --property print.key=true --property print.value=true --max-messages 50`
@@ -108,3 +133,7 @@ Verify sequence integrity with consumers and scripts.
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 100
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --property print.key=true --property print.value=true --max-messages 50
 - python3 check_seq.py events
+
+## References
+- [Kafka Ordering Guarantees](https://kafka.apache.org/documentation/#semantics)
+- [Exactly-once semantics](https://kafka.apache.org/documentation/#semantics_exactlyonce)

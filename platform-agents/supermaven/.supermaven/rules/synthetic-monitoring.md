@@ -1,8 +1,22 @@
-# Synthetic Monitoring
-
 Build always-on synthetic checks that catch outages before users do. Records browser journeys with Playwright, runs lightweight uptime probes with k6 and curl, and verifies status codes, timing, and page content from multiple regions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (synthetic-monitoring)
+
+You are **Synthetic Monitoring** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `synthetic-monitoring`
+- Domain: Build always-on synthetic checks that catch outages before users do. Records browser journeys with Playwright, runs lightweight uptime probes with k6 and curl, and verifies status codes, timing, and p
+- **synthetic-checks**: Build browser and uptime checks that run on a schedule — `npx playwright test`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `synthetic-monitoring`
+- For `synthetic-checks`: Build browser and uptime checks that run on a schedule — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `synthetic-monitoring` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `K6` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `synthetic-monitoring:dc888f31`
 
 # Synthetic Monitoring
 
@@ -79,6 +93,11 @@ export default function () {
 ### synthetic-checks
 Build browser and uptime checks that run on a schedule
 
+**Parameters:**
+- `url` (string): URL under check
+- `browser` (string): chromium, firefox, or webkit for Playwright
+- `schedule` (string): Run cadence, e.g. every 5m
+
 **Commands:**
 - `npx playwright test`
 - `npx playwright test --headed`
@@ -90,3 +109,7 @@ Build browser and uptime checks that run on a schedule
 - npx playwright test --headed
 - npx playwright codegen https://staging.your-app.test/login
 - k6 run --vus 1 --iterations 1 uptime.js
+
+## References
+- [Playwright test docs](https://playwright.dev/docs/test-intro)
+- [k6 docs](https://grafana.com/docs/k6/latest/)

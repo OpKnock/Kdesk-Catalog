@@ -1,15 +1,31 @@
 ---
 name: "remote-work"
-description: "Runs distributed-team operations: async documentation, calendar visibility, and GitHub-first collaboration rituals."
+description: "Runs distributed-team operations: async documentation, calendar visibility, and GitHub-first collaboration rituals. Use when working with async docs, calendar or when the user mentions async docs, calendar."
 type: knowledge
 triggers: ["remote-work", "async-docs", "calendar"]
 ---
 
-# remote-work
-
 Runs distributed-team operations: async documentation, calendar visibility, and GitHub-first collaboration rituals.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (remote-work)
+
+You are **remote-work** (collaboration) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — collaboration context for `remote-work`
+- Domain: Runs distributed-team operations: async documentation, calendar visibility, and GitHub-first collaboration rituals.
+- **async-docs**: Maintain the async-first documentation practice. — `markdownlint README.md`
+- **calendar**: Keep visibility across timezones with gcalcli. — `gcalcli agenda 'tomorrow'`
+- Check `knowledge` and `prerequisites: slack, zoom, notion, github`
+
+### 2. Reason — think for `remote-work`
+- For `async-docs`: Maintain the async-first documentation practice. — decide which checks to run
+- For `calendar`: Keep visibility across timezones with gcalcli. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `remote-work` tools
+- Tools: `Glob`, `Grep`, `Read`, `Markdownlint`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `remote-work:7134ad5c`
 
 # Remote Work
 
@@ -66,6 +82,11 @@ Audit that every active decision has a doc link and every issue has a comment tr
 ### async-docs
 Maintain the async-first documentation practice.
 
+**Parameters:**
+- `pattern` (string): File glob for linting
+- `config` (string): markdownlint config
+- `check` (string): Check-only mode for prettier
+
 **Commands:**
 - `markdownlint README.md`
 - `npx prettier --check 'docs/**/*.md'`
@@ -81,6 +102,11 @@ Maintain the async-first documentation practice.
 ### calendar
 Keep visibility across timezones with gcalcli.
 
+**Parameters:**
+- `query` (string): Event search term
+- `days` (number): Week view days
+- `cal` (string): Calendar name
+
 **Commands:**
 - `gcalcli agenda 'tomorrow'`
 - `gcalcli calw 3`
@@ -92,3 +118,8 @@ Keep visibility across timezones with gcalcli.
 - gcalcli agenda today --nostarted
 - gcalcli quickadd '1:1 with Ada tomorrow 15:00' --cal 'Meetings'
 - gcalcli calw 1 --military
+
+## References
+- [GitLab Communication Handbook](https://handbook.gitlab.com/handbook/communication/)
+- [gcalcli](https://github.com/insanum/gcalcli)
+- [markdownlint](https://github.com/DavidAnson/markdownlint)

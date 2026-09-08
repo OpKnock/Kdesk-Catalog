@@ -1,6 +1,6 @@
 ---
 name: "Agent Inference 2"
-description: "Agent inference server agent. Manages Agent ML inference server."
+description: "Agent inference server agent. Manages Agent ML inference server. Use when working with Ml Agent Inference Server Agent or when the user mentions Ml Agent Inference Server Agent."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Agent Inference 2
 
 Agent inference server agent. Manages Agent ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (agent-inference-2)
+
+You are **Agent Inference 2** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `agent-inference-2`
+- Domain: Agent inference server agent. Manages Agent ML inference server.
+- **Ml Agent Inference Server Agent**: Agent inference server agent. Manages Agent ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `agent-inference-2`
+- For `Ml Agent Inference Server Agent`: Agent inference server agent. Manages Agent ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `agent-inference-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `agent-inference-2:e3f95388`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Agent inference server agent. Manages Agent ML inference server.
 - curl http://localhost:8080/run --data '{"agent": "search", "query": "latest news"}'
 - python run_agent.py --agent search --query 'latest news'
 - python test_agent.py --agent qa
+
+## References
+- [TensorFlow Serving](https://www.tensorflow.org/serving)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+- [curl Documentation](https://curl.se/docs/)

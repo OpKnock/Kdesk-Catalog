@@ -1,15 +1,29 @@
 ---
 name: "Tracing"
-description: "Run the OTel Collector and route traces to backends."
+description: "Run the OTel Collector and route traces to backends. Use when working with otel pipeline, api or when the user mentions otel pipeline, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Tracing
-
 Run the OTel Collector and route traces to backends.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tracing)
+
+You are **Tracing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `tracing`
+- Domain: Run the OTel Collector and route traces to backends.
+- **otel-pipeline**: Run the OTel Collector and route traces to backends — `otelcol-contrib --config otel-collector.yaml`
+- Check `knowledge` and `prerequisites: docker, otelcol-contrib`
+
+### 2. Reason — think for `tracing`
+- For `otel-pipeline`: Run the OTel Collector and route traces to backends — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tracing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Otelcol-contrib`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tracing:59485c4a`
 
 # Tracing
 
@@ -85,6 +99,11 @@ curl -s localhost:16686/api/services | jq '.data'
 ### otel-pipeline
 Run the OTel Collector and route traces to backends
 
+**Parameters:**
+- `config` (string): Collector config file path
+- `backend` (string): jaeger or zipkin
+- `endpoint` (string): OTLP endpoint, e.g. localhost:4318
+
 **Commands:**
 - `otelcol-contrib --config otel-collector.yaml`
 - `curl -X POST localhost:4318/v1/traces -H 'Content-Type: application/json' -d '{"resourceSpans":[]}'`
@@ -96,3 +115,7 @@ Run the OTel Collector and route traces to backends
 - otelcol-contrib --config otel-collector.yaml
 - docker run -d -p 16686:16686 jaegertracing/all-in-one
 - curl -X POST localhost:4318/v1/traces -H 'Content-Type: application/json' -d '{"resourceSpans":[]}'
+
+## References
+- [OpenTelemetry Collector docs](https://opentelemetry.io/docs/collector/)
+- [Jaeger docs](https://www.jaegertracing.io/docs/)

@@ -6,27 +6,27 @@ globs: ["**/*.r", "**/*.sh", "**/*.sql"]
 
 Builds apps with Supabase: local development, migrations, auth, storage, and database operations with the supabase CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (supabase)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **supabase** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx supabase init`, `npx supabase migration new create_users`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — cloud context for `supabase`
+- Domain: Builds apps with Supabase: local development, migrations, auth, storage, and database operations with the supabase CLI.
+- **supabase-local**: Run the local Supabase stack. — `npx supabase init`
+- **supabase-db**: Manage migrations and database operations. — `npx supabase migration new create_users`
+- **supabase-auth-storage**: Manage auth users, storage buckets, and functions. — `npx supabase functions deploy myfunc`
+- Check `knowledge` and `prerequisites: npx, psql`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `supabase`
+- For `supabase-local`: Run the local Supabase stack. — decide which checks to run
+- For `supabase-db`: Manage migrations and database operations. — decide which checks to run
+- For `supabase-auth-storage`: Manage auth users, storage buckets, and functions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `supabase` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `supabase:fac5d237`
 
 # Supabase
 

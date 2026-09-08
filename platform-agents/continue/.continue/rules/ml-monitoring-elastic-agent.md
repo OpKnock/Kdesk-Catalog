@@ -1,6 +1,6 @@
 ---
 name: "Ml Monitoring Elastic Agent"
-description: "Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch."
+description: "Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch. Use when working with Ml Monitoring Elastic Agent or when the user mentions Ml Monitoring Elastic Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Monitoring Elastic Agent
 
 Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-monitoring-elastic-agent)
+
+You are **Ml Monitoring Elastic Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-monitoring-elastic-agent`
+- Domain: Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch.
+- **Ml Monitoring Elastic Agent**: Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch. — `curl -X GET 'localhost:9200/_nodes/stats'`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-monitoring-elastic-agent`
+- For `Ml Monitoring Elastic Agent`: Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-monitoring-elastic-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-monitoring-elastic-agent:f5d4129d`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearc
 - curl -X GET 'localhost:9200/_cat/indices?v'
 - curl -X GET 'localhost:9200/_cluster/health'
 - curl -X GET 'localhost:9200/_nodes/stats'
+
+## References
+- [Elastic Documentation](https://www.elastic.co/guide/)
+- [curl Documentation](https://curl.se/docs/)

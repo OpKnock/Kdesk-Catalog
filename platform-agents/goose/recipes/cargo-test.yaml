@@ -2,10 +2,23 @@ title: cargo-test
 description: Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and
   race condition checks.
 version: 2.0.0
-instructions: "# cargo-test\n\nRuns Rust test suites with cargo test, nextest, and coverage tools, including\
-  \ doctests and race condition checks.\n\n## Instructions\n\n# cargo test\n\nTest Rust code with unit,\
-  \ integration, and doc tests.\n\n## What This Skill Does\n\n- Runs the full test matrix (unit, integration,\
-  \ docs)\n- Filters tests by name and shows captured output\n- Measures coverage with tarpaulin or llvm-cov\n\
+instructions: "Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests\
+  \ and race condition checks.\n\n## Agentic Workflow: Read -> Reason -> Act (cargo-test)\n\nYou are **cargo-test**\
+  \ (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — testing context for `cargo-test`\n- Domain: Runs Rust test suites with cargo test, nextest, and\
+  \ coverage tools, including doctests and race condition checks.\n- **cargo-testing**: Run unit, integration,\
+  \ and doc tests. — `cargo test`\n- **nextest-and-coverage**: Faster parallel testing and coverage measurement.\
+  \ — `cargo nextest run`\n- **concurrency-and-vet**: Race detection and lints for tests. — `cargo test\
+  \ -- --test-threads=1`\n- Check `knowledge` and `prerequisites: cargo, rustflags='-c`\n\n### 2. Reason\
+  \ — think for `cargo-test`\n- For `cargo-testing`: Run unit, integration, and doc tests. — decide which\
+  \ checks to run\n- For `nextest-and-coverage`: Faster parallel testing and coverage measurement. — decide\
+  \ which checks to run\n- For `concurrency-and-vet`: Race detection and lints for tests. — decide which\
+  \ checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n\
+  ### 3. Act — execute with `cargo-test` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `RUSTFLAGS='-C`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `cargo-test:a78e3336`\n\n# cargo test\n\nTest Rust code with unit, integration,\
+  \ and doc tests.\n\n## What This Skill Does\n\n- Runs the full test matrix (unit, integration, docs)\n\
+  - Filters tests by name and shows captured output\n- Measures coverage with tarpaulin or llvm-cov\n\
   - Speeds up CI with nextest sharding\n\n## When to Use\n\n- Verifying changes before merge\n- Debugging\
   \ a single failing test\n- Enforcing coverage thresholds\n\n## Real Commands\n\n```bash\n# Basics\n\
   cargo test\ncargo test my_module::test_name\ncargo test -- --nocapture\ncargo test --release\ncargo\
@@ -17,14 +30,20 @@ instructions: "# cargo-test\n\nRuns Rust test suites with cargo test, nextest, a
   \ + assert_eq!/assert! for unit tests\n- Put integration tests in tests/ for public API coverage\n-\
   \ Run doctests in CI; they rot silently\n- Gate coverage at 80%+ with tarpaulin thresholds\n- Use nextest\
   \ for fast feedback on large workspaces\n\n## Capabilities\n\n### cargo-testing\nRun unit, integration,\
-  \ and doc tests.\n\n**Commands:**\n- `cargo test`\n- `cargo test my_module::test_name`\n- `cargo test\
-  \ -- --nocapture`\n- `cargo test --release`\n- `cargo test --doc`\n\n**Examples:**\n- cargo test\n-\
-  \ cargo test my_module::test_name -- --nocapture\n- cargo test -- --test-threads=8\n\n### nextest-and-coverage\n\
-  Faster parallel testing and coverage measurement.\n\n**Commands:**\n- `cargo nextest run`\n- `cargo\
-  \ nextest run --partition count:2/2`\n- `cargo tarpaulin --out html`\n- `cargo llvm-cov --open`\n- `cargo\
-  \ nextest run --fail-fast`\n\n**Examples:**\n- cargo nextest run\n- cargo tarpaulin --out html\n- cargo\
-  \ llvm-cov --open\n\n### concurrency-and-vet\nRace detection and lints for tests.\n\n**Commands:**\n\
-  - `cargo test -- --test-threads=1`\n- `RUSTFLAGS='-C target-feature=+crt-static' cargo test`\n- `cargo\
-  \ clippy --all-targets -- -D warnings`\n- `cargo test --features integration`\n\n**Examples:**\n- cargo\
-  \ test -- --test-threads=1\n- cargo clippy --all-targets -- -D warnings\n- cargo test --features integration"
+  \ and doc tests.\n\n**Parameters:**\n- `filter` (string): Test name substring filter\n- `nocapture`\
+  \ (boolean): Show println output from tests\n- `threads` (number): Test thread count\n\n**Commands:**\n\
+  - `cargo test`\n- `cargo test my_module::test_name`\n- `cargo test -- --nocapture`\n- `cargo test --release`\n\
+  - `cargo test --doc`\n\n**Examples:**\n- cargo test\n- cargo test my_module::test_name -- --nocapture\n\
+  - cargo test -- --test-threads=8\n\n### nextest-and-coverage\nFaster parallel testing and coverage measurement.\n\
+  \n**Parameters:**\n- `outFormat` (string): Coverage format: html, xml, json\n- `partition` (string):\
+  \ Test partition for sharding\n\n**Commands:**\n- `cargo nextest run`\n- `cargo nextest run --partition\
+  \ count:2/2`\n- `cargo tarpaulin --out html`\n- `cargo llvm-cov --open`\n- `cargo nextest run --fail-fast`\n\
+  \n**Examples:**\n- cargo nextest run\n- cargo tarpaulin --out html\n- cargo llvm-cov --open\n\n### concurrency-and-vet\n\
+  Race detection and lints for tests.\n\n**Parameters:**\n- `features` (string): Cargo features to enable\n\
+  - `testThreads` (integer): Number of parallel test threads via --test-threads.\n\n**Commands:**\n- `cargo\
+  \ test -- --test-threads=1`\n- `RUSTFLAGS='-C target-feature=+crt-static' cargo test`\n- `cargo clippy\
+  \ --all-targets -- -D warnings`\n- `cargo test --features integration`\n\n**Examples:**\n- cargo test\
+  \ -- --test-threads=1\n- cargo clippy --all-targets -- -D warnings\n- cargo test --features integration\n\
+  \n## References\n- [cargo test Reference](https://doc.rust-lang.org/cargo/commands/cargo-test.html)\n\
+  - [Nextest Documentation](https://nexte.st/)\n- [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)"
 prompt: Act as cargo-test and handle the task per the instructions.

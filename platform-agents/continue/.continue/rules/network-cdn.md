@@ -1,6 +1,6 @@
 ---
 name: "Network Cdn"
-description: "CDN agent for CloudFront, Cloudflare, Fastly."
+description: "CDN agent for CloudFront, Cloudflare, Fastly. Use when working with Network Cdn, network cdn or when the user mentions Network Cdn, network cdn."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Network Cdn
 
 CDN agent for CloudFront, Cloudflare, Fastly.
+
+## Agentic Workflow: Read -> Reason -> Act (network-cdn)
+
+You are **Network Cdn** (networking/configuration) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — networking context for `network-cdn`
+- Domain: CDN agent for CloudFront, Cloudflare, Fastly.
+- **Network Cdn**: CDN agent for CloudFront, Cloudflare, Fastly. — `CloudFront: aws cloudfront create-distribution`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `network-cdn`
+- For `Network Cdn`: CDN agent for CloudFront, Cloudflare, Fastly. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `network-cdn` tools
+- Tools: `Glob`, `Grep`, `Read`, `CloudFront`, `Invalidation` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `network-cdn:00e45354`
 
 ## Instructions
 
@@ -38,3 +56,8 @@ CDN agent for CloudFront, Cloudflare, Fastly.
 - Cloudflare: wrangler deploy
 - Fastly: fastly service list
 - Invalidation: aws cloudfront create-invalidation
+
+## References
+- [CloudFront Documentation](https://docs.aws.amazon.com/cloudfront/)
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

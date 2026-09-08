@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh **/*.{ts,tsx} **/*.{yaml,yml}"
 
 Use ConnectRPC in browser and TypeScript clients: @connectrpc/connect-web with buf-generated stubs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (connectrpc-web)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Connectrpc Web** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm create vite@latest my-app -- --template react-ts`, `npm run dev`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `connectrpc-web`
+- Domain: Use ConnectRPC in browser and TypeScript clients: @connectrpc/connect-web with buf-generated stubs.
+- **web-client**: Create a TypeScript ConnectRPC web client and generate stubs with buf — `npm create vite@latest my-app -- --template react-ts`
+- **browser-call**: Invoke Connect services from the browser with CORS and unary streaming support — `npm run dev`
+- Check `knowledge` and `prerequisites: npm, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `connectrpc-web`
+- For `web-client`: Create a TypeScript ConnectRPC web client and generate stubs with buf — decide which checks to run
+- For `browser-call`: Invoke Connect services from the browser with CORS and unary streaming support — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `connectrpc-web` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `connectrpc-web:cf026064`
 
 # ConnectRPC Web
 

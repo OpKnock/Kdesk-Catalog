@@ -1,15 +1,31 @@
 ---
 name: "packer"
-description: "Builds machine images with Packer: builders (AWS, VMware, Docker), provisioners, HCL2 templates, and CI pipelines."
+description: "Builds machine images with Packer: builders (AWS, VMware, Docker), provisioners, HCL2 templates, and CI pipelines. Use when working with template authoring, build and verify, devops or when the user mentions template authoring, build and verify, devops."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# packer
-
 Builds machine images with Packer: builders (AWS, VMware, Docker), provisioners, HCL2 templates, and CI pipelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (packer)
+
+You are **packer** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `packer`
+- Domain: Builds machine images with Packer: builders (AWS, VMware, Docker), provisioners, HCL2 templates, and CI pipelines.
+- **template-authoring**: Create and validate HCL2 Packer templates. — `packer init .`
+- **build-and-verify**: Build images and verify outputs across clouds. — `packer build -var-file=prod.pkrvars.hcl template.pkr.hcl`
+- Check `knowledge` and `prerequisites: aws, packer`
+
+### 2. Reason — think for `packer`
+- For `template-authoring`: Create and validate HCL2 Packer templates. — decide which checks to run
+- For `build-and-verify`: Build images and verify outputs across clouds. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `packer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Packer`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `packer:2ba99cc2`
 
 # Packer Image Building
 
@@ -84,6 +100,10 @@ build {
 ### template-authoring
 Create and validate HCL2 Packer templates.
 
+**Parameters:**
+- `template` (string): Template file or directory
+- `var-file` (string): Variable values file
+
 **Commands:**
 - `packer init .`
 - `packer validate template.pkr.hcl`
@@ -99,6 +119,11 @@ Create and validate HCL2 Packer templates.
 ### build-and-verify
 Build images and verify outputs across clouds.
 
+**Parameters:**
+- `var-file` (string): pkrvars file for environment values
+- `only` (string): Build only named builders
+- `on-error` (string): Error behavior: cleanup, abort, run-cleanup-provisioner
+
 **Commands:**
 - `packer build -var-file=prod.pkrvars.hcl template.pkr.hcl`
 - `packer build -only amazon-ebs.amazonlinux template.pkr.hcl`
@@ -110,3 +135,8 @@ Build images and verify outputs across clouds.
 - packer build -var-file=prod.pkrvars.hcl template.pkr.hcl
 - packer build -only amazon-ebs.amazonlinux template.pkr.hcl
 - packer build -on-error=cleanup template.pkr.hcl
+
+## References
+- [Packer Documentation](https://developer.hashicorp.com/packer/docs)
+- [Packer HCL2 Guide](https://developer.hashicorp.com/packer/guides/hcl)
+- [Amazon Builder](https://developer.hashicorp.com/packer/integrations/hashicorp/amazon)

@@ -1,15 +1,29 @@
 ---
 name: "mongodb-replica-set"
-description: "Deploy and manage MongoDB replica sets: init, membership, failover, elections, and oplog inspection."
+description: "Deploy and manage MongoDB replica sets: init, membership, failover, elections, and oplog inspection. Use when working with replica set operations, api or when the user mentions replica set operations, api."
 type: knowledge
 triggers: ["mongodb-replica-set", "replica-set-operations"]
 ---
 
-# Mongodb Replica Set
-
 Deploy and manage MongoDB replica sets: init, membership, failover, elections, and oplog inspection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mongodb-replica-set)
+
+You are **Mongodb Replica Set** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mongodb-replica-set`
+- Domain: Deploy and manage MongoDB replica sets: init, membership, failover, elections, and oplog inspection.
+- **replica-set-operations**: Initialize and manage a MongoDB replica set through mongod flags and mongosh replica set commands. — `mongod --replSet rs0 --dbpath /data/db --bind_ip 0.0.0.0 --port 27017`
+- Check `knowledge` and `prerequisites: mongod, mongosh`
+
+### 2. Reason — think for `mongodb-replica-set`
+- For `replica-set-operations`: Initialize and manage a MongoDB replica set through mongod flags and mongosh replica set commands. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mongodb-replica-set` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mongod`, `Mongosh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mongodb-replica-set:311c67bd`
 
 # MongoDB Replica Set
 
@@ -66,6 +80,11 @@ db.oplog.rs.find().sort({$natural:-1}).limit(1)
 ### replica-set-operations
 Initialize and manage a MongoDB replica set through mongod flags and mongosh replica set commands.
 
+**Parameters:**
+- `replSet` (string): Replica set name, must match across members
+- `host` (string): Hostname:port of the member to add or remove
+- `force` (boolean): Force reconfiguration when out of quorum
+
 **Commands:**
 - `mongod --replSet rs0 --dbpath /data/db --bind_ip 0.0.0.0 --port 27017`
 - `mongosh --eval "rs.initiate()"`
@@ -77,3 +96,7 @@ Initialize and manage a MongoDB replica set through mongod flags and mongosh rep
 - mongosh --eval "rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo1:27017'},{_id:1,host:'mongo2:27017'},{_id:2,host:'mongo3:27017'}]})"
 - mongosh --eval "rs.stepDown(60)"
 - mongosh --eval "rs.status()" | grep -E 'stateStr|name'
+
+## References
+- [MongoDB Replication Docs](https://www.mongodb.com/docs/manual/replication/)
+- [rs helper methods](https://www.mongodb.com/docs/manual/reference/method/js-replica-set-administration/)

@@ -1,15 +1,31 @@
 ---
 name: "message-queue-administrator"
-description: "Operates RabbitMQ and Redis Streams in production: node status, queue health, purges, and consumer troubleshooting."
+description: "Operates RabbitMQ and Redis Streams in production: node status, queue health, purges, and consumer troubleshooting. Use when working with rabbitmq, redis streams or when the user mentions rabbitmq, redis streams."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# message-queue-administrator
-
 Operates RabbitMQ and Redis Streams in production: node status, queue health, purges, and consumer troubleshooting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (message-queue-administrator)
+
+You are **message-queue-administrator** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `message-queue-administrator`
+- Domain: Operates RabbitMQ and Redis Streams in production: node status, queue health, purges, and consumer troubleshooting.
+- **rabbitmq**: Administer RabbitMQ nodes and queues. — `rabbitmqctl status`
+- **redis-streams**: Inspect and manage Redis Stream consumer groups. — `redis-cli XLEN orders:stream`
+- Check `knowledge` and `prerequisites: kafka, rabbitmq, kcat, kafka-ui`
+
+### 2. Reason — think for `message-queue-administrator`
+- For `rabbitmq`: Administer RabbitMQ nodes and queues. — decide which checks to run
+- For `redis-streams`: Inspect and manage Redis Stream consumer groups. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `message-queue-administrator` tools
+- Tools: `Glob`, `Grep`, `Read`, `Rabbitmqctl`, `Rabbitmq-plugins` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `message-queue-administrator:4cdf53ef`
 
 # Message Queue Administration
 
@@ -87,6 +103,11 @@ Assert queue counts return to baseline after load tests.
 ### rabbitmq
 Administer RabbitMQ nodes and queues.
 
+**Parameters:**
+- `queue` (string): Queue name for purge/list
+- `formatter` (string): table, tsv, or json output
+- `plugin` (string): rabbitmq plugin to enable
+
 **Commands:**
 - `rabbitmqctl status`
 - `rabbitmqctl list_queues name messages messages_ready messages_unacknowledged --formatter table`
@@ -102,6 +123,11 @@ Administer RabbitMQ nodes and queues.
 ### redis-streams
 Inspect and manage Redis Stream consumer groups.
 
+**Parameters:**
+- `stream` (string): Stream key name
+- `group` (string): Consumer group name
+- `count` (number): Number of entries to return
+
 **Commands:**
 - `redis-cli XLEN orders:stream`
 - `redis-cli XADD orders:stream '*' order 1 sku A1`
@@ -113,3 +139,8 @@ Inspect and manage Redis Stream consumer groups.
 - redis-cli XLEN orders:stream && redis-cli XINFO GROUPS orders:stream
 - redis-cli XRANGE orders:stream - + | head -20
 - redis-cli XGROUP CREATECONSUMER orders:stream workers w3
+
+## References
+- [RabbitMQ CLI](https://www.rabbitmq.com/docs/cli)
+- [RabbitMQ Management](https://www.rabbitmq.com/docs/management)
+- [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/)

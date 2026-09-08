@@ -1,15 +1,29 @@
 ---
 name: "pip-audit"
-description: "Audits Python environments and requirements files for known vulnerabilities with pip-audit."
+description: "Audits Python environments and requirements files for known vulnerabilities with pip-audit. Use when working with pip audit, code quality or when the user mentions pip audit, code quality."
 type: knowledge
 triggers: ["pip-audit"]
 ---
 
-# Pip Audit
-
 Audits Python environments and requirements files for known vulnerabilities with pip-audit.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pip-audit)
+
+You are **Pip Audit** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `pip-audit`
+- Domain: Audits Python environments and requirements files for known vulnerabilities with pip-audit.
+- **pip-audit**: Scan installed or declared Python dependencies against the OSV database — `pip-audit`
+- Check `knowledge` and `prerequisites: pip-audit`
+
+### 2. Reason — think for `pip-audit`
+- For `pip-audit`: Scan installed or declared Python dependencies against the OSV database — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pip-audit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pip-audit` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pip-audit:80015d53`
 
 # pip Audit
 
@@ -73,6 +87,11 @@ version; then proposes the upgrade command.
 ### pip-audit
 Scan installed or declared Python dependencies against the OSV database
 
+**Parameters:**
+- `format` (string): Output format: columns, json, cyclonedx-json, cyclonedx-xml, markdown
+- `fix` (boolean): Attempt to fix vulnerabilities by upgrading packages
+- `vuln-service` (string): Vulnerability service: osv or pypi
+
 **Commands:**
 - `pip-audit`
 - `pip-audit -r requirements.txt`
@@ -84,3 +103,7 @@ Scan installed or declared Python dependencies against the OSV database
 - pip-audit -r requirements.txt --format markdown
 - pip-audit -l | grep -i critical
 - pip-audit --fix --dry-run -r requirements.txt
+
+## References
+- [pip-audit GitHub](https://github.com/pypa/pip-audit)
+- [pip-audit PyPI](https://pypi.org/project/pip-audit/)

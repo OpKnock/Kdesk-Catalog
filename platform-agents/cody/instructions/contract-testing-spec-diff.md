@@ -1,8 +1,24 @@
-# Contract Testing Spec Diff
-
 Schema-based contract testing: diff OpenAPI specs across versions and lint schemas with spectral and openapi-diff.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (contract-testing-spec-diff)
+
+You are **Contract Testing Spec Diff** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `contract-testing-spec-diff`
+- Domain: Schema-based contract testing: diff OpenAPI specs across versions and lint schemas with spectral and openapi-diff.
+- **spec-diff**: Detect breaking changes between OpenAPI spec versions with openapi-diff and swagger-cli — `npx openapi-diff openapi-v1.yaml openapi-v2.yaml`
+- **spectral-lint**: Lint OpenAPI specs with custom Spectral rulesets to enforce contract rules — `npx @stoplight/spectral-cli lint openapi.yaml`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `contract-testing-spec-diff`
+- For `spec-diff`: Detect breaking changes between OpenAPI spec versions with openapi-diff and swagger-cli — decide which checks to run
+- For `spectral-lint`: Lint OpenAPI specs with custom Spectral rulesets to enforce contract rules — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `contract-testing-spec-diff` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `contract-testing-spec-diff:125f4e2c`
 
 # Contract Testing v2 (Schema Based)
 
@@ -74,6 +90,10 @@ npx openapi-diff openapi-v1.yaml openapi-v2.yaml > diff.txt
 ### spec-diff
 Detect breaking changes between OpenAPI spec versions with openapi-diff and swagger-cli
 
+**Parameters:**
+- `spec_a` (string): Old OpenAPI spec file
+- `spec_b` (string): New OpenAPI spec file
+
 **Commands:**
 - `npx openapi-diff openapi-v1.yaml openapi-v2.yaml`
 - `npx @apidevtools/swagger-cli validate openapi.yaml`
@@ -88,6 +108,10 @@ Detect breaking changes between OpenAPI spec versions with openapi-diff and swag
 ### spectral-lint
 Lint OpenAPI specs with custom Spectral rulesets to enforce contract rules
 
+**Parameters:**
+- `ruleset` (string): Path to Spectral ruleset file
+- `spec` (string): OpenAPI spec file to lint
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint openapi.yaml`
 - `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yaml`
@@ -98,3 +122,7 @@ Lint OpenAPI specs with custom Spectral rulesets to enforce contract rules
 - npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yaml
 - npx @stoplight/spectral-cli lint openapi.yaml -f json > lint.json
 - npx @stoplight/spectral-cli lint openapi.yaml --ruleset-json
+
+## References
+- [OpenAPI Diff](https://github.com/OpenAPITools/openapi-diff)
+- [Spectral Docs](https://docs.stoplight.io/docs/spectral)

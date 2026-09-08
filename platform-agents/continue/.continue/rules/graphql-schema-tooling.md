@@ -1,15 +1,29 @@
 ---
 name: "Graphql Schema Tooling"
-description: "GraphQL schema quality tooling: lint SDL with graphql-schema-linter, detect breaking changes with graphql-inspector, and validate operations against schemas."
+description: "GraphQL schema quality tooling: lint SDL with graphql-schema-linter, detect breaking changes with graphql-inspector, and validate operations against schemas. Use when working with schema tooling, api or when the user mentions schema tooling, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Graphql Schema Tooling
-
 GraphQL schema quality tooling: lint SDL with graphql-schema-linter, detect breaking changes with graphql-inspector, and validate operations against schemas.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-schema-tooling)
+
+You are **Graphql Schema Tooling** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `graphql-schema-tooling`
+- Domain: GraphQL schema quality tooling: lint SDL with graphql-schema-linter, detect breaking changes with graphql-inspector, and validate operations against schemas.
+- **schema-tooling**: Lint schemas, diff versions for breaking changes, and validate operations. — `npx graphql-schema-linter schema.graphql --rules=fields-have-descriptions,types-`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `graphql-schema-tooling`
+- For `schema-tooling`: Lint schemas, diff versions for breaking changes, and validate operations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-schema-tooling` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-schema-tooling:59af1b85`
 
 # GraphQL v2
 
@@ -79,6 +93,11 @@ echo 'type Bad{field:String}' > /tmp/bad.graphql && npx graphql-schema-linter /t
 ### schema-tooling
 Lint schemas, diff versions for breaking changes, and validate operations.
 
+**Parameters:**
+- `schema-file` (string): SDL file path
+- `old-schema` (string): Previous schema version for diffing
+- `documents-glob` (string): Glob of operation documents
+
 **Commands:**
 - `npx graphql-schema-linter schema.graphql --rules=fields-have-descriptions,types-have-descriptions`
 - `npx graphql-schema-linter --format json schema.graphql > lint.json`
@@ -90,3 +109,7 @@ Lint schemas, diff versions for breaking changes, and validate operations.
 - npx graphql-schema-linter schema.graphql --rules=fields-have-descriptions,types-have-descriptions
 - npx graphql-inspector diff schema-old.graphql schema-new.graphql | jq
 - npx graphql-inspector validate schema.graphql 'src/**/*.graphql'
+
+## References
+- [graphql-schema-linter](https://github.com/cjoudrey/graphql-schema-linter)
+- [graphql-inspector](https://the-guild.dev/graphql/inspector/docs)

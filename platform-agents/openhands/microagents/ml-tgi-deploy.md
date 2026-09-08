@@ -1,6 +1,6 @@
 ---
 name: "ml-tgi-deploy"
-description: "TGI deployment agent for LLM serving deployment."
+description: "TGI deployment agent for LLM serving deployment. Use when working with Ml Tgi Deploy, inference or when the user mentions Ml Tgi Deploy, inference."
 type: knowledge
 triggers: ["ml-tgi-deploy", "ml tgi deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-tgi-deploy", "ml tgi deploy"]
 # Ml Tgi Deploy
 
 TGI deployment agent for LLM serving deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-tgi-deploy)
+
+You are **Ml Tgi Deploy** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-tgi-deploy`
+- Domain: TGI deployment agent for LLM serving deployment.
+- **Ml Tgi Deploy**: TGI deployment agent for LLM serving deployment. — `Server: text-generation-launcher --model-id meta-llama/Llama-2-7b-chat-hf`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-tgi-deploy`
+- For `Ml Tgi Deploy`: TGI deployment agent for LLM serving deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-tgi-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Server`, `API` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-tgi-deploy:f1ff20a9`
 
 ## Instructions
 
@@ -38,3 +56,8 @@ TGI deployment agent for LLM serving deployment.
 - Docker: docker run --gpus all -p 8080:80 ghcr.io/huggingface/text-generation-inference:latest --model-id meta-llama/Llama-2-7b-chat-hf
 - API: curl http://localhost:8080/generate -X POST -H 'Content-Type: application/json' -d '{"inputs": "Hello", "parameters": {"max_new_tokens": 100}}'
 - Health: curl http://localhost:8080/health
+
+## References
+- [Text Generation Inference](https://huggingface.co/docs/text-generation-inference/)
+- [curl Documentation](https://curl.se/docs/)
+- [Docker Documentation](https://docs.docker.com/)

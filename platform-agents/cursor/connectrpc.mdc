@@ -6,27 +6,25 @@ alwaysApply: false
 
 Develop modern RPC services with ConnectRPC: protocol choice, buf codegen, and calling services from Go and browsers.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (connectrpc)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Connectrpc** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `buf lint`, `curl -H "Content-Type: application/json" -d '{"name":"alice"`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `connectrpc`
+- Domain: Develop modern RPC services with ConnectRPC: protocol choice, buf codegen, and calling services from Go and browsers.
+- **proto-codegen**: Lint, generate, and manage protobuf with buf for ConnectRPC projects — `buf lint`
+- **protocol-calls**: Call ConnectRPC services over Connect, gRPC, and gRPC-Web protocols — `curl -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:`
+- Check `knowledge` and `prerequisites: buf, grpcurl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `connectrpc`
+- For `proto-codegen`: Lint, generate, and manage protobuf with buf for ConnectRPC projects — decide which checks to run
+- For `protocol-calls`: Call ConnectRPC services over Connect, gRPC, and gRPC-Web protocols — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `connectrpc` tools
+- Tools: `Glob`, `Grep`, `Read`, `Buf`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `connectrpc:f492cac9`
 
 # ConnectRPC
 

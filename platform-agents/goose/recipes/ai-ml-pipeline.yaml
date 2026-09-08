@@ -2,8 +2,24 @@ title: ai-ml-pipeline
 description: 'Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking
   and serving, and Kubeflow Pipelines for orchestration.'
 version: 2.0.0
-instructions: "# ai-ml-pipeline\n\nBuilds reproducible ML pipelines: DVC for data/model versioning, MLflow\
-  \ for experiment tracking and serving, and Kubeflow Pipelines for orchestration.\n\n## Instructions\n\
+instructions: "Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment\
+  \ tracking and serving, and Kubeflow Pipelines for orchestration.\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (ai-ml-pipeline)\n\nYou are **ai-ml-pipeline** (data) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — data context for `ai-ml-pipeline`\n- Domain: Builds\
+  \ reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking and serving,\
+  \ and Kubeflow Pipelines for orchestration.\n- **data-versioning**: Track datasets and model artifacts\
+  \ with DVC so training runs reproduce from any git commit. — `dvc init`\n- **experiment-tracking**:\
+  \ Log parameters, metrics, and models with MLflow and serve models as REST endpoints. — `mlflow run\
+  \ . -P alpha=0.5`\n- **pipeline-orchestration**: Package and run component pipelines on Kubeflow Pipelines.\
+  \ — `kubectl apply -f pipeline.yaml`\n- Check `knowledge` and `prerequisites: python, scikit-learn,\
+  \ tensorflow, mlflow`\n\n### 2. Reason — think for `ai-ml-pipeline`\n- For `data-versioning`: Track\
+  \ datasets and model artifacts with DVC so training runs reproduce from any git commit. — decide which\
+  \ checks to run\n- For `experiment-tracking`: Log parameters, metrics, and models with MLflow and serve\
+  \ models as REST endpoints. — decide which checks to run\n- For `pipeline-orchestration`: Package and\
+  \ run component pipelines on Kubeflow Pipelines. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `ai-ml-pipeline`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Dvc`, `Mlflow` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `ai-ml-pipeline:5bbd5080`\n\
   \n# AI/ML Pipeline\n\n## What this skill does\n\nCreates reproducible ML pipelines: DVC versions raw\
   \ data and model artifacts, MLflow tracks experiments and serves models, and Kubeflow Pipelines orchestrates\
   \ training end to end.\n\n## When to use\n\n- Reproducing a training run from a git commit\n- Tracking\
@@ -20,17 +36,23 @@ instructions: "# ai-ml-pipeline\n\nBuilds reproducible ML pipelines: DVC for dat
   \ into git; DVC stores them in remote storage\n- Pin Python deps so runs are deterministic\n- Log a\
   \ params snapshot in MLflow for every run\n- Set `dvc remote add` to S3/GCS for team sharing\n\n## Capabilities\n\
   \n### data-versioning\nTrack datasets and model artifacts with DVC so training runs reproduce from any\
-  \ git commit.\n\n**Commands:**\n- `dvc init`\n- `dvc add data/train.csv`\n- `dvc repro`\n- `dvc push`\n\
-  - `dvc metrics show`\n\n**Examples:**\n- dvc add data/train.csv && git add data/train.csv.dvc .dvc/config\
-  \ && git commit -m 'add training data'\n- dvc repro train.dvc\n- dvc metrics diff --sort-by=accuracy\n\
-  \n### experiment-tracking\nLog parameters, metrics, and models with MLflow and serve models as REST\
-  \ endpoints.\n\n**Commands:**\n- `mlflow run . -P alpha=0.5`\n- `mlflow experiments create --experiment-name\
-  \ ab-test`\n- `mlflow models serve -m runs:/demo-run-id/model -p 5000`\n- `mlflow ui --host 0.0.0.0\
-  \ --port 5000`\n\n**Examples:**\n- mlflow run . -P alpha=0.5 -P batch_size=64\n- mlflow models serve\
-  \ -m runs:/abc123/model -p 5000\n- mlflow experiments list\n\n### pipeline-orchestration\nPackage and\
-  \ run component pipelines on Kubeflow Pipelines.\n\n**Commands:**\n- `kubectl apply -f pipeline.yaml`\n\
-  - `kfp pipeline upload`\n- `kubectl get pods -n kubeflow -l pipeline-sdk-type=component`\n- `kubectl\
-  \ logs -l pipeline-run-id=demo-run-id --all-containers`\n\n**Examples:**\n- kfp pipeline upload --name\
-  \ iris-pipeline pipeline.yaml\n- kubectl logs -n kubeflow -l pipeline-run-id=run-123 --tail=200\n- kubectl\
-  \ get experiments.pipelines.kubeflow.org"
+  \ git commit.\n\n**Parameters:**\n- `stage` (string): DVC stage file (e.g. train.dvc) to reproduce\n\
+  - `targets` (string): Space-separated stages for dvc repro\n\n**Commands:**\n- `dvc init`\n- `dvc add\
+  \ data/train.csv`\n- `dvc repro`\n- `dvc push`\n- `dvc metrics show`\n\n**Examples:**\n- dvc add data/train.csv\
+  \ && git add data/train.csv.dvc .dvc/config && git commit -m 'add training data'\n- dvc repro train.dvc\n\
+  - dvc metrics diff --sort-by=accuracy\n\n### experiment-tracking\nLog parameters, metrics, and models\
+  \ with MLflow and serve models as REST endpoints.\n\n**Parameters:**\n- `experiment` (string): MLflow\
+  \ experiment name or ID\n- `run_id` (string): Run ID used to reference a registered model\n- `params`\
+  \ (string): Hyperparameters passed with -P key=value\n\n**Commands:**\n- `mlflow run . -P alpha=0.5`\n\
+  - `mlflow experiments create --experiment-name ab-test`\n- `mlflow models serve -m runs:/demo-run-id/model\
+  \ -p 5000`\n- `mlflow ui --host 0.0.0.0 --port 5000`\n\n**Examples:**\n- mlflow run . -P alpha=0.5 -P\
+  \ batch_size=64\n- mlflow models serve -m runs:/abc123/model -p 5000\n- mlflow experiments list\n\n\
+  ### pipeline-orchestration\nPackage and run component pipelines on Kubeflow Pipelines.\n\n**Parameters:**\n\
+  - `pipeline_file` (string): Path to the compiled pipeline YAML/JSON\n- `run_id` (string): Pipeline run\
+  \ identifier for logs\n\n**Commands:**\n- `kubectl apply -f pipeline.yaml`\n- `kfp pipeline upload`\n\
+  - `kubectl get pods -n kubeflow -l pipeline-sdk-type=component`\n- `kubectl logs -l pipeline-run-id=demo-run-id\
+  \ --all-containers`\n\n**Examples:**\n- kfp pipeline upload --name iris-pipeline pipeline.yaml\n- kubectl\
+  \ logs -n kubeflow -l pipeline-run-id=run-123 --tail=200\n- kubectl get experiments.pipelines.kubeflow.org\n\
+  \n## References\n- [DVC Documentation](https://dvc.org/doc)\n- [MLflow Docs](https://mlflow.org/docs/latest/index.html)\n\
+  - [Kubeflow Pipelines](https://www.kubeflow.org/docs/components/pipelines/)"
 prompt: Act as ai-ml-pipeline and handle the task per the instructions.

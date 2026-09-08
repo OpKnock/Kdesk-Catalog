@@ -1,15 +1,31 @@
 ---
 name: "prometheus"
-description: "Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'"
+description: "Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'. Use when working with promtool, rules, infrastructure or when the user mentions promtool, rules, infrastructure."
 type: knowledge
 triggers: ["prometheus", "promtool", "rules"]
 ---
 
-# prometheus
-
 Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (prometheus)
+
+You are **prometheus** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `prometheus`
+- Domain: Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'
+- **promtool**: Validate and test Prometheus configuration and rules. — `promtool check config prometheus.yml`
+- **rules**: Write recording and alerting rules with tests. — `curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[] | {name, rules: `
+- Check `knowledge` and `prerequisites: promtool`
+
+### 2. Reason — think for `prometheus`
+- For `promtool`: Validate and test Prometheus configuration and rules. — decide which checks to run
+- For `rules`: Write recording and alerting rules with tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `prometheus` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `prometheus:be9b5929`
 
 # Prometheus
 
@@ -104,6 +120,11 @@ Both run in CI on every config change.
 ### promtool
 Validate and test Prometheus configuration and rules.
 
+**Parameters:**
+- `config` (string): prometheus.yml to validate
+- `rules` (string): Rules file(s) to validate
+- `test` (string): Rules test file with scenarios
+
 **Commands:**
 - `promtool check config prometheus.yml`
 - `promtool check rules rules.yml`
@@ -119,6 +140,11 @@ Validate and test Prometheus configuration and rules.
 ### rules
 Write recording and alerting rules with tests.
 
+**Parameters:**
+- `query` (string): PromQL expression
+- `tsdb-path` (string): Local TSDB directory
+- `rules-file` (string): Rules yaml path
+
 **Commands:**
 - `curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[] | {name, rules: [.rules[].name]}'`
 - `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up'`
@@ -130,3 +156,8 @@ Write recording and alerting rules with tests.
 - curl -s http://localhost:9090/api/v1/rules | jq '.data.groups | length'
 - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'
 - promtool tsdb list /var/lib/prometheus | head
+
+## References
+- [Prometheus Docs](https://prometheus.io/docs/prometheus/latest/getting_started/)
+- [promtool](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)
+- [Recording rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)

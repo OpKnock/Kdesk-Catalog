@@ -1,8 +1,24 @@
-# Kubernetes Deployment
-
 Deploy and operate workloads with kubectl: create deployments, scale replicas, update images, and manage rollouts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kubernetes-deployment)
+
+You are **Kubernetes Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kubernetes-deployment`
+- Domain: Deploy and operate workloads with kubectl: create deployments, scale replicas, update images, and manage rollouts.
+- **deploy-basic**: Create, scale, and update deployments. — `kubectl create deployment nginx --image=nginx:1.27 --replicas=3`
+- **rollout-ops**: Monitor rollout progress and status. — `kubectl rollout status deployment/nginx`
+- Check `knowledge` and `prerequisites: kubectl`
+
+### 2. Reason — think for `kubernetes-deployment`
+- For `deploy-basic`: Create, scale, and update deployments. — decide which checks to run
+- For `rollout-ops`: Monitor rollout progress and status. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kubernetes-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubernetes-deployment:929b10d0`
 
 # Kubernetes Deployments
 
@@ -90,6 +106,11 @@ kubectl get pods --watch
 ### deploy-basic
 Create, scale, and update deployments.
 
+**Parameters:**
+- `name` (string): Deployment name.
+- `image` (string): Container image.
+- `replicas` (integer): Desired replica count.
+
 **Commands:**
 - `kubectl create deployment nginx --image=nginx:1.27 --replicas=3`
 - `kubectl scale deployment nginx --replicas=5`
@@ -104,6 +125,10 @@ Create, scale, and update deployments.
 ### rollout-ops
 Monitor rollout progress and status.
 
+**Parameters:**
+- `name` (string): Deployment name.
+- `label` (string): Pod selector label.
+
 **Commands:**
 - `kubectl rollout status deployment/nginx`
 - `kubectl rollout restart deployment/nginx`
@@ -115,3 +140,7 @@ Monitor rollout progress and status.
 - kubectl rollout status deployment/nginx
 - kubectl rollout restart deployment/nginx
 - kubectl get deployments
+
+## References
+- [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [kubectl cheat sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)

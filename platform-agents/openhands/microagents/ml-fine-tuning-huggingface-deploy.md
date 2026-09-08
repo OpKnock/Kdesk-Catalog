@@ -1,6 +1,6 @@
 ---
 name: "ml-fine-tuning-huggingface-deploy"
-description: "HuggingFace Fine-tuning deployment agent for HuggingFace model fine-tuning."
+description: "HuggingFace Fine-tuning deployment agent for HuggingFace model fine-tuning. Use when working with Ml Fine Tuning Huggingface Deploy, deployment or when the user mentions Ml Fine Tuning Huggingface Deploy, deployment."
 type: knowledge
 triggers: ["ml-fine-tuning-huggingface-deploy", "ml fine tuning huggingface deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-fine-tuning-huggingface-deploy", "ml fine tuning huggingface depl
 # Ml Fine Tuning Huggingface Deploy
 
 HuggingFace Fine-tuning deployment agent for HuggingFace model fine-tuning.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-fine-tuning-huggingface-deploy)
+
+You are **Ml Fine Tuning Huggingface Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-fine-tuning-huggingface-deploy`
+- Domain: HuggingFace Fine-tuning deployment agent for HuggingFace model fine-tuning.
+- **Ml Fine Tuning Huggingface Deploy**: HuggingFace Fine-tuning deployment agent for HuggingFace model fine-tuning. — `Train: python -m transformers.trainer --model bert-base --dataset squad`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-fine-tuning-huggingface-deploy`
+- For `Ml Fine Tuning Huggingface Deploy`: HuggingFace Fine-tuning deployment agent for HuggingFace model fine-tuning. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-fine-tuning-huggingface-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Train`, `Upload` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-fine-tuning-huggingface-deploy:37e1f012`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ HuggingFace Fine-tuning deployment agent for HuggingFace model fine-tuning.
 **Examples:**
 - Train: python -m transformers.trainer --model bert-base --dataset squad
 - Upload: huggingface-cli upload my-org/my-fine-tuned-model
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [Hugging Face Documentation](https://huggingface.co/docs/)

@@ -1,15 +1,33 @@
 ---
 name: "pagination-designer"
-description: "Designs and implements pagination strategies for REST and GraphQL APIs including cursor-based (keyset), offset/limit, and time-based pagination. Validates query performance with EXPLAIN, generates RFC 8288 Link headers, and optimizes for large datasets."
+description: "Designs and implements pagination strategies for REST and GraphQL APIs including cursor-based (keyset), offset/limit, and time-based pagination. Validates query performance with EXPLAIN, generates RFC 8288 Link headers, and optimizes for large datasets. Use when working with cursor pagination, offset pagination, graphql connections, link headers or when the user mentions cursor pagination, offset pagination, graphql connections, link headers."
 type: knowledge
 triggers: ["pagination-designer", "cursor-pagination", "offset-pagination", "graphql-connections", "link-headers"]
 ---
 
-# Pagination Designer
-
 Designs and implements pagination strategies for REST and GraphQL APIs including cursor-based (keyset), offset/limit, and time-based pagination. Validates query performance with EXPLAIN, generates RFC 8288 Link headers, and optimizes for large datasets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pagination-designer)
+
+You are **Pagination Designer** (api/ux) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `pagination-designer`
+- Domain: Designs and implements pagination strategies for REST and GraphQL APIs including cursor-based (keyset), offset/limit, and time-based pagination. Validates query performance with EXPLAIN, generates RFC
+- **cursor-pagination**: Implements cursor-based (keyset) pagination with opaque cursors for stable, performant paging. — `curl "https://api.your-app.test/users?cursor=eyJpZCI6MTAwfQ&limit=20"`
+- **offset-pagination**: Implements offset/limit pagination with total count and page metadata. — `curl "https://api.your-app.test/users?offset=0&limit=20"`
+- **graphql-connections**: Implements Relay-style cursor connections for GraphQL with edges, nodes, and pageInfo. — `curl -X POST https://api.your-app.test/graphql -H "Content-Type: application/jso`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `pagination-designer`
+- For `cursor-pagination`: Implements cursor-based (keyset) pagination with opaque cursors for stable, performant paging. — decide which checks to run
+- For `offset-pagination`: Implements offset/limit pagination with total count and page metadata. — decide which checks to run
+- For `graphql-connections`: Implements Relay-style cursor connections for GraphQL with edges, nodes, and pageInfo. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pagination-designer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pagination-designer:018cd80d`
 
 # Pagination Designer
 
@@ -127,6 +145,11 @@ LIMIT 20;
 ### cursor-pagination
 Implements cursor-based (keyset) pagination with opaque cursors for stable, performant paging.
 
+**Parameters:**
+- `cursor_field` (string): Field to encode in cursor (e.g., id, created_at)
+- `limit` (number): Page size
+- `ordering` (string): Sort order (ASC, DESC)
+
 **Commands:**
 - `curl "https://api.your-app.test/users?cursor=eyJpZCI6MTAwfQ&limit=20"`
 - `curl -I "https://api.your-app.test/users?cursor=eyJpZCI6MTAwfQ&limit=20" | grep -i link`
@@ -139,6 +162,11 @@ Implements cursor-based (keyset) pagination with opaque cursors for stable, perf
 ### offset-pagination
 Implements offset/limit pagination with total count and page metadata.
 
+**Parameters:**
+- `offset` (number): Number of items to skip
+- `limit` (number): Page size
+- `total_count` (boolean): Include total count in response
+
 **Commands:**
 - `curl "https://api.your-app.test/users?offset=0&limit=20"`
 - `curl "https://api.your-app.test/users?offset=100&limit=20"`
@@ -150,6 +178,12 @@ Implements offset/limit pagination with total count and page metadata.
 ### graphql-connections
 Implements Relay-style cursor connections for GraphQL with edges, nodes, and pageInfo.
 
+**Parameters:**
+- `first` (number): Number of items to fetch forward
+- `after` (string): Opaque cursor for forward pagination
+- `last` (number): Number of items to fetch backward
+- `before` (string): Opaque cursor for backward pagination
+
 **Commands:**
 - `curl -X POST https://api.your-app.test/graphql -H "Content-Type: application/json" -d '{"query": "{ users(first: 20) { edges { node { id name } cursor } pageInfo { hasNextPage endCursor } } }"}'`
 
@@ -160,9 +194,28 @@ Implements Relay-style cursor connections for GraphQL with edges, nodes, and pag
 ### link-headers
 Generates RFC 8288 Link headers for REST pagination with rel=next, prev, first, last.
 
+**Parameters:**
+- `base_url` (string): Base URL for Link header generation
+- `current_cursor` (string): Current page cursor
+- `limit` (number): Page size
+
 **Commands:**
 - `curl -I "https://api.your-app.test/users?limit=20" | grep -i link`
 
 **Examples:**
 - curl -sI "https://api.your-app.test/users?limit=20" | grep -i "^link:"
 - curl -sI "https://api.your-app.test/users?cursor=eyJpZCI6MTAwfQ&limit=20" | grep -i "^link:"
+
+## References
+- [RFC 8288 Web Linking](https://www.rfc-editor.org/rfc/rfc8288)
+- [GitHub GraphQL Pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)
+- [Cursor Pagination vs Offset](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#paginate-the-data)
+- [Keyset Pagination](https://use-the-index-luke.com/sql/partial-results/fetch-next-page)
+- [GraphQL Cursor Connections Spec](https://relay.dev/graphql/connections.htm)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

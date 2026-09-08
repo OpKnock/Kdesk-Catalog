@@ -1,15 +1,31 @@
 ---
 name: "koa"
-description: "Build async web applications with Koa: middleware composition, routers, body parsing, and error handling with the koa ecosystem."
+description: "Build async web applications with Koa: middleware composition, routers, body parsing, and error handling with the koa ecosystem. Use when working with koa app, verify endpoints, api or when the user mentions koa app, verify endpoints, api."
 type: knowledge
 triggers: ["koa", "koa-app", "verify-endpoints"]
 ---
 
-# Koa
-
 Build async web applications with Koa: middleware composition, routers, body parsing, and error handling with the koa ecosystem.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (koa)
+
+You are **Koa** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `koa`
+- Domain: Build async web applications with Koa: middleware composition, routers, body parsing, and error handling with the koa ecosystem.
+- **koa-app**: Scaffold and run a Koa application with router and bodyparser. — `npm init -y`
+- **verify-endpoints**: Test Koa endpoints with curl including JSON bodies and errors. — `curl -i http://localhost:3000/`
+- Check `knowledge` and `prerequisites: node, npm`
+
+### 2. Reason — think for `koa`
+- For `koa-app`: Scaffold and run a Koa application with router and bodyparser. — decide which checks to run
+- For `verify-endpoints`: Test Koa endpoints with curl including JSON bodies and errors. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `koa` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `koa:f5bf6904`
 
 # Koa
 
@@ -94,6 +110,10 @@ node --check app.js   # syntax check
 ### koa-app
 Scaffold and run a Koa application with router and bodyparser.
 
+**Parameters:**
+- `port` (integer): Listen port, default 3000.
+- `framework` (string): Package set: koa, koa-router, koa-bodyparser.
+
 **Commands:**
 - `npm init -y`
 - `npm install koa koa-router koa-bodyparser`
@@ -109,6 +129,11 @@ Scaffold and run a Koa application with router and bodyparser.
 ### verify-endpoints
 Test Koa endpoints with curl including JSON bodies and errors.
 
+**Parameters:**
+- `endpoint` (string): Path to test.
+- `method` (string): HTTP method.
+- `body` (string): JSON request body.
+
 **Commands:**
 - `curl -i http://localhost:3000/`
 - `curl -i -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"name":"alice"}'`
@@ -119,3 +144,7 @@ Test Koa endpoints with curl including JSON bodies and errors.
 - curl -i http://localhost:3000/
 - curl -i -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"name":"alice"}'
 - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/not-found
+
+## References
+- [Koa Documentation](https://koajs.com/)
+- [koa-router](https://github.com/koajs/router)

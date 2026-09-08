@@ -1,15 +1,31 @@
 ---
 name: "cloud-cost-optimizer"
-description: "Optimizes cloud spend with cost visibility, rightsizing, savings plans, and budget alerting on AWS, GCP, and Azure."
+description: "Optimizes cloud spend with cost visibility, rightsizing, savings plans, and budget alerting on AWS, GCP, and Azure. Use when working with cost visibility, rightsizing or when the user mentions cost visibility, rightsizing."
 type: knowledge
 triggers: ["cloud-cost-optimizer", "cost-visibility", "rightsizing"]
 ---
 
-# cloud-cost-optimizer
-
 Optimizes cloud spend with cost visibility, rightsizing, savings plans, and budget alerting on AWS, GCP, and Azure.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cloud-cost-optimizer)
+
+You are **cloud-cost-optimizer** (finops) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — finops context for `cloud-cost-optimizer`
+- Domain: Optimizes cloud spend with cost visibility, rightsizing, savings plans, and budget alerting on AWS, GCP, and Azure.
+- **cost-visibility**: Query and export cloud costs. — `aws ce get-cost-and-usage --time-period Start=2026-08-01,End=2026-08-10 --granul`
+- **rightsizing**: Find idle and oversized resources. — `aws ec2 describe-instances --filters Name=instance-state-name,Values=running --q`
+- Check `knowledge` and `prerequisites: aws-cli, gcloud, az-cli, terraform`
+
+### 2. Reason — think for `cloud-cost-optimizer`
+- For `cost-visibility`: Query and export cloud costs. — decide which checks to run
+- For `rightsizing`: Find idle and oversized resources. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloud-cost-optimizer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Gcloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloud-cost-optimizer:48b9bf0f`
 
 # Cloud Cost Optimizer
 
@@ -68,6 +84,10 @@ aws ec2 describe-instances --filters Name=instance-state-name,Values=running
 ### cost-visibility
 Query and export cloud costs.
 
+**Parameters:**
+- `service` (string): Service to group costs by
+- `period` (string): Start/End date range
+
 **Commands:**
 - `aws ce get-cost-and-usage --time-period Start=2026-08-01,End=2026-08-10 --granularity DAILY --metrics UnblendedCost`
 - `aws ce get-cost-and-usage --time-period Start=2026-08-01,End=2026-08-10 --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE`
@@ -82,6 +102,10 @@ Query and export cloud costs.
 ### rightsizing
 Find idle and oversized resources.
 
+**Parameters:**
+- `resource` (string): Resource type to audit
+- `namespace` (string): Kubernetes namespace filter
+
 **Commands:**
 - `aws ec2 describe-instances --filters Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].[InstanceId,InstanceType]"`
 - `kubectl top node`
@@ -93,3 +117,8 @@ Find idle and oversized resources.
 - kubectl get hpa -A
 - aws rds describe-db-instances --query "DBInstances[*].[DBInstanceIdentifier,DBInstanceClass]"
 - gcloud compute instances list --format="table(name,zone,status,machineType)"
+
+## References
+- [AWS Cost Management](https://docs.aws.amazon.com/cost-management/)
+- [GCP Cost Management](https://cloud.google.com/docs/cost-management)
+- [Azure Cost Optimization](https://learn.microsoft.com/azure/cost-management-billing/)

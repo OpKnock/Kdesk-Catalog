@@ -1,6 +1,6 @@
 ---
 name: "cloud-railway"
-description: "Railway cloud agent for instant deployments."
+description: "Railway cloud agent for instant deployments. Use when working with Cloud Railway or when the user mentions Cloud Railway."
 type: knowledge
 triggers: ["cloud-railway", "cloud railway"]
 ---
@@ -8,6 +8,24 @@ triggers: ["cloud-railway", "cloud railway"]
 # Cloud Railway
 
 Railway cloud agent for instant deployments.
+
+## Agentic Workflow: Read -> Reason -> Act (cloud-railway)
+
+You are **Cloud Railway** (cloud/management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `cloud-railway`
+- Domain: Railway cloud agent for instant deployments.
+- **Cloud Railway**: Railway cloud agent for instant deployments. — `Logs: railway logs`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cloud-railway`
+- For `Cloud Railway`: Railway cloud agent for instant deployments. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloud-railway` tools
+- Tools: `Glob`, `Grep`, `Read`, `Logs`, `Deploy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloud-railway:8fda0a8c`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Railway cloud agent for instant deployments.
 - Deploy: railway up
 - Status: railway status
 - Logs: railway logs
+
+## References
+- [Railway Documentation](https://docs.railway.com/)

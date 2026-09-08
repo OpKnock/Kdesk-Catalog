@@ -1,15 +1,33 @@
 ---
 name: "cassandra-replication"
-description: "Manages Cassandra replication: replication factors, keyspace strategies, endpoint mapping, and consistency levels."
+description: "Manages Cassandra replication: replication factors, keyspace strategies, endpoint mapping, and consistency levels. Use when working with keyspace replication, endpoints, consistency, api or when the user mentions keyspace replication, endpoints, consistency, api."
 type: knowledge
 triggers: ["cassandra-replication", "keyspace-replication", "endpoints", "consistency"]
 ---
 
-# Cassandra Replication
-
 Manages Cassandra replication: replication factors, keyspace strategies, endpoint mapping, and consistency levels.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cassandra-replication)
+
+You are **Cassandra Replication** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `cassandra-replication`
+- Domain: Manages Cassandra replication: replication factors, keyspace strategies, endpoint mapping, and consistency levels.
+- **keyspace-replication**: Set and inspect replication configuration. — `cqlsh -e "DESCRIBE KEYSPACE mykeyspace"`
+- **endpoints**: Map partition keys to replicas. — `nodetool getendpoints mykeyspace users 42`
+- **consistency**: Set and test consistency levels. — `cqlsh -e "CONSISTENCY QUORUM"`
+- Check `knowledge` and `prerequisites: cqlsh, nodetool`
+
+### 2. Reason — think for `cassandra-replication`
+- For `keyspace-replication`: Set and inspect replication configuration. — decide which checks to run
+- For `endpoints`: Map partition keys to replicas. — decide which checks to run
+- For `consistency`: Set and test consistency levels. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cassandra-replication` tools
+- Tools: `Glob`, `Grep`, `Read`, `Cqlsh`, `Nodetool` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cassandra-replication:b9041e6b`
 
 # Cassandra Replication
 
@@ -63,6 +81,11 @@ cqlsh -e "TRACING ON; SELECT * FROM mykeyspace.users WHERE id=42"
 ### keyspace-replication
 Set and inspect replication configuration.
 
+**Parameters:**
+- `keyspace` (string): Keyspace name
+- `dc_replication` (string): Per-DC RF map
+- `strategy` (string): NetworkTopologyStrategy or SimpleStrategy
+
 **Commands:**
 - `cqlsh -e "DESCRIBE KEYSPACE mykeyspace"`
 - `cqlsh -e "ALTER KEYSPACE mykeyspace WITH replication = {'class':'NetworkTopologyStrategy','dc1':3,'dc2':3}"`
@@ -77,6 +100,11 @@ Set and inspect replication configuration.
 
 ### endpoints
 Map partition keys to replicas.
+
+**Parameters:**
+- `keyspace` (string): Keyspace
+- `table` (string): Table
+- `partition_key` (string): Partition key value
 
 **Commands:**
 - `nodetool getendpoints mykeyspace users 42`
@@ -93,6 +121,10 @@ Map partition keys to replicas.
 ### consistency
 Set and test consistency levels.
 
+**Parameters:**
+- `consistency` (string): Consistency level
+- `trace` (boolean): Enable tracing
+
 **Commands:**
 - `cqlsh -e "CONSISTENCY QUORUM"`
 - `cqlsh -e "CONSISTENCY LOCAL_QUORUM"`
@@ -104,3 +136,8 @@ Set and test consistency levels.
 - cqlsh -e "CONSISTENCY QUORUM; SELECT * FROM mykeyspace.users WHERE id=42"
 - cqlsh -e "TRACING ON; SELECT * FROM mykeyspace.users WHERE id=42"
 - cqlsh -e "CONSISTENCY EACH_QUORUM; SELECT COUNT(*) FROM mykeyspace.users"
+
+## References
+- [Cassandra Dynamo Architecture](https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html)
+- [Cassandra Consistency](https://cassandra.apache.org/doc/latest/cassandra/architecture/guarantees.html)
+- [nodetool getendpoints](https://cassandra.apache.org/doc/latest/cassandra/operating/nodetool/)

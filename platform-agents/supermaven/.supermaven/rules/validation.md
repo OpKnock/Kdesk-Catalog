@@ -1,8 +1,22 @@
-# Validation
-
 Validates JSON payloads against JSON Schema (draft 2020-12) using ajv-cli and Python jsonschema. Compiles schemas to catch errors before deployment, enforces contracts in CI pipelines, and performs quick shape checks with jq.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (validation)
+
+You are **Validation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `validation`
+- Domain: Validates JSON payloads against JSON Schema (draft 2020-12) using ajv-cli and Python jsonschema. Compiles schemas to catch errors before deployment, enforces contracts in CI pipelines, and performs qu
+- **schema-validate**: Validate JSON payloads against JSON Schema — `npx ajv-cli validate -s schema.json -d data.json --strict=false`
+- Check `knowledge` and `prerequisites: npx, python, jq`
+
+### 2. Reason — think for `validation`
+- For `schema-validate`: Validate JSON payloads against JSON Schema — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `validation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `validation:73dc273a`
 
 # Validation
 
@@ -70,6 +84,11 @@ npx ajv-cli compile -s schema.json
 ### schema-validate
 Validate JSON payloads against JSON Schema
 
+**Parameters:**
+- `schema` (string): Path to JSON Schema file
+- `data` (string): Path to data file to validate
+- `strict` (boolean): Reject unknown keywords
+
 **Commands:**
 - `npx ajv-cli validate -s schema.json -d data.json --strict=false`
 - `python -m jsonschema -i data.json schema.json`
@@ -81,3 +100,8 @@ Validate JSON payloads against JSON Schema
 - npx ajv-cli validate -s schema.json -d data.json --strict=false
 - python -m jsonschema -i data.json schema.json
 - jq "has(\"required_field\")" data.json
+
+## References
+- [JSON Schema spec](https://json-schema.org/)
+- [Ajv CLI docs](https://ajv.js.org/guide/cli.html)
+- [Python jsonschema](https://python-jsonschema.readthedocs.io/)

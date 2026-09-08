@@ -1,6 +1,6 @@
 ---
 name: "risk-model-server"
-description: "Risk server agent. Manages Risk ML server."
+description: "Risk server agent. Manages Risk ML server. Use when working with Ml Risk Server Agent or when the user mentions Ml Risk Server Agent."
 type: knowledge
 triggers: ["risk-model-server", "ml risk server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["risk-model-server", "ml risk server agent"]
 # Risk Model Server
 
 Risk server agent. Manages Risk ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (risk-model-server)
+
+You are **Risk Model Server** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `risk-model-server`
+- Domain: Risk server agent. Manages Risk ML server.
+- **Ml Risk Server Agent**: Risk server agent. Manages Risk ML server. — `python -m model.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `risk-model-server`
+- For `Ml Risk Server Agent`: Risk server agent. Manages Risk ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `risk-model-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `risk-model-server:7ea16e64`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Risk server agent. Manages Risk ML server.
 - curl http://localhost:8080/risk --data '{"model": "model.pkl"}'
 - python risk_assessment.py --model model.pkl --data data.csv --output risk.json
 - python risk_mitigation.py --model model.pkl --risks risks.json --output mitigation.json
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)

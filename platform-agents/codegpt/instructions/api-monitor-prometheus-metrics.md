@@ -1,8 +1,24 @@
-# Api Monitor Prometheus Metrics
-
 Monitors API performance with Prometheus and Grafana: exporting metrics, promtool validation, HTTP API queries, and alert rule checking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-monitor-prometheus-metrics)
+
+You are **Api Monitor Prometheus Metrics** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `api-monitor-prometheus-metrics`
+- Domain: Monitors API performance with Prometheus and Grafana: exporting metrics, promtool validation, HTTP API queries, and alert rule checking.
+- **prometheus-metrics**: Query API metrics from the Prometheus HTTP API — `promtool check config prometheus.yml`
+- **alert-rules**: Validate and test alerting rules for API SLOs — `promtool check rules rules.yml`
+- Check `knowledge` and `prerequisites: prometheus, grafana`
+
+### 2. Reason — think for `api-monitor-prometheus-metrics`
+- For `prometheus-metrics`: Query API metrics from the Prometheus HTTP API — decide which checks to run
+- For `alert-rules`: Validate and test alerting rules for API SLOs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-monitor-prometheus-metrics` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Grafana-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-monitor-prometheus-metrics:43d26017`
 
 # API Monitor v2 - Prometheus/Grafana
 
@@ -50,6 +66,11 @@ scrape_configs:
 ### prometheus-metrics
 Query API metrics from the Prometheus HTTP API
 
+**Parameters:**
+- `promql` (string): PromQL expression to evaluate
+- `range` (string): start/end/step for range queries
+- `config-file` (string): prometheus.yml path for validation
+
 **Commands:**
 - `promtool check config prometheus.yml`
 - `curl -s 'http://localhost:9090/api/v1/query' --data-urlencode 'query=rate(http_requests_total[5m])' | jq '.data.result'`
@@ -73,3 +94,7 @@ Validate and test alerting rules for API SLOs
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Prometheus HTTP API](https://prometheus.io/docs/prometheus/latest/querying/api/)
+- [PromQL Basics](https://prometheus.io/docs/prometheus/latest/querying/basics/)

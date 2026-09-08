@@ -1,15 +1,29 @@
 ---
 name: "Etl Pipeline"
-description: "Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling."
+description: "Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling. Use when working with etl pipeline, data or when the user mentions etl pipeline, data."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Etl Pipeline
-
 Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (etl-pipeline)
+
+You are **Etl Pipeline** (data/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `etl-pipeline`
+- Domain: Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling.
+- **etl-pipeline**: Implement and run ETL jobs with Python, Spark, and CLI tools — `python -m etl_pkg run --env prod --date 2024-01-15`
+- Check `knowledge` and `prerequisites: psql, python, spark-submit`
+
+### 2. Reason — think for `etl-pipeline`
+- For `etl-pipeline`: Implement and run ETL jobs with Python, Spark, and CLI tools — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `etl-pipeline` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Spark-submit` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `etl-pipeline:8c9521ae`
 
 # ETL Pipeline
 
@@ -68,6 +82,11 @@ and duration; if a step fails, isolates the step and error from logs.
 ### etl-pipeline
 Implement and run ETL jobs with Python, Spark, and CLI tools
 
+**Parameters:**
+- `env` (string): Environment: dev, staging, prod
+- `date` (string): Logical execution date for the pipeline
+- `incremental` (boolean): Process only the delta since the last run
+
 **Commands:**
 - `python -m etl_pkg run --env prod --date 2024-01-15`
 - `spark-submit --master yarn --deploy-mode cluster jobs/extract.py --input s3://raw/ --output s3://curated/`
@@ -79,3 +98,7 @@ Implement and run ETL jobs with Python, Spark, and CLI tools
 - python -m etl_pkg run --env staging --date 2024-01-15 --incremental
 - spark-submit --master local[4] jobs/transform.py
 - airflow dags trigger etl_pipeline --conf '{"date": "2024-01-15"}'
+
+## References
+- [Apache Spark SQL guide](https://spark.apache.org/docs/latest/sql-programming-guide.html)
+- [Airflow ETL best practices](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html)

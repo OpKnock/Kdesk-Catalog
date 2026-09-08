@@ -1,26 +1,24 @@
 Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (wireguard)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Wireguard** (networking/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `umask 077 && wg genkey | tee privatekey | wg pubkey > public`, `wg-quick up wg0`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — networking context for `wireguard`
+- Domain: Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick.
+- **keys**: Generate WireGuard key pairs securely. — `umask 077 && wg genkey | tee privatekey | wg pubkey > publickey`
+- **interfaces**: Bring up, tear down, and inspect WireGuard interfaces. — `wg-quick up wg0`
+- Check `knowledge` and `prerequisites: cat, umask, wg-quick`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `wireguard`
+- For `keys`: Generate WireGuard key pairs securely. — decide which checks to run
+- For `interfaces`: Bring up, tear down, and inspect WireGuard interfaces. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `wireguard` tools
+- Tools: `Glob`, `Grep`, `Read`, `Umask`, `Wg` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `wireguard:6dc75859`
 
 # WireGuard
 

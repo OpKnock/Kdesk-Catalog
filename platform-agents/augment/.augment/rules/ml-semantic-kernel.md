@@ -7,27 +7,23 @@ description: "Semantic Kernel agent for Microsoft AI orchestration. Use when wor
 
 Semantic Kernel agent for Microsoft AI orchestration.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ml-semantic-kernel)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Ml Semantic Kernel** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `Planner: planner = sk.FunctionCallingStepwiseMinimalPlanner(`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — ml context for `ml-semantic-kernel`
+- Domain: Semantic Kernel agent for Microsoft AI orchestration.
+- **Ml Semantic Kernel**: Semantic Kernel agent for Microsoft AI orchestration. — `Planner: planner = sk.FunctionCallingStepwiseMinimalPlanner()`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ml-semantic-kernel`
+- For `Ml Semantic Kernel`: Semantic Kernel agent for Microsoft AI orchestration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ml-semantic-kernel` tools
+- Tools: `Glob`, `Grep`, `Read`, `Planner`, `Python` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-semantic-kernel:1fa95db9`
 
 ## Instructions
 

@@ -1,15 +1,29 @@
 ---
 name: "Nikto"
-description: "Web server vulnerability scanning with Nikto: fingerprinting servers, finding misconfigurations, and producing reports."
+description: "Web server vulnerability scanning with Nikto: fingerprinting servers, finding misconfigurations, and producing reports. Use when working with web vuln scan, code quality or when the user mentions web vuln scan, code quality."
 globs: ["**/*.html", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Nikto
-
 Web server vulnerability scanning with Nikto: fingerprinting servers, finding misconfigurations, and producing reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nikto)
+
+You are **Nikto** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `nikto`
+- Domain: Web server vulnerability scanning with Nikto: fingerprinting servers, finding misconfigurations, and producing reports.
+- **web-vuln-scan**: Run Nikto scans against web servers with tuning, auth, and report options — `nikto -h http://localhost:8080`
+- Check `knowledge` and `prerequisites: nikto`
+
+### 2. Reason — think for `nikto`
+- For `web-vuln-scan`: Run Nikto scans against web servers with tuning, auth, and report options — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nikto` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nikto` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nikto:57a1a33a`
 
 # Nikto
 
@@ -71,6 +85,11 @@ then the agent recommends upgrading or confirming the config.
 ### web-vuln-scan
 Run Nikto scans against web servers with tuning, auth, and report options
 
+**Parameters:**
+- `port` (integer): Port to scan when not 80/443
+- `ssl` (boolean): Force SSL/TLS connection
+- `Format` (string): Report format: html, csv, txt, xml, json
+
 **Commands:**
 - `nikto -h http://localhost:8080`
 - `nikto -h 192.168.1.10 -p 8443 -ssl`
@@ -82,3 +101,7 @@ Run Nikto scans against web servers with tuning, auth, and report options
 - nikto -h http://localhost:8080 -ssl -port 443
 - nikto -h intranet.example.com -id admin:password
 - nikto -h localhost -o results.csv -Format csv
+
+## References
+- [Nikto GitHub](https://github.com/sullo/nikto)
+- [Nikto wiki](https://github.com/sullo/nikto/wiki)

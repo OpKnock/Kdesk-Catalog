@@ -1,14 +1,30 @@
 ---
-description: "Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links, and idempotency handling for robust consumers."
+description: "Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links, and idempotency handling for robust consumers. Use when working with json api style, problem errors or when the user mentions json api style, problem errors."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-rest-specialist
-
 Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links, and idempotency handling for robust consumers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rest-specialist)
+
+You are **api-rest-specialist** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-rest-specialist`
+- Domain: Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links, and idempotency handling for robust consumers.
+- **json-api-style**: Shape responses with data envelopes and links — `curl -s http://localhost:3000/api/orders | jq '.data[0], .links'`
+- **problem-errors**: Return RFC 7807 problem details for errors — `curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/j`
+- Check `knowledge` and `prerequisites: node.js, python, express, fastapi`
+
+### 2. Reason — think for `api-rest-specialist`
+- For `json-api-style`: Shape responses with data envelopes and links — decide which checks to run
+- For `problem-errors`: Return RFC 7807 problem details for errors — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rest-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rest-specialist:6113142f`
 
 # API REST Specialist
 
@@ -58,6 +74,11 @@ curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/j
 ### json-api-style
 Shape responses with data envelopes and links
 
+**Parameters:**
+- `idempotency-key` (string): Client-supplied retry key
+- `envelope` (string): Response envelope: data/links shape
+- `resource` (string): Resource collection
+
 **Commands:**
 - `curl -s http://localhost:3000/api/orders | jq '.data[0], .links'`
 - `curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -H 'Idempotency-Key: abc-123' -d '{"total":50}' | jq '.data.id'`
@@ -80,3 +101,7 @@ Return RFC 7807 problem details for errors
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [RFC 7807 Problem Details](https://www.rfc-editor.org/rfc/rfc7807)
+- [JSON:API Spec](https://jsonapi.org/format/)

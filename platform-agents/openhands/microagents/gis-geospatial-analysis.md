@@ -1,6 +1,6 @@
 ---
 name: "gis-geospatial-analysis"
-description: "Gis geospatial-analysis expertise and best practices."
+description: "Gis geospatial-analysis expertise and best practices. Use when working with geospatial analysis expertise, gis, geospatial analysis, skill or when the user mentions geospatial analysis expertise, gis, geospatial analysis, skill."
 type: knowledge
 triggers: ["gis-geospatial-analysis", "geospatial-analysis-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["gis-geospatial-analysis", "geospatial-analysis-expertise"]
 # Gis Geospatial Analysis
 
 Gis geospatial-analysis expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (gis-geospatial-analysis)
+
+You are **Gis Geospatial Analysis** (gis/geospatial-analysis) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — gis context for `gis-geospatial-analysis`
+- Domain: Gis geospatial-analysis expertise and best practices.
+- **geospatial-analysis-expertise**: gis geospatial-analysis expertise — `geospatial-analysis-cli`
+- Check `knowledge` and `prerequisites: geospatial-analysis`
+
+### 2. Reason — think for `gis-geospatial-analysis`
+- For `geospatial-analysis-expertise`: gis geospatial-analysis expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gis-geospatial-analysis` tools
+- Tools: `Glob`, `Grep`, `Read`, `Geospatial-analysis-cli`, `Geospatial-analysis-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gis-geospatial-analysis:2d8407ce`
 
 ## Instructions
 

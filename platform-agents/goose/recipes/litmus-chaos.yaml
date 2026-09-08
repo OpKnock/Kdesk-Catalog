@@ -2,9 +2,21 @@ title: Litmus Chaos
 description: 'Run chaos experiments on Kubernetes with LitmusChaos: install agents via litmusctl, apply
   chaos engines, and execute pod-delete experiments.'
 version: 2.0.0
-instructions: "# Litmus Chaos\n\nRun chaos experiments on Kubernetes with LitmusChaos: install agents\
-  \ via litmusctl, apply chaos engines, and execute pod-delete experiments.\n\n## Instructions\n\n# LitmusChaos\n\
-  \nRun Kubernetes chaos experiments with the LitmusChaos platform.\n\n## What this skill does\n\n- Connects\
+instructions: "Run chaos experiments on Kubernetes with LitmusChaos: install agents via litmusctl, apply\
+  \ chaos engines, and execute pod-delete experiments.\n\n## Agentic Workflow: Read -> Reason -> Act (litmus-chaos)\n\
+  \nYou are **Litmus Chaos** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `litmus-chaos`\n- Domain: Run chaos experiments on Kubernetes with LitmusChaos:\
+  \ install agents via litmusctl, apply chaos engines, and execute pod-delete experiments.\n- **litmusctl-connect**:\
+  \ Connect agents and manage experiments with litmusctl. — `litmusctl version`\n- **chaos-runs**: Apply\
+  \ chaos experiments (pod-delete, cpu-hog) and monitor runs. — `kubectl apply -f pod-delete-experiment.yaml\
+  \ -n litmus`\n- Check `knowledge` and `prerequisites: kubectl, litmusctl`\n\n### 2. Reason — think for\
+  \ `litmus-chaos`\n- For `litmusctl-connect`: Connect agents and manage experiments with litmusctl. —\
+  \ decide which checks to run\n- For `chaos-runs`: Apply chaos experiments (pod-delete, cpu-hog) and\
+  \ monitor runs. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `litmus-chaos` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Litmusctl`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `litmus-chaos:fb3fec87`\n\n# LitmusChaos\n\nRun\
+  \ Kubernetes chaos experiments with the LitmusChaos platform.\n\n## What this skill does\n\n- Connects\
   \ Kubernetes agents to the Litmus portal with litmusctl.\n- Applies ChaosEngine manifests targeting\
   \ workloads.\n- Monitors experiment results (ChaosResult CRs).\n\n## When to use\n\n- Validating pod\
   \ failure tolerance in staging.\n- Testing deployment rollbacks under pod deletion.\n- Building a chaos\
@@ -23,13 +35,17 @@ instructions: "# Litmus Chaos\n\nRun chaos experiments on Kubernetes with Litmus
   \ practices\n\n- Scope experiments to staging first; use namespaces to bound blast radius.\n- Define\
   \ steady-state checks (Probes) so failures surface automatically.\n- Clean up ChaosEngines after runs\
   \ to avoid repeating experiments.\n\n## Capabilities\n\n### litmusctl-connect\nConnect agents and manage\
-  \ experiments with litmusctl.\n\n**Commands:**\n- `litmusctl version`\n- `litmusctl connect agent --endpoint=http://litmus-frontend:3001\
-  \ --username admin --password=litmus`\n- `litmusctl get agents`\n- `litmusctl get chaosengines`\n- `litmusctl\
-  \ apply chaosengine -f chaosengine.yaml`\n\n**Examples:**\n- litmusctl connect agent --endpoint=http://litmus-frontend:3001\
+  \ experiments with litmusctl.\n\n**Parameters:**\n- `endpoint` (string): Litmus frontend endpoint.\n\
+  - `username` (string): Litmus portal username.\n- `password` (string): Litmus portal password.\n\n**Commands:**\n\
+  - `litmusctl version`\n- `litmusctl connect agent --endpoint=http://litmus-frontend:3001 --username\
+  \ admin --password=litmus`\n- `litmusctl get agents`\n- `litmusctl get chaosengines`\n- `litmusctl apply\
+  \ chaosengine -f chaosengine.yaml`\n\n**Examples:**\n- litmusctl connect agent --endpoint=http://litmus-frontend:3001\
   \ --username admin --password=litmus\n- litmusctl get agents\n- litmusctl apply chaosengine -f chaosengine.yaml\n\
-  \n### chaos-runs\nApply chaos experiments (pod-delete, cpu-hog) and monitor runs.\n\n**Commands:**\n\
-  - `kubectl apply -f pod-delete-experiment.yaml -n litmus`\n- `kubectl apply -f chaosengine.yaml -n litmus`\n\
-  - `kubectl get chaosengine -n litmus`\n- `kubectl get chaosresult -n litmus`\n- `kubectl logs -n litmus\
-  \ -l app=chaos-exporter --tail=50`\n\n**Examples:**\n- kubectl apply -f pod-delete-experiment.yaml -n\
-  \ litmus\n- kubectl get chaosresult -n litmus\n- kubectl apply -f chaosengine.yaml -n litmus"
+  \n### chaos-runs\nApply chaos experiments (pod-delete, cpu-hog) and monitor runs.\n\n**Parameters:**\n\
+  - `engine` (string): ChaosEngine YAML file.\n- `namespace` (string): Namespace where the engine runs.\n\
+  \n**Commands:**\n- `kubectl apply -f pod-delete-experiment.yaml -n litmus`\n- `kubectl apply -f chaosengine.yaml\
+  \ -n litmus`\n- `kubectl get chaosengine -n litmus`\n- `kubectl get chaosresult -n litmus`\n- `kubectl\
+  \ logs -n litmus -l app=chaos-exporter --tail=50`\n\n**Examples:**\n- kubectl apply -f pod-delete-experiment.yaml\
+  \ -n litmus\n- kubectl get chaosresult -n litmus\n- kubectl apply -f chaosengine.yaml -n litmus\n\n\
+  ## References\n- [LitmusChaos Docs](https://litmuschaos.io/docs/)\n- [litmusctl](https://docs.litmuschaos.io/docs/litmusctl/)"
 prompt: Act as Litmus Chaos and handle the task per the instructions.

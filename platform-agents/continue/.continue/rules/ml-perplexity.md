@@ -1,6 +1,6 @@
 ---
 name: "Ml Perplexity"
-description: "Perplexity API agent for search-augmented generation."
+description: "Perplexity API agent for search-augmented generation. Use when working with Ml Perplexity, inference or when the user mentions Ml Perplexity, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Perplexity
 
 Perplexity API agent for search-augmented generation.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-perplexity)
+
+You are **Ml Perplexity** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-perplexity`
+- Domain: Perplexity API agent for search-augmented generation.
+- **Ml Perplexity**: Perplexity API agent for search-augmented generation. — `Python: from openai import OpenAI; client = OpenAI(base_url='https://api.perplex`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-perplexity`
+- For `Ml Perplexity`: Perplexity API agent for search-augmented generation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-perplexity` tools
+- Tools: `Glob`, `Grep`, `Read`, `Python`, `Chat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-perplexity:0d73d8b9`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ Perplexity API agent for search-augmented generation.
 - Chat: client.chat.completions.create(model='llama-3.1-sonar-large-128k-online', messages=[{'role': 'user', 'content': 'What is the latest news?'}])
 - Models: client.models.list()
 - Citations: client.chat.completions.create(model='llama-3.1-sonar-large-128k-online', messages=[...], return_related_questions=True)
+
+## References
+- [Perplexity API Documentation](https://docs.perplexity.ai/)
+- [OpenAI API Documentation](https://platform.openai.com/docs/)

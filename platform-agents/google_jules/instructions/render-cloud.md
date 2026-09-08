@@ -1,8 +1,24 @@
-# Render
-
 Deploys web services, static sites, and background workers to Render with the CLI and render.yaml infrastructure configs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (render-cloud)
+
+You are **Render** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `render-cloud`
+- Domain: Deploys web services, static sites, and background workers to Render with the CLI and render.yaml infrastructure configs.
+- **render-cli**: Deploy and manage services on Render. — `npm install -g @render/cli`
+- **render-infra**: Manage render.yaml blueprint infrastructure. — `render blueprints apply --file render.yaml`
+- Check `knowledge` and `prerequisites: npm, render`
+
+### 2. Reason — think for `render-cloud`
+- For `render-cli`: Deploy and manage services on Render. — decide which checks to run
+- For `render-infra`: Manage render.yaml blueprint infrastructure. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `render-cloud` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Render` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `render-cloud:15ddf045`
 
 # Render
 
@@ -70,6 +86,10 @@ render project list
 ### render-cli
 Deploy and manage services on Render.
 
+**Parameters:**
+- `service` (string): Service id
+- `commit` (string): Commit or branch to deploy
+
 **Commands:**
 - `npm install -g @render/cli`
 - `render login`
@@ -85,6 +105,10 @@ Deploy and manage services on Render.
 ### render-infra
 Manage render.yaml blueprint infrastructure.
 
+**Parameters:**
+- `file` (string): render.yaml path
+- `detach` (boolean): Do not wait for apply to finish
+
 **Commands:**
 - `render blueprints apply --file render.yaml`
 - `render blueprints list`
@@ -94,3 +118,7 @@ Manage render.yaml blueprint infrastructure.
 **Examples:**
 - render blueprints apply --file render.yaml --detach
 - render blueprints index --file render.yaml
+
+## References
+- [Render Docs](https://docs.render.com)
+- [Render Blueprint Spec](https://docs.render.com/blueprint-spec)

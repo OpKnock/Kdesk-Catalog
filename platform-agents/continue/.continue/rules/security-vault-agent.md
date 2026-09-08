@@ -1,6 +1,6 @@
 ---
 name: "Security Vault Agent"
-description: "HashiCorp Vault agent for secrets management."
+description: "HashiCorp Vault agent for secrets management. Use when working with Security Vault Agent or when the user mentions Security Vault Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Security Vault Agent
 
 HashiCorp Vault agent for secrets management.
+
+## Agentic Workflow: Read -> Reason -> Act (security-vault-agent)
+
+You are **Security Vault Agent** (security/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-vault-agent`
+- Domain: HashiCorp Vault agent for secrets management.
+- **Security Vault Agent**: HashiCorp Vault agent for secrets management. — `vault auth enable approle`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `security-vault-agent`
+- For `Security Vault Agent`: HashiCorp Vault agent for secrets management. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-vault-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vault` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-vault-agent:8df05e8d`
 
 ## Instructions
 
@@ -31,3 +49,7 @@ HashiCorp Vault agent for secrets management.
 - vault kv get secret/myapp
 - vault auth enable approle
 - vault policy write my-policy policy.hcl
+
+## References
+- [HashiCorp Vault Documentation](https://developer.hashicorp.com/vault/docs)
+- [OAuth 2.0](https://oauth.net/2/)

@@ -1,15 +1,31 @@
 ---
 name: "shell-scripting"
-description: "Writes robust POSIX/bash scripts: syntax checking, shellcheck linting, error handling with set -euo pipefail, and cross-platform portability."
+description: "Writes robust POSIX/bash scripts: syntax checking, shellcheck linting, error handling with set -euo pipefail, and cross-platform portability. Use when working with script quality, robust patterns, devtools or when the user mentions script quality, robust patterns, devtools."
 type: knowledge
 triggers: ["shell-scripting", "script-quality", "robust-patterns"]
 ---
 
-# shell-scripting
-
 Writes robust POSIX/bash scripts: syntax checking, shellcheck linting, error handling with set -euo pipefail, and cross-platform portability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (shell-scripting)
+
+You are **shell-scripting** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `shell-scripting`
+- Domain: Writes robust POSIX/bash scripts: syntax checking, shellcheck linting, error handling with set -euo pipefail, and cross-platform portability.
+- **script-quality**: Validate and lint shell scripts for correctness. — `bash -n script.sh`
+- **robust-patterns**: Write error-safe scripts with strict mode and defensive patterns. — `set -euo pipefail`
+- Check `knowledge` and `prerequisites: bash, checkbashisms, command, local`
+
+### 2. Reason — think for `shell-scripting`
+- For `script-quality`: Validate and lint shell scripts for correctness. — decide which checks to run
+- For `robust-patterns`: Write error-safe scripts with strict mode and defensive patterns. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `shell-scripting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Shellcheck` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `shell-scripting:b3e25bc6`
 
 # Shell Scripting
 
@@ -78,6 +94,10 @@ echo "deploying to $env"
 ### script-quality
 Validate and lint shell scripts for correctness.
 
+**Parameters:**
+- `script` (string): Script file path
+- `severity` (string): Minimum severity: error, warning, info, style
+
 **Commands:**
 - `bash -n script.sh`
 - `shellcheck script.sh`
@@ -94,6 +114,10 @@ Validate and lint shell scripts for correctness.
 ### robust-patterns
 Write error-safe scripts with strict mode and defensive patterns.
 
+**Parameters:**
+- `var` (string): Variable name for readonly/local
+- `timeout-seconds` (integer): Timeout for guarded commands
+
 **Commands:**
 - `set -euo pipefail`
 - `trap 'echo failed at line $LINENO; exit 1' ERR`
@@ -106,3 +130,8 @@ Write error-safe scripts with strict mode and defensive patterns.
 - set -euo pipefail
 - trap 'echo failed at line $LINENO' ERR
 - command -v jq >/dev/null || exit 1
+
+## References
+- [ShellCheck](https://www.shellcheck.net/)
+- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
+- [POSIX Shell Utilities](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/contents.html)

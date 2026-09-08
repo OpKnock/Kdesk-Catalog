@@ -1,6 +1,6 @@
 ---
 name: "Ml Hybrid Aws Deploy"
-description: "AWS Hybrid deployment agent for ML hybrid cloud deployment."
+description: "AWS Hybrid deployment agent for ML hybrid cloud deployment. Use when working with Ml Hybrid Aws Deploy, deployment or when the user mentions Ml Hybrid Aws Deploy, deployment."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Hybrid Aws Deploy
 
 AWS Hybrid deployment agent for ML hybrid cloud deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-hybrid-aws-deploy)
+
+You are **Ml Hybrid Aws Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-hybrid-aws-deploy`
+- Domain: AWS Hybrid deployment agent for ML hybrid cloud deployment.
+- **Ml Hybrid Aws Deploy**: AWS Hybrid deployment agent for ML hybrid cloud deployment. — `Snow Family: aws snowball describe-jobs`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-hybrid-aws-deploy`
+- For `Ml Hybrid Aws Deploy`: AWS Hybrid deployment agent for ML hybrid cloud deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-hybrid-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Snow`, `Direct` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-hybrid-aws-deploy:27e9abc7`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ AWS Hybrid deployment agent for ML hybrid cloud deployment.
 - Snow Family: aws snowball describe-jobs
 - Storage Gateway: aws storagegateway describe-gateways
 - Direct Connect: aws directconnect describe-connections
+
+## References
+- [Google Cloud Anthos](https://cloud.google.com/anthos/docs)
+- [AWS Documentation](https://docs.aws.amazon.com/)

@@ -1,14 +1,30 @@
 ---
-description: "Manages schema evolution with Alembic, Prisma Migrate, and Flyway including autogeneration, review, rollbacks, and CI deploy."
+description: "Manages schema evolution with Alembic, Prisma Migrate, and Flyway including autogeneration, review, rollbacks, and CI deploy. Use when working with alembic migrations, prisma migrate, backend or when the user mentions alembic migrations, prisma migrate, backend."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Database Migration
-
 Manages schema evolution with Alembic, Prisma Migrate, and Flyway including autogeneration, review, rollbacks, and CI deploy.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (database-migration)
+
+You are **Database Migration** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `database-migration`
+- Domain: Manages schema evolution with Alembic, Prisma Migrate, and Flyway including autogeneration, review, rollbacks, and CI deploy.
+- **alembic-migrations**: Create and apply SQLAlchemy migrations. — `alembic init migrations`
+- **prisma-migrate**: Evolve the database schema from the Prisma schema. — `npx prisma migrate dev --name init`
+- Check `knowledge` and `prerequisites: alembic, npx`
+
+### 2. Reason — think for `database-migration`
+- For `alembic-migrations`: Create and apply SQLAlchemy migrations. — decide which checks to run
+- For `prisma-migrate`: Evolve the database schema from the Prisma schema. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-migration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Alembic`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-migration:74186ce7`
 
 # Database Migration
 
@@ -71,6 +87,10 @@ npx prisma db push
 ### alembic-migrations
 Create and apply SQLAlchemy migrations.
 
+**Parameters:**
+- `revision` (string): Target revision id or head/base
+- `message` (string): Migration name
+
 **Commands:**
 - `alembic init migrations`
 - `alembic revision --autogenerate -m "add users table"`
@@ -86,6 +106,10 @@ Create and apply SQLAlchemy migrations.
 ### prisma-migrate
 Evolve the database schema from the Prisma schema.
 
+**Parameters:**
+- `name` (string): Migration name
+- `force` (boolean): Skip confirmation prompts
+
 **Commands:**
 - `npx prisma migrate dev --name init`
 - `npx prisma migrate deploy`
@@ -97,3 +121,8 @@ Evolve the database schema from the Prisma schema.
 - npx prisma migrate dev --name add_profile
 - npx prisma migrate reset --force
 - npx prisma migrate status
+
+## References
+- [Alembic Docs](https://alembic.sqlalchemy.org/en/latest/)
+- [Prisma Migrate](https://www.prisma.io/docs/orm/prisma-migrate)
+- [Flyway Docs](https://documentation.red-gate.com/fd)

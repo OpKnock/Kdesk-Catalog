@@ -6,27 +6,27 @@ globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh"]
 
 Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (avro-rpc)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Avro Rpc** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `java -jar avro-tools.jar compile schema user.avsc .`, `java -jar avro-tools.jar compile protocol chat.avpr .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `avro-rpc`
+- Domain: Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing.
+- **schema-tools**: Compile schemas and convert data with avro-tools. — `java -jar avro-tools.jar compile schema user.avsc .`
+- **rpc-protocol**: Define and compile RPC protocols with avro-tools. — `java -jar avro-tools.jar compile protocol chat.avpr .`
+- **java-server**: Build and test a Java Avro RPC server. — `mvn package`
+- Check `knowledge` and `prerequisites: java, mvn`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `avro-rpc`
+- For `schema-tools`: Compile schemas and convert data with avro-tools. — decide which checks to run
+- For `rpc-protocol`: Define and compile RPC protocols with avro-tools. — decide which checks to run
+- For `java-server`: Build and test a Java Avro RPC server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `avro-rpc` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `avro-rpc:a68a7717`
 
 # Avro RPC
 

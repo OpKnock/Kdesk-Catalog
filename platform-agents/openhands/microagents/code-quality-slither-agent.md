@@ -1,6 +1,6 @@
 ---
 name: "code-quality-slither-agent"
-description: "Slither agent for Solidity static analysis."
+description: "Slither agent for Solidity static analysis. Use when working with Code Quality Slither Agent, code quality or when the user mentions Code Quality Slither Agent, code quality."
 type: knowledge
 triggers: ["code-quality-slither-agent", "code quality slither agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["code-quality-slither-agent", "code quality slither agent"]
 # Code Quality Slither Agent
 
 Slither agent for Solidity static analysis.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-slither-agent)
+
+You are **Code Quality Slither Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-slither-agent`
+- Domain: Slither agent for Solidity static analysis.
+- **Code Quality Slither Agent**: Slither agent for Solidity static analysis. — `slither contract.sol --exclude low`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `code-quality-slither-agent`
+- For `Code Quality Slither Agent`: Slither agent for Solidity static analysis. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-slither-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Slither` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-slither-agent:633dd198`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Slither agent for Solidity static analysis.
 - slither contract.sol --json report.json
 - slither contract.sol --detect reentrancy
 - slither contract.sol --exclude low
+
+## References
+- [Slither Documentation](https://github.com/crytic/slither)

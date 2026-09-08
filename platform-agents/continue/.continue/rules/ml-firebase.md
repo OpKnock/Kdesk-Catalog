@@ -1,6 +1,6 @@
 ---
 name: "Ml Firebase"
-description: "it agent handling ML on Firebase."
+description: "it agent handling ML on Firebase. Use when working with Ml Firebase, deployment or when the user mentions Ml Firebase, deployment."
 globs: ["**/*.go", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Firebase
 
 it agent handling ML on Firebase.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-firebase)
+
+You are **Ml Firebase** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-firebase`
+- Domain: it agent handling ML on Firebase.
+- **Ml Firebase**: ML Firebase agent for ML on Firebase. — `Cloud: python -m firebase.cloud --model model`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-firebase`
+- For `Ml Firebase`: ML Firebase agent for ML on Firebase. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-firebase` tools
+- Tools: `Glob`, `Grep`, `Read`, `Cloud`, `ML` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-firebase:aa524812`
 
 ## Instructions
 
@@ -27,6 +45,9 @@ Always use real Firebase ML tools. Never suggest fictional tools.
 ### Ml Firebase
 ML Firebase agent for ML on Firebase.
 
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
+
 **Commands:**
 - `Cloud: python -m firebase.cloud --model model`
 - `ML Kit: import com.google.firebase.ml.vision.FirebaseVision`
@@ -38,3 +59,8 @@ ML Firebase agent for ML on Firebase.
 - Custom: firebase deploy --only hosting,functions
 - On-device: python -m firebase.mlkit --model model.tflite
 - Cloud: python -m firebase.cloud --model model
+
+## References
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [Python Documentation](https://docs.python.org/3/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

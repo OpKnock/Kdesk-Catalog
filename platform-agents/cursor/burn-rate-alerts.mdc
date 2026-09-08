@@ -6,27 +6,27 @@ alwaysApply: false
 
 Designs SLO burn-rate alerts: multi-window burn rates, Prometheus rules, SLO windows, and alert fatigue control.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (burn-rate-alerts)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Burn Rate Alerts** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `promtool query instant 'sum(rate(http_requests_total{status=`, `promtool check rules burn-rate.yml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `burn-rate-alerts`
+- Domain: Designs SLO burn-rate alerts: multi-window burn rates, Prometheus rules, SLO windows, and alert fatigue control.
+- **slo-calculation**: Compute error budget and burn rates. — `promtool query instant 'sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(`
+- **multi-window-rules**: Author multi-window, multi-burn-rate alert rules. — `promtool check rules burn-rate.yml`
+- **budget-ops**: Track error budget consumption. — `curl -s 'http://localhost:9090/api/v1/query?query=(1%20-%20sum(rate(http_request`
+- Check `knowledge` and `prerequisites: amtool, promtool, python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `burn-rate-alerts`
+- For `slo-calculation`: Compute error budget and burn rates. — decide which checks to run
+- For `multi-window-rules`: Author multi-window, multi-burn-rate alert rules. — decide which checks to run
+- For `budget-ops`: Track error budget consumption. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `burn-rate-alerts` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Amtool` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `burn-rate-alerts:f35bea49`
 
 # Burn-Rate Alerts
 

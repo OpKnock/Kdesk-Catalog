@@ -1,8 +1,24 @@
-# Api Test Pact Broker
-
 Implements contract testing with Pact: consumer expectations, provider verification, Pact Broker versioning, and can-i-deploy gating.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-test-pact-broker)
+
+You are **Api Test Pact Broker** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-test-pact-broker`
+- Domain: Implements contract testing with Pact: consumer expectations, provider verification, Pact Broker versioning, and can-i-deploy gating.
+- **pact-broker**: Publish and manage contracts with Pact Broker — `pact-broker create-or-update-pacticipant --name OrderService --broker-base-url h`
+- **pact-testing**: Verify provider against consumer contracts — `npm install @pact-foundation/pact --save-dev`
+- Check `knowledge` and `prerequisites: jest, pytest, postman`
+
+### 2. Reason — think for `api-test-pact-broker`
+- For `pact-broker`: Publish and manage contracts with Pact Broker — decide which checks to run
+- For `pact-testing`: Verify provider against consumer contracts — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-test-pact-broker` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pact-broker`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-test-pact-broker:1b1e03f4`
 
 # API Test v2 - Contract Testing
 
@@ -48,6 +64,11 @@ pact-broker can-i-deploy --pacticipant OrderService --version 1.2.3 --to prod
 ### pact-broker
 Publish and manage contracts with Pact Broker
 
+**Parameters:**
+- `pacticipant` (string): Service name
+- `version` (string): Application version
+- `broker-url` (string): Pact Broker base URL
+
 **Commands:**
 - `pact-broker create-or-update-pacticipant --name OrderService --broker-base-url http://localhost:8080`
 - `pact-broker publish ./pacts --consumer-app-version 1.2.3 --broker-base-url http://localhost:8080`
@@ -71,3 +92,7 @@ Verify provider against consumer contracts
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Pact Docs](https://docs.pact.io/)
+- [Pact Broker](https://docs.pact.io/pact_broker/)

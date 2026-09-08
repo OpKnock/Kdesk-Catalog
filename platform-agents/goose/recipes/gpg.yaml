@@ -2,28 +2,40 @@ title: Gpg
 description: 'PGP encryption and signing: generate keypairs, encrypt/decrypt files, sign and verify commits,
   and manage keyrings.'
 version: 2.0.0
-instructions: "# Gpg\n\nPGP encryption and signing: generate keypairs, encrypt/decrypt files, sign and\
-  \ verify commits, and manage keyrings.\n\n## Instructions\n\n# GPG\n\n## What this skill does\n\nGPG\
-  \ (GnuPG) implements OpenPGP: asymmetric encryption, digital signatures, and key management. It protects\
-  \ files at rest and proves authorship of commits and releases.\n\n## When to use\n\n- Encrypting files\
-  \ exchanged with partners\n- Signing commits/tags for supply chain trust\n- Managing keyrings for CI\
-  \ release signing\n\n## Real commands\n\n```bash\n# Generate a keypair\ngpg --full-generate-key\n\n\
-  # Encrypt/decrypt\ngpg --encrypt --recipient alice@example.com secrets.txt\ngpg --decrypt secrets.txt.gpg\n\
-  \n# Sign and verify\ngpg --sign --local-user bob@example.com data.txt\ngpg --verify data.txt.gpg\n\n\
-  # Export/import public keys\ngpg --armor --export alice@example.com > alice.pub\ngpg --import alice.pub\n\
-  \n# Keyring\n gpg --list-keys --fingerprint\n```\n\n## Signing commits\n\n```bash\ngit config --global\
-  \ user.signingkey <fingerprint>\ngit config --global commit.gpgsign true\ngit commit -S -m \"signed\
-  \ commit\"\n```\n\n## Key backup\n\n```bash\n# Export the secret key (keep offline!) and revoke cert\n\
-  gpg --armor --export-secret-keys alice@example.com > alice-secret.asc\ngpg --gen-revoke alice@example.com\
-  \ > alice-revoke.asc\n```\n\n## Testing\n\n```bash\n# Round trip\necho topsecret | gpg --encrypt --recipient\
-  \ alice@example.com | gpg --decrypt\n```\n\n## Best practices\n\n- Use 4096-bit RSA or modern ECC keys;\
-  \ avoid legacy defaults.\n- Back up secret keys and revocation certs offline.\n- Sign, then encrypt\
-  \ (sign-then-encrypt) rather than the reverse.\n- Keep a separate signing subkey for CI agents.\n- Never\
-  \ share secret keys; share only armored public keys.\n\n## Capabilities\n\n### gpg-ops\nGenerate keys,\
-  \ encrypt/decrypt, sign/verify, and manage keyring exports.\n\n**Commands:**\n- `gpg --full-generate-key`\n\
-  - `gpg --encrypt --recipient alice@localhost secrets.txt`\n- `gpg --decrypt secrets.txt.gpg`\n- `gpg\
-  \ --sign --local-user bob@localhost data.txt`\n- `gpg --verify data.txt.gpg`\n- `gpg --armor --export\
-  \ alice@localhost > alice.pub`\n- `gpg --list-keys`\n\n**Examples:**\n- gpg --encrypt --recipient alice@localhost\
-  \ secrets.txt && gpg --decrypt secrets.txt.gpg\n- gpg --armor --export alice@localhost > alice.pub &&\
-  \ gpg --import alice.pub\n- gpg --list-keys --fingerprint"
+instructions: "PGP encryption and signing: generate keypairs, encrypt/decrypt files, sign and verify commits,\
+  \ and manage keyrings.\n\n## Agentic Workflow: Read -> Reason -> Act (gpg)\n\nYou are **Gpg** (api/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context\
+  \ for `gpg`\n- Domain: PGP encryption and signing: generate keypairs, encrypt/decrypt files, sign and\
+  \ verify commits, and manage keyrings.\n- **gpg-ops**: Generate keys, encrypt/decrypt, sign/verify,\
+  \ and manage keyring exports. — `gpg --full-generate-key`\n- Check `knowledge` and `prerequisites: gpg`\n\
+  \n### 2. Reason — think for `gpg`\n- For `gpg-ops`: Generate keys, encrypt/decrypt, sign/verify, and\
+  \ manage keyring exports. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `gpg` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Gpg` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `gpg:85718c9b`\n\n# GPG\n\n## What this skill does\n\nGPG (GnuPG)\
+  \ implements OpenPGP: asymmetric encryption, digital signatures, and key management. It protects files\
+  \ at rest and proves authorship of commits and releases.\n\n## When to use\n\n- Encrypting files exchanged\
+  \ with partners\n- Signing commits/tags for supply chain trust\n- Managing keyrings for CI release signing\n\
+  \n## Real commands\n\n```bash\n# Generate a keypair\ngpg --full-generate-key\n\n# Encrypt/decrypt\n\
+  gpg --encrypt --recipient alice@example.com secrets.txt\ngpg --decrypt secrets.txt.gpg\n\n# Sign and\
+  \ verify\ngpg --sign --local-user bob@example.com data.txt\ngpg --verify data.txt.gpg\n\n# Export/import\
+  \ public keys\ngpg --armor --export alice@example.com > alice.pub\ngpg --import alice.pub\n\n# Keyring\n\
+  \ gpg --list-keys --fingerprint\n```\n\n## Signing commits\n\n```bash\ngit config --global user.signingkey\
+  \ <fingerprint>\ngit config --global commit.gpgsign true\ngit commit -S -m \"signed commit\"\n```\n\n\
+  ## Key backup\n\n```bash\n# Export the secret key (keep offline!) and revoke cert\ngpg --armor --export-secret-keys\
+  \ alice@example.com > alice-secret.asc\ngpg --gen-revoke alice@example.com > alice-revoke.asc\n```\n\
+  \n## Testing\n\n```bash\n# Round trip\necho topsecret | gpg --encrypt --recipient alice@example.com\
+  \ | gpg --decrypt\n```\n\n## Best practices\n\n- Use 4096-bit RSA or modern ECC keys; avoid legacy defaults.\n\
+  - Back up secret keys and revocation certs offline.\n- Sign, then encrypt (sign-then-encrypt) rather\
+  \ than the reverse.\n- Keep a separate signing subkey for CI agents.\n- Never share secret keys; share\
+  \ only armored public keys.\n\n## Capabilities\n\n### gpg-ops\nGenerate keys, encrypt/decrypt, sign/verify,\
+  \ and manage keyring exports.\n\n**Parameters:**\n- `recipient` (string): Key id or email of the recipient\n\
+  - `input-file` (string): File to encrypt/sign/decrypt\n- `key-id` (string): Local key id or fingerprint\n\
+  \n**Commands:**\n- `gpg --full-generate-key`\n- `gpg --encrypt --recipient alice@localhost secrets.txt`\n\
+  - `gpg --decrypt secrets.txt.gpg`\n- `gpg --sign --local-user bob@localhost data.txt`\n- `gpg --verify\
+  \ data.txt.gpg`\n- `gpg --armor --export alice@localhost > alice.pub`\n- `gpg --list-keys`\n\n**Examples:**\n\
+  - gpg --encrypt --recipient alice@localhost secrets.txt && gpg --decrypt secrets.txt.gpg\n- gpg --armor\
+  \ --export alice@localhost > alice.pub && gpg --import alice.pub\n- gpg --list-keys --fingerprint\n\n\
+  ## References\n- [GnuPG documentation](https://www.gnupg.org/documentation/manuals/gnupg/)\n- [GPG CLI\
+  \ cheat sheet](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)"
 prompt: Act as Gpg and handle the task per the instructions.

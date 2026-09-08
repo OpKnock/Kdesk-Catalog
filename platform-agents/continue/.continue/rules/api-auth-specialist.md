@@ -1,15 +1,29 @@
 ---
 name: "api-auth-specialist"
-description: "Deep API auth expertise: JWT validation, JWKS fetching, token introspection, session revocation, and auditing auth failures."
+description: "Deep API auth expertise: JWT validation, JWKS fetching, token introspection, session revocation, and auditing auth failures. Use when working with auth deep or when the user mentions auth deep."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-auth-specialist
-
 Deep API auth expertise: JWT validation, JWKS fetching, token introspection, session revocation, and auditing auth failures.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-auth-specialist)
+
+You are **api-auth-specialist** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-auth-specialist`
+- Domain: Deep API auth expertise: JWT validation, JWKS fetching, token introspection, session revocation, and auditing auth failures.
+- **auth-deep**: Validate tokens, introspect, and audit auth flows — `curl -s http://localhost:8080/.well-known/jwks.json | jq '.keys[0] | {kid, kty}'`
+- Check `knowledge` and `prerequisites: node.js, python, jsonwebtoken`
+
+### 2. Reason — think for `api-auth-specialist`
+- For `auth-deep`: Validate tokens, introspect, and audit auth flows — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-auth-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-auth-specialist:5f5688b2`
 
 # API Auth Specialist
 
@@ -67,6 +81,11 @@ curl -s -X POST http://localhost:8080/oauth/introspect -d "token=$TOKEN" | jq '.
 ### auth-deep
 Validate tokens, introspect, and audit auth flows
 
+**Parameters:**
+- `token` (string): Access or refresh token to inspect
+- `audience` (string): Expected audience for validation
+- `issuer` (string): Expected token issuer
+
 **Commands:**
 - `curl -s http://localhost:8080/.well-known/jwks.json | jq '.keys[0] | {kid, kty}'`
 - `curl -s -X POST http://localhost:8080/oauth/introspect -H 'Content-Type: application/x-www-form-urlencoded' -d 'token=$TOKEN' | jq '.active'`
@@ -78,3 +97,7 @@ Validate tokens, introspect, and audit auth flows
 - curl -s 'http://localhost:8080/oauth/introspect?token=$TOKEN' | jq '.exp'
 - echo $TOKEN | cut -d. -f2 | base64 -d 2>/dev/null | jq '.exp, .scope'
 - curl -s http://localhost:8080/api/auth/audit?result=failed | jq '.events | length'
+
+## References
+- [JWT RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519)
+- [Token Introspection RFC 7662](https://datatracker.ietf.org/doc/html/rfc7662)

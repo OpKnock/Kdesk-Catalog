@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(ffmpeg:*) Bash(python:*)"
 
 Builds computer vision pipelines: image preprocessing with OpenCV, detection with YOLO, and video analysis with ffmpeg.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (computer-vision)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **computer-vision** (ai) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `python -c "import cv2; print(cv2.__version__)"`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — ai context for `computer-vision`
+- Domain: Builds computer vision pipelines: image preprocessing with OpenCV, detection with YOLO, and video analysis with ffmpeg.
+- **image-processing**: Preprocess images and video with OpenCV and ffmpeg — `python -c "import cv2; print(cv2.__version__)"`
+- Check `knowledge` and `prerequisites: python, opencv, tensorflow, pytorch`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `computer-vision`
+- For `image-processing`: Preprocess images and video with OpenCV and ffmpeg — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `computer-vision` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ffmpeg` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `computer-vision:fa1ed5f6`
 
 # Computer Vision
 

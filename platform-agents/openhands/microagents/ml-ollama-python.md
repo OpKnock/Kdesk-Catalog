@@ -1,6 +1,6 @@
 ---
 name: "ml-ollama-python"
-description: "Ollama Python SDK agent for local LLM inference."
+description: "Ollama Python SDK agent for local LLM inference. Use when working with Ml Ollama Python, inference or when the user mentions Ml Ollama Python, inference."
 type: knowledge
 triggers: ["ml-ollama-python", "ml ollama python"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-ollama-python", "ml ollama python"]
 # Ml Ollama Python
 
 Ollama Python SDK agent for local LLM inference.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-ollama-python)
+
+You are **Ml Ollama Python** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-ollama-python`
+- Domain: Ollama Python SDK agent for local LLM inference.
+- **Ml Ollama Python**: Ollama Python SDK agent for local LLM inference. — `Client: import ollama; response = ollama.chat(model='llama2', messages=[{'role':`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-ollama-python`
+- For `Ml Ollama Python`: Ollama Python SDK agent for local LLM inference. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-ollama-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Client`, `Install` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-ollama-python:5644dbd7`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Ollama Python SDK agent for local LLM inference.
 - Client: import ollama; response = ollama.chat(model='llama2', messages=[{'role': 'user', 'content': 'Hello'}])
 - Generate: response = ollama.generate(model='llama2', prompt='Hello')
 - Embed: response = ollama.embeddings(model='llama2', prompt='Hello')
+
+## References
+- [Ollama Documentation](https://docs.ollama.com/)

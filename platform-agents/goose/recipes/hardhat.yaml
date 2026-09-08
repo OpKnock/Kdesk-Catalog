@@ -2,25 +2,39 @@ title: Hardhat
 description: 'Develops and tests Solidity with Hardhat: compile, test, deploy scripts, network management,
   and Etherscan verification.'
 version: 2.0.0
-instructions: "# Hardhat\n\nDevelops and tests Solidity with Hardhat: compile, test, deploy scripts, network\
-  \ management, and Etherscan verification.\n\n## Instructions\n\n# Hardhat\n\nEVM development environment.\n\
-  \n## When to Use\n\n- Solidity development with JS/TS tests\n- Local blockchain with hardhat network\n\
-  - Deployments to testnets/mainnet with scripts\n- Etherscan verification\n\n## Commands\n\n```bash\n\
-  # Setup\nnpx hardhat init\n\n# Build\nnpx hardhat compile\nnpx hardhat clean\n\n# Test\nnpx hardhat\
-  \ test\nnpx hardhat test test/token.test.js\n\n# Local node\nnpx hardhat node\n\n# Deploy\nnpx hardhat\
-  \ run scripts/deploy.js --network sepolia\n\n# Verify\nnpx hardhat verify --network sepolia 0x1234\n\
-  \n# Console\nnpx hardhat console --network mainnet\n```\n\n## Config Example\n\n```javascript\n// hardhat.config.js\n\
-  require(\"@nomicfoundation/hardhat-toolbox\");\n\nmodule.exports = {\n  solidity: \"0.8.24\",\n  networks:\
-  \ {\n    sepolia: {\n      url: process.env.SEPOLIA_RPC_URL,\n      accounts: [process.env.PRIVATE_KEY],\n\
-  \    },\n  },\n};\n```\n\n## Best Practices\n\n- Test on the local hardhat network before testnets\n\
-  - Use env vars for private keys and RPC URLs\n- Pin the Solidity version in config\n- Verify contracts\
-  \ immediately after deploy\n- Use console.log in tests with hardhat-toolbox\n- Add gas reporting and\
-  \ coverage in CI\n\n## Capabilities\n\n### hardhat-dev\nCompile, test, and run local nodes.\n\n**Commands:**\n\
-  - `npx hardhat init`\n- `npx hardhat compile`\n- `npx hardhat test`\n- `npx hardhat node`\n- `npx hardhat\
-  \ clean`\n\n**Examples:**\n- npx hardhat test test/token.test.js\n- npx hardhat node --port 8545\n-\
-  \ npx hardhat compile --force\n\n### hardhat-deploy\nDeploy and verify contracts.\n\n**Commands:**\n\
+instructions: "Develops and tests Solidity with Hardhat: compile, test, deploy scripts, network management,\
+  \ and Etherscan verification.\n\n## Agentic Workflow: Read -> Reason -> Act (hardhat)\n\nYou are **Hardhat**\
+  \ (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — code-quality context for `hardhat`\n- Domain: Develops and tests Solidity with Hardhat:\
+  \ compile, test, deploy scripts, network management, and Etherscan verification.\n- **hardhat-dev**:\
+  \ Compile, test, and run local nodes. — `npx hardhat init`\n- **hardhat-deploy**: Deploy and verify\
+  \ contracts. — `npx hardhat run scripts/deploy.js`\n- Check `knowledge` and `prerequisites: npx`\n\n\
+  ### 2. Reason — think for `hardhat`\n- For `hardhat-dev`: Compile, test, and run local nodes. — decide\
+  \ which checks to run\n- For `hardhat-deploy`: Deploy and verify contracts. — decide which checks to\
+  \ run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act\
+  \ — execute with `hardhat` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `hardhat:be853e3b`\n\
+  \n# Hardhat\n\nEVM development environment.\n\n## When to Use\n\n- Solidity development with JS/TS tests\n\
+  - Local blockchain with hardhat network\n- Deployments to testnets/mainnet with scripts\n- Etherscan\
+  \ verification\n\n## Commands\n\n```bash\n# Setup\nnpx hardhat init\n\n# Build\nnpx hardhat compile\n\
+  npx hardhat clean\n\n# Test\nnpx hardhat test\nnpx hardhat test test/token.test.js\n\n# Local node\n\
+  npx hardhat node\n\n# Deploy\nnpx hardhat run scripts/deploy.js --network sepolia\n\n# Verify\nnpx hardhat\
+  \ verify --network sepolia 0x1234\n\n# Console\nnpx hardhat console --network mainnet\n```\n\n## Config\
+  \ Example\n\n```javascript\n// hardhat.config.js\nrequire(\"@nomicfoundation/hardhat-toolbox\");\n\n\
+  module.exports = {\n  solidity: \"0.8.24\",\n  networks: {\n    sepolia: {\n      url: process.env.SEPOLIA_RPC_URL,\n\
+  \      accounts: [process.env.PRIVATE_KEY],\n    },\n  },\n};\n```\n\n## Best Practices\n\n- Test on\
+  \ the local hardhat network before testnets\n- Use env vars for private keys and RPC URLs\n- Pin the\
+  \ Solidity version in config\n- Verify contracts immediately after deploy\n- Use console.log in tests\
+  \ with hardhat-toolbox\n- Add gas reporting and coverage in CI\n\n## Capabilities\n\n### hardhat-dev\n\
+  Compile, test, and run local nodes.\n\n**Parameters:**\n- `test-file` (string): Test file filter\n-\
+  \ `network` (string): Network name for tests\n\n**Commands:**\n- `npx hardhat init`\n- `npx hardhat\
+  \ compile`\n- `npx hardhat test`\n- `npx hardhat node`\n- `npx hardhat clean`\n\n**Examples:**\n- npx\
+  \ hardhat test test/token.test.js\n- npx hardhat node --port 8545\n- npx hardhat compile --force\n\n\
+  ### hardhat-deploy\nDeploy and verify contracts.\n\n**Parameters:**\n- `script` (string): Script path\n\
+  - `network` (string): Target network\n- `address` (string): Contract address to verify\n\n**Commands:**\n\
   - `npx hardhat run scripts/deploy.js`\n- `npx hardhat run scripts/deploy.js --network sepolia`\n- `npx\
   \ hardhat verify --network sepolia 0x1234`\n- `npx hardhat console`\n- `npx hardhat run scripts/deploy.js\
   \ --network localhost`\n\n**Examples:**\n- npx hardhat verify --network sepolia 0x1234 --constructor-args\
-  \ args.js\n- npx hardhat console --network mainnet\n- npx hardhat run scripts/deploy.ts --network hardhat"
+  \ args.js\n- npx hardhat console --network mainnet\n- npx hardhat run scripts/deploy.ts --network hardhat\n\
+  \n## References\n- [Hardhat Docs](https://hardhat.org/docs)\n- [Hardhat Network](https://hardhat.org/hardhat-network/docs/overview)"
 prompt: Act as Hardhat and handle the task per the instructions.

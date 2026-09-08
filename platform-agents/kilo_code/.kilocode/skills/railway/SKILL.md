@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(railway:*)"
 
 Deploy to Railway: login, init, link, deploy, variables, logs and project management with the railway CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (railway)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Railway** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `railway login`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `railway`
+- Domain: Deploy to Railway: login, init, link, deploy, variables, logs and project management with the railway CLI.
+- **railway-deployments**: Deploy applications to Railway, manage environment variables and inspect deployments. — `railway login`
+- Check `knowledge` and `prerequisites: railway`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `railway`
+- For `railway-deployments`: Deploy applications to Railway, manage environment variables and inspect deployments. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `railway` tools
+- Tools: `Glob`, `Grep`, `Read`, `Railway` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `railway:10913cb4`
 
 # Railway
 

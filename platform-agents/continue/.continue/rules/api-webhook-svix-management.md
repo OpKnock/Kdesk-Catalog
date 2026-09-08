@@ -1,15 +1,31 @@
 ---
 name: "Api Webhook Svix Management"
-description: "Operates webhook infrastructure with Svix and Hookdeck: endpoint management, message dispatch, retries, and delivery observability."
+description: "Operates webhook infrastructure with Svix and Hookdeck: endpoint management, message dispatch, retries, and delivery observability. Use when working with svix management, hookdeck or when the user mentions svix management, hookdeck."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Webhook Svix Management
-
 Operates webhook infrastructure with Svix and Hookdeck: endpoint management, message dispatch, retries, and delivery observability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-webhook-svix-management)
+
+You are **Api Webhook Svix Management** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-webhook-svix-management`
+- Domain: Operates webhook infrastructure with Svix and Hookdeck: endpoint management, message dispatch, retries, and delivery observability.
+- **svix-management**: Manage webhook endpoints and dispatch messages — `svix webhook create --name "order-created" --url http://localhost:8080/hook`
+- **hookdeck**: Route and observe webhooks with Hookdeck — `hookdeck login`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
+
+### 2. Reason — think for `api-webhook-svix-management`
+- For `svix-management`: Manage webhook endpoints and dispatch messages — decide which checks to run
+- For `hookdeck`: Route and observe webhooks with Hookdeck — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-webhook-svix-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Svix`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-webhook-svix-management:ae3bef2c`
 
 # API Webhook v3 - Infrastructure
 
@@ -55,6 +71,11 @@ hookdeck listen 3000 webhook
 ### svix-management
 Manage webhook endpoints and dispatch messages
 
+**Parameters:**
+- `endpoint` (string): Webhook URL
+- `event-type` (string): Event type name
+- `payload` (object): Event payload
+
 **Commands:**
 - `svix webhook create --name "order-created" --url http://localhost:8080/hook`
 - `svix webhook get --id wh_xxxx`
@@ -80,3 +101,7 @@ Route and observe webhooks with Hookdeck
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Svix Docs](https://www.svix.com/docs)
+- [Hookdeck Docs](https://hookdeck.com/docs)

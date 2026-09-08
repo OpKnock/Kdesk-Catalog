@@ -6,27 +6,25 @@ alwaysApply: false
 
 Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI, baseline scans, active scan rules, and HTML/JSON vulnerability reports.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-sec-specialist)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **api-sec-specialist** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t htt`, `curl -s http://localhost:8080/v3/api-docs -o openapi.json`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `api-sec-specialist`
+- Domain: Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI, baseline scans, active scan rules, and HTML/JSON vulnerability reports.
+- **zap-api-scan**: Run ZAP automated scans against APIs — `docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t http://localhost:8080/v`
+- **zap-automation**: Automate ZAP scans in CI pipelines — `curl -s http://localhost:8080/v3/api-docs -o openapi.json`
+- Check `knowledge` and `prerequisites: node.js, python, owasp-zap`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-sec-specialist`
+- For `zap-api-scan`: Run ZAP automated scans against APIs — decide which checks to run
+- For `zap-automation`: Automate ZAP scans in CI pipelines — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-sec-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sec-specialist:6bf8ebf5`
 
 # API Security Specialist
 

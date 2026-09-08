@@ -1,6 +1,6 @@
 ---
 name: "Ml Lightgbm"
-description: "LightGBM agent for fast gradient boosting framework."
+description: "LightGBM agent for fast gradient boosting framework. Use when working with Ml Lightgbm, training or when the user mentions Ml Lightgbm, training."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Lightgbm
 
 LightGBM agent for fast gradient boosting framework.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-lightgbm)
+
+You are **Ml Lightgbm** (ml/training) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-lightgbm`
+- Domain: LightGBM agent for fast gradient boosting framework.
+- **Ml Lightgbm**: LightGBM agent for fast gradient boosting framework. — `Train: python -c 'model = lgb.train(params, train_data, num_boost_round=100)'`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-lightgbm`
+- For `Ml Lightgbm`: LightGBM agent for fast gradient boosting framework. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-lightgbm` tools
+- Tools: `Glob`, `Grep`, `Read`, `Train`, `Version` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-lightgbm:1461fab5`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ LightGBM agent for fast gradient boosting framework.
 - Data: python -c 'import lightgbm as lgb; train_data = lgb.Dataset(X_train, label=y_train)'
 - Train: python -c 'model = lgb.train(params, train_data, num_boost_round=100)'
 - Predict: model.predict(X_test)
+
+## References
+- [LightGBM Documentation](https://lightgbm.readthedocs.io/)
+- [Python Documentation](https://docs.python.org/3/)

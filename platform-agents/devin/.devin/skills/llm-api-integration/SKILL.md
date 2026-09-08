@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(npm:*) Bash(npx:*) Bash(ollama:
 
 Integrates LLM APIs (OpenAI, Anthropic, local models) into applications: streaming, tool calling, retries, cost control, and evaluation.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (llm-api-integration)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Llm Api Integration** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl https://api.openai.com/v1/chat/completions -H "Authoriz`, `pip install promptfoo`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `llm-api-integration`
+- Domain: Integrates LLM APIs (OpenAI, Anthropic, local models) into applications: streaming, tool calling, retries, cost control, and evaluation.
+- **llm-clients**: Call LLM providers with the official CLIs and SDKs. — `curl https://api.openai.com/v1/chat/completions -H "Authorization: Bearer $OPENA`
+- **llm-ops**: Manage prompts, evals, and cost guardrails. — `pip install promptfoo`
+- Check `knowledge` and `prerequisites: npm, npx, ollama, openai`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `llm-api-integration`
+- For `llm-clients`: Call LLM providers with the official CLIs and SDKs. — decide which checks to run
+- For `llm-ops`: Manage prompts, evals, and cost guardrails. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `llm-api-integration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ollama` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `llm-api-integration:0693061b`
 
 # LLM API Integration
 

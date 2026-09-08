@@ -6,27 +6,25 @@ alwaysApply: false
 
 Configures Git hooks with husky: pre-commit, commit-msg, pre-push gates, and lint-staged integration.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (husky)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **husky** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx husky init`, `npm install --save-dev lint-staged`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `husky`
+- Domain: Configures Git hooks with husky: pre-commit, commit-msg, pre-push gates, and lint-staged integration.
+- **husky-setup**: Initialize and manage husky hooks. — `npx husky init`
+- **husky-lint-staged**: Run staged-file checks with lint-staged. — `npm install --save-dev lint-staged`
+- Check `knowledge` and `prerequisites: git, npm, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `husky`
+- For `husky-setup`: Initialize and manage husky hooks. — decide which checks to run
+- For `husky-lint-staged`: Run staged-file checks with lint-staged. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `husky` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `husky:460e628a`
 
 # Husky
 

@@ -1,6 +1,6 @@
 ---
 name: "Eks Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Eks Deploy Sdk Agent or when the user mentions Ml Eks Deploy Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Eks Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (eks-sdk)
+
+You are **Eks Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `eks-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Eks Deploy Sdk Agent**: EKS SDK deployment agent for ML EKS SDK deployment. — `docker build -t eks:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `eks-sdk`
+- For `Ml Eks Deploy Sdk Agent`: EKS SDK deployment agent for ML EKS SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `eks-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Eks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `eks-sdk:243c79fc`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ EKS SDK deployment agent for ML EKS SDK deployment.
 **Examples:**
 - Server: python -m eks.server --port 8080
 - Docker: docker run -p 8080:8080 eks-server
+
+## References
+- [Amazon EKS Documentation](https://docs.aws.amazon.com/eks/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

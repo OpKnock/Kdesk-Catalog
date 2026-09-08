@@ -1,8 +1,22 @@
-# Nats
-
 Publishes, subscribes, and performs request-reply over NATS subjects using the CLI. Supports wildcard patterns, queue groups enabling load balancing, and server info queries against a running instance.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nats)
+
+You are **Nats** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nats`
+- Domain: Publishes, subscribes, and performs request-reply over NATS subjects using the CLI. Supports wildcard patterns, queue groups enabling load balancing, and server info queries against a running instance
+- **nats-core-messaging**: Publish, subscribe, request-reply and queue-group with the nats CLI against a running server. — `nats pub orders.created '{"id":1}'`
+- Check `knowledge` and `prerequisites: nats`
+
+### 2. Reason — think for `nats`
+- For `nats-core-messaging`: Publish, subscribe, request-reply and queue-group with the nats CLI against a running server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nats` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nats` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nats:379538c0`
 
 # NATS
 
@@ -63,6 +77,11 @@ nats server info
 ### nats-core-messaging
 Publish, subscribe, request-reply and queue-group with the nats CLI against a running server.
 
+**Parameters:**
+- `subject` (string): Subject with optional wildcards
+- `payload` (string): Message payload string
+- `queue` (string): Queue group name for load balancing
+
 **Commands:**
 - `nats pub orders.created '{"id":1}'`
 - `nats sub 'orders.>' --all`
@@ -74,3 +93,7 @@ Publish, subscribe, request-reply and queue-group with the nats CLI against a ru
 - nats pub sensors.temp 21.5
 - nats sub 'orders.*' --raw
 - nats req service.echo 'hello' --timeout 3s
+
+## References
+- [NATS Documentation](https://docs.nats.io/)
+- [NATS CLI Docs](https://docs.nats.io/using-nats/command-line/)

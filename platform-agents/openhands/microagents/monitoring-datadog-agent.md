@@ -1,6 +1,6 @@
 ---
 name: "monitoring-datadog-agent"
-description: "Datadog agent for monitoring and observability."
+description: "Datadog agent for monitoring and observability. Use when working with Monitoring Datadog Agent or when the user mentions Monitoring Datadog Agent."
 type: knowledge
 triggers: ["monitoring-datadog-agent", "monitoring datadog agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["monitoring-datadog-agent", "monitoring datadog agent"]
 # Monitoring Datadog Agent
 
 Datadog agent for monitoring and observability.
+
+## Agentic Workflow: Read -> Reason -> Act (monitoring-datadog-agent)
+
+You are **Monitoring Datadog Agent** (monitoring/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — monitoring context for `monitoring-datadog-agent`
+- Domain: Datadog agent for monitoring and observability.
+- **Monitoring Datadog Agent**: Datadog agent for monitoring and observability. — `datadog-agent config set api_key demo-key`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `monitoring-datadog-agent`
+- For `Monitoring Datadog Agent`: Datadog agent for monitoring and observability. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `monitoring-datadog-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Datadog-agent` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monitoring-datadog-agent:b701323f`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Datadog agent for monitoring and observability.
 - datadog-agent status
 - datadog-agent config set api_key demo-key
 - datadog-agent service check --check demo-check --host localhost
+
+## References
+- [Datadog Documentation](https://docs.datadoghq.com/)

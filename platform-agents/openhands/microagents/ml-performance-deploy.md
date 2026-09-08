@@ -1,6 +1,6 @@
 ---
 name: "ml-performance-deploy"
-description: "Performance deployment agent for ML performance monitoring service deployment."
+description: "Performance deployment agent for ML performance monitoring service deployment. Use when working with Ml Performance Deploy, inference or when the user mentions Ml Performance Deploy, inference."
 type: knowledge
 triggers: ["ml-performance-deploy", "ml performance deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-performance-deploy", "ml performance deploy"]
 # Ml Performance Deploy
 
 Performance deployment agent for ML performance monitoring service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-performance-deploy)
+
+You are **Ml Performance Deploy** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-performance-deploy`
+- Domain: Performance deployment agent for ML performance monitoring service deployment.
+- **Ml Performance Deploy**: Performance deployment agent for ML performance monitoring service deployment. — `Health: curl http://localhost:8080/health`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-performance-deploy`
+- For `Ml Performance Deploy`: Performance deployment agent for ML performance monitoring service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-performance-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Health`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-performance-deploy:d72aecef`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ Performance deployment agent for ML performance monitoring service deployment.
 - Server: python -m ml_performance.server --port 8080
 - Profile: python -m ml_performance.profile --model model.onnx --input input.json
 - Health: curl http://localhost:8080/health
+
+## References
+- [AWS Performance Efficiency Pillar](https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/welcome.html)
+- [curl Documentation](https://curl.se/docs/)
+- [Python Documentation](https://docs.python.org/3/)

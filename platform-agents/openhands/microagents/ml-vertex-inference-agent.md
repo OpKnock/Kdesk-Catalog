@@ -1,6 +1,6 @@
 ---
 name: "ml-vertex-inference-agent"
-description: "Vertex AI inference agent. Manages ML inference on Google Vertex AI."
+description: "Vertex AI inference agent. Manages ML inference on Google Vertex AI. Use when working with Ml Vertex Inference Agent or when the user mentions Ml Vertex Inference Agent."
 type: knowledge
 triggers: ["ml-vertex-inference-agent", "ml vertex inference agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-vertex-inference-agent", "ml vertex inference agent"]
 # Ml Vertex Inference Agent
 
 Vertex AI inference agent. Manages ML inference on Google Vertex AI.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-vertex-inference-agent)
+
+You are **Ml Vertex Inference Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-vertex-inference-agent`
+- Domain: Vertex AI inference agent. Manages ML inference on Google Vertex AI.
+- **Ml Vertex Inference Agent**: Vertex AI inference agent. Manages ML inference on Google Vertex AI. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-vertex-inference-agent`
+- For `Ml Vertex Inference Agent`: Vertex AI inference agent. Manages ML inference on Google Vertex AI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-vertex-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Vertex` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-vertex-inference-agent:eff1d10c`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Vertex AI inference agent. Manages ML inference on Google Vertex AI.
 - gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json
 - gcloud ai models predict --model <model> --json-request request.json
 - gcloud ai predictions predict --model <model> --json-request request.json
+
+## References
+- [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

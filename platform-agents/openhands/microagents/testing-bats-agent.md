@@ -1,6 +1,6 @@
 ---
 name: "testing-bats-agent"
-description: "BATS agent for Bash testing."
+description: "BATS agent for Bash testing. Use when working with Testing Bats Agent or when the user mentions Testing Bats Agent."
 type: knowledge
 triggers: ["testing-bats-agent", "testing bats agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["testing-bats-agent", "testing bats agent"]
 # Testing Bats Agent
 
 BATS agent for Bash testing.
+
+## Agentic Workflow: Read -> Reason -> Act (testing-bats-agent)
+
+You are **Testing Bats Agent** (testing/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `testing-bats-agent`
+- Domain: BATS agent for Bash testing.
+- **Testing Bats Agent**: BATS agent for Bash testing. — `bats -r test.bats`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `testing-bats-agent`
+- For `Testing Bats Agent`: BATS agent for Bash testing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `testing-bats-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bats` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `testing-bats-agent:a6c80ceb`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ BATS agent for Bash testing.
 - bats -t test.bats
 - bats -r test.bats
 - bats --tap test.bats
+
+## References
+- [Bats Core Testing](https://bats-core.readthedocs.io/)

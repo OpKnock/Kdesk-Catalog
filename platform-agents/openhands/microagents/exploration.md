@@ -1,6 +1,6 @@
 ---
 name: "exploration"
-description: "it SDK deployment agent handling ML it SDK deployment."
+description: "it SDK deployment agent handling ML it SDK deployment. Use when working with Ml Exploration Deploy Sdk or when the user mentions Ml Exploration Deploy Sdk."
 type: knowledge
 triggers: ["exploration", "ml exploration deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["exploration", "ml exploration deploy sdk"]
 # Exploration
 
 it SDK deployment agent handling ML it SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (exploration)
+
+You are **Exploration** (ml/exploration) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `exploration`
+- Domain: it SDK deployment agent handling ML it SDK deployment.
+- **Ml Exploration Deploy Sdk**: Exploration SDK deployment agent for ML Exploration SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `exploration`
+- For `Ml Exploration Deploy Sdk`: Exploration SDK deployment agent for ML Exploration SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `exploration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `exploration:1119a131`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Exploration SDK deployment agent for ML Exploration SDK deployment.
 **Examples:**
 - Server: python -m exploration.server --port 8080
 - Docker: docker run -p 8080:8080 exploration-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

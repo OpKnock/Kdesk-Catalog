@@ -1,6 +1,6 @@
 ---
 name: "mlx-lm-python-sdk"
-description: "ML it agent handling Apple Silicon LLM integration."
+description: "ML it agent handling Apple Silicon LLM integration. Use when working with Ml Mlx Lm Python Sdk Agent, inference or when the user mentions Ml Mlx Lm Python Sdk Agent, inference."
 type: knowledge
 triggers: ["mlx-lm-python-sdk", "ml mlx lm python sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["mlx-lm-python-sdk", "ml mlx lm python sdk agent"]
 # Mlx Lm Python Sdk
 
 ML it agent handling Apple Silicon LLM integration.
+
+## Agentic Workflow: Read -> Reason -> Act (mlx-lm-python-sdk)
+
+You are **Mlx Lm Python Sdk** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `mlx-lm-python-sdk`
+- Domain: ML it agent handling Apple Silicon LLM integration.
+- **Ml Mlx Lm Python Sdk Agent**: ML MLX LM Python SDK agent for Apple Silicon LLM integration. — `Generate: python -c 'from mlx_lm import load, generate; model, tokenizer = load(`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `mlx-lm-python-sdk`
+- For `Ml Mlx Lm Python Sdk Agent`: ML MLX LM Python SDK agent for Apple Silicon LLM integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mlx-lm-python-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Generate`, `Serve` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mlx-lm-python-sdk:4dc4c8d4`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ ML MLX LM Python SDK agent for Apple Silicon LLM integration.
 **Examples:**
 - Serve: python -m mlx_lm.server --model mlx-community/Llama-2-7b-chat-hf-4bit
 - Generate: python -c 'from mlx_lm import load, generate; model, tokenizer = load('mlx-community/Llama-2-7b-chat-hf-4bit'); print(generate(model, tokenizer, prompt='Hello', max_tokens=100))'
+
+## References
+- [MLX LM Documentation](https://github.com/ml-explore/mlx-examples/tree/main/llms)
+- [Python Documentation](https://docs.python.org/3/)

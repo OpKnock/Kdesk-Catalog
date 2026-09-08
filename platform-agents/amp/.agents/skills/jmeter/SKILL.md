@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(jmeter:*)"
 
 Run Apache JMeter test plans headlessly, scale via property overrides, produce JTL results and HTML dashboards, and extract key metrics to support capacity reviews.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (jmeter)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **JMeter** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `jmeter -n -t test-plan.jmx -l results.jtl -e -o report/`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `jmeter`
+- Domain: Run Apache JMeter test plans headlessly, scale via property overrides, produce JTL results and HTML dashboards, and extract key metrics to support capacity reviews.
+- **jmeter-run**: Execute JMeter test plans in non-GUI mode and produce reports. — `jmeter -n -t test-plan.jmx -l results.jtl -e -o report/`
+- Check `knowledge` and `prerequisites: jmeter`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `jmeter`
+- For `jmeter-run`: Execute JMeter test plans in non-GUI mode and produce reports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `jmeter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Jmeter` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `jmeter:7f9b0825`
 
 # JMeter
 

@@ -2,14 +2,47 @@ title: queue-based-architecture
 description: 'Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups,
   and at-least-once semantics.'
 version: 2.0.0
-instructions: '# queue-based-architecture
+instructions: 'Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups,
+  and at-least-once semantics.
 
 
-  Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups, and at-least-once
-  semantics.
+  ## Agentic Workflow: Read -> Reason -> Act (queue-based-architecture)
 
 
-  ## Instructions
+  You are **queue-based-architecture** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts**
+  via `allowed-tools`.
+
+
+  ### 1. Read — infrastructure context for `queue-based-architecture`
+
+  - Domain: Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups,
+  and at-least-once semantics.
+
+  - **sqs**: Manage SQS queues and messages. — `aws sqs create-queue --queue-name orders --attributes
+  VisibilityTimeout=60`
+
+  - **redis-streams**: Use Redis Streams for consumer groups and replays. — `redis-cli XADD orders:stream
+  ''*'' order 42 sku A1`
+
+  - Check `knowledge` and `prerequisites: redis, rabbitmq, kafka, node.js`
+
+
+  ### 2. Reason — think for `queue-based-architecture`
+
+  - For `sqs`: Manage SQS queues and messages. — decide which checks to run
+
+  - For `redis-streams`: Use Redis Streams for consumer groups and replays. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `queue-based-architecture` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Aws`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `queue-based-architecture:2800cfb9`
 
 
   # Queue-Based Architecture
@@ -108,6 +141,15 @@ instructions: '# queue-based-architecture
   Manage SQS queues and messages.
 
 
+  **Parameters:**
+
+  - `queue-url` (string): SQS queue URL
+
+  - `message-body` (string): Message payload
+
+  - `max-number-of-messages` (number): Batch receive size
+
+
   **Commands:**
 
   - `aws sqs create-queue --queue-name orders --attributes VisibilityTimeout=60`
@@ -135,6 +177,15 @@ instructions: '# queue-based-architecture
   Use Redis Streams for consumer groups and replays.
 
 
+  **Parameters:**
+
+  - `stream` (string): Stream key
+
+  - `group` (string): Consumer group name
+
+  - `consumer` (string): Consumer name
+
+
   **Commands:**
 
   - `redis-cli XADD orders:stream ''*'' order 42 sku A1`
@@ -154,5 +205,14 @@ instructions: '# queue-based-architecture
 
   - redis-cli XREADGROUP GROUP workers w2 COUNT 5 STREAMS orders:stream ''>''
 
-  - redis-cli XINFO GROUPS orders:stream'
+  - redis-cli XINFO GROUPS orders:stream
+
+
+  ## References
+
+  - [Amazon SQS](https://docs.aws.amazon.com/sqs/)
+
+  - [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/)
+
+  - [AWS Lambda + SQS](https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html)'
 prompt: Act as queue-based-architecture and handle the task per the instructions.

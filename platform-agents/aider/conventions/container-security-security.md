@@ -1,8 +1,24 @@
-# Container Security
-
 Scans container images for vulnerabilities and supply-chain risks with Docker Scout, trivy, and grype, then hardens Dockerfiles.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (container-security-security)
+
+You are **Container Security** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `container-security-security`
+- Domain: Scans container images for vulnerabilities and supply-chain risks with Docker Scout, trivy, and grype, then hardens Dockerfiles.
+- **docker-scout**: Analyze images with Docker Scout for CVEs and remediation guidance. — `docker scout quickview nginx:latest`
+- **image-scanning**: Scan images and filesystems with trivy and grype for CVE coverage. — `trivy image nginx:latest`
+- Check `knowledge` and `prerequisites: docker, grype, trivy`
+
+### 2. Reason — think for `container-security-security`
+- For `docker-scout`: Analyze images with Docker Scout for CVEs and remediation guidance. — decide which checks to run
+- For `image-scanning`: Scan images and filesystems with trivy and grype for CVE coverage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `container-security-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Trivy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `container-security-security:724885cd`
 
 # Container Security
 
@@ -62,6 +78,10 @@ trivy fs --scanners vuln,secret .
 ### docker-scout
 Analyze images with Docker Scout for CVEs and remediation guidance.
 
+**Parameters:**
+- `image` (string): Image reference, e.g. nginx:latest
+- `severity` (string): Minimum severity filter: low, medium, high, critical
+
 **Commands:**
 - `docker scout quickview nginx:latest`
 - `docker scout cves nginx:latest`
@@ -77,6 +97,10 @@ Analyze images with Docker Scout for CVEs and remediation guidance.
 ### image-scanning
 Scan images and filesystems with trivy and grype for CVE coverage.
 
+**Parameters:**
+- `image` (string): Image to scan
+- `scanners` (array): trivy scanner types: vuln, secret, config, license
+
 **Commands:**
 - `trivy image nginx:latest`
 - `trivy image --severity CRITICAL --ignore-unfixed nginx:latest`
@@ -88,3 +112,8 @@ Scan images and filesystems with trivy and grype for CVE coverage.
 - trivy image --severity HIGH,CRITICAL --ignore-unfixed myapp:latest
 - grype --only-fixed myapp:latest
 - docker scout cves myapp:latest --format sarif --output scout.sarif
+
+## References
+- [Docker Scout Documentation](https://docs.docker.com/scout/)
+- [Trivy Documentation](https://trivy.dev/)
+- [Grype GitHub](https://github.com/anchore/grype)

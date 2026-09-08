@@ -1,8 +1,22 @@
-# Elastic Logs
-
 Ship, index, and query application logs into Elasticsearch with Filebeat, and run Elasticsearch log queries from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (elastic-logs)
+
+You are **Elastic Logs** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `elastic-logs`
+- Domain: Ship, index, and query application logs into Elasticsearch with Filebeat, and run Elasticsearch log queries from the CLI.
+- **log-shipping**: Configure and run Filebeat, test pipelines, and query indexed logs via the Elasticsearch REST API. — `filebeat test config -c filebeat.yml`
+- Check `knowledge` and `prerequisites: filebeat`
+
+### 2. Reason — think for `elastic-logs`
+- For `log-shipping`: Configure and run Filebeat, test pipelines, and query indexed logs via the Elasticsearch REST API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `elastic-logs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Filebeat`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `elastic-logs:10783352`
 
 # Elastic Logs
 
@@ -73,6 +87,11 @@ filebeat -e -c filebeat.yml -d 'publish'
 ### log-shipping
 Configure and run Filebeat, test pipelines, and query indexed logs via the Elasticsearch REST API.
 
+**Parameters:**
+- `config-file` (string): Filebeat YAML config path
+- `index-pattern` (string): Elasticsearch index pattern like filebeat-*
+- `es-url` (string): Elasticsearch endpoint for queries
+
 **Commands:**
 - `filebeat test config -c filebeat.yml`
 - `filebeat setup -e -c filebeat.yml --index-management`
@@ -84,3 +103,7 @@ Configure and run Filebeat, test pipelines, and query indexed logs via the Elast
 - filebeat test config -c filebeat.yml && filebeat -e -c filebeat.yml
 - curl -s 'localhost:9200/filebeat-*/_search' -H 'Content-Type: application/json' -d '{"query":{"bool":{"filter":[{"term":{"log.level":"ERROR"}}]}},"size":10}' | jq '.hits.hits[]._source.message'
 - curl -s 'localhost:9200/_cat/indices/filebeat-*?v'
+
+## References
+- [Filebeat Reference](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-overview.html)
+- [Elasticsearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)

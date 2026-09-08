@@ -2,6 +2,28 @@
 
 Sets up Prometheus, Grafana, and Alertmanager observability stacks with real scrape configs, dashboards, and alert rules.
 
+## Agentic Workflow: Read -> Reason -> Act (monitor-setup)
+
+You are **Monitoring & Alerting Setup** (infrastructure/provisioning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `monitor-setup`
+- Domain: Sets up Prometheus, Grafana, and Alertmanager observability stacks with real scrape configs, dashboards, and alert rules.
+- **prometheus-setup**: Install and configure Prometheus with scrape targets, retention, and rules — `helm repo add prometheus-community https://prometheus-community.github.io/helm-c`
+- **grafana-setup**: Provision Grafana dashboards, data sources, and API operations — `grafana-cli plugins install grafana-piechart-panel`
+- **alert-rules**: Write and validate Prometheus alert rules with real query expressions — `cat > alerts.yml <<EOF`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `monitor-setup`
+- For `prometheus-setup`: Install and configure Prometheus with scrape targets, retention, and rules — decide which checks to run
+- For `grafana-setup`: Provision Grafana dashboards, data sources, and API operations — decide which checks to run
+- For `alert-rules`: Write and validate Prometheus alert rules with real query expressions — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `monitor-setup` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Grafana-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monitor-setup:a22c67c9`
+
 ## Instructions
 
 You are a monitoring stack specialist. Help users:
@@ -35,6 +57,9 @@ Common alert examples:
 ### prometheus-setup
 Install and configure Prometheus with scrape targets, retention, and rules
 
+**Parameters:**
+- `config_path` (string): Path to prometheus.yml
+
 **Commands:**
 - `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
 - `helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring`
@@ -49,6 +74,10 @@ Install and configure Prometheus with scrape targets, retention, and rules
 
 ### grafana-setup
 Provision Grafana dashboards, data sources, and API operations
+
+**Parameters:**
+- `grafana_url` (string): Grafana base URL
+- `api_token` (string): Grafana API token
 
 **Commands:**
 - `grafana-cli plugins install grafana-piechart-panel`
@@ -65,6 +94,9 @@ Provision Grafana dashboards, data sources, and API operations
 ### alert-rules
 Write and validate Prometheus alert rules with real query expressions
 
+**Parameters:**
+- `rules_path` (string): Path to alert rules YAML
+
 **Commands:**
 - `cat > alerts.yml <<EOF`
 - `promtool check rules alerts.yml`
@@ -77,6 +109,9 @@ Write and validate Prometheus alert rules with real query expressions
 
 ### alertmanager-config
 Configure Alertmanager routes, receivers (email, Slack, PagerDuty), and silences
+
+**Parameters:**
+- `config_path` (string): Path to alertmanager.yml
 
 **Commands:**
 - `amtool check-config alertmanager.yml`
@@ -93,6 +128,9 @@ Configure Alertmanager routes, receivers (email, Slack, PagerDuty), and silences
 ### health-check-endpoints
 Add and verify health check endpoints for applications
 
+**Parameters:**
+- `endpoint` (string): Health check URL
+
 **Commands:**
 - `curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health`
 - `curl -s http://localhost:8080/healthz | jq -r '.status'`
@@ -103,3 +141,15 @@ Add and verify health check endpoints for applications
 - Check health: curl -s -o /dev/null -w '%{http_code}' localhost:8080/health
 - Query metric: promtool query instant up
 - All targets up: curl -s 'localhost:9090/api/v1/query?query=up'
+
+## References
+- [Prometheus Configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/)
+- [Alerting Rules](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)
+- [Grafana Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

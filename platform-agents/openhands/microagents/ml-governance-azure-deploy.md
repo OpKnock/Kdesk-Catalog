@@ -1,6 +1,6 @@
 ---
 name: "ml-governance-azure-deploy"
-description: "Azure Governance deployment agent for ML governance on Azure."
+description: "Azure Governance deployment agent for ML governance on Azure. Use when working with Ml Governance Azure Deploy or when the user mentions Ml Governance Azure Deploy."
 type: knowledge
 triggers: ["ml-governance-azure-deploy", "ml governance azure deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-governance-azure-deploy", "ml governance azure deploy"]
 # Ml Governance Azure Deploy
 
 Azure Governance deployment agent for ML governance on Azure.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-governance-azure-deploy)
+
+You are **Ml Governance Azure Deploy** (ml/governance) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-governance-azure-deploy`
+- Domain: Azure Governance deployment agent for ML governance on Azure.
+- **Ml Governance Azure Deploy**: Azure Governance deployment agent for ML governance on Azure. — `Register: az ml model register --name my-model --path ./model --resource-group m`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-governance-azure-deploy`
+- For `Ml Governance Azure Deploy`: Azure Governance deployment agent for ML governance on Azure. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-governance-azure-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Register`, `Policy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-governance-azure-deploy:23be7b97`
 
 ## Instructions
 
@@ -25,3 +43,6 @@ Azure Governance deployment agent for ML governance on Azure.
 **Examples:**
 - Register: az ml model register --name my-model --path ./model --resource-group myRG --workspace-name myWS
 - Policy: az policy assignment create --policy /providers/Microsoft.Authorization/policyDefinitions/... --scope /subscriptions/...
+
+## References
+- [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)

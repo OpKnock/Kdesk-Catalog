@@ -1,15 +1,29 @@
 ---
 name: "fallback"
-description: "Infrastructure failover strategies: nginx upstream server groups with backup servers for automatic failover, DNS round-robin and failover records for multi-region routing, and CDN origin switching so static content remains available during outages."
+description: "Infrastructure failover strategies: nginx upstream server groups with backup servers for automatic failover, DNS round-robin and failover records for multi-region routing, and CDN origin switching so static content remains available during outages. Use when working with infra failover, api or when the user mentions infra failover, api."
 type: knowledge
 triggers: ["fallback", "infra-failover"]
 ---
 
-# Fallback
-
 Infrastructure failover strategies: nginx upstream server groups with backup servers for automatic failover, DNS round-robin and failover records for multi-region routing, and CDN origin switching so static content remains available during outages.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fallback)
+
+You are **Fallback** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `fallback`
+- Domain: Infrastructure failover strategies: nginx upstream server groups with backup servers for automatic failover, DNS round-robin and failover records for multi-region routing, and CDN origin switching so 
+- **infra-failover**: Configure nginx upstream failover, test DNS fallback, and verify origin fallback behavior. — `nginx -t -c /etc/nginx/nginx.conf`
+- Check `knowledge` and `prerequisites: dig, nginx`
+
+### 2. Reason — think for `fallback`
+- For `infra-failover`: Configure nginx upstream failover, test DNS fallback, and verify origin fallback behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fallback` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fallback:2fb94743`
 
 # Fallback
 
@@ -87,6 +101,11 @@ curl -s -o /dev/null -w '%{http_code}' https://api.internal/health
 ### infra-failover
 Configure nginx upstream failover, test DNS fallback, and verify origin fallback behavior.
 
+**Parameters:**
+- `primary-host` (string): Primary backend hostname
+- `fallback-host` (string): Backup backend for failover
+- `health-path` (string): Path used by nginx health checks
+
 **Commands:**
 - `nginx -t -c /etc/nginx/nginx.conf`
 - `nginx -s reload`
@@ -99,3 +118,6 @@ Configure nginx upstream failover, test DNS fallback, and verify origin fallback
 - nginx -t -c /etc/nginx/nginx.conf && nginx -s reload
 - dig +short httpbin.org A
 - curl -sI https://httpbin.org | grep -iE 'HTTP|x-cache'
+
+## References
+- [nginx upstream module](https://nginx.org/en/docs/http/ngx_http_upstream_module.html)

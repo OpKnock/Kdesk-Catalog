@@ -1,14 +1,30 @@
 ---
-description: "Implements gateway architecture patterns: BFF composition, protocol translation, routing, and centralized security across clients."
+description: "Implements gateway architecture patterns: BFF composition, protocol translation, routing, and centralized security across clients. Use when working with bff composition, protocol translation or when the user mentions bff composition, protocol translation."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-gateway-patterns
-
 Implements gateway architecture patterns: BFF composition, protocol translation, routing, and centralized security across clients.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-gateway-patterns)
+
+You are **api-gateway-patterns** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-gateway-patterns`
+- Domain: Implements gateway architecture patterns: BFF composition, protocol translation, routing, and centralized security across clients.
+- **bff-composition**: Build a Backend-for-Frontend that composes multiple services into client-shaped responses — `npm init -y && npm install express node-fetch`
+- **protocol-translation**: Translate between REST, GraphQL, and gRPC at the edge — `npm install @graphql-tools/executor-http`
+- Check `knowledge` and `prerequisites: kong, aws-api-gateway, nginx, node.js`
+
+### 2. Reason — think for `api-gateway-patterns`
+- For `bff-composition`: Build a Backend-for-Frontend that composes multiple services into client-shaped responses — decide which checks to run
+- For `protocol-translation`: Translate between REST, GraphQL, and gRPC at the edge — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-gateway-patterns` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-gateway-patterns:62bb9e40`
 
 # API Gateway Patterns
 
@@ -50,6 +66,10 @@ Load test the composed route and confirm p95 stays within budget.
 ### bff-composition
 Build a Backend-for-Frontend that composes multiple services into client-shaped responses
 
+**Parameters:**
+- `route` (string): Composed route path
+- `services` (string): Comma-separated upstream services
+
 **Commands:**
 - `npm init -y && npm install express node-fetch`
 - `node -e "const express=require('express');const app=express();app.get('/api/home',(req,res)=>res.json({users:[],orders:[]}));app.listen(3000,()=>console.log('bff on 3000'))"`
@@ -65,6 +85,10 @@ Build a Backend-for-Frontend that composes multiple services into client-shaped 
 ### protocol-translation
 Translate between REST, GraphQL, and gRPC at the edge
 
+**Parameters:**
+- `from` (string): Source protocol
+- `to` (string): Target protocol
+
 **Commands:**
 - `npm install @graphql-tools/executor-http`
 - `node -e "console.log('grpc_health_probe -addr=localhost:50051')"`
@@ -76,3 +100,7 @@ Translate between REST, GraphQL, and gRPC at the edge
 - node -e "const {buildSchema,graphql}=require('graphql');const s=buildSchema('type Query{hello:String}');graphql(s,'{hello}').then(r=>console.log(r))"
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ hello }"}'
 - npm install @graphql-tools/executor-http
+
+## References
+- [BFF Pattern](https://samnewman.io/patterns/architectural/bff/)
+- [API Gateway Pattern](https://microservices.io/patterns/apigateway.html)

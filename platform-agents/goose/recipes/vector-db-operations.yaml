@@ -2,15 +2,26 @@ title: Vector Db Operations
 description: 'Operates vector databases (Chroma, Qdrant, Pinecone, Weaviate) for embeddings: collections,
   indexing, search, and maintenance.'
 version: 2.0.0
-instructions: "# Vector Db Operations\n\nOperates vector databases (Chroma, Qdrant, Pinecone, Weaviate)\
-  \ for embeddings: collections, indexing, search, and maintenance.\n\n## Instructions\n\n# Vector DB\
-  \ Operations\n\nRun vector databases for embeddings and similarity search.\n\n## When to Use\n\n- RAG\
-  \ retrieval backends\n- Semantic search and deduplication\n- Recommendation by embedding proximity\n\
-  - Anomaly detection on vectorized events\n\n## Concepts\n\n- Collection: named group of vectors with\
-  \ one metric\n- Dimension: must match the embedding model output\n- Distance: cosine, L2 (euclidean),\
-  \ or inner product\n- Payload/metadata: filters applied before or after search\n- HNSW: default index\
-  \ algorithm, tunable for speed vs recall\n\n## Chroma Commands\n\n```bash\npip install chromadb\n\n\
-  # Create\npython -c \"import chromadb; c=chromadb.PersistentClient(path='./db'); c.create_collection('docs',\
+instructions: "Operates vector databases (Chroma, Qdrant, Pinecone, Weaviate) for embeddings: collections,\
+  \ indexing, search, and maintenance.\n\n## Agentic Workflow: Read -> Reason -> Act (vector-db-operations)\n\
+  \nYou are **Vector Db Operations** (backend/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — backend context for `vector-db-operations`\n- Domain: Operates\
+  \ vector databases (Chroma, Qdrant, Pinecone, Weaviate) for embeddings: collections, indexing, search,\
+  \ and maintenance.\n- **chroma-ops**: Create and query ChromaDB collections. — `pip install chromadb`\n\
+  - **qdrant-ops**: Operate Qdrant collections via CLI and REST. — `docker run -p 6333:6333 qdrant/qdrant`\n\
+  - Check `knowledge` and `prerequisites: docker, pip, python`\n\n### 2. Reason — think for `vector-db-operations`\n\
+  - For `chroma-ops`: Create and query ChromaDB collections. — decide which checks to run\n- For `qdrant-ops`:\
+  \ Operate Qdrant collections via CLI and REST. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `vector-db-operations`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `vector-db-operations:6271e6ca`\n\
+  \n# Vector DB Operations\n\nRun vector databases for embeddings and similarity search.\n\n## When to\
+  \ Use\n\n- RAG retrieval backends\n- Semantic search and deduplication\n- Recommendation by embedding\
+  \ proximity\n- Anomaly detection on vectorized events\n\n## Concepts\n\n- Collection: named group of\
+  \ vectors with one metric\n- Dimension: must match the embedding model output\n- Distance: cosine, L2\
+  \ (euclidean), or inner product\n- Payload/metadata: filters applied before or after search\n- HNSW:\
+  \ default index algorithm, tunable for speed vs recall\n\n## Chroma Commands\n\n```bash\npip install\
+  \ chromadb\n\n# Create\npython -c \"import chromadb; c=chromadb.PersistentClient(path='./db'); c.create_collection('docs',\
   \ metadata={'hnsw:space':'cosine'})\"\n\n# Insert\npython -c \"import chromadb; c=chromadb.PersistentClient(path='./db');\
   \ col=c.get_collection('docs'); col.add(ids=['1'], documents=['hello'], metadatas=[{'src':'x.md'}])\"\
   \n\n# Search\npython -c \"import chromadb; c=chromadb.PersistentClient(path='./db'); print(c.get_collection('docs').query(query_texts=['greeting'],\
@@ -22,20 +33,23 @@ instructions: "# Vector Db Operations\n\nOperates vector databases (Chroma, Qdra
   ```\n\n## Best Practices\n\n- Match vector dimension to the embedding model exactly\n- Store metadata\
   \ with every vector; filter before brute force\n- Back up persistent storage (Chroma dir / Qdrant volumes)\n\
   - Monitor collection growth; re-index when recall degrades\n- Test with the exact queries your app will\
-  \ send\n\n## Capabilities\n\n### chroma-ops\nCreate and query ChromaDB collections.\n\n**Commands:**\n\
-  - `pip install chromadb`\n- `python -c \"import chromadb; c=chromadb.PersistentClient(path=\\\"./db\\\
-  \"); c.create_collection(\\\"docs\\\", metadata={\\\"hnsw:space\\\":\\\"cosine\\\"}); print(\\\"created\\\
-  \")\"`\n- `python -c \"import chromadb; c=chromadb.PersistentClient(path=\\\"./db\\\"); col=c.get_collection(\\\
+  \ send\n\n## Capabilities\n\n### chroma-ops\nCreate and query ChromaDB collections.\n\n**Parameters:**\n\
+  - `collection` (string): Collection name\n- `space` (string): Similarity metric: cosine, l2, ip\n\n\
+  **Commands:**\n- `pip install chromadb`\n- `python -c \"import chromadb; c=chromadb.PersistentClient(path=\\\
+  \"./db\\\"); c.create_collection(\\\"docs\\\", metadata={\\\"hnsw:space\\\":\\\"cosine\\\"}); print(\\\
+  \"created\\\")\"`\n- `python -c \"import chromadb; c=chromadb.PersistentClient(path=\\\"./db\\\"); col=c.get_collection(\\\
   \"docs\\\"); col.add(ids=[\\\"1\\\"], documents=[\\\"hello world\\\"], metadatas=[{\\\"src\\\":\\\"\
   x.md\\\"}]); print(col.count())\"`\n- `python -c \"import chromadb; c=chromadb.PersistentClient(path=\\\
   \"./db\\\"); print(c.get_collection(\\\"docs\\\").query(query_texts=[\\\"greeting\\\"], n_results=3))\"\
   `\n\n**Examples:**\n- python -c \"import chromadb; c=chromadb.PersistentClient(path=\\\"./db\\\"); c.delete_collection(\\\
   \"docs\\\"); print(\\\"deleted\\\")\"\n- python -c \"import chromadb; c=chromadb.PersistentClient(path=\\\
   \"./db\\\"); print([x.name for x in c.list_collections()])\"\n\n### qdrant-ops\nOperate Qdrant collections\
-  \ via CLI and REST.\n\n**Commands:**\n- `docker run -p 6333:6333 qdrant/qdrant`\n- `curl -s http://localhost:6333/collections`\n\
+  \ via CLI and REST.\n\n**Parameters:**\n- `collection` (string): Collection name\n- `dimension` (integer):\
+  \ Vector dimension\n\n**Commands:**\n- `docker run -p 6333:6333 qdrant/qdrant`\n- `curl -s http://localhost:6333/collections`\n\
   - `curl -s -X PUT http://localhost:6333/collections/demo -H \"Content-Type: application/json\" -d \"\
   {\\\"vectors\\\":{\\\"size\\\":384,\\\"distance\\\":\\\"Cosine\\\"}}\"`\n- `curl -s http://localhost:6333/collections/demo/points/count\
   \ -H \"Content-Type: application/json\" -d \"{}\"`\n\n**Examples:**\n- curl -s \"http://localhost:6333/collections/demo/points/search\"\
   \ -H \"Content-Type: application/json\" -d \"{\\\"vector\\\":[0.1,0.2],\\\"limit\\\":5}\"\n- curl -s\
-  \ http://localhost:6333/collections/demo"
+  \ http://localhost:6333/collections/demo\n\n## References\n- [ChromaDB Docs](https://docs.trychroma.com)\n\
+  - [Qdrant Docs](https://qdrant.tech/documentation/)\n- [Weaviate Docs](https://weaviate.io/developers/weaviate)"
 prompt: Act as Vector Db Operations and handle the task per the instructions.

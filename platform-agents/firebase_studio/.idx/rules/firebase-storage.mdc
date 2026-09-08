@@ -1,14 +1,28 @@
 ---
-description: "Upload, download, delete, and secure files in it buckets. uploads.'"
+description: "Upload, download, delete, and secure files in it buckets. uploads.'. Use when working with storage ops, api or when the user mentions storage ops, api."
 globs: ["**/*.go", "**/*.java", "**/*.json", "**/*.r", "**/*.sh", "**/*.{js,ts,jsx,tsx}"]
 alwaysApply: false
 ---
 
-# Firebase Storage
-
 Upload, download, delete, and secure files in it buckets. uploads.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (firebase-storage)
+
+You are **Firebase Storage** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `firebase-storage`
+- Domain: Upload, download, delete, and secure files in it buckets. uploads.'
+- **storage-ops**: Upload, download, delete, and secure files in Firebase Storage buckets. — `firebase deploy --only storage:rules`
+- Check `knowledge` and `prerequisites: firebase, gcloud, gsutil`
+
+### 2. Reason — think for `firebase-storage`
+- For `storage-ops`: Upload, download, delete, and secure files in Firebase Storage buckets. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `firebase-storage` tools
+- Tools: `Glob`, `Grep`, `Read`, `Firebase`, `Gsutil` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-storage:49ccd8aa`
 
 # Firebase Storage
 
@@ -84,6 +98,11 @@ curl -s -o /dev/null -w '%{http_code}' -X PUT -F 'file=@x' 'https://firebasestor
 ### storage-ops
 Upload, download, delete, and secure files in Firebase Storage buckets.
 
+**Parameters:**
+- `bucket` (string): Storage bucket like project.appspot.com
+- `object-path` (string): Object path in the bucket
+- `rules-file` (string): Path to storage.rules
+
 **Commands:**
 - `firebase deploy --only storage:rules`
 - `gsutil ls gs://project.appspot.com/`
@@ -95,3 +114,7 @@ Upload, download, delete, and secure files in Firebase Storage buckets.
 - gsutil cp local-file gs://project.appspot.com/uploads/file1
 - gsutil ls gs://project.appspot.com/uploads/
 - gcloud storage cors set cors.json gs://project.appspot.com
+
+## References
+- [Firebase Storage docs](https://firebase.google.com/docs/storage)
+- [Storage security rules](https://firebase.google.com/docs/storage/security/rules-conditions)

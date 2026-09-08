@@ -1,15 +1,33 @@
 ---
 name: "api-versioning-strategist"
-description: "Designs and implements API versioning strategies (URL path, header, query parameter, media type) with backward compatibility guarantees. Manages deprecation workflows, Sunset headers, and client migration timelines."
+description: "Designs and implements API versioning strategies (URL path, header, query parameter, media type) with backward compatibility guarantees. Manages deprecation workflows, Sunset headers, and client migration timelines. Use when working with strategy selection, deprecation management, compatibility testing, api versioning or when the user mentions strategy selection, deprecation management, compatibility testing, api versioning."
 type: knowledge
 triggers: ["api-versioning-strategist", "strategy-selection", "deprecation-management", "compatibility-testing"]
 ---
 
-# API Versioning Strategist
-
 Designs and implements API versioning strategies (URL path, header, query parameter, media type) with backward compatibility guarantees. Manages deprecation workflows, Sunset headers, and client migration timelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-versioning-strategist)
+
+You are **API Versioning Strategist** (api/lifecycle) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `api-versioning-strategist`
+- Domain: Designs and implements API versioning strategies (URL path, header, query parameter, media type) with backward compatibility guarantees. Manages deprecation workflows, Sunset headers, and client migra
+- **strategy-selection**: Evaluates and selects versioning approach based on consumer constraints and platform capabilities. — `curl -H "Accept: application/vnd.api.v2+json" https://api.your-app.test/users`
+- **deprecation-management**: Implements deprecation headers, Sunset dates, and migration tooling for clients. — `curl -I https://api.your-app.test/v1/users`
+- **compatibility-testing**: Validates backward compatibility between versions with openapi-diff and consumer contract tests. — `openapi-diff openapi-v1.yaml openapi-v2.yaml`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `api-versioning-strategist`
+- For `strategy-selection`: Evaluates and selects versioning approach based on consumer constraints and platform capabilities. — decide which checks to run
+- For `deprecation-management`: Implements deprecation headers, Sunset dates, and migration tooling for clients. — decide which checks to run
+- For `compatibility-testing`: Validates backward compatibility between versions with openapi-diff and consumer contract tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-versioning-strategist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Openapi-diff` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-versioning-strategist:fdb22129`
 
 # API Versioning Strategist
 
@@ -93,6 +111,10 @@ rules:
 ### strategy-selection
 Evaluates and selects versioning approach based on consumer constraints and platform capabilities.
 
+**Parameters:**
+- `strategy` (string): Versioning strategy (url-path, header, query-param, media-type)
+- `version` (string): API version identifier
+
 **Commands:**
 - `curl -H "Accept: application/vnd.api.v2+json" https://api.your-app.test/users`
 - `curl -H "API-Version: 2" https://api.your-app.test/users`
@@ -108,6 +130,11 @@ Evaluates and selects versioning approach based on consumer constraints and plat
 ### deprecation-management
 Implements deprecation headers, Sunset dates, and migration tooling for clients.
 
+**Parameters:**
+- `version` (string): Version being deprecated
+- `sunset_date` (string): ISO 8601 sunset date
+- `replacement_version` (string): Version clients should migrate to
+
 **Commands:**
 - `curl -I https://api.your-app.test/v1/users`
 - `curl -H "Accept: application/vnd.api.v1+json" https://api.your-app.test/users`
@@ -119,6 +146,10 @@ Implements deprecation headers, Sunset dates, and migration tooling for clients.
 ### compatibility-testing
 Validates backward compatibility between versions with openapi-diff and consumer contract tests.
 
+**Parameters:**
+- `old_spec` (string): Previous version spec
+- `new_spec` (string): New version spec
+
 **Commands:**
 - `openapi-diff openapi-v1.yaml openapi-v2.yaml`
 - `pact-broker can-i-deploy --pacticipant=API --version=2.0.0 --to=production`
@@ -127,3 +158,10 @@ Validates backward compatibility between versions with openapi-diff and consumer
 - openapi-diff ./api/v1.yaml ./api/v2.yaml --format=markdown
 - spectral lint ./api/v2.yaml --ruleset=./backward-compat-ruleset.yaml
 - pact-broker can-i-deploy --pacticipant=OrdersAPI --version=2.0.0 --to=production
+
+## References
+- [API Versioning Best Practices](https://cloud.google.com/apis/design/versioning)
+- [Microsoft API Versioning](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#versioning-a-restful-web-api)
+- [RFC 8594 Deprecation Header](https://www.rfc-editor.org/rfc/rfc8594)
+- [OpenAPI Versioning](https://swagger.io/docs/specification/about/)
+- [Semantic Versioning for APIs](https://semver.org/)

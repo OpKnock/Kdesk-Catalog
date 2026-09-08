@@ -1,15 +1,33 @@
 ---
 name: "Azure Monitor Logs"
-description: "Queries and administers Log Analytics workspaces with the Azure CLI: creates workspaces, runs KQL queries for application and audit diagnostics, and configures diagnostic settings to route resource logs."
+description: "Queries and administers Log Analytics workspaces with the Azure CLI: creates workspaces, runs KQL queries for application and audit diagnostics, and configures diagnostic settings to route resource logs. Use when working with workspaces, kql queries, diagnostic settings, api or when the user mentions workspaces, kql queries, diagnostic settings, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Azure Monitor Logs
-
 Queries and administers Log Analytics workspaces with the Azure CLI: creates workspaces, runs KQL queries for application and audit diagnostics, and configures diagnostic settings to route resource logs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (azure-monitor-logs)
+
+You are **Azure Monitor Logs** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `azure-monitor-logs`
+- Domain: Queries and administers Log Analytics workspaces with the Azure CLI: creates workspaces, runs KQL queries for application and audit diagnostics, and configures diagnostic settings to route resource lo
+- **workspaces**: Create and manage Log Analytics workspaces. — `az monitor log-analytics workspace create -g rg -n myworkspace`
+- **kql-queries**: Run Kusto queries against workspaces. — `az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AzureD`
+- **diagnostic-settings**: Route resource logs to workspaces. — `az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-12`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `azure-monitor-logs`
+- For `workspaces`: Create and manage Log Analytics workspaces. — decide which checks to run
+- For `kql-queries`: Run Kusto queries against workspaces. — decide which checks to run
+- For `diagnostic-settings`: Route resource logs to workspaces. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `azure-monitor-logs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Az` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-monitor-logs:93f6bae7`
 
 # Azure Monitor Logs
 
@@ -55,6 +73,10 @@ az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-12
 ### workspaces
 Create and manage Log Analytics workspaces.
 
+**Parameters:**
+- `workspace_name` (string): Workspace name
+- `retention` (number): Retention in days
+
 **Commands:**
 - `az monitor log-analytics workspace create -g rg -n myworkspace`
 - `az monitor log-analytics workspace list`
@@ -70,6 +92,10 @@ Create and manage Log Analytics workspaces.
 ### kql-queries
 Run Kusto queries against workspaces.
 
+**Parameters:**
+- `workspace_id` (string): Workspace customerId/ID
+- `query` (string): KQL query text
+
 **Commands:**
 - `az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AzureDiagnostics | where OperationName contains 'error' | take 10"`
 - `az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AppRequests | where Success == false | summarize count() by bin(TimeGenerated, 1h)"`
@@ -84,6 +110,10 @@ Run Kusto queries against workspaces.
 ### diagnostic-settings
 Route resource logs to workspaces.
 
+**Parameters:**
+- `resource_id` (string): Azure resource ID
+- `categories` (string): Log categories JSON
+
 **Commands:**
 - `az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --workspace abc123-def456-ghi789 --logs '[{"category":"AuditLogs","enabled":true}]'`
 - `az monitor diagnostic-settings list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv`
@@ -94,3 +124,8 @@ Route resource logs to workspaces.
 - az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --workspace abc123-def456-ghi789 --logs '[{"category":"AuditEvent","enabled":true}]'
 - az monitor diagnostic-settings list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --query '[].{name:name,workspaceId:workspaceId}' -o table
 - az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-func --workspace abc123-def456-ghi789 --metrics '[{"category":"AllMetrics","enabled":true}]'
+
+## References
+- [Azure Monitor Logs Docs](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/)
+- [Kusto Query Language](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/)
+- [Azure CLI monitor Reference](https://learn.microsoft.com/en-us/cli/azure/monitor/log-analytics)

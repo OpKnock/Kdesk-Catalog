@@ -1,6 +1,6 @@
 ---
 name: "support-customer-success"
-description: "Support customer-success expertise and best practices."
+description: "Support customer-success expertise and best practices. Use when working with customer success expertise, support, customer success, skill or when the user mentions customer success expertise, support, customer success, skill."
 type: knowledge
 triggers: ["support-customer-success", "customer-success-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["support-customer-success", "customer-success-expertise"]
 # Support Customer Success
 
 Support customer-success expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (support-customer-success)
+
+You are **Support Customer Success** (support/customer-success) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — support context for `support-customer-success`
+- Domain: Support customer-success expertise and best practices.
+- **customer-success-expertise**: support customer-success expertise — `customer-success-cli`
+- Check `knowledge` and `prerequisites: customer-success`
+
+### 2. Reason — think for `support-customer-success`
+- For `customer-success-expertise`: support customer-success expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `support-customer-success` tools
+- Tools: `Glob`, `Grep`, `Read`, `Customer-success-cli`, `Customer-success-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `support-customer-success:0b42e177`
 
 ## Instructions
 

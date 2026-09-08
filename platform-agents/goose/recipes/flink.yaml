@@ -2,25 +2,38 @@ title: Flink
 description: 'Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL
   clients.'
 version: 2.0.0
-instructions: "# Flink\n\nRuns and manages Apache Flink streaming jobs: submission, monitoring, savepoints,\
-  \ and SQL clients.\n\n## Instructions\n\n# Flink\n\nStream processing with Apache Flink: submit jobs,\
-  \ monitor the cluster, manage\nstate via savepoints, and run SQL.\n\n## When to Use\n\n- Running real-time\
-  \ event processing jobs\n- Managing checkpoints and savepoints for stateful jobs\n- Developing queries\
-  \ with the SQL client\n\n## Real Commands\n\n```bash\n# Submit a job in detached mode\nflink run -d\
-  \ -p 4 ./target/streaming-job.jar \\\n  --input kafka://orders --output clickhouse://events\n\n# With\
-  \ explicit main class\nflink run -d -c com.example.StreamingJob ./job.jar --parallelism 8\n\n# List\
-  \ running jobs\nflink list -m localhost:8081\n\n# Take a savepoint, then stop cleanly\nflink stop -p\
-  \ /tmp/savepoints <jobid>\n\n# Cancel (kill) with a savepoint\nflink cancel -m localhost:8081 <jobid>\
-  \ -s /tmp/savepoints\n\n# Restore from savepoint\nflink run -d -s /tmp/savepoints/savepoint-xxxx ./streaming-job.jar\n\
-  \n# SQL client\nsql-client.sh -f queries.sql\n```\n\n## Best Practices\n\n- Always take a savepoint\
-  \ before upgrading a stateful job\n- Use `flink stop` (graceful) over `flink cancel` for production\n\
-  - Align checkpoint intervals with throughput needs\n- Monitor the JobManager UI at the REST port (8081)\n\
-  - Version schemas in Kafka to avoid state deserialization failures\n\n## Example Response\n\nFor a job\
-  \ upgrade: takes a savepoint, verifies it completed, submits the new jar\nwith -s restore, and checks\
-  \ the job restarted in RUNNING state.\n\n## Capabilities\n\n### flink-cli\nSubmit, list, cancel, and\
-  \ snapshot Flink jobs\n\n**Commands:**\n- `flink run -d -p 4 ./target/streaming-job.jar --input kafka://orders\
-  \ --output clickhouse://events`\n- `flink list -m localhost:8081`\n- `flink cancel -m localhost:8081\
-  \ demo-jobid`\n- `flink savepoint demo-jobid /tmp/savepoints --yarn -yid demo-appid`\n- `sql-client.sh\
-  \ -f queries.sql`\n\n**Examples:**\n- flink run -d -c com.example.StreamingJob ./job.jar --parallelism\
-  \ 8\n- flink stop -p /tmp/savepoints demo-jobid\n- flink cancel -m localhost:8081 demo-jobid -s /tmp/savepoints"
+instructions: "Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL\
+  \ clients.\n\n## Agentic Workflow: Read -> Reason -> Act (flink)\n\nYou are **Flink** (data/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — data context\
+  \ for `flink`\n- Domain: Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints,\
+  \ and SQL clients.\n- **flink-cli**: Submit, list, cancel, and snapshot Flink jobs — `flink run -d -p\
+  \ 4 ./target/streaming-job.jar --input kafka://orders --output cli`\n- Check `knowledge` and `prerequisites:\
+  \ flink, sql-client.sh`\n\n### 2. Reason — think for `flink`\n- For `flink-cli`: Submit, list, cancel,\
+  \ and snapshot Flink jobs — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `flink` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Flink`, `Sql-client.sh` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for\
+  \ any write; record evidence (paths, checksums)\n- Fingerprint: `flink:ea5f1c7b`\n\n# Flink\n\nStream\
+  \ processing with Apache Flink: submit jobs, monitor the cluster, manage\nstate via savepoints, and\
+  \ run SQL.\n\n## When to Use\n\n- Running real-time event processing jobs\n- Managing checkpoints and\
+  \ savepoints for stateful jobs\n- Developing queries with the SQL client\n\n## Real Commands\n\n```bash\n\
+  # Submit a job in detached mode\nflink run -d -p 4 ./target/streaming-job.jar \\\n  --input kafka://orders\
+  \ --output clickhouse://events\n\n# With explicit main class\nflink run -d -c com.example.StreamingJob\
+  \ ./job.jar --parallelism 8\n\n# List running jobs\nflink list -m localhost:8081\n\n# Take a savepoint,\
+  \ then stop cleanly\nflink stop -p /tmp/savepoints <jobid>\n\n# Cancel (kill) with a savepoint\nflink\
+  \ cancel -m localhost:8081 <jobid> -s /tmp/savepoints\n\n# Restore from savepoint\nflink run -d -s /tmp/savepoints/savepoint-xxxx\
+  \ ./streaming-job.jar\n\n# SQL client\nsql-client.sh -f queries.sql\n```\n\n## Best Practices\n\n- Always\
+  \ take a savepoint before upgrading a stateful job\n- Use `flink stop` (graceful) over `flink cancel`\
+  \ for production\n- Align checkpoint intervals with throughput needs\n- Monitor the JobManager UI at\
+  \ the REST port (8081)\n- Version schemas in Kafka to avoid state deserialization failures\n\n## Example\
+  \ Response\n\nFor a job upgrade: takes a savepoint, verifies it completed, submits the new jar\nwith\
+  \ -s restore, and checks the job restarted in RUNNING state.\n\n## Capabilities\n\n### flink-cli\nSubmit,\
+  \ list, cancel, and snapshot Flink jobs\n\n**Parameters:**\n- `parallelism` (integer): Parallelism for\
+  \ the job (-p)\n- `main-class` (string): Main class for jobs with multiple entry points (-c)\n- `detached`\
+  \ (boolean): Submit in detached mode (-d), return immediately\n\n**Commands:**\n- `flink run -d -p 4\
+  \ ./target/streaming-job.jar --input kafka://orders --output clickhouse://events`\n- `flink list -m\
+  \ localhost:8081`\n- `flink cancel -m localhost:8081 demo-jobid`\n- `flink savepoint demo-jobid /tmp/savepoints\
+  \ --yarn -yid demo-appid`\n- `sql-client.sh -f queries.sql`\n\n**Examples:**\n- flink run -d -c com.example.StreamingJob\
+  \ ./job.jar --parallelism 8\n- flink stop -p /tmp/savepoints demo-jobid\n- flink cancel -m localhost:8081\
+  \ demo-jobid -s /tmp/savepoints\n\n## References\n- [Flink docs](https://nightlies.apache.org/flink/flink-docs-stable/)\n\
+  - [Flink operations](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/)"
 prompt: Act as Flink and handle the task per the instructions.

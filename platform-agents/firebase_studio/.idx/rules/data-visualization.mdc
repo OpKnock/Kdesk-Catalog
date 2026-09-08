@@ -1,14 +1,28 @@
 ---
-description: "Creates data visualizations: matplotlib/seaborn charts, interactive notebooks, and export."
+description: "Creates data visualizations: matplotlib/seaborn charts, interactive notebooks, and export. Use when working with plotting or when the user mentions plotting."
 globs: ["**/*.go", "**/*.html", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# data-visualization
-
 Creates data visualizations: matplotlib/seaborn charts, interactive notebooks, and export.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (data-visualization)
+
+You are **data-visualization** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `data-visualization`
+- Domain: Creates data visualizations: matplotlib/seaborn charts, interactive notebooks, and export.
+- **plotting**: Generate charts with matplotlib/seaborn and manage notebooks — `python -m pip install matplotlib seaborn plotly pandas`
+- Check `knowledge` and `prerequisites: d3, plotly, recharts, chart.js`
+
+### 2. Reason — think for `data-visualization`
+- For `plotting`: Generate charts with matplotlib/seaborn and manage notebooks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-visualization` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Jupyter` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-visualization:b1999ede`
 
 # Data Visualization
 
@@ -70,6 +84,11 @@ visualization reveals with interpretation notes.
 ### plotting
 Generate charts with matplotlib/seaborn and manage notebooks
 
+**Parameters:**
+- `output` (string): Output file path for the chart
+- `execute` (boolean): Execute the notebook during conversion
+- `output-dir` (string): Directory for converted notebooks
+
 **Commands:**
 - `python -m pip install matplotlib seaborn plotly pandas`
 - `python charts/sales.py --output charts/sales.png`
@@ -81,3 +100,8 @@ Generate charts with matplotlib/seaborn and manage notebooks
 - python -c "import matplotlib.pyplot as plt; plt.plot([1,2,3],[1,4,9]); plt.savefig('p.png')"
 - jupyter nbconvert --execute --inplace analysis.ipynb
 - python charts/dashboard.py --style darkgrid --size 16x9
+
+## References
+- [matplotlib docs](https://matplotlib.org/)
+- [seaborn docs](https://seaborn.pydata.org/)
+- [Jupyter nbconvert docs](https://nbconvert.readthedocs.io/)

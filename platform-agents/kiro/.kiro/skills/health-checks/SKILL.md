@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(kubectl:*) Bash(python:*)"
 
 Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints with proper semantics.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (health-checks)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Health Checks** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s -o /dev/null -w "%{http_code}" http://localhost:8000`, `kubectl apply -f deployment.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `health-checks`
+- Domain: Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints with proper semantics.
+- **http-health**: Create and test HTTP health endpoints. — `curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/health`
+- **k8s-probes**: Define liveness, readiness, and startup probes in Kubernetes manifests. — `kubectl apply -f deployment.yaml`
+- Check `knowledge` and `prerequisites: kubectl, python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `health-checks`
+- For `http-health`: Create and test HTTP health endpoints. — decide which checks to run
+- For `k8s-probes`: Define liveness, readiness, and startup probes in Kubernetes manifests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `health-checks` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `health-checks:06dde41a`
 
 # Health Checks
 

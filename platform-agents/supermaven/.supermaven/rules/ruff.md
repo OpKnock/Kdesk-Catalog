@@ -1,8 +1,22 @@
-# ruff
-
 Ultra-fast Python linter and formatter: runs hundreds of rules at once and fixes files in place.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ruff)
+
+You are **ruff** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `ruff`
+- Domain: Ultra-fast Python linter and formatter: runs hundreds of rules at once and fixes files in place.
+- **ruff-lint-and-format**: Lint, auto-fix, and format Python code with Ruff — `ruff check src/`
+- Check `knowledge` and `prerequisites: ruff`
+
+### 2. Reason — think for `ruff`
+- For `ruff-lint-and-format`: Lint, auto-fix, and format Python code with Ruff — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ruff` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ruff` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ruff:6685563e`
 
 # Ruff
 
@@ -95,6 +109,11 @@ and lists remaining issues with file:line.
 ### ruff-lint-and-format
 Lint, auto-fix, and format Python code with Ruff
 
+**Parameters:**
+- `select` (string): Comma-separated rule codes to enable, e.g. E,F,I,B,UP
+- `output-format` (string): text, json, github, gitlab, sarif, or junit
+- `target-version` (string): Python version for the rules, e.g. py311
+
 **Commands:**
 - `ruff check src/`
 - `ruff check --fix src/`
@@ -106,3 +125,7 @@ Lint, auto-fix, and format Python code with Ruff
 - ruff check --statistics src/
 - ruff format --check .
 - ruff check --fix-only --diff src/
+
+## References
+- [Ruff docs](https://docs.astral.sh/ruff/)
+- [Ruff rules catalog](https://docs.astral.sh/ruff/rules/)

@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(composer:*) Bash(php:*)"
 
 Builds PHP web applications with Laravel: artisan commands, migrations, queues, scheduling, and testing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (laravel)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **laravel** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `composer create-project laravel/laravel myapp`, `php artisan queue:work`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `laravel`
+- Domain: Builds PHP web applications with Laravel: artisan commands, migrations, queues, scheduling, and testing.
+- **laravel-artisan**: Scaffold and manage Laravel applications. — `composer create-project laravel/laravel myapp`
+- **laravel-queues**: Run queue workers and the scheduler. — `php artisan queue:work`
+- Check `knowledge` and `prerequisites: composer, php`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `laravel`
+- For `laravel-artisan`: Scaffold and manage Laravel applications. — decide which checks to run
+- For `laravel-queues`: Run queue workers and the scheduler. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `laravel` tools
+- Tools: `Glob`, `Grep`, `Read`, `Composer`, `Php` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `laravel:b17a9c39`
 
 # Laravel
 

@@ -1,15 +1,29 @@
 ---
 name: "Docker Deployment"
-description: "Production Docker deployments: builds multi-stage images, tags and pushes to registries, runs containers with proper restart policies, and rolls back."
+description: "Production Docker deployments: builds multi-stage images, tags and pushes to registries, runs containers with proper restart policies, and rolls back. Use when working with image deploy, api or when the user mentions image deploy, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/Dockerfile*"]
 alwaysApply: false
 ---
 
-# Docker Deployment
-
 Production Docker deployments: builds multi-stage images, tags and pushes to registries, runs containers with proper restart policies, and rolls back.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (docker-deployment)
+
+You are **Docker Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `docker-deployment`
+- Domain: Production Docker deployments: builds multi-stage images, tags and pushes to registries, runs containers with proper restart policies, and rolls back.
+- **image-deploy**: Build, sign, push, run, and inspect Docker images and containers in deployment pipelines. — `docker build -t ghcr.io/org/app:v1.2.3 .`
+- Check `knowledge` and `prerequisites: docker`
+
+### 2. Reason — think for `docker-deployment`
+- For `image-deploy`: Build, sign, push, run, and inspect Docker images and containers in deployment pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `docker-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `docker-deployment:2829df65`
 
 # Docker Deployment
 
@@ -86,6 +100,11 @@ curl -sf http://localhost:8080/health && echo OK
 ### image-deploy
 Build, sign, push, run, and inspect Docker images and containers in deployment pipelines.
 
+**Parameters:**
+- `image-tag` (string): Full image reference including registry and tag
+- `container-name` (string): Name for the running container
+- `port-mapping` (string): host:container port mapping for -p
+
 **Commands:**
 - `docker build -t ghcr.io/org/app:v1.2.3 .`
 - `docker login ghcr.io`
@@ -98,3 +117,7 @@ Build, sign, push, run, and inspect Docker images and containers in deployment p
 - docker build -t ghcr.io/org/app:v1.2.3 . && docker push ghcr.io/org/app:v1.2.3
 - docker run -d --name app --restart unless-stopped -p 8080:8080 ghcr.io/org/app:v1.2.3
 - docker tag app:old ghcr.io/org/app:v1.2.2 && docker push ghcr.io/org/app:v1.2.2
+
+## References
+- [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+- [docker CLI Reference](https://docs.docker.com/reference/cli/docker/)

@@ -6,27 +6,25 @@ globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Operates and troubleshoots the kubelet: service management, journal logs, kubeadm join flow, config flags, and node registration.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kubelet)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **kubelet** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `systemctl status kubelet`, `kubeadm token create --print-join-command`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `kubelet`
+- Domain: Operates and troubleshoots the kubelet: service management, journal logs, kubeadm join flow, config flags, and node registration.
+- **kubelet-service**: Check, restart, and inspect the kubelet systemd service. — `systemctl status kubelet`
+- **join-and-config**: Join nodes to the cluster and inspect kubelet configuration. — `kubeadm token create --print-join-command`
+- Check `knowledge` and `prerequisites: journalctl, kubeadm, kubectl, kubelet`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kubelet`
+- For `kubelet-service`: Check, restart, and inspect the kubelet systemd service. — decide which checks to run
+- For `join-and-config`: Join nodes to the cluster and inspect kubelet configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kubelet` tools
+- Tools: `Glob`, `Grep`, `Read`, `Systemctl`, `Journalctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubelet:21ecf225`
 
 # kubelet Operations
 

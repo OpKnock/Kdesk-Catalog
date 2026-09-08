@@ -3,30 +3,43 @@ description: Validates JSON payloads against JSON Schema (draft 2020-12) using a
   Compiles schemas to catch errors before deployment, enforces contracts in CI pipelines, and performs
   quick shape checks with jq.
 version: 2.0.0
-instructions: "# Validation\n\nValidates JSON payloads against JSON Schema (draft 2020-12) using ajv-cli\
-  \ and Python jsonschema. Compiles schemas to catch errors before deployment, enforces contracts in CI\
-  \ pipelines, and performs quick shape checks with jq.\n\n## Instructions\n\n# Validation\n\nHand-crafted\
-  \ skill for schema validation of JSON payloads.\n\n## What this skill does\n\n- Validates payloads against\
-  \ JSON Schema (draft 2020-12)\n- Compiles schemas to check them before shipping\n- Guards pipelines\
-  \ and webhooks against bad shapes\n\n## When to use\n\n- CI gates on API response shapes\n- Validating\
-  \ webhook payloads before processing\n- Enforcing contracts between producers and consumers\n\n## Real\
-  \ commands\n\n```bash\n# Validate a document\nnpx ajv-cli validate -s schema.json -d data.json --strict=false\n\
-  \n# Python alternative\npython -m jsonschema -i data.json schema.json\npython -c \"import json, jsonschema;\
-  \ jsonschema.validate(json.load(open('data.json')), json.load(open('schema.json'))); print('valid')\"\
-  \n\n# Compile-only check (schema itself must be valid)\nnpx ajv-cli compile -s schema.json\n\n# Quick\
-  \ jq shape checks\njq 'type == \"object\" and (.id | type == \"string\") and (.price | type == \"number\"\
-  )' data.json\njq 'has(\"required_field\")' data.json\n```\n\n## Example schema\n\n```json\n{\n  \"$schema\"\
-  : \"https://json-schema.org/draft/2020-12/schema\",\n  \"type\": \"object\",\n  \"required\": [\"id\"\
-  , \"price\"],\n  \"properties\": {\n    \"id\": {\"type\": \"string\"},\n    \"price\": {\"type\": \"\
-  number\", \"minimum\": 0}\n  }\n}\n```\n\n## Testing\n\n```bash\nnpx ajv-cli validate -s schema.json\
+instructions: "Validates JSON payloads against JSON Schema (draft 2020-12) using ajv-cli and Python jsonschema.\
+  \ Compiles schemas to catch errors before deployment, enforces contracts in CI pipelines, and performs\
+  \ quick shape checks with jq.\n\n## Agentic Workflow: Read -> Reason -> Act (validation)\n\nYou are\
+  \ **Validation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `validation`\n- Domain: Validates JSON payloads against JSON Schema\
+  \ (draft 2020-12) using ajv-cli and Python jsonschema. Compiles schemas to catch errors before deployment,\
+  \ enforces contracts in CI pipelines, and performs qu\n- **schema-validate**: Validate JSON payloads\
+  \ against JSON Schema — `npx ajv-cli validate -s schema.json -d data.json --strict=false`\n- Check `knowledge`\
+  \ and `prerequisites: npx, python, jq`\n\n### 2. Reason — think for `validation`\n- For `schema-validate`:\
+  \ Validate JSON payloads against JSON Schema — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `validation`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `validation:73dc273a`\n\
+  \n# Validation\n\nHand-crafted skill for schema validation of JSON payloads.\n\n## What this skill does\n\
+  \n- Validates payloads against JSON Schema (draft 2020-12)\n- Compiles schemas to check them before\
+  \ shipping\n- Guards pipelines and webhooks against bad shapes\n\n## When to use\n\n- CI gates on API\
+  \ response shapes\n- Validating webhook payloads before processing\n- Enforcing contracts between producers\
+  \ and consumers\n\n## Real commands\n\n```bash\n# Validate a document\nnpx ajv-cli validate -s schema.json\
+  \ -d data.json --strict=false\n\n# Python alternative\npython -m jsonschema -i data.json schema.json\n\
+  python -c \"import json, jsonschema; jsonschema.validate(json.load(open('data.json')), json.load(open('schema.json')));\
+  \ print('valid')\"\n\n# Compile-only check (schema itself must be valid)\nnpx ajv-cli compile -s schema.json\n\
+  \n# Quick jq shape checks\njq 'type == \"object\" and (.id | type == \"string\") and (.price | type\
+  \ == \"number\")' data.json\njq 'has(\"required_field\")' data.json\n```\n\n## Example schema\n\n```json\n\
+  {\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"type\": \"object\",\n  \"required\"\
+  : [\"id\", \"price\"],\n  \"properties\": {\n    \"id\": {\"type\": \"string\"},\n    \"price\": {\"\
+  type\": \"number\", \"minimum\": 0}\n  }\n}\n```\n\n## Testing\n\n```bash\nnpx ajv-cli validate -s schema.json\
   \ -d data.json --strict=false\nnpx ajv-cli compile -s schema.json\n```\n\n## Best practices\n\n- Ship\
   \ the schema with the contract, not after\n- Keep --strict off only when schemas use unknown extensions\n\
   - Fail CI on invalid payloads, never warn\n\n## Capabilities\n\n### schema-validate\nValidate JSON payloads\
-  \ against JSON Schema\n\n**Commands:**\n- `npx ajv-cli validate -s schema.json -d data.json --strict=false`\n\
-  - `python -m jsonschema -i data.json schema.json`\n- `python -c \"import json, jsonschema; jsonschema.validate(json.load(open(\\\
-  \"data.json\\\")), json.load(open(\\\"schema.json\\\"))); print(\\\"valid\\\")\"`\n- `npx ajv-cli compile\
-  \ -s schema.json`\n- `jq \"type == \\\"object\\\" and (.id | type == \\\"string\\\") and (.price | type\
-  \ == \\\"number\\\")\" data.json`\n\n**Examples:**\n- npx ajv-cli validate -s schema.json -d data.json\
-  \ --strict=false\n- python -m jsonschema -i data.json schema.json\n- jq \"has(\\\"required_field\\\"\
-  )\" data.json"
+  \ against JSON Schema\n\n**Parameters:**\n- `schema` (string): Path to JSON Schema file\n- `data` (string):\
+  \ Path to data file to validate\n- `strict` (boolean): Reject unknown keywords\n\n**Commands:**\n- `npx\
+  \ ajv-cli validate -s schema.json -d data.json --strict=false`\n- `python -m jsonschema -i data.json\
+  \ schema.json`\n- `python -c \"import json, jsonschema; jsonschema.validate(json.load(open(\\\"data.json\\\
+  \")), json.load(open(\\\"schema.json\\\"))); print(\\\"valid\\\")\"`\n- `npx ajv-cli compile -s schema.json`\n\
+  - `jq \"type == \\\"object\\\" and (.id | type == \\\"string\\\") and (.price | type == \\\"number\\\
+  \")\" data.json`\n\n**Examples:**\n- npx ajv-cli validate -s schema.json -d data.json --strict=false\n\
+  - python -m jsonschema -i data.json schema.json\n- jq \"has(\\\"required_field\\\")\" data.json\n\n\
+  ## References\n- [JSON Schema spec](https://json-schema.org/)\n- [Ajv CLI docs](https://ajv.js.org/guide/cli.html)\n\
+  - [Python jsonschema](https://python-jsonschema.readthedocs.io/)"
 prompt: Act as Validation and handle the task per the instructions.

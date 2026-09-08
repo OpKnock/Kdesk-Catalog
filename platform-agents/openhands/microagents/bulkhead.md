@@ -1,15 +1,33 @@
 ---
 name: "bulkhead"
-description: "Implements bulkhead isolation with opossum (Node.js) and Resilience4j (Java): semaphores, per-dependency pools, and testing."
+description: "Implements bulkhead isolation with opossum (Node.js) and Resilience4j (Java): semaphores, per-dependency pools, and testing. Use when working with opossum node, resilience4j java, verify, api or when the user mentions opossum node, resilience4j java, verify, api."
 type: knowledge
 triggers: ["bulkhead", "opossum-node", "resilience4j-java", "verify"]
 ---
 
-# Bulkhead
-
 Implements bulkhead isolation with opossum (Node.js) and Resilience4j (Java): semaphores, per-dependency pools, and testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (bulkhead)
+
+You are **Bulkhead** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `bulkhead`
+- Domain: Implements bulkhead isolation with opossum (Node.js) and Resilience4j (Java): semaphores, per-dependency pools, and testing.
+- **opossum-node**: Add bulkhead limits to Node.js calls with opossum. — `npm install opossum`
+- **resilience4j-java**: Configure Resilience4j bulkheads in Java apps. — `mvn dependency:tree | grep resilience4j-bulkhead`
+- **verify**: Load-test bulkhead behavior. — `ab -n 1000 -c 100 http://localhost:8080/api/calls`
+- Check `knowledge` and `prerequisites: kubectl, mvn, node, npm`
+
+### 2. Reason — think for `bulkhead`
+- For `opossum-node`: Add bulkhead limits to Node.js calls with opossum. — decide which checks to run
+- For `resilience4j-java`: Configure Resilience4j bulkheads in Java apps. — decide which checks to run
+- For `verify`: Load-test bulkhead behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bulkhead` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bulkhead:c27ff877`
 
 # Bulkhead
 
@@ -66,6 +84,10 @@ resilience4j.bulkhead:
 ### opossum-node
 Add bulkhead limits to Node.js calls with opossum.
 
+**Parameters:**
+- `max_concurrent` (number): Max concurrent executions
+- `queue_size` (number): Max queued executions
+
 **Commands:**
 - `npm install opossum`
 - `node -e "const opossum=require('opossum'); const b=opossum.bulkhead(async()=>42, {maxConcurrent:2}); b.call().then(console.log)"`
@@ -79,6 +101,10 @@ Add bulkhead limits to Node.js calls with opossum.
 
 ### resilience4j-java
 Configure Resilience4j bulkheads in Java apps.
+
+**Parameters:**
+- `max_concurrent` (number): resilience4j bulkhead maxConcurrentCalls
+- `wait_timeout` (number): maxWaitDuration
 
 **Commands:**
 - `mvn dependency:tree | grep resilience4j-bulkhead`
@@ -94,6 +120,10 @@ Configure Resilience4j bulkheads in Java apps.
 ### verify
 Load-test bulkhead behavior.
 
+**Parameters:**
+- `endpoint` (string): Protected endpoint
+- `concurrency` (number): Load test concurrency
+
 **Commands:**
 - `ab -n 1000 -c 100 http://localhost:8080/api/calls`
 - `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api/calls`
@@ -104,3 +134,7 @@ Load-test bulkhead behavior.
 - ab -n 1000 -c 100 http://localhost:8080/api/calls | grep -E 'Non-2xx|Failed'
 - curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.rejected.calls | jq '.measurements'
 - watch -n1 'curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api/calls'
+
+## References
+- [opossum npm](https://github.com/nodeshift/opossum)
+- [Resilience4j Bulkhead](https://resilience4j.readme.io/docs/bulkhead)

@@ -1,8 +1,22 @@
-# Firebase Auth
-
 Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (firebase-auth)
+
+You are **Firebase Auth** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `firebase-auth`
+- Domain: Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation.
+- **auth-admin**: Administer Firebase Auth users, issue custom tokens, and verify ID tokens. — `firebase auth:list`
+- Check `knowledge` and `prerequisites: firebase, node`
+
+### 2. Reason — think for `firebase-auth`
+- For `auth-admin`: Administer Firebase Auth users, issue custom tokens, and verify ID tokens. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `firebase-auth` tools
+- Tools: `Glob`, `Grep`, `Read`, `Firebase`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-auth:ff5080fe`
 
 # Firebase Auth
 
@@ -75,6 +89,11 @@ curl -s -X POST 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPa
 ### auth-admin
 Administer Firebase Auth users, issue custom tokens, and verify ID tokens.
 
+**Parameters:**
+- `email` (string): User email to create or delete
+- `id-token` (string): ID token to verify
+- `import-file` (string): JSON file with users to import
+
 **Commands:**
 - `firebase auth:list`
 - `firebase auth:import users.json`
@@ -87,3 +106,7 @@ Administer Firebase Auth users, issue custom tokens, and verify ID tokens.
 - firebase auth:list
 - firebase auth:import users.json
 - node -e "const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)"
+
+## References
+- [Firebase Auth REST API](https://firebase.google.com/docs/reference/rest/auth)
+- [Admin SDK verifyIdToken](https://firebase.google.com/docs/auth/admin/verify-id-tokens)

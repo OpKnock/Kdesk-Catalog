@@ -1,8 +1,26 @@
-# semgrep
-
 Finds bugs and security issues with Semgrep's pattern-based SAST across 30+ languages, including custom rules and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (semgrep)
+
+You are **semgrep** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `semgrep`
+- Domain: Finds bugs and security issues with Semgrep's pattern-based SAST across 30+ languages, including custom rules and CI integration.
+- **semgrep-scan**: Scan code with built-in or custom rule packs. — `semgrep scan --config auto .`
+- **custom-rules**: Write and test custom pattern rules. — `semgrep scan --config custom.yml .`
+- **ci-integration**: Run Semgrep CI with findings management. — `semgrep login`
+- Check `knowledge` and `prerequisites: semgrep`
+
+### 2. Reason — think for `semgrep`
+- For `semgrep-scan`: Scan code with built-in or custom rule packs. — decide which checks to run
+- For `custom-rules`: Write and test custom pattern rules. — decide which checks to run
+- For `ci-integration`: Run Semgrep CI with findings management. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `semgrep` tools
+- Tools: `Glob`, `Grep`, `Read`, `Semgrep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `semgrep:62704b03`
 
 # Semgrep
 
@@ -68,6 +86,11 @@ rules:
 ### semgrep-scan
 Scan code with built-in or custom rule packs.
 
+**Parameters:**
+- `config` (string): Ruleset: auto, p/..., local YAML file
+- `severity` (string): Minimum severity: ERROR, WARNING, INFO
+- `jsonOutput` (string): Path to write JSON results
+
 **Commands:**
 - `semgrep scan --config auto .`
 - `semgrep scan --config p/owasp-top-ten .`
@@ -83,6 +106,10 @@ Scan code with built-in or custom rule packs.
 ### custom-rules
 Write and test custom pattern rules.
 
+**Parameters:**
+- `pattern` (string): Inline match pattern
+- `lang` (string): Language for inline patterns
+
 **Commands:**
 - `semgrep scan --config custom.yml .`
 - `semgrep scan --validate --config custom.yml`
@@ -97,6 +124,10 @@ Write and test custom pattern rules.
 ### ci-integration
 Run Semgrep CI with findings management.
 
+**Parameters:**
+- `sarif` (boolean): Output SARIF format
+- `supplyChain` (boolean): Enable supply-chain dependency scanning
+
 **Commands:**
 - `semgrep login`
 - `semgrep ci`
@@ -107,3 +138,7 @@ Run Semgrep CI with findings management.
 - semgrep ci
 - semgrep ci --sarif -o results.sarif
 - semgrep ci --supply-chain
+
+## References
+- [Semgrep Documentation](https://semgrep.dev/docs/)
+- [Semgrep Registry](https://semgrep.dev/r)

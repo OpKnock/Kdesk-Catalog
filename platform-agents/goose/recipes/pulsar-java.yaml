@@ -1,24 +1,36 @@
 title: Pulsar Java
 description: 'Pulsar clients in Java: producer/consumer APIs, Maven setup, message builders and configuration.'
 version: 2.0.0
-instructions: "# Pulsar Java\n\nPulsar clients in Java: producer/consumer APIs, Maven setup, message builders\
-  \ and configuration.\n\n## Instructions\n\n# Pulsar Java\n\nBuild Pulsar producers and consumers in\
-  \ Java with the official client library.\n\n## What this skill does\n\n- Configures the Maven dependency\n\
-  - Writes producer/consumer code\n- Uses typed schemas\n\n## When to use\n\n- JVM services in the Pulsar\
-  \ ecosystem\n- Replacing Kafka clients with Pulsar\n\n## Real commands\n\n```bash\nmvn compile\nmvn\
-  \ exec:java -Dexec.mainClass=com.example.Producer\nmvn dependency:tree -Dincludes=org.apache.pulsar\n\
-  mvn package\n```\n\n## Producer\n\n```java\nPulsarClient client = PulsarClient.builder().serviceUrl(\"\
-  pulsar://localhost:6650\").build();\nProducer<String> producer = client.newProducer(Schema.STRING)\n\
-  \    .topic(\"my-topic\").create();\nproducer.send(\"hello\");\nclient.close();\n```\n\n## Consumer\n\
-  \n```java\nConsumer<String> consumer = client.newConsumer(Schema.STRING)\n    .topic(\"my-topic\").subscriptionName(\"\
-  worker\").subscribe();\nMessage<String> msg = consumer.receive();\nSystem.out.println(msg.getValue());\n\
-  consumer.acknowledge(msg);\n```\n\n## pom.xml\n\n```xml\n<dependency>\n  <groupId>org.apache.pulsar</groupId>\n\
-  \  <artifactId>pulsar-client</artifactId>\n  <version>3.2.0</version>\n</dependency>\n```\n\n## Best\
-  \ practices\n\n- Use schemas (Schema.STRING/JSON) instead of raw bytes\n- Always acknowledge received\
-  \ messages\n- Tune batching for producer throughput\n\n## Capabilities\n\n### pulsar-java-client\nAdd\
-  \ pulsar-client to Maven projects and build producers and consumers in Java.\n\n**Commands:**\n- `mvn\
-  \ dependency:tree -Dincludes=org.apache.pulsar`\n- `mvn compile`\n- `mvn package`\n- `mvn exec:java\
-  \ -Dexec.mainClass=com.example.Producer`\n- `curl -s https://repo1.maven.org/maven2/org/apache/pulsar/pulsar-client/maven-metadata.xml`\n\
-  \n**Examples:**\n- mvn exec:java -Dexec.mainClass=com.example.Consumer\n- mvn compile\n- mvn dependency:tree\
-  \ -Dincludes=org.apache.pulsar | grep pulsar-client"
+instructions: "Pulsar clients in Java: producer/consumer APIs, Maven setup, message builders and configuration.\n\
+  \n## Agentic Workflow: Read -> Reason -> Act (pulsar-java)\n\nYou are **Pulsar Java** (api/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context\
+  \ for `pulsar-java`\n- Domain: Pulsar clients in Java: producer/consumer APIs, Maven setup, message\
+  \ builders and configuration.\n- **pulsar-java-client**: Add pulsar-client to Maven projects and build\
+  \ producers and consumers in Java. — `mvn dependency:tree -Dincludes=org.apache.pulsar`\n- Check `knowledge`\
+  \ and `prerequisites: mvn`\n\n### 2. Reason — think for `pulsar-java`\n- For `pulsar-java-client`: Add\
+  \ pulsar-client to Maven projects and build producers and consumers in Java. — decide which checks to\
+  \ run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act\
+  \ — execute with `pulsar-java` tools\n- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Bash` (see frontmatter\
+  \ `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint:\
+  \ `pulsar-java:4fec35ca`\n\n# Pulsar Java\n\nBuild Pulsar producers and consumers in Java with the official\
+  \ client library.\n\n## What this skill does\n\n- Configures the Maven dependency\n- Writes producer/consumer\
+  \ code\n- Uses typed schemas\n\n## When to use\n\n- JVM services in the Pulsar ecosystem\n- Replacing\
+  \ Kafka clients with Pulsar\n\n## Real commands\n\n```bash\nmvn compile\nmvn exec:java -Dexec.mainClass=com.example.Producer\n\
+  mvn dependency:tree -Dincludes=org.apache.pulsar\nmvn package\n```\n\n## Producer\n\n```java\nPulsarClient\
+  \ client = PulsarClient.builder().serviceUrl(\"pulsar://localhost:6650\").build();\nProducer<String>\
+  \ producer = client.newProducer(Schema.STRING)\n    .topic(\"my-topic\").create();\nproducer.send(\"\
+  hello\");\nclient.close();\n```\n\n## Consumer\n\n```java\nConsumer<String> consumer = client.newConsumer(Schema.STRING)\n\
+  \    .topic(\"my-topic\").subscriptionName(\"worker\").subscribe();\nMessage<String> msg = consumer.receive();\n\
+  System.out.println(msg.getValue());\nconsumer.acknowledge(msg);\n```\n\n## pom.xml\n\n```xml\n<dependency>\n\
+  \  <groupId>org.apache.pulsar</groupId>\n  <artifactId>pulsar-client</artifactId>\n  <version>3.2.0</version>\n\
+  </dependency>\n```\n\n## Best practices\n\n- Use schemas (Schema.STRING/JSON) instead of raw bytes\n\
+  - Always acknowledge received messages\n- Tune batching for producer throughput\n\n## Capabilities\n\
+  \n### pulsar-java-client\nAdd pulsar-client to Maven projects and build producers and consumers in Java.\n\
+  \n**Parameters:**\n- `main_class` (string): Java main class to run\n- `topic` (string): Topic name\n\
+  - `service_url` (string): Pulsar broker URL\n\n**Commands:**\n- `mvn dependency:tree -Dincludes=org.apache.pulsar`\n\
+  - `mvn compile`\n- `mvn package`\n- `mvn exec:java -Dexec.mainClass=com.example.Producer`\n- `curl -s\
+  \ https://repo1.maven.org/maven2/org/apache/pulsar/pulsar-client/maven-metadata.xml`\n\n**Examples:**\n\
+  - mvn exec:java -Dexec.mainClass=com.example.Consumer\n- mvn compile\n- mvn dependency:tree -Dincludes=org.apache.pulsar\
+  \ | grep pulsar-client\n\n## References\n- [Pulsar Java client docs](https://pulsar.apache.org/docs/3.0.x/client-libraries-java/)\n\
+  - [pulsar-client on Maven](https://central.sonatype.com/artifact/org.apache.pulsar/pulsar-client)"
 prompt: Act as Pulsar Java and handle the task per the instructions.

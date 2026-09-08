@@ -1,8 +1,22 @@
-# Rate Limiting
-
 Core rate limiting: nginx limit_req/limit_conn, 429 responses, headers, and per-IP vs per-key scoping.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rate-limiting)
+
+You are **Rate Limiting** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rate-limiting`
+- Domain: Core rate limiting: nginx limit_req/limit_conn, 429 responses, headers, and per-IP vs per-key scoping.
+- **rate-limiting-basics**: Configure nginx request and connection limits with burst handling and verify 429 responses. — `nginx -t`
+- Check `knowledge` and `prerequisites: nginx`
+
+### 2. Reason — think for `rate-limiting`
+- For `rate-limiting-basics`: Configure nginx request and connection limits with burst handling and verify 429 responses. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rate-limiting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rate-limiting:720a103e`
 
 # Rate Limiting
 
@@ -63,6 +77,11 @@ server {
 ### rate-limiting-basics
 Configure nginx request and connection limits with burst handling and verify 429 responses.
 
+**Parameters:**
+- `rate` (string): Rate like 10r/s or 30r/m
+- `burst` (integer): Queue capacity for excess requests
+- `key` (string): Scoping key: IP, header, query param
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -74,3 +93,7 @@ Configure nginx request and connection limits with burst handling and verify 429
 - nginx -t && nginx -s reload
 - ab -n 300 -c 30 http://localhost:8080/api
 - curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api
+
+## References
+- [nginx limit_req](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)
+- [HTTP 429 semantics](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429)

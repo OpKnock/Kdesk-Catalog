@@ -1,15 +1,31 @@
 ---
 name: "betterer"
-description: "Tracks and enforces code quality metrics over time with betterer: type coverage, lint counts, and complexity budgets that never regress."
+description: "Tracks and enforces code quality metrics over time with betterer: type coverage, lint counts, and complexity budgets that never regress. Use when working with betterer core, betterer config, code quality or when the user mentions betterer core, betterer config, code quality."
 type: knowledge
 triggers: ["betterer", "betterer-core", "betterer-config"]
 ---
 
-# betterer
-
 Tracks and enforces code quality metrics over time with betterer: type coverage, lint counts, and complexity budgets that never regress.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (betterer)
+
+You are **betterer** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `betterer`
+- Domain: Tracks and enforces code quality metrics over time with betterer: type coverage, lint counts, and complexity budgets that never regress.
+- **betterer-core**: Initialize, run, and update betterer metrics. — `npx betterer init`
+- **betterer-config**: Configure custom tests and thresholds. — `npx betterer --ci`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `betterer`
+- For `betterer-core`: Initialize, run, and update betterer metrics. — decide which checks to run
+- For `betterer-config`: Configure custom tests and thresholds. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `betterer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `betterer:7dcf20af`
 
 # Betterer
 
@@ -70,6 +86,10 @@ export default {
 ### betterer-core
 Initialize, run, and update betterer metrics.
 
+**Parameters:**
+- `update` (boolean): Update baseline results
+- `strict` (boolean): Reject unchanged results as failures
+
 **Commands:**
 - `npx betterer init`
 - `npx betterer`
@@ -85,6 +105,10 @@ Initialize, run, and update betterer metrics.
 ### betterer-config
 Configure custom tests and thresholds.
 
+**Parameters:**
+- `ci` (boolean): CI-friendly mode
+- `workers` (integer): Worker processes for checks
+
 **Commands:**
 - `npx betterer --ci`
 - `npx betterer --cache`
@@ -94,3 +118,7 @@ Configure custom tests and thresholds.
 **Examples:**
 - npx betterer --ci --silent
 - npx betterer --cache-dir .cache/betterer
+
+## References
+- [Betterer Docs](https://phenomnomnominal.github.io/betterer/)
+- [Betterer on GitHub](https://github.com/phenomnomnominal/betterer)

@@ -2,12 +2,22 @@ title: Api Auth OIDC
 description: API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation,
   and userinfo retrieval.
 version: 2.0.0
-instructions: "# Api Auth OIDC\n\nAPI auth with OpenID Connect - discovery, authorization code flow with\
-  \ PKCE, ID token validation, and userinfo retrieval.\n\n## Instructions\n\n# API Auth (OpenID Connect)\n\
-  \n## What this skill does\nImplement OpenID Connect on top of OAuth2: run discovery, drive the authorization\
-  \ code flow with PKCE, validate ID tokens, and call the userinfo endpoint.\n\n## When to use\n- Building\
-  \ SPAs that need identity (not just access)\n- Federating login with an external IdP\n- Moving from\
-  \ opaque sessions to OIDC\n\n## Real commands\n```bash\n# Discovery\ncurl -s http://localhost:8080/realms/demo/.well-known/openid-configuration\
+instructions: "API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation,\
+  \ and userinfo retrieval.\n\n## Agentic Workflow: Read -> Reason -> Act (api-auth-oidc)\n\nYou are **Api\
+  \ Auth OIDC** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — security context for `api-auth-oidc`\n- Domain: API auth with OpenID Connect - discovery,\
+  \ authorization code flow with PKCE, ID token validation, and userinfo retrieval.\n- **oidc-flow**:\
+  \ Implement and test OpenID Connect flows — `curl -s http://localhost:8080/realms/demo/.well-known/openid-configuration\
+  \ | jq `\n- Check `knowledge` and `prerequisites: node.js, python, jsonwebtoken`\n\n### 2. Reason —\
+  \ think for `api-auth-oidc`\n- For `oidc-flow`: Implement and test OpenID Connect flows — decide which\
+  \ checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n\
+  ### 3. Act — execute with `api-auth-oidc` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter\
+  \ `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint:\
+  \ `api-auth-oidc:995af076`\n\n# API Auth (OpenID Connect)\n\n## What this skill does\nImplement OpenID\
+  \ Connect on top of OAuth2: run discovery, drive the authorization code flow with PKCE, validate ID\
+  \ tokens, and call the userinfo endpoint.\n\n## When to use\n- Building SPAs that need identity (not\
+  \ just access)\n- Federating login with an external IdP\n- Moving from opaque sessions to OIDC\n\n##\
+  \ Real commands\n```bash\n# Discovery\ncurl -s http://localhost:8080/realms/demo/.well-known/openid-configuration\
   \ | jq '.authorization_endpoint, .userinfo_endpoint, .jwks_uri'\n\n# Generate PKCE pair\nnode -e \"\
   const c=require('crypto');\\\nconst v=c.randomBytes(32).toString('base64url');\\\nconsole.log('verifier:',v);\\\
   \nconsole.log('challenge:',c.createHash('sha256').update(v).digest('base64url'))\"\n\n# Authorization\
@@ -23,8 +33,10 @@ instructions: "# Api Auth OIDC\n\nAPI auth with OpenID Connect - discovery, auth
   \ practices\n- Never expose client secrets in SPAs (use PKCE)\n- Validate the nonce to prevent replay\n\
   - Use `openid` scope so an ID token is returned\n\n## Testing\n```bash\ncurl -s http://localhost:8080/realms/demo/.well-known/openid-configuration\
   \ | jq -e '.issuer' && echo OK\n```\n\n## Capabilities\n\n### oidc-flow\nImplement and test OpenID Connect\
-  \ flows\n\n**Commands:**\n- `curl -s http://localhost:8080/realms/demo/.well-known/openid-configuration\
-  \ | jq '.authorization_endpoint, .userinfo_endpoint'`\n- `curl -s 'http://localhost:8080/realms/demo/protocol/openid-connect/auth?client_id=spa&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20profile&code_challenge=CHALLENGE&code_challenge_method=S256'\
+  \ flows\n\n**Parameters:**\n- `realm` (string): OIDC realm/tenant\n- `scope` (string): Scopes, e.g.\
+  \ openid profile email\n- `code_challenge` (string): PKCE S256 challenge\n\n**Commands:**\n- `curl -s\
+  \ http://localhost:8080/realms/demo/.well-known/openid-configuration | jq '.authorization_endpoint,\
+  \ .userinfo_endpoint'`\n- `curl -s 'http://localhost:8080/realms/demo/protocol/openid-connect/auth?client_id=spa&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20profile&code_challenge=CHALLENGE&code_challenge_method=S256'\
   \ -o /dev/null -w '%{redirect_url}'`\n- `curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token\
   \ -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=authorization_code&client_id=spa&code=$CODE&redirect_uri=http://localhost:3000/cb&code_verifier=VERIFIER'\
   \ | jq -r '.id_token'`\n- `curl -s http://localhost:8080/realms/demo/protocol/openid-connect/userinfo\
@@ -32,5 +44,6 @@ instructions: "# Api Auth OIDC\n\nAPI auth with OpenID Connect - discovery, auth
   \ | jq '.keys | length'`\n\n**Examples:**\n- node -e \"const c=require('crypto');const v=c.randomBytes(32).toString('base64url');console.log(v);console.log(c.createHash('sha256').update(v).digest('base64url'))\"\
   \n- curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d 'grant_type=authorization_code&client_id=spa&code=$CODE&redirect_uri=http://localhost:3000/cb&code_verifier=VERIFIER'\
   \ | jq '.expires_in'\n- curl -s http://localhost:8080/realms/demo/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:3000\
-  \ -o /dev/null -w '%{http_code}'"
+  \ -o /dev/null -w '%{http_code}'\n\n## References\n- [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html)\n\
+  - [OAuth 2.0 PKCE (RFC 7636)](https://datatracker.ietf.org/doc/html/rfc7636)"
 prompt: Act as Api Auth OIDC and handle the task per the instructions.

@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(kubelinter:*)"
 
 Lints Kubernetes manifests with KubeLinter: security, best-practice, and reliability checks with config-driven rules.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kubelinter)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Kubelinter** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kubelinter lint deploy.yaml`, `kubelinter lint --list-checks`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `kubelinter`
+- Domain: Lints Kubernetes manifests with KubeLinter: security, best-practice, and reliability checks with config-driven rules.
+- **kubelinter-scan**: Scan manifests and directories. — `kubelinter lint deploy.yaml`
+- **kubelinter-config**: Customize checks and policies. — `kubelinter lint --list-checks`
+- Check `knowledge` and `prerequisites: kubelinter`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kubelinter`
+- For `kubelinter-scan`: Scan manifests and directories. — decide which checks to run
+- For `kubelinter-config`: Customize checks and policies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kubelinter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kubelinter` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubelinter:cf5b5ac5`
 
 # KubeLinter
 

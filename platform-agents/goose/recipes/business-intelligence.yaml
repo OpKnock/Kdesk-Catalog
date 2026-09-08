@@ -2,11 +2,22 @@ title: business-intelligence
 description: 'Builds BI pipelines with SQL warehouses, dbt, Metabase, and Superset: metrics modeling,
   dashboards, and scheduled reporting.'
 version: 2.0.0
-instructions: "# business-intelligence\n\nBuilds BI pipelines with SQL warehouses, dbt, Metabase, and\
-  \ Superset: metrics modeling, dashboards, and scheduled reporting.\n\n## Instructions\n\n# Business\
-  \ Intelligence\n\nBuild analytics pipelines and dashboards.\n\n## When to Use\n\n- Reporting revenue,\
-  \ retention, and funnel metrics\n- Self-serve dashboards for stakeholders\n- Metrics engineering with\
-  \ dbt\n- One-off analysis with DuckDB/psql\n\n## Commands\n\n```bash\n# Ad-hoc querying\npsql analytics\
+instructions: "Builds BI pipelines with SQL warehouses, dbt, Metabase, and Superset: metrics modeling,\
+  \ dashboards, and scheduled reporting.\n\n## Agentic Workflow: Read -> Reason -> Act (business-intelligence)\n\
+  \nYou are **business-intelligence** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — data context for `business-intelligence`\n- Domain: Builds BI pipelines with SQL warehouses,\
+  \ dbt, Metabase, and Superset: metrics modeling, dashboards, and scheduled reporting.\n- **bi-warehouses**:\
+  \ Query and manage warehouse data. — `psql \"postgres://user:pass@localhost/analytics\" -c \"SELECT\
+  \ count(*) FROM orders\"`\n- **bi-modeling**: Model metrics with dbt. — `dbt init my_project`\n- Check\
+  \ `knowledge` and `prerequisites: snowflake, bigquery, dbt, airflow`\n\n### 2. Reason — think for `business-intelligence`\n\
+  - For `bi-warehouses`: Query and manage warehouse data. — decide which checks to run\n- For `bi-modeling`:\
+  \ Model metrics with dbt. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `business-intelligence` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash`, `Duckdb` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `business-intelligence:28860413`\n\
+  \n# Business Intelligence\n\nBuild analytics pipelines and dashboards.\n\n## When to Use\n\n- Reporting\
+  \ revenue, retention, and funnel metrics\n- Self-serve dashboards for stakeholders\n- Metrics engineering\
+  \ with dbt\n- One-off analysis with DuckDB/psql\n\n## Commands\n\n```bash\n# Ad-hoc querying\npsql analytics\
   \ -c \"SELECT count(*) FROM orders\"\nduckdb analytics.db \"SELECT * FROM orders LIMIT 10\"\nduckdb\
   \ -csv analytics.db \"SELECT date_trunc('day', created_at) d, count(*) FROM orders GROUP BY 1\"\n\n\
   # dbt modeling\ndbt init my_project\ndbt run\ndbt test\ndbt build\ndbt docs generate\ndbt docs serve\n\
@@ -16,12 +27,15 @@ instructions: "# business-intelligence\n\nBuilds BI pipelines with SQL warehouse
   \ everywhere\n- Write tests for uniqueness, not-null, and freshness\n- Use semantic layers so dashboard\
   \ numbers agree\n- Document models with dbt docs generate\n- Schedule dbt build, then refresh dashboards\n\
   - Keep raw data immutable; model in layers (staging, marts)\n\n## Capabilities\n\n### bi-warehouses\n\
-  Query and manage warehouse data.\n\n**Commands:**\n- `psql \"postgres://user:pass@localhost/analytics\"\
-  \ -c \"SELECT count(*) FROM orders\"`\n- `duckdb analytics.db \"SELECT count(*) FROM orders\"`\n- `mysql\
-  \ -u root -p analytics -e \"SHOW TABLES\"`\n- `duckdb -csv analytics.db \"SELECT * FROM orders LIMIT\
-  \ 10\"`\n\n**Examples:**\n- psql analytics -c \"\\\\dt\"\n- duckdb analytics.db \"SELECT date_trunc('day',\
+  Query and manage warehouse data.\n\n**Parameters:**\n- `connection` (string): Connection string\n- `sql`\
+  \ (string): Query text\n\n**Commands:**\n- `psql \"postgres://user:pass@localhost/analytics\" -c \"\
+  SELECT count(*) FROM orders\"`\n- `duckdb analytics.db \"SELECT count(*) FROM orders\"`\n- `mysql -u\
+  \ root -p analytics -e \"SHOW TABLES\"`\n- `duckdb -csv analytics.db \"SELECT * FROM orders LIMIT 10\"\
+  `\n\n**Examples:**\n- psql analytics -c \"\\\\dt\"\n- duckdb analytics.db \"SELECT date_trunc('day',\
   \ created_at) d, count(*) FROM orders GROUP BY 1\"\n- python -m venv .venv\n\n### bi-modeling\nModel\
-  \ metrics with dbt.\n\n**Commands:**\n- `dbt init my_project`\n- `dbt run`\n- `dbt test`\n- `dbt build`\n\
+  \ metrics with dbt.\n\n**Parameters:**\n- `select` (string): Model selection\n- `test` (boolean): Run\
+  \ dbt data tests\n\n**Commands:**\n- `dbt init my_project`\n- `dbt run`\n- `dbt test`\n- `dbt build`\n\
   - `dbt docs generate`\n\n**Examples:**\n- dbt run --select stg_orders\n- dbt test --select tag:core\n\
-  - dbt docs serve"
+  - dbt docs serve\n\n## References\n- [dbt Docs](https://docs.getdbt.com)\n- [DuckDB Docs](https://duckdb.org/docs/)\n\
+  - [Metabase Docs](https://www.metabase.com/docs/latest/)"
 prompt: Act as business-intelligence and handle the task per the instructions.

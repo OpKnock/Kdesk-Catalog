@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(pip:*) Bash(python3:*) Bash(rabbitmqadmin:*)
 
 RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume and rabbitmqadmin.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (rabbitmq-python)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Rabbitmq Python** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `pip install pika`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `rabbitmq-python`
+- Domain: RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume and rabbitmqadmin.
+- **rabbitmq-python-client**: Install pika, write publishers/consumers, and manage queues with rabbitmqadmin. — `pip install pika`
+- Check `knowledge` and `prerequisites: pip, python3, rabbitmqadmin`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `rabbitmq-python`
+- For `rabbitmq-python-client`: Install pika, write publishers/consumers, and manage queues with rabbitmqadmin. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `rabbitmq-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Python3` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rabbitmq-python:5f8d202f`
 
 # RabbitMQ Python
 

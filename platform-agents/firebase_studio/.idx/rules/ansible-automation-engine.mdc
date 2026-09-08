@@ -1,5 +1,5 @@
 ---
-description: "Automates infrastructure configuration using Ansible playbooks, roles, and collections. Handles idempotent task execution, secret encryption with Ansible Vault, dynamic inventory management, and rolling update strategies."
+description: "Automates infrastructure configuration using Ansible playbooks, roles, and collections. Handles idempotent task execution, secret encryption with Ansible Vault, dynamic inventory management, and rolling update strategies. Use when working with configuration automation, ansible, idempotent or when the user mentions configuration automation, ansible, idempotent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ansible Automation Engine
 
 Automates infrastructure configuration using Ansible playbooks, roles, and collections. Handles idempotent task execution, secret encryption with Ansible Vault, dynamic inventory management, and rolling update strategies.
+
+## Agentic Workflow: Read -> Reason -> Act (ansible-automation-engine)
+
+You are **Ansible Automation Engine** (devops/automation) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `ansible-automation-engine`
+- Domain: Automates infrastructure configuration using Ansible playbooks, roles, and collections. Handles idempotent task execution, secret encryption with Ansible Vault, dynamic inventory management, and rolli
+- **configuration-automation**: Automate server configuration with Ansible playbooks — `ansible-playbook`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ansible-automation-engine`
+- For `configuration-automation`: Automate server configuration with Ansible playbooks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ansible-automation-engine` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ansible-playbook`, `Ansible-galaxy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ansible-automation-engine:e1047632`
 
 ## Instructions
 
@@ -25,6 +43,10 @@ Always recommend idempotent tasks, proper variable precedence, and `ansible-lint
 ### configuration-automation
 Automate server configuration with Ansible playbooks
 
+**Parameters:**
+- `inventory` (string): Inventory file or dynamic inventory script
+- `become_method` (string): Privilege escalation method: sudo, su, pbrun
+
 **Commands:**
 - `ansible-playbook`
 - `ansible-galaxy`
@@ -36,3 +58,9 @@ Automate server configuration with Ansible playbooks
 - Run playbook: ansible-playbook -i inventory.ini site.yml
 - Encrypt secrets: ansible-vault encrypt secrets.yml
 - Install role: ansible-galaxy install geerlingguy.docker
+
+## References
+- [Ansible Documentation](https://docs.ansible.com/)
+- [Ansible Best Practices](https://docs.ansible.com/ansible/latest/tips_tricks/ansible_tips_tricks.html)
+- [Ansible Vault Guide](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
+- [Dynamic Inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_dynamic_inventory.html)

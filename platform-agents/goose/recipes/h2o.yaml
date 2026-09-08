@@ -2,12 +2,22 @@ title: H2O
 description: 'H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing
   data, training models, and querying the REST API.'
 version: 2.0.0
-instructions: "# H2O\n\nH2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar,\
-  \ importing data, training models, and querying the REST API.\n\n## Instructions\n\n# H2O\n\nRun H2O.ai\
-  \ machine learning clusters and drive them with the REST API.\n\n## What this skill does\n\n- Starts\
-  \ single-node and multinode H2O clusters with the java jar.\n- Imports CSV/parquet data into H2O frames.\n\
-  - Trains GLM, GBM, XGBoost, and Deep Learning models via API.\n- Inspects models, frames, and predictions\
-  \ through Flow or REST.\n\n## When to use\n\n- Training tabular models locally without cloud dependencies.\n\
+instructions: "H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing\
+  \ data, training models, and querying the REST API.\n\n## Agentic Workflow: Read -> Reason -> Act (h2o)\n\
+  \nYou are **H2O** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `h2o`\n- Domain: H2O.ai machine learning platform: starting H2O clusters\
+  \ with java -jar h2o.jar, importing data, training models, and querying the REST API.\n- **h2o-cluster-ops**:\
+  \ Start H2O clusters, import datasets, and train/inspect models via the H2O REST API. — `java -Xmx4g\
+  \ -jar h2o.jar -port 54321 -name myCluster`\n- Check `knowledge` and `prerequisites: java`\n\n### 2.\
+  \ Reason — think for `h2o`\n- For `h2o-cluster-ops`: Start H2O clusters, import datasets, and train/inspect\
+  \ models via the H2O REST API. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `h2o` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `h2o:16d5b9ee`\n\n# H2O\n\nRun H2O.ai machine\
+  \ learning clusters and drive them with the REST API.\n\n## What this skill does\n\n- Starts single-node\
+  \ and multinode H2O clusters with the java jar.\n- Imports CSV/parquet data into H2O frames.\n- Trains\
+  \ GLM, GBM, XGBoost, and Deep Learning models via API.\n- Inspects models, frames, and predictions through\
+  \ Flow or REST.\n\n## When to use\n\n- Training tabular models locally without cloud dependencies.\n\
   - Automating model training from scripts.\n- Verifying cluster health and memory across nodes.\n\n##\
   \ Real commands\n\n```bash\n# Start a single-node cluster with 4GB heap\njava -Xmx4g -jar h2o.jar -port\
   \ 54321 -name myCluster\n\n# Multinode: start more nodes on other hosts with the same name\njava -Xmx4g\
@@ -26,9 +36,13 @@ instructions: "# H2O\n\nH2O.ai machine learning platform: starting H2O clusters 
   \ POST /3/Models/<id>/mojo.\n\n## Example exchange\n\n```\nUser: How many nodes are in my H2O cloud?\n\
   Agent: curl http://localhost:54321/3/Cloud | jq .nodes  # lists node addresses\n```\n\n## Capabilities\n\
   \n### h2o-cluster-ops\nStart H2O clusters, import datasets, and train/inspect models via the H2O REST\
-  \ API.\n\n**Commands:**\n- `java -Xmx4g -jar h2o.jar -port 54321 -name myCluster`\n- `curl http://localhost:54321/3/Cloud`\n\
+  \ API.\n\n**Parameters:**\n- `port` (integer): H2O REST/Flow port (default 54321).\n- `max_mem` (string):\
+  \ JVM heap, e.g. -Xmx4g.\n- `name` (string): Cluster name used for multinode discovery.\n\n**Commands:**\n\
+  - `java -Xmx4g -jar h2o.jar -port 54321 -name myCluster`\n- `curl http://localhost:54321/3/Cloud`\n\
   - `curl -X POST 'http://localhost:54321/3/ImportFiles?path=/data/housing.csv'`\n- `curl 'http://localhost:54321/3/Models?all_states=true'`\n\
   - `curl -X POST 'http://localhost:54321/3/TrainModel?model_id=glm1&training_frame=housing.hex&algo=glm'`\n\
   \n**Examples:**\n- java -Xmx8g -jar h2o.jar -port 54322 -name prod\n- curl 'http://localhost:54321/3/Frames?row_count=5'\
-  \ | jq .frames[0].rows\n- curl 'http://localhost:54321/3/Predictions/models/glm1/frames/housing.hex'"
+  \ | jq .frames[0].rows\n- curl 'http://localhost:54321/3/Predictions/models/glm1/frames/housing.hex'\n\
+  \n## References\n- [H2O Docs](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html)\n- [H2O REST\
+  \ API](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html)"
 prompt: Act as H2O and handle the task per the instructions.

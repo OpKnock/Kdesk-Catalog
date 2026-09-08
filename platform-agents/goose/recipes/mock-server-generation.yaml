@@ -2,8 +2,19 @@ title: Mock Server Generation
 description: 'Generate mock servers from OpenAPI specs: Prism, WireMock stubs, and OpenAPI Generator server
   skeletons.'
 version: 2.0.0
-instructions: "# Mock Server Generation\n\nGenerate mock servers from OpenAPI specs: Prism, WireMock stubs,\
-  \ and OpenAPI Generator server skeletons.\n\n## Instructions\n\n# Mock Server Generation\n\nTurn an\
+instructions: "Generate mock servers from OpenAPI specs: Prism, WireMock stubs, and OpenAPI Generator\
+  \ server skeletons.\n\n## Agentic Workflow: Read -> Reason -> Act (mock-server-generation)\n\nYou are\
+  \ **Mock Server Generation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `mock-server-generation`\n- Domain: Generate mock servers from OpenAPI\
+  \ specs: Prism, WireMock stubs, and OpenAPI Generator server skeletons.\n- **mock-server-generate**:\
+  \ Generate and run mock servers from an OpenAPI/Swagger specification, and manage WireMock stubs. —\
+  \ `npx @stoplight/prism-cli mock openapi.yaml`\n- Check `knowledge` and `prerequisites: java, npx, openapi-generator-cli`\n\
+  \n### 2. Reason — think for `mock-server-generation`\n- For `mock-server-generate`: Generate and run\
+  \ mock servers from an OpenAPI/Swagger specification, and manage WireMock stubs. — decide which checks\
+  \ to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3.\
+  \ Act — execute with `mock-server-generation` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Java`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `mock-server-generation:358c60e0`\n\n# Mock Server Generation\n\nTurn an\
   \ OpenAPI spec into a running mock server in seconds so frontend and tests never block on backend availability.\n\
   \n## What this skill does\n\n- Runs Prism mock servers straight from the spec\n- Creates and manages\
   \ WireMock stub mappings over the admin API\n- Generates full server skeletons with openapi-generator\n\
@@ -19,11 +30,14 @@ instructions: "# Mock Server Generation\n\nGenerate mock servers from OpenAPI sp
   \ Validate the spec first (`openapi-generator-cli validate -i openapi.yaml`)\n- Use Prism for dynamic\
   \ mocks, WireMock for deterministic stubs\n- Keep generated skeletons out of version control or regenerate\
   \ on spec change\n\n## Capabilities\n\n### mock-server-generate\nGenerate and run mock servers from\
-  \ an OpenAPI/Swagger specification, and manage WireMock stubs.\n\n**Commands:**\n- `npx @stoplight/prism-cli\
+  \ an OpenAPI/Swagger specification, and manage WireMock stubs.\n\n**Parameters:**\n- `spec` (string):\
+  \ Path to the OpenAPI YAML/JSON spec\n- `port` (integer): Port for the mock server\n- `generator` (string):\
+  \ openapi-generator language target, e.g. nodejs-express-server\n\n**Commands:**\n- `npx @stoplight/prism-cli\
   \ mock openapi.yaml`\n- `npx @stoplight/prism-cli mock -p 4010 openapi.yaml`\n- `java -jar wiremock-standalone.jar\
   \ --port 8080 --verbose`\n- `curl -X POST http://localhost:8080/__admin/mappings -d @stub.json`\n- `openapi-generator-cli\
   \ generate -g nodejs-express-server -i openapi.yaml -o mock-server/`\n\n**Examples:**\n- npx @stoplight/prism-cli\
   \ mock -p 4010 petstore.yaml\n- curl -X POST http://localhost:8080/__admin/mappings -d '{\"request\"\
   :{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"status\":200,\"jsonBody\":[{\"id\":1}]}}'\n\
-  - openapi-generator-cli generate -g go-server -i openapi.yaml -o out/"
+  - openapi-generator-cli generate -g go-server -i openapi.yaml -o out/\n\n## References\n- [Prism Documentation](https://docs.stoplight.io/docs/prism)\n\
+  - [WireMock Docs](https://wiremock.org/docs/)\n- [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator)"
 prompt: Act as Mock Server Generation and handle the task per the instructions.

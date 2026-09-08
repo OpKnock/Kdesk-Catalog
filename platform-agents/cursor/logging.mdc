@@ -6,27 +6,25 @@ alwaysApply: false
 
 System and application logging basics: tail/grep log files, journald queries, syslog emission, and kernel message checks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (logging)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Logging** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `tail -n 200 /var/log/nginx/access.log`, `journalctl -u myapp --since yesterday`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `logging`
+- Domain: System and application logging basics: tail/grep log files, journald queries, syslog emission, and kernel message checks.
+- **file-logs**: Tail, filter, and analyze application log files. — `tail -n 200 /var/log/nginx/access.log`
+- **journald-syslog**: Query journald and emit syslog messages. — `journalctl -u myapp --since yesterday`
+- Check `knowledge` and `prerequisites: dmesg, grep, journalctl, logger`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `logging`
+- For `file-logs`: Tail, filter, and analyze application log files. — decide which checks to run
+- For `journald-syslog`: Query journald and emit syslog messages. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `logging` tools
+- Tools: `Glob`, `Read`, `Tail`, `Grep`, `Journalctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `logging:1fbf3612`
 
 # Logging (Basics)
 

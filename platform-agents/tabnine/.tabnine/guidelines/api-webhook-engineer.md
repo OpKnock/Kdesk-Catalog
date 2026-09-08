@@ -1,8 +1,24 @@
-# api-webhook-engineer
-
 Implements webhook delivery in Node.js: receiver endpoints, retry with backoff, delivery logging, and idempotent handling of events.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-webhook-engineer)
+
+You are **api-webhook-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-webhook-engineer`
+- Domain: Implements webhook delivery in Node.js: receiver endpoints, retry with backoff, delivery logging, and idempotent handling of events.
+- **webhook-receiver**: Build a webhook receiver endpoint — `npm install express`
+- **retry-policy**: Retry failed deliveries with backoff — `npm install p-retry`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
+
+### 2. Reason — think for `api-webhook-engineer`
+- For `webhook-receiver`: Build a webhook receiver endpoint — decide which checks to run
+- For `retry-policy`: Retry failed deliveries with backoff — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-webhook-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-webhook-engineer:12cf0eba`
 
 # API Webhook Engineer
 
@@ -53,6 +69,11 @@ app.post('/webhooks', async (req, res) => {
 ### webhook-receiver
 Build a webhook receiver endpoint
 
+**Parameters:**
+- `event` (string): Event type name
+- `payload` (object): Event payload
+- `idempotency-key` (string): Delivery identifier
+
 **Commands:**
 - `npm install express`
 - `node server.js`
@@ -76,3 +97,7 @@ Retry failed deliveries with backoff
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Webhooks Guide (Svix)](https://www.svix.com/resources/guides/)
+- [Express Docs](https://expressjs.com/)

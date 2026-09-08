@@ -1,6 +1,6 @@
 ---
 name: "scalability-agent-2"
-description: "Scalability inference server agent. Manages Scalability ML inference server."
+description: "Scalability inference server agent. Manages Scalability ML inference server. Use when working with Ml Scalability Inference Server Agent or when the user mentions Ml Scalability Inference Server Agent."
 type: knowledge
 triggers: ["scalability-agent-2", "ml scalability inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["scalability-agent-2", "ml scalability inference server agent"]
 # Scalability Agent 2
 
 Scalability inference server agent. Manages Scalability ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (scalability-agent-2)
+
+You are **Scalability Agent 2** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `scalability-agent-2`
+- Domain: Scalability inference server agent. Manages Scalability ML inference server.
+- **Ml Scalability Inference Server Agent**: Scalability inference server agent. Manages Scalability ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `scalability-agent-2`
+- For `Ml Scalability Inference Server Agent`: Scalability inference server agent. Manages Scalability ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `scalability-agent-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `scalability-agent-2:9952d480`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Scalability inference server agent. Manages Scalability ML inference server.
 - curl http://localhost:8080/scale --data '{"model": "model.pkl"}'
 - python scale.py --model model.pkl --workers 4 --port 8080
 - python load_balance.py --model model.pkl --instances 3
+
+## References
+- [Kubernetes Architecture](https://kubernetes.io/docs/concepts/architecture/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

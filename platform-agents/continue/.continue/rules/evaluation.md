@@ -1,6 +1,6 @@
 ---
 name: "Evaluation"
-description: "it SDK deployment agent handling ML it SDK deployment."
+description: "it SDK deployment agent handling ML it SDK deployment. Use when working with Ml Evaluation Deploy Sdk or when the user mentions Ml Evaluation Deploy Sdk."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Evaluation
 
 it SDK deployment agent handling ML it SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (evaluation)
+
+You are **Evaluation** (ml/evaluation) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `evaluation`
+- Domain: it SDK deployment agent handling ML it SDK deployment.
+- **Ml Evaluation Deploy Sdk**: Evaluation SDK deployment agent for ML Evaluation SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `evaluation`
+- For `Ml Evaluation Deploy Sdk`: Evaluation SDK deployment agent for ML Evaluation SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `evaluation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Evaluation` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `evaluation:76af1d58`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Evaluation SDK deployment agent for ML Evaluation SDK deployment.
 **Examples:**
 - Server: python -m evaluation.server --port 8080
 - Docker: docker run -p 8080:8080 evaluation-server
+
+## References
+- [MLflow LLM Evaluation](https://mlflow.org/docs/latest/llms/llm-evaluate/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

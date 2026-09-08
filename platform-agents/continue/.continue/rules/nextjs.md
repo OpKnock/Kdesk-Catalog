@@ -1,15 +1,31 @@
 ---
 name: "nextjs"
-description: "Builds full-stack React apps with Next.js App Router: server components, route handlers, middleware, and Vercel/Docker deploys."
+description: "Builds full-stack React apps with Next.js App Router: server components, route handlers, middleware, and Vercel/Docker deploys. Use when working with scaffold dev, diagnose, frontend or when the user mentions scaffold dev, diagnose, frontend."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 alwaysApply: false
 ---
 
-# nextjs
-
 Builds full-stack React apps with Next.js App Router: server components, route handlers, middleware, and Vercel/Docker deploys.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nextjs)
+
+You are **nextjs** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `nextjs`
+- Domain: Builds full-stack React apps with Next.js App Router: server components, route handlers, middleware, and Vercel/Docker deploys.
+- **scaffold-dev**: Create, run, and lint Next.js projects. — `npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-d`
+- **diagnose**: Inspect Next.js setup and build output. — `npx next info`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `nextjs`
+- For `scaffold-dev`: Create, run, and lint Next.js projects. — decide which checks to run
+- For `diagnose`: Inspect Next.js setup and build output. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nextjs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nextjs:28c5f256`
 
 # Next.js
 
@@ -101,6 +117,11 @@ Run both in CI before deploying to any environment.
 ### scaffold-dev
 Create, run, and lint Next.js projects.
 
+**Parameters:**
+- `app` (string): Use App Router (default true)
+- `tailwind` (string): Include Tailwind CSS setup
+- `src-dir` (string): Place app code under src/
+
 **Commands:**
 - `npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir`
 - `npm run dev`
@@ -116,6 +137,11 @@ Create, run, and lint Next.js projects.
 ### diagnose
 Inspect Next.js setup and build output.
 
+**Parameters:**
+- `dir` (string): Directory to lint
+- `file` (string): Lint a single file
+- `turbo` (string): Enable Turbopack dev server
+
 **Commands:**
 - `npx next info`
 - `npx next lint --dir src`
@@ -127,3 +153,8 @@ Inspect Next.js setup and build output.
 - npx next info | grep -i versions
 - npx next lint --file src/app/page.tsx --fix
 - npx next dev --turbo --port 3000
+
+## References
+- [Next.js Docs](https://nextjs.org/docs)
+- [Next.js CLI](https://nextjs.org/docs/app/api-reference/cli)
+- [Vercel Deploy](https://vercel.com/docs)

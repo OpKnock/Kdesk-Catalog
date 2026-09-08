@@ -1,15 +1,31 @@
 ---
 name: "Railway"
-description: "Deploys apps to Railway with the CLI: project linking, deploys, services, variables, and logs."
+description: "Deploys apps to Railway with the CLI: project linking, deploys, services, variables, and logs. Use when working with railway cli, railway ops, cloud or when the user mentions railway cli, railway ops, cloud."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Railway
-
 Deploys apps to Railway with the CLI: project linking, deploys, services, variables, and logs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (railway-cloud)
+
+You are **Railway** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `railway-cloud`
+- Domain: Deploys apps to Railway with the CLI: project linking, deploys, services, variables, and logs.
+- **railway-cli**: Link projects and deploy services. — `npm install -g @railway/cli`
+- **railway-ops**: Manage variables, services, and logs. — `railway variables`
+- Check `knowledge` and `prerequisites: npm, railway`
+
+### 2. Reason — think for `railway-cloud`
+- For `railway-cli`: Link projects and deploy services. — decide which checks to run
+- For `railway-ops`: Manage variables, services, and logs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `railway-cloud` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Railway` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `railway-cloud:0e6b3903`
 
 # Railway
 
@@ -64,6 +80,10 @@ railway down
 ### railway-cli
 Link projects and deploy services.
 
+**Parameters:**
+- `project` (string): Project name
+- `detach` (boolean): Do not stream logs
+
 **Commands:**
 - `npm install -g @railway/cli`
 - `railway login`
@@ -79,6 +99,10 @@ Link projects and deploy services.
 ### railway-ops
 Manage variables, services, and logs.
 
+**Parameters:**
+- `key` (string): Variable name
+- `service` (string): Service name
+
 **Commands:**
 - `railway variables`
 - `railway variables set DATABASE_URL=postgres://...`
@@ -90,3 +114,7 @@ Manage variables, services, and logs.
 - railway variables set --env production API_KEY=abc
 - railway logs --service api
 - railway status
+
+## References
+- [Railway Docs](https://docs.railway.com)
+- [Railway CLI Reference](https://docs.railway.com/reference/cli-api)

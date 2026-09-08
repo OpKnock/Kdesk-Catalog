@@ -1,6 +1,6 @@
 ---
 name: "ml-evaluation-python-agent"
-description: "it handling model evaluation."
+description: "it handling model evaluation. Use when working with Ml Evaluation Python Agent or when the user mentions Ml Evaluation Python Agent."
 type: knowledge
 triggers: ["ml-evaluation-python-agent", "ml evaluation python agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-evaluation-python-agent", "ml evaluation python agent"]
 # Ml Evaluation Python Agent
 
 it handling model evaluation.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-evaluation-python-agent)
+
+You are **Ml Evaluation Python Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-evaluation-python-agent`
+- Domain: it handling model evaluation.
+- **Ml Evaluation Python Agent**: ML Evaluation Python agent for model evaluation. — `Accuracy: python -c 'from sklearn.metrics import accuracy_score; print(accuracy_`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-evaluation-python-agent`
+- For `Ml Evaluation Python Agent`: ML Evaluation Python agent for model evaluation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-evaluation-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Accuracy`, `CrossVal` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-evaluation-python-agent:d6b9f3a2`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ ML Evaluation Python agent for model evaluation.
 - Accuracy: python -c 'from sklearn.metrics import accuracy_score; print(accuracy_score([1,0,1,1], [1,0,1,0]))'
 - CrossVal: python -c 'from sklearn.model_selection import cross_val_score; from sklearn.ensemble import RandomForestClassifier; print(cross_val_score(RandomForestClassifier(), X, y, cv=5))'
 - Confusion: python -c 'from sklearn.metrics import confusion_matrix; print(confusion_matrix([1,0,1,1], [1,0,1,0]))'
+
+## References
+- [MLflow LLM Evaluation](https://mlflow.org/docs/latest/llms/llm-evaluate/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -1,6 +1,6 @@
 ---
 name: "network-zerotier"
-description: "ZeroTier agent for software-defined networking."
+description: "ZeroTier agent for software-defined networking. Use when working with Network Zerotier, networking or when the user mentions Network Zerotier, networking."
 type: knowledge
 triggers: ["network-zerotier", "network zerotier"]
 ---
@@ -8,6 +8,24 @@ triggers: ["network-zerotier", "network zerotier"]
 # Network Zerotier
 
 ZeroTier agent for software-defined networking.
+
+## Agentic Workflow: Read -> Reason -> Act (network-zerotier)
+
+You are **Network Zerotier** (networking/configuration) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — networking context for `network-zerotier`
+- Domain: ZeroTier agent for software-defined networking.
+- **Network Zerotier**: ZeroTier agent for software-defined networking. — `Networks: zerotier-cli listnetworks`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `network-zerotier`
+- For `Network Zerotier`: ZeroTier agent for software-defined networking. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `network-zerotier` tools
+- Tools: `Glob`, `Grep`, `Read`, `Networks`, `Status` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `network-zerotier:1bd0ffb3`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ ZeroTier agent for software-defined networking.
 - Networks: zerotier-cli listnetworks
 - Join: zerotier-cli join network-id
 - Info: zerotier-cli info
+
+## References
+- [ZeroTier Documentation](https://docs.zerotier.com/)

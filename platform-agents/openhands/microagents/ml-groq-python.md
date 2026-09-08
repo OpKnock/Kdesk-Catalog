@@ -1,6 +1,6 @@
 ---
 name: "ml-groq-python"
-description: "Groq Python SDK agent for fast LLM inference."
+description: "Groq Python SDK agent for fast LLM inference. Use when working with Ml Groq Python, inference or when the user mentions Ml Groq Python, inference."
 type: knowledge
 triggers: ["ml-groq-python", "ml groq python"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-groq-python", "ml groq python"]
 # Ml Groq Python
 
 Groq Python SDK agent for fast LLM inference.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-groq-python)
+
+You are **Ml Groq Python** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-groq-python`
+- Domain: Groq Python SDK agent for fast LLM inference.
+- **Ml Groq Python**: Groq Python SDK agent for fast LLM inference. — `Install: pip install groq`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-groq-python`
+- For `Ml Groq Python`: Groq Python SDK agent for fast LLM inference. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-groq-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Install`, `Stream` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-groq-python:fdb95176`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Groq Python SDK agent for fast LLM inference.
 - Client: from groq import Groq; client = Groq()
 - Chat: client.chat.completions.create(model='llama-3.3-70b-versatile', messages=[{'role': 'user', 'content': 'Hello'}])
 - Stream: for chunk in client.chat.completions.create(model='llama-3.3-70b-versatile', messages=[...], stream=True): print(chunk)
+
+## References
+- [Groq Documentation](https://console.groq.com/docs/)

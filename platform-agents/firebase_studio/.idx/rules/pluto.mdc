@@ -1,14 +1,30 @@
 ---
-description: "Detects deprecated Kubernetes API versions in manifests and live clusters with Fairwinds Pluto, tracking removal schedules per version."
+description: "Detects deprecated Kubernetes API versions in manifests and live clusters with Fairwinds Pluto, tracking removal schedules per version. Use when working with manifest scanning, cluster scanning, devops or when the user mentions manifest scanning, cluster scanning, devops."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# pluto
-
 Detects deprecated Kubernetes API versions in manifests and live clusters with Fairwinds Pluto, tracking removal schedules per version.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pluto)
+
+You are **pluto** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `pluto`
+- Domain: Detects deprecated Kubernetes API versions in manifests and live clusters with Fairwinds Pluto, tracking removal schedules per version.
+- **manifest-scanning**: Scan directory trees of YAML manifests for deprecated APIs. — `pluto detect-files -d ./deploy`
+- **cluster-scanning**: Scan live clusters for in-use deprecated APIs via helm output or kube context. — `pluto detect-kube-context`
+- Check `knowledge` and `prerequisites: helm, pluto`
+
+### 2. Reason — think for `pluto`
+- For `manifest-scanning`: Scan directory trees of YAML manifests for deprecated APIs. — decide which checks to run
+- For `cluster-scanning`: Scan live clusters for in-use deprecated APIs via helm output or kube context. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pluto` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pluto`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pluto:de019aca`
 
 # Pluto Deprecation Scanning
 
@@ -69,6 +85,11 @@ pluto detect-files -d ./deploy --output json | jq '.items | length'
 ### manifest-scanning
 Scan directory trees of YAML manifests for deprecated APIs.
 
+**Parameters:**
+- `dir` (string): Directory to scan
+- `target-versions` (string): Target versions, e.g. k8s=v1.25.0
+- `output` (string): Output format: normal, json, yaml
+
 **Commands:**
 - `pluto detect-files -d ./deploy`
 - `pluto detect-files -d . --output json`
@@ -84,6 +105,10 @@ Scan directory trees of YAML manifests for deprecated APIs.
 ### cluster-scanning
 Scan live clusters for in-use deprecated APIs via helm output or kube context.
 
+**Parameters:**
+- `context` (string): Kube context to scan
+- `output` (string): Output format
+
 **Commands:**
 - `pluto detect-kube-context`
 - `pluto detect-kube-context -o json`
@@ -95,3 +120,7 @@ Scan live clusters for in-use deprecated APIs via helm output or kube context.
 - pluto detect-kube-context
 - pluto detect-helm -o json
 - pluto list-versions
+
+## References
+- [Pluto GitHub](https://github.com/FairwindsOps/pluto)
+- [Fairwinds Deprecated API Policy](https://www.fairwinds.com/blog/deprecated-kubernetes-apis)

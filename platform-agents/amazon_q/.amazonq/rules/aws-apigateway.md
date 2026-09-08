@@ -1,26 +1,24 @@
 Manages AWS API Gateway REST APIs: creating APIs and resources, deploying to stages, and invoking endpoints via curl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (aws-apigateway)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Aws Apigateway** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `aws apigateway create-rest-api --name my-api`, `curl -X POST https://abc123xyz.execute-api.us-east-1.amazona`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `aws-apigateway`
+- Domain: Manages AWS API Gateway REST APIs: creating APIs and resources, deploying to stages, and invoking endpoints via curl.
+- **api-lifecycle**: Create REST APIs, resources, methods, and deployments. — `aws apigateway create-rest-api --name my-api`
+- **invoke-and-test**: Invoke deployed endpoints and test integration. — `curl -X POST https://abc123xyz.execute-api.us-east-1.amazonaws.com/prod/users -H`
+- Check `knowledge` and `prerequisites: aws`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `aws-apigateway`
+- For `api-lifecycle`: Create REST APIs, resources, methods, and deployments. — decide which checks to run
+- For `invoke-and-test`: Invoke deployed endpoints and test integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `aws-apigateway` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-apigateway:4e18f94a`
 
 # AWS API Gateway
 

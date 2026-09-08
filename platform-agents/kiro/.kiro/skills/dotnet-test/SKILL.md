@@ -9,27 +9,27 @@ allowed-tools: "Glob Grep Read Bash(dotnet:*) Bash(dotnet-coverage:*)"
 
 Runs .NET test suites with dotnet test, xUnit/NUnit/MSTest filters, code coverage, and CI output.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (dotnet-test)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **dotnet-test** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `dotnet test`, `dotnet test --collect:"XPlat Code Coverage"`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `dotnet-test`
+- Domain: Runs .NET test suites with dotnet test, xUnit/NUnit/MSTest filters, code coverage, and CI output.
+- **dotnet-testing**: Build and run .NET test projects with filters. — `dotnet test`
+- **coverage-and-reporting**: Collect coverage and generate test reports. — `dotnet test --collect:"XPlat Code Coverage"`
+- **test-suite-scaffolding**: Create new test projects for frameworks. — `dotnet new xunit -o tests/MyApp.Tests`
+- Check `knowledge` and `prerequisites: dotnet, dotnet-coverage`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `dotnet-test`
+- For `dotnet-testing`: Build and run .NET test projects with filters. — decide which checks to run
+- For `coverage-and-reporting`: Collect coverage and generate test reports. — decide which checks to run
+- For `test-suite-scaffolding`: Create new test projects for frameworks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `dotnet-test` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dotnet`, `Dotnet-coverage` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dotnet-test:1bbed7e0`
 
 # dotnet test
 

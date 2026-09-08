@@ -1,6 +1,6 @@
 ---
 name: "Collaboration"
-description: "it SDK deployment agent handling ML it SDK deployment."
+description: "it SDK deployment agent handling ML it SDK deployment. Use when working with Ml Collaboration Deploy Sdk or when the user mentions Ml Collaboration Deploy Sdk."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Collaboration
 
 it SDK deployment agent handling ML it SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (collaboration)
+
+You are **Collaboration** (ml/collaboration) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `collaboration`
+- Domain: it SDK deployment agent handling ML it SDK deployment.
+- **Ml Collaboration Deploy Sdk**: Collaboration SDK deployment agent for ML Collaboration SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `collaboration`
+- For `Ml Collaboration Deploy Sdk`: Collaboration SDK deployment agent for ML Collaboration SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `collaboration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Collaboration` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `collaboration:ea808f70`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Collaboration SDK deployment agent for ML Collaboration SDK deployment.
 **Examples:**
 - Server: python -m collaboration.server --port 8080
 - Docker: docker run -p 8080:8080 collaboration-server
+
+## References
+- [Hugging Face Hub Documentation](https://huggingface.co/docs/hub/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

@@ -1,15 +1,29 @@
 ---
 name: "Grpc Gateway"
-description: "Expose gRPC services as RESTful JSON APIs using grpc-gateway v2: google.api.http annotations, protoc plugins, and OpenAPI generation."
+description: "Expose gRPC services as RESTful JSON APIs using grpc-gateway v2: google.api.http annotations, protoc plugins, and OpenAPI generation. Use when working with gateway generation, api or when the user mentions gateway generation, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Grpc Gateway
-
 Expose gRPC services as RESTful JSON APIs using grpc-gateway v2: google.api.http annotations, protoc plugins, and OpenAPI generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-gateway)
+
+You are **Grpc Gateway** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-gateway`
+- Domain: Expose gRPC services as RESTful JSON APIs using grpc-gateway v2: google.api.http annotations, protoc plugins, and OpenAPI generation.
+- **gateway-generation**: Generate REST gateway stubs and OpenAPI specs from protos annotated with google.api.http. — `go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@lat`
+- Check `knowledge` and `prerequisites: protoc`
+
+### 2. Reason — think for `grpc-gateway`
+- For `gateway-generation`: Generate REST gateway stubs and OpenAPI specs from protos annotated with google.api.http. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-gateway` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Protoc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-gateway:e7a6e152`
 
 # grpc-gateway
 
@@ -97,6 +111,11 @@ Agent: Annotate SayHello with additional_bindings, then run protoc --grpc-gatewa
 ### gateway-generation
 Generate REST gateway stubs and OpenAPI specs from protos annotated with google.api.http.
 
+**Parameters:**
+- `proto_file` (string): Proto file containing google.api.http annotations.
+- `out_dir` (string): Output directory for gateway code.
+- `swagger_dir` (string): Output directory for generated OpenAPI specs.
+
 **Commands:**
 - `go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest`
 - `go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest`
@@ -108,3 +127,7 @@ Generate REST gateway stubs and OpenAPI specs from protos annotated with google.
 - protoc -I . --grpc-gateway_out=logtostderr=true:./gen --go_out=./gen --go-grpc_out=./gen ./proto/helloworld.proto
 - curl http://localhost:8080/v1/hello/John
 - curl -X POST http://localhost:8080/v1/greet -d '{"name":"John"}'
+
+## References
+- [grpc-gateway Docs](https://grpc-ecosystem.github.io/grpc-gateway/)
+- [google.api.http annotations](https://github.com/googleapis/googleapis/blob/master/google/api/http.proto)

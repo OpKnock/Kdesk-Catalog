@@ -1,6 +1,6 @@
 ---
 name: "coding-agent"
-description: "Coding inference server agent. Manages Coding ML inference server."
+description: "Coding inference server agent. Manages Coding ML inference server. Use when working with Ml Coding Inference Server Agent or when the user mentions Ml Coding Inference Server Agent."
 type: knowledge
 triggers: ["coding-agent", "ml coding inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["coding-agent", "ml coding inference server agent"]
 # Coding Agent
 
 Coding inference server agent. Manages Coding ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (coding-agent)
+
+You are **Coding Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `coding-agent`
+- Domain: Coding inference server agent. Manages Coding ML inference server.
+- **Ml Coding Inference Server Agent**: Coding inference server agent. Manages Coding ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `coding-agent`
+- For `Ml Coding Inference Server Agent`: Coding inference server agent. Manages Coding ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `coding-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `coding-agent:965d222c`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Coding inference server agent. Manages Coding ML inference server.
 - curl http://localhost:8080/code --data '{"model": "model.pkl"}'
 - python generate_code.py --model model.pkl --output model.py
 - python refactor.py --model model.pkl --output refactored_model.py
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

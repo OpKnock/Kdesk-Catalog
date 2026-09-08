@@ -1,8 +1,24 @@
-# code-analysis
-
 Performs static and dynamic code analysis: complexity metrics, duplicate detection, profiling, and cross-language analyzers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (code-analysis)
+
+You are **code-analysis** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-analysis`
+- Domain: Performs static and dynamic code analysis: complexity metrics, duplicate detection, profiling, and cross-language analyzers.
+- **complexity-analysis**: Measure code complexity and duplication. — `python -m pip install radon`
+- **runtime-analysis**: Profile CPU, memory, and hot paths. — `python -m cProfile -o out.prof app.py`
+- Check `knowledge` and `prerequisites: node, pprof, python, radon`
+
+### 2. Reason — think for `code-analysis`
+- For `complexity-analysis`: Measure code complexity and duplication. — decide which checks to run
+- For `runtime-analysis`: Profile CPU, memory, and hot paths. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-analysis` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Radon` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-analysis:910cc73c`
 
 # Code Analysis
 
@@ -61,6 +77,10 @@ pprof -web cpu.out
 ### complexity-analysis
 Measure code complexity and duplication.
 
+**Parameters:**
+- `path` (string): Source directory
+- `threshold` (integer): Complexity threshold
+
 **Commands:**
 - `python -m pip install radon`
 - `radon cc src/ -s`
@@ -76,6 +96,10 @@ Measure code complexity and duplication.
 ### runtime-analysis
 Profile CPU, memory, and hot paths.
 
+**Parameters:**
+- `profile-file` (string): Profiler output path
+- `method` (string): cpu or heap profiling
+
 **Commands:**
 - `python -m cProfile -o out.prof app.py`
 - `python -m pstats`
@@ -87,3 +111,8 @@ Profile CPU, memory, and hot paths.
 - python -m cProfile -s cumtime app.py | head -30
 - node --heap-prof --heap-prof-dir=./prof app.js
 - pprof -web cpu.out
+
+## References
+- [Radon Docs](https://radon.readthedocs.io)
+- [Vulture Docs](https://github.com/jendrikseipp/vulture)
+- [pprof Docs](https://github.com/google/pprof)

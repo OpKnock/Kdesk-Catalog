@@ -1,14 +1,32 @@
 ---
-description: "Works with BSON (binary JSON) data: conversion with bsondump, mongoexport/mongorestore round-trips, and Python bson handling."
+description: "Works with BSON (binary JSON) data: conversion with bsondump, mongoexport/mongorestore round-trips, and Python bson handling. Use when working with bsondump, mongo tools, python bson, api or when the user mentions bsondump, mongo tools, python bson, api."
 globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Bson
-
 Works with BSON (binary JSON) data: conversion with bsondump, mongoexport/mongorestore round-trips, and Python bson handling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (bson)
+
+You are **Bson** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `bson`
+- Domain: Works with BSON (binary JSON) data: conversion with bsondump, mongoexport/mongorestore round-trips, and Python bson handling.
+- **bsondump**: Convert BSON files to JSON for inspection. — `bsondump file.bson`
+- **mongo-tools**: Export/import BSON with mongo tools. — `mongoexport --collection=users --out=users.bson --uri mongodb://localhost:27017/`
+- **python-bson**: Encode/decode BSON with pymongo's bson module. — `pip install pymongo`
+- Check `knowledge` and `prerequisites: bsondump, mongodump, mongoexport, mongorestore`
+
+### 2. Reason — think for `bson`
+- For `bsondump`: Convert BSON files to JSON for inspection. — decide which checks to run
+- For `mongo-tools`: Export/import BSON with mongo tools. — decide which checks to run
+- For `python-bson`: Encode/decode BSON with pymongo's bson module. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bson` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bsondump`, `Mongoexport` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bson:c73b62d4`
 
 # BSON
 
@@ -57,6 +75,10 @@ python -c "from bson import BSON; d=BSON.encode({'hello': 'world'}); print(d.hex
 ### bsondump
 Convert BSON files to JSON for inspection.
 
+**Parameters:**
+- `file` (string): BSON file path
+- `type` (string): Output type: json or debug
+
 **Commands:**
 - `bsondump file.bson`
 - `bsondump --pretty file.bson`
@@ -70,6 +92,11 @@ Convert BSON files to JSON for inspection.
 
 ### mongo-tools
 Export/import BSON with mongo tools.
+
+**Parameters:**
+- `collection` (string): Collection name
+- `uri` (string): MongoDB connection URI
+- `archive` (string): Archive file
 
 **Commands:**
 - `mongoexport --collection=users --out=users.bson --uri mongodb://localhost:27017/app`
@@ -86,6 +113,9 @@ Export/import BSON with mongo tools.
 ### python-bson
 Encode/decode BSON with pymongo's bson module.
 
+**Parameters:**
+- `document` (string): Python dict to encode
+
 **Commands:**
 - `pip install pymongo`
 - `python -c "from bson import BSON; d=BSON.encode({'a': 1, 'b': 'x'}); print(d.hex())"`
@@ -96,3 +126,8 @@ Encode/decode BSON with pymongo's bson module.
 - python -c "from bson import BSON; d=BSON.encode({'hello': 'world'}); print(d.hex()); print(BSON.decode(d))"
 - python -c "from bson import json_util; print(json_util.dumps({'ts': __import__('datetime').datetime.utcnow()}))"
 - python -c "from bson import ObjectId; print(ObjectId())"
+
+## References
+- [bsondump Reference](https://www.mongodb.com/docs/database-tools/bsondump/)
+- [BSON Specification](https://bsonspec.org/)
+- [MongoDB Database Tools](https://www.mongodb.com/docs/database-tools/)

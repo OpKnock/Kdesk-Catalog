@@ -1,8 +1,24 @@
-# Api Sec JWT Auditing
-
 Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm confusion tests, and auth header verification with jwt-cli.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-sec-jwt-auditing)
+
+You are **Api Sec JWT Auditing** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-sec-jwt-auditing`
+- Domain: Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm confusion tests, and auth header verification with jwt-cli.
+- **jwt-auditing**: Inspect and validate JWTs — `npm install -g jwt-cli`
+- **auth-header-checks**: Verify bearer and basic auth enforcement — `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/me`
+- Check `knowledge` and `prerequisites: node.js, python, owasp-zap`
+
+### 2. Reason — think for `api-sec-jwt-auditing`
+- For `jwt-auditing`: Inspect and validate JWTs — decide which checks to run
+- For `auth-header-checks`: Verify bearer and basic auth enforcement — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-sec-jwt-auditing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Jwt` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sec-jwt-auditing:db342051`
 
 # API Security v2 - Auth Tokens
 
@@ -48,6 +64,11 @@ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOKEN" https
 ### jwt-auditing
 Inspect and validate JWTs
 
+**Parameters:**
+- `token` (string): JWT to decode
+- `secret` (string): HMAC signing secret
+- `claims` (object): Claims object to encode
+
 **Commands:**
 - `npm install -g jwt-cli`
 - `jwt decode $TOKEN`
@@ -71,3 +92,7 @@ Verify bearer and basic auth enforcement
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [jwt-cli GitHub](https://github.com/mike-engel/jwt-cli)
+- [JWT.io Introduction](https://jwt.io/introduction)

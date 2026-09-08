@@ -2,13 +2,24 @@ title: Haproxy
 description: 'Configures and operates HAProxy: config validation, hot reloads, and runtime inspection
   via the stats socket.'
 version: 2.0.0
-instructions: "# Haproxy\n\nConfigures and operates HAProxy: config validation, hot reloads, and runtime\
-  \ inspection via the stats socket.\n\n## Instructions\n\n# HAProxy\n\nConfigure, reload, and operate\
-  \ HAProxy load balancers.\n\n## When to Use\n\n- Fronting web services with layer 4/7 load balancing\n\
-  - Zero-downtime config changes\n- Traffic control: drain, maintenance, and health checks\n\n## Basic\
-  \ config\n\n```haproxy\nfrontend web\n  bind *:80\n  default_backend servers\n\nbackend servers\n  balance\
-  \ roundrobin\n  option httpchk GET /healthz\n  server web-1 10.0.1.11:8080 check inter 3s fall 3 rise\
-  \ 2\n  server web-2 10.0.1.12:8080 check inter 3s fall 3 rise 2\n```\n\n## Validate before touching\
+instructions: "Configures and operates HAProxy: config validation, hot reloads, and runtime inspection\
+  \ via the stats socket.\n\n## Agentic Workflow: Read -> Reason -> Act (haproxy)\n\nYou are **Haproxy**\
+  \ (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n\
+  ### 1. Read — infrastructure context for `haproxy`\n- Domain: Configures and operates HAProxy: config\
+  \ validation, hot reloads, and runtime inspection via the stats socket.\n- **config**: Validate and\
+  \ reload HAProxy configuration. — `haproxy -c -f /etc/haproxy/haproxy.cfg`\n- **stats**: Inspect runtime\
+  \ state via the admin socket. — `echo 'show info' | socat /run/haproxy/admin.sock -`\n- Check `knowledge`\
+  \ and `prerequisites: echo, haproxy`\n\n### 2. Reason — think for `haproxy`\n- For `config`: Validate\
+  \ and reload HAProxy configuration. — decide which checks to run\n- For `stats`: Inspect runtime state\
+  \ via the admin socket. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `haproxy` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Haproxy`, `Echo` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `haproxy:0557dfe1`\n\n# HAProxy\n\nConfigure, reload,\
+  \ and operate HAProxy load balancers.\n\n## When to Use\n\n- Fronting web services with layer 4/7 load\
+  \ balancing\n- Zero-downtime config changes\n- Traffic control: drain, maintenance, and health checks\n\
+  \n## Basic config\n\n```haproxy\nfrontend web\n  bind *:80\n  default_backend servers\n\nbackend servers\n\
+  \  balance roundrobin\n  option httpchk GET /healthz\n  server web-1 10.0.1.11:8080 check inter 3s fall\
+  \ 3 rise 2\n  server web-2 10.0.1.12:8080 check inter 3s fall 3 rise 2\n```\n\n## Validate before touching\
   \ production\n\n```bash\nhaproxy -c -f /etc/haproxy/haproxy.cfg\n```\n\n## Reload without dropping connections\n\
   \n```bash\nhaproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -sf $(cat /run/haproxy.pid)\n```\n\
   \n`-sf` asks the old process to finish in-flight connections before exiting.\n\n## Runtime control\n\
@@ -20,15 +31,20 @@ instructions: "# Haproxy\n\nConfigures and operates HAProxy: config validation, 
   \ file permissions - it is an admin channel.\n\n## Testing\n\n```bash\nhaproxy -c -f /etc/haproxy/haproxy.cfg\n\
   echo 'show stat' | socat /run/haproxy/admin.sock - | grep DOWN\n```\n\nSimulate a server down and confirm\
   \ the health check flips state.\n\n## Capabilities\n\n### config\nValidate and reload HAProxy configuration.\n\
-  \n**Commands:**\n- `haproxy -c -f /etc/haproxy/haproxy.cfg`\n- `haproxy -f /etc/haproxy/haproxy.cfg\
-  \ -p /run/haproxy.pid -sf $(cat /run/haproxy.pid)`\n- `haproxy -vv`\n- `haproxy -f /etc/haproxy/haproxy.cfg\
-  \ -d`\n- `haproxy -c -f /etc/haproxy/haproxy.cfg -C /etc/haproxy/errors`\n\n**Examples:**\n- haproxy\
-  \ -c -f haproxy.cfg -f haproxy-extra.cfg\n- haproxy -vv | grep -E 'HA-Proxy version|OpenSSL'\n- haproxy\
-  \ -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -sf $(cat /run/haproxy.pid)\n\n### stats\nInspect\
-  \ runtime state via the admin socket.\n\n**Commands:**\n- `echo 'show info' | socat /run/haproxy/admin.sock\
+  \n**Parameters:**\n- `c` (string): Check configuration only\n- `f` (string): Config file path (repeatable)\n\
+  - `sf` (string): Soft-stop old PIDs for reload\n\n**Commands:**\n- `haproxy -c -f /etc/haproxy/haproxy.cfg`\n\
+  - `haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -sf $(cat /run/haproxy.pid)`\n- `haproxy\
+  \ -vv`\n- `haproxy -f /etc/haproxy/haproxy.cfg -d`\n- `haproxy -c -f /etc/haproxy/haproxy.cfg -C /etc/haproxy/errors`\n\
+  \n**Examples:**\n- haproxy -c -f haproxy.cfg -f haproxy-extra.cfg\n- haproxy -vv | grep -E 'HA-Proxy\
+  \ version|OpenSSL'\n- haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -sf $(cat /run/haproxy.pid)\n\
+  \n### stats\nInspect runtime state via the admin socket.\n\n**Parameters:**\n- `command` (string): Socket\
+  \ command: show stat, show info, set server\n- `server` (string): backend/server pair, e.g. web/web-1\n\
+  - `state` (string): drain, maint, or ready state\n\n**Commands:**\n- `echo 'show info' | socat /run/haproxy/admin.sock\
   \ -`\n- `echo 'show stat' | socat /run/haproxy/admin.sock -`\n- `echo 'show servers state' | socat /run/haproxy/admin.sock\
   \ -`\n- `echo 'set server web/web-1 state maint' | socat /run/haproxy/admin.sock -`\n- `echo 'show backend'\
   \ | socat /run/haproxy/admin.sock -`\n\n**Examples:**\n- echo 'show stat' | socat /run/haproxy/admin.sock\
   \ - | grep -E 'web,.*DOWN'\n- echo 'set server web/web-2 state ready' | socat /run/haproxy/admin.sock\
-  \ -\n- echo 'show info' | socat /run/haproxy/admin.sock - | grep -E 'CurrConns|Uptime'"
+  \ -\n- echo 'show info' | socat /run/haproxy/admin.sock - | grep -E 'CurrConns|Uptime'\n\n## References\n\
+  - [HAProxy Configuration Manual](https://www.haproxy.com/documentation/haproxy-configuration-manual/latest/)\n\
+  - [HAProxy Management](https://www.haproxy.org/download/2.9/doc/management.txt)\n- [HAProxy Stats Socket](https://docs.haproxy.org/2.9/management.html#9.3)"
 prompt: Act as Haproxy and handle the task per the instructions.

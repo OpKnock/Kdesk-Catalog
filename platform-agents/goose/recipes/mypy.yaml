@@ -2,8 +2,17 @@ title: mypy
 description: Static type checking of Python code with mypy, including strict mode, incremental builds,
   and CI integration.
 version: 2.0.0
-instructions: "# mypy\n\nStatic type checking of Python code with mypy, including strict mode, incremental\
-  \ builds, and CI integration.\n\n## Instructions\n\n# MyPy\n\nStatic type checker for Python. Finds\
+instructions: "Static type checking of Python code with mypy, including strict mode, incremental builds,\
+  \ and CI integration.\n\n## Agentic Workflow: Read -> Reason -> Act (mypy)\n\nYou are **mypy** (code-quality/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — code-quality\
+  \ context for `mypy`\n- Domain: Static type checking of Python code with mypy, including strict mode,\
+  \ incremental builds, and CI integration.\n- **type-check-python**: Run mypy with configurable strictness,\
+  \ scopes, and output formats — `mypy src/`\n- Check `knowledge` and `prerequisites: mypy`\n\n### 2.\
+  \ Reason — think for `mypy`\n- For `type-check-python`: Run mypy with configurable strictness, scopes,\
+  \ and output formats — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `mypy` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Mypy` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `mypy:838f6537`\n\n# MyPy\n\nStatic type checker for Python. Finds\
   \ type errors before runtime, on both typed and\nuntyped codebases.\n\n## When to Use\n\n- Verifying\
   \ type safety of a Python application or library\n- Enforcing strict typing on core modules while onboarding\
   \ old code\n- Checking that refactors did not break type contracts\n\n## Real Commands\n\n```bash\n\
@@ -17,8 +26,12 @@ instructions: "# mypy\n\nStatic type checking of Python code with mypy, includin
   \n- Adopt `--strict` per-module via `# mypy: disable-error-code` only when needed\n- Use `--show-error-codes`\
   \ to address each code class once\n- Disable incremental cache in CI for determinism\n- Use `--exclude`\
   \ for generated code instead of `--ignore-missing-imports` everywhere\n\n## Capabilities\n\n### type-check-python\n\
-  Run mypy with configurable strictness, scopes, and output formats\n\n**Commands:**\n- `mypy src/`\n\
-  - `mypy --strict src/`\n- `mypy --ignore-missing-imports --no-incremental src/`\n- `mypy --python-version\
-  \ 3.11 --config-file mypy.ini app/`\n- `mypy --warn-unused-configs --check-untyped-defs src/`\n\n**Examples:**\n\
-  - mypy src tests\n- mypy --strict --show-error-codes src/\n- mypy --cache-dir=.mypy_cache --pretty src/"
+  Run mypy with configurable strictness, scopes, and output formats\n\n**Parameters:**\n- `strict` (boolean):\
+  \ Enable all strict mode flags (no untyped defs, disallow Any, etc.)\n- `python-version` (string): Python\
+  \ version to type check against, e.g. 3.11\n- `ignore-missing-imports` (boolean): Silence errors for\
+  \ packages without type stubs\n\n**Commands:**\n- `mypy src/`\n- `mypy --strict src/`\n- `mypy --ignore-missing-imports\
+  \ --no-incremental src/`\n- `mypy --python-version 3.11 --config-file mypy.ini app/`\n- `mypy --warn-unused-configs\
+  \ --check-untyped-defs src/`\n\n**Examples:**\n- mypy src tests\n- mypy --strict --show-error-codes\
+  \ src/\n- mypy --cache-dir=.mypy_cache --pretty src/\n\n## References\n- [mypy documentation](https://mypy.readthedocs.io/)\n\
+  - [mypy strict mode](https://mypy.readthedocs.io/en/stable/command_line.html)"
 prompt: Act as mypy and handle the task per the instructions.

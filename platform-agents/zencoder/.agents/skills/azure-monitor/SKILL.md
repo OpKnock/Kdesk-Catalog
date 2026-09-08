@@ -9,27 +9,27 @@ allowed-tools: "Glob Grep Read Bash(az:*)"
 
 Collects and evaluates Azure resource metrics and alerts via the Azure CLI: retrieves metric time series, defines metric and activity log alert rules with conditions, manages action groups, and queries the activity log for operational auditing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (azure-monitor)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Azure Monitor** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `az monitor metrics list --resource /subscriptions/12345678-1`, `az monitor alert create --name api-5xx --resource-group api-`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `azure-monitor`
+- Domain: Collects and evaluates Azure resource metrics and alerts via the Azure CLI: retrieves metric time series, defines metric and activity log alert rules with conditions, manages action groups, and querie
+- **metrics**: Retrieve resource metrics and definitions. — `az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456`
+- **alerts**: Create and manage metric/activity alerts. — `az monitor alert create --name api-5xx --resource-group api-rg --condition "perc`
+- **activity-log**: Query the activity log. — `az monitor activity-log list --resource /subscriptions/12345678-1234-1234-1234-1`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `azure-monitor`
+- For `metrics`: Retrieve resource metrics and definitions. — decide which checks to run
+- For `alerts`: Create and manage metric/activity alerts. — decide which checks to run
+- For `activity-log`: Query the activity log. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `azure-monitor` tools
+- Tools: `Glob`, `Grep`, `Read`, `Az` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-monitor:3345ee61`
 
 # Azure Monitor
 

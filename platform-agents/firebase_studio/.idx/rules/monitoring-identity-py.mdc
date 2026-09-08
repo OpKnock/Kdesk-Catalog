@@ -1,5 +1,5 @@
 ---
-description: "Monitoring deployment agent. Manages Monitoring ML deployment."
+description: "Monitoring deployment agent. Manages Monitoring ML deployment. Use when working with Ml Monitoring Deploy Agent or when the user mentions Ml Monitoring Deploy Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Monitoring Identity Py
 
 Monitoring deployment agent. Manages Monitoring ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (monitoring-identity-py)
+
+You are **Monitoring Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `monitoring-identity-py`
+- Domain: Monitoring deployment agent. Manages Monitoring ML deployment.
+- **Ml Monitoring Deploy Agent**: Monitoring deployment agent. Manages Monitoring ML deployment. — `docker build -t ing:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `monitoring-identity-py`
+- For `Ml Monitoring Deploy Agent`: Monitoring deployment agent. Manages Monitoring ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `monitoring-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Monitoring` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monitoring-identity-py:d53f4fbd`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Monitoring deployment agent. Manages Monitoring ML deployment.
 - curl http://localhost:8080/monitor --data '{"model": "model.pkl"}'
 - python monitor.py --model model.pkl --data-stream data.json --alert-threshold 0.9
 - python track_drift.py --reference-data train.csv --current-data current.csv
+
+## References
+- [Prometheus Documentation](https://prometheus.io/docs/introduction/overview/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

@@ -1,6 +1,6 @@
 ---
 name: "embedding-identity-py"
-description: "Embedding deployment agent. Manages Embedding ML deployment."
+description: "Embedding deployment agent. Manages Embedding ML deployment. Use when working with Ml Embedding Deploy Agent or when the user mentions Ml Embedding Deploy Agent."
 type: knowledge
 triggers: ["embedding-identity-py", "ml embedding deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["embedding-identity-py", "ml embedding deploy agent"]
 # Embedding Identity Py
 
 Embedding deployment agent. Manages Embedding ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (embedding-identity-py)
+
+You are **Embedding Identity Py** (ml/embedding) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `embedding-identity-py`
+- Domain: Embedding deployment agent. Manages Embedding ML deployment.
+- **Ml Embedding Deploy Agent**: Embedding deployment agent. Manages Embedding ML deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `embedding-identity-py`
+- For `Ml Embedding Deploy Agent`: Embedding deployment agent. Manages Embedding ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `embedding-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Embedding` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `embedding-identity-py:331ee6c1`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Embedding deployment agent. Manages Embedding ML deployment.
 - curl http://localhost:8080/embed --data '{"text": "Hello world"}'
 - python embed.py --input texts.txt --output embeddings.npy
 - python search.py --query 'hello world' --index embeddings.npy
+
+## References
+- [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

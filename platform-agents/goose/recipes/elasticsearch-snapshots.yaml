@@ -2,8 +2,19 @@ title: Elasticsearch Snapshots
 description: 'Elasticsearch snapshot and restore: register snapshot repositories, create and list snapshots,
   and restore indices from backups.'
 version: 2.0.0
-instructions: "# Elasticsearch Snapshots\n\nElasticsearch snapshot and restore: register snapshot repositories,\
-  \ create and list snapshots, and restore indices from backups.\n\n## Instructions\n\n# Elasticsearch\
+instructions: "Elasticsearch snapshot and restore: register snapshot repositories, create and list snapshots,\
+  \ and restore indices from backups.\n\n## Agentic Workflow: Read -> Reason -> Act (elasticsearch-snapshots)\n\
+  \nYou are **Elasticsearch Snapshots** (api/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — api context for `elasticsearch-snapshots`\n- Domain: Elasticsearch\
+  \ snapshot and restore: register snapshot repositories, create and list snapshots, and restore indices\
+  \ from backups.\n- **snapshot-lifecycle**: Manage snapshot repositories, take snapshots, list them,\
+  \ and restore data. — `curl -s -X PUT 'localhost:9200/_snapshot/my_backup' -H 'Content-Type: applicatio`\n\
+  - Check `knowledge` references before acting\n\n### 2. Reason — think for `elasticsearch-snapshots`\n\
+  - For `snapshot-lifecycle`: Manage snapshot repositories, take snapshots, list them, and restore data.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `elasticsearch-snapshots` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `elasticsearch-snapshots:5b72b683`\n\n# Elasticsearch\
   \ Snapshots\n\n## What this skill does\n\nSnapshots back up indices to a repository (S3, GCS, Azure,\
   \ or shared filesystem) with incremental deduplication. Restore brings indices back with optional renaming.\
   \ This skill covers the whole lifecycle.\n\n## When to use\n\n- Scheduled nightly backups of indices\n\
@@ -26,16 +37,20 @@ instructions: "# Elasticsearch Snapshots\n\nElasticsearch snapshot and restore: 
   \ practices\n\n- Never restore over a live index; always use rename_pattern.\n- Enable `wait_for_completion=true`\
   \ in scripts or poll _status.\n- Retain at least 14 daily snapshots and run a restore drill monthly.\n\
   - Ensure the repo bucket has versioning for extra safety.\n\n## Capabilities\n\n### snapshot-lifecycle\n\
-  Manage snapshot repositories, take snapshots, list them, and restore data.\n\n**Commands:**\n- `curl\
-  \ -s -X PUT 'localhost:9200/_snapshot/my_backup' -H 'Content-Type: application/json' -d '{\"type\":\"\
-  s3\",\"settings\":{\"bucket\":\"es-backups\",\"region\":\"us-east-1\"}}' | jq`\n- `curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date\
-  \ +%Y%m%d)' -H 'Content-Type: application/json' -d '{\"indices\":\"orders,users\",\"ignore_unavailable\"\
-  :true}' | jq`\n- `curl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false' | jq '.snapshots[].snapshot'`\n\
+  Manage snapshot repositories, take snapshots, list them, and restore data.\n\n**Parameters:**\n- `repository`\
+  \ (string): Snapshot repository name\n- `snapshot` (string): Snapshot name, e.g. snap_20240101\n- `indices`\
+  \ (array): Indices to snapshot or restore\n\n**Commands:**\n- `curl -s -X PUT 'localhost:9200/_snapshot/my_backup'\
+  \ -H 'Content-Type: application/json' -d '{\"type\":\"s3\",\"settings\":{\"bucket\":\"es-backups\",\"\
+  region\":\"us-east-1\"}}' | jq`\n- `curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date +%Y%m%d)'\
+  \ -H 'Content-Type: application/json' -d '{\"indices\":\"orders,users\",\"ignore_unavailable\":true}'\
+  \ | jq`\n- `curl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false' | jq '.snapshots[].snapshot'`\n\
   - `curl -s 'localhost:9200/_snapshot/my_backup/snap_20240101/_status' | jq '.snapshots[0].stats.incremental'`\n\
   - `curl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore' -H 'Content-Type: application/json'\
   \ -d '{\"indices\":\"orders\",\"rename_pattern\":\"(.+)\",\"rename_replacement\":\"restored_$1\"}' |\
   \ jq`\n\n**Examples:**\n- curl -s -X PUT 'localhost:9200/_snapshot/my_backup/snap_$(date +%Y%m%d)' -H\
   \ 'Content-Type: application/json' -d '{\"indices\":\"orders\"}' | jq\n- curl -s 'localhost:9200/_snapshot/my_backup/_all?verbose=false'\
   \ | jq '.snapshots | length'\n- curl -s -X POST 'localhost:9200/_snapshot/my_backup/snap_20240101/_restore'\
-  \ -H 'Content-Type: application/json' -d '{\"indices\":\"orders\"}' | jq"
+  \ -H 'Content-Type: application/json' -d '{\"indices\":\"orders\"}' | jq\n\n## References\n- [Snapshot\
+  \ and Restore](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshot-restore.html)\n\
+  - [S3 Repository Plugin](https://www.elastic.co/guide/en/elasticsearch/plugins/current/repository-s3.html)"
 prompt: Act as Elasticsearch Snapshots and handle the task per the instructions.

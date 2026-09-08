@@ -1,15 +1,31 @@
 ---
 name: "api-version-specialist"
-description: "Applies Semantic Versioning to API releases: semver range evaluation, npm versioning, git tags, and breaking-change classification."
+description: "Applies Semantic Versioning to API releases: semver range evaluation, npm versioning, git tags, and breaking-change classification. Use when working with semver tools, breaking classification or when the user mentions semver tools, breaking classification."
 type: knowledge
 triggers: ["api-version-specialist", "semver-tools", "breaking-classification"]
 ---
 
-# api-version-specialist
-
 Applies Semantic Versioning to API releases: semver range evaluation, npm versioning, git tags, and breaking-change classification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-version-specialist)
+
+You are **api-version-specialist** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-version-specialist`
+- Domain: Applies Semantic Versioning to API releases: semver range evaluation, npm versioning, git tags, and breaking-change classification.
+- **semver-tools**: Evaluate and apply semver versions — `npx semver 1.2.3 major`
+- **breaking-classification**: Classify changes as breaking or non-breaking — `npm version major -m "chore: release v%s"`
+- Check `knowledge` and `prerequisites: node.js, python, openapi`
+
+### 2. Reason — think for `api-version-specialist`
+- For `semver-tools`: Evaluate and apply semver versions — decide which checks to run
+- For `breaking-classification`: Classify changes as breaking or non-breaking — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-version-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-version-specialist:ba68c06b`
 
 # API Version Specialist
 
@@ -54,6 +70,11 @@ git tag -l 'v*' --sort=-v:refname | head
 ### semver-tools
 Evaluate and apply semver versions
 
+**Parameters:**
+- `version` (string): Current version
+- `bump` (string): major, minor, or patch
+- `range` (string): Semver range expression
+
 **Commands:**
 - `npx semver 1.2.3 major`
 - `npx semver "1.2.3" -r ">=1.0.0 <2.0.0"`
@@ -78,3 +99,7 @@ Classify changes as breaking or non-breaking
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Semantic Versioning Spec](https://semver.org/)
+- [npm version Command](https://docs.npmjs.com/cli/v10/commands/npm-version)

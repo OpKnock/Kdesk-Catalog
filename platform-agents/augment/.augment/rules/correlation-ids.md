@@ -5,27 +5,25 @@ description: "Implement correlation/request IDs across APIs: generate, propagate
 
 Implement correlation/request IDs across APIs: generate, propagate via headers, and trace requests through logs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (correlation-ids)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Correlation Ids** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -H "X-Correlation-ID: $(uuidgen)" https://httpbin.org/g`, `npm install express`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `correlation-ids`
+- Domain: Implement correlation/request IDs across APIs: generate, propagate via headers, and trace requests through logs.
+- **id-generation**: Generate and send correlation IDs with curl and system tools — `curl -H "X-Correlation-ID: $(uuidgen)" https://httpbin.org/get`
+- **middleware**: Implement correlation ID middleware that accepts, generates, and propagates IDs — `npm install express`
+- Check `knowledge` and `prerequisites: node, npm, uuidgen`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `correlation-ids`
+- For `id-generation`: Generate and send correlation IDs with curl and system tools — decide which checks to run
+- For `middleware`: Implement correlation ID middleware that accepts, generates, and propagates IDs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `correlation-ids` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Uuidgen` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `correlation-ids:e9870bc3`
 
 # Correlation IDs
 

@@ -1,14 +1,30 @@
 ---
-description: "Operate Kafka log compaction: enable compacted topics, tune min.cleanable.dirty.ratio and segment.ms, and verify tombstones and duplicate-key removal."
+description: "Operate Kafka log compaction: enable compacted topics, tune min.cleanable.dirty.ratio and segment.ms, and verify tombstones and duplicate-key removal. Use when working with enable compaction, verify compaction, api or when the user mentions enable compaction, verify compaction, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Kafka Compaction
-
 Operate Kafka log compaction: enable compacted topics, tune min.cleanable.dirty.ratio and segment.ms, and verify tombstones and duplicate-key removal.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-compaction)
+
+You are **Kafka Compaction** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka-compaction`
+- Domain: Operate Kafka log compaction: enable compacted topics, tune min.cleanable.dirty.ratio and segment.ms, and verify tombstones and duplicate-key removal.
+- **enable-compaction**: Enable and tune log compaction per topic with kafka-configs.sh. — `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity`
+- **verify-compaction**: Verify compaction state, log segments, and tombstoned keys. — `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`
+- Check `knowledge` and `prerequisites: kafka-configs.sh, kafka-console-consumer.sh, kafka-log-dirs.sh, kafka-run-class.sh`
+
+### 2. Reason — think for `kafka-compaction`
+- For `enable-compaction`: Enable and tune log compaction per topic with kafka-configs.sh. — decide which checks to run
+- For `verify-compaction`: Verify compaction state, log segments, and tombstoned keys. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-compaction` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-configs.sh`, `Kafka-topics.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-compaction:688d5bef`
 
 # Kafka Compaction
 
@@ -83,6 +99,10 @@ echo '{"key":"u-1","v":1}' | kafka-console-producer.sh --bootstrap-server localh
 ### enable-compaction
 Enable and tune log compaction per topic with kafka-configs.sh.
 
+**Parameters:**
+- `topic` (string): Topic name to configure.
+- `config` (string): Comma-separated configs, e.g. min.cleanable.dirty.ratio=0.01,segment.ms=3600000.
+
 **Commands:**
 - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config cleanup.policy=compact`
 - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter --add-config "min.cleanable.dirty.ratio=0.01"`
@@ -97,6 +117,10 @@ Enable and tune log compaction per topic with kafka-configs.sh.
 ### verify-compaction
 Verify compaction state, log segments, and tombstoned keys.
 
+**Parameters:**
+- `topic` (string): Topic to inspect.
+- `max_messages` (integer): Number of records to read for verification.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`
 - `kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list orders`
@@ -107,3 +131,7 @@ Verify compaction state, log segments, and tombstoned keys.
 - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --property print.key=true --max-messages 10
 - kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list orders
+
+## References
+- [Kafka Log Compaction](https://kafka.apache.org/documentation/#compaction)
+- [kafka-configs.sh](https://kafka.apache.org/documentation/#configuration)

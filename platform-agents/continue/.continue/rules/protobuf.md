@@ -1,15 +1,29 @@
 ---
 name: "Protobuf"
-description: "Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and gRPC schema workflows."
+description: "Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and gRPC schema workflows. Use when working with protobuf generation, api or when the user mentions protobuf generation, api."
 globs: ["**/*.go", "**/*.java", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Protobuf
-
 Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and gRPC schema workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (protobuf)
+
+You are **Protobuf** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `protobuf`
+- Domain: Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and gRPC schema workflows.
+- **protobuf-generation**: Compile .proto files to Go/Java/Python, lint with buf, and check breaking changes. — `protoc --version`
+- Check `knowledge` and `prerequisites: buf, protoc`
+
+### 2. Reason — think for `protobuf`
+- For `protobuf-generation`: Compile .proto files to Go/Java/Python, lint with buf, and check breaking changes. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `protobuf` tools
+- Tools: `Glob`, `Grep`, `Read`, `Protoc`, `Buf` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `protobuf:7716a476`
 
 # Protocol Buffers
 
@@ -72,6 +86,11 @@ message User {
 ### protobuf-generation
 Compile .proto files to Go/Java/Python, lint with buf, and check breaking changes.
 
+**Parameters:**
+- `proto_file` (string): Path to the .proto file
+- `language` (string): go, java, python, cpp, etc.
+- `out_dir` (string): Output directory for generated code
+
 **Commands:**
 - `protoc --version`
 - `protoc --go_out=. --go_opt=paths=source_relative user.proto`
@@ -83,3 +102,7 @@ Compile .proto files to Go/Java/Python, lint with buf, and check breaking change
 - protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. user.proto
 - buf generate
 - buf breaking --against .git#branch=main
+
+## References
+- [Protobuf.dev](https://protobuf.dev/)
+- [Buf Docs](https://buf.build/docs/)

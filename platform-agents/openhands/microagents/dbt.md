@@ -1,15 +1,29 @@
 ---
 name: "dbt"
-description: "Develops and runs dbt models and tests: data transformation, testing, and documentation generation."
+description: "Develops and runs dbt models and tests: data transformation, testing, and documentation generation. Use when working with dbt core, data or when the user mentions dbt core, data."
 type: knowledge
 triggers: ["dbt", "dbt-core"]
 ---
 
-# Dbt
-
 Develops and runs dbt models and tests: data transformation, testing, and documentation generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (dbt)
+
+You are **Dbt** (data/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `dbt`
+- Domain: Develops and runs dbt models and tests: data transformation, testing, and documentation generation.
+- **dbt-core**: Run models, tests, and docs for dbt projects — `dbt debug`
+- Check `knowledge` and `prerequisites: dbt`
+
+### 2. Reason — think for `dbt`
+- For `dbt-core`: Run models, tests, and docs for dbt projects — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `dbt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dbt` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dbt:d070207f`
 
 # dbt
 
@@ -90,6 +104,11 @@ failing rows, then proposes the data fix or test adjustment.
 ### dbt-core
 Run models, tests, and docs for dbt projects
 
+**Parameters:**
+- `select` (string): Node selection syntax, e.g. my_model+, tag:daily, 1+2
+- `store-failures` (boolean): Persist test failures to the database
+- `profiles-dir` (string): Directory containing profiles.yml
+
 **Commands:**
 - `dbt debug`
 - `dbt run`
@@ -101,3 +120,7 @@ Run models, tests, and docs for dbt projects
 - dbt run --select tag:daily
 - dbt test --select source:raw.orders --store-failures
 - dbt compile --select stg_orders
+
+## References
+- [dbt docs](https://docs.getdbt.com/)
+- [dbt node selection](https://docs.getdbt.com/reference/node-selection/syntax)

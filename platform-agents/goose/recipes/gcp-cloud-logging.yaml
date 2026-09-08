@@ -2,10 +2,20 @@ title: Gcp Cloud Logging
 description: 'GCP Cloud Logging operations: query logs with gcloud logging read, create log-based metrics,
   and export logs to storage sinks.'
 version: 2.0.0
-instructions: "# Gcp Cloud Logging\n\nGCP Cloud Logging operations: query logs with gcloud logging read,\
-  \ create log-based metrics, and export logs to storage sinks.\n\n## Instructions\n\n# GCP Cloud Logging\n\
-  \n## What this skill does\n\nCloud Logging aggregates logs from GCP services. gcloud logging read filters\
-  \ and returns entries; metrics turn filters into counters for dashboards; sinks export to Storage/BigQuery.\n\
+instructions: "GCP Cloud Logging operations: query logs with gcloud logging read, create log-based metrics,\
+  \ and export logs to storage sinks.\n\n## Agentic Workflow: Read -> Reason -> Act (gcp-cloud-logging)\n\
+  \nYou are **Gcp Cloud Logging** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `gcp-cloud-logging`\n- Domain: GCP Cloud Logging operations: query logs\
+  \ with gcloud logging read, create log-based metrics, and export logs to storage sinks.\n- **gcp-logging**:\
+  \ Read logs, create log-based metrics, and manage exports. — `gcloud logging read 'resource.type=cloud_run_revision\
+  \ AND severity>=ERROR' --lim`\n- Check `knowledge` and `prerequisites: gcloud`\n\n### 2. Reason — think\
+  \ for `gcp-cloud-logging`\n- For `gcp-logging`: Read logs, create log-based metrics, and manage exports.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `gcp-cloud-logging` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Gcloud` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `gcp-cloud-logging:946232c5`\n\n# GCP Cloud Logging\n\n## What\
+  \ this skill does\n\nCloud Logging aggregates logs from GCP services. gcloud logging read filters and\
+  \ returns entries; metrics turn filters into counters for dashboards; sinks export to Storage/BigQuery.\n\
   \n## When to use\n\n- Debugging errors across Cloud Run/Functions/VM services\n- Building error-rate\
   \ metrics for SLOs\n- Archiving logs for compliance\n\n## Real commands\n\n```bash\n# Read recent errors\n\
   \ gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'\n\
@@ -20,13 +30,16 @@ instructions: "# Gcp Cloud Logging\n\nGCP Cloud Logging operations: query logs w
   - Add `trace` fields to correlate with Cloud Trace.\n- Use log-based metrics for SLO counters instead\
   \ of scraping logs.\n- Set sink filters tight; archiving everything costs storage.\n- Prefer `--format='table(...)'`\
   \ for human-readable triage output.\n\n## Capabilities\n\n### gcp-logging\nRead logs, create log-based\
-  \ metrics, and manage exports.\n\n**Commands:**\n- `gcloud logging read 'resource.type=cloud_run_revision\
-  \ AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'`\n- `gcloud\
-  \ logging read 'logName=projects/my-project/logs/requests' --freshness=1d --limit=20`\n- `gcloud logging\
-  \ metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND httpRequest.status>=500'`\n\
-  - `gcloud logging metrics describe 5xx-errors`\n- `gcloud logging sinks create archive-errors storage.googleapis.com\
-  \ --log-filter='severity>=ERROR'`\n- `gcloud logging tail 'severity=ERROR'`\n\n**Examples:**\n- gcloud\
-  \ logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'\n\
-  - gcloud logging metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND\
-  \ httpRequest.status>=500'\n- gcloud logging tail 'severity=ERROR'"
+  \ metrics, and manage exports.\n\n**Parameters:**\n- `filter` (string): Logging filter expression\n\
+  - `limit` (integer): Number of entries to return\n- `sink-name` (string): Log sink name for exports\n\
+  \n**Commands:**\n- `gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50\
+  \ --format='table(timestamp,severity,jsonPayload.message)'`\n- `gcloud logging read 'logName=projects/my-project/logs/requests'\
+  \ --freshness=1d --limit=20`\n- `gcloud logging metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global\
+  \ AND httpRequest.status>=500'`\n- `gcloud logging metrics describe 5xx-errors`\n- `gcloud logging sinks\
+  \ create archive-errors storage.googleapis.com --log-filter='severity>=ERROR'`\n- `gcloud logging tail\
+  \ 'severity=ERROR'`\n\n**Examples:**\n- gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR'\
+  \ --limit=50 --format='table(timestamp,severity,jsonPayload.message)'\n- gcloud logging metrics create\
+  \ 5xx-errors --description='5xx rate' --filter='resource.type=global AND httpRequest.status>=500'\n\
+  - gcloud logging tail 'severity=ERROR'\n\n## References\n- [Cloud Logging docs](https://cloud.google.com/logging/docs)\n\
+  - [gcloud logging reference](https://cloud.google.com/sdk/gcloud/reference/logging)"
 prompt: Act as Gcp Cloud Logging and handle the task per the instructions.

@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(firebase:*) Bash(node:*)"
 
 Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (firebase-firestore)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Firebase Firestore** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `firebase firestore:indexes`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `firebase-firestore`
+- Domain: Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI.
+- **firestore-data**: Read, write, and administer Firestore data, indexes, and rules. — `firebase firestore:indexes`
+- Check `knowledge` and `prerequisites: firebase, node`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `firebase-firestore`
+- For `firestore-data`: Read, write, and administer Firestore data, indexes, and rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `firebase-firestore` tools
+- Tools: `Glob`, `Grep`, `Read`, `Firebase`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-firestore:1ef53df9`
 
 # Firebase Firestore
 

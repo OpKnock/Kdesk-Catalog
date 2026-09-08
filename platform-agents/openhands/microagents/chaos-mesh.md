@@ -1,15 +1,31 @@
 ---
 name: "chaos-mesh"
-description: "Run Kubernetes chaos experiments with Chaos Mesh: install via helm, apply PodChaos/NetworkChaos, and inspect injection status."
+description: "Run Kubernetes chaos experiments with Chaos Mesh: install via helm, apply PodChaos/NetworkChaos, and inspect injection status. Use when working with chaos mesh install, chaos injection, api or when the user mentions chaos mesh install, chaos injection, api."
 type: knowledge
 triggers: ["chaos-mesh", "chaos-mesh-install", "chaos-injection"]
 ---
 
-# Chaos Mesh
-
 Run Kubernetes chaos experiments with Chaos Mesh: install via helm, apply PodChaos/NetworkChaos, and inspect injection status.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (chaos-mesh)
+
+You are **Chaos Mesh** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `chaos-mesh`
+- Domain: Run Kubernetes chaos experiments with Chaos Mesh: install via helm, apply PodChaos/NetworkChaos, and inspect injection status.
+- **chaos-mesh-install**: Install Chaos Mesh CRDs and controller in the cluster — `helm repo add chaos-mesh https://charts.chaos-mesh.org`
+- **chaos-injection**: Apply PodChaos and NetworkChaos resources and observe fault injection — `kubectl apply -f pod-kill.yaml`
+- Check `knowledge` and `prerequisites: helm, kubectl`
+
+### 2. Reason — think for `chaos-mesh`
+- For `chaos-mesh-install`: Install Chaos Mesh CRDs and controller in the cluster — decide which checks to run
+- For `chaos-injection`: Apply PodChaos and NetworkChaos resources and observe fault injection — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `chaos-mesh` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `chaos-mesh:b01590f5`
 
 # Chaos Mesh
 
@@ -101,6 +117,9 @@ curl -s -o /dev/null -w "%{http_code}\n" http://api.example.com/health
 ### chaos-mesh-install
 Install Chaos Mesh CRDs and controller in the cluster
 
+**Parameters:**
+- `namespace` (string): Namespace for Chaos Mesh, default chaos-mesh
+
 **Commands:**
 - `helm repo add chaos-mesh https://charts.chaos-mesh.org`
 - `helm install chaos-mesh chaos-mesh/chaos-mesh --namespace chaos-mesh --create-namespace`
@@ -115,6 +134,10 @@ Install Chaos Mesh CRDs and controller in the cluster
 ### chaos-injection
 Apply PodChaos and NetworkChaos resources and observe fault injection
 
+**Parameters:**
+- `chaos_kind` (string): podchaos, networkchaos, stresschaos, or iochaos
+- `manifest` (string): Path to chaos YAML manifest
+
 **Commands:**
 - `kubectl apply -f pod-kill.yaml`
 - `kubectl get podchaos -n myapp`
@@ -125,3 +148,7 @@ Apply PodChaos and NetworkChaos resources and observe fault injection
 - kubectl apply -f pod-kill.yaml && kubectl get podchaos -n myapp
 - kubectl apply -f network-loss.yaml && kubectl get networkchaos -n myapp
 - kubectl describe networkchaos network-loss -n myapp
+
+## References
+- [Chaos Mesh Docs](https://chaos-mesh.org/docs/)
+- [Chaos Mesh Dashboard](https://chaos-mesh.org/docs/basic-features/dashboard/)

@@ -1,8 +1,22 @@
-# Graphql Graphene
-
 GraphQL in Python with Graphene: define schema and resolvers with Python classes, integrate with Django/Flask, and run queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-graphene)
+
+You are **Graphql Graphene** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `graphql-graphene`
+- Domain: GraphQL in Python with Graphene: define schema and resolvers with Python classes, integrate with Django/Flask, and run queries.
+- **graphene-schema**: Define Graphene schemas, wire Django/Flask integration, and test queries. — `pip install graphene django-graphql-graphene`
+- Check `knowledge` and `prerequisites: pip, python`
+
+### 2. Reason — think for `graphql-graphene`
+- For `graphene-schema`: Define Graphene schemas, wire Django/Flask integration, and test queries. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-graphene` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-graphene:803072b4`
 
 # GraphQL Graphene
 
@@ -75,6 +89,11 @@ python -c "from myapp.schema import schema; r=schema.execute('{ order(id: \"1\")
 ### graphene-schema
 Define Graphene schemas, wire Django/Flask integration, and test queries.
 
+**Parameters:**
+- `schema-module` (string): Python module path to the Schema
+- `output-file` (string): SDL export path
+- `endpoint` (string): GraphQL HTTP endpoint
+
 **Commands:**
 - `pip install graphene django-graphql-graphene`
 - `python -c "import graphene; s=graphene.Schema(query=Query); print(s.execute('{ hello }').data)"`
@@ -86,3 +105,7 @@ Define Graphene schemas, wire Django/Flask integration, and test queries.
 - python -c "import graphene; s=graphene.Schema(query=Query); print(s.execute('{ hello }').data)"
 - python manage.py graphql_schema --schema myapp.schema.schema --out schema.graphql
 - curl -s -X POST http://localhost:8000/graphql -H 'Content-Type: application/json' -d '{"query":"{ hello }"}' | jq
+
+## References
+- [Graphene docs](https://docs.graphene-python.org/)
+- [Graphene Django](https://docs.graphene-python.org/projects/django/en/latest/)

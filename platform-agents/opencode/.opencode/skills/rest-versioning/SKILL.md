@@ -5,27 +5,23 @@ description: "Expert reference covering Accept-header and URL versioning, cursor
 
 Expert reference covering Accept-header and URL versioning, cursor pagination, conditional requests, and Prefer response selection.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (rest-versioning)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Rest Versioning** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s -H 'Accept: application/vnd.myapi.v2+json' https://a`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `rest-versioning`
+- Domain: Expert reference covering Accept-header and URL versioning, cursor pagination, conditional requests, and Prefer response selection.
+- **rest-versioning**: Versioned REST design: media types, cursors, conditional requests — `curl -s -H 'Accept: application/vnd.myapi.v2+json' https://api.your-app.test/use`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `rest-versioning`
+- For `rest-versioning`: Versioned REST design: media types, cursors, conditional requests — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `rest-versioning` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rest-versioning:ba13df60`
 
 # REST API Versioning (v2 conventions)
 

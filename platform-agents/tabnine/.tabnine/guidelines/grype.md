@@ -1,8 +1,24 @@
-# grype
-
 Scan images, directories, and binaries handling known CVEs. Update the vulnerability database and scan SBOMs directly. and filesystem scanning.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grype)
+
+You are **grype** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `grype`
+- Domain: Scan images, directories, and binaries handling known CVEs. Update the vulnerability database and scan SBOMs directly. and filesystem scanning.
+- **vulnerability-matching**: Scan images, directories, and binaries for known CVEs. — `grype alpine:latest`
+- **db-and-sbom**: Update the vulnerability database and scan SBOMs directly. — `grype db update`
+- Check `knowledge` and `prerequisites: grype, syft`
+
+### 2. Reason — think for `grype`
+- For `vulnerability-matching`: Scan images, directories, and binaries for known CVEs. — decide which checks to run
+- For `db-and-sbom`: Update the vulnerability database and scan SBOMs directly. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grype` tools
+- Tools: `Glob`, `Grep`, `Read`, `Grype`, `Syft` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grype:0d6847a3`
 
 # Grype
 
@@ -57,6 +73,11 @@ grype db status
 ### vulnerability-matching
 Scan images, directories, and binaries for known CVEs.
 
+**Parameters:**
+- `target` (string): Image, directory, or binary to scan
+- `scope` (string): Squashed or all-layers scope
+- `output` (string): Format: table, json, sarif, cyclonedx
+
 **Commands:**
 - `grype alpine:latest`
 - `grype .`
@@ -72,6 +93,10 @@ Scan images, directories, and binaries for known CVEs.
 ### db-and-sbom
 Update the vulnerability database and scan SBOMs directly.
 
+**Parameters:**
+- `format` (string): SBOM format for syft output: json, cyclonedx, spdx
+- `outputFile` (string): Where to write the generated SBOM.
+
 **Commands:**
 - `grype db update`
 - `grype db status`
@@ -83,3 +108,7 @@ Update the vulnerability database and scan SBOMs directly.
 - grype db update
 - syft alpine:latest -o cyclonedx > sbom.cdx.json
 - grype -q sbom:sbom.cdx.json
+
+## References
+- [Grype GitHub](https://github.com/anchore/grype)
+- [Syft GitHub](https://github.com/anchore/syft)

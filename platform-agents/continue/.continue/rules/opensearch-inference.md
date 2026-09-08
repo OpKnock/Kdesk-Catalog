@@ -1,6 +1,6 @@
 ---
 name: "Opensearch Inference"
-description: "OpenSearch inference server agent. Manages OpenSearch ML inference server."
+description: "OpenSearch inference server agent. Manages OpenSearch ML inference server. Use when working with Ml Opensearch Inference Server Agent, vector db or when the user mentions Ml Opensearch Inference Server Agent, vector db."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Opensearch Inference
 
 OpenSearch inference server agent. Manages OpenSearch ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (opensearch-inference)
+
+You are **Opensearch Inference** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `opensearch-inference`
+- Domain: OpenSearch inference server agent. Manages OpenSearch ML inference server.
+- **Ml Opensearch Inference Server Agent**: OpenSearch inference server agent. Manages OpenSearch ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `opensearch-inference`
+- For `Ml Opensearch Inference Server Agent`: OpenSearch inference server agent. Manages OpenSearch ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `opensearch-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Opensearch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `opensearch-inference:2679189b`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ OpenSearch inference server agent. Manages OpenSearch ML inference server.
 - python index_vectors.py --index my-index --vectors vectors.json
 - python search_vectors.py --index my-index --query query_vector --k 10
 - python delete_vectors.py --index my-index --ids ids.json
+
+## References
+- [OpenSearch Documentation](https://opensearch.org/docs/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

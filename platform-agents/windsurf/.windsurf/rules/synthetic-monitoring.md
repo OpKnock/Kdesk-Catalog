@@ -6,27 +6,23 @@ globs: ["**/*.go", "**/*.java", "**/*.r", "**/*.sh", "**/*.{js,ts,jsx,tsx}"]
 
 Build always-on synthetic checks that catch outages before users do. Records browser journeys with Playwright, runs lightweight uptime probes with k6 and curl, and verifies status codes, timing, and page content from multiple regions.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (synthetic-monitoring)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Synthetic Monitoring** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx playwright test`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `synthetic-monitoring`
+- Domain: Build always-on synthetic checks that catch outages before users do. Records browser journeys with Playwright, runs lightweight uptime probes with k6 and curl, and verifies status codes, timing, and p
+- **synthetic-checks**: Build browser and uptime checks that run on a schedule — `npx playwright test`
+- Check `knowledge` and `prerequisites: npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `synthetic-monitoring`
+- For `synthetic-checks`: Build browser and uptime checks that run on a schedule — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `synthetic-monitoring` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `K6` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `synthetic-monitoring:dc888f31`
 
 # Synthetic Monitoring
 

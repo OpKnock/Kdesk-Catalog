@@ -1,14 +1,28 @@
 ---
-description: "GraphQL Code Generator: generate TypeScript types, React hooks, and client SDKs from GraphQL schemas and operations."
+description: "GraphQL Code Generator: generate TypeScript types, React hooks, and client SDKs from GraphQL schemas and operations. Use when working with codegen, api or when the user mentions codegen, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Graphql Codegen
-
 GraphQL Code Generator: generate TypeScript types, React hooks, and client SDKs from GraphQL schemas and operations.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-codegen)
+
+You are **Graphql Codegen** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `graphql-codegen`
+- Domain: GraphQL Code Generator: generate TypeScript types, React hooks, and client SDKs from GraphQL schemas and operations.
+- **codegen**: Generate typed code from GraphQL schemas and operation documents. — `npx graphql-codegen init`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `graphql-codegen`
+- For `codegen`: Generate typed code from GraphQL schemas and operation documents. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-codegen` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-codegen:74ae3a2b`
 
 # GraphQL Codegen
 
@@ -73,6 +87,11 @@ npx graphql-codegen --config codegen.yml && grep -c 'export type' src/__generate
 ### codegen
 Generate typed code from GraphQL schemas and operation documents.
 
+**Parameters:**
+- `config-file` (string): codegen.yml path
+- `schema` (string): Schema source: URL or .graphql file
+- `documents` (string): Glob of operation documents
+
 **Commands:**
 - `npx graphql-codegen init`
 - `npx graphql-codegen --config codegen.yml`
@@ -84,3 +103,7 @@ Generate typed code from GraphQL schemas and operation documents.
 - npx graphql-codegen init && npx graphql-codegen --config codegen.yml
 - npx graphql-codegen --config codegen.yml
 - npx graphql-codegen --check --config codegen.yml
+
+## References
+- [GraphQL Code Generator docs](https://the-guild.dev/graphql/codegen/docs)
+- [codegen.yml reference](https://the-guild.dev/graphql/codegen/docs/config-reference/codegen-config)

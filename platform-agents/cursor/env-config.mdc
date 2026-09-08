@@ -6,27 +6,23 @@ alwaysApply: false
 
 Environment configuration management: load .env files, validate required variables, and inject config per environment without leaking secrets.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (env-config)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Env Config** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `node -r dotenv/config index.js`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `env-config`
+- Domain: Environment configuration management: load .env files, validate required variables, and inject config per environment without leaking secrets.
+- **env-management**: Load, validate, and debug environment variables across dev/staging/prod. — `node -r dotenv/config index.js`
+- Check `knowledge` and `prerequisites: env, grep, node, python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `env-config`
+- For `env-management`: Load, validate, and debug environment variables across dev/staging/prod. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `env-config` tools
+- Tools: `Glob`, `Read`, `Bash`, `Grep`, `Env` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `env-config:f673a26e`
 
 # Env Config
 

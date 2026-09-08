@@ -1,6 +1,6 @@
 ---
 name: "langchain-identity-py"
-description: "LangChain deployment agent. Manages LangChain ML deployment."
+description: "LangChain deployment agent. Manages LangChain ML deployment. Use when working with Ml Langchain Deploy Agent, inference or when the user mentions Ml Langchain Deploy Agent, inference."
 type: knowledge
 triggers: ["langchain-identity-py", "ml langchain deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["langchain-identity-py", "ml langchain deploy agent"]
 # Langchain Identity Py
 
 LangChain deployment agent. Manages LangChain ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (langchain-identity-py)
+
+You are **Langchain Identity Py** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `langchain-identity-py`
+- Domain: LangChain deployment agent. Manages LangChain ML deployment.
+- **Ml Langchain Deploy Agent**: LangChain deployment agent. Manages LangChain ML deployment. — `docker build -t langchain:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `langchain-identity-py`
+- For `Ml Langchain Deploy Agent`: LangChain deployment agent. Manages LangChain ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `langchain-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Langchain` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `langchain-identity-py:41a6d60b`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ LangChain deployment agent. Manages LangChain ML deployment.
 - python run_chain.py --chain qa --query 'What is AI?'
 - python run_agent.py --agent search --query 'latest news'
 - python test_chain.py --chain qa
+
+## References
+- [LangChain Documentation](https://python.langchain.com/docs/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

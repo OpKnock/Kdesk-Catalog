@@ -1,26 +1,22 @@
 Delivers alerts to Slack via webhooks, email via mailx, SMS via Twilio, and push notifications via ntfy. Supports channel selection by severity and includes rate-limiting guidance.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (notification-channels)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Notification Channels** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -X POST -H 'Content-type: application/json' --data '{"t`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `notification-channels`
+- Domain: Delivers alerts to Slack via webhooks, email via mailx, SMS via Twilio, and push notifications via ntfy. Supports channel selection by severity and includes rate-limiting guidance.
+- **notification-delivery**: Deliver messages to Slack, email, Twilio SMS and ntfy topics using curl and CLI tools. — `curl -X POST -H 'Content-type: application/json' --data '{"text":"Deploy complet`
+- Check `knowledge` and `prerequisites: echo, ntfy`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `notification-channels`
+- For `notification-delivery`: Deliver messages to Slack, email, Twilio SMS and ntfy topics using curl and CLI tools. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `notification-channels` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Echo` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `notification-channels:e61c0c10`
 
 # Notification Channels
 

@@ -1,6 +1,6 @@
 ---
 name: "Ml Reproducibility Deploy"
-description: "Reproducibility deployment agent for ML experiment reproducibility service deployment."
+description: "Reproducibility deployment agent for ML experiment reproducibility service deployment. Use when working with Ml Reproducibility Deploy, inference or when the user mentions Ml Reproducibility Deploy, inference."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Reproducibility Deploy
 
 Reproducibility deployment agent for ML experiment reproducibility service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-reproducibility-deploy)
+
+You are **Ml Reproducibility Deploy** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-reproducibility-deploy`
+- Domain: Reproducibility deployment agent for ML experiment reproducibility service deployment.
+- **Ml Reproducibility Deploy**: Reproducibility deployment agent for ML experiment reproducibility service deployment. — `Server: python -m reproducibility.server --port 8080`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-reproducibility-deploy`
+- For `Ml Reproducibility Deploy`: Reproducibility deployment agent for ML experiment reproducibility service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-reproducibility-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Server`, `Health` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-reproducibility-deploy:678a7880`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ Reproducibility deployment agent for ML experiment reproducibility service deplo
 - Server: python -m reproducibility.server --port 8080
 - Track: python -m reproducibility.track --experiment exp1 --params params.json
 - Health: curl http://localhost:8080/health
+
+## References
+- [DVC Documentation](https://dvc.org/doc)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

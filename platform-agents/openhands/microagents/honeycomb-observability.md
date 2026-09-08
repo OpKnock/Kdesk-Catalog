@@ -1,15 +1,29 @@
 ---
 name: "honeycomb-observability"
-description: "Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability."
+description: "Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability. Use when working with honeycomb ops, api or when the user mentions honeycomb ops, api."
 type: knowledge
 triggers: ["honeycomb-observability", "honeycomb-ops"]
 ---
 
-# Honeycomb Observability
-
 Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (honeycomb-observability)
+
+You are **Honeycomb Observability** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `honeycomb-observability`
+- Domain: Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production observability.
+- **honeycomb-ops**: Manage datasets, run queries, and send events with the Honeycomb CLI. — `honeycomb auth login`
+- Check `knowledge` and `prerequisites: honeycomb`
+
+### 2. Reason — think for `honeycomb-observability`
+- For `honeycomb-ops`: Manage datasets, run queries, and send events with the Honeycomb CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `honeycomb-observability` tools
+- Tools: `Glob`, `Grep`, `Read`, `Honeycomb` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `honeycomb-observability:533647a0`
 
 # Honeycomb Observability
 
@@ -82,6 +96,11 @@ Agent: honeycomb query run --dataset myservice '{"time_range": 900, "breakdowns"
 ### honeycomb-ops
 Manage datasets, run queries, and send events with the Honeycomb CLI.
 
+**Parameters:**
+- `dataset` (string): Honeycomb dataset name.
+- `time_range` (integer): Query window in seconds.
+- `api_key` (string): Honeycomb API key (or OTEL header).
+
 **Commands:**
 - `honeycomb auth login`
 - `honeycomb dataset list`
@@ -93,3 +112,7 @@ Manage datasets, run queries, and send events with the Honeycomb CLI.
 - honeycomb query run --dataset myservice '{"time_range": 900, "order": [{"op": "COUNT"}]}'
 - honeycomb dataset create frontend
 - export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io
+
+## References
+- [Honeycomb Docs](https://docs.honeycomb.io/)
+- [Honeycomb CLI](https://docs.honeycomb.io/working-with-your-data/honeycomb-cli/)

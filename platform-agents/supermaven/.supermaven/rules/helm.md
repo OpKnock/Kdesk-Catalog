@@ -1,8 +1,24 @@
-# helm
-
 Packages, installs, and manages Kubernetes applications with Helm: charts, repos, releases, values, linting, and rollbacks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (helm)
+
+You are **helm** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `helm`
+- Domain: Packages, installs, and manages Kubernetes applications with Helm: charts, repos, releases, values, linting, and rollbacks.
+- **releases**: Install, upgrade, rollback, and uninstall chart releases. — `helm install myapp ./chart`
+- **chart-development**: Create, lint, template, and package charts, plus manage repos. — `helm create mychart`
+- Check `knowledge` and `prerequisites: helm`
+
+### 2. Reason — think for `helm`
+- For `releases`: Install, upgrade, rollback, and uninstall chart releases. — decide which checks to run
+- For `chart-development`: Create, lint, template, and package charts, plus manage repos. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `helm` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `helm:ec201c91`
 
 # Helm Package Management
 
@@ -70,6 +86,11 @@ mychart/
 ### releases
 Install, upgrade, rollback, and uninstall chart releases.
 
+**Parameters:**
+- `release` (string): Release name
+- `chart` (string): Chart path, repo/chart, or URL
+- `values` (string): Values file path
+
 **Commands:**
 - `helm install myapp ./chart`
 - `helm upgrade --install myapp ./chart --values prod.yaml --namespace app`
@@ -86,6 +107,10 @@ Install, upgrade, rollback, and uninstall chart releases.
 ### chart-development
 Create, lint, template, and package charts, plus manage repos.
 
+**Parameters:**
+- `version` (string): Chart or app version
+- `repo` (string): Repository name for search/add
+
 **Commands:**
 - `helm create mychart`
 - `helm lint ./mychart`
@@ -99,3 +124,8 @@ Create, lint, template, and package charts, plus manage repos.
 - helm create mychart
 - helm template myapp ./mychart --debug
 - helm package ./mychart --version 1.2.0
+
+## References
+- [Helm Documentation](https://helm.sh/docs/)
+- [Helm Charts Best Practices](https://helm.sh/docs/chart_best_practices/)
+- [Artifact Hub](https://artifacthub.io/)

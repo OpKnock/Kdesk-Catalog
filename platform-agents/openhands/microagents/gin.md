@@ -1,15 +1,29 @@
 ---
 name: "gin"
-description: "Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test handlers."
+description: "Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test handlers. Use when working with gin development, api or when the user mentions gin development, api."
 type: knowledge
 triggers: ["gin", "gin-development"]
 ---
 
-# Gin
-
 Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test handlers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gin)
+
+You are **Gin** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gin`
+- Domain: Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test handlers.
+- **gin-development**: Run Gin apps, add middleware, and test handlers with Go testing. — `go get github.com/gin-gonic/gin`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `gin`
+- For `gin-development`: Run Gin apps, add middleware, and test handlers with Go testing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gin` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gin:c720f994`
 
 # Gin
 
@@ -99,6 +113,11 @@ func TestGetOrder(t *testing.T) {
 ### gin-development
 Run Gin apps, add middleware, and test handlers with Go testing.
 
+**Parameters:**
+- `port` (integer): Gin listen port
+- `mode` (string): GIN_MODE debug/release
+- `middleware` (string): logger, recovery, cors, custom
+
 **Commands:**
 - `go get github.com/gin-gonic/gin`
 - `go run main.go`
@@ -110,3 +129,7 @@ Run Gin apps, add middleware, and test handlers with Go testing.
 - go get github.com/gin-gonic/gin && go run main.go
 - go test ./... -race -v
 - curl -s localhost:8080/api/orders | jq
+
+## References
+- [Gin documentation](https://gin-gonic.com/docs/)
+- [Gin GitHub](https://github.com/gin-gonic/gin)

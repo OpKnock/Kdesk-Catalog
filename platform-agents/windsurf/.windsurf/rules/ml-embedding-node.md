@@ -8,27 +8,23 @@ globs: ["**/*.r"]
 
 Embedding generation Node.js agent for text embeddings.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ml-embedding-node)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Ml Embedding Node** (ml/embedding) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `Similarity: const similarity = (a, b) => a.reduce((sum, val,`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — ml context for `ml-embedding-node`
+- Domain: Embedding generation Node.js agent for text embeddings.
+- **Ml Embedding Node**: Embedding generation Node.js agent for text embeddings. — `Similarity: const similarity = (a, b) => a.reduce((sum, val, i) => sum + val * b`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ml-embedding-node`
+- For `Ml Embedding Node`: Embedding generation Node.js agent for text embeddings. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ml-embedding-node` tools
+- Tools: `Glob`, `Grep`, `Read`, `Similarity`, `Cohere` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-embedding-node:2c621355`
 
 ## Instructions
 

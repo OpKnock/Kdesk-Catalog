@@ -4,27 +4,25 @@ applyTo: "**/*.go **/*.r **/*.rs **/*.sh"
 
 Manage credentials with the LastPass CLI (lpass): login, search entries, retrieve passwords, and generate new ones from the terminal.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (lastpass)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Lastpass** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `lpass login alice@myapp.test`, `lpass ls`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `lastpass`
+- Domain: Manage credentials with the LastPass CLI (lpass): login, search entries, retrieve passwords, and generate new ones from the terminal.
+- **lpass-session**: Login, logout, and status of the LastPass CLI. — `lpass login alice@myapp.test`
+- **lpass-entries**: Search, show, and manage credential entries. — `lpass ls`
+- Check `knowledge` and `prerequisites: lpass`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `lastpass`
+- For `lpass-session`: Login, logout, and status of the LastPass CLI. — decide which checks to run
+- For `lpass-entries`: Search, show, and manage credential entries. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `lastpass` tools
+- Tools: `Glob`, `Grep`, `Read`, `Lpass` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `lastpass:57378403`
 
 # LastPass CLI (lpass)
 

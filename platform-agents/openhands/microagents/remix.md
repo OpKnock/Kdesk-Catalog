@@ -1,15 +1,31 @@
 ---
 name: "remix"
-description: "Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment to Node/Cloudflare."
+description: "Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment to Node/Cloudflare. Use when working with scaffold, build deploy, frontend or when the user mentions scaffold, build deploy, frontend."
 type: knowledge
 triggers: ["remix", "scaffold", "build-deploy"]
 ---
 
-# Remix
-
 Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment to Node/Cloudflare.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (remix)
+
+You are **Remix** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `remix`
+- Domain: Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment to Node/Cloudflare.
+- **scaffold**: Create and configure Remix applications. — `npx create-remix@latest my-app --template remix-run/remix/templates/express`
+- **build-deploy**: Build and run Remix apps for production. — `npx remix build`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `remix`
+- For `scaffold`: Create and configure Remix applications. — decide which checks to run
+- For `build-deploy`: Build and run Remix apps for production. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `remix` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `remix:c7c95340`
 
 # Remix
 
@@ -81,6 +97,11 @@ Run both in CI; a failed typecheck with a passing build indicates stale types.
 ### scaffold
 Create and configure Remix applications.
 
+**Parameters:**
+- `template` (string): Deployment template: express, cloudflare, netlify, vercel
+- `json` (string): Print route tree as JSON
+- `show` (string): Preview revealed files without writing
+
 **Commands:**
 - `npx create-remix@latest my-app --template remix-run/remix/templates/express`
 - `npm run dev`
@@ -96,6 +117,11 @@ Create and configure Remix applications.
 ### build-deploy
 Build and run Remix apps for production.
 
+**Parameters:**
+- `sourcemap` (string): Emit sourcemaps for the build
+- `port` (number): Production server port
+- `build` (string): Build mode: development or production
+
 **Commands:**
 - `npx remix build`
 - `npx remix-serve build/server/index.js`
@@ -107,3 +133,8 @@ Build and run Remix apps for production.
 - npx remix build --sourcemap
 - npx remix-serve build/server/index.js --port 3001
 - npm run typecheck && npx remix build
+
+## References
+- [Remix Docs](https://remix.run/docs)
+- [Remix CLI](https://remix.run/docs/en/main/other-api/cli)
+- [Remix Deployment](https://remix.run/docs/en/main/guides/deployment)

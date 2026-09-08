@@ -1,8 +1,22 @@
-# Fly Io
-
 Deploy applications to Fly.io edge infrastructure with flyctl: launch apps, scale machines, manage volumes, and wire secrets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fly-io)
+
+You are **Fly Io** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `fly-io`
+- Domain: Deploy applications to Fly.io edge infrastructure with flyctl: launch apps, scale machines, manage volumes, and wire secrets.
+- **flyctl-deploy**: Launch, deploy, scale, and monitor apps on Fly.io. — `fly launch --name myapp --region ams`
+- Check `knowledge` and `prerequisites: fly`
+
+### 2. Reason — think for `fly-io`
+- For `flyctl-deploy`: Launch, deploy, scale, and monitor apps on Fly.io. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fly-io` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fly-io:2c1ce69e`
 
 # Fly.io
 
@@ -78,6 +92,11 @@ fly curl myapp.fly.dev/health
 ### flyctl-deploy
 Launch, deploy, scale, and monitor apps on Fly.io.
 
+**Parameters:**
+- `app-name` (string): Fly app name
+- `region` (string): Deployment region like ams or iad
+- `count` (integer): Number of machines/instances
+
 **Commands:**
 - `fly launch --name myapp --region ams`
 - `fly deploy`
@@ -91,3 +110,7 @@ Launch, deploy, scale, and monitor apps on Fly.io.
 - fly launch --name myapp --region ams && fly deploy
 - fly scale count 3 --region ams && fly status
 - fly secrets set DATABASE_URL=postgres://... && fly deploy
+
+## References
+- [Fly.io docs](https://fly.io/docs/)
+- [flyctl reference](https://fly.io/docs/flyctl/)

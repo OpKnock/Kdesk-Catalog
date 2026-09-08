@@ -1,6 +1,6 @@
 ---
 name: "Xai Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Xai Deploy Sdk Agent, deployment or when the user mentions Ml Xai Deploy Sdk Agent, deployment."
 globs: ["**/*.py", "**/*.r", "**/Dockerfile*"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Xai Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (xai-sdk)
+
+You are **Xai Sdk** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `xai-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Xai Deploy Sdk Agent**: xAI SDK deployment agent for ML xAI SDK deployment. — `docker build -t xai:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `xai-sdk`
+- For `Ml Xai Deploy Sdk Agent`: xAI SDK deployment agent for ML xAI SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `xai-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Xai` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `xai-sdk:e8961a34`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ xAI SDK deployment agent for ML xAI SDK deployment.
 **Examples:**
 - Server: python -m xai.server --port 8080
 - Docker: docker run -p 8080:8080 xai-server
+
+## References
+- [xAI Documentation](https://docs.x.ai/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(promtool:*)"
 
 Defines and measures service-level objectives with Prometheus SLIs, error-budget policies, and promtool rule validation.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (sla-slo-sli)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **sla-slo-sli** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `promtool check rules slo-rules.yml`, `curl -s 'http://localhost:9090/api/v1/query?query=slo:availa`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — sre context for `sla-slo-sli`
+- Domain: Defines and measures service-level objectives with Prometheus SLIs, error-budget policies, and promtool rule validation.
+- **slo-rule-authoring**: Author and validate Prometheus SLO rules and alerts. — `promtool check rules slo-rules.yml`
+- **slo-inspection**: Query SLO state and error budgets from running Prometheus. — `curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_r`
+- Check `knowledge` and `prerequisites: prometheus, grafana, datadog, slo-lib`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `sla-slo-sli`
+- For `slo-rule-authoring`: Author and validate Prometheus SLO rules and alerts. — decide which checks to run
+- For `slo-inspection`: Query SLO state and error budgets from running Prometheus. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `sla-slo-sli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sla-slo-sli:a2f3f88a`
 
 # SLA / SLO / SLI
 

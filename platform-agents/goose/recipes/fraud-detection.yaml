@@ -2,14 +2,48 @@ title: fraud-detection
 description: 'Builds fraud detection pipelines with pandas, scikit-learn, and MLflow: feature engineering,
   model training, evaluation, and experiment tracking.'
 version: 2.0.0
-instructions: '# fraud-detection
+instructions: 'Builds fraud detection pipelines with pandas, scikit-learn, and MLflow: feature engineering,
+  model training, evaluation, and experiment tracking.
 
 
-  Builds fraud detection pipelines with pandas, scikit-learn, and MLflow: feature engineering, model training,
-  evaluation, and experiment tracking.
+  ## Agentic Workflow: Read -> Reason -> Act (fraud-detection)
 
 
-  ## Instructions
+  You are **fraud-detection** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — security context for `fraud-detection`
+
+  - Domain: Builds fraud detection pipelines with pandas, scikit-learn, and MLflow: feature engineering,
+  model training, evaluation, and experiment tracking.
+
+  - **data-pipeline**: Prepare and inspect transaction datasets with Python data tooling. — `python -m
+  venv .venv && .venv/Scripts/activate`
+
+  - **mlflow**: Track experiments, log models, and compare fraud detection runs. — `mlflow run . -e train
+  --env-manager local`
+
+  - Check `knowledge` and `prerequisites: python, scikit-learn, tensorflow, kafka`
+
+
+  ### 2. Reason — think for `fraud-detection`
+
+  - For `data-pipeline`: Prepare and inspect transaction datasets with Python data tooling. — decide which
+  checks to run
+
+  - For `mlflow`: Track experiments, log models, and compare fraud detection runs. — decide which checks
+  to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `fraud-detection` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Bash`, `Jupyter` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `fraud-detection:37c123eb`
 
 
   # Fraud Detection
@@ -133,6 +167,15 @@ instructions: '# fraud-detection
   Prepare and inspect transaction datasets with Python data tooling.
 
 
+  **Parameters:**
+
+  - `dataset` (string): Path to transactions CSV
+
+  - `test-path` (string): pytest path filter
+
+  - `notebook` (string): Notebook path to export
+
+
   **Commands:**
 
   - `python -m venv .venv && .venv/Scripts/activate`
@@ -160,6 +203,15 @@ instructions: '# fraud-detection
   Track experiments, log models, and compare fraud detection runs.
 
 
+  **Parameters:**
+
+  - `experiment-name` (string): MLflow experiment name
+
+  - `model-uri` (string): Registered model URI like models:/fraud-detector/Production
+
+  - `max_depth` (number): Tree depth hyperparameter for training run
+
+
   **Commands:**
 
   - `mlflow run . -e train --env-manager local`
@@ -179,5 +231,14 @@ instructions: '# fraud-detection
 
   - mlflow models serve -m models:/fraud-detector/Production -p 5001
 
-  - mlflow runs list --experiment-id 42 --order-by ''metrics.auc desc'''
+  - mlflow runs list --experiment-id 42 --order-by ''metrics.auc desc''
+
+
+  ## References
+
+  - [scikit-learn](https://scikit-learn.org/stable/)
+
+  - [imbalanced-learn](https://imbalanced-learn.org/stable/)
+
+  - [MLflow Docs](https://mlflow.org/docs/latest/)'
 prompt: Act as fraud-detection and handle the task per the instructions.

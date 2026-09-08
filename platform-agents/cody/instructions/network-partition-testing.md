@@ -1,8 +1,22 @@
-# Network Partition Testing
-
 Injects network faults with tc netem for latency and packet loss, drops traffic via iptables, and captures packets with tcpdump to validate service resilience under partitions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (network-partition-testing)
+
+You are **Network Partition Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `network-partition-testing`
+- Domain: Injects network faults with tc netem for latency and packet loss, drops traffic via iptables, and captures packets with tcpdump to validate service resilience under partitions.
+- **network-fault-injection**: Inject link loss/latency with tc netem, drop traffic with iptables, and capture traffic with tcpdump — `tc qdisc add dev eth0 root netem loss 100%`
+- Check `knowledge` and `prerequisites: iptables, tcpdump`
+
+### 2. Reason — think for `network-partition-testing`
+- For `network-fault-injection`: Inject link loss/latency with tc netem, drop traffic with iptables, and capture traffic with tcpdump. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `network-partition-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tc`, `Iptables` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `network-partition-testing:f400127e`
 
 # Network Partition Testing
 
@@ -57,6 +71,11 @@ curl -s -o /dev/null -w "%{time_total}\n" http://10.0.0.2:8080/health
 ### network-fault-injection
 Inject link loss/latency with tc netem, drop traffic with iptables, and capture traffic with tcpdump.
 
+**Parameters:**
+- `interface` (string): Network interface to modify
+- `loss_percent` (integer): Packet loss percentage
+- `target_host` (string): Host IP for iptables/tcpdump rules
+
 **Commands:**
 - `tc qdisc add dev eth0 root netem loss 100%`
 - `tc qdisc change dev eth0 root netem loss 10% latency 200ms`
@@ -68,3 +87,7 @@ Inject link loss/latency with tc netem, drop traffic with iptables, and capture 
 - tc qdisc add dev eth0 root netem delay 500ms 100ms distribution normal
 - iptables -D INPUT -s 10.0.0.2 -j DROP
 - tc qdisc show dev eth0
+
+## References
+- [tc-netem man page](https://man7.org/linux/man-pages/man8/tc-netem.8.html)
+- [tcpdump man page](https://man7.org/linux/man-pages/man8/tcpdump.8.html)

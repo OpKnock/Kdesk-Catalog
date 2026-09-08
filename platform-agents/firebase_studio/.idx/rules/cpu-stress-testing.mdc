@@ -1,14 +1,30 @@
 ---
-description: "Stress test CPU for load, capacity planning, and chaos scenarios with stress-ng, stress, and sysbench."
+description: "Stress test CPU for load, capacity planning, and chaos scenarios with stress-ng, stress, and sysbench. Use when working with stress tools, monitoring, api or when the user mentions stress tools, monitoring, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Cpu Stress Testing
-
 Stress test CPU for load, capacity planning, and chaos scenarios with stress-ng, stress, and sysbench.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cpu-stress-testing)
+
+You are **Cpu Stress Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `cpu-stress-testing`
+- Domain: Stress test CPU for load, capacity planning, and chaos scenarios with stress-ng, stress, and sysbench.
+- **stress-tools**: Drive CPU to saturation with stress-ng, stress, and sysbench and monitor utilization — `stress-ng --cpu 8 --timeout 60s`
+- **monitoring**: Monitor CPU utilization and thermal/load behavior during the stress window — `top -bn1 | head -15`
+- Check `knowledge` and `prerequisites: mpstat, stress, stress-ng, sysbench`
+
+### 2. Reason — think for `cpu-stress-testing`
+- For `stress-tools`: Drive CPU to saturation with stress-ng, stress, and sysbench and monitor utilization — decide which checks to run
+- For `monitoring`: Monitor CPU utilization and thermal/load behavior during the stress window — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cpu-stress-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Stress-ng`, `Sysbench` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cpu-stress-testing:d102f57a`
 
 # CPU Stress Testing
 
@@ -80,6 +96,10 @@ stress-ng --cpu 4 --cpu-load 95 --timeout 120s
 ### stress-tools
 Drive CPU to saturation with stress-ng, stress, and sysbench and monitor utilization
 
+**Parameters:**
+- `workers` (string): Number of CPU workers
+- `timeout` (string): Duration such as 60s or 1m
+
 **Commands:**
 - `stress-ng --cpu 8 --timeout 60s`
 - `stress-ng --cpu 4 --cpu-load 80 --timeout 30s`
@@ -94,6 +114,9 @@ Drive CPU to saturation with stress-ng, stress, and sysbench and monitor utiliza
 ### monitoring
 Monitor CPU utilization and thermal/load behavior during the stress window
 
+**Parameters:**
+- `interval` (string): Sample interval in seconds
+
 **Commands:**
 - `top -bn1 | head -15`
 - `mpstat -P ALL 1 5`
@@ -104,3 +127,7 @@ Monitor CPU utilization and thermal/load behavior during the stress window
 - top -bn1 | head -15
 - mpstat -P ALL 1 3
 - vmstat 1 5
+
+## References
+- [stress-ng reference](https://manpages.ubuntu.com/manpages/trusty/man1/stress-ng.1.html)
+- [sysbench documentation](https://github.com/akopytov/sysbench)

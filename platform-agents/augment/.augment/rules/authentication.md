@@ -5,27 +5,27 @@ description: "Acquires and validates OAuth2/OIDC tokens, inspects JWT structure 
 
 Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (authentication)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Authentication** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -X POST https://auth.your-app.test/oauth2/token -d gran`, `openssl genrsa -out private.pem 2048`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `authentication`
+- Domain: Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl.
+- **oauth-tokens**: Acquire and validate OAuth2/OIDC tokens. — `curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_creden`
+- **jwt-verify**: Inspect and verify JWTs with openssl and jq. — `openssl genrsa -out private.pem 2048`
+- **bearer-testing**: Test authenticated API calls with curl. — `curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me`
+- Check `knowledge` and `prerequisites: echo, openssl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `authentication`
+- For `oauth-tokens`: Acquire and validate OAuth2/OIDC tokens. — decide which checks to run
+- For `jwt-verify`: Inspect and verify JWTs with openssl and jq. — decide which checks to run
+- For `bearer-testing`: Test authenticated API calls with curl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `authentication` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Openssl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `authentication:0cbc65d2`
 
 # Authentication
 

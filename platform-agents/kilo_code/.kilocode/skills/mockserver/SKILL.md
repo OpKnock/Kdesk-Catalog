@@ -9,27 +9,27 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(docker:*) Bash(java:*) Bash(nod
 
 Mocks HTTP and HTTPS APIs with MockServer, creating expectations via REST admin API and proxying to real backends.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (mockserver)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **mockserver** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `java -jar mockserver-netty-jar-with-dependencies.jar -server`, `curl -s -X PUT http://localhost:1080/mockserver/expectation `
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `mockserver`
+- Domain: Mocks HTTP and HTTPS APIs with MockServer, creating expectations via REST admin API and proxying to real backends.
+- **mockserver-start**: Start MockServer locally or in Docker. — `java -jar mockserver-netty-jar-with-dependencies.jar -serverPort 1080`
+- **expectation-management**: Create, inspect, and clear expectations via the admin API. — `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{"httpRequest":{`
+- **request-verification**: Inspect received requests and proxy behavior. — `curl -s http://localhost:1080/mockserver/requests -d '{"path":"/api/users"}'`
+- Check `knowledge` and `prerequisites: docker, java, node`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `mockserver`
+- For `mockserver-start`: Start MockServer locally or in Docker. — decide which checks to run
+- For `expectation-management`: Create, inspect, and clear expectations via the admin API. — decide which checks to run
+- For `request-verification`: Inspect received requests and proxy behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `mockserver` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mockserver:281ac802`
 
 # MockServer
 

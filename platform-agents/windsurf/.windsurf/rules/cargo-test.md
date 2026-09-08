@@ -6,27 +6,27 @@ globs: ["**/*.go", "**/*.html", "**/*.r", "**/*.rs", "**/*.sh"]
 
 Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and race condition checks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (cargo-test)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **cargo-test** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `cargo test`, `cargo nextest run`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `cargo-test`
+- Domain: Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and race condition checks.
+- **cargo-testing**: Run unit, integration, and doc tests. — `cargo test`
+- **nextest-and-coverage**: Faster parallel testing and coverage measurement. — `cargo nextest run`
+- **concurrency-and-vet**: Race detection and lints for tests. — `cargo test -- --test-threads=1`
+- Check `knowledge` and `prerequisites: cargo, rustflags='-c`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `cargo-test`
+- For `cargo-testing`: Run unit, integration, and doc tests. — decide which checks to run
+- For `nextest-and-coverage`: Faster parallel testing and coverage measurement. — decide which checks to run
+- For `concurrency-and-vet`: Race detection and lints for tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `cargo-test` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `RUSTFLAGS='-C` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cargo-test:a78e3336`
 
 # cargo test
 

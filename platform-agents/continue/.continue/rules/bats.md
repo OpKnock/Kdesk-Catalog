@@ -1,15 +1,31 @@
 ---
 name: "Bats"
-description: "Writes and runs BASH unit tests with Bats, covering assertions, setup/teardown, and CI-friendly TAP output."
+description: "Writes and runs BASH unit tests with Bats, covering assertions, setup/teardown, and CI-friendly TAP output. Use when working with bats testing, assertions and fixtures or when the user mentions bats testing, assertions and fixtures."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Bats
-
 Writes and runs BASH unit tests with Bats, covering assertions, setup/teardown, and CI-friendly TAP output.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (bats)
+
+You are **Bats** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `bats`
+- Domain: Writes and runs BASH unit tests with Bats, covering assertions, setup/teardown, and CI-friendly TAP output.
+- **bats-testing**: Author and run Bats test files with filters. — `bats test.bats`
+- **assertions-and-fixtures**: Use bats-assert helpers and fixtures in tests. — `load 'test_helper/bats-support/load'`
+- Check `knowledge` and `prerequisites: assert_output, assert_success, bats, load`
+
+### 2. Reason — think for `bats`
+- For `bats-testing`: Author and run Bats test files with filters. — decide which checks to run
+- For `assertions-and-fixtures`: Use bats-assert helpers and fixtures in tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bats` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bats`, `Load` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bats:59cc79e1`
 
 # Bats
 
@@ -82,6 +98,11 @@ teardown() {
 ### bats-testing
 Author and run Bats test files with filters.
 
+**Parameters:**
+- `filter` (string): Run only tests matching the regex (-f)
+- `tap` (boolean): TAP output format
+- `dryRun` (boolean): Count and print tests without running (-c)
+
 **Commands:**
 - `bats test.bats`
 - `bats -t test.bats`
@@ -97,6 +118,10 @@ Author and run Bats test files with filters.
 ### assertions-and-fixtures
 Use bats-assert helpers and fixtures in tests.
 
+**Parameters:**
+- `command` (string): Command to run under `run`
+- `expected` (string): Expected output for assertions
+
 **Commands:**
 - `load 'test_helper/bats-support/load'`
 - `load 'test_helper/bats-assert/load'`
@@ -108,3 +133,7 @@ Use bats-assert helpers and fixtures in tests.
 - assert_success
 - assert_output --regexp 'deploying.*prod'
 - run ./script.sh -h && assert_failure
+
+## References
+- [Bats Documentation](https://bats-core.readthedocs.io/)
+- [bats-assert GitHub](https://github.com/bats-core/bats-assert)

@@ -1,15 +1,31 @@
 ---
 name: "kubernetes"
-description: "Architects Kubernetes clusters end-to-end: cluster creation with kind/k3s, RBAC, namespaces, quotas, and multi-cluster access."
+description: "Architects Kubernetes clusters end-to-end: cluster creation with kind/k3s, RBAC, namespaces, quotas, and multi-cluster access. Use when working with cluster creation, rbac and quotas, devops or when the user mentions cluster creation, rbac and quotas, devops."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# kubernetes
-
 Architects Kubernetes clusters end-to-end: cluster creation with kind/k3s, RBAC, namespaces, quotas, and multi-cluster access.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kubernetes)
+
+You are **kubernetes** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `kubernetes`
+- Domain: Architects Kubernetes clusters end-to-end: cluster creation with kind/k3s, RBAC, namespaces, quotas, and multi-cluster access.
+- **cluster-creation**: Create local and production-style clusters with kind, k3s, and kubeadm. — `kind create cluster --name dev --config kind-config.yaml`
+- **rbac-and-quotas**: Configure namespaces, RBAC, quotas, and limits. — `kubectl create namespace staging`
+- Check `knowledge` and `prerequisites: k3s, kind, kubeadm, kubectl`
+
+### 2. Reason — think for `kubernetes`
+- For `cluster-creation`: Create local and production-style clusters with kind, k3s, and kubeadm. — decide which checks to run
+- For `rbac-and-quotas`: Configure namespaces, RBAC, quotas, and limits. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kubernetes` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kind`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubernetes:e442fbf0`
 
 # Kubernetes Platform Engineering
 
@@ -79,6 +95,10 @@ spec:
 ### cluster-creation
 Create local and production-style clusters with kind, k3s, and kubeadm.
 
+**Parameters:**
+- `cluster-name` (string): Cluster name
+- `config` (string): Kind cluster config file
+
 **Commands:**
 - `kind create cluster --name dev --config kind-config.yaml`
 - `kind get clusters`
@@ -95,6 +115,10 @@ Create local and production-style clusters with kind, k3s, and kubeadm.
 ### rbac-and-quotas
 Configure namespaces, RBAC, quotas, and limits.
 
+**Parameters:**
+- `namespace` (string): Namespace name
+- `serviceaccount` (string): Service account name
+
 **Commands:**
 - `kubectl create namespace staging`
 - `kubectl create serviceaccount ci-bot -n staging`
@@ -107,3 +131,9 @@ Configure namespaces, RBAC, quotas, and limits.
 - kubectl create rolebinding ci-bot-binding --role=edit --serviceaccount=staging:ci-bot -n staging
 - kubectl apply -f resourcequota.yaml
 - kubectl auth can-i list pods --as=system:serviceaccount:staging:ci-bot
+
+## References
+- [Kubernetes Documentation](https://kubernetes.io/docs/)
+- [kind](https://kind.sigs.k8s.io/)
+- [K3s](https://docs.k3s.io/)
+- [RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)

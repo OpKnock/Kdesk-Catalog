@@ -1,15 +1,29 @@
 ---
 name: "redis-insight"
-description: "Visualizes and manages Redis with RedisInsight, plus core redis-cli operations for verification."
+description: "Visualizes and manages Redis with RedisInsight, plus core redis-cli operations for verification. Use when working with redis insight, database or when the user mentions redis insight, database."
 type: knowledge
 triggers: ["redis-insight"]
 ---
 
-# redis-insight
-
 Visualizes and manages Redis with RedisInsight, plus core redis-cli operations for verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (redis-insight)
+
+You are **redis-insight** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `redis-insight`
+- Domain: Visualizes and manages Redis with RedisInsight, plus core redis-cli operations for verification.
+- **redis-insight**: Launch RedisInsight, connect to databases, and run redis-cli checks — `redisinsight`
+- Check `knowledge` and `prerequisites: redis-cli, redisinsight`
+
+### 2. Reason — think for `redis-insight`
+- For `redis-insight`: Launch RedisInsight, connect to databases, and run redis-cli checks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `redis-insight` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redisinsight`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `redis-insight:d2200730`
 
 # Redis Insight
 
@@ -72,6 +86,11 @@ commands with optimization suggestions.
 ### redis-insight
 Launch RedisInsight, connect to databases, and run redis-cli checks
 
+**Parameters:**
+- `http-port` (integer): Port for the RedisInsight web UI
+- `pattern` (string): Key pattern for --scan
+- `bigkeys` (boolean): Find the largest keys in the database
+
 **Commands:**
 - `redisinsight`
 - `redis-cli -p 6379 PING`
@@ -83,3 +102,7 @@ Launch RedisInsight, connect to databases, and run redis-cli checks
 - redisinsight --http-port 8001
 - redis-cli -u redis://user:pass@localhost:6379/2 INFO memory
 - redis-cli --latency -h cache.internal
+
+## References
+- [RedisInsight docs](https://redis.io/docs/insight/)
+- [redis-cli reference](https://redis.io/docs/latest/develop/tools/cli/)

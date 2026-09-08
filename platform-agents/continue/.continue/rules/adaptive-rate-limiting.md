@@ -1,15 +1,31 @@
 ---
 name: "Adaptive Rate Limiting"
-description: "Implements adaptive rate limiting with nginx limit_req zones, Redis sliding-window counters, and load-test verification with ab."
+description: "Implements adaptive rate limiting with nginx limit_req zones, Redis sliding-window counters, and load-test verification with ab. Use when working with nginx limits, redis counters, api or when the user mentions nginx limits, redis counters, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Adaptive Rate Limiting
-
 Implements adaptive rate limiting with nginx limit_req zones, Redis sliding-window counters, and load-test verification with ab.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (adaptive-rate-limiting)
+
+You are **Adaptive Rate Limiting** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `adaptive-rate-limiting`
+- Domain: Implements adaptive rate limiting with nginx limit_req zones, Redis sliding-window counters, and load-test verification with ab.
+- **nginx-limits**: Configure and hot-reload nginx request-rate and connection limits. — `nginx -t`
+- **redis-counters**: Use Redis fixed-window and Lua sliding-window counters to adapt limits per client. — `redis-cli INCR rate:{userId}:{window}`
+- Check `knowledge` and `prerequisites: nginx, redis-cli, tail`
+
+### 2. Reason — think for `adaptive-rate-limiting`
+- For `nginx-limits`: Configure and hot-reload nginx request-rate and connection limits. — decide which checks to run
+- For `redis-counters`: Use Redis fixed-window and Lua sliding-window counters to adapt limits per client. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `adaptive-rate-limiting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Ab` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `adaptive-rate-limiting:475a7116`
 
 # Adaptive Rate Limiting
 
@@ -75,6 +91,11 @@ Run a Lua script for atomic sliding-window decisions: `redis-cli --eval sliding_
 ### nginx-limits
 Configure and hot-reload nginx request-rate and connection limits.
 
+**Parameters:**
+- `rate` (string): Rate in nginx syntax, e.g. 10r/s
+- `burst` (number): Burst capacity above the rate
+- `status_code` (number): Rejection status, e.g. 429
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -90,6 +111,11 @@ Configure and hot-reload nginx request-rate and connection limits.
 ### redis-counters
 Use Redis fixed-window and Lua sliding-window counters to adapt limits per client.
 
+**Parameters:**
+- `key_pattern` (string): Redis key pattern, e.g. rate:{userId}:{window}
+- `window` (number): Window size in seconds
+- `limit` (number): Max requests per window
+
 **Commands:**
 - `redis-cli INCR rate:{userId}:{window}`
 - `redis-cli EXPIRE rate:{userId}:{window} 60`
@@ -101,3 +127,8 @@ Use Redis fixed-window and Lua sliding-window counters to adapt limits per clien
 - redis-cli INCR rate:42:1736500000 && redis-cli EXPIRE rate:42:1736500000 60
 - redis-cli --eval sliding_window.lua rate:42:1736500000 1 60 100 1736500030
 - redis-cli GET rate:42:1736500000
+
+## References
+- [nginx limit_req Module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)
+- [Redis Commands](https://redis.io/docs/latest/commands/)
+- [AWS Rate Limiting Strategies](https://aws.amazon.com/blogs/architecture/rate-limiting-strategies-for-scalable-apis/)
